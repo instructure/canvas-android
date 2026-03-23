@@ -363,8 +363,8 @@ class CalendarViewModel @Inject constructor(
             when {
                 submissionState.excused -> context.getString(R.string.calendarEventExcused)
                 submissionState.missing -> context.getString(R.string.calendarEventMissing)
-                submissionState.graded -> context.getString(R.string.calendarEventGraded)
-                submissionState.needsGrading -> context.getString(R.string.calendarEventSubmitted)
+                submissionState.graded && submissionState.postedAt != null -> context.getString(R.string.calendarEventGraded)
+                submissionState.graded || submissionState.needsGrading -> context.getString(R.string.calendarEventSubmitted)
                 plannerItem.plannable.pointsPossible != null -> context.getString(
                     R.string.calendarEventPoints,
                     NumberHelper.formatDecimal(plannerItem.plannable.pointsPossible!!, 1, true)

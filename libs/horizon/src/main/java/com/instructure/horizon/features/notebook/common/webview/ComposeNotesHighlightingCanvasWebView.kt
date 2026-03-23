@@ -38,9 +38,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewStateViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -81,7 +82,8 @@ fun ComposeNotesHighlightingCanvasWebView(
     var scrollValue by rememberSaveable { mutableIntStateOf(0) }
     var previousScrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
     var scrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
-    val webViewState = rememberSaveable { bundleOf() }
+    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel()
+    val webViewState = stateViewModel.webViewState
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
     val composeScope = rememberCoroutineScope()

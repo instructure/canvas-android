@@ -31,6 +31,7 @@
     <string name="tab_attendance">考勤</string>
     <string name="tab_pages">頁面</string>
     <string name="tab_todo">待辦事項</string>
+    <string name="tab_todo_new">待辦事項</string>
     <string name="content_description_school_logo">學校圖標</string>
     <string name="search_guides">搜尋 Canvas 指南</string>
     <string name="canvas_guides">Canvas 指南</string>
@@ -830,6 +831,7 @@
     <string name="toDoEmpty">沒有待辦事項！\n祝您愉快。</string>
     <string name="toDoNoSubmissions">沒有針對該作業的提交項目可供評分。</string>
     <string name="errorToDoRouteFailed">嘗試檢視此待辦事項時發生錯誤。</string>
+    <string name="errorToDoRouteFailedNew">嘗試檢視此待辦事項時發生錯誤。</string>
     <string name="errorIsDesigner">設計師註冊無法檢視此項。</string>
 
     <string name="sections">章節</string>

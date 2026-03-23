@@ -31,6 +31,7 @@
     <string name="tab_attendance">Assistència</string>
     <string name="tab_pages">Pàgines</string>
     <string name="tab_todo">Tasques pendents</string>
+    <string name="tab_todo_new">Tasques pendents</string>
     <string name="content_description_school_logo">Logotip de l\'escola</string>
     <string name="search_guides">Cerca les guies del Canvas</string>
     <string name="canvas_guides">Guies del Canvas</string>
@@ -538,7 +539,7 @@
     <string name="practiceQuiz">Prova sobre pràctiques</string>
     <string name="gradedQuiz">Prova amb nota</string>
     <string name="gradedSurvey">Estudi amb nota</string>
-    <string name="ungradedSurvey">Estudi sense nota</string>
+    <string name="ungradedSurvey">Enquesta sense nota</string>
 
     <string-array name="quizTypes" translatable="false">
         <item>@string/practiceQuiz</item>
@@ -580,8 +581,8 @@
     <string name="unlimited">Il·limitat</string>
     <string name="practice_quiz">Prova sobre pràctiques</string>
     <string name="graded_quiz">Prova amb nota</string>
-    <string name="graded_survey">Estudi qualificat</string>
-    <string name="ungraded_survey">Estudi sense nota</string>
+    <string name="graded_survey">Enquesta qualificada</string>
+    <string name="ungraded_survey">Enquesta sense nota</string>
     <string name="no_time_limit">Sense límit de temps</string>
     <string name="immediately">Immediatament</string>
     <string name="quiz_details_no_points_assigned">No hi ha cap punt assignat</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Ja no s\'ha de fer res més.\n Que tingueu bon dia.</string>
     <string name="toDoNoSubmissions">No hi ha cap entrega que s\'hagi de qualificar per a aquesta activitat.</string>
     <string name="errorToDoRouteFailed">S\'ha produït un error en provar de veure aquest element de tasques pendents.</string>
+    <string name="errorToDoRouteFailedNew">S\'ha produït un error en provar de visualitzar aquest element de Tasques pendents.</string>
     <string name="errorIsDesigner">En la inscripció de dissenyadors no es pot veure això.</string>
 
     <string name="sections">Seccions</string>

@@ -65,8 +65,8 @@
     <string name="always">Sempre</string>
     <string name="graded_quiz">Prova qualificada</string>
     <string name="practice_quiz">Prova sobre pràctiques</string>
-    <string name="graded_survey">Estudi qualificat</string>
-    <string name="ungraded_survey">Estudi sense nota</string>
+    <string name="graded_survey">Enquesta qualificada</string>
+    <string name="ungraded_survey">Enquesta sense nota</string>
     <string name="andMore"> i %d més</string>
 
     <!-- Enrollment Types -->

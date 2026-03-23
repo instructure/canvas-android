@@ -31,6 +31,7 @@
     <string name="tab_attendance">Prisotnost</string>
     <string name="tab_pages">Strani</string>
     <string name="tab_todo">Seznam opravil</string>
+    <string name="tab_todo_new">Opravilo</string>
     <string name="content_description_school_logo">Logotip šole</string>
     <string name="search_guides">Išči vodnike po sistemu Canvas</string>
     <string name="canvas_guides">Vodniki po sistemu Canvas</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Ničesar ni več treba opraviti.\n Uživajte v dnevu.</string>
     <string name="toDoNoSubmissions">Za to nalogo ni oddaj, ki bi jih bilo treba oceniti.</string>
     <string name="errorToDoRouteFailed">Pri ogledu tega elementa seznama opravil je prišlo do napake.</string>
+    <string name="errorToDoRouteFailedNew">Pri ogledu tega elementa seznama opravil je prišlo do napake.</string>
     <string name="errorIsDesigner">Za vpis snovalca ogled tega ni mogoč.</string>
 
     <string name="sections">Sekcije</string>

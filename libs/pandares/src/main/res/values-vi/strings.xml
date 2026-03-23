@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Nộp Thất Bại</string>
     <string name="submissionStatusFailedSubtitle">Nhấn vào để xem thông tin chi tiết</string>
     <string name="submissionAndRubric">Bài Nộp Và Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="submissionAndFeedback">Bài Nộp &amp; Phản Hồi</string>
     <string name="commentsAndRubric">Bình Luận Và Bảng Đánh Giá Theo Tiêu Chí</string>
     <string name="errorLoadingAssignment">Đã xảy ra vấn đề khi tải bài tập này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="submitted">Đã nộp</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Hôm Nay</string>
+    <string name="tomorrow">Ngày mai</string>
     <string name="past">Trước Đây</string>
     <string name="noDate">Không Có Ngày</string>
     <string name="future">Tương Lai</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Độc Thoại</string>
     <string name="noItemsToDisplayShort">Không có mục để hiển thị</string>
     <string name="Todo">Việc Cần Làm</string>
+    <string name="TodoNew">Việc Cần Làm</string>
     <string name="todoFilter">Lọc Khóa Học</string>
     <string name="filterByEllipsis">Lọc theo...</string>
     <string name="favoriteCoursesLabel">Khóa Học Yêu Thích</string>
@@ -474,6 +477,7 @@
     <string name="groups">Nhóm</string>
     <string name="groupMembers">Thành Viên Nhóm</string>
 
+    <string name="messageGroup">Nhóm tin nhắn</string>
     <string name="loading">Đang tải&#8230;</string>
     <string name="select_item_to_display">Chọn từ danh sách</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Việc Cần Làm</string>
+    <string name="todoWidgetTitleNew">Việc Cần Làm</string>
     <string name="gradesWidgetTitle">Điểm</string>
     <string name="notificationWidgetTitle">Thông Báo</string>
     <string name="todoWidgetTitleLong">Canvas - Việc Cần Làm</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Việc Cần Làm</string>
     <string name="gradesWidgetTitleLong">Canvas - Điểm</string>
     <string name="gradeWidgetTitleLong">Canvas - Điểm</string>
     <string name="notificationWidgetTitleLong">Canvas - Thông Báo</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Khóa Học</string>
     <string name="toDoList">Danh Sách Việc Cần Làm</string>
+    <string name="toDoListNew">Danh Sách Việc Cần Làm</string>
+
     <string name="notifications">Thông Báo</string>
     <string name="pushNotifications">Thông Báo Đẩy</string>
     <string name="pushNotificationsError">Thông Báo Đẩy chưa được đăng ký cho thiết bị này.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Mở SpeedGrader</string>
 
-    <string name="search_todo">việc cần làm việc cần làm danh sách việc cần làm</string>
     <string name="search_course">khóa học khóa học lớp lớp</string>
     <string name="search_grades">lớp lớp</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Phải cài đặt tiêu đề trang.</string>
     <string name="pageDetails">Thông Tin Chi Tiết Trang</string>
     <string name="saving">Đang lưu</string>
+    <string name="speedGraderSaving">Đang lưu</string>
+    <string name="speedGraderSaved">Đã Lưu</string>
+    <string name="speedGraderFailed">Thất bại</string>
+    <string name="speedGraderSaveErrorTitle">Rất tiếc, đã xảy ra vấn đề</string>
+    <string name="speedGraderSaveErrorMessage">Đã xảy ra lỗi khi lưu điều chỉnh điểm của bạn. Bạn có thể thử lại hoặc quay lại sau.</string>
+    <string name="speedGraderSaveErrorContentDescription">Lưu điểm không thành công. Nhấn để biết thêm chi tiết.</string>
+
     <string name="confirmDeleteEvent">Bạn có chắc chắn muốn xóa sự kiện này không?</string>
     <string name="conferencesNotSupported">Hội Nghị chưa được hỗ trợ trên di động.</string>
     <string name="filePreviewContentDescription">Hình ảnh xem trước tập tin</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Bản Ghi</string>
     <string name="conferenceInProgress">Hội nghị đang diễn ra</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Hội Nghị (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Hội nghị đang diễn ra</string>
+    <string name="conferencesWidgetDismissed">Hội nghị bị hủy bỏ</string>
     <string name="a11y_criterion_content_description">Xếp hạng tiêu chí %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">thêm thông tin</string>
@@ -1373,6 +1391,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s mục việc cần làm</item>
+        <item quantity="other">%s mục việc cần làm</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s mục việc cần làm</item>
         <item quantity="other">%s mục việc cần làm</item>
     </plurals>
@@ -1662,7 +1684,9 @@
     <string name="calendarNoEvents">Không Có Sự Kiện Hôm Nay!</string>
     <string name="calendarNoEventsDescription">Có vẻ là một ngày tuyệt vời để nghỉ ngơi, thư giãn và hồi sức.</string>
     <string name="userCalendarToDo">Cần Làm</string>
+    <string name="userCalendarToDoNew">Việc Cần Làm</string>
     <string name="courseToDo">%s Việc Cần Làm</string>
+    <string name="courseToDoNew">%s Việc Cần Làm</string>
     <string name="calendarEventExcused">Đã Xin Phép</string>
     <string name="calendarEventMissing">Bị Thiếu</string>
     <string name="calendarEventGraded">Đã Chấm Điểm</string>
@@ -1687,21 +1711,30 @@
     <string name="a11y_eventCreatedAnnouncement">Sự kiện %s đã được tạo thành công.</string>
     <string name="a11y_eventUpdatedAnnouncement">Sự kiện %s đã được cập nhật thành công.</string>
     <string name="a11y_toDoCreatedAnnouncement">Danh sách những việc cần làm %s đã được tạo thành công.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Việc cần làm %s đã được tạo thành công.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Danh sách những việc cần làm %s đã được cập nhật thành công.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Việc cần làm %s đã được cập nhật thành công.</string>
     <string name="todoScreenTitle">Cần Làm</string>
+    <string name="todoScreenTitleNew">Việc Cần Làm</string>
     <string name="todoDateLabel">Ngày</string>
     <string name="todoDescriptionLabel">Mô Tả</string>
     <string name="todoDeleteConfirmationTitle">Xóa Việc Cần Làm?</string>
+    <string name="todoDeleteConfirmationTitleNew">Xóa Việc Cần Làm?</string>
     <string name="todoDeleteConfirmationText">Sẽ xóa vĩnh viễn mục Cần Làm của bạn.</string>
+    <string name="todoDeleteConfirmationTextNew">Sẽ xóa vĩnh viễn mục Việc Cần Làm của bạn.</string>
     <string name="todoDeleteErrorMessage">Đã xảy ra lỗi xóa Việc Cần Làm này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="todoDeleteErrorMessageNew">Đã xảy ra lỗi khi xóa Việc Cần Làm này. Vui lòng kiểm tra kết nối và thử lại.</string>
     <string name="createTodoScreenTitle">Việc Cần Làm Mới</string>
+    <string name="createTodoScreenTitleNew">Việc Cần Làm Mới</string>
     <string name="editTodoScreenTitle">Chỉnh Sửa Việc Cần Làm</string>
+    <string name="editTodoScreenTitleNew">Chỉnh Sửa Việc Cần Làm</string>
     <string name="createToDoTitleHint">Thêm tiêu đề</string>
     <string name="createToDoDateLabel">Ngày</string>
     <string name="createToDoTimeLabel">Thời Gian</string>
     <string name="createToDoCalendarLabel">Lịch</string>
     <string name="createToDoDetailsLabel">Các Thông Tin Chi Tiết</string>
     <string name="todoSaveErrorMessage">Đã xảy ra lỗi lưu Việc Cần Làm này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="todoSaveErrorMessageNew">Đã xảy ra lỗi khi lưu Việc Cần Làm này. Vui lòng kiểm tra kết nối và thử lại.</string>
     <string name="selectCalendarScreenTitle">Chọn Lịch</string>
     <string name="errorContentRetryButton">Thử Lại</string>
     <string name="eventLocationLabel">Địa Điểm</string>
@@ -1709,6 +1742,7 @@
     <string name="eventDetailsLabel">Các Thông Tin Chi Tiết</string>
     <string name="errorLoadingEvent">Đã có sự cố khi tải sự kiện này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="errorLoadingTodo">Đã có sự cố khi tải việc cần làm này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="errorLoadingTodoNew">Đã xảy ra vấn đề khi tải việc cần làm này. Vui lòng kiểm tra kết nối và thử lại.</string>
     <string name="eventDeleteConfirmationTitle">Xóa Sự Kiện?</string>
     <string name="eventDeleteConfirmationText">Thao tác này sẽ xóa vĩnh viễn sự kiện của bạn.</string>
     <string name="eventDeleteErrorMessage">Đã xảy ra lỗi khi xóa sự kiện này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
@@ -1725,6 +1759,7 @@
     <string name="eventDeleteScopeAll">Tất cả sự kiện</string>
     <string name="eventDeleteScopeFollowing">Sự kiện này và tất cả các sự kiện sau</string>
     <string name="calendarAddToDo">Thêm Việc Cần Làm</string>
+    <string name="calendarAddToDoNew">Thêm Việc Cần Làm</string>
     <string name="calendarAddEvent">Thêm Sự Kiện</string>
     <string name="createEventScreenTitle">Sự Kiện Mới</string>
     <string name="editEventScreenTitle">Chỉnh Sửa Sự Kiện</string>
@@ -2103,7 +2138,9 @@
     <string name="widgetNotLoggedInTitle">Hãy Tiến Hành Đăng Nhập!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Để xem các việc cần làm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng. Sẽ chỉ mất một lát thôi!</string>
     <string name="a11y_widgetToDoOpenToDoList">Mở màn hình danh sách Việc Cần Làm</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Mở màn hình danh sách Việc Cần Làm</string>
     <string name="a11y_widgetToDoCreateNewToDo">Tạo Việc Cần Làm mới</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Tạo Việc Cần Làm mới</string>
     <string name="widgetGradesErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị điểm của bạn ngay lúc này. Vui lòng thử lại sau một lúc hoặc truy cập ứng dụng.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Để xem điểm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng. Sẽ chỉ mất một lát thôi!</string>
     <string name="widgetSingleGradeErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị điểm của bạn ngay lúc này.</string>
@@ -2111,6 +2148,19 @@
     <string name="widgetSingleGradeSelectCourse">Hãy chọn một khóa học</string>
     <string name="widgetGradesErrorLoadingCourses">Đã xảy ra lỗi khi tải các khóa học.</string>
     <string name="settingsSwitchExperience">Chuyển đổi sang Canvas Career</string>
+    <string name="forecastWidgetTitle">Tóm Tắt Hàng Tuần</string>
+    <string name="forecastWidgetWeekPeriod">Tuần %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Bị Thiếu</string>
+    <string name="forecastWidgetDue">Hạn</string>
+    <string name="forecastWidgetRecentGrades">Điểm Mới</string>
+    <string name="forecastWidgetGradeWeight">%d%% điểm cuối cùng</string>
+    <string name="forecastWidgetErrorMessage">Chúng tôi đang gặp khó khăn khi tải bài tập của bạn. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="forecastWidgetEmptyMissing">Không có bài tập bị thiếu. Bạn đã bắt kịp mọi thứ!</string>
+    <string name="forecastWidgetEmptyDue">Không có bài tập đến hạn tuần này.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Không có điểm mới trong tuần này.</string>
+    <string name="a11y_contentDescription_previousWeek">Tuần trước</string>
+    <string name="a11y_contentDescription_nextWeek">Tuần sau</string>
+
     <string name="speedGraderGradeTabTitle">Điểm &amp; Bảng Đánh Giá Theo Tiêu Chí</string>
     <string name="speedGraderDetailsTabTitle">Các Thông Tin Chi Tiết</string>
     <string name="a11y_contentDescription_expandPanel">Mở rộng bảng</string>
@@ -2189,6 +2239,7 @@
     <string name="errorLoadingToDos">Đã xảy ra lỗi khi tải các mục việc cần làm. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="errorUpdatingToDo">Đã xảy ra lỗi khi cập nhật các mục việc cần làm. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="noToDosForNow">Hiện chưa có Việc Cần Làm!</string>
+    <string name="noToDosForNowNew">Hiện chưa có Việc Cần Làm!</string>
     <string name="noToDosForNowSubtext">Có vẻ là thời điểm tuyệt vời để nghỉ ngơi, thư giãn và hồi sức.</string>
     <string name="todoSwipeDone">Đã Xong</string>
     <string name="todoSwipeUndo">Hoàn tác</string>
@@ -2199,8 +2250,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Tùy Chọn danh sách Việc Cần Làm</string>
+    <string name="todoFilterPreferencesNew">Tùy Chọn danh sách Việc Cần Làm</string>
     <string name="todoFilterVisibleItems">Các Mục Hiển Thị</string>
     <string name="todoFilterShowPersonalToDos">Hiển Thị Việc Cần Làm Cá Nhân</string>
+    <string name="todoFilterShowPersonalToDosNew">Hiển Thị Việc Cần Làm Cá Nhân</string>
     <string name="todoFilterShowCalendarEvents">Hiển Thị Sự Kiện Lịch</string>
     <string name="todoFilterShowCompleted">Hiển Thị Mục Đã Hoàn Thành</string>
     <string name="todoFilterFavoriteCoursesOnly">Chỉ Khóa Học Yêu Thích</string>
@@ -2226,6 +2279,9 @@
     <string name="courseInvitationDeclined">Đã từ chối lời mời đến %s</string>
     <string name="courseInvitationDeclineConfirmTitle">Từ Chối Lời Mời</string>
     <string name="courseInvitationDeclineConfirmMessage">Bạn có chắc chắn muốn từ chối lời mời đến %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Quá Trình</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2349,6 +2405,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Xin chào, %s</string>
 
+    <string name="courses_and_groups">Khóa Học &amp; Nhóm</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Tùy Chỉnh Bảng Điều Khiển</string>
     <string name="dashboard_widgets">Tiện Ích</string>
@@ -2358,16 +2415,44 @@
     <string name="changing_dashboard_layout">Đang thay đổi bố cục bảng điều khiển</string>
     <string name="changing_dashboard_layout_message">Để thay đổi bố cục bảng điều khiển, bạn phải khởi động lại ứng dụng</string>
     <string name="restart_now">Khởi động lại ngay</string>
+    <string name="turn_on_new_dashboard">Bật bảng điều khiển mới</string>
     <string name="switched_back">Bạn đã chuyển lại rồi à?</string>
     <string name="switched_back_message">Cảm ơn bạn đã thử dùng bảng điều khiển mới! Bạn có thể cho chúng tôi biết lý do bạn chuyển lại không?</string>
+    <string name="survey_option_hard_to_find">Khó tìm nội dung</string>
+    <string name="survey_option_prefer_old_layout">Thích bố cục cũ hơn</string>
+    <string name="survey_option_something_broken">Có gì đó không hiệu quả</string>
     <string name="what_could_we_improve">Chúng tôi có thể cải thiện điều gì?</string>
+    <string name="what_do_you_think_of_new_dashboard">Bạn nghĩ gì về bảng điều khiển mới?</string>
+    <string name="let_us_know">Hãy cho chúng tôi biết!</string>
+    <string name="no_app_to_handle_link">Không có ứng dụng nào khả dụng để mở liên kết này</string>
     <string name="skip">Bỏ Qua</string>
     <string name="widget_setting_show_greeting">Hiển thị phần chào hỏi</string>
     <string name="background_color">Màu nền</string>
+    <string name="widget_setting_show_grades">Điểm Khóa Học</string>
+    <string name="widget_setting_show_color_overlay">Lớp Phủ Màu Khóa Học</string>
     <string name="offline_content_available">Không có nội dung ngoại tuyến nào khả dụng</string>
     <string name="a11y_contentDescription_moreOptions">Tùy chọn khác</string>
     <string name="customizeCourse">Tùy Chỉnh Khóa Học</string>
     <string name="favoriteCoursesAndGroups">Khóa Học và Nhóm Yêu Thích</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Công Cụ Ngoài không khả dụng ngoại tuyến.</string>
+    <string name="widget_weekly_summary">Tóm Tắt Hàng Tuần</string>
+
+    <string name="dashboardCourseNickname">Biệt Danh</string>
+    <string name="dashboardCourseNicknameHint">Viết biệt danh khóa học ở đây</string>
+    <string name="dashboardCourseColor">Màu Khóa Học</string>
+    <string name="widget_toDo">Cần Làm Hàng Ngày</string>
+    <string name="dailyToDoWidgetTitle">Cần Làm Hàng Ngày</string>
+    <string name="todoWidget_showCompleted">Hiển Thị Mục Đã Hoàn Thành</string>
+    <string name="todoWidget_emptyTitle">Bây giờ, bạn đã hoàn tất mọi việc!</string>
+    <string name="todoWidget_emptyMessage">Có vẻ như hôm nay bạn đang rảnh.\nBạn có muốn thêm một số việc Cần Làm không?</string>
+    <string name="todoWidget_addTodo">Thêm Việc Cần Làm</string>
+    <string name="todoWidget_errorTitle">Rất tiếc, Đã xảy ra vấn đề</string>
+    <string name="todoWidget_errorMessage">Không thể tải danh sách Cần Làm.\nThử lại hoặc quay lại sau.</string>
+    <string name="todoWidget_refresh">Làm Mới</string>
+    <string name="todoWidget_today">Hôm Nay</string>
+    <string name="a11y_todoWidget_jumpToToday">Chuyển đến hôm nay</string>
+    <string name="widgetSettings_widgetsColor">Màu Chính của Bảng Điều Khiển</string>
+    <string name="dashboard_globalAnnouncement">Thông Báo Toàn Cầu</string>
+    <string name="forecastWidget_currentWeek">Tuần hiện tại</string>
 </resources>

@@ -31,6 +31,7 @@
     <string name="tab_attendance">Presença</string>
     <string name="tab_pages">Páginas</string>
     <string name="tab_todo">A Fazer</string>
+    <string name="tab_todo_new">A fazer</string>
     <string name="content_description_school_logo">Logo da escola</string>
     <string name="search_guides">Procurar nos Guias do Canvas</string>
     <string name="canvas_guides">Guias Canvas</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Nada mais a fazer!\n Aproveite seu dia.</string>
     <string name="toDoNoSubmissions">Não há envios para classificação para esta tarefa.</string>
     <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar exibir este item para fazer.</string>
+    <string name="errorToDoRouteFailedNew">Ocorreu um erro ao tentar exibir este item a fazer.</string>
     <string name="errorIsDesigner">Inscrição do Designer não pode ver isto.</string>
 
     <string name="sections">Secções</string>

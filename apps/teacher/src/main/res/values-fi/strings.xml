@@ -31,6 +31,7 @@
     <string name="tab_attendance">Osallistuminen</string>
     <string name="tab_pages">Sivut</string>
     <string name="tab_todo">Tehtävä</string>
+    <string name="tab_todo_new">Tehtävälista</string>
     <string name="content_description_school_logo">Koulun logo</string>
     <string name="search_guides">Etsi Canvas-oppaita</string>
     <string name="canvas_guides">Canvas-oppaat</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Ei enempää tehtävänä!\n Nauti päivästäsi.</string>
     <string name="toDoNoSubmissions">Ei ole lähetyksiä tämän tehtävän arvosteluun.</string>
     <string name="errorToDoRouteFailed">Tämän Tehtävä-kohteen näyttämisen yhteydessä ilmeni virhe.</string>
+    <string name="errorToDoRouteFailedNew">Tämän Tehtävä-kohteen näyttämisen yhteydessä ilmeni virhe.</string>
     <string name="errorIsDesigner">Suunnittelijan ilmoittautumista ei voi tarkastella tätä.</string>
 
     <string name="sections">Osat</string>

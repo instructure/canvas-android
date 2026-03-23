@@ -61,6 +61,7 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeD
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
+import sdk.pendo.io.pendoTag
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 
@@ -178,7 +179,7 @@ fun CoursesWidgetContent(
                 Button(
                     onClick = { activity?.let { uiState.onAllCourses(it) } },
                     shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier.height(30.dp),
+                    modifier = Modifier.height(30.dp).pendoTag("coursesWidget_allCoursesButton", true),
                     contentPadding = PaddingValues(
                         start = 12.dp,
                         0.dp,

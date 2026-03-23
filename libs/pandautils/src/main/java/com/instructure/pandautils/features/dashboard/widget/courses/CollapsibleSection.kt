@@ -43,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun CollapsibleSection(
@@ -57,6 +58,7 @@ fun CollapsibleSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .pendoTag("coursesWidget_collapsibleSection", true)
                 .clickable { onToggleExpanded() }
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,

@@ -70,9 +70,9 @@ fun <T> TabRow(
 ) {
     val localDensity = LocalDensity.current
     val scrollState = rememberScrollState()
-    var containerWidth by rememberSaveable { mutableIntStateOf(0) }
-    var tabRowWidth by rememberSaveable { mutableIntStateOf(0) }
-    var sizes by rememberSaveable { mutableStateOf(tabs.map { 0 }) }
+    var containerWidth by rememberSaveable(tabs) { mutableIntStateOf(0) }
+    var tabRowWidth by rememberSaveable(tabs) { mutableIntStateOf(0) }
+    var sizes by rememberSaveable(tabs) { mutableStateOf(tabs.map { 0 }) }
     val spacingPx = with(localDensity) { spacing.toPx().toInt() }
     val alignmentOffset = when (tabAlignment) {
         Alignment.Start -> 0

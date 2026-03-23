@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemedColor
+import sdk.pendo.io.pendoTag
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -111,7 +112,8 @@ fun ColorPicker(
                 .fillMaxWidth()
                 .then(if (isCollapsible) Modifier.clickable { isExpanded = !isExpanded } else Modifier)
                 .padding(vertical = 12.dp)
-                .then(titleModifier),
+                .then(titleModifier)
+                .pendoTag("colorPickerTitle", true),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -193,7 +195,7 @@ private fun ColorCircle(
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier.size(36.dp),
+        modifier = modifier.size(36.dp).pendoTag("colorOption", true),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color(displayColor or 0xFF000000.toInt())

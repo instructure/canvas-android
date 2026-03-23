@@ -168,7 +168,7 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             is LtiLaunchAction.LaunchCustomTab -> launchCustomTab(action.url)
             is LtiLaunchAction.ShowError -> {
                 toast(R.string.errorOccurred)
-                if (activity != null) {
+                if (isAdded && !parentFragmentManager.isStateSaved) {
                     requireActivity().onBackPressed()
                 }
             }

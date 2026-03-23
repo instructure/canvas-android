@@ -37,7 +37,7 @@ class ParentInboxRouter(
 ) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        navigation.navigate(activity, navigation.inboxDetailsRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD))
+        navigation.navigate(activity, navigation.inboxDetailsRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD, scope))
     }
 
     override fun attachNavigationIcon(toolbar: Toolbar) {

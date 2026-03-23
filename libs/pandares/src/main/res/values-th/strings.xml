@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">จัดส่งล้มเหลว</string>
     <string name="submissionStatusFailedSubtitle">กดเพื่อดูรายละเอียด</string>
     <string name="submissionAndRubric">ผลงานจัดส่งและเกณฑ์การให้คะแนน</string>
+    <string name="submissionAndFeedback">ผลงานจัดส่งและข้อคิดเห็น</string>
     <string name="commentsAndRubric">ความเห็นและเกณฑ์การให้คะแนน</string>
     <string name="errorLoadingAssignment">มีปัญหาในการโหลดภารกิจนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="submitted">จัดส่งแล้ว</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">วันนี้</string>
+    <string name="tomorrow">พรุ่งนี้</string>
     <string name="past">อดีต</string>
     <string name="noDate">ไม่มีวันที่</string>
     <string name="future">อนาคต</string>
@@ -291,6 +293,7 @@
     <string name="monologue">โมโนล็อก</string>
     <string name="noItemsToDisplayShort">ไม่มีรายการจัดแสดง</string>
     <string name="Todo">สิ่งที่ต้องดำเนินการ</string>
+    <string name="TodoNew">สิ่งที่ต้องทำ</string>
     <string name="todoFilter">กรองบทเรียน</string>
     <string name="filterByEllipsis">กรองจาก...</string>
     <string name="favoriteCoursesLabel">บทเรียนโปรด</string>
@@ -474,6 +477,7 @@
     <string name="groups">กลุ่ม</string>
     <string name="groupMembers">สมาชิกในกลุ่ม</string>
 
+    <string name="messageGroup">ส่งข้อความถึงกลุ่ม</string>
     <string name="loading">กำลังโหลด&#8230;</string>
     <string name="select_item_to_display">เลือกจากรายการ</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">สิ่งที่ต้องดำเนินการ</string>
+    <string name="todoWidgetTitleNew">สิ่งที่ต้องทำ</string>
     <string name="gradesWidgetTitle">เกรด</string>
     <string name="notificationWidgetTitle">การแจ้งข้อมูล</string>
     <string name="todoWidgetTitleLong">Canvas - สิ่งที่ต้องทำ</string>
+    <string name="todoWidgetTitleLongNew">Canvas - สิ่งที่ต้องทำ</string>
     <string name="gradesWidgetTitleLong">Canvas - เกรด</string>
     <string name="gradeWidgetTitleLong">Canvas - เกรด</string>
     <string name="notificationWidgetTitleLong">Canvas - การแจ้งข้อมูล</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">บทเรียน</string>
     <string name="toDoList">รายการสิ่งที่ต้องทำ</string>
+    <string name="toDoListNew">รายการสิ่งที่ต้องทำ</string>
+
     <string name="notifications">การแจ้งข้อมูล</string>
     <string name="pushNotifications">การแจ้งเตือนแบบพุช</string>
     <string name="pushNotificationsError">การแจ้งเตือนแบบพุชยังไม่ได้ลงทะเบียนสำหรับอุปกรณ์นี้</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">เปิด SpeedGrader</string>
 
-    <string name="search_todo">สิ่งที่ต้องทำ ต้องดำเนินการ รายการสิ่งที่ต้องทำ</string>
     <string name="search_course">บทเรียน บทเรียน ชั้นเรียน ชั้นเรียน</string>
     <string name="search_grades">เกรด เกรด</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">ต้องระบุชื่อเพจ</string>
     <string name="pageDetails">รายละเอียดหน้าเพจ</string>
     <string name="saving">กำลังบันทึก</string>
+    <string name="speedGraderSaving">กำลังบันทึก</string>
+    <string name="speedGraderSaved">บันทึกแล้ว</string>
+    <string name="speedGraderFailed">ล้มเหลว</string>
+    <string name="speedGraderSaveErrorTitle">อุ๊ปส์ มีบางอย่างผิดปกติ</string>
+    <string name="speedGraderSaveErrorMessage">มีข้อผิดพลาดขณะบันทึกข้อมูลการแก้ไขเกรดของคุณ สามารถลองใหม่อีกครั้งหรือลองทำรายการใหม่อีกครั้งในภายหลัง</string>
+    <string name="speedGraderSaveErrorContentDescription">บันทึกเกรดล้มเหลว กดเลือกรายละเอียด</string>
+
     <string name="confirmDeleteEvent">แน่ใจว่าต้องการลบกิจกรรมนี้หรือไม่</string>
     <string name="conferencesNotSupported">การประชุมยังไม่รองรับกับอุปกรณ์พกพา</string>
     <string name="filePreviewContentDescription">ภาพตัวอย่างไฟล์</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">ผลงานบันทึก</string>
     <string name="conferenceInProgress">กำลังจัดการประชุม</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">การประชุม (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">กำลังจัดการประชุม</string>
+    <string name="conferencesWidgetDismissed">ยกเลิกการประชุมแล้ว</string>
     <string name="a11y_criterion_content_description">คะแนนตามเกณฑ์ %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">ข้อมูลเพิ่มเติม</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s รายการสิ่งที่ต้องทำ</item>
+        <item quantity="other">%s รายการสิ่งที่ต้องทำ</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s รายการสิ่งที่ต้องทำ</item>
         <item quantity="other">%s รายการสิ่งที่ต้องทำ</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">ไม่มีกิจกรรมในวันนี้!</string>
     <string name="calendarNoEventsDescription">ดูเหมือนนี่จะเป็นวันที่เหมาะสำหรับพัก ผ่อนคลายและเติมพลัง</string>
     <string name="userCalendarToDo">สิ่งที่ต้องทำ</string>
+    <string name="userCalendarToDoNew">สิ่งที่ต้องทำ</string>
     <string name="courseToDo">%s สิ่งที่ต้องทำ</string>
+    <string name="courseToDoNew">%s สิ่งที่ต้องทำ</string>
     <string name="calendarEventExcused">ได้รับการยกเว้น</string>
     <string name="calendarEventMissing">ขาดหาย</string>
     <string name="calendarEventGraded">ให้เกรดแล้ว</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">จัดทำ %s สำหรับกิจกรรมเสร็จสิ้น</string>
     <string name="a11y_eventUpdatedAnnouncement">อัพเดต %s สำหรับกิจกรรมเสร็จสิ้น</string>
     <string name="a11y_toDoCreatedAnnouncement">จัดทำ %s สำหรับรายการที่ต้องดำเนินการเสร็จสิ้น</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">จัดทำ %s สำหรับรายการที่ต้องทำเสร็จสิ้น</string>
     <string name="a11y_toDoUpdatedAnnouncement">อัพเดต %s สำหรับรายการที่ต้องดำเนินการเสร็จสิ้น</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">จัดทำ %s สำหรับรายการที่ต้องทำเสร็จสิ้น</string>
     <string name="todoScreenTitle">สิ่งที่ต้องทำ</string>
+    <string name="todoScreenTitleNew">สิ่งที่ต้องทำ</string>
     <string name="todoDateLabel">วันที่</string>
     <string name="todoDescriptionLabel">รายละเอียด</string>
     <string name="todoDeleteConfirmationTitle">ลบรายการที่ต้องทำหรือไม่</string>
+    <string name="todoDeleteConfirmationTitleNew">ลบรายการที่ต้องทำหรือไม่</string>
     <string name="todoDeleteConfirmationText">นี่เป็นการลบรายการ สิ่งที่ต้องทำ (To Do) ของคุณอย่างถาวร</string>
+    <string name="todoDeleteConfirmationTextNew">นี่เป็นการลบรายการ สิ่งที่ต้องทำ (To-do) ของคุณอย่างถาวร</string>
     <string name="todoDeleteErrorMessage">มีข้อผิดพลาดในการลบรายการสิ่งที่ต้องทำนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="todoDeleteErrorMessageNew">มีข้อผิดพลาดในการลบรายการสิ่งที่ต้องทำ (To-do) นี้ กรุณาตรวจสอบการเชื่อมต่อของคุณแล้วรอใหม่อีกครั้ง</string>
     <string name="createTodoScreenTitle">รายการสิ่งที่ต้องทำใหม่</string>
+    <string name="createTodoScreenTitleNew">รายการสิ่งที่ต้องทำใหม่</string>
     <string name="editTodoScreenTitle">แก้ไขรายการสิ่งที่ต้องทำ</string>
+    <string name="editTodoScreenTitleNew">แก้ไขรายการสิ่งที่ต้องทำ</string>
     <string name="createToDoTitleHint">เพิ่มชื่อ</string>
     <string name="createToDoDateLabel">วันที่</string>
     <string name="createToDoTimeLabel">เวลา</string>
     <string name="createToDoCalendarLabel">ปฏิทิน</string>
     <string name="createToDoDetailsLabel">รายละเอียด</string>
     <string name="todoSaveErrorMessage">มีข้อผิดพลาดในการบันทึกรายการสิ่งที่ต้องทำนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="todoSaveErrorMessageNew">มีข้อผิดพลาดในการบันทึกรายการสิ่งที่ต้องทำ (To-do) นี้ กรุณาตรวจสอบการเชื่อมต่อของคุณแล้วรอใหม่อีกครั้ง</string>
     <string name="selectCalendarScreenTitle">เลือกปฏิทิน</string>
     <string name="errorContentRetryButton">ลองใหม่</string>
     <string name="eventLocationLabel">ตำแหน่ง</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">รายละเอียด</string>
     <string name="errorLoadingEvent">มีปัญหาในการโหลดกิจกรรมนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="errorLoadingTodo">มีปัญหาในการโหลดรายการสิ่งที่ต้องดำเนินการ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="errorLoadingTodoNew">มีปัญหาในการโหลรายการสิ่งที่ต้องทำนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณแล้วรอใหม่อีกครั้ง</string>
     <string name="eventDeleteConfirmationTitle">ลบกิจกรรมหรือไม่</string>
     <string name="eventDeleteConfirmationText">นี่จะเป็นการลบกิจกรรมของคุณอย่างถาวร</string>
     <string name="eventDeleteErrorMessage">มีข้อผิดพลาดในการลบรายการกิจกรรมนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">กิจกรรมทั้งหมด</string>
     <string name="eventDeleteScopeFollowing">รายการนี้และกิจกรรมต่อจากนี้ทั้งหมด</string>
     <string name="calendarAddToDo">เพิ่มรายการสิ่งที่ต้องทำ</string>
+    <string name="calendarAddToDoNew">เพิ่มรายการสิ่งที่ต้องทำ</string>
     <string name="calendarAddEvent">เพิ่มกิจกรรม</string>
     <string name="createEventScreenTitle">กิจกรรมใหม่</string>
     <string name="editEventScreenTitle">แก้ไขกิจกรรม</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">ล็อกอินกันก่อนเลย!</string>
     <string name="widgetToDoNotLoggedInSubtitle">ดูรายการที่ต้องดำเนินการโดยล็อกอินไปยังบัญชีของคุณในแอพ แป๊ปเดียวเท่านั้น!</string>
     <string name="a11y_widgetToDoOpenToDoList">เปิดหน้าจอรายการ สิ่งที่ต้องทำ</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">เปิดหน้าจอรายการ สิ่งที่ต้องทำ (To-do)</string>
     <string name="a11y_widgetToDoCreateNewToDo">จัดทำรายการ สิ่งที่ต้องทำ ใหม่</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">จัดทำรายการ สิ่งที่ต้องทำ (To-do) ใหม่</string>
     <string name="widgetGradesErrorSubtitle">เรามีปัญหาในการแสดงเกรดของคุณในตอนนี้ กรุณาลองใหม่อีกครั้งอีกสักครู่หรือเข้าไปที่แอพ</string>
     <string name="widgetGradesNotLoggedInSubtitle">ดูรเกรดของคุณโดยล็อกอินไปยังบัญชีของคุณในแอพ แป๊ปเดียวเท่านั้น!</string>
     <string name="widgetSingleGradeErrorSubtitle">เรามีปัญหาในการแสดงเกรดของคุณในตอนนี้</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">เลือกบทเรียนกันเลย</string>
     <string name="widgetGradesErrorLoadingCourses">เกิดข้อผิดพลาดขณะโหลดบทเรียน</string>
     <string name="settingsSwitchExperience">สลับไปใช้ Canvas Career</string>
+    <string name="forecastWidgetTitle">ข้อมูลสรุปรายสัปดาห์</string>
+    <string name="forecastWidgetWeekPeriod">สัปดาห์ %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">ขาดหาย</string>
+    <string name="forecastWidgetDue">ครบกำหนด</string>
+    <string name="forecastWidgetRecentGrades">เกรดใหม่</string>
+    <string name="forecastWidgetGradeWeight">%d%% ของเกรดสรุป</string>
+    <string name="forecastWidgetErrorMessage">เรามีปัญหาในการโหลดภารกิจของคุณ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="forecastWidgetEmptyMissing">ไม่มีภารกิจที่ขาดหาย คุณไม่ได้ก้าวหน้าไปไหนเลย!</string>
+    <string name="forecastWidgetEmptyDue">ไม่มีภารกิจที่ครบกำหนดสัปดาห์นี้</string>
+    <string name="forecastWidgetEmptyRecentGrades">ไม่มีเกรดใหม่ในสัปดาห์นี้</string>
+    <string name="a11y_contentDescription_previousWeek">สัปดาห์ก่อนหน้า</string>
+    <string name="a11y_contentDescription_nextWeek">สัปดาห์ถัดไป</string>
+
     <string name="speedGraderGradeTabTitle">เกรดและเกณฑ์การให้คะแนน</string>
     <string name="speedGraderDetailsTabTitle">รายละเอียด</string>
     <string name="a11y_contentDescription_expandPanel">ขยายแถบคำสั่ง</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">มีข้อผิดพลาดในการโหลดรายการสิ่งที่ต้องทำของคุณ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="errorUpdatingToDo">มีข้อผิดพลาดในการอัพเดตรายการสิ่งที่ต้องทำ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="noToDosForNow">ไม่มีรายการสิ่งที่ต้องทำตอนนี้!</string>
+    <string name="noToDosForNowNew">ไม่มีรายการที่ต้องทำในตอนนี้!</string>
     <string name="noToDosForNowSubtext">ดูเหมือนนี่จะเป็นเวลาที่เหมาะสำหรับพัก ผ่อนคลายและเติมพลัง</string>
     <string name="todoSwipeDone">เสร็จสิ้น</string>
     <string name="todoSwipeUndo">เลิกทำ</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">ค่าปรับแต่งรายการสิ่งที่ต้องทำ</string>
+    <string name="todoFilterPreferencesNew">ค่าปรับแต่งรายการสิ่งที่ต้องทำ (To-do)</string>
     <string name="todoFilterVisibleItems">รายการที่จัดแสดง</string>
     <string name="todoFilterShowPersonalToDos">แสดงรายการสิ่งที่ต้องทำส่วนบุคคล</string>
+    <string name="todoFilterShowPersonalToDosNew">แสดงรายการสิ่งที่ต้องทำส่วนตัว</string>
     <string name="todoFilterShowCalendarEvents">แสดงกิจกรรมในปฏิทิน</string>
     <string name="todoFilterShowCompleted">แสดงรายการที่เสร็จสิ้นแล้ว</string>
     <string name="todoFilterFavoriteCoursesOnly">เฉพาะบทเรียนโปรด</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">ปฏิเสธคำเชิญ %s แล้ว</string>
     <string name="courseInvitationDeclineConfirmTitle">ปฏิเสธคำเชิญ</string>
     <string name="courseInvitationDeclineConfirmMessage">แน่ใจว่าต้องการปฏิเสธคำเชิญ %s หรือไม่</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">ความคืบหน้า</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">สวัสดี %s</string>
 
+    <string name="courses_and_groups">บทเรียนและกลุ่ม</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">กำหนดค่าแผงข้อมูล</string>
     <string name="dashboard_widgets">Widgets</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">การปรับเค้าโครงแผงข้อมูล</string>
     <string name="changing_dashboard_layout_message">แก้ไขเค้าโครงแผงข้อมูลโดยคุณจะต้องรีสตาร์ทแอพพลิเคชั่น</string>
     <string name="restart_now">รีสตาร์ทตอนนี้</string>
+    <string name="turn_on_new_dashboard">เปิดแผงข้อมูลใหม่</string>
     <string name="switched_back">เปลี่ยนกลับหรือไม่</string>
     <string name="switched_back_message">ขอบคุณที่ทดลองใช้แผงข้อมูลใหม่ กรุณาแจ้งให้เราทราบว่าทำไมคุณถึงเปลี่ยนกลับ</string>
+    <string name="survey_option_hard_to_find">ค้นหาข้อมูลได้ยาก</string>
+    <string name="survey_option_prefer_old_layout">ชอบเค้าโครงแบบเดิมมากกว่า</string>
+    <string name="survey_option_something_broken">บางอย่างไม่ถูกต้อง</string>
     <string name="what_could_we_improve">มีอะไรที่เราสามารถปรับปรุงได้บ้าง</string>
+    <string name="what_do_you_think_of_new_dashboard">คุณคิดอย่างไรเกี่ยวกับแผงข้อมูลรูปแบบใหม่</string>
+    <string name="let_us_know">แจ้งให้เราทราบ!</string>
+    <string name="no_app_to_handle_link">ไม่มีแอพสำหรับเปิดลิงค์นี้</string>
     <string name="skip">ข้าม</string>
     <string name="widget_setting_show_greeting">แสดงคำทักทาย</string>
     <string name="background_color">สีพื้นหลัง</string>
+    <string name="widget_setting_show_grades">เกรดของบทเรียน</string>
+    <string name="widget_setting_show_color_overlay">โอเวอร์เลย์สีบทเรียน</string>
     <string name="offline_content_available">มีเนื้อหาออฟไลน์</string>
     <string name="a11y_contentDescription_moreOptions">ตัวเลือกเพิ่มเติม</string>
     <string name="customizeCourse">ปรับแต่งบทเรียน</string>
     <string name="favoriteCoursesAndGroups">บทเรียนโปรดและกลุ่ม</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">เครื่องมือจากภายนอกไม่สามารถใช้งานแบบออฟไลน์ได้</string>
+    <string name="widget_weekly_summary">ข้อมูลสรุปรายสัปดาห์</string>
+
+    <string name="dashboardCourseNickname">ชื่อเล่น</string>
+    <string name="dashboardCourseNicknameHint">เขียนชื่อเล่นสำหรับบทเรียนที่นี่</string>
+    <string name="dashboardCourseColor">สีบทเรียน</string>
+    <string name="widget_toDo">สิ่งที่ต้องทำประจำวัน</string>
+    <string name="dailyToDoWidgetTitle">สิ่งที่ต้องทำประจำวัน</string>
+    <string name="todoWidget_showCompleted">แสดงรายการที่เสร็จสิ้นแล้ว</string>
+    <string name="todoWidget_emptyTitle">เสร็จสิ้นแล้วในตอนนี้!</string>
+    <string name="todoWidget_emptyMessage">ดูเหมือนคุณจะว่างวันนี้\nตองการเพิ่มรายการสิ่งที่ต้องทำ (To-do) หรือไม่</string>
+    <string name="todoWidget_addTodo">เพิ่มรายการสิ่งที่ต้องทำ</string>
+    <string name="todoWidget_errorTitle">อุ๊ปส์ มีบางอย่างผิดปกติ</string>
+    <string name="todoWidget_errorMessage">เราไม่สามารถโหลดรายการสิ่งที่ต้องทำ (To-do) ของคุณ\nลองใหม่อีกครั้งหรือทำรายการใหม่ในภายหลัง</string>
+    <string name="todoWidget_refresh">รีเฟรช</string>
+    <string name="todoWidget_today">วันนี้</string>
+    <string name="a11y_todoWidget_jumpToToday">ข้ามไปที่วันนี้</string>
+    <string name="widgetSettings_widgetsColor">สีหลักแผงข้อมูล</string>
+    <string name="dashboard_globalAnnouncement">ประกาศส่วนกลาง</string>
+    <string name="forecastWidget_currentWeek">สัปดาห์ปัจจุบัน</string>
 </resources>

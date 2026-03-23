@@ -45,6 +45,7 @@
     <string name="submissionStatusFailedTitle">提交項目失敗</string>
     <string name="submissionStatusFailedSubtitle">點選以檢視詳情</string>
     <string name="submissionAndRubric">提交項目及評分標準</string>
+    <string name="submissionAndFeedback">提交與回饋</string>
     <string name="commentsAndRubric">評論及評分標準</string>
     <string name="errorLoadingAssignment">載入此作業時出現問題。請檢查您的連接然後重試。</string>
     <string name="submitted">已提交</string>
@@ -214,6 +215,7 @@
 
     <!-- Date strings -->
     <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
     <string name="past">歷史</string>
     <string name="noDate">無日期</string>
     <string name="future">未來</string>
@@ -286,6 +288,7 @@
     <string name="monologue">獨白</string>
     <string name="noItemsToDisplayShort">沒有可顯示的項目</string>
     <string name="Todo">待辦事項</string>
+    <string name="TodoNew">待辦事項</string>
     <string name="todoFilter">篩選課程</string>
     <string name="filterByEllipsis">篩選條件為...</string>
     <string name="favoriteCoursesLabel">最喜愛的課程</string>
@@ -463,6 +466,7 @@
     <string name="groups">群組</string>
     <string name="groupMembers">群組成員</string>
 
+    <string name="messageGroup">訊息群組</string>
     <string name="loading">正在載入&#8230;</string>
     <string name="select_item_to_display">從列表中選擇</string>
 
@@ -679,9 +683,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">待辦事項</string>
+    <string name="todoWidgetTitleNew">待辦事項</string>
     <string name="gradesWidgetTitle">成績</string>
     <string name="notificationWidgetTitle">通知</string>
     <string name="todoWidgetTitleLong">Canvas - 待辦事項</string>
+    <string name="todoWidgetTitleLongNew">Canvas - 待辦事項</string>
     <string name="gradesWidgetTitleLong">Canvas - 評分</string>
     <string name="gradeWidgetTitleLong">Canvas - 評分</string>
     <string name="notificationWidgetTitleLong">Canvas - 通知</string>
@@ -717,6 +723,8 @@
     <!-- Tablet Strings -->
     <string name="courses">課程</string>
     <string name="toDoList">待辦事項清單</string>
+    <string name="toDoListNew">待辦事項清單</string>
+
     <string name="notifications">通知</string>
     <string name="pushNotifications">推送通知</string>
     <string name="pushNotificationsError">尚未為此設備註冊推送通知。</string>
@@ -731,7 +739,6 @@
 
     <string name="launchSpeedgrader">打開 Speedgrader</string>
 
-    <string name="search_todo">待辦事項清單</string>
     <string name="search_course">課程 課程 班級 班級</string>
     <string name="search_grades">評分 成績</string>
 
@@ -1059,6 +1066,13 @@
     <string name="pageTitleMustBeSet">必須設定頁面標題。</string>
     <string name="pageDetails">頁面詳情</string>
     <string name="saving">正在儲存</string>
+    <string name="speedGraderSaving">正在儲存</string>
+    <string name="speedGraderSaved">已儲存</string>
+    <string name="speedGraderFailed">失敗</string>
+    <string name="speedGraderSaveErrorTitle">糟糕，出現問題</string>
+    <string name="speedGraderSaveErrorMessage">儲存評分修改時發生錯誤。您可以重試，或稍後再試一次。</string>
+    <string name="speedGraderSaveErrorContentDescription">儲存評分失敗。點選以取得詳細資料。</string>
+
     <string name="confirmDeleteEvent">您是否確定要刪除此活動？</string>
     <string name="conferencesNotSupported">移動設備尚未支援會議。</string>
     <string name="filePreviewContentDescription">檔案預覽圖像</string>
@@ -1204,6 +1218,10 @@
     <string name="recordings">記錄</string>
     <string name="conferenceInProgress">會議進行中</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">會議 (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">會議進行中</string>
+    <string name="conferencesWidgetDismissed">會議已結束</string>
     <string name="a11y_criterion_content_description">標準評級%s</string>
     <string name="a11y_criterion_description_content_description">%s，%s</string>
     <string name="a11y_criterion_button_click_description">更多資訊</string>
@@ -1350,6 +1368,9 @@
 
     <plurals name="a11y_todoBadgeCount">
         <item quantity="other">%s 個待辦項目</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="other">%s 個待辦事項</item>
     </plurals>
     <string name="noAnnotationSelected">未選擇任何註釋</string>
     <string name="emailNotifications">電子郵件通知</string>
@@ -1632,7 +1653,9 @@
     <string name="calendarNoEvents">今天並無活動！</string>
     <string name="calendarNoEventsDescription">看來是適合休息、放鬆和充電的一天。</string>
     <string name="userCalendarToDo">待辦事項</string>
+    <string name="userCalendarToDoNew">待辦事項</string>
     <string name="courseToDo">%s 待辦事項</string>
+    <string name="courseToDoNew">%s 待辦事項</string>
     <string name="calendarEventExcused">已免除</string>
     <string name="calendarEventMissing">缺少</string>
     <string name="calendarEventGraded">已評分</string>
@@ -1657,21 +1680,30 @@
     <string name="a11y_eventCreatedAnnouncement">已成功建立事件 %s。</string>
     <string name="a11y_eventUpdatedAnnouncement">已成功更新事件 %s。</string>
     <string name="a11y_toDoCreatedAnnouncement">已成功建立待辦事項 %s。</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">已成功建立待辦事項 %s。</string>
     <string name="a11y_toDoUpdatedAnnouncement">已成功更新待辦事項 %s。</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">已成功更新待辦事項 %s。</string>
     <string name="todoScreenTitle">待辦事項</string>
+    <string name="todoScreenTitleNew">待辦事項</string>
     <string name="todoDateLabel">日期</string>
     <string name="todoDescriptionLabel">描述</string>
     <string name="todoDeleteConfirmationTitle">刪除待辦事項？</string>
+    <string name="todoDeleteConfirmationTitleNew">刪除待辦事項？</string>
     <string name="todoDeleteConfirmationText">這將永久刪除您的待辦事項。</string>
+    <string name="todoDeleteConfirmationTextNew">這將永久刪除您的待辦項目。</string>
     <string name="todoDeleteErrorMessage">刪除此待辦事項時出錯。請檢查您的連接然後重試。</string>
+    <string name="todoDeleteErrorMessageNew">刪除此待辦事項時發生錯誤。請檢查您的連線，然後再試一次。</string>
     <string name="createTodoScreenTitle">新待辦事項</string>
+    <string name="createTodoScreenTitleNew">新待辦事項</string>
     <string name="editTodoScreenTitle">編輯待辦事項</string>
+    <string name="editTodoScreenTitleNew">編輯待辦事項</string>
     <string name="createToDoTitleHint">添加標題</string>
     <string name="createToDoDateLabel">日期</string>
     <string name="createToDoTimeLabel">時間</string>
     <string name="createToDoCalendarLabel">行事曆</string>
     <string name="createToDoDetailsLabel">詳細資料</string>
     <string name="todoSaveErrorMessage">保存此待辦事項時出錯。請檢查您的連接然後重試。</string>
+    <string name="todoSaveErrorMessageNew">儲存此待辦事項時發生錯誤。請檢查您的連線，然後再試一次。</string>
     <string name="selectCalendarScreenTitle">選取行事曆</string>
     <string name="errorContentRetryButton">重試</string>
     <string name="eventLocationLabel">位置</string>
@@ -1679,6 +1711,7 @@
     <string name="eventDetailsLabel">詳細資料</string>
     <string name="errorLoadingEvent">載入此活動時出現問題。請檢查您的連接然後重試。</string>
     <string name="errorLoadingTodo">載入此待辦事項時出現問題。請檢查您的連接然後重試。</string>
+    <string name="errorLoadingTodoNew">儲存此待辦事項時發生問題。請檢查您的連線，然後再試一次。</string>
     <string name="eventDeleteConfirmationTitle">刪除事件？</string>
     <string name="eventDeleteConfirmationText">這將永久刪除您的活動。</string>
     <string name="eventDeleteErrorMessage">刪除此活動時發生錯誤。請檢查您的連接然後重試。</string>
@@ -1694,6 +1727,7 @@
     <string name="eventDeleteScopeAll">所有活動</string>
     <string name="eventDeleteScopeFollowing">此活動和所有後續活動</string>
     <string name="calendarAddToDo">添加到待辦事項</string>
+    <string name="calendarAddToDoNew">添加待辦事項</string>
     <string name="calendarAddEvent">添加活動</string>
     <string name="createEventScreenTitle">新活動</string>
     <string name="editEventScreenTitle">編輯事件</string>
@@ -2066,7 +2100,9 @@
     <string name="widgetNotLoggedInTitle">讓我們幫您登入！</string>
     <string name="widgetToDoNotLoggedInSubtitle">若要查看您的待辦事項，請在應用程式中登入您的帳戶。只需一秒鐘！</string>
     <string name="a11y_widgetToDoOpenToDoList">開啟待辦事項清單畫面</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">開啟待辦事項清單畫面</string>
     <string name="a11y_widgetToDoCreateNewToDo">建立新的待辦事項</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">建立新的待辦事項</string>
     <string name="widgetGradesErrorSubtitle">我們現在無法顯示您的成績。請稍後重試或前往應用程式。</string>
     <string name="widgetGradesNotLoggedInSubtitle">要查看您的成績，請在應用程式中登入您的帳戶。只需一秒鐘！</string>
     <string name="widgetSingleGradeErrorSubtitle">我們現在無法顯示您的成績。</string>
@@ -2074,6 +2110,19 @@
     <string name="widgetSingleGradeSelectCourse">讓我們選擇課程</string>
     <string name="widgetGradesErrorLoadingCourses">載入課程時發生錯誤。</string>
     <string name="settingsSwitchExperience">切換到 Canvas Career</string>
+    <string name="forecastWidgetTitle">每週摘要</string>
+    <string name="forecastWidgetWeekPeriod">第 %1$d 週 | %2$s</string>
+    <string name="forecastWidgetMissing">缺少</string>
+    <string name="forecastWidgetDue">截止</string>
+    <string name="forecastWidgetRecentGrades">最新成續</string>
+    <string name="forecastWidgetGradeWeight">最終評分 %d%%</string>
+    <string name="forecastWidgetErrorMessage">我們在載入您的作業時遇到問題。請檢查您的連接然後重試。</string>
+    <string name="forecastWidgetEmptyMissing">沒有缺少作業。您已讀完所有新訊息！</string>
+    <string name="forecastWidgetEmptyDue">本過沒有截止作業。</string>
+    <string name="forecastWidgetEmptyRecentGrades">本週沒有新的成績。</string>
+    <string name="a11y_contentDescription_previousWeek">上週</string>
+    <string name="a11y_contentDescription_nextWeek">下週</string>
+
     <string name="speedGraderGradeTabTitle">評分和評分標準</string>
     <string name="speedGraderDetailsTabTitle">詳細資料</string>
     <string name="a11y_contentDescription_expandPanel">展開面板</string>
@@ -2150,6 +2199,7 @@
     <string name="errorLoadingToDos">載入您的待辦項目時發生錯誤。請檢查您的連接然後重試。</string>
     <string name="errorUpdatingToDo">更新待辦項目時發生錯誤。請檢查您的連接然後重試。</string>
     <string name="noToDosForNow">目前沒有待辦事項！</string>
+    <string name="noToDosForNowNew">暫時沒有待辦事項！</string>
     <string name="noToDosForNowSubtext">看來是適合休息、放鬆和充電的時候。</string>
     <string name="todoSwipeDone">已完成</string>
     <string name="todoSwipeUndo">復原</string>
@@ -2160,8 +2210,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">待辦事項清單偏好設定</string>
+    <string name="todoFilterPreferencesNew">待辦事項清單偏好設定</string>
     <string name="todoFilterVisibleItems">可見項目</string>
     <string name="todoFilterShowPersonalToDos">顯示個人待辦事項</string>
+    <string name="todoFilterShowPersonalToDosNew">顯示個人待辦事項</string>
     <string name="todoFilterShowCalendarEvents">顯示行事曆事件</string>
     <string name="todoFilterShowCompleted">顯示已完成</string>
     <string name="todoFilterFavoriteCoursesOnly">僅顯示最愛課程</string>
@@ -2187,6 +2239,9 @@
     <string name="courseInvitationDeclined">已拒絕 %s 邀請</string>
     <string name="courseInvitationDeclineConfirmTitle">拒絕邀請</string>
     <string name="courseInvitationDeclineConfirmMessage">是否確定要拒絕 %s 邀請？</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">進行中</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2310,6 +2365,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">您好，%s</string>
 
+    <string name="courses_and_groups">課程和群組</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">自訂控制面板</string>
     <string name="dashboard_widgets">小部件</string>
@@ -2319,16 +2375,44 @@
     <string name="changing_dashboard_layout">變更控制面板佈局</string>
     <string name="changing_dashboard_layout_message">若要變更控制面板佈局，您必須重新啟動應用程式</string>
     <string name="restart_now">立即重新啟動</string>
+    <string name="turn_on_new_dashboard">啟用新的控制面板</string>
     <string name="switched_back">已切換回原來的佈局？</string>
     <string name="switched_back_message">感謝您試用新的控制面板！請問您切換回原來的佈局的原因是什麼？</string>
+    <string name="survey_option_hard_to_find">難以找到內容</string>
+    <string name="survey_option_prefer_old_layout">更喜歡舊版面</string>
+    <string name="survey_option_something_broken">出現問題</string>
     <string name="what_could_we_improve">我們可以改進哪些地方？</string>
+    <string name="what_do_you_think_of_new_dashboard">您覺得新的控制面板怎麼樣？</string>
+    <string name="let_us_know">請通知我們！</string>
+    <string name="no_app_to_handle_link">沒有可用的應用程式可以開啟此連結</string>
     <string name="skip">跳過</string>
     <string name="widget_setting_show_greeting">顯示問候語</string>
     <string name="background_color">背景顏色</string>
+    <string name="widget_setting_show_grades">課程成績</string>
+    <string name="widget_setting_show_color_overlay">課程顏色覆蓋</string>
     <string name="offline_content_available">離線內容可用</string>
     <string name="a11y_contentDescription_moreOptions">更多選項</string>
     <string name="customizeCourse">定制課程</string>
     <string name="favoriteCoursesAndGroups">最愛課程和群組</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">外部工具無法離線使用。</string>
+    <string name="widget_weekly_summary">每週摘要</string>
+
+    <string name="dashboardCourseNickname">暱稱</string>
+    <string name="dashboardCourseNicknameHint">在此寫入課程暱稱</string>
+    <string name="dashboardCourseColor">課程顏色</string>
+    <string name="widget_toDo">每日待辦事項</string>
+    <string name="dailyToDoWidgetTitle">每日待辦事項</string>
+    <string name="todoWidget_showCompleted">顯示已完成</string>
+    <string name="todoWidget_emptyTitle">您現在已全部完成！</string>
+    <string name="todoWidget_emptyMessage">看來您今天有空。\n是否要添加一些待辦事項？</string>
+    <string name="todoWidget_addTodo">添加待辦事項</string>
+    <string name="todoWidget_errorTitle">糟糕，出現問題</string>
+    <string name="todoWidget_errorMessage">我們無法載入您的待辦事項。\n請再試一次，或稍後返回。</string>
+    <string name="todoWidget_refresh">重新整理</string>
+    <string name="todoWidget_today">今天</string>
+    <string name="a11y_todoWidget_jumpToToday">跳到今天</string>
+    <string name="widgetSettings_widgetsColor">控制面板主色</string>
+    <string name="dashboard_globalAnnouncement">全域通告</string>
+    <string name="forecastWidget_currentWeek">本週</string>
 </resources>

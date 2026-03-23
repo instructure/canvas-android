@@ -23,6 +23,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
+import javax.inject.Singleton
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -35,6 +36,7 @@ annotation class JourneyApolloClient
 @Module
 @InstallIn(SingletonComponent::class)
 class GraphQlClientModule {
+    @Singleton
     @Provides
     @DefaultApolloClient
     fun provideDefaultApolloClient(): ApolloClient {
@@ -42,6 +44,7 @@ class GraphQlClientModule {
         return config.buildClient()
     }
 
+    @Singleton
     @Provides
     @JourneyApolloClient
     fun provideJourneyApolloClient(journeyGraphQLClientConfig: JourneyGraphQLClientConfig): ApolloClient {

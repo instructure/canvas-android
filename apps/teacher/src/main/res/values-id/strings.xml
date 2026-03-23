@@ -31,6 +31,7 @@
     <string name="tab_attendance">Kehadiran</string>
     <string name="tab_pages">Halaman</string>
     <string name="tab_todo">Harus Dilakukan</string>
+    <string name="tab_todo_new">To-do</string>
     <string name="content_description_school_logo">Logo Sekolah</string>
     <string name="search_guides">Cari di Panduan Canvas</string>
     <string name="canvas_guides">Panduan Canvas</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Tidak ada lagi hal yang harus dilakukan!\n Semoga harimu menyenangkan.</string>
     <string name="toDoNoSubmissions">Tidak ada penyerahan untuk dinilai untuk tugas ini.</string>
     <string name="errorToDoRouteFailed">Kesalahan terjadi saat mencoba melihat item To Do ini.</string>
+    <string name="errorToDoRouteFailedNew">Kesalahan terjadi saat mencoba melihat item To Do ini.</string>
     <string name="errorIsDesigner">Pendaftaran desainer tidak dapat melihat ini.</string>
 
     <string name="sections">Bagian</string>

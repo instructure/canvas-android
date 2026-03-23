@@ -54,6 +54,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.offline.sync.StudioOfflineVideoHelper
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.IntArg
@@ -101,6 +102,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: ModuleProgressionRepository
+
+    @Inject
+    lateinit var studioOfflineVideoHelper: StudioOfflineVideoHelper
 
     private var moduleItemsJob: Job? = null
     private var markAsReadJob: WeaveJob? = null
@@ -699,7 +703,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             repository.isOnline() || !isOfflineEnabled, // If the offline feature is disabled we always use the online behavior
             snycedTabs,
             syncedFileIds,
-            requireContext()
+            requireContext(),
+            studioOfflineVideoHelper = if (isOfflineEnabled) studioOfflineVideoHelper else null
         )
         var args: Bundle? = fragment!!.arguments
         if (args == null) {
