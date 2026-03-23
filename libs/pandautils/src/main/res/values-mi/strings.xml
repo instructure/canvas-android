@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Ī %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s ki te %2$s</string>
     <string name="schedule_todo_due_text">Hei Mahi: %s</string>
+    <string name="schedule_todo_due_text_new">Ngā mahi hei mahi: %s</string>
     <string name="schedule_due_text">E tika ana: %s</string>
     <string name="show_missing_items_title">Whakāturia %d ngā tūemi e ngaro ana</string>
     <string name="hide_missing_items_title">Huna %d ngā tuemi e ngaro ana</string>
     <string name="schedule_error_message">Kaore e taea te tiki i tō pūwhakarite</string>
     <string name="schedule_todo_title">Hei mahi</string>
+    <string name="schedule_todo_title_new">Mahi-mahi</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s koinga</item>
         <item quantity="one">%s koinga</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Mahere tuhipoka</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Hei Mahi</string>
+    <string name="a11y_todo_new">Mahi-mahi</string>
     <string name="a11y_page">Whārangi</string>
     <string name="a11y_assessment_request">Tono aromatawai</string>
     <string name="a11y_marked_as_done">Tohua kua oti</string>

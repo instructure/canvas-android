@@ -31,6 +31,7 @@
     <string name="tab_attendance">出席状況</string>
     <string name="tab_pages">ページ</string>
     <string name="tab_todo">タスク</string>
+    <string name="tab_todo_new">するべきこと</string>
     <string name="content_description_school_logo">スクールロゴ</string>
     <string name="search_guides">Canvas ガイドを検索する</string>
     <string name="canvas_guides">Canvas ガイド</string>
@@ -830,6 +831,7 @@
     <string name="toDoEmpty">他にすることはありません！\nよい一日を。</string>
     <string name="toDoNoSubmissions">この課題を採点するための提出物はありません。</string>
     <string name="errorToDoRouteFailed">このやるべきことの項目を表示しようとしてエラーが発生しました。</string>
+    <string name="errorToDoRouteFailedNew">この「するべきこと」の項目を表示しようとしてエラーが発生しました。</string>
     <string name="errorIsDesigner">デザイナー登録はこれを表示できません。</string>
 
     <string name="sections">セクション</string>

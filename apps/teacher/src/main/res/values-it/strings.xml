@@ -31,6 +31,7 @@
     <string name="tab_attendance">Frequenza</string>
     <string name="tab_pages">Pagine</string>
     <string name="tab_todo">Elenco attività</string>
+    <string name="tab_todo_new">Attività da fare</string>
     <string name="content_description_school_logo">Logo della scuola</string>
     <string name="search_guides">Cerca Guide Canvas</string>
     <string name="canvas_guides">Guide Canvas</string>
@@ -843,6 +844,7 @@
     <string name="toDoEmpty">Nessun\'altra attività!\n Buona giornata.</string>
     <string name="toDoNoSubmissions">Non ci sono consegne da valutare per questo compito.</string>
     <string name="errorToDoRouteFailed">Si è verificato un errore durante il tentativo di visualizzare le cose da fare.</string>
+    <string name="errorToDoRouteFailedNew">Si è verificato un errore durante il tentativo di visualizzare questo elemento da fare.</string>
     <string name="errorIsDesigner">L’iscrizione progettista non può visualizzare questo elemento.</string>
 
     <string name="sections">Sezioni</string>

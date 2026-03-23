@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">Vào %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s đến %2$s</string>
     <string name="schedule_todo_due_text">Việc Cần Làm: %s</string>
+    <string name="schedule_todo_due_text_new">Việc Cần Làm: %s</string>
     <string name="schedule_due_text">Hạn: %s</string>
     <string name="show_missing_items_title">Hiển thị %d mục bị thiếu</string>
     <string name="hide_missing_items_title">Ẩn %d mục bị thiếu</string>
     <string name="schedule_error_message">Không thể tìm nạp lịch trình của bạn</string>
     <string name="schedule_todo_title">Việc Cần Làm</string>
+    <string name="schedule_todo_title_new">Việc Cần Làm</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s điểm</item>
         <item quantity="one">%s điểm</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Ghi chú trình hoạch định</string>
     <string name="a11y_quiz">Kiểm Tra</string>
     <string name="a11y_todo">Việc Cần Làm</string>
+    <string name="a11y_todo_new">Việc Cần Làm</string>
     <string name="a11y_page">Trang</string>
     <string name="a11y_assessment_request">Yêu cầu đánh giá</string>
     <string name="a11y_marked_as_done">Được đánh dấu là đã xong</string>

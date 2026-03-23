@@ -446,11 +446,13 @@
     <string name="schedule_calendar_event_due_text"> %s에</string>
     <string name="schedule_calendar_event_interval_text">%1$s부터 %2$s</string>
     <string name="schedule_todo_due_text">할 일: %s</string>
+    <string name="schedule_todo_due_text_new">할 일: %s</string>
     <string name="schedule_due_text">기한: %s</string>
     <string name="show_missing_items_title">%d개 누락된 항목 표시</string>
     <string name="hide_missing_items_title">%d개 누락된 항목 숨기기</string>
     <string name="schedule_error_message">일정을 검색할 수 ㅇ벗음</string>
     <string name="schedule_todo_title">할 일</string>
+    <string name="schedule_todo_title_new">할 일</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s점</item>
         <item quantity="other">%s점</item>
@@ -472,6 +474,7 @@
     <string name="a11y_planner_note">플래너 메모</string>
     <string name="a11y_quiz">퀴즈</string>
     <string name="a11y_todo">할 일</string>
+    <string name="a11y_todo_new">할 일</string>
     <string name="a11y_page">페이지</string>
     <string name="a11y_assessment_request">평가 요청</string>
     <string name="a11y_marked_as_done">완료로 표시</string>
@@ -493,4 +496,8 @@
         <item quantity="other">%d분</item>
     </plurals>
     <string name="notATeacherDescription">저희의 다른 앱이 더 적합할 수 있습니다. 아이콘을 탭하여 로그인합니다.</string>
+    <string name="gradePercentAccessibility">성적: %d%</string>
+    <string name="gradePointsAccessibility">성적: %s점</string>
+    <string name="gradePercentTextFieldAccessibility">성적: %d퍼센트, %s </string>
+    <string name="gradePointsTextFieldAccessibility">성적: %s점, %s</string>
 </resources>

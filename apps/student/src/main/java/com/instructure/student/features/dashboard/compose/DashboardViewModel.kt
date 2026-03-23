@@ -84,7 +84,7 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true, error = null) }
             try {
-                launch { ensureDefaultWidgetsUseCase(Unit) }
+                ensureDefaultWidgetsUseCase(Unit)
                 combine(
                     observeWidgetMetadataUseCase(Unit),
                     networkStateProvider.isOnlineLiveData.asFlow()

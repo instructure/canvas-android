@@ -65,6 +65,7 @@ import com.instructure.pandautils.compose.composables.TodayButton
 import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDate
 import java.util.Date
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ForecastWidget(
@@ -115,7 +116,8 @@ fun ForecastWidgetContent(
                     title = stringResource(R.string.forecastWidget_currentWeek),
                     onClick = uiState.onJumpToCurrentWeek,
                     buttonColor = Color(uiState.backgroundColor.color()),
-                    textColor = colorResource(R.color.textLightest)
+                    textColor = colorResource(R.color.textLightest),
+                    modifier = Modifier.pendoTag("forecastWidget_currentWeekButton", true)
                 )
             } else {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -344,6 +346,7 @@ private fun ForecastWidgetErrorState(
         buttonText = stringResource(R.string.retry),
         buttonClick = onRetry,
         modifier = modifier
+            .pendoTag("forecastWidget_retryButton", true)
             .padding(top = 8.dp)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(14.dp))
             .background(

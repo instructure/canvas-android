@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Naslednji element modula</string>
     <string name="a11y_nextModule">Naslednji modul</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, označeno kot %2$s, dvakrat tapnite za urejanje opombe</string>
+    <string name="learnCoursesTabLabel">Predmeti</string>
+    <string name="learnProgramsTabLabel">Programi</string>
     <string name="reportAProblemDescriptionMessage">Vložite vstopnico za osebni odziv naše ekipe za podporo.</string>
     <string name="igniteAIEnterAPromptLabel">Vnesi poziv</string>
     <string name="a11y_igniteAiLoadingContentDescription">Nalaganje odgovora</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Obrni kartico</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Nalaganje predmetov ni uspelo</string>
+    <string name="learnCourseListFilterAll">Vsi predmeti</string>
+    <string name="learnCourseListFilterNotStarted">Ni začeto</string>
+    <string name="learnCourseListFilterInProgress">V poteku</string>
+    <string name="learnCourseListFilterCompleted">Zaključeno</string>
+    <string name="learnCourseListStartLearningLabel">Začnite z učenjem</string>
+    <string name="learnCourseListResumeLearningLabel">Nadaljuj z učenjem</string>
+    <string name="learnCourseListViewCourseLabel">Ogled predmeta</string>
+    <string name="learnCourseListShowMoreLabel">Prikaži več</string>
+    <string name="learnCourseListSearchBarPlaceholder">Iskanje predmetov</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Del od %1$s</string>
+    <string name="learnCourseListEmptyMessage">Rezultatov ni mogoče najti. Poskusite z drugimi iskalnimi izrazi.</string>
+    <string name="learnProgramListFilterAll">Vsi programi</string>
+    <string name="learnProgramListFilterNotStarted">Ni začeto</string>
+    <string name="learnProgramListFilterInProgress">V poteku</string>
+    <string name="learnProgramListFilterCompleted">Zaključeno</string>
+    <string name="learnProgramListShowMoreLabel">Prikaži več</string>
+    <string name="learnProgramListEmptyMessage">Rezultatov ni mogoče najti. Poskusite z drugimi iskalnimi izrazi.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Iskanje programov</string>
+    <string name="learnProgramListFailedToLoadMessage">Nalaganje programov ni uspelo</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d predmet</item>
+        <item quantity="other">%1$d predmetov (-a/-i)</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Napaka: %1$s</string>
     <string name="a11y_required">Zahtevano</string>
 </resources>

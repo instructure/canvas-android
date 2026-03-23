@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Kohteessa %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s - %2$s</string>
     <string name="schedule_todo_due_text">Tehtävälista: %s</string>
+    <string name="schedule_todo_due_text_new"> Tehtävä: %s</string>
     <string name="schedule_due_text">Määräpäivä: %s</string>
     <string name="show_missing_items_title">Näytä %d puuttuvaa kohdetta</string>
     <string name="hide_missing_items_title">Piilota %d puuttuvaa kohdetta</string>
     <string name="schedule_error_message">Aikataulun nouto ei onnistu</string>
     <string name="schedule_todo_title">Tehtävälista</string>
+    <string name="schedule_todo_title_new">Tehtävälista</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s piste</item>
         <item quantity="one">%s piste</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Suunnittelumerkintä</string>
     <string name="a11y_quiz">Testi</string>
     <string name="a11y_todo">Tehtävälista</string>
+    <string name="a11y_todo_new">Tehtävälista</string>
     <string name="a11y_page">Sivu</string>
     <string name="a11y_assessment_request">Arviointipyyntö</string>
     <string name="a11y_marked_as_done">Merkitty tehdyksi</string>

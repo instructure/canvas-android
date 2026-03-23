@@ -48,6 +48,7 @@
     <string name="submissionStatusFailedTitle">Przesyłanie zadania nie powiodło się</string>
     <string name="submissionStatusFailedSubtitle">Stuknij, aby wyświetlić szczegóły</string>
     <string name="submissionAndRubric">Przesyłka i kryteria ocen</string>
+    <string name="submissionAndFeedback">Przesłane materiały i opinie</string>
     <string name="commentsAndRubric">Komentarze i kryteria ocen</string>
     <string name="errorLoadingAssignment">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="submitted">Przesłano</string>
@@ -229,6 +230,7 @@
 
     <!-- Date strings -->
     <string name="today">Dzisiaj</string>
+    <string name="tomorrow">Jutro</string>
     <string name="past">Przeszłe</string>
     <string name="noDate">Brak daty</string>
     <string name="future">Przyszłość</string>
@@ -301,6 +303,7 @@
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Brak pozycji do wyświetlenia</string>
     <string name="Todo">Lista zadań</string>
+    <string name="TodoNew">Lista zadań</string>
     <string name="todoFilter">Filtruj kursy</string>
     <string name="filterByEllipsis">Filtruj wg...</string>
     <string name="favoriteCoursesLabel">Ulubione kursy</string>
@@ -496,6 +499,7 @@
     <string name="groups">Grupy</string>
     <string name="groupMembers">Członkowie grupy</string>
 
+    <string name="messageGroup">Wyślij wiadomość do grupy</string>
     <string name="loading">Wczytywanie&#8230;</string>
     <string name="select_item_to_display">Wybierz z listy</string>
 
@@ -712,9 +716,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Lista zadań</string>
+    <string name="todoWidgetTitleNew">Lista zadań</string>
     <string name="gradesWidgetTitle">Oceny</string>
     <string name="notificationWidgetTitle">Powiadomienia</string>
     <string name="todoWidgetTitleLong">Canvas - Lista zadań</string>
+    <string name="todoWidgetTitleLongNew">Canvas – lista zadań</string>
     <string name="gradesWidgetTitleLong">Canvas - Oceny</string>
     <string name="gradeWidgetTitleLong">Canvas - Ocena</string>
     <string name="notificationWidgetTitleLong">Canvas - Powiadomienia</string>
@@ -750,6 +756,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Kursy</string>
     <string name="toDoList">Lista zadań</string>
+    <string name="toDoListNew">Lista zadań</string>
+
     <string name="notifications">Powiadomienia</string>
     <string name="pushNotifications">Powiadomienia push</string>
     <string name="pushNotificationsError">Nie zarejestrowano powiadomień push dla tego urządzenia.</string>
@@ -764,7 +772,6 @@
 
     <string name="launchSpeedgrader">Otwórz Speedgrader</string>
 
-    <string name="search_todo">do zrobienia do zrobienia lista do zrobienia</string>
     <string name="search_course">kurs kursy klasa klasy</string>
     <string name="search_grades">ocena oceny</string>
 
@@ -1113,6 +1120,13 @@
     <string name="pageTitleMustBeSet">Należy ustawić tytuł strony.</string>
     <string name="pageDetails">Szczegóły strony</string>
     <string name="saving">Zapisywanie</string>
+    <string name="speedGraderSaving">Zapisywanie</string>
+    <string name="speedGraderSaved">Zapisano</string>
+    <string name="speedGraderFailed">Nie powiodło się</string>
+    <string name="speedGraderSaveErrorTitle">Ups, coś poszło nie tak.</string>
+    <string name="speedGraderSaveErrorMessage">Wystąpił błąd podczas zapisywania zmian ocen. Możesz ponowić próbę lub spróbować później.</string>
+    <string name="speedGraderSaveErrorContentDescription">Nie udało się zapisać oceny. Stuknij, aby wyświetlić szczegóły.</string>
+
     <string name="confirmDeleteEvent">Czy na pewno chcesz usunąć to zdarzenie?</string>
     <string name="conferencesNotSupported">Konferencje nie mają jeszcze wsparcia dla urządzeń przenośnych.</string>
     <string name="filePreviewContentDescription">Obraz podglądu pliku</string>
@@ -1267,6 +1281,10 @@
     <string name="recordings">Nagrań</string>
     <string name="conferenceInProgress">Konferencja w toku</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferencje (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Konferencja w toku</string>
+    <string name="conferencesWidgetDismissed">Odrzucono konferencje</string>
     <string name="a11y_criterion_content_description">Punktacja dla danego kryterium %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">więcej informacji</string>
@@ -1422,6 +1440,12 @@
         <item quantity="few">Pozycje z listy zadań: %s</item>
         <item quantity="many">Pozycje z listy zadań: %s</item>
         <item quantity="other">Pozycje z listy zadań: %s</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s element listy zadań</item>
+        <item quantity="few">%s elementy listy zadań</item>
+        <item quantity="many">%s elementy listy zadań</item>
+        <item quantity="other">%s elementy listy zadań</item>
     </plurals>
     <string name="noAnnotationSelected">Nie wybrano adnotacji</string>
     <string name="emailNotifications">Powiadomienia e-mail</string>
@@ -1719,7 +1743,9 @@
     <string name="calendarNoEvents">Brak wydarzeń na dziś!</string>
     <string name="calendarNoEventsDescription">Wygląda to na świetny dzień do odpoczynku, relaksu i regeneracji.</string>
     <string name="userCalendarToDo">Lista zadań</string>
+    <string name="userCalendarToDoNew">Lista zadań</string>
     <string name="courseToDo">Lista zadań %s</string>
+    <string name="courseToDoNew">%s Lista zadań</string>
     <string name="calendarEventExcused">Usprawiedliwiony</string>
     <string name="calendarEventMissing">Brak</string>
     <string name="calendarEventGraded">Oceniono</string>
@@ -1744,21 +1770,30 @@
     <string name="a11y_eventCreatedAnnouncement">Wydarzenie %s zostało pomyślnie utworzone.</string>
     <string name="a11y_eventUpdatedAnnouncement">Wydarzenie %s zostało pomyślnie zaktualizowane.</string>
     <string name="a11y_toDoCreatedAnnouncement">Utworzono zadanie %s.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Utworzono listę zadań %s.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Zaktualizowano zadanie %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Zaktualizowano listę zadań %s.</string>
     <string name="todoScreenTitle">Lista zadań</string>
+    <string name="todoScreenTitleNew">Lista zadań</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Opis</string>
     <string name="todoDeleteConfirmationTitle">Usunąć listę zadań?</string>
+    <string name="todoDeleteConfirmationTitleNew">Usunąć listę zadań?</string>
     <string name="todoDeleteConfirmationText">Spowoduje to trwałe usunięcie elementu z listy zadań.</string>
+    <string name="todoDeleteConfirmationTextNew">Spowoduje to trwałe usunięcie elementu z listy zadań.</string>
     <string name="todoDeleteErrorMessage">Wystąpił błąd podczas usuwania tej listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="todoDeleteErrorMessageNew">Wystąpił błąd podczas usuwania listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="createTodoScreenTitle">Nowa lista zadań</string>
+    <string name="createTodoScreenTitleNew">Nowa lista zadań</string>
     <string name="editTodoScreenTitle">Edytuj listę zadań</string>
+    <string name="editTodoScreenTitleNew">Edytuj listę zadań</string>
     <string name="createToDoTitleHint">Dodaj tytuł</string>
     <string name="createToDoDateLabel">Data</string>
     <string name="createToDoTimeLabel">Czas</string>
     <string name="createToDoCalendarLabel">Kalendarz</string>
     <string name="createToDoDetailsLabel">Szczegóły</string>
     <string name="todoSaveErrorMessage">Wystąpił błąd podczas zapisywania tej listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="todoSaveErrorMessageNew">Wystąpił błąd podczas zapisywania listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="selectCalendarScreenTitle">Wybierz kalendarz</string>
     <string name="errorContentRetryButton">Ponów próbę</string>
     <string name="eventLocationLabel">Lokalizacja</string>
@@ -1766,6 +1801,7 @@
     <string name="eventDetailsLabel">Szczegóły</string>
     <string name="errorLoadingEvent">Wystąpił problem z wczytaniem tego wydarzenia. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="errorLoadingTodo">Wystąpił problem z wczytaniem tej listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="errorLoadingTodoNew">Wystąpił błąd podczas wczytywania listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="eventDeleteConfirmationTitle">Usunąć wydarzenie?</string>
     <string name="eventDeleteConfirmationText">Spowoduje to trwałe usunięcie Twojego wydarzenia.</string>
     <string name="eventDeleteErrorMessage">Wystąpił błąd podczas usuwania tego wydarzenia. Sprawdź połączenie i spróbuj ponownie.</string>
@@ -1784,6 +1820,7 @@
     <string name="eventDeleteScopeAll">Wszystkie zdarzenia</string>
     <string name="eventDeleteScopeFollowing">To i wszystkie następne zdarzenia</string>
     <string name="calendarAddToDo">Dodaj do listy zadań</string>
+    <string name="calendarAddToDoNew">Dodaj listę zadań</string>
     <string name="calendarAddEvent">Dodaj wydarzenie</string>
     <string name="createEventScreenTitle">Nowe wydarzenie</string>
     <string name="editEventScreenTitle">Edytuj wydarzenie</string>
@@ -2174,7 +2211,9 @@
     <string name="widgetNotLoggedInTitle">Spróbujmy Cię zalogować!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Aby wyświetlić listy zadań, zaloguj się do konta w aplikacji. To potrwa tylko chwilę!</string>
     <string name="a11y_widgetToDoOpenToDoList">Otwórz ekran listy zadań</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Otwórz ekran listy zadań</string>
     <string name="a11y_widgetToDoCreateNewToDo">Utwórz nową listę zadań</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Utwórz nową listę zadań</string>
     <string name="widgetGradesErrorSubtitle">Mamy problem z wyświetleniem ocen. Spróbuj ponownie za pewien czas lub przejdź do aplikacji.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Aby wyświetlić oceny, zaloguj się do konta w aplikacji. To potrwa tylko chwilę!</string>
     <string name="widgetSingleGradeErrorSubtitle">Mamy problem z wyświetleniem ocen.</string>
@@ -2182,6 +2221,19 @@
     <string name="widgetSingleGradeSelectCourse">Wybierzmy kurs</string>
     <string name="widgetGradesErrorLoadingCourses">Wystąpił błąd podczas wczytywania kursów.</string>
     <string name="settingsSwitchExperience">Przełącz na Canvas Career</string>
+    <string name="forecastWidgetTitle">Tygodniowe podsumowanie</string>
+    <string name="forecastWidgetWeekPeriod">Tydzień %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Brak</string>
+    <string name="forecastWidgetDue">Termin</string>
+    <string name="forecastWidgetRecentGrades">Nowe oceny</string>
+    <string name="forecastWidgetGradeWeight">%d%% końcowej oceny</string>
+    <string name="forecastWidgetErrorMessage">Wystąpił problem z wczytaniem zadań. Sprawdź połączenie i spróbuj ponownie.</string>
+    <string name="forecastWidgetEmptyMissing">Nie ma brakujących zadań. To już wszystko!</string>
+    <string name="forecastWidgetEmptyDue">Brak zadań z terminem w tym tygodniu.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Brak nowych ocen w tym tygodniu.</string>
+    <string name="a11y_contentDescription_previousWeek">Poprzedni tydzień</string>
+    <string name="a11y_contentDescription_nextWeek">Następny tydzień</string>
+
     <string name="speedGraderGradeTabTitle">Stopnie i kryteria ocen</string>
     <string name="speedGraderDetailsTabTitle">Szczegóły</string>
     <string name="a11y_contentDescription_expandPanel">Rozwiń panel</string>
@@ -2264,6 +2316,7 @@
     <string name="errorLoadingToDos">Wystąpił błąd podczas wczytywania listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="errorUpdatingToDo">Wystąpił błąd podczas aktualizowania pozycji z listy zadań. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="noToDosForNow">Brak pozycji na liście zadań!</string>
+    <string name="noToDosForNowNew">Brak list zadań na teraz!</string>
     <string name="noToDosForNowSubtext">Wygląda to na świetny dzień do odpoczynku, relaksu i regeneracji.</string>
     <string name="todoSwipeDone">Gotowe</string>
     <string name="todoSwipeUndo">Cofnij</string>
@@ -2274,8 +2327,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferencje dot. listy zadań</string>
+    <string name="todoFilterPreferencesNew">Preferencje listy zadań</string>
     <string name="todoFilterVisibleItems">Widoczne elementy</string>
     <string name="todoFilterShowPersonalToDos">Pokaż prywatne listy zadań</string>
+    <string name="todoFilterShowPersonalToDosNew">Pokaż prywatne listy zadań</string>
     <string name="todoFilterShowCalendarEvents">Pokaż wydarzenia w kalendarzu</string>
     <string name="todoFilterShowCompleted">Pokaż ukończone</string>
     <string name="todoFilterFavoriteCoursesOnly">Tylko ulubione kursy</string>
@@ -2301,6 +2356,9 @@
     <string name="courseInvitationDeclined">Odrzucono zaproszenie do %s</string>
     <string name="courseInvitationDeclineConfirmTitle">Odrzuć zaproszenie</string>
     <string name="courseInvitationDeclineConfirmMessage">Czy na pewno chcesz odrzucić to zaproszenie do %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Postęp</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2424,6 +2482,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Witaj, %s</string>
 
+    <string name="courses_and_groups">Kursy i grupy</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Personalizuj pulpit nawigacyjny</string>
     <string name="dashboard_widgets">Widżety</string>
@@ -2433,16 +2492,44 @@
     <string name="changing_dashboard_layout">Zmienianie układu pulpitu nawigacyjnego</string>
     <string name="changing_dashboard_layout_message">Aby zmienić układu pulpitu nawigacyjnego, należy ponownie uruchomić aplikację</string>
     <string name="restart_now">Uruchom ponownie teraz</string>
+    <string name="turn_on_new_dashboard">Włącz nowy pulpit nawigacyjny</string>
     <string name="switched_back">Powrót do poprzedniej wersji?</string>
     <string name="switched_back_message">Dziękujemy za wypróbowanie nowego pulpitu nawigacyjnego! Czy możesz nam powiedzieć, dlaczego powróciłeś do poprzedniej wersji?</string>
+    <string name="survey_option_hard_to_find">Trudno jest wyszukiwać</string>
+    <string name="survey_option_prefer_old_layout">Wolę starszy układ</string>
+    <string name="survey_option_something_broken">Coś nie działa jak trzeba</string>
     <string name="what_could_we_improve">Co moglibyśmy ulepszyć?</string>
+    <string name="what_do_you_think_of_new_dashboard">Co myślisz o nowym pulpicie nawigacyjnym?</string>
+    <string name="let_us_know">Powiadom nas!</string>
+    <string name="no_app_to_handle_link">Brak aplikacji do otwarcia tego łącza</string>
     <string name="skip">Pomiń</string>
     <string name="widget_setting_show_greeting">Pokaż powitanie</string>
     <string name="background_color">Kolor tła</string>
+    <string name="widget_setting_show_grades">Oceny kursu</string>
+    <string name="widget_setting_show_color_overlay">Kolor nakładki kursu</string>
     <string name="offline_content_available">Dostępna zawartość offline</string>
     <string name="a11y_contentDescription_moreOptions">Więcej opcji</string>
     <string name="customizeCourse">Personalizuj kurs</string>
     <string name="favoriteCoursesAndGroups">Ulubione kursy i grupy</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Narzędzia zewnętrzne są niedostępne w trybie offline.</string>
+    <string name="widget_weekly_summary">Tygodniowe podsumowanie</string>
+
+    <string name="dashboardCourseNickname">Przyjazna nazwa</string>
+    <string name="dashboardCourseNicknameHint">Wpisz tutaj przyjazną nazwę kursu</string>
+    <string name="dashboardCourseColor">Kolor kursu</string>
+    <string name="widget_toDo">Codzienne zadanie</string>
+    <string name="dailyToDoWidgetTitle">Codzienne zadanie</string>
+    <string name="todoWidget_showCompleted">Pokaż ukończone</string>
+    <string name="todoWidget_emptyTitle">To wszystko na razie!</string>
+    <string name="todoWidget_emptyMessage">Wygląda na to, że nie masz już zadań.\nCzy chcesz jakieś dodać?</string>
+    <string name="todoWidget_addTodo">Dodaj listę zadań</string>
+    <string name="todoWidget_errorTitle">Ups, coś poszło nie tak.</string>
+    <string name="todoWidget_errorMessage">Nie udało się wczytać Twoich zadań.\nSpróbuj ponownie lub powróć później.</string>
+    <string name="todoWidget_refresh">Odśwież</string>
+    <string name="todoWidget_today">Dzisiaj</string>
+    <string name="a11y_todoWidget_jumpToToday">Przejdź do dzisiaj</string>
+    <string name="widgetSettings_widgetsColor">Główny kolor pulpitu nawigacyjnego</string>
+    <string name="dashboard_globalAnnouncement">Ogłoszenie globalne</string>
+    <string name="forecastWidget_currentWeek">Bieżący tydzień</string>
 </resources>

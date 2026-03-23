@@ -445,11 +445,13 @@
     <string name="schedule_calendar_event_due_text">%sで</string>
     <string name="schedule_calendar_event_interval_text">%1$sから%2$s</string>
     <string name="schedule_todo_due_text">タスク：%s</string>
+    <string name="schedule_todo_due_text_new">するべきこと：%s</string>
     <string name="schedule_due_text">期限：%s</string>
     <string name="show_missing_items_title">%d欠如アイテムを表示する</string>
     <string name="hide_missing_items_title">%d欠如アイテムを非表示にする</string>
     <string name="schedule_error_message">スケジュールを取得できません</string>
     <string name="schedule_todo_title">タスク</string>
+    <string name="schedule_todo_title_new">するべきこと</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s 点</item>
         <item quantity="other">%s 点</item>
@@ -472,6 +474,7 @@
     <string name="a11y_planner_note">計画者のメモ</string>
     <string name="a11y_quiz">小テスト</string>
     <string name="a11y_todo">タスク</string>
+    <string name="a11y_todo_new">するべきこと</string>
     <string name="a11y_page">ページ</string>
     <string name="a11y_assessment_request">アセスメントの要求</string>
     <string name="a11y_marked_as_done">完了としてマークする</string>

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Oddaja ni uspela.</string>
     <string name="submissionStatusFailedSubtitle">Tapnite za ogled podrobnosti</string>
     <string name="submissionAndRubric">Oddaja in ocenjevalni vodnik</string>
+    <string name="submissionAndFeedback">Oddaja in povratne informacije</string>
     <string name="commentsAndRubric">Komentarji in ocenjevalni vodnik</string>
     <string name="errorLoadingAssignment">Prišlo je do težave z nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
     <string name="submitted">Poslano</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Danes</string>
+    <string name="tomorrow">Jutri</string>
     <string name="past">Preteklo</string>
     <string name="noDate">Brez datuma</string>
     <string name="future">Prihodnje</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Samogovor</string>
     <string name="noItemsToDisplayShort">Ni elementov za prikaz.</string>
     <string name="Todo">Čakajoča opravila</string>
+    <string name="TodoNew">Opravilo</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
     <string name="favoriteCoursesLabel">Priljubljeni predmeti</string>
@@ -474,6 +477,7 @@
     <string name="groups">Skupine</string>
     <string name="groupMembers">Člani skupine</string>
 
+    <string name="messageGroup">Sporoči skupini</string>
     <string name="loading">Nalaganje&#8230;</string>
     <string name="select_item_to_display">Izberi s seznama</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Čakajoča opravila</string>
+    <string name="todoWidgetTitleNew">Opravilo</string>
     <string name="gradesWidgetTitle">Ocene</string>
     <string name="notificationWidgetTitle">Obvestila</string>
     <string name="todoWidgetTitleLong">Sistem Canvas – Čakajoča opravila</string>
+    <string name="todoWidgetTitleLongNew">Canvas – Čakajoča opravila</string>
     <string name="gradesWidgetTitleLong">Sistem Canvas – Ocene</string>
     <string name="gradeWidgetTitleLong">Canvas – Ocena</string>
     <string name="notificationWidgetTitleLong">Sistem Canvas – Obvestila</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Predmeti</string>
     <string name="toDoList">Čakajoča opravila</string>
+    <string name="toDoListNew">Seznam opravil</string>
+
     <string name="notifications">Obvestila</string>
     <string name="pushNotifications">Poslana obvestila</string>
     <string name="pushNotificationsError">Za to napravo ni registriranih poslanih obvestil.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Odpri aplikacijo SpeedGrader</string>
 
-    <string name="search_todo">Čakajoča opravila Čakajočaopravila seznamopravil seznam opravil seznami opravil seznam opravila</string>
     <string name="search_course">predmet predmeti razred razredi</string>
     <string name="search_grades">ocena ocene</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Nastavljen mora biti naslov strani.</string>
     <string name="pageDetails">Podrobnosti o strani</string>
     <string name="saving">Shranjevanje</string>
+    <string name="speedGraderSaving">Shranjevanje</string>
+    <string name="speedGraderSaved">Shranjeno</string>
+    <string name="speedGraderFailed">Neuspelo</string>
+    <string name="speedGraderSaveErrorTitle">Ups, nekaj se je zalomilo</string>
+    <string name="speedGraderSaveErrorMessage">Pri shranjevanju vaše spremembe ocene je prišlo do napake. Lahko poskusite znova ali pa poskusite znova pozneje.</string>
+    <string name="speedGraderSaveErrorContentDescription">Shranjevanje ocene ni uspelo. Za pomoč tapnite.</string>
+
     <string name="confirmDeleteEvent">Ali ste prepričani, da želite odstraniti ta dogodek?</string>
     <string name="conferencesNotSupported">Konference na mobilni napravi še niso podprte.</string>
     <string name="filePreviewContentDescription">Slika predogleda datoteke</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Snemanja</string>
     <string name="conferenceInProgress">V teku je konferenca</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konference (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">V teku je konferenca</string>
+    <string name="conferencesWidgetDismissed">Konferenca zaključena</string>
     <string name="a11y_criterion_content_description">Ocena merila %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">več informacij</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element seznama opravil</item>
+        <item quantity="other">%s elementov(-a/-i) seznama opravil</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s element seznama opravil</item>
         <item quantity="other">%s elementov(-a/-i) seznama opravil</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Danes ni dogodkov.</string>
     <string name="calendarNoEventsDescription">Videti je, da je to krasen dan za počitek, sprostitev in regeneracijo.</string>
     <string name="userCalendarToDo">Čakajoča opravila</string>
+    <string name="userCalendarToDoNew">Opravilo</string>
     <string name="courseToDo">%s Seznam opravil</string>
+    <string name="courseToDoNew">%s opravilo</string>
     <string name="calendarEventExcused">Opravičeno</string>
     <string name="calendarEventMissing">Manjkajoče</string>
     <string name="calendarEventGraded">Ocenjeno</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Dogodek %s uspešno ustvarjen.</string>
     <string name="a11y_eventUpdatedAnnouncement">Dogodek %s uspešno posodobljen.</string>
     <string name="a11y_toDoCreatedAnnouncement">Seznam opravil %s uspešno ustvarjen.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Opravilo %s uspešno ustvarjeno.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Seznam opravil %s uspešno posodobljen.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Opravilo %s uspešno posodobljeno.</string>
     <string name="todoScreenTitle">Čakajoča opravila</string>
+    <string name="todoScreenTitleNew">Opravilo</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Opis</string>
     <string name="todoDeleteConfirmationTitle">Izbriši seznam opravil?</string>
+    <string name="todoDeleteConfirmationTitleNew">Izbriši opravilo?</string>
     <string name="todoDeleteConfirmationText">To bo trajno izbrisalo vaš element seznama opravil.</string>
+    <string name="todoDeleteConfirmationTextNew">To bo trajno izbrisalo vaše opravilo.</string>
     <string name="todoDeleteErrorMessage">Prišlo je do napake pri brisanju tega seznama opravil. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="todoDeleteErrorMessageNew">Pri brisanju tega opravila je prišlo do napake. Preverite povezavo in poskusite znova.</string>
     <string name="createTodoScreenTitle">Nov seznam opravil</string>
+    <string name="createTodoScreenTitleNew">Novo opravilo</string>
     <string name="editTodoScreenTitle">Uredi seznam opravil</string>
+    <string name="editTodoScreenTitleNew">Uredi opravilo</string>
     <string name="createToDoTitleHint">Dodaj naslov</string>
     <string name="createToDoDateLabel">Datum</string>
     <string name="createToDoTimeLabel">Čas</string>
     <string name="createToDoCalendarLabel">Koledar</string>
     <string name="createToDoDetailsLabel">Podrobnosti</string>
     <string name="todoSaveErrorMessage">Prišlo je do napake pri shranjevanju tega seznama opravil. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="todoSaveErrorMessageNew">Pri shranjevanju tega opravila je prišlo do napake. Preverite povezavo in poskusite znova.</string>
     <string name="selectCalendarScreenTitle">Izberi koledar</string>
     <string name="errorContentRetryButton">Ponovno poskusi</string>
     <string name="eventLocationLabel">Mesto</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Podrobnosti</string>
     <string name="errorLoadingEvent">Prišlo je do težave z nalaganjem tega dogodka Preverite svojo povezavo in poskusite znova.</string>
     <string name="errorLoadingTodo">Prišlo je do težave z nalaganjem tega seznama opravil. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="errorLoadingTodoNew">Pri nalaganju tega opravila je prišlo do težave. Preverite povezavo in poskusite znova.</string>
     <string name="eventDeleteConfirmationTitle">Izbriši dogodek?</string>
     <string name="eventDeleteConfirmationText">S tem boste trajno izbrisali svoj dogodek.</string>
     <string name="eventDeleteErrorMessage">Prišlo je do napake pri brisanju tega dogodka. Preverite svojo povezavo in poskusite znova.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Vsi dogodki</string>
     <string name="eventDeleteScopeFollowing">Ta in vsi naslednji dogodki</string>
     <string name="calendarAddToDo">Dodaj seznamu opravil</string>
+    <string name="calendarAddToDoNew">Dodaj opravilo</string>
     <string name="calendarAddEvent">Dodaj dogodek</string>
     <string name="createEventScreenTitle">Nov dogodek</string>
     <string name="editEventScreenTitle">Uredi dogodek</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Naj vas prijavimo!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Če si želite ogledati svoja opravila, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
     <string name="a11y_widgetToDoOpenToDoList">Odpri zaslon s seznamom opravil</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Odpri zaslon s seznamom opravil</string>
     <string name="a11y_widgetToDoCreateNewToDo">Ustvari nov seznam opravil</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Ustvari novo opravilo</string>
     <string name="widgetGradesErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
     <string name="widgetSingleGradeErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
     <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
     <string name="settingsSwitchExperience">Preklopi na Canvas Career</string>
+    <string name="forecastWidgetTitle">Tedenski povzetek</string>
+    <string name="forecastWidgetWeekPeriod">Teden %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Manjkajoče</string>
+    <string name="forecastWidgetDue">Rok</string>
+    <string name="forecastWidgetRecentGrades">Nove ocene</string>
+    <string name="forecastWidgetGradeWeight">%d%% končne ocene</string>
+    <string name="forecastWidgetErrorMessage">Imamo težave pri nalaganju vaših nalog. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="forecastWidgetEmptyMissing">Ni manjkajočih nalog. Seznanjeni ste z vsem.</string>
+    <string name="forecastWidgetEmptyDue">Ta teden nima roka nobena naloga.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Ta teden ni novih ocen.</string>
+    <string name="a11y_contentDescription_previousWeek">Prejšnji teden</string>
+    <string name="a11y_contentDescription_nextWeek">Naslednji teden</string>
+
     <string name="speedGraderGradeTabTitle">Ocena in ocenjevalni vodnik</string>
     <string name="speedGraderDetailsTabTitle">Podrobnosti</string>
     <string name="a11y_contentDescription_expandPanel">Razširi ploščo</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Pri nalaganju vaših opravil je prišlo do napake. Preverite svojo povezavo in poskusite znova.</string>
     <string name="errorUpdatingToDo">Pri posodabljanju elementa seznama opravil je prišlo do napake. Preverite svojo povezavo in poskusite znova.</string>
     <string name="noToDosForNow">Zaenkrat ni opravil!</string>
+    <string name="noToDosForNowNew">Zaenkrat ni opravil!</string>
     <string name="noToDosForNowSubtext">Videti je, da je to krasen čas za počitek, sprostitev in regeneracijo.</string>
     <string name="todoSwipeDone">Dokončano</string>
     <string name="todoSwipeUndo">Razveljavi</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Nastavitve seznama opravil</string>
+    <string name="todoFilterPreferencesNew">Nastavitve seznama opravil</string>
     <string name="todoFilterVisibleItems">Vidni elementi</string>
     <string name="todoFilterShowPersonalToDos">Prikaži osebna opravila</string>
+    <string name="todoFilterShowPersonalToDosNew">Prikaži osebna opravila</string>
     <string name="todoFilterShowCalendarEvents">Prikaži dogodke koledarja</string>
     <string name="todoFilterShowCompleted">Prikaži končano</string>
     <string name="todoFilterFavoriteCoursesOnly">Samo najljubši predmeti</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Vabilo za %s zavrnjeno</string>
     <string name="courseInvitationDeclineConfirmTitle">Zavrni vabilo</string>
     <string name="courseInvitationDeclineConfirmMessage">Ali ste prepričani, da želite zavrniti vabilo za %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Napredek</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Pozdravljeni, %s</string>
 
+    <string name="courses_and_groups">Predmeti in skupine</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Prilagodi nadzorno ploščo</string>
     <string name="dashboard_widgets">Pripomočki</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Sprememba postavitve nadzorne plošče</string>
     <string name="changing_dashboard_layout_message">Če želite spremeniti postavitev nadzorne plošče, morate znova zagnati aplikacijo</string>
     <string name="restart_now">Znova zaženi zdaj</string>
+    <string name="turn_on_new_dashboard">Vklopite novo nadzorno ploščo</string>
     <string name="switched_back">Preklopljeno nazaj?</string>
     <string name="switched_back_message">Hvala za preskus nove nadzorne plošče! Nam lahko poveste, zakaj ste preklopili nazaj?</string>
+    <string name="survey_option_hard_to_find">Težko je najti stvari</string>
+    <string name="survey_option_prefer_old_layout">Raje imam staro postavitev</string>
+    <string name="survey_option_something_broken">Nekaj ni delovalo prav</string>
     <string name="what_could_we_improve">Kaj bi lahko izboljšali?</string>
+    <string name="what_do_you_think_of_new_dashboard">Kaj menite o novi nadzorni plošči?</string>
+    <string name="let_us_know">Sporočite nam!</string>
+    <string name="no_app_to_handle_link">Ni na voljo aplikacije za odpiranje te povezave</string>
     <string name="skip">Preskoči</string>
     <string name="widget_setting_show_greeting">Pokaži pozdrav</string>
     <string name="background_color">Barva ozadja</string>
+    <string name="widget_setting_show_grades">Ocene pri predmetu</string>
+    <string name="widget_setting_show_color_overlay">Prekrivanje barve predmeta</string>
     <string name="offline_content_available">Na voljo vsebina brez povezave</string>
     <string name="a11y_contentDescription_moreOptions">Dodatne možnosti</string>
     <string name="customizeCourse">Prilagodi predmet po meri</string>
     <string name="favoriteCoursesAndGroups">Priljubljeni predmeti in skupine</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Zunanja orodja niso na voljo brez povezave.</string>
+    <string name="widget_weekly_summary">Tedenski povzetek</string>
+
+    <string name="dashboardCourseNickname">Vzdevek</string>
+    <string name="dashboardCourseNicknameHint">Tukaj napišite vzdevek predmeta</string>
+    <string name="dashboardCourseColor">Barva predmeta</string>
+    <string name="widget_toDo">Dnevna opravila</string>
+    <string name="dailyToDoWidgetTitle">Dnevna opravila</string>
+    <string name="todoWidget_showCompleted">Prikaži končano</string>
+    <string name="todoWidget_emptyTitle">Zaenkrat ste končali!</string>
+    <string name="todoWidget_emptyMessage">Zdi se, da ste danes prosti.\nŽelite dodati nekaj opravil?</string>
+    <string name="todoWidget_addTodo">Dodaj opravilo</string>
+    <string name="todoWidget_errorTitle">Ups, nekaj je narobe</string>
+    <string name="todoWidget_errorMessage">Vaših opravil ni bilo mogoče naložiti.\nPoskusite znova ali se vrnite pozneje.</string>
+    <string name="todoWidget_refresh">Osveži</string>
+    <string name="todoWidget_today">Danes</string>
+    <string name="a11y_todoWidget_jumpToToday">Preskoči na danes</string>
+    <string name="widgetSettings_widgetsColor">Glavna barva nadzorne plošče</string>
+    <string name="dashboard_globalAnnouncement">Splošno obvestilo</string>
+    <string name="forecastWidget_currentWeek">Tekoči teden</string>
 </resources>

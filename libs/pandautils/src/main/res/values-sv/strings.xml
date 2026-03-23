@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">kl. %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s till %2$s</string>
     <string name="schedule_todo_due_text">Att göra: %s</string>
+    <string name="schedule_todo_due_text_new">Att göra: %s</string>
     <string name="schedule_due_text">Förfallodatum: %s</string>
     <string name="show_missing_items_title">Visa %d saknade objekt</string>
     <string name="hide_missing_items_title">Dölj %d saknade objekt</string>
     <string name="schedule_error_message">Det gick inte att hämta ditt schema</string>
     <string name="schedule_todo_title">Att göra</string>
+    <string name="schedule_todo_title_new">Att göra</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s poäng</item>
         <item quantity="one">%s poäng</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Planeringsanteckning</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Att göra</string>
+    <string name="a11y_todo_new">Att göra</string>
     <string name="a11y_page">Sida</string>
     <string name="a11y_assessment_request">Uppgiftsbegäran</string>
     <string name="a11y_marked_as_done">Markera som färdig</string>

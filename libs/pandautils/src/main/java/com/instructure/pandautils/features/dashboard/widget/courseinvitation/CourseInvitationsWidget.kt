@@ -62,6 +62,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
 import kotlinx.coroutines.flow.SharedFlow
+import sdk.pendo.io.pendoTag
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -200,7 +201,8 @@ fun CourseInvitationsContent(
                     onClick = {
                         uiState.onDeclineInvitation(invitation)
                         invitationToDecline = null
-                    }
+                    },
+                    modifier = Modifier.pendoTag("courseInvitationsWidget_confirmDeclineButton", true)
                 ) {
                     Text(
                         text = stringResource(R.string.declineCourseInvitation),
@@ -209,7 +211,7 @@ fun CourseInvitationsContent(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { invitationToDecline = null }) {
+                TextButton(onClick = { invitationToDecline = null }, modifier = Modifier.pendoTag("courseInvitationsWidget_cancelDeclineButton", true)) {
                     Text(
                         text = stringResource(android.R.string.cancel),
                         color = colorResource(R.color.textDark)
@@ -267,7 +269,8 @@ private fun InvitationCard(
                     enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
-                        .height(32.dp),
+                        .height(32.dp)
+                        .pendoTag("courseInvitationsWidget_declineButton", true),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = colorResource(R.color.backgroundLightest),
@@ -295,7 +298,8 @@ private fun InvitationCard(
                     enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
-                        .height(32.dp),
+                        .height(32.dp)
+                        .pendoTag("courseInvitationsWidget_acceptButton", true),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = buttonColor,

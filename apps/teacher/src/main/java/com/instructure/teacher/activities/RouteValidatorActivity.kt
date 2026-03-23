@@ -118,6 +118,7 @@ class RouteValidatorActivity : BaseCanvasActivity() {
                     val intent = if (tokenResponse.realUser != null && tokenResponse.user != null) {
                         // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
                         ApiPrefs.isMasqueradingFromQRCode = true
+                        ApiPrefs.masqueradeId = tokenResponse.user!!.id
                         val extras = Bundle()
                         extras.putLong(Const.QR_CODE_MASQUERADE_ID, tokenResponse.user!!.id)
                         LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, extras)

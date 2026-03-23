@@ -459,11 +459,13 @@
     <string name="schedule_calendar_event_due_text">В %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s до %2$s</string>
     <string name="schedule_todo_due_text">Задачи: %s</string>
+    <string name="schedule_todo_due_text_new">Задача: %s</string>
     <string name="schedule_due_text">Срок: %s</string>
     <string name="show_missing_items_title">Показать %d отсутствующие элементы</string>
     <string name="hide_missing_items_title">Скрыть %d отсутствующие элементы</string>
     <string name="schedule_error_message">Не удалось получить ваше расписание</string>
     <string name="schedule_todo_title">Задачи</string>
+    <string name="schedule_todo_title_new">Задача</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s баллов</item>
         <item quantity="one">%s баллов</item>
@@ -492,6 +494,7 @@
     <string name="a11y_planner_note">Примечание планировщика</string>
     <string name="a11y_quiz">Тест</string>
     <string name="a11y_todo">Задачи</string>
+    <string name="a11y_todo_new">Задача</string>
     <string name="a11y_page">Страница</string>
     <string name="a11y_assessment_request">Запрос задания</string>
     <string name="a11y_marked_as_done">Отмечено как выполненное</string>

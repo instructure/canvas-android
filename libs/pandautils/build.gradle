@@ -235,6 +235,7 @@ dependencies {
     api Libs.COMPOSE_FRAGMENT
     api Libs.COMPOSE_REORDERABLE
 
+    api Libs.PENDO
 
     implementation Libs.FLEXBOX_LAYOUT
 

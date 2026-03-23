@@ -31,6 +31,7 @@
     <string name="tab_attendance">Tinreamh</string>
     <string name="tab_pages">Leathanaigh</string>
     <string name="tab_todo">Le Déanamh</string>
+    <string name="tab_todo_new">Le Déanamh</string>
     <string name="content_description_school_logo">Lógó na Scoile</string>
     <string name="search_guides">Cuardaigh na Treoracha Canvas</string>
     <string name="canvas_guides">Treoracha Canvas</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Níl aon rud níos mó le déanamh!\n Bain taitneamh as do lá.</string>
     <string name="toDoNoSubmissions">Níl aon uaslódálacha le marcáil don tasc seo.</string>
     <string name="errorToDoRouteFailed">Tharla earráid agus an mhír Le Déanamh seo a fheiceáil.</string>
+    <string name="errorToDoRouteFailedNew">Tharla earráid agus iarracht á déanamh an mhír Le Déanamh seo a fheiceáil.</string>
     <string name="errorIsDesigner">Ní féidir le rollú dearthóirí é seo a fheiceáil.</string>
 
     <string name="sections">Grúpaí</string>
