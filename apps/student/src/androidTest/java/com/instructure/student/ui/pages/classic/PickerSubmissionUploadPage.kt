@@ -17,10 +17,10 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
@@ -29,7 +29,6 @@ import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf.allOf
-import org.hamcrest.core.IsNot.not
 
 class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
     private val deviceIcon by OnViewWithId(R.id.sourceDeviceIcon)
@@ -55,11 +54,11 @@ class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
     }
 
     fun assertScannerButtonDisplayed() {
-        onView(withId(R.id.sourceScanner)).check(matches(isDisplayed()))
+        onView(withId(R.id.sourceScanner)).assertDisplayed()
     }
 
     fun assertScannerButtonNotDisplayed() {
-        onView(withId(R.id.sourceScanner)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.sourceScanner)).assertNotDisplayed()
     }
 
     fun waitForSubmitButtonToAppear() {
