@@ -52,7 +52,7 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
   next unless File.directory? src_dir
   Dir.glob("#{src_dir}/*.{xml,arb}") do |file|
     language = File.basename(src_dir).gsub('_', '-')
-    
+
     # Fix Chinese directories
     if file.end_with?('.xml')
       language = language.gsub('zh-', 'b+zh+')
