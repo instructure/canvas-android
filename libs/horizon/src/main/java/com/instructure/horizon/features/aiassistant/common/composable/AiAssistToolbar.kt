@@ -46,6 +46,7 @@ fun AiAssistToolbar(
     onDismissPressed: () -> Unit,
     modifier: Modifier = Modifier,
     onBackPressed: (() -> Unit)? = null,
+    onInfoPressed: (() -> Unit)? = null,
 ) {
     Row(
         modifier = modifier.padding(24.dp),
@@ -80,6 +81,17 @@ fun AiAssistToolbar(
         )
 
         HorizonSpace(SpaceSize.SPACE_4)
+
+        if (onInfoPressed != null) {
+            IconButton(
+                iconRes = R.drawable.info,
+                contentDescription = stringResource(R.string.a11y_aiInformation),
+                size = IconButtonSize.SMALL,
+                color = IconButtonColor.WhiteOutline,
+                onClick = onInfoPressed,
+            )
+            HorizonSpace(SpaceSize.SPACE_4)
+        }
 
         IconButton(
             iconRes = R.drawable.close,

@@ -64,8 +64,8 @@ import com.instructure.horizon.horizonui.molecules.TextLinkSize
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AiInformationScreen(
-    data: AiInformationData,
     onDismiss: () -> Unit,
+    data: AiInformationData = defaultAiInformationData(),
 ) {
     var showPermissionLevels by rememberSaveable { mutableStateOf(false) }
     var showNutritionFacts by rememberSaveable { mutableStateOf(false) }
@@ -153,6 +153,130 @@ fun AiInformationScreen(
         )
     }
 }
+
+@Composable
+private fun defaultAiInformationData() = AiInformationData(
+    title = stringResource(R.string.aiInformation_title),
+    permissionLevelText = stringResource(R.string.aiInformation_permissionLevelText),
+    permissionLevel = stringResource(R.string.aiInformation_permissionLevel),
+    description = stringResource(R.string.aiInformation_description),
+    permissionLevelsModalTriggerText = stringResource(R.string.aiInformation_permissionLevelsModalTriggerText),
+    modelNameText = stringResource(R.string.aiInformation_modelNameText),
+    modelName = stringResource(R.string.aiInformation_modelName),
+    nutritionFactsModalTriggerText = stringResource(R.string.aiInformation_nutritionFactsModalTriggerText),
+    permissionLevelsData = AiInformationPermissionLevelsData(
+        title = stringResource(R.string.aiInformation_permissionLevels_title),
+        currentFeatureText = stringResource(R.string.aiInformation_permissionLevels_currentFeatureText),
+        currentFeature = stringResource(R.string.aiInformation_permissionLevels_currentFeature),
+        closeButtonText = stringResource(R.string.aiInformation_close),
+        levels = listOf(
+            DataPermissionLevel(
+                level = stringResource(R.string.aiInformation_level1),
+                title = stringResource(R.string.aiInformation_level1_title),
+                description = stringResource(R.string.aiInformation_level1_description),
+                isHighlighted = true,
+            ),
+            DataPermissionLevel(
+                level = stringResource(R.string.aiInformation_level2),
+                title = stringResource(R.string.aiInformation_level2_title),
+                description = stringResource(R.string.aiInformation_level2_description),
+            ),
+            DataPermissionLevel(
+                level = stringResource(R.string.aiInformation_level3),
+                title = stringResource(R.string.aiInformation_level3_title),
+                description = stringResource(R.string.aiInformation_level3_description),
+            ),
+            DataPermissionLevel(
+                level = stringResource(R.string.aiInformation_level4),
+                title = stringResource(R.string.aiInformation_level4_title),
+                description = stringResource(R.string.aiInformation_level4_description),
+            ),
+        ),
+    ),
+    nutritionFactsData = AiInformationNutritionFactsData(
+        title = stringResource(R.string.aiInformation_nutritionFacts_title),
+        featureName = stringResource(R.string.aiInformation_nutritionFacts_featureName),
+        closeButtonText = stringResource(R.string.aiInformation_close),
+        blocks = listOf(
+            NutritionFactBlock(
+                blockTitle = stringResource(R.string.aiInformation_block_modelData),
+                segments = listOf(
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_baseModel_title),
+                        description = stringResource(R.string.aiInformation_segment_baseModel_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                        valueDescription = stringResource(R.string.aiInformation_segment_valueDescription),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_trainedWithUserData_title),
+                        description = stringResource(R.string.aiInformation_segment_trainedWithUserData_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_dataSharedWithModel_title),
+                        description = stringResource(R.string.aiInformation_segment_dataSharedWithModel_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                ),
+            ),
+            NutritionFactBlock(
+                blockTitle = stringResource(R.string.aiInformation_block_privacyCompliance),
+                segments = listOf(
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_dataRetention_title),
+                        description = stringResource(R.string.aiInformation_segment_dataRetention_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_dataLogging_title),
+                        description = stringResource(R.string.aiInformation_segment_dataLogging_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_regionsSupported_title),
+                        description = stringResource(R.string.aiInformation_segment_regionsSupported_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_pii_title),
+                        description = stringResource(R.string.aiInformation_segment_pii_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                ),
+            ),
+            NutritionFactBlock(
+                blockTitle = stringResource(R.string.aiInformation_block_outputs),
+                segments = listOf(
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_aiSettingsControl_title),
+                        description = stringResource(R.string.aiInformation_segment_aiSettingsControl_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_humanInTheLoop_title),
+                        description = stringResource(R.string.aiInformation_segment_humanInTheLoop_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_guardrails_title),
+                        description = stringResource(R.string.aiInformation_segment_guardrails_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_expectedRisks_title),
+                        description = stringResource(R.string.aiInformation_segment_expectedRisks_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                    NutritionFactSegment(
+                        segmentTitle = stringResource(R.string.aiInformation_segment_intendedOutcomes_title),
+                        description = stringResource(R.string.aiInformation_segment_intendedOutcomes_description),
+                        value = stringResource(R.string.aiInformation_segment_value),
+                    ),
+                ),
+            ),
+        ),
+    ),
+)
 
 @Composable
 internal fun AiInformationHeader(
