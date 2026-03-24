@@ -16,6 +16,7 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
@@ -34,6 +35,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForWebElement
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
 
@@ -103,12 +105,14 @@ class LoginSignInPage: BasePage() {
     }
 
     private fun enterEmail(email: String) {
+        waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, EMAIL_FIELD_CSS, timeoutMillis = 10000)
         emailField().perform(clearElement())
         emailField().perform(webKeys(email))
         notifyReactOfInputChange(EMAIL_FIELD_CSS)
     }
 
     private fun enterPassword(password: String) {
+        waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, PASSWORD_FIELD_CSS, timeoutMillis = 10000)
         passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
         notifyReactOfInputChange(PASSWORD_FIELD_CSS)
