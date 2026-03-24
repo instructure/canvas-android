@@ -27,7 +27,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -408,7 +407,6 @@ class LoginE2ETest : StudentTest() {
     }
 
     @Test
-    @ReleaseExclude
     fun testLoginSignInPageObjects() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
