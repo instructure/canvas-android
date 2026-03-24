@@ -18,6 +18,7 @@ package com.instructure.espresso
 
 import android.os.Build
 import android.view.View
+import android.webkit.WebView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -26,8 +27,11 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.sugar.Web
@@ -37,6 +41,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import com.instructure.espresso.page.plus
+import com.instructure.loginapi.login.R
 import com.instructure.pandautils.binding.BindableViewHolder
 import org.apache.commons.lang3.StringUtils
 import org.hamcrest.Matcher
@@ -359,4 +364,27 @@ fun getVideoPosition(viewId: Int): String {
             }
         }
     return positionText
+}
+
+/**
+ * Notifies React components in a WebView of an input change by dispatching 'input' and 'change' events.
+ * E.g. Using this on New Login UI page.
+ */
+fun notifyReactOfInputChange(cssSelector: String) {
+    onView(withId(R.id.webView)).perform(object : ViewAction {
+        override fun getConstraints() = isDisplayed()
+        override fun getDescription() = "Notify React of input change"
+        override fun perform(uiController: UiController, view: View) {
+            (view as WebView).evaluateJavascript("""
+                    (function() {
+                        var el = document.querySelector('$cssSelector');
+                        if (!el) return;
+                        if (el._valueTracker) { el._valueTracker.setValue(''); }
+                        el.dispatchEvent(new Event('input', { bubbles: true }));
+                        el.dispatchEvent(new Event('change', { bubbles: true }));
+                    })();
+                """.trimIndent(), null)
+            uiController.loopMainThreadForAtLeast(300)
+        }
+    })
 }
