@@ -29,6 +29,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.notifyReactOfInputChange
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
@@ -104,11 +105,13 @@ class LoginSignInPage: BasePage() {
     private fun enterEmail(email: String) {
         emailField().perform(clearElement())
         emailField().perform(webKeys(email))
+        notifyReactOfInputChange(EMAIL_FIELD_CSS)
     }
 
     private fun enterPassword(password: String) {
         passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
+        notifyReactOfInputChange(PASSWORD_FIELD_CSS)
     }
 
     private fun clickLoginButton() {
