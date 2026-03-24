@@ -21,6 +21,7 @@ import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.SubmissionStateTypeAdapter
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 /**
  * If this class is expanded with other fields, the type adapter should be updated as well.
@@ -43,5 +44,7 @@ data class SubmissionState(
     @SerializedName("with_feedback")
     val withFeedback: Boolean = false,
     @SerializedName("redo_request")
-    val redoRequest: Boolean = false
+    val redoRequest: Boolean = false,
+    @SerializedName("posted_at")
+    val postedAt: Date? = null
 ): Parcelable

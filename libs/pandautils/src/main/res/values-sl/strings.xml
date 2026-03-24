@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Ob %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s do %2$s</string>
     <string name="schedule_todo_due_text">Čakajoča opravila: %s</string>
+    <string name="schedule_todo_due_text_new">Opravilo: %s</string>
     <string name="schedule_due_text">Rok: %s</string>
     <string name="show_missing_items_title">Prikaži %d manjkajočih elementov</string>
     <string name="hide_missing_items_title">Skrij %d manjkajočih elementov</string>
     <string name="schedule_error_message">Vašega urnika ni mogoče pridobiti</string>
     <string name="schedule_todo_title">Čakajoča opravila</string>
+    <string name="schedule_todo_title_new">Opravilo</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s točka</item>
         <item quantity="one">%s točka</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Opomba orodja Planner</string>
     <string name="a11y_quiz">Kviz</string>
     <string name="a11y_todo">Čakajoča opravila</string>
+    <string name="a11y_todo_new">Opravilo</string>
     <string name="a11y_page">Stran</string>
     <string name="a11y_assessment_request">Zahteva za ocenjevanje</string>
     <string name="a11y_marked_as_done">Označi kot dokončano</string>

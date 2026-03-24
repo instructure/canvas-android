@@ -1143,7 +1143,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         //check to make sure we have all of our items
 
         // If the user has read/write/manage we want to let them delete (and only delete) non-authored annotations
-        val annotation = pdfFragment?.selectedAnnotations?.get(0)
+        val annotation = pdfFragment?.selectedAnnotations?.firstOrNull()
         if (::docSession.isInitialized && docSession.annotationMetadata?.canManage() == true && annotation?.flags?.contains(AnnotationFlags.LOCKED) == true) {
             // We need to only return a list with the delete menu item
             delete = ContextualToolbarMenuItem.createSingleItem(context, View.generateViewId(),

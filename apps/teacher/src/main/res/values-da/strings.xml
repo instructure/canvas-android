@@ -31,6 +31,7 @@
     <string name="tab_attendance">Tilstedeværelse</string>
     <string name="tab_pages">Sider</string>
     <string name="tab_todo">Opgaveliste</string>
+    <string name="tab_todo_new">Element på opgaveliste</string>
     <string name="content_description_school_logo">Skolelogo</string>
     <string name="search_guides">Søg i Canvas-vejledningerne</string>
     <string name="canvas_guides">Canvas-vejledningerne</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Ikke mere at gøre!\n Hav en god dag.</string>
     <string name="toDoNoSubmissions">Der er ingen afleveringer til bedømmelse for denne opgave.</string>
     <string name="errorToDoRouteFailed">Der opstod en fejl ved forsøg på at vise dette element på opgavelisten.</string>
+    <string name="errorToDoRouteFailedNew">Der opstod en fejl ved forsøg på at vise dette element på opgavelisten.</string>
     <string name="errorIsDesigner">Designer-tilmelding kan ikke se dette.</string>
 
     <string name="sections">Sektioner</string>

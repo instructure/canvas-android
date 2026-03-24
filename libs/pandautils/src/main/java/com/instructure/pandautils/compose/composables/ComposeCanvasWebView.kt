@@ -19,11 +19,10 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.os.bundleOf
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.instructure.pandautils.views.CanvasWebView
 
 data class ComposeWebViewCallbacks(
@@ -48,7 +47,8 @@ fun ComposeCanvasWebView(
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(),
     applyOnWebView: (CanvasWebView.() -> Unit)? = null
 ) {
-    val webViewState = rememberSaveable { bundleOf() }
+    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel()
+    val webViewState = stateViewModel.webViewState
 
     if (LocalInspectionMode.current) {
         Text(text = url)

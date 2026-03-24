@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">I rahua te tuku o te tāpaetanga</string>
     <string name="submissionStatusFailedSubtitle">Pātō ki te tiro i ngā taipitopito</string>
     <string name="submissionAndRubric">Tāpaetanga &amp;Rubric</string>
+    <string name="submissionAndFeedback">Tukunga me te Urupare</string>
     <string name="commentsAndRubric">Ngā Kōrerorero &amp; Rubric</string>
     <string name="errorLoadingAssignment">He raruraru i te wā e tikiake ana i tēnei whakataunga Tēnā koa tirohia tō hononga ana ka tarai anō</string>
     <string name="submitted">Kua tukuna</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">I tēnei rā tonu</string>
+    <string name="tomorrow">Apopo</string>
     <string name="past">O muri</string>
     <string name="noDate">Kāore he rā</string>
     <string name="future">E heke mai nei</string>
@@ -291,6 +293,7 @@
     <string name="monologue">whai kupu</string>
     <string name="noItemsToDisplayShort">Kaore ngā tūemi hei whakātu</string>
     <string name="Todo">Hei mahi</string>
+    <string name="TodoNew">Mahi-mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
     <string name="favoriteCoursesLabel">Ngā akoranga makau</string>
@@ -474,6 +477,7 @@
     <string name="groups">rōpū</string>
     <string name="groupMembers">mema rōpū</string>
 
+    <string name="messageGroup">Rōpū Karere</string>
     <string name="loading">E tukuake ana&#8230;</string>
     <string name="select_item_to_display">Tīpakohia i te rārangi</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Hei mahi</string>
+    <string name="todoWidgetTitleNew">Mahi-mahi</string>
     <string name="gradesWidgetTitle">Ngā Kōeke</string>
     <string name="notificationWidgetTitle">whakamōhiotanga</string>
     <string name="todoWidgetTitleLong">Canvas – Hei Mahi</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Ngā mahi</string>
     <string name="gradesWidgetTitleLong">Canvas – ngā Kōeke</string>
     <string name="gradeWidgetTitleLong">Canvas - Kōeke</string>
     <string name="notificationWidgetTitleLong">Canvas – ngā whakamōhiotanga</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Ngā Akoranga</string>
     <string name="toDoList">Rārangi Hei Mahi</string>
+    <string name="toDoListNew">Rārangi Mahi</string>
+
     <string name="notifications">whakamōhiotanga</string>
     <string name="pushNotifications">Pana ngā Whakamōhiotanga</string>
     <string name="pushNotificationsError">Kāore i te rēhitahia ngā whakamōhiotanga Pana mo tēnei pūrere.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">tuwhera speedgrader</string>
 
-    <string name="search_todo">hei mahi hei mahi ngā hei mahi hei mahi rārangi</string>
     <string name="search_course">akoranga ngā akoranga akomanga ngā akomanga</string>
     <string name="search_grades">kōeke ngā kōeke</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Me whakatau te taitara o te Whārangi.</string>
     <string name="pageDetails">Taipitopito Whārangi</string>
     <string name="saving">E tiaki ana</string>
+    <string name="speedGraderSaving">E tiaki ana</string>
+    <string name="speedGraderSaved">Kua Ora</string>
+    <string name="speedGraderFailed">I rahua</string>
+    <string name="speedGraderSaveErrorTitle">Āe, i he tetahi mea</string>
+    <string name="speedGraderSaveErrorMessage">I puta he hapa i te wā e tiaki ana i tō whakarerekētanga māka. Ka taea e koe te ngana anō, te ngana anō rānei ā muri ake nei.</string>
+    <string name="speedGraderSaveErrorContentDescription">I rahua te tiaki māka. Pāwhiritia mō ngā taipitopito.</string>
+
     <string name="confirmDeleteEvent">E tino hiahia ana koe ki te muku i tēnei hui?</string>
     <string name="conferencesNotSupported">Kaore i te tautokona ngā huihuinga i runga i te waea.</string>
     <string name="filePreviewContentDescription">Kōnae arokite āhua</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Ngā ōrongongo</string>
     <string name="conferenceInProgress">Huihuinga I roto i te kaunuku</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Ngā Huihuinga (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Huihuinga I roto i te kaunuku</string>
+    <string name="conferencesWidgetDismissed">Kua whakakorea te hui</string>
     <string name="a11y_criterion_content_description">Ngā whakatauranga paearu %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">ētahi atu mōhiohio</string>
@@ -1374,6 +1392,10 @@
     <plurals name="a11y_todoBadgeCount">
         <item quantity="one">%s ki te mahi i te tūemi</item>
         <item quantity="other">%s ki te mahi i ngā tūemi</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s tūemi mahi</item>
+        <item quantity="other">%s ngā mea hei mahi</item>
     </plurals>
     <string name="noAnnotationSelected">Karekau he tuhipoka i tohua</string>
     <string name="emailNotifications">Ngā Īmēra Whakamōhiotanga</string>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Kaore he tauwhāinga i tēnei rā!</string>
     <string name="calendarNoEventsDescription">Ko te āhua nei he rā pai ki te whakatā me te whakahou anō.</string>
     <string name="userCalendarToDo">Hei Mahi</string>
+    <string name="userCalendarToDoNew">Mahi-mahi</string>
     <string name="courseToDo">%s Hei Mahi</string>
+    <string name="courseToDoNew">%s Ngā mahi hei mahi</string>
     <string name="calendarEventExcused">Whakawātea</string>
     <string name="calendarEventMissing">Ngaro</string>
     <string name="calendarEventGraded">Kōekehia</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Takahanga %s i tutuki pai.</string>
     <string name="a11y_eventUpdatedAnnouncement">Takahanga %s i pai te whakahou.</string>
     <string name="a11y_toDoCreatedAnnouncement">Ki te mahi %s i pai te hanga.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Ngā mahi hei mahi %s i hangaia angitu.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Ki te mahi %s i pai te whakahou.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Ngā mahi hei mahi %s kua angitu te whakahōu.</string>
     <string name="todoScreenTitle">Hei Mahi</string>
+    <string name="todoScreenTitleNew">Mahi-mahi</string>
     <string name="todoDateLabel">Rā</string>
     <string name="todoDescriptionLabel">Whakāhuatanga</string>
     <string name="todoDeleteConfirmationTitle">Mukua Hei Mahi?</string>
+    <string name="todoDeleteConfirmationTitleNew">Mukua ngā Mahi-ā-ringa?</string>
     <string name="todoDeleteConfirmationText">Ma tenei ka muku tonu to mea hei Mahi.</string>
+    <string name="todoDeleteConfirmationTextNew">Ka mukua rawatia tō tūemi Mahi.</string>
     <string name="todoDeleteErrorMessage">He hapa i te wā e muku ana i tēnei Hei Whakamahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="todoDeleteErrorMessageNew">I puta he hapa i te mukunga o tēnei Mahi-ā-ringa. Tirohia tō hononga, ka ngana anō.</string>
     <string name="createTodoScreenTitle">He Hou Whakamahi</string>
+    <string name="createTodoScreenTitleNew">Ngā Mahi-ā-ringa Hou</string>
     <string name="editTodoScreenTitle">Whakatika Whakamahi</string>
+    <string name="editTodoScreenTitleNew">Whakatikahia ngā Mahi-ā-ringa</string>
     <string name="createToDoTitleHint">Tāpiri taitara</string>
     <string name="createToDoDateLabel">Rā</string>
     <string name="createToDoTimeLabel">Wā</string>
     <string name="createToDoCalendarLabel">Maramataka</string>
     <string name="createToDoDetailsLabel">Nga korero taipitopito</string>
     <string name="todoSaveErrorMessage">He hapa i te wā e tiaki ana i tenei Hei Whakamahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="todoSaveErrorMessageNew">I puta he hapa i te wā e tiaki ana i tēnei Mahi-ā-ringa. Tirohia tō hononga, ka ngana anō.</string>
     <string name="selectCalendarScreenTitle">Tīpakohia Maramataka</string>
     <string name="errorContentRetryButton">Ngana anō</string>
     <string name="eventLocationLabel">Wāhi</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Nga korero taipitopito</string>
     <string name="errorLoadingEvent">I raru te uta i tenei takahanga. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
     <string name="errorLoadingTodo">I raru te uta i tenei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="errorLoadingTodoNew">I puta he raruraru i te utaina o tēnei mahi-ā-ringa. Tirohia tō hononga, ka ngana anō.</string>
     <string name="eventDeleteConfirmationTitle">Mukua Takahanga?</string>
     <string name="eventDeleteConfirmationText">Ma tenei ka muku tonu to kaupapa.</string>
     <string name="eventDeleteErrorMessage">I hapa te muku i tenei takahanga. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Nga huihuinga katoa</string>
     <string name="eventDeleteScopeFollowing">Ko tenei me nga huihuinga katoa e whai ake nei</string>
     <string name="calendarAddToDo">Tāpiri Hei Mahi</string>
+    <string name="calendarAddToDoNew">Tāpiri Mahi</string>
     <string name="calendarAddEvent">Tāpiri Takahanga</string>
     <string name="createEventScreenTitle">Tauwhāinga Hōu</string>
     <string name="editEventScreenTitle">Tauwhāinga Whakatika</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Kia Takiuru koe!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Hei kite i o mahi, tena koa takiuru ki to putea i roto i te taupānga. He wa poto noa iho!</string>
     <string name="a11y_widgetToDoOpenToDoList">Whakatuwherahia te mata rarangi Mahi</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Whakatuwheratia te mata o te rārangi mahi</string>
     <string name="a11y_widgetToDoCreateNewToDo">Waihanga hou Hei Mahi</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Waihangahia he mahi hou</string>
     <string name="widgetGradesErrorSubtitle">Kei te raru matou ki te whakaatu i o tohu i naianei. Tena koa ngana ano mo te wa poto, haere ranei ki te taupānga.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Hei kite i o tohu, tena koa takiuru ki to putea i roto i te taupānga. He wa poto noa iho!</string>
     <string name="widgetSingleGradeErrorSubtitle">Kei te raru matou ki te whakaatu i o tohu i naianei.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Me whiriwhiri he akoranga</string>
     <string name="widgetGradesErrorLoadingCourses">I puta he hapa i te wa e uta ana i nga akoranga.</string>
     <string name="settingsSwitchExperience">Hurihia ki te Canvas Mahi</string>
+    <string name="forecastWidgetTitle">Whakarāpopototanga ā-Wiki</string>
+    <string name="forecastWidgetWeekPeriod">Wiki %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Ngaro</string>
+    <string name="forecastWidgetDue">E tika ana</string>
+    <string name="forecastWidgetRecentGrades">Ngā Tohu Hou</string>
+    <string name="forecastWidgetGradeWeight">%d%% o te māka whakamutunga</string>
+    <string name="forecastWidgetErrorMessage">Kei te raru mātou ki te uta i ō mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="forecastWidgetEmptyMissing">Kāore he mahi e ngaro ana. Kua mau katoa koe</string>
+    <string name="forecastWidgetEmptyDue">Kāore he mahi e tika ana kia tukuna i tēnei wiki.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Kāore he māka hou i tēnei wiki.</string>
+    <string name="a11y_contentDescription_previousWeek">Wiki o mua</string>
+    <string name="a11y_contentDescription_nextWeek">Te wiki e tū mai nei</string>
+
     <string name="speedGraderGradeTabTitle">Kōeke &amp; Rubric</string>
     <string name="speedGraderDetailsTabTitle">Nga korero taipitopito</string>
     <string name="a11y_contentDescription_expandPanel">Roha te röpü</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">I hapa i te utaina o nga mea hei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
     <string name="errorUpdatingToDo">I hapa te whakahōu i te tūemi hei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
     <string name="noToDosForNow">Kaore he mahi mo tenei wa!</string>
+    <string name="noToDosForNowNew">Kāore he Mahi-ā-ringa i tēnei wā!</string>
     <string name="noToDosForNowSubtext">He wā pai tēnei ki te okioki, ki te wātea, me te whakahou i te tinana.</string>
     <string name="todoSwipeDone">Kua mahia</string>
     <string name="todoSwipeUndo">Wete</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Ngā Manakohanga o te Rārangi Mahi</string>
+    <string name="todoFilterPreferencesNew">Ngā Manakohanga o te Rārangi Mahi</string>
     <string name="todoFilterVisibleItems">Ngā Tuemi e Kitea Ana</string>
     <string name="todoFilterShowPersonalToDos">Whakaatuhia ngā Mahi Whaiaro</string>
+    <string name="todoFilterShowPersonalToDosNew">Whakaatuhia ngā Mahi Whaiaro</string>
     <string name="todoFilterShowCalendarEvents">Whakaatuhia ngā Takahanga Maramataka</string>
     <string name="todoFilterShowCompleted">Whakaatuhia ngā Mea Kua Oti</string>
     <string name="todoFilterFavoriteCoursesOnly">Ngā Akoranga Tino Pai Anake</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Pōwhiri ki %s i whakakāhoretia</string>
     <string name="courseInvitationDeclineConfirmTitle">Whakakore i te Pōwhiri</string>
     <string name="courseInvitationDeclineConfirmMessage">Kei te tino hiahia koe ki te whakakore i te pōwhiri ki %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Ahu Whakamua</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Kia ora, %s</string>
 
+    <string name="courses_and_groups">Ngā Akoranga me ngā Rōpū</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Whakaritea te Papatohu</string>
     <string name="dashboard_widgets">Ngā taputapu</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Kei te huri i te tahora o te papaaho</string>
     <string name="changing_dashboard_layout_message">Hei huri i te tahora o te papaaho me tīmata anō te tono</string>
     <string name="restart_now">Tīmata anō inaianei</string>
+    <string name="turn_on_new_dashboard">Whakakāhia te papaaho hou</string>
     <string name="switched_back">Kua hoki anō?</string>
     <string name="switched_back_message">Ngā mihi mō te whakamātau i te papaaho hou! Ka taea e koe te kōrero mai he aha koe i hoki anō ai?</string>
+    <string name="survey_option_hard_to_find">Ngā mea uaua ki te kimi</string>
+    <string name="survey_option_prefer_old_layout">He pai ake te tahora tawhito</string>
+    <string name="survey_option_something_broken">Kāore i tika te mahi a tetahi mea</string>
     <string name="what_could_we_improve">He aha tā mātou e taea te whakapai ake?</string>
+    <string name="what_do_you_think_of_new_dashboard">He aha ō whakaaro mō te papatohu hou?</string>
+    <string name="let_us_know">Mōhio mai!</string>
+    <string name="no_app_to_handle_link">Kāore he taupānga e wātea ana hei whakatuwhera i tēnei hononga</string>
     <string name="skip">Tīpoka</string>
     <string name="widget_setting_show_greeting">Whakaatu mihi</string>
     <string name="background_color">Tae papamuri</string>
+    <string name="widget_setting_show_grades">Ngā Kōeke Akoranga</string>
+    <string name="widget_setting_show_color_overlay">Paparua Tae Akoranga</string>
     <string name="offline_content_available">Kei te wātea ngā ihirangi tuimotu</string>
     <string name="a11y_contentDescription_moreOptions">Kōwhiringa atu</string>
     <string name="customizeCourse">Whakarite akoranga</string>
     <string name="favoriteCoursesAndGroups">Ngā Akoranga me ngā Rōpū Tino Pai</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Kāore ngā Utauta o Waho e wātea ana tuimotu.</string>
+    <string name="widget_weekly_summary">Whakarāpopototanga o te Wiki</string>
+
+    <string name="dashboardCourseNickname">Ingoakāinga</string>
+    <string name="dashboardCourseNicknameHint">Tuhia te ingoa o te akoranga ki konei</string>
+    <string name="dashboardCourseColor">Akoranga tae</string>
+    <string name="widget_toDo">Ngā Mahi o ia Rā</string>
+    <string name="dailyToDoWidgetTitle">Ngā Mahi o ia Rā</string>
+    <string name="todoWidget_showCompleted">Whakaatuhia ngā Mea Kua Oti</string>
+    <string name="todoWidget_emptyTitle">Kua oti katoa i a koe i nāianei!</string>
+    <string name="todoWidget_emptyMessage">Te āhua nei kua wātea koe mō tēnei rā.\nKei te hiahia koe ki te tāpiri i ētahi Mahi-ā-ringa?</string>
+    <string name="todoWidget_addTodo">Tāpiri Mahi</string>
+    <string name="todoWidget_errorTitle">Āe, i he tetahi mea</string>
+    <string name="todoWidget_errorMessage">Kāore i taea e mātou te uta i ō Mahi.\nNgāna anō, hoki mai anō ā muri ake nei.</string>
+    <string name="todoWidget_refresh">Whakahouhia</string>
+    <string name="todoWidget_today">I tēnei rā tonu</string>
+    <string name="a11y_todoWidget_jumpToToday">Peke atu ki tēnei rā</string>
+    <string name="widgetSettings_widgetsColor">Tae Matua o te Papaaho</string>
+    <string name="dashboard_globalAnnouncement">Panuitanga o te Ao</string>
+    <string name="forecastWidget_currentWeek">Te wiki o nāianei</string>
 </resources>

@@ -31,6 +31,7 @@ data class InboxDetailsUiState(
     val showBackButton: Boolean = true,
     val showDeleteButton: Boolean = true,
     val showReplyAllButton: Boolean = true,
+    val showArchiveOption: Boolean = true,
 )
 
 data class ConfirmationDialogState(

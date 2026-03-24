@@ -30,6 +30,7 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -299,6 +300,44 @@ class FileSyncProgressDaoTest {
         result.observeForever { }
 
         assertEquals(entities, result.value)
+    }
+
+    @Test
+    fun testFindAllFlow() = runTest {
+        courseSyncProgressDao.insert(CourseSyncProgressEntity(2L, "Course 2"))
+        val entities = listOf(
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 1L,
+                id = 1L
+            ),
+            FileSyncProgressEntity(
+                courseId = 1L,
+                fileName = "File 2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 2L,
+                id = 2L
+            ),
+            FileSyncProgressEntity(
+                courseId = 2L,
+                fileName = "File 3",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                fileId = 3L,
+                id = 3L
+            )
+        )
+        fileSyncProgressDao.insertAll(entities)
+
+        val result = fileSyncProgressDao.findAllFlow().first()
+        assertEquals(entities, result)
     }
 
     @Test

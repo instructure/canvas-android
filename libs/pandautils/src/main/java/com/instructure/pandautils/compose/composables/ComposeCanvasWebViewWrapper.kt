@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
@@ -50,7 +51,8 @@ fun ComposeCanvasWebViewWrapper(
     webViewCallbacks: ComposeWebViewCallbacks? = null,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
-    val webViewState = rememberSaveable(content) { bundleOf() }
+    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel()
+    val webViewState = stateViewModel.webViewState
     val savedHtml = rememberSaveable(content, stateSaver = Saver(
         save = { it },
         restore = { it }

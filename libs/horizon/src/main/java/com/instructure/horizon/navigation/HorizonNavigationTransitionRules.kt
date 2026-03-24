@@ -107,6 +107,11 @@ val animationRules = listOf(
         to = LearnRoute.LearnCourseDetailsScreen.route,
         style = NavigationTransitionAnimation.SLIDE
     ),
+    NavigationTransitionAnimationRule(
+        from = LearnRoute.LearnScreen.route,
+        to = LearnRoute.LearnLearningLibraryDetailsScreen.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
 )
 
 private val Any.serializableRoute: String

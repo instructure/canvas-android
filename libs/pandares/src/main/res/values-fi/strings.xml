@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Lähetys epäonnistui</string>
     <string name="submissionStatusFailedSubtitle">Napauta tarkastellaksesi tietoja</string>
     <string name="submissionAndRubric">Lähetys &amp; Rubriikki</string>
+    <string name="submissionAndFeedback">Tehtävänpalautus &amp; Palaute</string>
     <string name="commentsAndRubric">Kommentit &amp; Rubriikki</string>
     <string name="errorLoadingAssignment">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="submitted">Lähetetty</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Tänään</string>
+    <string name="tomorrow">Huomenna</string>
     <string name="past">Edelliset</string>
     <string name="noDate">Ei päivämäärää</string>
     <string name="future">Tulevaisuus</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monologi</string>
     <string name="noItemsToDisplayShort">Ei näytettäviä kohteita</string>
     <string name="Todo">Tehtävä</string>
+    <string name="TodoNew">Tehtävälista</string>
     <string name="todoFilter">Suodata kursseja</string>
     <string name="filterByEllipsis">Suodatustapa...</string>
     <string name="favoriteCoursesLabel">Suosikkikurssit</string>
@@ -474,6 +477,7 @@
     <string name="groups">Ryhmät</string>
     <string name="groupMembers">Ryhmän jäsenet</string>
 
+    <string name="messageGroup">Lähetä viesti ryhmälle</string>
     <string name="loading">Ladataan&#8230;</string>
     <string name="select_item_to_display">Valitse luettelosta.</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
+    <string name="todoWidgetTitleNew">Tehtävälista</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
     <string name="notificationWidgetTitle">Ilmoitukset</string>
     <string name="todoWidgetTitleLong">Canvas - Tehtävälista</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Tehtävälista</string>
     <string name="gradesWidgetTitleLong">Canvas - Arvosanat</string>
     <string name="gradeWidgetTitleLong">Canvas - Arvosana</string>
     <string name="notificationWidgetTitleLong">Canvas - Ilmoitukset</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Kurssit</string>
     <string name="toDoList">Tehtäväluettelo</string>
+    <string name="toDoListNew">Tehtävä-luettelo</string>
+
     <string name="notifications">Ilmoitukset</string>
     <string name="pushNotifications">Push-ilmoitukset</string>
     <string name="pushNotificationsError">Push-ilmoituksia ei ole rekisteröity tälle laitteelle.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Avaa Speedgrader</string>
 
-    <string name="search_todo">mitätehdä mitä tehdä mitä tehdä -luettelo</string>
     <string name="search_course">kurssi kurssit luokka luokat</string>
     <string name="search_grades">arvosanat arvosanat</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Sivun otsikko täytyy määrittää.</string>
     <string name="pageDetails">Sivun tiedot</string>
     <string name="saving">Tallennetaan</string>
+    <string name="speedGraderSaving">Tallennetaan</string>
+    <string name="speedGraderSaved">Tallennettu</string>
+    <string name="speedGraderFailed">Epäonnistui</string>
+    <string name="speedGraderSaveErrorTitle">Hups, jotakin meni pieleen</string>
+    <string name="speedGraderSaveErrorMessage">Arvosanojen antoasteikon muokkauksessa ilmeni virhe. Voit yrittää uudelleen tai yrittää uudelleen myöhemmin.</string>
+    <string name="speedGraderSaveErrorContentDescription">Arvosanan tallennus epäonnistui. Napauta saadaksesi lisätietoja.</string>
+
     <string name="confirmDeleteEvent">Haluatko varmasti poistaa tämän tapahtuman?</string>
     <string name="conferencesNotSupported">Konferensseja ei vielä tueta matkapuhelimessa.</string>
     <string name="filePreviewContentDescription">Tiedoston esikatselukuva</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Nauhoitukset</string>
     <string name="conferenceInProgress">Kokous käynnissä</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferenssit (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Kokous käynnissä</string>
+    <string name="conferencesWidgetDismissed">Konferenssi hylätty</string>
     <string name="a11y_criterion_content_description">Kriteerien luokitukset %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">lisätietoja</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s tehtävä</item>
+        <item quantity="other">%s tehtävää</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s tehtävä</item>
         <item quantity="other">%s tehtävää</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Ei tapahtumia tänään!</string>
     <string name="calendarNoEventsDescription">Näyttää olevan hyvä päivä levätä, rentoutua ja latautua.</string>
     <string name="userCalendarToDo">Tehtävälista</string>
+    <string name="userCalendarToDoNew">Tehtävälista</string>
     <string name="courseToDo">%s Tehtävä</string>
+    <string name="courseToDoNew">%s Tehtävä</string>
     <string name="calendarEventExcused">Vapautettu</string>
     <string name="calendarEventMissing">Puuttuu</string>
     <string name="calendarEventGraded">Arvioitu</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Tapahtuman %s luonti onnistui.</string>
     <string name="a11y_eventUpdatedAnnouncement">Tapahtuman %s päivitys onnistui.</string>
     <string name="a11y_toDoCreatedAnnouncement">Tehtävälistan %s luonti onnistui.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Tehtävälistan %s luonti onnistui.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Tehtävälistan %s päivitys onnistui.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Tehtävälistan %s päivitys onnistui.</string>
     <string name="todoScreenTitle">Tehtävälista</string>
+    <string name="todoScreenTitleNew">Tehtävälista</string>
     <string name="todoDateLabel">Päivämäärä</string>
     <string name="todoDescriptionLabel">Kuvaus</string>
     <string name="todoDeleteConfirmationTitle">Poistetaanko tehtävä?</string>
+    <string name="todoDeleteConfirmationTitleNew">Poistetaanko tehtävä?</string>
     <string name="todoDeleteConfirmationText">Tämä poistaa tehtävä-kohteesi pysyvästi.</string>
+    <string name="todoDeleteConfirmationTextNew">Tämä poistaa tehtävä-kohteesi pysyvästi.</string>
     <string name="todoDeleteErrorMessage">Tämän tehtävän tallennuksessa tapahtui virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="todoDeleteErrorMessageNew">Karttoja ladattaessa tapahtui virhe. Tarkista yhteys ja yritä uudelleen.</string>
     <string name="createTodoScreenTitle">Uusi tehtävä</string>
+    <string name="createTodoScreenTitleNew">Uusi tehtävä</string>
     <string name="editTodoScreenTitle">Muokkaa tehtävää</string>
+    <string name="editTodoScreenTitleNew">Muokkaa tehtävää</string>
     <string name="createToDoTitleHint">Lisää otsikko</string>
     <string name="createToDoDateLabel">Päivämäärä</string>
     <string name="createToDoTimeLabel">Aika</string>
     <string name="createToDoCalendarLabel">Kalenteri</string>
     <string name="createToDoDetailsLabel">Lisätiedot</string>
     <string name="todoSaveErrorMessage">Tehtävän tallennuksessa tapahtui virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="todoSaveErrorMessageNew">Karttoja ladattaessa tapahtui virhe. Tarkista yhteys ja yritä uudelleen.</string>
     <string name="selectCalendarScreenTitle">Valitse kalenteri</string>
     <string name="errorContentRetryButton">Yritä uudelleen</string>
     <string name="eventLocationLabel">Sijainti</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Lisätiedot</string>
     <string name="errorLoadingEvent">Tämän tapahtuman lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="errorLoadingTodo">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="errorLoadingTodoNew">Tehtävää ladattaessa tapahtui virhe. Tarkista yhteys ja yritä uudelleen.</string>
     <string name="eventDeleteConfirmationTitle">Poistetaanko tapahtuma?</string>
     <string name="eventDeleteConfirmationText">Tämä poistaa tapahtuma-kohteesi pysyvästi.</string>
     <string name="eventDeleteErrorMessage">Tämän tehtävän tallennuksessa tapahtui virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Kaikki tapahtumat</string>
     <string name="eventDeleteScopeFollowing">Tämä ja kaikki seuraavat tapahtumat</string>
     <string name="calendarAddToDo">Lisää tehtäväluetteloon</string>
+    <string name="calendarAddToDoNew">Lisää tehtäväluetteloon</string>
     <string name="calendarAddEvent">Lisää tapahtuma</string>
     <string name="createEventScreenTitle">Uusi tapahtuma</string>
     <string name="editEventScreenTitle">Muokkaa tapahtumaa</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Kirjaudutaan sisään!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Nähdäksesi tehtävälistasi, kirjaudu tilillesi sovelluksessa. Se vie vain hetken!</string>
     <string name="a11y_widgetToDoOpenToDoList">Avaa tehtävälistanäyttö</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Avaa tehtävälistanäyttö</string>
     <string name="a11y_widgetToDoCreateNewToDo">Luo uusi tehtävälista</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Luo uusi tehtävä</string>
     <string name="widgetGradesErrorSubtitle">Arvosanojesi näyttämisessä on tällä hetkellä ongelmia. Yritä uudelleen hetken kuluttua tai siirry sovellukseen.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Nähdäksesi arvosanasi, kirjaudu tilillesi sovelluksessa.. Se vie vain hetken!</string>
     <string name="widgetSingleGradeErrorSubtitle">Arvosanojesi näyttämisessä on tällä hetkellä ongelmia.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Valitaan kurssi</string>
     <string name="widgetGradesErrorLoadingCourses">Kurssien lataamisen yhteydessä tapahtui virhe.</string>
     <string name="settingsSwitchExperience">Vaihda Canvas-uraan</string>
+    <string name="forecastWidgetTitle">Viikoittainen yhteenveto</string>
+    <string name="forecastWidgetWeekPeriod">Viikko %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Puuttuu</string>
+    <string name="forecastWidgetDue">Määräpäivä</string>
+    <string name="forecastWidgetRecentGrades">Uudet arvosanat</string>
+    <string name="forecastWidgetGradeWeight">%d%% lopullisesta arvosanasta</string>
+    <string name="forecastWidgetErrorMessage">Tehtäviesi latauksessa ilmeni virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="forecastWidgetEmptyMissing">Ei puuttuvia tehtäviä. Olet ajan tasalla!</string>
+    <string name="forecastWidgetEmptyDue">Ei tehtäväpalautusten määräpäivää tällä viikolla.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Ei uusia arvosanoja tällä viikolla.</string>
+    <string name="a11y_contentDescription_previousWeek">Edellinen viikko</string>
+    <string name="a11y_contentDescription_nextWeek">Seuraava viikko</string>
+
     <string name="speedGraderGradeTabTitle">Arvosana &amp; Rubriikki</string>
     <string name="speedGraderDetailsTabTitle">Lisätiedot</string>
     <string name="a11y_contentDescription_expandPanel">Laajenna paneelia</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Tehtäväkohteiden latauksessa ilmeni virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="errorUpdatingToDo">Tehtävien päivittämisessä tapahtui virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="noToDosForNow">Ei tehtäviä nyt!</string>
+    <string name="noToDosForNowNew">Ei tehtäviä nyt!</string>
     <string name="noToDosForNowSubtext">Näyttää olevan hyvä päivä levätä, rentoutua ja latautua.</string>
     <string name="todoSwipeDone">Valmis</string>
     <string name="todoSwipeUndo">Peruuta</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Tehtävälistan asetukset</string>
+    <string name="todoFilterPreferencesNew">Tehtävälistan asetukset</string>
     <string name="todoFilterVisibleItems">Näkyvät kohteet</string>
     <string name="todoFilterShowPersonalToDos">Näytä henkilökohtaiset tehtävät</string>
+    <string name="todoFilterShowPersonalToDosNew">Näytä henkilökohtaiset tehtävät</string>
     <string name="todoFilterShowCalendarEvents">Näytä kalenteritapahtumat</string>
     <string name="todoFilterShowCompleted">Näytä suoritetut</string>
     <string name="todoFilterFavoriteCoursesOnly">Vain suosikkikurssit</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Kutsu kohteeseen %s hylätty</string>
     <string name="courseInvitationDeclineConfirmTitle">Kieltäydy kutsusta</string>
     <string name="courseInvitationDeclineConfirmMessage">Haluatko varmasti kieltäytyä kutsusta kohteeseen %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Edistyminen</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hei, %s</string>
 
+    <string name="courses_and_groups">Kurssit &amp; Ryhmät</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Mukauta koontinäyttöä</string>
     <string name="dashboard_widgets">Pienoisohjelmat</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Koontinäytön asettelun muuttaminen</string>
     <string name="changing_dashboard_layout_message">Jos haluat muuttaa koontinäytön asettelua, sinun täytyy käynnistää sovellus uudelleen</string>
     <string name="restart_now">Käynnistä nyt uudelleen</string>
+    <string name="turn_on_new_dashboard">Ota uusi kojelauta käyttöön</string>
     <string name="switched_back">Vaihdetaanko takaisin?</string>
     <string name="switched_back_message">Kiitos uuden koontinäytön kokeilemisesta! Voitko kertoa, miksi vaihdoit takaisin?</string>
+    <string name="survey_option_hard_to_find">Vaikea löytää asioita</string>
+    <string name="survey_option_prefer_old_layout">Pidän parempana vanhaa asettelua</string>
+    <string name="survey_option_something_broken">Jokin ei toiminut oikein</string>
     <string name="what_could_we_improve">Mitä voisimme parantaa?</string>
+    <string name="what_do_you_think_of_new_dashboard">Mitä mieltä olet uudesta koontinäytöstä?</string>
+    <string name="let_us_know">Kerro meille!</string>
+    <string name="no_app_to_handle_link">Tämän linkin avaamiseen ei ole sovellusta saatavilla</string>
     <string name="skip">Ohita</string>
     <string name="widget_setting_show_greeting">Näytä tervehdys</string>
     <string name="background_color">Taustaväri</string>
+    <string name="widget_setting_show_grades">Kurssin arvosanat</string>
+    <string name="widget_setting_show_color_overlay">Kurssin värikerros</string>
     <string name="offline_content_available">Offline-sisältöä saatavilla</string>
     <string name="a11y_contentDescription_moreOptions">Lisäasetukset</string>
     <string name="customizeCourse">Mukauta kurssi</string>
     <string name="favoriteCoursesAndGroups">Suosikkikurssit ja ryhmät</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Ulkoiset työkalut eivät ole saatavilla verkon ulkopuolella.</string>
+    <string name="widget_weekly_summary">Viikoittainen yhteenveto</string>
+
+    <string name="dashboardCourseNickname">Lempinimi</string>
+    <string name="dashboardCourseNicknameHint">Kirjoita kurssin lyhennys tähän</string>
+    <string name="dashboardCourseColor">Kurssiväri</string>
+    <string name="widget_toDo">Päivittäiset tehtävät</string>
+    <string name="dailyToDoWidgetTitle">Päivittäiset tehtävät</string>
+    <string name="todoWidget_showCompleted">Näytä suoritetut</string>
+    <string name="todoWidget_emptyTitle">Olet nyt valmis!</string>
+    <string name="todoWidget_emptyMessage">Näyttää siltä, että sinulla on vapaata tältä päivältä.\nHaluatko lisätä tehtäviä?</string>
+    <string name="todoWidget_addTodo">Lisää tehtäväluetteloon</string>
+    <string name="todoWidget_errorTitle">Hups, jotakin meni pieleen</string>
+    <string name="todoWidget_errorMessage">Tehtävälistan lataaminen epäonnistui.\nYritä uudelleen tai palaa myöhemmin.</string>
+    <string name="todoWidget_refresh">Päivitä</string>
+    <string name="todoWidget_today">Tänään</string>
+    <string name="a11y_todoWidget_jumpToToday">Siirry tähän päivään</string>
+    <string name="widgetSettings_widgetsColor">Mittariston pääväri</string>
+    <string name="dashboard_globalAnnouncement">Globaali ilmoitus</string>
+    <string name="forecastWidget_currentWeek">Nykyinen viikko</string>
 </resources>

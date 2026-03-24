@@ -20,7 +20,6 @@ package com.instructure.pandautils.features.offline.sync.progress
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
@@ -41,6 +40,7 @@ import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -73,6 +73,10 @@ class AggregateProgressObserverTest {
             "${captor.captured} bytes"
         }
 
+        every { courseSyncProgressDao.findAllFlow() } returns MutableStateFlow(emptyList())
+        every { fileSyncProgressDao.findAllFlow() } returns MutableStateFlow(emptyList())
+        every { studioMediaProgressDao.findAllFlow() } returns MutableStateFlow(emptyList())
+
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -91,9 +95,9 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        val courseProgressLiveData = MutableLiveData(listOf(courseProgress))
+        val courseProgressFlow = MutableStateFlow(listOf(courseProgress))
 
-        every { courseSyncProgressDao.findAllLiveData() } returns courseProgressLiveData
+        every { courseSyncProgressDao.findAllFlow() } returns courseProgressFlow
 
         aggregateProgressObserver = createObserver()
 
@@ -109,7 +113,7 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.COMPLETED
         )
 
-        courseProgressLiveData.postValue(listOf(courseProgress))
+        courseProgressFlow.value = listOf(courseProgress)
 
         assertEquals(100, aggregateProgressObserver.progressData.value?.progress)
         assertEquals(ProgressState.COMPLETED, aggregateProgressObserver.progressData.value?.progressState)
@@ -143,11 +147,11 @@ class AggregateProgressObserverTest {
             fileSize = 2000, progressState = ProgressState.IN_PROGRESS, fileId = 2L
         )
 
-        val courseLiveData = MutableLiveData(listOf(course1, course2))
-        val fileLiveData = MutableLiveData(listOf(file1, file2))
+        val courseFlow = MutableStateFlow(listOf(course1, course2))
+        val fileFlow = MutableStateFlow(listOf(file1, file2))
 
-        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
-        every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
+        every { courseSyncProgressDao.findAllFlow() } returns courseFlow
+        every { fileSyncProgressDao.findAllFlow() } returns fileFlow
 
         aggregateProgressObserver = createObserver()
 
@@ -167,8 +171,8 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.COMPLETED
         )
 
-        courseLiveData.postValue(listOf(course1, course2))
-        fileLiveData.postValue(listOf(file1, file2))
+        courseFlow.value = listOf(course1, course2)
+        fileFlow.value = listOf(file1, file2)
 
         assertEquals(49, aggregateProgressObserver.progressData.value?.progress)
 
@@ -182,8 +186,8 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.COMPLETED
         )
 
-        courseLiveData.postValue(listOf(course1, course2))
-        fileLiveData.postValue(listOf(file1, file2))
+        courseFlow.value = listOf(course1, course2)
+        fileFlow.value = listOf(file1, file2)
 
         assertEquals(100, aggregateProgressObserver.progressData.value?.progress)
         assertEquals(ProgressState.COMPLETED, aggregateProgressObserver.progressData.value?.progressState)
@@ -199,7 +203,7 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        val courseLiveData = MutableLiveData(listOf(course1Progress))
+        val courseFlow = MutableStateFlow(listOf(course1Progress))
 
         var file1Progress =
             FileSyncProgressEntity(
@@ -229,10 +233,10 @@ class AggregateProgressObserverTest {
             fileId = 3L
         )
 
-        val fileLiveData = MutableLiveData(listOf(file1Progress, file2Progress, file3Progress))
+        val fileFlow = MutableStateFlow(listOf(file1Progress, file2Progress, file3Progress))
 
-        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
-        every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
+        every { courseSyncProgressDao.findAllFlow() } returns courseFlow
+        every { fileSyncProgressDao.findAllFlow() } returns fileFlow
 
         aggregateProgressObserver = createObserver()
 
@@ -250,8 +254,8 @@ class AggregateProgressObserverTest {
             tabs = CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.COMPLETED) },
         )
 
-        courseLiveData.postValue(listOf(course1Progress))
-        fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
+        courseFlow.value = listOf(course1Progress)
+        fileFlow.value = listOf(file1Progress, file2Progress, file3Progress)
 
         // Course tabs and files are completed, but additional files are still in progress
         assertEquals(99, aggregateProgressObserver.progressData.value?.progress)
@@ -268,7 +272,7 @@ class AggregateProgressObserverTest {
             fileId = 3L
         )
 
-        fileLiveData.postValue(listOf(file1Progress, file2Progress, file3Progress))
+        fileFlow.value = listOf(file1Progress, file2Progress, file3Progress)
 
         // Total size is updated with the external file
         assertEquals("${1000000 + 1000 + 2000 + 3000} bytes", aggregateProgressObserver.progressData.value?.totalSize)
@@ -286,10 +290,8 @@ class AggregateProgressObserverTest {
         course1Progress = course1Progress.copy(
             progressState = ProgressState.COMPLETED
         )
-        courseLiveData.postValue(listOf(course1Progress))
-        fileLiveData.postValue(
-            listOf(file1Progress, file2Progress, file3Progress)
-        )
+        courseFlow.value = listOf(course1Progress)
+        fileFlow.value = listOf(file1Progress, file2Progress, file3Progress)
 
         // External files are downloaded, progress should be 100%
         assertEquals(
@@ -308,7 +310,7 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        val courseLiveData = MutableLiveData(listOf(course1Progress))
+        val courseFlow = MutableStateFlow(listOf(course1Progress))
 
         var file1Progress =
             FileSyncProgressEntity(
@@ -322,12 +324,12 @@ class AggregateProgressObserverTest {
 
         var studioMediaProgress = StudioMediaProgressEntity("1234", 0, 2000, ProgressState.IN_PROGRESS, 1L)
 
-        val fileLiveData = MutableLiveData(listOf(file1Progress))
-        val studioLiveData = MutableLiveData(listOf(studioMediaProgress))
+        val fileFlow = MutableStateFlow(listOf(file1Progress))
+        val studioFlow = MutableStateFlow(listOf(studioMediaProgress))
 
-        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
-        every { fileSyncProgressDao.findAllLiveData() } returns fileLiveData
-        every { studioMediaProgressDao.findAllLiveData() } returns studioLiveData
+        every { courseSyncProgressDao.findAllFlow() } returns courseFlow
+        every { fileSyncProgressDao.findAllFlow() } returns fileFlow
+        every { studioMediaProgressDao.findAllFlow() } returns studioFlow
 
         aggregateProgressObserver = createObserver()
 
@@ -346,14 +348,14 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.COMPLETED
         )
 
-        courseLiveData.postValue(listOf(course1Progress))
-        fileLiveData.postValue(listOf(file1Progress))
+        courseFlow.value = listOf(course1Progress)
+        fileFlow.value = listOf(file1Progress)
 
         // Course tabs and files are completed, but studio media is still in progress
         assertEquals(99, aggregateProgressObserver.progressData.value?.progress)
 
         studioMediaProgress = studioMediaProgress.copy(progress = 100, progressState = ProgressState.COMPLETED)
-        studioLiveData.postValue(listOf(studioMediaProgress))
+        studioFlow.value = listOf(studioMediaProgress)
 
         // External files are downloaded, progress should be 100%
         assertEquals(
@@ -371,9 +373,9 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.IN_PROGRESS
         )
 
-        val courseLiveData = MutableLiveData(listOf(course1))
+        val courseFlow = MutableStateFlow(listOf(course1))
 
-        every { courseSyncProgressDao.findAllLiveData() } returns courseLiveData
+        every { courseSyncProgressDao.findAllFlow() } returns courseFlow
 
         aggregateProgressObserver = createObserver()
 
@@ -382,7 +384,7 @@ class AggregateProgressObserverTest {
             progressState = ProgressState.ERROR
         )
 
-        courseLiveData.postValue(listOf(course1))
+        courseFlow.value = listOf(course1)
 
         assertEquals(ProgressState.ERROR, aggregateProgressObserver.progressData.value?.progressState)
     }

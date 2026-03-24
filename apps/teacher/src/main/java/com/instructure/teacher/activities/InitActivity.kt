@@ -237,7 +237,12 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         typefaceBehaviour.overrideFont(CanvasFont.REGULAR)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
-        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        val intentMasqueradeId = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        val masqueradingUserId: Long = when {
+            intentMasqueradeId != 0L -> intentMasqueradeId
+            !ApiPrefs.isMasquerading && ApiPrefs.isMasqueradingFromQRCode && ApiPrefs.masqueradeId > 0L -> ApiPrefs.masqueradeId
+            else -> 0L
+        }
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, InitActivity::class.java)
             finish()

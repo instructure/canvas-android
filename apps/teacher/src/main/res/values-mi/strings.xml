@@ -31,6 +31,7 @@
     <string name="tab_attendance">Taenga mai</string>
     <string name="tab_pages">Ngā whārangi</string>
     <string name="tab_todo">Hei mahi</string>
+    <string name="tab_todo_new">Mahi-mahi</string>
     <string name="content_description_school_logo">Tohu o te Kura</string>
     <string name="search_guides">Rapu nga Kaiarahi Canvas</string>
     <string name="canvas_guides">Canvas Kaiārahi</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Kaore atu anō he mahi!\n Kia pai tō rā.</string>
     <string name="toDoNoSubmissions">Kaore he tukunga hei kōeke mo tēnei whakataunga.</string>
     <string name="errorToDoRouteFailed">He hapa i puta i te wā e tiro ana i tēnei Hei Mahi tuemi.</string>
+    <string name="errorToDoRouteFailedNew">I puta he hapa i te ngana ki te tiro i tēnei tūemi mahi.</string>
     <string name="errorIsDesigner">Kaore e taea e ngā kaitātai whakaurunga te tiro i tenei.</string>
 
     <string name="sections">Ngā Wāhanga</string>

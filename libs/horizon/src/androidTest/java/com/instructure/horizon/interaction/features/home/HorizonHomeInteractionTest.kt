@@ -18,17 +18,21 @@ package com.instructure.horizon.interaction.features.home
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetLearningLibraryManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeMyContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRedwoodApiManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyModule
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.horizon.espresso.HorizonTest
 import com.instructure.horizon.pages.HorizonHomePage
@@ -45,6 +49,8 @@ class HorizonHomeInteractionTest : HorizonTest() {
     private val fakeGetWidgetsManager = FakeGetWidgetsManager()
     private val fakeGetSkillsManager = FakeGetSkillsManager()
     private val fakeRedwoodApiManager = FakeRedwoodApiManager()
+    private val fakeLearningLibraryManager = FakeGetLearningLibraryManager()
+    private val fakeMyContentManager = FakeMyContentManager()
 
     @BindValue
     @JvmField
@@ -65,6 +71,14 @@ class HorizonHomeInteractionTest : HorizonTest() {
     @BindValue
     @JvmField
     val redwoodApiManager: RedwoodApiManager = fakeRedwoodApiManager
+
+    @BindValue
+    @JvmField
+    val learningLibraryManager: GetLearningLibraryManager = fakeLearningLibraryManager
+
+    @BindValue
+    @JvmField
+    val myContentManager: MyContentManager = fakeMyContentManager
 
     private val homePage: HorizonHomePage by lazy { HorizonHomePage(composeTestRule) }
 

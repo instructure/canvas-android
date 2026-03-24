@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Kl. %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
     <string name="schedule_todo_due_text">Opgaveliste: %s</string>
+    <string name="schedule_todo_due_text_new">Element på opgaveliste: %s</string>
     <string name="schedule_due_text">Forfalder: %s</string>
     <string name="show_missing_items_title">Vis %d manglende elementer</string>
     <string name="hide_missing_items_title">Skjul %d manglende elementer</string>
     <string name="schedule_error_message">Din tidsplan kunne ikke hentes</string>
     <string name="schedule_todo_title">Opgaveliste</string>
+    <string name="schedule_todo_title_new">Element på opgaveliste</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s point</item>
         <item quantity="one">%s point</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Planlægger-bemærkning</string>
     <string name="a11y_quiz">Test</string>
     <string name="a11y_todo">Opgaveliste</string>
+    <string name="a11y_todo_new">Element på opgaveliste</string>
     <string name="a11y_page">Side</string>
     <string name="a11y_assessment_request">Vurderingsanmodning</string>
     <string name="a11y_marked_as_done">Markeret som færdig</string>

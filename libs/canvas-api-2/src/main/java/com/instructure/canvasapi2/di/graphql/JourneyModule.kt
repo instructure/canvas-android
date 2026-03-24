@@ -18,12 +18,16 @@ package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.JourneyApolloClient
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManagerImpl
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.JourneyRedwoodManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import dagger.Module
@@ -60,6 +64,20 @@ class JourneyModule {
         @JourneyApolloClient journeyClient: ApolloClient
     ): RedwoodApiManager {
         return JourneyRedwoodManagerImpl(journeyClient)
+    }
+
+    @Provides
+    fun provideGetLearningLibraryManager(
+        @JourneyApolloClient journeyClient: ApolloClient
+    ): GetLearningLibraryManager {
+        return GetLearningLibraryManagerImpl(journeyClient)
+    }
+
+    @Provides
+    fun provideMyContentManager(
+        @JourneyApolloClient journeyClient: ApolloClient
+    ): MyContentManager {
+        return MyContentManagerImpl(journeyClient)
     }
 
 }
