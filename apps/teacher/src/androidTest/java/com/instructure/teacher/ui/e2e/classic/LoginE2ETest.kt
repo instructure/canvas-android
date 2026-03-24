@@ -213,7 +213,7 @@ class LoginE2ETest : TeacherTest() {
 
         val INVALID_USERNAME = "invalidusercred@test.com"
         val INVALID_PASSWORD = "invalidpw"
-        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your username or password and try again."
+        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your email or password and try again."
         val NO_EMAIL_GIVEN_ERROR_MESSAGE = "Please enter your email."
         val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "Please enter your password."
         val DOMAIN = "mobileqa.beta"
