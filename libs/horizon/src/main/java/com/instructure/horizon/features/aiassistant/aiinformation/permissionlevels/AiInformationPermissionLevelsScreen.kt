@@ -79,8 +79,7 @@ fun AiInformationPermissionLevelsScreen(
             HorizontalDivider(thickness = 1.dp, color = HorizonColors.LineAndBorder.lineStroke())
             LazyColumn(
                 modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 24.dp),
+                    .weight(1f),
                 contentPadding = PaddingValues(vertical = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
@@ -90,9 +89,13 @@ fun AiInformationPermissionLevelsScreen(
                             level = level,
                             currentFeatureText = data.currentFeatureText,
                             currentFeature = data.currentFeature,
+                            modifier = Modifier.padding(horizontal = 8.dp)
                         )
                     } else {
-                        PermissionLevelItem(level = level)
+                        PermissionLevelItem(
+                            level = level,
+                            modifier = Modifier.padding(horizontal = 24.dp)
+                        )
                     }
                 }
             }

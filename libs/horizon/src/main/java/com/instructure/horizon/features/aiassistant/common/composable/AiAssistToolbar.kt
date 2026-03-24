@@ -87,7 +87,7 @@ fun AiAssistToolbar(
                 iconRes = R.drawable.info,
                 contentDescription = stringResource(R.string.a11y_aiInformation),
                 size = IconButtonSize.SMALL,
-                color = IconButtonColor.WhiteOutline,
+                color = IconButtonColor.BlackGhost,
                 onClick = onInfoPressed,
             )
             HorizonSpace(SpaceSize.SPACE_4)
@@ -97,7 +97,7 @@ fun AiAssistToolbar(
             iconRes = R.drawable.close,
             contentDescription = stringResource(R.string.studyToolsDismissContentDescription),
             size = IconButtonSize.SMALL,
-            color = IconButtonColor.WhiteOutline,
+            color = IconButtonColor.BlackGhost,
             onClick = onDismissPressed,
         )
     }

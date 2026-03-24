@@ -29,7 +29,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.aiinformation.AiInformationScreen
@@ -41,9 +40,6 @@ fun AiAssistScaffold(
     navController: NavHostController,
     onClearChatHistory: () -> Unit,
     onDismiss: () -> Unit,
-    inputTextValue: TextFieldValue? = null,
-    onInputTextChanged: ((TextFieldValue) -> Unit)? = null,
-    onInputTextSubmitted: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable (Modifier) -> Unit,
 ) {

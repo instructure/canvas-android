@@ -97,12 +97,6 @@ fun AiAssistMainScreen(
         navController = navController,
         onClearChatHistory = { },
         onDismiss = { onDismiss() },
-        inputTextValue = promptInput,
-        onInputTextChanged = { promptInput = it },
-        onInputTextSubmitted = {
-            state.sendMessage(promptInput.text)
-            promptInput = TextFieldValue("")
-        }
     ) { modifier ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
