@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -49,6 +50,7 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
+    @ReleaseExclude
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2E() {
 
@@ -143,6 +145,7 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
+    @ReleaseExclude
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2EWithLastSavedSchool() {
 
