@@ -16,6 +16,7 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
@@ -29,22 +30,24 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
+import com.instructure.espresso.notifyReactOfInputChange
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForWebElement
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
 
 @Suppress("unused")
 class LoginSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[name=\"pseudonym_session[unique_id]\"]"
-    private val PASSWORD_FIELD_CSS = "input[name=\"pseudonym_session[password]\"]"
-    private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
-    private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
-    private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
-    private val LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[class='error']"
+    private val EMAIL_FIELD_CSS = "input[data-testid=\"username-input\"]"
+    private val PASSWORD_FIELD_CSS = "input[data-testid=\"password-input\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-testid=\"login-button\"]"
+    private val FORGOT_PASSWORD_BUTTON_CSS = "a[data-testid=\"forgot-password-link\"]"
+    private val EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___0\"] span[class\$='formFieldMessage']"
+    private val PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___1\"] span[class\$='formFieldMessage']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
@@ -67,12 +70,12 @@ class LoginSignInPage: BasePage() {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, FORGOT_PASSWORD_BUTTON_CSS))
     }
 
-    private fun authorizeButton(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, AUTHORIZE_BUTTON_CSS))
+    private fun emailLoginErrorMessageHolder(): Web.WebInteraction<*> {
+        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
     }
 
-    private fun loginErrorMessageHolder(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, LOGIN_ERROR_MESSAGE_HOLDER_CSS))
+    private fun passwordLoginErrorMessageHolder(): Web.WebInteraction<*> {
+        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
     }
 
     //endregion
@@ -102,13 +105,17 @@ class LoginSignInPage: BasePage() {
     }
 
     private fun enterEmail(email: String) {
+        waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, EMAIL_FIELD_CSS, timeoutMillis = 10000)
         emailField().perform(clearElement())
         emailField().perform(webKeys(email))
+        notifyReactOfInputChange(EMAIL_FIELD_CSS)
     }
 
     private fun enterPassword(password: String) {
+        waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, PASSWORD_FIELD_CSS, timeoutMillis = 10000)
         passwordField().perform(clearElement())
         passwordField().perform(webKeys(password))
+        notifyReactOfInputChange(PASSWORD_FIELD_CSS)
     }
 
     private fun clickLoginButton() {
@@ -119,8 +126,12 @@ class LoginSignInPage: BasePage() {
         forgotPasswordButton().perform(webClick())
     }
 
-    fun assertLoginErrorMessage(errorMessage: String) {
-        loginErrorMessageHolder().check(webMatches(getText(), containsString(errorMessage)))
+    fun assertLoginEmailErrorMessage(emailErrorMessage: String) {
+        emailLoginErrorMessageHolder().check(webMatches(getText(), containsString(emailErrorMessage)))
+    }
+
+    fun assertLoginPasswordErrorMessage(passwordErrorMessage: String) {
+        passwordLoginErrorMessageHolder().check(webMatches(getText(), containsString(passwordErrorMessage)))
     }
 
     fun loginAs(user: CanvasUserApiModel) {
