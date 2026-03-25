@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
@@ -50,6 +51,8 @@ import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -69,6 +72,7 @@ class InboxComposeViewModelTest {
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val inboxComposeBehavior: InboxComposeBehavior = mockk(relaxed = true)
+    private val workManager: WorkManager = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -80,7 +84,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
-        coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
+        coEvery { context.packageName } returns "com.instructure.teacher"
         coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
         coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
         coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
@@ -502,7 +506,8 @@ class InboxComposeViewModelTest {
         val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false)
         val uuid = UUID.randomUUID()
         coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
-        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid)
 
         assertEquals(1, viewmodel.uiState.value.attachments.size)
 
@@ -575,7 +580,8 @@ class InboxComposeViewModelTest {
         assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
 
         // Complete upload - replaces placeholder with real attachment
-        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid)
         assertEquals(true, viewmodel.uiState.value.isSendButtonEnabled)
     }
 
@@ -593,7 +599,8 @@ class InboxComposeViewModelTest {
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
 
         // Complete upload - replaces placeholder
-        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid)
         assertEquals(AttachmentStatus.UPLOADED, viewmodel.uiState.value.attachments.first().status)
     }
 
@@ -606,7 +613,9 @@ class InboxComposeViewModelTest {
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
 
         // Upload fails - updates placeholder status
-        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        val uuid = UUID.randomUUID()
+        coEvery { workManager.getWorkInfoByIdFlow(uuid) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        viewmodel.onWorkStarted(uuid)
         assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first().status)
     }
 
@@ -637,7 +646,8 @@ class InboxComposeViewModelTest {
         assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
 
         // First upload completes - replaces first placeholder
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
 
         // Send button still disabled (second placeholder still uploading)
         assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
@@ -645,7 +655,8 @@ class InboxComposeViewModelTest {
         assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADING })
 
         // Second upload completes
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid2)
 
         // Now send button should be enabled
         assertEquals(true, viewmodel.uiState.value.isSendButtonEnabled)
@@ -661,8 +672,12 @@ class InboxComposeViewModelTest {
         assertEquals(1, viewmodel.uiState.value.attachments.size)
 
         // Multiple state updates should not add duplicates (placeholders already added)
-        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
-        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
+        viewmodel.onWorkStarted(uuid2)
 
         // Should still only have one attachment
         assertEquals(1, viewmodel.uiState.value.attachments.size)
@@ -686,15 +701,18 @@ class InboxComposeViewModelTest {
         viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
 
         // Assign workerIds to placeholders
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
+        viewmodel.onWorkStarted(uuid2)
 
         assertEquals(2, viewmodel.uiState.value.attachments.size)
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
 
         // First upload FAILS
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
 
         // Verify: First attachment is FAILED, second is still UPLOADING
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -702,7 +720,8 @@ class InboxComposeViewModelTest {
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
 
         // Second upload SUCCEEDS
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid2)
 
         // Verify: First attachment still FAILED, second is UPLOADED
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -721,20 +740,24 @@ class InboxComposeViewModelTest {
         viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
 
         // Assign workerIds to placeholders
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
+        viewmodel.onWorkStarted(uuid2)
 
         assertEquals(2, viewmodel.uiState.value.attachments.size)
 
         // First upload fails
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
 
         // Verify: Only first attachment is FAILED, second is still UPLOADING
         assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
 
         // Second upload also fails
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        viewmodel.onWorkStarted(uuid2)
 
         // Verify: Both attachments are FAILED
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -760,13 +783,16 @@ class InboxComposeViewModelTest {
         viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
 
         // Assign workerIds
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
+        viewmodel.onWorkStarted(uuid2)
 
         assertEquals(2, viewmodel.uiState.value.attachments.size)
 
         // First upload succeeds
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
 
         // Verify: First replaced with real attachment, second still uploading
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -774,7 +800,8 @@ class InboxComposeViewModelTest {
         assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADING })
 
         // Second upload succeeds
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        viewmodel.onWorkStarted(uuid2)
 
         // Verify: Both replaced with real attachments
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -793,8 +820,10 @@ class InboxComposeViewModelTest {
         viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf", "/storage/test2.pdf"))
 
         // Assign workerIds
-        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
-        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid1) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        coEvery { workManager.getWorkInfoByIdFlow(uuid2) } returns flowOf(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.onWorkStarted(uuid1)
+        viewmodel.onWorkStarted(uuid2)
 
         // Both should have workerIds assigned
         assertEquals(2, viewmodel.uiState.value.attachments.size)
@@ -804,6 +833,30 @@ class InboxComposeViewModelTest {
         // Both attachments should be UPLOADING
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
         assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
+    }
+
+    @Test
+    fun `onWorkStarted survives rotation - processes all work states without re-subscription`() = runTest {
+        val viewmodel = getViewModel()
+        val uuid = UUID.randomUUID()
+        val attachment = Attachment(id = 1, displayName = "test.pdf")
+        val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
+
+        coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
+
+        // Simulate Fragment calling addUploadingAttachments and onWorkStarted before rotation
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+
+        coEvery { workManager.getWorkInfoByIdFlow(uuid) } returns flow {
+            emit(WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+            emit(WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        }
+
+        // Fragment calls onWorkStarted once before rotation — viewModelScope keeps the flow alive
+        viewmodel.onWorkStarted(uuid)
+
+        // Both RUNNING and SUCCEEDED states processed without re-subscription after "rotation"
+        assertEquals(AttachmentStatus.UPLOADED, viewmodel.uiState.value.attachments.first().status)
     }
 
     @Test
@@ -1032,7 +1085,7 @@ class InboxComposeViewModelTest {
                 attachments = attachments
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
         val uiState = viewmodel.uiState.value
 
         assertEquals(mode, uiState.inboxComposeMode)
@@ -1060,7 +1113,7 @@ class InboxComposeViewModelTest {
                 isAttachmentDisabled = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
         val disabledFields = viewmodel.uiState.value.disabledFields
 
         assertEquals(true, disabledFields.isContextDisabled)
@@ -1085,7 +1138,7 @@ class InboxComposeViewModelTest {
                 isAttachmentHidden = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
         val hiddenFields = viewmodel.uiState.value.hiddenFields
 
         assertEquals(true, hiddenFields.isContextHidden)
@@ -1271,7 +1324,7 @@ class InboxComposeViewModelTest {
             )
         )
 
-        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
 
         val events = mutableListOf<InboxComposeViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -1307,7 +1360,7 @@ class InboxComposeViewModelTest {
             )
         )
 
-        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
 
         val events = mutableListOf<InboxComposeViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -1392,6 +1445,6 @@ class InboxComposeViewModelTest {
     // endregion
 
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
-        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior, workManager)
     }
 }
