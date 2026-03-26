@@ -440,6 +440,12 @@ class CanvasWebView @JvmOverloads constructor(
                 return WebResourceResponse(null, null, null)
             }
 
+            if (isCanvasFileDownload(url) && mediaDownloadCallback != null) {
+                val fileName = parseFileNameFromContentDisposition(url, url)
+                mediaDownloadCallback?.downloadInternalMedia(null, url, fileName)
+                view.post { stopLoading() }
+            }
+
             return super.shouldInterceptRequest(view, request)
         }
 
@@ -1013,7 +1019,7 @@ class CanvasWebView @JvmOverloads constructor(
                 .replace("src='www.".toRegex(), "src='https://www.")
         }
 
-        fun isStudioDownload(url: String): Boolean {
+        private fun isStudioDownload(url: String): Boolean {
             return url.contains("instructuremedia.com/fetch/") && url.contains("disposition=download")
         }
 
@@ -1041,13 +1047,21 @@ class CanvasWebView @JvmOverloads constructor(
             return false
         }
 
-        fun isInternalFileDownloadLink(url: String): Boolean {
+        private fun isInternalFileDownloadLink(url: String): Boolean {
             return try {
                 val uri = url.toUri()
                 uri.host?.contains("instructure-uploads") == true
             } catch (e: Exception) {
                 false
             }
+        }
+
+        private fun isCanvasFileDownload(url: String): Boolean {
+            return url.contains("canvas-user-content.com") &&
+                    url.contains("/files/") &&
+                    url.contains("/download") &&
+                    url.contains("verifier=") &&
+                    url.contains("download_frd=1")
         }
     }
 }
