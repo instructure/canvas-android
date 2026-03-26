@@ -444,7 +444,6 @@ class CanvasWebView @JvmOverloads constructor(
                 val fileName = parseFileNameFromContentDisposition(url, url)
                 mediaDownloadCallback?.downloadInternalMedia(null, url, fileName)
                 view.post { stopLoading() }
-                return WebResourceResponse(null, null, null)
             }
 
             return super.shouldInterceptRequest(view, request)
