@@ -74,7 +74,7 @@ class AssignmentDetailsRepositoryTest {
         val authenticatedUrl = "https://example.com/file?session=xyz"
         val session = AuthenticatedSession(sessionUrl = authenticatedUrl)
 
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns
+        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any(), any()) } returns
             DataResult.Success(session)
 
         val result = getRepository().authenticateUrl(originalUrl)
@@ -85,7 +85,7 @@ class AssignmentDetailsRepositoryTest {
     @Test
     fun `Test URL authentication fallback on failure`() = runTest {
         val originalUrl = "https://example.com/file"
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns DataResult.Fail()
+        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any(), any()) } returns DataResult.Fail()
 
         val result = getRepository().authenticateUrl(originalUrl)
 
@@ -95,7 +95,7 @@ class AssignmentDetailsRepositoryTest {
     @Test
     fun `Test URL authentication fallback on null session`() = runTest {
         val originalUrl = "https://example.com/file"
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns DataResult.Fail()
+        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any(), any()) } returns DataResult.Fail()
 
         val result = getRepository().authenticateUrl(originalUrl)
 
