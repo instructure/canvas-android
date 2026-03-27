@@ -35,6 +35,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ButtonDefaults
@@ -188,62 +189,75 @@ fun DashboardScreenContent(
             }
         }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .background(colorResource(R.color.backgroundLight))
-                .padding(paddingValues)
-                .pullRefresh(pullRefreshState)
-                .fillMaxSize()
-        ) {
-            when {
-                uiState.error != null -> {
-                    ErrorContent(
-                        errorMessage = uiState.error,
-                        retryClick = uiState.onRetry,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("errorContent")
-                    )
-                }
+        DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, router)
+    }
+}
 
-                uiState.loading -> {
-                    Loading(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("loading")
-                    )
-                }
-
-                uiState.widgets.isEmpty() -> {
-                    EmptyContent(
-                        emptyMessage = stringResource(id = R.string.noCoursesSubtext),
-                        imageRes = R.drawable.ic_panda_nocourses,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("emptyContent")
-                    )
-                }
-
-                else -> {
-                    WidgetList(
-                        widgets = uiState.widgets,
-                        refreshSignal = refreshSignal,
-                        onShowSnackbar = onShowSnackbar,
-                        router = router,
-                        color = uiState.color,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+@Composable
+@OptIn(ExperimentalMaterialApi::class)
+fun DashboardBody(
+    paddingValues: PaddingValues,
+    pullRefreshState: PullRefreshState,
+    uiState: DashboardUiState,
+    refreshSignal: SharedFlow<Unit>,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    router: DashboardRouter
+) {
+    Box(
+        modifier = Modifier
+            .background(colorResource(R.color.backgroundLight))
+            .padding(paddingValues)
+            .pullRefresh(pullRefreshState)
+            .fillMaxSize()
+    ) {
+        when {
+            uiState.error != null -> {
+                ErrorContent(
+                    errorMessage = uiState.error,
+                    retryClick = uiState.onRetry,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("errorContent")
+                )
             }
 
-            PullRefreshIndicator(
-                refreshing = uiState.refreshing,
-                state = pullRefreshState,
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .testTag("dashboardPullRefreshIndicator")
-            )
+            uiState.loading -> {
+                Loading(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("loading")
+                )
+            }
+
+            uiState.widgets.isEmpty() -> {
+                EmptyContent(
+                    emptyMessage = stringResource(id = R.string.noCoursesSubtext),
+                    imageRes = R.drawable.ic_panda_nocourses,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("emptyContent")
+                )
+            }
+
+            else -> {
+                WidgetList(
+                    widgets = uiState.widgets,
+                    refreshSignal = refreshSignal,
+                    onShowSnackbar = onShowSnackbar,
+                    router = router,
+                    color = uiState.color,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
+
+        PullRefreshIndicator(
+            refreshing = uiState.refreshing,
+            state = pullRefreshState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .testTag("dashboardPullRefreshIndicator")
+        )
     }
 }
 

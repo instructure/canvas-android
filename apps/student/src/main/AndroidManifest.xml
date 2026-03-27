@@ -281,6 +281,14 @@
         <activity android:name=".activity.StudentLoginWithQRActivity" />
 
         <activity
+            android:name=".features.ngc.NGCActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false"
+            android:label="@string/student_app_name"
+            android:launchMode="singleTask"
+            android:theme="@style/CanvasMaterialTheme_Default" />
+
+        <activity
             android:name=".activity.StudentViewStarterActivity"
             android:launchMode="singleTask"
             android:exported="true">

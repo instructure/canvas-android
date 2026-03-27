@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.HorizonActivity
 import com.instructure.loginapi.login.CANVAS_CAREER
+import com.instructure.loginapi.login.NEXT_GEN_CANVAS
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -30,6 +31,7 @@ import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.features.ngc.NGCActivity
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentAcceptableUsePolicyRouter(
@@ -49,10 +51,11 @@ class StudentAcceptableUsePolicyRouter(
         CookieManager.getInstance().flush()
 
         val isCanvasCareer = activity.intent?.getBooleanExtra(CANVAS_CAREER, false) ?: false
-        val intent = if (isCanvasCareer) {
-            Intent(activity, HorizonActivity::class.java)
-        } else {
-            Intent(activity, NavigationActivity.startActivityClass)
+        val isNextGenCanvas = activity.intent?.getBooleanExtra(NEXT_GEN_CANVAS, false) ?: false
+        val intent = when {
+            isCanvasCareer -> Intent(activity, HorizonActivity::class.java)
+            isNextGenCanvas -> Intent(activity, NGCActivity::class.java)
+            else -> Intent(activity, NavigationActivity.startActivityClass)
         }
 
         activity.intent?.extras?.let { extras ->
