@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 
 interface InboxRouter {
@@ -36,6 +37,8 @@ interface InboxRouter {
     fun avatarClicked(conversation: Conversation, scope: InboxApi.Scope)
 
     fun routeToAttachment(attachment: Attachment)
+
+    fun routeToMediaComment(mediaComment: MediaComment)
 
     fun popDetailsScreen(activity: FragmentActivity?)
 }

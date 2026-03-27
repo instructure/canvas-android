@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
@@ -518,6 +519,22 @@ class InboxDetailsViewModelTest {
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.OpenAttachment(attachment), events[0])
+    }
+
+    @Test
+    fun `Test MessageAction MediaComment onClick`() = runTest {
+        val viewModel = getViewModel()
+        val mediaComment = MediaComment(mediaId = "m-123", displayName = "Video", url = "https://example.com/video.mp4")
+
+        viewModel.messageActionHandler(MessageAction.OpenMediaAttachment(mediaComment))
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(1, events.size)
+        assertEquals(InboxDetailsFragmentAction.OpenMediaAttachment(mediaComment), events[0])
     }
 
     @Test
