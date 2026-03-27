@@ -63,7 +63,7 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
         openMedia(activity, attachment.url)
     }
 
-    override fun routeToMediaComment(mediaComment: MediaComment) {
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
         openMedia(activity, mediaComment.url)
     }
 

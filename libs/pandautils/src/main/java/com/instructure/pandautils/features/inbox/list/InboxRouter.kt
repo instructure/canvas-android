@@ -38,7 +38,7 @@ interface InboxRouter {
 
     fun routeToAttachment(attachment: Attachment)
 
-    fun routeToMediaComment(mediaComment: MediaComment)
+    fun routeToMediaAttachment(mediaComment: MediaComment)
 
     fun popDetailsScreen(activity: FragmentActivity?)
 }

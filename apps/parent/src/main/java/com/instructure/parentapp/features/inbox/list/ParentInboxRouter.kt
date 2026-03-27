@@ -64,7 +64,7 @@ class ParentInboxRouter(
         fileDownloader.downloadFileToDevice(attachment)
     }
 
-    override fun routeToMediaComment(mediaComment: MediaComment) {
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
         fileDownloader.downloadFileToDevice(mediaComment.url, mediaComment.displayName, mediaComment.contentType)
     }
 

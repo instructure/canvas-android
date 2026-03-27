@@ -87,8 +87,8 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
         openMedia(activity, attachment.url)
     }
 
-    override fun routeToMediaComment(mediaComment: MediaComment) {
-        openMedia(activity, mediaComment.url, mediaComment.displayName)
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
+        openMedia(activity, mediaComment.url)
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {
