@@ -19,10 +19,8 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
@@ -34,6 +32,7 @@ import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class AggregateProgressObserver(
@@ -48,56 +47,45 @@ class AggregateProgressObserver(
         get() = _progressData
     private val _progressData = MutableLiveData<AggregateProgressViewData?>()
 
-    private var courseProgressLiveData: LiveData<List<CourseSyncProgressEntity>>? = null
-    private var fileProgressLiveData: LiveData<List<FileSyncProgressEntity>>? = null
-    private var studioMediaProgressLiveData: LiveData<List<StudioMediaProgressEntity>>? = null
-
     private var courseProgresses = mutableMapOf<Long, CourseSyncProgressEntity>()
     private var fileProgresses = mutableMapOf<Long, FileSyncProgressEntity>()
     private var studioMediaProgresses = mutableListOf<StudioMediaProgressEntity>()
 
-    private val courseProgressObserver = Observer<List<CourseSyncProgressEntity>> {
-        courseProgresses = it.associateBy { it.courseId }.toMutableMap()
-
-        calculateProgress()
-    }
-
-    private val fileProgressObserver = Observer<List<FileSyncProgressEntity>> {
-        fileProgresses = it.associateBy { it.fileId }.toMutableMap()
-
-        calculateProgress()
-    }
-
-    private val studioMediaProgressObserver = Observer<List<StudioMediaProgressEntity>> {
-        studioMediaProgresses = it.toMutableList()
-        calculateProgress()
-    }
-
     init {
         GlobalScope.launch(Dispatchers.Main) {
-            courseProgressLiveData = try {
-                courseSyncProgressDao.findAllLiveData()
-            } catch (e: Exception) {
-                firebaseCrashlytics.recordException(e)
-                null
-            }
-            courseProgressLiveData?.observeForever(courseProgressObserver)
+            courseSyncProgressDao.findAllFlow()
+                .catch { e ->
+                    firebaseCrashlytics.recordException(e)
+                    emit(emptyList())
+                }
+                .collect { entities ->
+                    courseProgresses = entities.associateBy { it.courseId }.toMutableMap()
+                    calculateProgress()
+                }
+        }
 
-            fileProgressLiveData = try {
-                fileSyncProgressDao.findAllLiveData()
-            } catch (e: Exception) {
-                firebaseCrashlytics.recordException(e)
-                null
-            }
-            fileProgressLiveData?.observeForever(fileProgressObserver)
+        GlobalScope.launch(Dispatchers.Main) {
+            fileSyncProgressDao.findAllFlow()
+                .catch { e ->
+                    firebaseCrashlytics.recordException(e)
+                    emit(emptyList())
+                }
+                .collect { entities ->
+                    fileProgresses = entities.associateBy { it.fileId }.toMutableMap()
+                    calculateProgress()
+                }
+        }
 
-            studioMediaProgressLiveData = try {
-                studioMediaProgressDao.findAllLiveData()
-            } catch (e: Exception) {
-                firebaseCrashlytics.recordException(e)
-                null
-            }
-            studioMediaProgressLiveData?.observeForever(studioMediaProgressObserver)
+        GlobalScope.launch(Dispatchers.Main) {
+            studioMediaProgressDao.findAllFlow()
+                .catch { e ->
+                    firebaseCrashlytics.recordException(e)
+                    emit(emptyList())
+                }
+                .collect { entities ->
+                    studioMediaProgresses = entities.toMutableList()
+                    calculateProgress()
+                }
         }
     }
 
@@ -163,13 +151,6 @@ class AggregateProgressObserver(
         }
 
         _progressData.postValue(viewData)
-    }
-
-    @MainThread
-    fun onCleared() {
-        courseProgressLiveData?.removeObserver(courseProgressObserver)
-        fileProgressLiveData?.removeObserver(fileProgressObserver)
-        studioMediaProgressLiveData?.removeObserver(studioMediaProgressObserver)
     }
 }
 

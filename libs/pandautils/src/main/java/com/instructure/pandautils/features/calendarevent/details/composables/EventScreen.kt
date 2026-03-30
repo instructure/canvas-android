@@ -17,13 +17,21 @@
 
 package com.instructure.pandautils.features.calendarevent.details.composables
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -49,6 +57,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -108,6 +117,7 @@ internal fun EventScreen(
 
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal),
             topBar = {
                 CanvasThemedAppBar(
                     title = title,
@@ -148,17 +158,27 @@ internal fun EventScreen(
             },
             floatingActionButton = {
                 if (eventUiState.isMessageFabEnabled) {
-                    FloatingActionButton(
-                        backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
-                        onClick = {
-                            actionHandler(EventAction.OnMessageFabClicked)
-                        }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_chat),
-                            tint = Color(ThemePrefs.buttonTextColor),
-                            contentDescription = stringResource(id = R.string.sendMessageAboutEvent)
+                    val configuration = LocalConfiguration.current
+                    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+                    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues()
+
+                    Box(
+                        modifier = Modifier.padding(
+                            bottom = if (isPortrait) navigationBarPadding.calculateBottomPadding() else 0.dp
                         )
+                    ) {
+                        FloatingActionButton(
+                            backgroundColor = Color(color = eventUiState.toolbarUiState.toolbarColor),
+                            onClick = {
+                                actionHandler(EventAction.OnMessageFabClicked)
+                            }
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_chat),
+                                tint = Color(ThemePrefs.buttonTextColor),
+                                contentDescription = stringResource(id = R.string.sendMessageAboutEvent)
+                            )
+                        }
                     }
                 }
             },
@@ -372,6 +392,7 @@ private fun EventContent(
                         applyOnWebView = applyOnWebView
                     )
                 }
+                Spacer(Modifier.size(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }

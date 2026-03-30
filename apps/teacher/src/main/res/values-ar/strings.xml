@@ -31,6 +31,7 @@
     <string name="tab_attendance">الحضور</string>
     <string name="tab_pages">الصفحات</string>
     <string name="tab_todo">قائمة مهام</string>
+    <string name="tab_todo_new">المهمة</string>
     <string name="content_description_school_logo">شعار المدرسة</string>
     <string name="search_guides">البحث في Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
@@ -890,6 +891,7 @@
     <string name="toDoEmpty">لا يوجد شيء آخر يمكن فعله!\n طاب يومك.</string>
     <string name="toDoNoSubmissions">لا توجد مهام مرسلة لتقييمها لهذه المهمة.</string>
     <string name="errorToDoRouteFailed">حدث خطأ أثناء محاولة عرض عنصر المهام هذا.</string>
+    <string name="errorToDoRouteFailedNew">وقع خطأ أثناء محاولة عرض عنصر المهمة هذا.</string>
     <string name="errorIsDesigner">لا يمكن لتسجيل المصمم عرض هذا.</string>
 
     <string name="sections">الأقسام</string>

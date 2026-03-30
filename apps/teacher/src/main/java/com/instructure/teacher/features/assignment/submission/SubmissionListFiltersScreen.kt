@@ -32,7 +32,6 @@ import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,8 +50,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
-import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.RadioButtonText
@@ -120,7 +119,7 @@ private fun SubmissionFilterScreenContent(
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
-            CanvasAppBar(
+            CanvasThemedAppBar(
                 title = stringResource(R.string.preferences),
                 subtitle = uiState.assignmentName,
                 navigationActionClick = {
@@ -129,7 +128,7 @@ private fun SubmissionFilterScreenContent(
                 navIconContentDescription = stringResource(R.string.close),
                 navIconRes = R.drawable.ic_close,
                 backgroundColor = uiState.courseColor,
-                textColor = colorResource(id = R.color.textLightest),
+                contentColor = colorResource(id = R.color.textLightest),
                 actions = {
                     TextButton(
                         modifier = Modifier.testTag("appBarDoneButton"),

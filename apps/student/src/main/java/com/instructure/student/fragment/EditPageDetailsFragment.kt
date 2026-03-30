@@ -19,6 +19,7 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -40,7 +41,20 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsCloseButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditPageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
@@ -74,6 +88,11 @@ class EditPageDetailsFragment : ParentFragment() {
         return url.toString()
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
+    }
+
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_edit_page, container, false)
@@ -82,6 +101,7 @@ class EditPageDetailsFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupDescription()
+        binding.pageRCEView.applyBottomSystemBarInsets()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -121,7 +141,9 @@ class EditPageDetailsFragment : ParentFragment() {
     //endregion
 
     //region Fragment Interaction Overrides
-    override fun applyTheme() = Unit
+    override fun applyTheme() {
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
+    }
 
     override fun title(): String = getString(R.string.editPage)
     //endregion
@@ -192,6 +214,7 @@ class EditPageDetailsFragment : ParentFragment() {
             }
         }
         toolbar.title = page.title
+        toolbar.applyTopSystemBarInsets()
         setupToolbarMenu(toolbar, R.menu.menu_edit_page)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)

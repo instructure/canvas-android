@@ -38,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 287
-        versionName = '8.5.0'
+        versionCode = 289
+        versionName = '8.6.1'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -317,8 +317,6 @@ dependencies {
     /* WorkManager */
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
-
-    implementation Libs.PENDO
 
     /* ROOM */
     implementation Libs.ROOM

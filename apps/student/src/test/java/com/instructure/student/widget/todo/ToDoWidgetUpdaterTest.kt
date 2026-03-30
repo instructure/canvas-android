@@ -71,7 +71,7 @@ class ToDoWidgetUpdaterTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         mockkObject(DateHelper)
         every { DateHelper.getPreferredTimeFormat(any()) } returns SimpleDateFormat("HH:mm", Locale.getDefault())
-        every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "To Do"
         every { context.getString(R.string.widgetAllDay) } returns "All day"
 
         // Set up default mocks

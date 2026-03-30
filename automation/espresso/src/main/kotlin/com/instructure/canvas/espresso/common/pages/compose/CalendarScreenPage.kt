@@ -55,7 +55,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickAddTodo() {
-        composeTestRule.onNodeWithText("Add To Do").performClick()
+        composeTestRule.onNodeWithText("Add To-do").performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -134,6 +134,13 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
 
     fun clickTodayButton() {
         composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.a11y_contentDescriptionCalendarJumpToToday), true).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickOnDayNumber(dayNumber: Int) {
+        composeTestRule.onNode(
+            hasTestTag(dayNumber.toString()) and hasAnyAncestor(hasTestTag("calendarBody0"))
+        ).performClick()
         composeTestRule.waitForIdle()
     }
 

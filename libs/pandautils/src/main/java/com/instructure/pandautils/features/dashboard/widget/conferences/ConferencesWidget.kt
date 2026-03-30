@@ -63,6 +63,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import kotlinx.coroutines.flow.SharedFlow
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ConferencesWidget(
@@ -180,6 +181,7 @@ private fun ConferenceCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .pendoTag("conferencesWidget_joinConference", true)
             .clickable(enabled = !isJoining, onClick = onJoin),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -246,7 +248,7 @@ private fun ConferenceCard(
             } else {
                 IconButton(
                     onClick = onDismiss,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp).pendoTag("conferencesWidget_dismissConference", true)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),

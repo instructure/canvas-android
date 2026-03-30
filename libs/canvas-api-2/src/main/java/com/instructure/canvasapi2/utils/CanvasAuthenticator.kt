@@ -32,6 +32,12 @@ private const val RETRY_HEADER = "mobile_refresh"
 class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
+        // This is used to prevent user logout on embedded LTIs in pages where we can't obtain an authenticated session for the LTI url.
+        val params = response.request.restParams()
+        if (params?.shouldRefreshToken == false) {
+            return null
+        }
+
         if (response.request.header(RETRY_HEADER) != null) {
             logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
             EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))

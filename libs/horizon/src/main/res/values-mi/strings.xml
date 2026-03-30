@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Tuemi kōwae e whai ake nei</string>
     <string name="a11y_nextModule">Kōwae e whai ake nei</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, kua tohua hei %2$s, pato rua hei whakatika i te tuhipoka</string>
+    <string name="learnCoursesTabLabel">Ngā Akoranga</string>
+    <string name="learnProgramsTabLabel">Ngā Hōtaka</string>
     <string name="reportAProblemDescriptionMessage">Kōnae he tīkiti mo te whakautu whaiaro i to tatou rōpū tautoko.</string>
     <string name="igniteAIEnterAPromptLabel">Whakauruhia he tohu</string>
     <string name="a11y_igniteAiLoadingContentDescription">Utaina ana te whakautu</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Tahurihia te kāri</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">I rahua te uta i nga akoranga</string>
+    <string name="learnCourseListFilterAll">Ngā akoranga kato</string>
+    <string name="learnCourseListFilterNotStarted">Kaore i timata</string>
+    <string name="learnCourseListFilterInProgress">Kei te ahu whakamua</string>
+    <string name="learnCourseListFilterCompleted">Kua Oti</string>
+    <string name="learnCourseListStartLearningLabel">Tīmata te ako</string>
+    <string name="learnCourseListResumeLearningLabel">Whakahokia te ako</string>
+    <string name="learnCourseListViewCourseLabel">Tirohia te akoranga</string>
+    <string name="learnCourseListShowMoreLabel">Whakāturia mai ētahi atu</string>
+    <string name="learnCourseListSearchBarPlaceholder">Rapu akoranga</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Wāhanga o %1$s</string>
+    <string name="learnCourseListEmptyMessage">Kāore i kitea he hua. Whakamātauria te whakarerekē i ō kupu rapu.</string>
+    <string name="learnProgramListFilterAll">Ngā hōtaka katoa</string>
+    <string name="learnProgramListFilterNotStarted">Kaore i timata</string>
+    <string name="learnProgramListFilterInProgress">Kei te ahu whakamua</string>
+    <string name="learnProgramListFilterCompleted">Kua Oti</string>
+    <string name="learnProgramListShowMoreLabel">Whakāturia mai ētahi atu</string>
+    <string name="learnProgramListEmptyMessage">Kāore i kitea he hua. Ngāna ki te whakarerekē i ō kupu rapu.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Rapu kaupapa</string>
+    <string name="learnProgramListFailedToLoadMessage">Kāore i taea te uta i ngā kaupapa</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d akoranga</item>
+        <item quantity="other">%1$d ngā akoranga</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Hapa: %1$s</string>
     <string name="a11y_required">E Hiahiatia Ana</string>
 </resources>

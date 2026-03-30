@@ -140,7 +140,7 @@ class HtmlContentFormatter(
     }
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
-        val ltiResult = apiAsync<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.await()
+        val ltiResult = apiAsync { oAuthManager.getAuthenticatedSession(ltiUrl, it, shouldRefreshToken = false) }.await()
         return if (ltiResult.isSuccess) {
             return ltiResult.dataOrNull?.sessionUrl ?: ltiUrl
         } else {

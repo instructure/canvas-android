@@ -18,10 +18,12 @@
 package com.instructure.parentapp.features.courses.details
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
@@ -35,8 +37,9 @@ class CourseDetailsRepositoryTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)
+    private val pageApi: PageAPI.PagesInterface = mockk(relaxed = true)
 
-    private val repository = CourseDetailsRepository(courseApi, tabApi)
+    private val repository = CourseDetailsRepository(courseApi, tabApi, pageApi)
 
     @Test
     fun `Get course details successfully returns data`() = runTest {
@@ -84,5 +87,35 @@ class CourseDetailsRepositoryTest {
         } returns DataResult.Fail()
 
         repository.getCourseTabs(1L, true)
+    }
+
+    @Test
+    fun `Get front page successfully returns page`() = runTest {
+        val expected = Page(body = "Front page content")
+
+        coEvery {
+            pageApi.getFrontPage(
+                CanvasContext.Type.COURSE.apiString,
+                1L,
+                RestParams(isForceReadFromNetwork = false)
+            )
+        } returns DataResult.Success(expected)
+
+        val result = repository.getFrontPage(1L, false)
+        Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get front page returns null when fails`() = runTest {
+        coEvery {
+            pageApi.getFrontPage(
+                CanvasContext.Type.COURSE.apiString,
+                1L,
+                RestParams(isForceReadFromNetwork = false)
+            )
+        } returns DataResult.Fail()
+
+        val result = repository.getFrontPage(1L, false)
+        Assert.assertNull(result)
     }
 }

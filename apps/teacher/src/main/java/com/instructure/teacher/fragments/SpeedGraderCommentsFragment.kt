@@ -58,6 +58,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.onTextChanged
@@ -159,6 +160,12 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCommentInput()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        speedGraderCommentsRecyclerView.applyImeAndSystemBarInsets()
+        commentInputContainer.commentInputRoot.applyImeAndSystemBarInsets()
     }
 
     override fun onRefreshStarted() {}

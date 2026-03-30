@@ -133,7 +133,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         calendarToDoDetailsPage.clickEditMenu()
 
         composeTestRule.waitForIdle()
-        calendarToDoCreateUpdatePage.assertPageTitle("Edit To Do")
+        calendarToDoCreateUpdatePage.assertPageTitle("Edit To-do")
     }
 
     @Test
@@ -179,7 +179,7 @@ abstract class ToDoDetailsInteractionTest : CanvasComposeTest() {
         calendarToDoDetailsPage.clickDeleteMenu()
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete To-do?").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete").performClick()
 
         composeTestRule.waitForIdle()

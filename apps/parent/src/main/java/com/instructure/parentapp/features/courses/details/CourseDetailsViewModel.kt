@@ -79,18 +79,18 @@ class CourseDetailsViewModel @Inject constructor(
 
             val course = repository.getCourse(courseId, forceRefresh)
             val tabs = repository.getCourseTabs(courseId, forceRefresh)
+            val frontPage = repository.getFrontPage(courseId, forceRefresh)
 
-            val hasHomePageAsFrontPage = course.homePage == Course.HomePage.HOME_WIKI
+            val showFrontPageTab = !frontPage?.body.isNullOrEmpty()
 
             val showSyllabusTab = !course.syllabusBody.isNullOrEmpty() &&
-                    (course.homePage == Course.HomePage.HOME_SYLLABUS ||
-                            (!hasHomePageAsFrontPage && tabs.any { it.tabId == Tab.SYLLABUS_ID }))
+                    (course.homePage == Course.HomePage.HOME_SYLLABUS || tabs.any { it.tabId == Tab.SYLLABUS_ID })
 
             val showSummary = showSyllabusTab && course.settings?.courseSummary.orDefault()
 
             val tabTypes = buildList {
                 add(TabType.GRADES)
-                if (hasHomePageAsFrontPage) add(TabType.FRONT_PAGE)
+                if (showFrontPageTab) add(TabType.FRONT_PAGE)
                 if (showSyllabusTab) add(TabType.SYLLABUS)
                 if (showSummary) add(TabType.SUMMARY)
             }

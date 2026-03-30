@@ -467,11 +467,13 @@
     <string name="schedule_calendar_event_due_text">في %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s إلى %2$s</string>
     <string name="schedule_todo_due_text">قائمة المهام: %s</string>
+    <string name="schedule_todo_due_text_new">المهمة: %s</string>
     <string name="schedule_due_text">تاريخ الاستحقاق: %s</string>
     <string name="show_missing_items_title">إظهار %d من العناصر المفقودة</string>
     <string name="hide_missing_items_title">إخفاء %d من العناصر المفقودة</string>
     <string name="schedule_error_message">لا يمكن إحضار جدولك</string>
     <string name="schedule_todo_title">قائمة المهام</string>
+    <string name="schedule_todo_title_new">المهمة</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s نقطة</item>
         <item quantity="one">%s نقطة</item>
@@ -502,6 +504,7 @@
     <string name="a11y_planner_note">ملاحظة المخطِط</string>
     <string name="a11y_quiz">الاختبار الموجز</string>
     <string name="a11y_todo">قائمة المهام</string>
+    <string name="a11y_todo_new">المهمة</string>
     <string name="a11y_page">صفحة</string>
     <string name="a11y_assessment_request">طلب التقييم</string>
     <string name="a11y_marked_as_done">تم وضع علامة "تم"</string>

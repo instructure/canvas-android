@@ -18,11 +18,6 @@ package com.instructure.student.ui.rendertests.renderpages
 
 import android.view.View
 import androidx.test.espresso.Espresso.onData
-import androidx.test.espresso.action.CoordinatesProvider
-import androidx.test.espresso.action.GeneralLocation
-import androidx.test.espresso.action.GeneralSwipeAction
-import androidx.test.espresso.action.Press
-import androidx.test.espresso.action.Swipe
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -58,17 +53,6 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
     val drawerContent by OnViewWithId(R.id.drawerViewPager)
     val slidingPanel by OnViewWithId(R.id.slidingUpPanelLayout)
     val versionSpinner by OnViewWithId(R.id.submissionVersionsSpinner)
-
-    /* Grabs the current coordinates of the center of drawerTabLayout */
-    private val tabLayoutCoordinates = object : CoordinatesProvider {
-        override fun calculateCoordinates(view: View): FloatArray {
-            val tabs = view.findViewById<View>(R.id.drawerTabLayout)
-            val xy = IntArray(2).apply { tabs.getLocationOnScreen(this) }
-            val x = xy[0] + (tabs.width / 2f)
-            val y = xy[1] + (tabs.height / 2f)
-            return floatArrayOf(x, y)
-        }
-    }
 
     fun assertDisplaysToolbarTitle(text: String) {
         onViewWithText(text).assertDisplayed()
@@ -118,10 +102,6 @@ class SubmissionDetailsRenderPage : SubmissionDetailsPage() {
 
     fun clickTab(name: String) {
         onView(allOf(withAncestor(R.id.drawerTabLayout), withText(name))).click()
-    }
-
-    fun swipeDrawerTo(location: GeneralLocation) {
-        slidingPanel.perform(GeneralSwipeAction(Swipe.FAST, tabLayoutCoordinates, location, Press.FINGER))
     }
 
     fun assertSpinnerMatchesText(text: String) {

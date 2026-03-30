@@ -143,8 +143,9 @@ import com.instructure.teacher.utils.setAnonymousAvatar
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.pspdfkit.ui.PdfFragment
+import com.pspdfkit.ui.annotations.OnAnnotationCreationModeChangeListener
+import com.pspdfkit.ui.annotations.OnAnnotationEditingModeChangeListener
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
-import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import kotlinx.coroutines.Job
@@ -164,7 +165,7 @@ class SubmissionContentView(
     private val assignment: Assignment,
     private val course: Course,
     var initialTabIndex: Int = 0
-) : PdfSubmissionView(context, courseId = course.id), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+) : PdfSubmissionView(context, courseId = course.id), OnAnnotationCreationModeChangeListener, OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewSubmissionContentBinding
 

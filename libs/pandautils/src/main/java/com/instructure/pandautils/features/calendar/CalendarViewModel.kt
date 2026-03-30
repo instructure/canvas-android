@@ -317,9 +317,9 @@ class CalendarViewModel @Inject constructor(
     private fun getContextNameForPlannerItem(plannerItem: PlannerItem): String {
         return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
             if (plannerItem.contextName.isNullOrEmpty()) {
-                context.getString(R.string.userCalendarToDo)
+                context.getString(R.string.userCalendarToDoNew)
             } else {
-                context.getString(R.string.courseToDo, plannerItem.contextName)
+                context.getString(R.string.courseToDoNew, plannerItem.contextName)
             }
         } else {
             plannerItem.contextName.orEmpty()
@@ -363,8 +363,8 @@ class CalendarViewModel @Inject constructor(
             when {
                 submissionState.excused -> context.getString(R.string.calendarEventExcused)
                 submissionState.missing -> context.getString(R.string.calendarEventMissing)
-                submissionState.graded -> context.getString(R.string.calendarEventGraded)
-                submissionState.needsGrading -> context.getString(R.string.calendarEventSubmitted)
+                submissionState.graded && submissionState.postedAt != null -> context.getString(R.string.calendarEventGraded)
+                submissionState.graded || submissionState.needsGrading -> context.getString(R.string.calendarEventSubmitted)
                 plannerItem.plannable.pointsPossible != null -> context.getString(
                     R.string.calendarEventPoints,
                     NumberHelper.formatDecimal(plannerItem.plannable.pointsPossible!!, 1, true)

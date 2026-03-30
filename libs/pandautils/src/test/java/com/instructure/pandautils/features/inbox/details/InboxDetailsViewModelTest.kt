@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.details
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -72,6 +73,7 @@ class InboxDetailsViewModelTest {
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
         coEvery { savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID) } returns conversation.id
         coEvery { savedStateHandle.get<Boolean>(InboxDetailsFragment.UNREAD) } returns false
+        coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns null
         coEvery { context.getString(
             com.instructure.pandautils.R.string.inboxForwardSubjectFwPrefix,
             conversation.subject
@@ -445,6 +447,42 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
+    fun `Test archiving conversation shows archived snackbar`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.ARCHIVED
+        val newConversation = conversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationArchived)), events[0])
+    }
+
+    @Test
+    fun `Test unarchiving conversation shows unarchived snackbar`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.READ
+        val newConversation = conversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+    }
+
+    @Test
     fun `Test Conversation workflow state update failed`() = runTest {
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.READ
@@ -675,6 +713,24 @@ class InboxDetailsViewModelTest {
         uiState.messageStates.forEach { messageState ->
             assertEquals(true, messageState.canDelete)
             assertEquals(true, messageState.canReplyAll)
+        }
+    }
+
+    @Test
+    fun `Test Sent scope hides archive option`() {
+        coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns InboxApi.Scope.SENT.name
+        val viewModel = getViewModel()
+
+        assertEquals(false, viewModel.uiState.value.showArchiveOption)
+    }
+
+    @Test
+    fun `Test non-Sent scope shows archive option`() {
+        InboxApi.Scope.entries.filter { it != InboxApi.Scope.SENT }.forEach { scope ->
+            coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns scope.name
+            val viewModel = getViewModel()
+
+            assertEquals(true, viewModel.uiState.value.showArchiveOption)
         }
     }
 

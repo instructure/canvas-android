@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.FileSyncProgressEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FileSyncProgressDao {
@@ -60,6 +61,9 @@ interface FileSyncProgressDao {
 
     @Query("SELECT * FROM FileSyncProgressEntity")
     fun findAllLiveData(): LiveData<List<FileSyncProgressEntity>>
+
+    @Query("SELECT * FROM FileSyncProgressEntity")
+    fun findAllFlow(): Flow<List<FileSyncProgressEntity>>
 
     @Query("SELECT * FROM FileSyncProgressEntity")
     suspend fun findAll(): List<FileSyncProgressEntity>

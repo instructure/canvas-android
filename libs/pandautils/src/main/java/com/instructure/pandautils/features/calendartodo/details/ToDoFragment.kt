@@ -162,7 +162,7 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
     override val navigation: Navigation?
         get() = activity as? Navigation
 
-    override fun title(): String = getString(R.string.userCalendarToDo)
+    override fun title(): String = getString(R.string.userCalendarToDoNew)
 
     override fun applyTheme() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)

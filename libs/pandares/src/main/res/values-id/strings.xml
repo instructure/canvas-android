@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Penyerahan Gagal</string>
     <string name="submissionStatusFailedSubtitle">Ketuk untuk melihat detail</string>
     <string name="submissionAndRubric">Penyerahan &amp; Rubrik</string>
+    <string name="submissionAndFeedback">Penyerahan &amp; Umpan Balik</string>
     <string name="commentsAndRubric">Komentar &amp; Rubrik</string>
     <string name="errorLoadingAssignment">Ada masalah saat memuat tugas ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="submitted">Diserahkan</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Hari Ini</string>
+    <string name="tomorrow">Besok</string>
     <string name="past">Masa Lalu</string>
     <string name="noDate">Tidak Ada Tanggal</string>
     <string name="future">Mendatang</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Tidak ada item untuk ditampilkan</string>
     <string name="Todo">Harus Dilakukan</string>
+    <string name="TodoNew">To-do</string>
     <string name="todoFilter">Filter Kursus</string>
     <string name="filterByEllipsis">Filter menurut...</string>
     <string name="favoriteCoursesLabel">Kursus Favorit</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grup</string>
     <string name="groupMembers">Anggota Grup</string>
 
+    <string name="messageGroup">Kirim Pesan ke Grup</string>
     <string name="loading">Memuat&#8230;</string>
     <string name="select_item_to_display">Pilih dari daftar</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Harus Dilakukan</string>
+    <string name="todoWidgetTitleNew">To-do</string>
     <string name="gradesWidgetTitle">Nilai</string>
     <string name="notificationWidgetTitle">Notifikasi</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
+    <string name="todoWidgetTitleLongNew">Canvas - To-do</string>
     <string name="gradesWidgetTitleLong">Canvas - Nilai</string>
     <string name="gradeWidgetTitleLong">Canvas - Nilai</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikasi</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Kursus</string>
     <string name="toDoList">Daftar To Do</string>
+    <string name="toDoListNew">Daftar To-do</string>
+
     <string name="notifications">Notifikasi</string>
     <string name="pushNotifications">Notifikasi Push</string>
     <string name="pushNotificationsError">Notifikasi Push belum didaftarkan untuk perangkat ini.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Buka SpeedGrader</string>
 
-    <string name="search_todo">todo to do todos todo daftar</string>
     <string name="search_course">kursus kursus kelas kelas</string>
     <string name="search_grades">nilai nilai</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Judul halaman harus ditetapkan.</string>
     <string name="pageDetails">Detail Halaman</string>
     <string name="saving">Sedang menyimpan</string>
+    <string name="speedGraderSaving">Sedang menyimpan</string>
+    <string name="speedGraderSaved">Disimpan</string>
+    <string name="speedGraderFailed">Gagal</string>
+    <string name="speedGraderSaveErrorTitle">Ups, terjadi kesalahan</string>
+    <string name="speedGraderSaveErrorMessage">Terjadi kesalahan saat menyimpan perubahan nilai Anda. Anda dapat mencoba lagi, atau coba lagi nanti.</string>
+    <string name="speedGraderSaveErrorContentDescription">Penyimpanan nilai gagal. Ketuk untuk detail.</string>
+
     <string name="confirmDeleteEvent">Anda yakin mau menghapus acara ini?</string>
     <string name="conferencesNotSupported">Konferensi belum didukung di seluler.</string>
     <string name="filePreviewContentDescription">Gambar pratinjau file</string>
@@ -1223,6 +1237,10 @@
     <string name="recordings">Rekaman</string>
     <string name="conferenceInProgress">Konferensi sedang berlangsung</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferensi (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Konferensi sedang berlangsung</string>
+    <string name="conferencesWidgetDismissed">Konferensi dibatalkan</string>
     <string name="a11y_criterion_content_description">Peringkat kriteria %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">informasi selengkapnya</string>
@@ -1377,6 +1395,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s item harus dilakukan</item>
+        <item quantity="other">%s item harus dilakukan</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s item harus dilakukan</item>
         <item quantity="other">%s item harus dilakukan</item>
     </plurals>
@@ -1664,7 +1686,9 @@
     <string name="calendarNoEvents">Tidak Ada Acara Hari Ini!</string>
     <string name="calendarNoEventsDescription">Sepertinya hari ini sangat cocok untuk beristirahat, santai, dan menyegarkan diri.</string>
     <string name="userCalendarToDo">To Do</string>
+    <string name="userCalendarToDoNew">To-do</string>
     <string name="courseToDo">To Do %s</string>
+    <string name="courseToDoNew">%s To-do</string>
     <string name="calendarEventExcused">Dibolehkan</string>
     <string name="calendarEventMissing">Tidak Ada</string>
     <string name="calendarEventGraded">Dinilai</string>
@@ -1689,21 +1713,30 @@
     <string name="a11y_eventCreatedAnnouncement">Acara %s berhasil dibuat.</string>
     <string name="a11y_eventUpdatedAnnouncement">Acara %s berhasil diperbarui.</string>
     <string name="a11y_toDoCreatedAnnouncement">Harus Dilakukan %s berhasil dibuat.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Harus dilakukan %s berhasil dibuat.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Harus Dilakukan %s berhasil diperbarui.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Harus dilakukan %s berhasil diperbarui.</string>
     <string name="todoScreenTitle">To Do</string>
+    <string name="todoScreenTitleNew">To-do</string>
     <string name="todoDateLabel">Tanggal</string>
     <string name="todoDescriptionLabel">Deskripsi</string>
     <string name="todoDeleteConfirmationTitle">Harus Dilakukan/To Do?</string>
+    <string name="todoDeleteConfirmationTitleNew">Hapus To-do?</string>
     <string name="todoDeleteConfirmationText">Ini akan secara permanen menghapus butir To Do/Harus Dilakukan Anda.</string>
+    <string name="todoDeleteConfirmationTextNew">Ini akan menghapus item To-do Anda secara permanen.</string>
     <string name="todoDeleteErrorMessage">Terjadi kesalahan saat menghapus To Do ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="todoDeleteErrorMessageNew">Terjadi kesalahan saat menghapus tugas ini. Silakan periksa koneksi Anda dan coba lagi.</string>
     <string name="createTodoScreenTitle">To Do Baru</string>
+    <string name="createTodoScreenTitleNew">To-do Baru</string>
     <string name="editTodoScreenTitle">Edit To Do</string>
+    <string name="editTodoScreenTitleNew">Edit To-do</string>
     <string name="createToDoTitleHint">Tambah judul</string>
     <string name="createToDoDateLabel">Tanggal</string>
     <string name="createToDoTimeLabel">Waktu</string>
     <string name="createToDoCalendarLabel">Kalender</string>
     <string name="createToDoDetailsLabel">Detail</string>
     <string name="todoSaveErrorMessage">Terjadi kesalahan saat menyimpan To Do ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="todoSaveErrorMessageNew">Terjadi kesalahan saat menyimpan tugas ini. Silakan periksa koneksi Anda dan coba lagi.</string>
     <string name="selectCalendarScreenTitle">Pilih Kalender</string>
     <string name="errorContentRetryButton">Coba lagi</string>
     <string name="eventLocationLabel">Lokasi</string>
@@ -1711,6 +1744,7 @@
     <string name="eventDetailsLabel">Detail</string>
     <string name="errorLoadingEvent">Ada masalah saat memuat acara ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="errorLoadingTodo">Ada masalah saat memuat to do ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="errorLoadingTodoNew">Terjadi kesalahan saat memuat daftar to-do. Silakan periksa koneksi Anda dan coba lagi.</string>
     <string name="eventDeleteConfirmationTitle">Hapus Acara?</string>
     <string name="eventDeleteConfirmationText">Ini akan secara permanen menghapus acara Anda.</string>
     <string name="eventDeleteErrorMessage">Terjadi kesalahan saat menghapus acara ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
@@ -1727,6 +1761,7 @@
     <string name="eventDeleteScopeAll">Semua acara</string>
     <string name="eventDeleteScopeFollowing">Ini dan semua peristiwa berikutnya</string>
     <string name="calendarAddToDo">Tambah To-Do</string>
+    <string name="calendarAddToDoNew">Tambah To-Do</string>
     <string name="calendarAddEvent">Tambah Acara</string>
     <string name="createEventScreenTitle">Acara Baru</string>
     <string name="editEventScreenTitle">Edit Acara</string>
@@ -2105,7 +2140,9 @@
     <string name="widgetNotLoggedInTitle">Ayo Kita Log In!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat to-do Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
     <string name="a11y_widgetToDoOpenToDoList">Buka layar To Do</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Buka layar daftar To-do</string>
     <string name="a11y_widgetToDoCreateNewToDo">Buat To Do baru</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Buat To-do baru</string>
     <string name="widgetGradesErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
     <string name="widgetSingleGradeErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini.</string>
@@ -2113,6 +2150,19 @@
     <string name="widgetSingleGradeSelectCourse">Ayo pilih kursus</string>
     <string name="widgetGradesErrorLoadingCourses">Kesalahan terjadi saat memuat kursus.</string>
     <string name="settingsSwitchExperience">Alihkan ke Canvas Career</string>
+    <string name="forecastWidgetTitle">Rangkuman Mingguan</string>
+    <string name="forecastWidgetWeekPeriod">Minggu %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Tidak Ada</string>
+    <string name="forecastWidgetDue">Batas Waktu</string>
+    <string name="forecastWidgetRecentGrades">Nilai Baru</string>
+    <string name="forecastWidgetGradeWeight">%d%% dari nilai final</string>
+    <string name="forecastWidgetErrorMessage">Kami kesulitan memuat nilai tugas Anda. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="forecastWidgetEmptyMissing">Tidak ada tugas yang hilang. Anda berhasil menyusul!</string>
+    <string name="forecastWidgetEmptyDue">Tidak ada tugas jatuh tempo minggu ini</string>
+    <string name="forecastWidgetEmptyRecentGrades">Tidak ada nilai baru minggu ini.</string>
+    <string name="a11y_contentDescription_previousWeek">Minggu sebelumnya</string>
+    <string name="a11y_contentDescription_nextWeek">Minggu depan</string>
+
     <string name="speedGraderGradeTabTitle">Nilai &amp; Rubrik</string>
     <string name="speedGraderDetailsTabTitle">Detail</string>
     <string name="a11y_contentDescription_expandPanel">Perluas panel</string>
@@ -2191,6 +2241,7 @@
     <string name="errorLoadingToDos">Terjadi kesalahan saat memuat item harus dilakukan Anda. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="errorUpdatingToDo">Terjadi kesalahan saat memperbarui item harus dilakukan. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="noToDosForNow">Tidak ada yang harus dilakukan sekarang!</string>
+    <string name="noToDosForNowNew">Tidak ada To-do untuk sekarang!</string>
     <string name="noToDosForNowSubtext">Sepertinya waktu yang tepat untuk beristirahat, bersantai, dan memulihkan tenaga.</string>
     <string name="todoSwipeDone">Selesai</string>
     <string name="todoSwipeUndo">Urungkan</string>
@@ -2201,8 +2252,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferensi Daftar Yang Harus Dilakukan</string>
+    <string name="todoFilterPreferencesNew">Preferensi daftar To-do</string>
     <string name="todoFilterVisibleItems">Item Tampak</string>
     <string name="todoFilterShowPersonalToDos">Tampilkan Daftar Harus Dilakukan Pribadi</string>
+    <string name="todoFilterShowPersonalToDosNew">Tampilkan Daftar To Do</string>
     <string name="todoFilterShowCalendarEvents">Tampilkan Acara Kalender</string>
     <string name="todoFilterShowCompleted">Tampilkan Selesai</string>
     <string name="todoFilterFavoriteCoursesOnly">Kursus Favorit Saja</string>
@@ -2228,6 +2281,9 @@
     <string name="courseInvitationDeclined">Undangan ke %s ditolak</string>
     <string name="courseInvitationDeclineConfirmTitle">Tolak Undangan</string>
     <string name="courseInvitationDeclineConfirmMessage">Anda yakin mau menolak undangan dari %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Kemajuan</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2351,6 +2407,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Halo, %s</string>
 
+    <string name="courses_and_groups">Kursus &amp; Grup</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Sesuaikan Dashboard</string>
     <string name="dashboard_widgets">Widget</string>
@@ -2360,16 +2417,44 @@
     <string name="changing_dashboard_layout">Mengubah tata letak dashboard</string>
     <string name="changing_dashboard_layout_message">Untuk mengubah tata letak dashboard, Anda harus memulai ulang aplikasi.</string>
     <string name="restart_now">Mulai ulang sekarang</string>
+    <string name="turn_on_new_dashboard">Aktifkan dasbor baru</string>
     <string name="switched_back">Beralih kembali?</string>
     <string name="switched_back_message">Terima kasih telah mencoba dashboard baru! Bisakah Anda memberi tahu kami mengapa Anda beralih kembali?</string>
+    <string name="survey_option_hard_to_find">Sulit menemukan sesuatu</string>
+    <string name="survey_option_prefer_old_layout">Lebih suka tata letak lama</string>
+    <string name="survey_option_something_broken">Ada yang tidak berfungsi dengan benar</string>
     <string name="what_could_we_improve">Apa yang dapat kami tingkatkan?</string>
+    <string name="what_do_you_think_of_new_dashboard">Apa pendapat Anda tentang dashboard yang baru?</string>
+    <string name="let_us_know">Beri tahu kami!</string>
+    <string name="no_app_to_handle_link">Tidak ada aplikasi yang tersedia untuk membuka tautan ini</string>
     <string name="skip">Lewati</string>
     <string name="widget_setting_show_greeting">Tampilkan sapaan</string>
     <string name="background_color">Warna latar belakang</string>
+    <string name="widget_setting_show_grades">Peringkat Kursus</string>
+    <string name="widget_setting_show_color_overlay">Overlay Warna Kursus</string>
     <string name="offline_content_available">Konten offline tersedia</string>
     <string name="a11y_contentDescription_moreOptions">Opsi lain</string>
     <string name="customizeCourse">Kustomisasikan Kursus</string>
     <string name="favoriteCoursesAndGroups">Favoritkan Kursus dan Grup</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Alat Eksternal tidak tersedia offline.</string>
+    <string name="widget_weekly_summary">Rangkuman Mingguan</string>
+
+    <string name="dashboardCourseNickname">Nama panggilan</string>
+    <string name="dashboardCourseNicknameHint">Tulis nama kursus di sini</string>
+    <string name="dashboardCourseColor">Warna Kursus</string>
+    <string name="widget_toDo">Daftar Tugas Harian</string>
+    <string name="dailyToDoWidgetTitle">Daftar Tugas Harian</string>
+    <string name="todoWidget_showCompleted">Tampilkan Selesai</string>
+    <string name="todoWidget_emptyTitle">Anda sudah selesai untuk saat ini!</string>
+    <string name="todoWidget_emptyMessage">Sepertinya Anda bebas untuk hari ini.\nApakah Anda ingin menambahkan beberapa tugas?</string>
+    <string name="todoWidget_addTodo">Tambah To-Do</string>
+    <string name="todoWidget_errorTitle">Ups, terjadi kesalahan</string>
+    <string name="todoWidget_errorMessage">Kami tidak dapat memuat tugas Anda.\nCoba lagi, atau kembali lagi nanti.</string>
+    <string name="todoWidget_refresh">Muat Ulang</string>
+    <string name="todoWidget_today">Hari Ini</string>
+    <string name="a11y_todoWidget_jumpToToday">Lompat ke hari ini</string>
+    <string name="widgetSettings_widgetsColor">Warna Utama Dasbor</string>
+    <string name="dashboard_globalAnnouncement">Pengumuman Global</string>
+    <string name="forecastWidget_currentWeek">Minggu ini</string>
 </resources>

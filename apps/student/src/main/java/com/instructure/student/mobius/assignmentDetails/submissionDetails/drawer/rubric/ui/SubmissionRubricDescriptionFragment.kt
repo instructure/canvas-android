@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,15 @@ import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
@@ -53,6 +62,7 @@ class SubmissionRubricDescriptionFragment : BaseCanvasDialogFragment() {
         with (binding) {
             toolbar.title = title
             toolbar.setupAsBackButton(this@SubmissionRubricDescriptionFragment)
+            toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarLight(requireActivity(), toolbar)
 
             // Show progress bar while loading description
@@ -92,9 +102,16 @@ class SubmissionRubricDescriptionFragment : BaseCanvasDialogFragment() {
             // make the WebView background transparent
             webView.setBackgroundResource(android.R.color.transparent)
 
+            webView.applyBottomSystemBarInsets()
+
             // Load description
             webView.loadHtml(description, title)
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     companion object {

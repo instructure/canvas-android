@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Seuraava moduulikohde</string>
     <string name="a11y_nextModule">Seuraava moduuli</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, merkitty %2$s, muokkaa huomautusta kaksoisnapsauttamalla</string>
+    <string name="learnCoursesTabLabel">Kurssit</string>
+    <string name="learnProgramsTabLabel">Ohjelmat</string>
     <string name="reportAProblemDescriptionMessage">Lähetä palvelupyyntö ja pyydä henkilökohtainen vastaus tukitiimiltämme.</string>
     <string name="igniteAIEnterAPromptLabel">Syötä kehote</string>
     <string name="a11y_igniteAiLoadingContentDescription">Vastausta ladataan</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Käännä kortti</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Kurssien lataus epäonnistui</string>
+    <string name="learnCourseListFilterAll">Kaikki kurssit</string>
+    <string name="learnCourseListFilterNotStarted">Ei aloitettu</string>
+    <string name="learnCourseListFilterInProgress">Käynnissä</string>
+    <string name="learnCourseListFilterCompleted">Suoritettu</string>
+    <string name="learnCourseListStartLearningLabel">Aloita oppiminen</string>
+    <string name="learnCourseListResumeLearningLabel">Palaa opiskeluun</string>
+    <string name="learnCourseListViewCourseLabel">Tarkastele kurssia</string>
+    <string name="learnCourseListShowMoreLabel">Näytä lisää</string>
+    <string name="learnCourseListSearchBarPlaceholder">Hae kursseja</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Osa kohteesta %1$s</string>
+    <string name="learnCourseListEmptyMessage">Tuloksia ei löytynyt. Kokeile muokata hakusanojasi.</string>
+    <string name="learnProgramListFilterAll">Kaikki ohjelmat</string>
+    <string name="learnProgramListFilterNotStarted">Ei aloitettu</string>
+    <string name="learnProgramListFilterInProgress">Käynnissä</string>
+    <string name="learnProgramListFilterCompleted">Suoritettu</string>
+    <string name="learnProgramListShowMoreLabel">Näytä lisää</string>
+    <string name="learnProgramListEmptyMessage">Tuloksia ei löytynyt. Kokeile muokata hakusanojasi.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Hae ohjelmia</string>
+    <string name="learnProgramListFailedToLoadMessage">Ohjelmien lataus epäonnistui</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d kurssi</item>
+        <item quantity="other">%1$d kurssia</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Virhe: %1$s</string>
     <string name="a11y_required">Pakollinen</string>
 </resources>

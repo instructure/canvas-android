@@ -221,7 +221,7 @@ class CreateUpdateToDoViewModelTest {
 
     @Test
     fun `Save ToDo failed`() {
-        every { resources.getString(R.string.todoSaveErrorMessage) } returns "Failed to save ToDo"
+        every { resources.getString(R.string.todoSaveErrorMessageNew) } returns "Failed to save ToDo"
         coEvery { repository.createToDo(any(), any(), any(), any()) } throws Exception()
 
         createViewModel()
