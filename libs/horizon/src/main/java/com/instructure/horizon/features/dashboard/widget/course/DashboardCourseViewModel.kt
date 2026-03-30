@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.dashboard.widget.course
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.weave.catch
@@ -29,7 +28,10 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,8 +45,11 @@ import javax.inject.Inject
 class DashboardCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: DashboardCourseRepository,
-    private val dashboardEventHandler: DashboardEventHandler
-): ViewModel() {
+    private val dashboardEventHandler: DashboardEventHandler,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+
     private val _uiState = MutableStateFlow(DashboardCourseUiState(onRefresh = ::onRefresh))
     val uiState = _uiState.asStateFlow()
 
@@ -54,20 +59,25 @@ class DashboardCourseViewModel @Inject constructor(
         viewModelScope.launch {
             dashboardEventHandler.events.collect { event ->
                 when (event) {
-                    is DashboardEvent.ProgressRefresh -> {
-                        onRefresh()
-                    }
+                    is DashboardEvent.ProgressRefresh -> onRefresh()
                     else -> { /* No-op */ }
                 }
             }
         }
     }
 
+    override fun onNetworkRestored() {
+        loadData()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled by DashboardViewModel; no action needed here
+    }
+
     private fun loadData() {
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-
         viewModelScope.tryLaunch {
-            fetchData(forceNetwork = false)
+            fetchData()
             _uiState.update { it.copy(state = DashboardItemState.SUCCESS) }
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
@@ -77,7 +87,7 @@ class DashboardCourseViewModel @Inject constructor(
     private fun onRefresh(onFinished: () -> Unit = {}) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            fetchData(forceNetwork = true)
+            fetchData()
             _uiState.update { it.copy(state = DashboardItemState.SUCCESS) }
             onFinished()
         } catch {
@@ -86,28 +96,26 @@ class DashboardCourseViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchData(forceNetwork: Boolean) {
-        var enrollments = repository.getEnrollments(forceNetwork)
-        val programs = repository.getPrograms(forceNetwork)
-        val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
+    private suspend fun fetchData() {
+        var enrollments = repository.getEnrollments()
+        val programs = repository.getPrograms()
 
-        // Accept invitations automatically
+        val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
         if (invitations.isNotEmpty()) {
             invitations.forEach { enrollment ->
                 repository.acceptInvite(
                     enrollment.course?.id?.toLongOrNull() ?: return@forEach,
-                    enrollment.id?.toLongOrNull() ?: return@forEach
+                    enrollment.id?.toLongOrNull() ?: return@forEach,
                 )
             }
-            enrollments = repository.getEnrollments(true)
+            enrollments = repository.getEnrollments()
         }
-
 
         val courseCardStates = enrollments.mapToDashboardCourseCardState(
             context,
             programs = programs,
             nextModuleForCourse = { courseId ->
-                fetchNextModuleState(courseId, forceNetwork)
+                fetchNextModuleState(courseId)
             },
         )
 
@@ -118,26 +126,23 @@ class DashboardCourseViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 programs = DashboardPaginatedWidgetCardState(programCardStates),
-                courses = courseCardStates
+                courses = courseCardStates,
             )
         }
     }
 
-    private suspend fun fetchNextModuleState(courseId: Long?, forceNetwork: Boolean): DashboardCourseCardModuleItemState? {
+    private suspend fun fetchNextModuleState(courseId: Long?): DashboardCourseCardModuleItemState? {
         if (courseId == null) return null
-        val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork)
-        val nextModuleItem = modules.flatMap { module -> module.items }.firstOrNull()
-        val nextModule = modules.find { module -> module.id == nextModuleItem?.moduleId }
-        if (nextModuleItem == null) {
-            return null
-        }
-
+        val modules = repository.getModuleItemsForCourse(courseId)
+        val nextModuleItem = modules.flatMap { it.items }.firstOrNull() ?: return null
+        val formattedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context)
         return DashboardCourseCardModuleItemState(
             moduleItemTitle = nextModuleItem.title.orEmpty(),
-            moduleItemType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
+            moduleItemType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT
+                             else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
             dueDate = nextModuleItem.moduleDetails?.dueDate,
-            estimatedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
-            onClickAction = CardClickAction.NavigateToModuleItem(courseId, nextModuleItem.id)
+            estimatedDuration = formattedDuration,
+            onClickAction = CardClickAction.NavigateToModuleItem(courseId, nextModuleItem.id),
         )
     }
 }

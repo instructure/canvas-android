@@ -17,43 +17,62 @@
 package com.instructure.horizon.features.dashboard.widget.course
 
 import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ModuleAPI
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.offline.HorizonOfflineRepository
+import com.instructure.horizon.offline.SyncPolicy
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class DashboardCourseRepository @Inject constructor(
-    private val horizonGetCoursesManager: HorizonGetCoursesManager,
-    private val moduleApi: ModuleAPI.ModuleInterface,
-    private val apiPrefs: ApiPrefs,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val getProgramsManager: GetProgramsManager,
+    private val networkDataSource: DashboardCourseNetworkDataSource,
+    private val localDataSource: DashboardCourseLocalDataSource,
+    private val localDataSync: DashboardCourseSyncer,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : HorizonOfflineRepository<DashboardCourseDataSource>(
+    localDataSource = localDataSource,
+    networkDataSource = networkDataSource,
+    networkStateProvider = networkStateProvider,
+    featureFlagProvider = featureFlagProvider,
 ) {
-    suspend fun getEnrollments(forceNetwork: Boolean): List<GetCoursesQuery.Enrollment> {
-        return horizonGetCoursesManager.getEnrollments(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
+
+    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+        return if (shouldFetchFromNetwork()) {
+            networkDataSource.getEnrollments().also { enrollments ->
+                if (isOfflineEnabled()) localDataSync.syncCourses(enrollments, SyncPolicy.ALWAYS_REPLACE)
+            }
+        } else {
+            localDataSource.getEnrollments()
+        }
     }
 
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
-        return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams()).dataOrThrow
+        networkDataSource.acceptInvite(courseId, enrollmentId)
     }
 
-    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork)
+    suspend fun getPrograms(): List<Program> {
+        return if (shouldFetchFromNetwork()) {
+            networkDataSource.getPrograms().also { programs ->
+                if (isOfflineEnabled()) localDataSync.syncPrograms(programs, SyncPolicy.ALWAYS_REPLACE)
+            }
+        } else {
+            localDataSource.getPrograms()
+        }
     }
 
-    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): List<ModuleObject> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return moduleApi.getFirstPageModulesWithItems(
-            CanvasContext.Type.COURSE.apiString,
-            courseId,
-            params,
-            includes = listOf("estimated_durations")
-        ).dataOrThrow
+    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+        return if (shouldFetchFromNetwork()) {
+            networkDataSource.getModuleItemsForCourse(courseId).also { modules ->
+                if (isOfflineEnabled()) localDataSync.syncModuleItem(courseId, modules, SyncPolicy.ALWAYS_REPLACE)
+            }
+        } else {
+            localDataSource.getModuleItemsForCourse(courseId)
+        }
     }
+
+    suspend fun getLastSyncedAt(): Long? = localDataSync.getLastSyncedAt()
+
+    private suspend fun shouldFetchFromNetwork() = isOnline() || !isOfflineEnabled()
 }

@@ -25,6 +25,8 @@ data class DashboardUiState(
     val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
     val snackbarMessage: String? = null,
     val onSnackbarDismiss: () -> Unit = {},
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )
 
 data class DashboardUnreadState(

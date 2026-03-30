@@ -1,0 +1,62 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+package com.instructure.horizon.di
+
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.database.HorizonDatabase
+import com.instructure.horizon.database.HorizonDatabaseProvider
+import com.instructure.horizon.database.course.HorizonDashboardCourseDao
+import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemDao
+import com.instructure.horizon.database.program.HorizonDashboardProgramDao
+import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+@Module
+@InstallIn(SingletonComponent::class)
+class HorizonOfflineModule {
+
+    @Provides
+    fun provideHorizonDatabase(
+        provider: HorizonDatabaseProvider,
+        apiPrefs: ApiPrefs,
+    ): HorizonDatabase {
+        val userId = apiPrefs.user?.id ?: -1L
+        return provider.getDatabase(userId)
+    }
+
+    @Provides
+    fun provideHorizonDashboardCourseDao(db: HorizonDatabase): HorizonDashboardCourseDao {
+        return db.dashboardCourseDao()
+    }
+
+    @Provides
+    fun provideHorizonDashboardProgramDao(db: HorizonDatabase): HorizonDashboardProgramDao {
+        return db.dashboardProgramDao()
+    }
+
+    @Provides
+    fun provideHorizonDashboardModuleItemDao(db: HorizonDatabase): HorizonDashboardModuleItemDao {
+        return db.dashboardModuleItemDao()
+    }
+
+    @Provides
+    fun provideHorizonSyncMetadataDao(db: HorizonDatabase): HorizonSyncMetadataDao {
+        return db.syncMetadataDao()
+    }
+}
