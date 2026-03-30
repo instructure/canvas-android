@@ -31,6 +31,7 @@
     <string name="tab_attendance">Närvaro</string>
     <string name="tab_pages">Sidor</string>
     <string name="tab_todo">Att göra</string>
+    <string name="tab_todo_new">Att göra</string>
     <string name="content_description_school_logo">Skolans logotyp</string>
     <string name="search_guides">Sök i Canvas-guider</string>
     <string name="canvas_guides">Canvas-guider</string>
@@ -843,6 +844,7 @@
     <string name="toDoEmpty">Inget mer att göra!\n Ha en bra dag.</string>
     <string name="toDoNoSubmissions">Det finns inga inlämningar att bedöma för denna uppgift.</string>
     <string name="errorToDoRouteFailed">Ett fel uppstod när du försökte visa detta att göra-objekt.</string>
+    <string name="errorToDoRouteFailedNew">Ett fel inträffade vid försök att visa det här att göra-objektet.</string>
     <string name="errorIsDesigner">Designerregistrering kan inte visa detta.</string>
 
     <string name="sections">Sektioner</string>

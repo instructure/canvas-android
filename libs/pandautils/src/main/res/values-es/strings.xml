@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">A las %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Por hacer: %s</string>
+    <string name="schedule_todo_due_text_new">Ítem Por hacer: %s</string>
     <string name="schedule_due_text">Fecha límite: %s</string>
     <string name="show_missing_items_title">Mostrar %d ítems faltantes</string>
     <string name="hide_missing_items_title">Ocultar %d ítems faltantes</string>
     <string name="schedule_error_message">No se pudo recuperar su cronograma</string>
     <string name="schedule_todo_title">Por hacer</string>
+    <string name="schedule_todo_title_new">Ítem Por hacer</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pto.</item>
         <item quantity="one">%s pto.</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nota del planificador</string>
     <string name="a11y_quiz">Examen</string>
     <string name="a11y_todo">Por hacer</string>
+    <string name="a11y_todo_new">Ítem Por hacer</string>
     <string name="a11y_page">Página</string>
     <string name="a11y_assessment_request">Solicitud de evaluación</string>
     <string name="a11y_marked_as_done">Marcado como realizado</string>

@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -52,6 +54,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelper
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.offline.sync.StudioOfflineVideoHelper
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.IntArg
@@ -99,6 +102,9 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var repository: ModuleProgressionRepository
+
+    @Inject
+    lateinit var studioOfflineVideoHelper: StudioOfflineVideoHelper
 
     private var moduleItemsJob: Job? = null
     private var markAsReadJob: WeaveJob? = null
@@ -149,6 +155,32 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         binding.prevItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.color))
         binding.nextItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.color))
+
+        // Apply bottom margin to bottom bar for edge-to-edge support
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomBarModule) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.bottomMargin = systemBars.bottom
+            view.layoutParams = layoutParams
+            insets
+        }
+
+        // Consume bottom insets for fragment container to prevent child fragments from applying them again
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { view, insets ->
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.systemBars(),
+                    androidx.core.graphics.Insets.of(
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).right,
+                        0 // Set bottom to 0 to consume bottom insets
+                    )
+                )
+                .build()
+        }
+
+        ViewCompat.requestApplyInsets(binding.bottomBarModule)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -671,7 +703,8 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             repository.isOnline() || !isOfflineEnabled, // If the offline feature is disabled we always use the online behavior
             snycedTabs,
             syncedFileIds,
-            requireContext()
+            requireContext(),
+            studioOfflineVideoHelper = if (isOfflineEnabled) studioOfflineVideoHelper else null
         )
         var args: Bundle? = fragment!!.arguments
         if (args == null) {

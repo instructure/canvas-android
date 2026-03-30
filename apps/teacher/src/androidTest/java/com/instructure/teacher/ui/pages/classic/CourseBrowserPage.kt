@@ -132,6 +132,13 @@ class CourseBrowserPage : BasePage() {
     }
 
     /**
+     * Opens the files tab in the course browser.
+     */
+    fun openFilesTab() {
+        scrollOpen("Files", scrollPosition = magicNumberForScroll)
+    }
+
+    /**
      * Opens the modules tab in the course browser.
      */
     fun openModulesTab() {

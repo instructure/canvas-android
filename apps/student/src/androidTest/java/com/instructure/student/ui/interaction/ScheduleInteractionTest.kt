@@ -130,7 +130,7 @@ class ScheduleInteractionTest : StudentComposeTest() {
 
         goToScheduleTab(data)
         schedulePage.scrollToPosition(8)
-        schedulePage.assertCourseHeaderDisplayed(schedulePage.getStringFromResource(R.string.schedule_todo_title))
+        schedulePage.assertCourseHeaderDisplayed(schedulePage.getStringFromResource(R.string.schedule_todo_title_new))
         schedulePage.assertScheduleItemDisplayed(todo.plannable.title)
         schedulePage.assertScheduleItemDisplayed(todo2.plannable.title)
     }

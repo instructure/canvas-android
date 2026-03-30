@@ -18,6 +18,7 @@
 package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.parentapp.features.courses.details.CourseDetailsRepository
 import dagger.Module
@@ -33,8 +34,9 @@ class CourseDetailsModule {
     @Provides
     fun provideCourseDetailsRepository(
         courseApi: CourseAPI.CoursesInterface,
-        tabsInterface: TabAPI.TabsInterface
+        tabsInterface: TabAPI.TabsInterface,
+        pageApi: PageAPI.PagesInterface
     ): CourseDetailsRepository {
-        return CourseDetailsRepository(courseApi, tabsInterface)
+        return CourseDetailsRepository(courseApi, tabsInterface, pageApi)
     }
 }

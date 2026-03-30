@@ -31,6 +31,7 @@
     <string name="tab_attendance">Kehadiran</string>
     <string name="tab_pages">Halaman</string>
     <string name="tab_todo">Untuk Dilakukan</string>
+    <string name="tab_todo_new">Untuk Dilakukan</string>
     <string name="content_description_school_logo">Logo Sekolah</string>
     <string name="search_guides">Buat Carian dalam Panduan Canvas</string>
     <string name="canvas_guides">Panduan Canvas</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Tiada apa-apa lagi untuk dilakukan!\n Nikmati hari anda</string>
     <string name="toDoNoSubmissions">Tiada serahan untuk digredkan untuk tugasan ini.</string>
     <string name="errorToDoRouteFailed">Ralat berlaku semasa cuba melihat Item Untuk Dilakukan</string>
+    <string name="errorToDoRouteFailedNew">Ralat berlaku semasa cuba melihat item Untuk Dilakukan ini.</string>
     <string name="errorIsDesigner">Pendaftaran Pereka Bentuk tidak boleh melihat ini.</string>
 
     <string name="sections">Seksyen</string>

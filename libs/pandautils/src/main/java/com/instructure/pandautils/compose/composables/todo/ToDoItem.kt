@@ -336,7 +336,8 @@ private fun ToDoItemContent(
                         fontSize = 14.sp,
                         color = colorResource(id = R.color.textDark),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.testTag("todoItemTag")
                     )
                 }
 
@@ -346,7 +347,8 @@ private fun ToDoItemContent(
                         fontSize = 14.sp,
                         color = colorResource(id = R.color.textDark),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.testTag("todoItemTime")
                     )
                 }
             }

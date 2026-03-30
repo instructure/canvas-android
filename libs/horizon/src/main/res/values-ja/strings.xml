@@ -503,10 +503,35 @@
     <string name="a11y_nextModuleItem">次のモジュール項目</string>
     <string name="a11y_nextModule">次のモジュー</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s、%2$sは未読としてマーク、ダブルタップしてノートを編集する</string>
+    <string name="learnCoursesTabLabel">コース</string>
+    <string name="learnProgramsTabLabel">プログラム</string>
     <string name="reportAProblemDescriptionMessage">サポート チームからの個人向け応答のチケットを保存する。</string>
     <string name="igniteAIEnterAPromptLabel">プロンプトを入力</string>
     <string name="a11y_igniteAiLoadingContentDescription">応答を読み込み中</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">カードを裏返す</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">コースの読み込みに失敗しました</string>
+    <string name="learnCourseListFilterAll">全コース</string>
+    <string name="learnCourseListFilterNotStarted">開始されていない</string>
+    <string name="learnCourseListFilterInProgress">進行中</string>
+    <string name="learnCourseListFilterCompleted">完了</string>
+    <string name="learnCourseListStartLearningLabel">学習を開始する</string>
+    <string name="learnCourseListResumeLearningLabel">学習を再開する</string>
+    <string name="learnCourseListViewCourseLabel">コースを表示</string>
+    <string name="learnCourseListShowMoreLabel">多く表示</string>
+    <string name="learnCourseListSearchBarPlaceholder">コースの検索</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">%1$sの一部</string>
+    <string name="learnCourseListEmptyMessage">検索結果が見つかりません。検索項目を調整してみてください。</string>
+    <string name="learnProgramListFilterAll">すべてのプログラム</string>
+    <string name="learnProgramListFilterNotStarted">開始されていない</string>
+    <string name="learnProgramListFilterInProgress">進行中</string>
+    <string name="learnProgramListFilterCompleted">完了</string>
+    <string name="learnProgramListShowMoreLabel">多く表示</string>
+    <string name="learnProgramListEmptyMessage">検索結果が見つかりません。検索項目を調整してみてください。</string>
+    <string name="learnProgramListSearchBarPlaceholder">プログラムを検索する</string>
+    <string name="learnProgramListFailedToLoadMessage">プログラムの読み込みに失敗しました</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="other">%1$dコース</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">エラー: %1$s</string>
     <string name="a11y_required">必須</string>
 </resources>

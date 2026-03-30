@@ -21,6 +21,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface StudioMediaProgressDao {
@@ -42,6 +43,9 @@ interface StudioMediaProgressDao {
 
     @Query("SELECT * FROM StudioMediaProgressEntity")
     fun findAllLiveData(): LiveData<List<StudioMediaProgressEntity>>
+
+    @Query("SELECT * FROM StudioMediaProgressEntity")
+    fun findAllFlow(): Flow<List<StudioMediaProgressEntity>>
 
     @Query("DELETE FROM StudioMediaProgressEntity")
     suspend fun deleteAll()

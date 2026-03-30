@@ -67,6 +67,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
     private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetId
     private val scrollToNoteId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().scrollToNoteId
+    private val showMyProgressButton = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().showMyProgressButton
 
     private var courseProgressChanged = false
 
@@ -75,6 +76,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             ModuleItemSequenceUiState(
                 courseId = courseId,
                 scrollToNoteId = scrollToNoteId,
+                showMyProgressButton = showMyProgressButton,
                 loadingState = LoadingState(onRefresh = ::refresh),
                 onPreviousClick = ::previousClicked,
                 onNextClick = ::nextClicked,
@@ -582,7 +584,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         courseProgressChanged = true
         viewModelScope.launch {
             dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
-            learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+            learnEventHandler.postEvent(LearnEvent.RefreshCourseProgress)
         }
     }
 }

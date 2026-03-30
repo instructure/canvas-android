@@ -30,6 +30,7 @@ import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -59,6 +60,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
@@ -169,6 +172,8 @@ class OldDashboardFragment : ParentFragment() {
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
         applyTheme()
+
+        binding.toolbar.applyTopSystemBarInsets()
 
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()
@@ -314,6 +319,7 @@ class OldDashboardFragment : ParentFragment() {
             .setTitle(R.string.changing_dashboard_layout)
             .setMessage(R.string.changing_dashboard_layout_message)
             .setPositiveButton(R.string.restart_now) { _, _ ->
+                Analytics.logEvent(AnalyticsParamConstants.NEW_DASHBOARD_ENABLED)
                 lifecycleScope.launch {
                     updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(true))
                     dashboardRouter.restartApp()

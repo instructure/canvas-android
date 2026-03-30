@@ -573,6 +573,7 @@ class CourseSync(
                     ModuleItem.Type.Page.name -> fetchPageModuleItem(courseId, it, params)
                     ModuleItem.Type.File.name -> fetchFileModuleItem(courseId, it, params, courseSettings)
                     ModuleItem.Type.Quiz.name -> fetchQuizModuleItem(courseId, it, params)
+                    ModuleItem.Type.ExternalTool.name -> processExternalToolModuleItem(it)
                 }
             }
 
@@ -661,6 +662,17 @@ class CourseSync(
             quiz?.description = parseHtmlContent(quiz?.description, courseId)
             quiz?.let { quizDao.insert(QuizEntity(it, courseId)) }
         }
+    }
+
+    private fun processExternalToolModuleItem(moduleItem: ModuleItem) {
+        val externalUrl = moduleItem.externalUrl ?: return
+        val mediaId = extractStudioMediaId(externalUrl) ?: return
+        studioMediaIdsToSync.add(mediaId)
+    }
+
+    private fun extractStudioMediaId(url: String): String? {
+        val regex = Regex("[?&]custom_arc_media_id=([^&]+)")
+        return regex.find(url)?.groupValues?.get(1)
     }
 
     private suspend fun parseHtmlContent(htmlContent: String?, courseId: Long): String? {

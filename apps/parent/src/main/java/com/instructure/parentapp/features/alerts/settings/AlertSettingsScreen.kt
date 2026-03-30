@@ -37,7 +37,6 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextField
@@ -77,8 +76,9 @@ import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasSwitch
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
@@ -100,16 +100,16 @@ fun AlertSettingsScreen(
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
-                CanvasAppBar(
+                CanvasThemedAppBar(
                     title = stringResource(id = R.string.alertSettingsTitle),
                     navIconRes = R.drawable.ic_back_arrow,
                     navIconContentDescription = stringResource(id = R.string.back),
                     navigationActionClick = navigationActionClick,
                     backgroundColor = Color(uiState.userColor),
-                    textColor = colorResource(id = R.color.textLightest),
+                    contentColor = colorResource(id = R.color.textLightest),
                     actions = {
                         var showMenu by rememberSaveable { mutableStateOf(false) }
                         var showConfirmationDialog by rememberSaveable { mutableStateOf(false) }

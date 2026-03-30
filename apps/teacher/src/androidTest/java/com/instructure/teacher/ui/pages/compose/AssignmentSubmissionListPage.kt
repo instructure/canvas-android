@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.ui.pages.compose
 
-
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
@@ -105,6 +104,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clearSearch() {
         composeTestRule.onNodeWithTag("clearButton").performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -130,6 +130,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickOnPostPolicies() {
         composeTestRule.onNodeWithTag("postPolicyButton").performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -167,6 +168,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -180,6 +182,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -190,8 +193,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         composeTestRule.onNode(
             hasTestTag("statusCheckBox") and hasAnySibling(hasText("Needs Grading")),
             useUnmergedTree = true
-        ).performScrollTo()
+        )
+            .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -211,7 +216,8 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
                 )
             ),
             useUnmergedTree = true
-        ).performScrollTo()
+        )
+            .performScrollTo()
             .performClick()
         composeTestRule.waitForIdle()
     }
@@ -267,6 +273,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param expectedCount
      */
     fun assertHasSubmission(expectedCount: Int = 1) {
+        composeTestRule.waitUntil(timeoutMillis = 10000) {
+            composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
         composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
             .assertCountEquals(expectedCount)
     }
@@ -327,6 +337,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     fun clickAddMessage() {
         composeTestRule.onNodeWithTag("addMessageButton")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -383,6 +394,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -399,6 +411,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -420,6 +433,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -440,6 +454,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         composeTestRule.onNodeWithText(sortOrderName, useUnmergedTree = true)
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Aflevering mislykkedes</string>
     <string name="submissionStatusFailedSubtitle">Tryk for at se detaljer</string>
     <string name="submissionAndRubric">Aflevering og rubrik</string>
+    <string name="submissionAndFeedback">Indsendelse og feedback</string>
     <string name="commentsAndRubric">Kommentarer og rubrik</string>
     <string name="errorLoadingAssignment">Der opstod et problem med at indlæse denne opgave. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="submitted">Afleveret</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">I dag</string>
+    <string name="tomorrow">I morgen</string>
     <string name="past">Tidligere</string>
     <string name="noDate">Ingen dato</string>
     <string name="future">Fremtid</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Ingen elementer for visning</string>
     <string name="Todo">Opgaveliste</string>
+    <string name="TodoNew">Element på opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
     <string name="favoriteCoursesLabel">Favoritfag</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grupper</string>
     <string name="groupMembers">Gruppemedlemmer</string>
 
+    <string name="messageGroup">Send besked til gruppe</string>
     <string name="loading">Indlæser&#8230;</string>
     <string name="select_item_to_display">Vælg fra listen</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Opgaveliste</string>
+    <string name="todoWidgetTitleNew">Element på opgaveliste</string>
     <string name="gradesWidgetTitle">Karakterer</string>
     <string name="notificationWidgetTitle">Notifikationer</string>
     <string name="todoWidgetTitleLong">Canvas - Opgaveliste</string>
+    <string name="todoWidgetTitleLongNew">Canvas – Opgaveliste</string>
     <string name="gradesWidgetTitleLong">Canvas - Karakterer</string>
     <string name="gradeWidgetTitleLong">Canvas – Karakter</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikationer</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Fag</string>
     <string name="toDoList">Opgaveliste</string>
+    <string name="toDoListNew">Opgaveliste</string>
+
     <string name="notifications">Notifikationer</string>
     <string name="pushNotifications">Push notifikationer</string>
     <string name="pushNotificationsError">Push-meddelelser er ikke blevet registreret for denne enhed.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Åbn SpeedGrader</string>
 
-    <string name="search_todo">at gøre at gøre at gøre at gøre liste</string>
     <string name="search_course">kursus kuser klasse klasser</string>
     <string name="search_grades">karakter karakterer</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Sidens titel skal indstilles.</string>
     <string name="pageDetails">Sidedetaljer</string>
     <string name="saving">Gemmer</string>
+    <string name="speedGraderSaving">Gemmer</string>
+    <string name="speedGraderSaved">Gemt</string>
+    <string name="speedGraderFailed">Mislykkedes</string>
+    <string name="speedGraderSaveErrorTitle">Ups, noget gik galt</string>
+    <string name="speedGraderSaveErrorMessage">Der opstod en fejl under lagring af karakterændringen. Du kan prøve igen nu eller senere.</string>
+    <string name="speedGraderSaveErrorContentDescription">Karakteren kunne ikke gemmes. Tryk for at få nærmere oplysninger.</string>
+
     <string name="confirmDeleteEvent">Er du sikker på, du vil slette denne begivenhed?</string>
     <string name="conferencesNotSupported">Konferencer understøttes endnu ikke på mobil.</string>
     <string name="filePreviewContentDescription">Forhåndsvisning af fil-billede</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Optagelser</string>
     <string name="conferenceInProgress">Konference i gang</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferencer (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Konference i gang</string>
+    <string name="conferencesWidgetDismissed">Konferencen afvist</string>
     <string name="a11y_criterion_content_description">Kriteriebedømmelse %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">yderligere oplysninger</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element på opgavelisten</item>
+        <item quantity="other">%s elementer på opgavelisten</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s element på opgavelisten</item>
         <item quantity="other">%s elementer på opgavelisten</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Ingen begivenheder i dag!</string>
     <string name="calendarNoEventsDescription">Det er en alle tiders dag til at tage den med ro og slappe af.</string>
     <string name="userCalendarToDo">Opgaveliste</string>
+    <string name="userCalendarToDoNew">At gøre</string>
     <string name="courseToDo">%s Opgaveliste</string>
+    <string name="courseToDoNew">%s opgaveliste</string>
     <string name="calendarEventExcused">Undskyldt</string>
     <string name="calendarEventMissing">Mangler</string>
     <string name="calendarEventGraded">Bedømt</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Begivenhed %s blev oprettet.</string>
     <string name="a11y_eventUpdatedAnnouncement">Begivenhed %s blev opdateret.</string>
     <string name="a11y_toDoCreatedAnnouncement">Opgaveliste %s blev oprettet.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Element på opgaveliste %s blev oprettet.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Opgaveliste %s blev opdateret.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Element på opgaveliste %s blev opdateret.</string>
     <string name="todoScreenTitle">Opgaveliste</string>
+    <string name="todoScreenTitleNew">At gøre</string>
     <string name="todoDateLabel">Dato</string>
     <string name="todoDescriptionLabel">Beskrivelse</string>
     <string name="todoDeleteConfirmationTitle">Slet opgave?</string>
+    <string name="todoDeleteConfirmationTitleNew">Slet opgave?</string>
     <string name="todoDeleteConfirmationText">Du sletter din opgave permanent.</string>
+    <string name="todoDeleteConfirmationTextNew">Dette vil slette dit element på opgavelisten permanent.</string>
     <string name="todoDeleteErrorMessage">Der opstod en fejl under sletning af denne opgaveliste. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="todoDeleteErrorMessageNew">Der opstod en fejl under sletning af dette element på opgavelisten. Tjek din forbindelse, og prøv igen.</string>
     <string name="createTodoScreenTitle">Nyt på opgavelisten</string>
+    <string name="createTodoScreenTitleNew">Ny opgave</string>
     <string name="editTodoScreenTitle">Rediger opgavelisten</string>
+    <string name="editTodoScreenTitleNew">Rediger opgave</string>
     <string name="createToDoTitleHint">Tilføj titel</string>
     <string name="createToDoDateLabel">Dato</string>
     <string name="createToDoTimeLabel">Tidspunkt</string>
     <string name="createToDoCalendarLabel">Kalender</string>
     <string name="createToDoDetailsLabel">Nærmere oplysninger</string>
     <string name="todoSaveErrorMessage">Der opstod en fejl ved lagring af denne opgaveliste. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="todoSaveErrorMessageNew">Der opstod en fejl under lagring af dette element på opgavelisten. Tjek din forbindelse, og prøv igen.</string>
     <string name="selectCalendarScreenTitle">Vælg kalender</string>
     <string name="errorContentRetryButton">Prøv igen</string>
     <string name="eventLocationLabel">Placering</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Nærmere oplysninger</string>
     <string name="errorLoadingEvent">Der opstod et problem under indlæsning af denne begivenhed. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="errorLoadingTodo">Der opstod et problem med at indlæse denne opgave. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="errorLoadingTodoNew">Der opstod en fejl under indlæsning af dette element på opgavelisten. Tjek din forbindelse, og prøv igen.</string>
     <string name="eventDeleteConfirmationTitle">Slet begivenhed?</string>
     <string name="eventDeleteConfirmationText">Dette sletter din begivenhed permanent.</string>
     <string name="eventDeleteErrorMessage">Der opstod en fejl under sletning af denne begivenhed. Kontrollér forbindelsen, og prøv igen.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Alle begivenheder</string>
     <string name="eventDeleteScopeFollowing">Denne og alle efterfølgende begivenheder</string>
     <string name="calendarAddToDo">Tilføj til opgaveliste</string>
+    <string name="calendarAddToDoNew">Tilføj opgave</string>
     <string name="calendarAddEvent">Tilføj begivenhed</string>
     <string name="createEventScreenTitle">Ny begivenhed</string>
     <string name="editEventScreenTitle">Rediger begivenhed</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Lad os få dig logget ind!</string>
     <string name="widgetToDoNotLoggedInSubtitle">For at se din opgaveliste skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
     <string name="a11y_widgetToDoOpenToDoList">Åbn skærmen med opgavelisten</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Åbn skærmen med opgavelisten</string>
     <string name="a11y_widgetToDoCreateNewToDo">Opret ny opgave</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Opret nyt element på opgavelisten</string>
     <string name="widgetGradesErrorSubtitle">Vi har problemer med at vise dine karakterer lige nu. Prøv igen om lidt, eller brug appen.</string>
     <string name="widgetGradesNotLoggedInSubtitle">For at se dine karakterer skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
     <string name="widgetSingleGradeErrorSubtitle">Vi har problemer med at vise dine karakterer lige nu.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Lad os vælge et fag</string>
     <string name="widgetGradesErrorLoadingCourses">Der opstod en fejl under indlæsning af fag.</string>
     <string name="settingsSwitchExperience">Skift til Canvas Career</string>
+    <string name="forecastWidgetTitle">Ugentlig oversigt</string>
+    <string name="forecastWidgetWeekPeriod">Uge %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Mangler</string>
+    <string name="forecastWidgetDue">Forfalder</string>
+    <string name="forecastWidgetRecentGrades">Nye karakterer</string>
+    <string name="forecastWidgetGradeWeight">%d%% af den endelige karakter</string>
+    <string name="forecastWidgetErrorMessage">Vi har problemer med at indlæse dine opgaver. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="forecastWidgetEmptyMissing">Ingen manglende opgaver. Du har set det hele!</string>
+    <string name="forecastWidgetEmptyDue">Ingen opgaver skal afleveres i denne uge</string>
+    <string name="forecastWidgetEmptyRecentGrades">Ingen nye karakterer i denne uge.</string>
+    <string name="a11y_contentDescription_previousWeek">Forrige uge</string>
+    <string name="a11y_contentDescription_nextWeek">Næste uge</string>
+
     <string name="speedGraderGradeTabTitle">Karakter og rubrik</string>
     <string name="speedGraderDetailsTabTitle">Nærmere oplysninger</string>
     <string name="a11y_contentDescription_expandPanel">Udvid panel</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Der opstod en fejl under indlæsning af dine elementer på opgavelisten. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="errorUpdatingToDo">Der opstod en fejl under indlæsning af dit element på opgavelisten. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="noToDosForNow">Ingen elementer på opgavelisten indtil videre!</string>
+    <string name="noToDosForNowNew">Ingen elementer på opgavelisten for nu!</string>
     <string name="noToDosForNowSubtext">Det ser ud til at være et godt tidspunkt til at hvile sig og slappe af.</string>
     <string name="todoSwipeDone">Udført</string>
     <string name="todoSwipeUndo">Fortryd</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Præferencer for opgavelister</string>
+    <string name="todoFilterPreferencesNew">Præferencer for opgaveliste</string>
     <string name="todoFilterVisibleItems">Synlige elementer</string>
     <string name="todoFilterShowPersonalToDos">Vis personlig opgaveliste</string>
+    <string name="todoFilterShowPersonalToDosNew">Vis personlig opgaveliste</string>
     <string name="todoFilterShowCalendarEvents">Vis kalenderbegivenheder</string>
     <string name="todoFilterShowCompleted">Vis afsluttet</string>
     <string name="todoFilterFavoriteCoursesOnly">Kun favoritfag</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Invitation til %s afvist</string>
     <string name="courseInvitationDeclineConfirmTitle">Afvis invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Er du sikker på, at du vil afvise invitationen til %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Fremskridt</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hej %s</string>
 
+    <string name="courses_and_groups">Fag og grupper</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Tilpas oversigt</string>
     <string name="dashboard_widgets">Widgets</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Skift oversigtens layout</string>
     <string name="changing_dashboard_layout_message">For at skifte oversigtens layout skal du genstarte applikationen.</string>
     <string name="restart_now">Genstart nu</string>
+    <string name="turn_on_new_dashboard">Aktiver den nye oversigt til</string>
     <string name="switched_back">Skiftede tilbage?</string>
     <string name="switched_back_message">Tak, fordi du prøvede den nye oversigt! Kan du fortælle os, hvorfor du skiftede tilbage?</string>
+    <string name="survey_option_hard_to_find">Svært at finde ting</string>
+    <string name="survey_option_prefer_old_layout">Foretrækker det gamle layout</string>
+    <string name="survey_option_something_broken">Noget fungerede ikke rigtigt</string>
     <string name="what_could_we_improve">Hvad kunne vi forbedre?</string>
+    <string name="what_do_you_think_of_new_dashboard">Hvad synes du om den nye oversigt?</string>
+    <string name="let_us_know">Fortæl os det!</string>
+    <string name="no_app_to_handle_link">Ingen app tilgængelig til at åbne dette link</string>
     <string name="skip">Spring over</string>
     <string name="widget_setting_show_greeting">Vis hilsen</string>
     <string name="background_color">Baggrundsfarve</string>
+    <string name="widget_setting_show_grades">Fagets karakterer</string>
+    <string name="widget_setting_show_color_overlay">Farveoverlejring for faget</string>
     <string name="offline_content_available">Offlineindhold tilgængeligt</string>
     <string name="a11y_contentDescription_moreOptions">Flere indstillinger:</string>
     <string name="customizeCourse">Tilpas fag</string>
     <string name="favoriteCoursesAndGroups">Favoritfag og -grupper</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Eksterne værktøjer er ikke tilgængelige offline.</string>
+    <string name="widget_weekly_summary">Ugentlig oversigt</string>
+
+    <string name="dashboardCourseNickname">Alias</string>
+    <string name="dashboardCourseNicknameHint">Skriv fagets navn her</string>
+    <string name="dashboardCourseColor">Fagets farve</string>
+    <string name="widget_toDo">Daglig opgaveliste</string>
+    <string name="dailyToDoWidgetTitle">Daglig opgaveliste</string>
+    <string name="todoWidget_showCompleted">Vis afsluttet</string>
+    <string name="todoWidget_emptyTitle">Du er færdig for nu!</string>
+    <string name="todoWidget_emptyMessage">Det ser ud til, at du har fri denne dag.\nVil du tilføje noget til opgavelisten?</string>
+    <string name="todoWidget_addTodo">Tilføj opgave</string>
+    <string name="todoWidget_errorTitle">Ups, noget gik galt</string>
+    <string name="todoWidget_errorMessage">Vi kunne ikke indlæse din opgaveliste.\nPrøv igen, eller kom tilbage senere.</string>
+    <string name="todoWidget_refresh">Opdater</string>
+    <string name="todoWidget_today">I dag</string>
+    <string name="a11y_todoWidget_jumpToToday">Spring til i dag</string>
+    <string name="widgetSettings_widgetsColor">Oversigtens hovedfarve</string>
+    <string name="dashboard_globalAnnouncement">Generel besked</string>
+    <string name="forecastWidget_currentWeek">Aktuel uge</string>
 </resources>

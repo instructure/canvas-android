@@ -79,6 +79,7 @@ fun <T> DropdownChip(
     dropdownWidth: Dp? = null,
     placeholder: String,
     showIconCollapsed: Boolean = false,
+    showSelectedIcon: Boolean = false,
     enabled: Boolean = true,
     borderColor: Color = HorizonColors.LineAndBorder.lineStroke(),
     contentColor: Color = HorizonColors.Text.body(),
@@ -176,7 +177,7 @@ fun <T> DropdownChip(
                     }
                 },
                 item = { item ->
-                    DropdownChipItem(item, selectedItem)
+                    DropdownChipItem(item, selectedItem, showSelectedIcon)
                 }
             )
         }
@@ -186,7 +187,8 @@ fun <T> DropdownChip(
 @Composable
 private fun <T> DropdownChipItem(
     item: DropdownItem<out T>,
-    selectedItem: DropdownItem<out T>?
+    selectedItem: DropdownItem<out T>?,
+    showSelectedIcon: Boolean,
 ) {
     val isSelected = selectedItem?.value == item.value
     val context = LocalContext.current
@@ -226,8 +228,20 @@ private fun <T> DropdownChipItem(
             } else {
                 HorizonColors.Text.body()
             },
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 4.dp)
         )
+        if (isSelected && showSelectedIcon) {
+            Icon(
+                painter = painterResource(R.drawable.check),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(1.dp),
+                tint = HorizonColors.Icon.default()
+            )
+        }
     }
 }
 

@@ -23,6 +23,8 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.os.Handler
+import android.os.Looper
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -185,26 +187,23 @@ object ViewStyler {
     }
 
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
-        activity.window.statusBarColor = ThemePrefs.darker(color)
-        var flags = activity.window.decorView.systemUiVisibility
-        flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        activity.window.decorView.systemUiVisibility = flags
+        WindowInsetsHelper.setStatusBarDark(activity, color)
     }
 
     fun setStatusBarLight(activity: Activity) {
-        activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
-        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        WindowInsetsHelper.setStatusBarLight(activity)
+    }
+
+    fun setStatusBarLightDelayed(activity: Activity) {
+        // Due to the messed up navigation stack in the Student app some screens under this on config change can override the color of the statusbar,
+        // so we need to add a delay to make sure this gets called last.
+        Handler(Looper.getMainLooper()).postDelayed({
+            setStatusBarLight(activity)
+        }, 100)
     }
 
     fun setStatusBarColor(activity: Activity, @ColorInt color: Int, lightIcons: Boolean = false) {
-        activity.window.statusBarColor = color
-        var flags = activity.window.decorView.systemUiVisibility
-        flags = if (lightIcons) {
-            flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        } else {
-            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-        activity.window.decorView.systemUiVisibility = flags
+        WindowInsetsHelper.setStatusBarColor(activity, color, lightIcons)
     }
 
     fun colorImageView(imageView: ImageView, color: Int) {

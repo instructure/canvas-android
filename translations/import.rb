@@ -4,19 +4,11 @@ require 'mkmf'
 
 projects_json = File.join('translations', 'projects.json')
 
-hub_config = File.join(Dir.home, '.config', 'hub')
-
 s3_source = 's3://instructure-translations/translations/android-canvas/'
 
 # Projects json file is required
 unless File.exist? projects_json
   raise 'Missing projects.json; please run again from repository root'
-end
-
-# Hub CLI and valid config are required for creating Pull Requests
-raise 'Missing Hub CLI' if find_executable('hub').nil?
-unless File.exist?(hub_config) || !ENV['GITHUB_TOKEN'].nil?
-  raise 'Must specify GITHUB_TOKEN or place Hub config at ~/.config/hub'
 end
 
 # AWS CLI and credentials are required for accessing the S3 bucket
@@ -60,7 +52,7 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
   next unless File.directory? src_dir
   Dir.glob("#{src_dir}/*.{xml,arb}") do |file|
     language = File.basename(src_dir).gsub('_', '-')
-    
+
     # Fix Chinese directories
     if file.end_with?('.xml')
       language = language.gsub('zh-', 'b+zh+')
@@ -127,9 +119,4 @@ system('git commit -m "Update translations"')
 success = system('git push origin HEAD')
 raise 'Failed to push new git branch' unless success
 
-# Create pull request
-success = system('hub pull-request -b master -m "Update translations"')
-raise 'Failed to create pull request' unless success
-
 puts 'Translations successfully imported!'
-puts 'PLEASE REVIEW THE PULL REQUEST'

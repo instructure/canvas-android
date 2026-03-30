@@ -31,6 +31,7 @@
     <string name="tab_attendance">การเข้าร่วม</string>
     <string name="tab_pages">เพจ</string>
     <string name="tab_todo">สิ่งที่ต้องดำเนินการ</string>
+    <string name="tab_todo_new">สิ่งที่ต้องทำ</string>
     <string name="content_description_school_logo">โลโก้สถานศึกษา</string>
     <string name="search_guides">ค้นหาคู่มือ Canvas</string>
     <string name="canvas_guides">คู่มือ Canvas</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">ไม่มีการดำเนินการใด ๆ อีก!\n ขอให้มีความสุข</string>
     <string name="toDoNoSubmissions">ไม่มีผลงานจัดส่งที่จะให้คะแนนสำหรับภารกิจนี้</string>
     <string name="errorToDoRouteFailed">เกิดข้อผิดพลาดขณะพยายามดูรายการที่ต้องทำนี้</string>
+    <string name="errorToDoRouteFailedNew">เกิดข้อผิดพลาดขณะพยายามดูรายการที่ต้องทำ (To-do) นี้</string>
     <string name="errorIsDesigner">ส่วนการลงทะเบียนของผู้ออกแบบไม่สามารถดูในส่วนนี้ได้</string>
 
     <string name="sections">กลุ่มย่อย</string>

@@ -1,0 +1,61 @@
+query GetLearnItems(
+    $cursor: String,
+    $limit: Int,
+    $forward: Boolean,
+    $searchTerm: String,
+    $itemTypes: [LearnItemType!],
+    $status: [LearnItemStatus!],
+    $sortBy: LearnItemSortOption
+) {
+    learnItems(input: {
+        cursor: $cursor
+        limit: $limit
+        forward: $forward
+        searchTerm: $searchTerm
+        itemTypes: $itemTypes
+        status: $status
+        sortBy: $sortBy
+    }) {
+        items {
+            ... on ProgramEnrollmentItemGQL {
+                id
+                name
+                position
+                itemType
+                startDate
+                endDate
+                enrolledAt
+                completionPercentage
+                status
+                description
+                variant
+                estimatedDurationMinutes
+                courseCount
+            }
+            ... on CourseEnrollmentItemGQL {
+                id
+                name
+                position
+                itemType
+                startAt
+                endAt
+                enrolledAt
+                completionPercentage
+                requirementCount
+                requirementCompletedCount
+                completedAt
+                grade
+                imageUrl
+                workflowState
+                lastActivityAt
+            }
+        }
+        pageInfo {
+            nextCursor
+            previousCursor
+            hasNextPage
+            hasPreviousPage
+            totalCount
+        }
+    }
+}

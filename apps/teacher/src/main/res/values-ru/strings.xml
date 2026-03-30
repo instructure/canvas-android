@@ -31,6 +31,7 @@
     <string name="tab_attendance">Посещаемость</string>
     <string name="tab_pages">Страницы</string>
     <string name="tab_todo">Задачи</string>
+    <string name="tab_todo_new">Задача</string>
     <string name="content_description_school_logo">Логотип учебного заведения</string>
     <string name="search_guides">Поиск в руководствах Canvas</string>
     <string name="canvas_guides">Руководства Canvas</string>
@@ -866,6 +867,7 @@
     <string name="toDoEmpty">Все задания выполнены!\n Хорошего дня.</string>
     <string name="toDoNoSubmissions">Для этого задания отсутствуют объекты для оценки.</string>
     <string name="errorToDoRouteFailed">Произошла ошибка при попытке просмотра этого элемента списка текущих дел.</string>
+    <string name="errorToDoRouteFailedNew">Произошла ошибка при попытке просмотра этого элемента списка текущих задач.</string>
     <string name="errorIsDesigner">Это не доступно для просмотра при зачислении дизайнеров.</string>
 
     <string name="sections">Разделы</string>

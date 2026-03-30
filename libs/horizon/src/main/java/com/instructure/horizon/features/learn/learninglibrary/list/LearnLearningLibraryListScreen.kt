@@ -1,0 +1,416 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.features.learn.learninglibrary.list
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.common.LearnSearchBar
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollection
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
+import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
+import com.instructure.horizon.features.learn.navigation.LearnRoute
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.modifiers.conditional
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun LearnLearningLibraryListScreen(
+    state: LearnLearningLibraryListUiState,
+    navController: NavHostController
+) {
+    val collectionScrollState = rememberLazyListState()
+    val itemScrollState = rememberLazyListState()
+
+    Column(Modifier.fillMaxSize()) {
+        LearnLearningLibraryListFilterRow(
+            state,
+            if (state.isEmptyFilter()) collectionScrollState else itemScrollState,
+            navController
+        )
+
+        if (state.isEmptyFilter()) {
+            LearnLearningLibraryCollections(
+                state,
+                collectionScrollState,
+                navController
+            )
+        } else {
+            LearnLearningLibraryItems(
+                state,
+                itemScrollState,
+                navController
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LearnLearningLibraryCollections(
+    state: LearnLearningLibraryListUiState,
+    scrollState: LazyListState,
+    navController: NavHostController,
+) {
+    LoadingStateWrapper(state.collectionState.loadingState) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = PaddingValues(top = 16.dp),
+            modifier = Modifier.testTag("CollapsableBody")
+        ) {
+            if (state.collectionState.recommendedItems.isNotEmpty()) {
+                item {
+                    LearnLearningLibraryRecommendedSection(state, navController)
+                }
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 24.dp)
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .background(HorizonColors.PrimitivesGrey.grey12(), CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.stacks_filled),
+                            contentDescription = null,
+                            tint = HorizonColors.PrimitivesGrey.grey45(),
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.learnLearningLibraryCollectionsHeader),
+                        style = HorizonTypography.labelMediumBold,
+                        color = HorizonColors.Text.dataPoint()
+                    )
+                }
+            }
+
+            LearnLearningLibraryCollection(
+                state.collectionState.collections.take(state.collectionState.itemsToDisplay),
+                state.collectionState.onBookmarkClicked,
+                { itemId ->
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
+                },
+                { route ->
+                    when (route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(route.route)
+                        }
+                        null -> {}
+                    }
+                },
+                {
+                    navController.navigate(LearnRoute.LearnLearningLibraryDetailsScreen.route(it))
+                },
+                Modifier.padding(horizontal = 24.dp)
+            )
+
+            if (state.collectionState.collections.size > state.collectionState.itemsToDisplay) {
+                item {
+                    Button(
+                        label = stringResource(R.string.learningLibraryListShowMoreLabel),
+                        height = ButtonHeight.SMALL,
+                        width = ButtonWidth.FILL,
+                        color = ButtonColor.BlackOutline,
+                        onClick = state.collectionState.increaseItemsToDisplay,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LearnLearningLibraryRecommendedSection(
+    state: LearnLearningLibraryListUiState,
+    navController: NavHostController,
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(HorizonColors.Surface.aiGradient(), CircleShape, 0.15f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ai_filled),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(
+                text = stringResource(
+                    R.string.learnLearningLibraryListRecommendedForLabel,
+                    state.collectionState.userName
+                ),
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.dataPoint()
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+
+        val pagerState = rememberPagerState { state.collectionState.recommendedItems.size }
+        HorizontalPager(
+            pagerState,
+            pageSpacing = 24.dp,
+            contentPadding = PaddingValues(horizontal = 24.dp)
+        ) { pageIndex ->
+            val itemState = state.collectionState.recommendedItems[pageIndex]
+
+            LearnLearningLibraryItem(
+                itemState,
+                onClick = {
+                    when (itemState.route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        null -> {}
+                    }
+                },
+                onBookmarkClick = {
+                    state.itemState.onBookmarkClicked(itemState.id)
+                },
+                onEnrollClick = {
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemState.id))
+                },
+            )
+        }
+
+        if (state.collectionState.recommendedItems.size > 1) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 24.dp)
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                IconButton(
+                    iconRes = R.drawable.chevron_left,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedPreviousContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage > 0,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                    }
+                )
+                IconButton(
+                    iconRes = R.drawable.chevron_right,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedNextContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage < state.collectionState.recommendedItems.lastIndex,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                    }
+                )
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LearnLearningLibraryItems(
+    state: LearnLearningLibraryListUiState,
+    scrollState: LazyListState,
+    navController: NavHostController,
+) {
+    LoadingStateWrapper(state.itemState.loadingState) {
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier.testTag("CollapsableBody")
+        ) {
+            item {
+                if (state.itemState.items.isEmpty()) {
+                    EmptyMessage()
+                }
+            }
+
+            items(state.itemState.items) { collectionItemState ->
+                LearnLearningLibraryItem(
+                    state = collectionItemState,
+                    onClick = {
+                        when (collectionItemState.route) {
+                            is LearningLibraryRoute.StringRoute -> {
+                                navController.navigate(collectionItemState.route.route)
+                            }
+                            is LearningLibraryRoute.ObjectRoute -> {
+                                navController.navigate(collectionItemState.route.route)
+                            }
+                            null -> {}
+                        }
+                    },
+                    onBookmarkClick = {
+                        state.itemState.onBookmarkClicked(collectionItemState.id)
+                    },
+                    onEnrollClick = {
+                        navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(collectionItemState.id))
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 24.dp)
+                )
+            }
+
+            if (state.itemState.showMoreButton) {
+                item {
+                    LoadingButton(
+                        loading = state.itemState.isMoreButtonLoading,
+                        label = stringResource(R.string.learningLibraryListShowMoreLabel),
+                        height = ButtonHeight.SMALL,
+                        width = ButtonWidth.FILL,
+                        color = ButtonColor.BlackOutline,
+                        onClick = state.itemState.onShowMoreClicked,
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp)
+                            .padding(bottom = 24.dp)
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LearnLearningLibraryListFilterRow(
+    state: LearnLearningLibraryListUiState,
+    scrollState: LazyListState,
+    navController: NavHostController
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(scrollState.canScrollBackward) {
+                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
+            }
+            .background(HorizonColors.Surface.pagePrimary())
+            .padding(24.dp)
+    ) {
+        LearnSearchBar(
+            value = state.searchQuery,
+            onValueChange = state.updateSearchQuery,
+            placeholder = stringResource(R.string.learnLearningLibraryListSearchPlaceholder),
+            modifier = Modifier.weight(1f)
+        )
+        HorizonSpace(SpaceSize.SPACE_16)
+        IconButton(
+            iconRes = R.drawable.tune,
+            size = IconButtonSize.NORMAL,
+            color = IconButtonColor.White,
+            elevation = HorizonElevation.level4,
+            contentDescription = stringResource(R.string.a11y_learnLearningLibraryFilterContentDescription),
+            onClick = {
+                navController.navigate(
+                    LearnRoute.LearnLearningLibraryFilterScreen.route(
+                        screenType = LearnLearningLibraryFilterScreenType.Browse,
+                        typeFilter = state.typeFilter,
+                        sortOption = state.sortOption,
+                    )
+                )
+            },
+            badge = if (state.activeFilterCount > 0) {
+                {
+                    Badge(
+                        content = BadgeContent.Text(state.activeFilterCount.toString()),
+                        type = BadgeType.Primary
+                    )
+                }
+            } else null
+        )
+    }
+}
+
+@Composable
+private fun EmptyMessage() {
+    Text(
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
+}

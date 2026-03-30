@@ -69,6 +69,7 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
 
     fun assertDiscussionCheckpointDetailsOnDetailsPage(checkpointText: String, dueAt: String)
     {
+        composeTestRule.waitForIdle()
         try {
             composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
         } catch (e: AssertionError) {

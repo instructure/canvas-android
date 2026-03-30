@@ -171,7 +171,7 @@ class ToDoViewModelTest {
 
     @Test
     fun `Error deleting ToDo`() = runTest {
-        every { context.getString(R.string.todoDeleteErrorMessage) } returns "Error deleting to do"
+        every { context.getString(R.string.todoDeleteErrorMessageNew) } returns "Error deleting to do"
         coEvery { toDoRepository.deletePlannerNote(any()) } throws Exception()
 
         viewModel.handleAction(ToDoAction.DeleteToDo)

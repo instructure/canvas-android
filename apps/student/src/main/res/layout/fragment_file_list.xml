@@ -28,7 +28,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="?attr/actionBarSize"
+        android:minHeight="?android:attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:background="@color/textDarkest"
         android:elevation="6dp"

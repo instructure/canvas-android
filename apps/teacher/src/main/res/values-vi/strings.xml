@@ -31,6 +31,7 @@
     <string name="tab_attendance">Chuyên Cần</string>
     <string name="tab_pages">Trang</string>
     <string name="tab_todo">Việc Cần Làm</string>
+    <string name="tab_todo_new">Việc Cần Làm</string>
     <string name="content_description_school_logo">Biểu Trưng Trường</string>
     <string name="search_guides">Tìm kiếm Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Không còn gì thêm cần làm!\n Hãy tận hưởng thời gian còn lại trong ngày nhé.</string>
     <string name="toDoNoSubmissions">Không có bài nộp để chấm điểm cho bài tập này.</string>
     <string name="errorToDoRouteFailed">Đã xảy ra lỗi khi thử xem mục Việc Cần Làm.</string>
+    <string name="errorToDoRouteFailedNew">Đã xảy ra lỗi khi thử xem mục Việc Cần Làm.</string>
     <string name="errorIsDesigner">Vai trò người thiết kế/ghi danh không xem được</string>
 
     <string name="sections">Phần</string>

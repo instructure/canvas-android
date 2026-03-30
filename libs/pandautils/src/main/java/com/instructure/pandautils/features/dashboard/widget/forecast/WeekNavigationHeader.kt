@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun WeekNavigationHeader(
@@ -53,7 +54,7 @@ fun WeekNavigationHeader(
     ) {
         IconButton(
             onClick = onNavigatePrevious,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp).pendoTag("forecastWidget_previousWeek", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_chevron_left),
@@ -78,7 +79,7 @@ fun WeekNavigationHeader(
 
         IconButton(
             onClick = onNavigateNext,
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier.size(24.dp).pendoTag("forecastWidget_nextWeek", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_chevron_right),

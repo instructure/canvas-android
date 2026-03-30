@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">A les %s</string>
     <string name="schedule_calendar_event_interval_text">De %1$s a %2$s</string>
     <string name="schedule_todo_due_text">Tasques pendents: %s</string>
+    <string name="schedule_todo_due_text_new">Tasques pendents: %s</string>
     <string name="schedule_due_text">Data de lliurament: %s</string>
     <string name="show_missing_items_title">Mostra %d elements no presentats</string>
     <string name="hide_missing_items_title">Amaga %d elements no presentats</string>
     <string name="schedule_error_message">No es pot obtenir la vostra planificació</string>
     <string name="schedule_todo_title">Tasques pendents</string>
+    <string name="schedule_todo_title_new">Tasques pendents</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s punt</item>
         <item quantity="one">%s punt</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nota del planificador</string>
     <string name="a11y_quiz">Prova</string>
     <string name="a11y_todo">Tasques pendents</string>
+    <string name="a11y_todo_new">Tasques pendents</string>
     <string name="a11y_page">Pàgina</string>
     <string name="a11y_assessment_request">Sol·licitud d’avaluació</string>
     <string name="a11y_marked_as_done">Marcada com a feta</string>

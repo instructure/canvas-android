@@ -18,13 +18,25 @@ package com.instructure.pandautils.compose.composables
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -38,10 +50,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 
 /**
- * App bar for edit screens/modal screens, the colors are always the same and has smaller elevation.
+ * App bar for edit screens/modal screens, the colors are always the same and has elevation.
  */
 @Composable
 fun CanvasAppBar(
@@ -53,8 +68,18 @@ fun CanvasAppBar(
     navIconContentDescription: String = stringResource(id = R.string.close),
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
-    textColor: Color = colorResource(id = R.color.textDarkest)
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    }
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    activity?.let {
+        ViewStyler.themeStatusBar(activity)
+    }
+
     TopAppBar(
         title = {
             Column(
@@ -76,7 +101,7 @@ fun CanvasAppBar(
                 }
             }
         },
-        elevation = 2.dp,
+        elevation = 0.dp,
         backgroundColor = backgroundColor,
         contentColor = textColor,
         navigationIcon = {
@@ -90,8 +115,95 @@ fun CanvasAppBar(
                 )
             }
         },
-        modifier = modifier.testTag("toolbar"),
-        actions = actions
+        modifier = modifier
+            .testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout)
+            .graphicsLayer { clip = false }
+            .drawWithContent {
+                drawContent()
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Black.copy(alpha = 0.1f), Color.Transparent),
+                        startY = size.height,
+                        endY = size.height + 4.dp.toPx()
+                    ),
+                    topLeft = Offset(0f, size.height),
+                    size = Size(size.width, 4.dp.toPx())
+                )
+            },
+        actions = actions,
+        windowInsets = windowInsets
+    )
+}
+
+/**
+ * App bar for edit screens/modal screens, the colors are always the same and has elevation.
+ */
+@Composable
+fun CanvasAppBar(
+    content: @Composable () -> Unit,
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    @DrawableRes navIconRes: Int = R.drawable.ic_close,
+    navIconContentDescription: String = stringResource(id = R.string.close),
+    actions: @Composable RowScope.() -> Unit = {},
+    backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    }
+) {
+    val activity = LocalContext.current.getActivityOrNull()
+    activity?.let {
+        ViewStyler.themeStatusBar(activity)
+    }
+
+    TopAppBar(
+        title = {
+            Column(
+                modifier = Modifier.semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                    traversalIndex = -1f
+                    heading()
+                }
+            ) {
+                content()
+            }
+        },
+        elevation = 0.dp,
+        backgroundColor = backgroundColor,
+        contentColor = textColor,
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier.testTag("navigationButton"),
+                onClick = navigationActionClick
+            ) {
+                Icon(
+                    painter = painterResource(id = navIconRes),
+                    contentDescription = navIconContentDescription
+                )
+            }
+        },
+        modifier = modifier
+            .testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout)
+            .graphicsLayer { clip = false }
+            .drawWithContent {
+                drawContent()
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color.Black.copy(alpha = 0.1f), Color.Transparent),
+                        startY = size.height,
+                        endY = size.height + 4.dp.toPx()
+                    ),
+                    topLeft = Offset(0f, size.height),
+                    size = Size(size.width, 4.dp.toPx())
+                )
+            },
+        actions = actions,
+        windowInsets = windowInsets
     )
 }
 

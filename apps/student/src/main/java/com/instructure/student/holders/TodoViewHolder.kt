@@ -60,9 +60,9 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private fun getContextNameForPlannerItem(context: Context, plannerItem: PlannerItem): String {
         return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
             if (plannerItem.contextName.isNullOrEmpty()) {
-                context.getString(R.string.userCalendarToDo)
+                context.getString(R.string.userCalendarToDoNew)
             } else {
-                context.getString(R.string.courseToDo, plannerItem.contextName)
+                context.getString(R.string.courseToDoNew, plannerItem.contextName)
             }
         } else {
             plannerItem.contextName.orEmpty()

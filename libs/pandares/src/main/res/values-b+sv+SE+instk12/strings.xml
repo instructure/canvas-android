@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Inlämningen misslyckades</string>
     <string name="submissionStatusFailedSubtitle">Tryck för att visa detaljer</string>
     <string name="submissionAndRubric">Inlämning och matris</string>
+    <string name="submissionAndFeedback">Inlämning och återkoppling</string>
     <string name="commentsAndRubric">Kommentarer och matris</string>
     <string name="errorLoadingAssignment">Ett problem uppstod vid inläsningen av den här uppgiften. Kontrollera din anslutning och försök igen.</string>
     <string name="submitted">Skickad</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Idag</string>
+    <string name="tomorrow">I morgon</string>
     <string name="past">Tidigare</string>
     <string name="noDate">Inget datum</string>
     <string name="future">Framtida</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Inga objekt att visa</string>
     <string name="Todo">Att göra</string>
+    <string name="TodoNew">Att göra</string>
     <string name="todoFilter">Filtrera kurser</string>
     <string name="filterByEllipsis">Filtrera efter ...</string>
     <string name="favoriteCoursesLabel">Favoritkurser</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grupper</string>
     <string name="groupMembers">Gruppmedlemmar</string>
 
+    <string name="messageGroup">Meddelandegrupp</string>
     <string name="loading">Laddar&#8230;</string>
     <string name="select_item_to_display">Välj från listan</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
+    <string name="todoWidgetTitleNew">Att göra</string>
     <string name="gradesWidgetTitle">Omdömen</string>
     <string name="notificationWidgetTitle">Aviseringar</string>
     <string name="todoWidgetTitleLong">Canvas - Att göra</string>
+    <string name="todoWidgetTitleLongNew">Canvas – Att göra</string>
     <string name="gradesWidgetTitleLong">Canvas - Omdömen</string>
     <string name="gradeWidgetTitleLong">Canvas – bedömning</string>
     <string name="notificationWidgetTitleLong">Canvas - Aviseringar</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Kurser</string>
     <string name="toDoList">Att göra-lista</string>
+    <string name="toDoListNew">Att göra-lista</string>
+
     <string name="notifications">Aviseringar</string>
     <string name="pushNotifications">Pushmeddelanden</string>
     <string name="pushNotificationsError">Pushmeddelanden har inte registrerats för den här enheten.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Öppna Speedgrader</string>
 
-    <string name="search_todo">att göra att göra lista</string>
     <string name="search_course">kurs kurser klass klasser</string>
     <string name="search_grades">omdöme omdömen</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Sidrubrik måste anges.</string>
     <string name="pageDetails">Sidinformation</string>
     <string name="saving">Sparar</string>
+    <string name="speedGraderSaving">Sparar</string>
+    <string name="speedGraderSaved">Sparad</string>
+    <string name="speedGraderFailed">Misslyckad</string>
+    <string name="speedGraderSaveErrorTitle">Hoppsan, något gick fel</string>
+    <string name="speedGraderSaveErrorMessage">Ett fel uppstod när din bedömningsändring skulle sparas. Du kan försöka igen, eller vänta till senare.</string>
+    <string name="speedGraderSaveErrorContentDescription">Det gick inte att spara bedömningen. Tryck för information</string>
+
     <string name="confirmDeleteEvent">Vill du ta bort den här händelsen?</string>
     <string name="conferencesNotSupported">Konferenser stöds ännu inte på den här mobilen.</string>
     <string name="filePreviewContentDescription">Förhandsvisningsbild för fil</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Inspelningar</string>
     <string name="conferenceInProgress">Konferens pågår...</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferenser (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Konferens pågår...</string>
+    <string name="conferencesWidgetDismissed">Konferensen avvisades</string>
     <string name="a11y_criterion_content_description">Kriteriebedömning %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">mer information</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s att göra-objekt</item>
+        <item quantity="other">%s att göra-objekt</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s att göra-objekt</item>
         <item quantity="other">%s att göra-objekt</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Inga händelser idag!</string>
     <string name="calendarNoEventsDescription">Det verkar vara en bra dag för vila, avslappning och omladdning.</string>
     <string name="userCalendarToDo">Att göra</string>
+    <string name="userCalendarToDoNew">Att göra</string>
     <string name="courseToDo">Att-göra för %s</string>
+    <string name="courseToDoNew">%s att göra</string>
     <string name="calendarEventExcused">Ursäktad</string>
     <string name="calendarEventMissing">Saknad</string>
     <string name="calendarEventGraded">Har bedömts</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Händelsen %s skapades.</string>
     <string name="a11y_eventUpdatedAnnouncement">Händelsen %s uppdaterades.</string>
     <string name="a11y_toDoCreatedAnnouncement">Att göra %s skapades.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Att göra %s skapades.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Att göra %s uppdaterades.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Att göra %s uppdaterades.</string>
     <string name="todoScreenTitle">Att göra</string>
+    <string name="todoScreenTitleNew">Att göra</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Beskrivning</string>
     <string name="todoDeleteConfirmationTitle">Vill du radera Att-göra?</string>
+    <string name="todoDeleteConfirmationTitleNew">Vill du radera Att göra?</string>
     <string name="todoDeleteConfirmationText">Detta tar bort ditt Att göra-objekt permanent.</string>
+    <string name="todoDeleteConfirmationTextNew">Detta tar bort ditt Att göra-objekt permanent.</string>
     <string name="todoDeleteErrorMessage">Det gick inte att ta bort det här att-göra-objektet. Kontrollera din anslutning och försök igen.</string>
+    <string name="todoDeleteErrorMessageNew">Det gick inte att radera detta att göra-objekt. Kontrollera anslutningen och försök igen.</string>
     <string name="createTodoScreenTitle">Ny att-göra</string>
+    <string name="createTodoScreenTitleNew">Nytt Att göra</string>
     <string name="editTodoScreenTitle">Redigera att-göra</string>
+    <string name="editTodoScreenTitleNew">Redigera Att göra</string>
     <string name="createToDoTitleHint">Lägg till titel</string>
     <string name="createToDoDateLabel">Datum</string>
     <string name="createToDoTimeLabel">Tid</string>
     <string name="createToDoCalendarLabel">Kalender</string>
     <string name="createToDoDetailsLabel">Detaljer</string>
     <string name="todoSaveErrorMessage">Det gick inte att läsa in det här att-göra-objektet. Kontrollera din anslutning och försök igen.</string>
+    <string name="todoSaveErrorMessageNew">Det gick inte att spara detta att göra-objekt. Kontrollera anslutningen och försök igen.</string>
     <string name="selectCalendarScreenTitle">Välj kalender</string>
     <string name="errorContentRetryButton">Försök igen</string>
     <string name="eventLocationLabel">Plats</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Detaljer</string>
     <string name="errorLoadingEvent">Det gick inte att läsa in den här händelsen. Kontrollera din anslutning och försök igen.</string>
     <string name="errorLoadingTodo">Det gick inte att läsa in det här att göra-objektet. Kontrollera din anslutning och försök igen.</string>
+    <string name="errorLoadingTodoNew">Det gick inte att läsa in detta att göra-objekt. Kontrollera anslutningen och försök igen.</string>
     <string name="eventDeleteConfirmationTitle">Radera händelse?</string>
     <string name="eventDeleteConfirmationText">Detta raderar din händelse permanent.</string>
     <string name="eventDeleteErrorMessage">Det gick inte att radera den här händelsen. Kontrollera din anslutning och försök igen.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Alla händelser</string>
     <string name="eventDeleteScopeFollowing">Denna och alla följande händelser</string>
     <string name="calendarAddToDo">Lägg till att göra</string>
+    <string name="calendarAddToDoNew">Lägg till att göra-uppgift</string>
     <string name="calendarAddEvent">Lägg till händelse</string>
     <string name="createEventScreenTitle">Ny händelse</string>
     <string name="editEventScreenTitle">Redigera händelse</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Då loggar vi in dig!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Om du vill se dina att göra-uppgifter loggar du in på ditt konto i appen. Det tar bara en sekund!</string>
     <string name="a11y_widgetToDoOpenToDoList">Öppna skärmen med att göra-listan</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Öppna skärmen med att göra-listan</string>
     <string name="a11y_widgetToDoCreateNewToDo">Skapa en ny att göra-uppgift</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Skapa en ny att göra-uppgift</string>
     <string name="widgetGradesErrorSubtitle">Vi har problem med att visa dig dina bedömningar för tillfället. Försök igen om en stund eller gå till appen.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Om du vill se dina bedömningar loggar du in på ditt konto i appen. Det tar bara en sekund!</string>
     <string name="widgetSingleGradeErrorSubtitle">Vi har problem med att visa dig dina bedömningar för tillfället.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Nu väljer vi en kurs.</string>
     <string name="widgetGradesErrorLoadingCourses">Ett fel inträffade under inläsning av kurser.</string>
     <string name="settingsSwitchExperience">Byt till Canvas Career</string>
+    <string name="forecastWidgetTitle">Veckovis sammanfattning</string>
+    <string name="forecastWidgetWeekPeriod">Vecka %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Saknad</string>
+    <string name="forecastWidgetDue">Inlämningsdatum</string>
+    <string name="forecastWidgetRecentGrades">Nya bedömningar</string>
+    <string name="forecastWidgetGradeWeight">%d%% av slutbedömningen</string>
+    <string name="forecastWidgetErrorMessage">Vi har problem med att läsa in dina uppgifter. Kontrollera din anslutning och försök igen.</string>
+    <string name="forecastWidgetEmptyMissing">Inga saknade uppgifter. Du har kommit ikapp!</string>
+    <string name="forecastWidgetEmptyDue">Inga uppgifter måste lämnas in denna vecka.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Inga nya bedömningar den här veckan.</string>
+    <string name="a11y_contentDescription_previousWeek">Föregående vecka</string>
+    <string name="a11y_contentDescription_nextWeek">Nästa vecka</string>
+
     <string name="speedGraderGradeTabTitle">Bedömning och matris</string>
     <string name="speedGraderDetailsTabTitle">Detaljer</string>
     <string name="a11y_contentDescription_expandPanel">Visa panelen</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Det gick inte att läsa in dina att göra-objekt. Kontrollera din anslutning och försök igen.</string>
     <string name="errorUpdatingToDo">Det gick inte att uppdatera att göra-objektet. Kontrollera din anslutning och försök igen.</string>
     <string name="noToDosForNow">Du har inga att göra-objekt för tillfället!</string>
+    <string name="noToDosForNowNew">Inga Att göra-objekt för tillfället!</string>
     <string name="noToDosForNowSubtext">Det verkar vara en bra tid för vila, slappna av och ladda om batterierna.</string>
     <string name="todoSwipeDone">Klar</string>
     <string name="todoSwipeUndo">Ångra</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Inställningar för att göra-lista</string>
+    <string name="todoFilterPreferencesNew">Inställningar för att göra-lista</string>
     <string name="todoFilterVisibleItems">Synliga objekt</string>
     <string name="todoFilterShowPersonalToDos">Visa personliga att göra-objekt</string>
+    <string name="todoFilterShowPersonalToDosNew">Visa personliga att göra-objekt</string>
     <string name="todoFilterShowCalendarEvents">Visa kalenderhändelser</string>
     <string name="todoFilterShowCompleted">Visa slutförda</string>
     <string name="todoFilterFavoriteCoursesOnly">Endast favoritkurser</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Inbjudan till %s avvisad</string>
     <string name="courseInvitationDeclineConfirmTitle">Avvisa inbjudan</string>
     <string name="courseInvitationDeclineConfirmMessage">Är du säker på att du vill avvisa inbjudan till %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Framsteg</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hej %s!</string>
 
+    <string name="courses_and_groups">Kurser och grupper</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Anpassa översikt</string>
     <string name="dashboard_widgets">Widgetar</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Ändrar layouten för översikten</string>
     <string name="changing_dashboard_layout_message">Om du vill ändra layouten för översikten måste du starta om appen.</string>
     <string name="restart_now">Starta om nu</string>
+    <string name="turn_on_new_dashboard">Aktivera den nya översikten</string>
     <string name="switched_back">Ändrade du tillbaka?</string>
     <string name="switched_back_message">Tack för att du provade den nya översikten! Vill du berätta varför du ändrade tillbaka?</string>
+    <string name="survey_option_hard_to_find">Svårt att hitta saker</string>
+    <string name="survey_option_prefer_old_layout">Föredrar den tidigare layouten</string>
+    <string name="survey_option_something_broken">Något fungerade inte som det skulle</string>
     <string name="what_could_we_improve">Vad kan vi förbättra?</string>
+    <string name="what_do_you_think_of_new_dashboard">Vad tycker du om den nya översikten?</string>
+    <string name="let_us_know">Informera oss!</string>
+    <string name="no_app_to_handle_link">Det finns ingen tillgänglig app som kan öppna den här länken</string>
     <string name="skip">Hoppa över</string>
     <string name="widget_setting_show_greeting">Visa hälsning</string>
     <string name="background_color">Bakgrundsfärg</string>
+    <string name="widget_setting_show_grades">Kursens bedömningar</string>
+    <string name="widget_setting_show_color_overlay">Överlägg för kursfärg</string>
     <string name="offline_content_available">Offlineinnehåll tillgängligt</string>
     <string name="a11y_contentDescription_moreOptions">Fler alternativ</string>
     <string name="customizeCourse">Anpassa kurs</string>
     <string name="favoriteCoursesAndGroups">Favoritkurser och grupper</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Externa verktyg är inte tillgängliga offline.</string>
+    <string name="widget_weekly_summary">Veckovis sammanfattning</string>
+
+    <string name="dashboardCourseNickname">Smeknamn</string>
+    <string name="dashboardCourseNicknameHint">Skriv kursen smeknamn här</string>
+    <string name="dashboardCourseColor">Kursfärg</string>
+    <string name="widget_toDo">Dagliga att göra-objekt</string>
+    <string name="dailyToDoWidgetTitle">Dagliga att göra-objekt</string>
+    <string name="todoWidget_showCompleted">Visa slutförda</string>
+    <string name="todoWidget_emptyTitle">Du är klar för tillfället!</string>
+    <string name="todoWidget_emptyMessage">Det ser ut som du är ledig för idag.\nVill du lägga till några att göra-objekt?</string>
+    <string name="todoWidget_addTodo">Lägg till att göra-uppgift</string>
+    <string name="todoWidget_errorTitle">Hoppsan, något gick fel</string>
+    <string name="todoWidget_errorMessage">Vi kunde inte läsa in dina att göra-objekt.\nFörsök igen, eller kom tillbaka senare.</string>
+    <string name="todoWidget_refresh">Uppdatera</string>
+    <string name="todoWidget_today">I dag</string>
+    <string name="a11y_todoWidget_jumpToToday">Hoppa över idag</string>
+    <string name="widgetSettings_widgetsColor">Huvudfärg för översikt</string>
+    <string name="dashboard_globalAnnouncement">Globalt meddelande</string>
+    <string name="forecastWidget_currentWeek">Aktuell vecka</string>
 </resources>

@@ -31,6 +31,7 @@
     <string name="tab_attendance">출석</string>
     <string name="tab_pages">페이지</string>
     <string name="tab_todo">할 일</string>
+    <string name="tab_todo_new">할 일</string>
     <string name="content_description_school_logo">학교 로고</string>
     <string name="search_guides">Canvas 가이드 검색</string>
     <string name="canvas_guides">Canvas 가이드</string>
@@ -832,6 +833,7 @@
     <string name="toDoEmpty">더 할 일이 없습니다.\n 즐거운 하루 보내세요.</string>
     <string name="toDoNoSubmissions">이 과제에 대해 채점할 제출이 없습니다.</string>
     <string name="errorToDoRouteFailed">이 할 일 항목을 보려고 시도하는 데 오류가 발생했습니다.</string>
+    <string name="errorToDoRouteFailedNew">이 할 일 항목을 보려고 시도하는 데 오류가 발생했습니다.</string>
     <string name="errorIsDesigner">디자이너 등록은 볼 수 없습니다.</string>
 
     <string name="sections">분반</string>
