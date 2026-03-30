@@ -21,6 +21,11 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.AcceptCourseInviteParams
+import com.instructure.horizon.domain.usecase.AcceptCourseInviteUseCase
+import com.instructure.horizon.domain.usecase.GetEnrollmentsUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemsUseCase
+import com.instructure.horizon.domain.usecase.GetProgramsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -44,7 +49,10 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: DashboardCourseRepository,
+    private val getEnrollmentsUseCase: GetEnrollmentsUseCase,
+    private val getProgramsUseCase: GetProgramsUseCase,
+    private val getModuleItemsUseCase: GetModuleItemsUseCase,
+    private val acceptCourseInviteUseCase: AcceptCourseInviteUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
@@ -97,26 +105,26 @@ class DashboardCourseViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
-        var enrollments = repository.getEnrollments()
-        val programs = repository.getPrograms()
+        var enrollments = getEnrollmentsUseCase()
+        val programs = getProgramsUseCase()
 
         val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
         if (invitations.isNotEmpty()) {
             invitations.forEach { enrollment ->
-                repository.acceptInvite(
-                    enrollment.course?.id?.toLongOrNull() ?: return@forEach,
-                    enrollment.id?.toLongOrNull() ?: return@forEach,
+                acceptCourseInviteUseCase(
+                    AcceptCourseInviteParams(
+                        courseId = enrollment.course?.id?.toLongOrNull() ?: return@forEach,
+                        enrollmentId = enrollment.id?.toLongOrNull() ?: return@forEach,
+                    )
                 )
             }
-            enrollments = repository.getEnrollments()
+            enrollments = getEnrollmentsUseCase()
         }
 
         val courseCardStates = enrollments.mapToDashboardCourseCardState(
             context,
             programs = programs,
-            nextModuleForCourse = { courseId ->
-                fetchNextModuleState(courseId)
-            },
+            nextModuleForCourse = { courseId -> fetchNextModuleState(courseId) },
         )
 
         val programCardStates = programs
@@ -133,7 +141,7 @@ class DashboardCourseViewModel @Inject constructor(
 
     private suspend fun fetchNextModuleState(courseId: Long?): DashboardCourseCardModuleItemState? {
         if (courseId == null) return null
-        val modules = repository.getModuleItemsForCourse(courseId)
+        val modules = getModuleItemsUseCase(courseId)
         val nextModuleItem = modules.flatMap { it.items }.firstOrNull() ?: return null
         val formattedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context)
         return DashboardCourseCardModuleItemState(

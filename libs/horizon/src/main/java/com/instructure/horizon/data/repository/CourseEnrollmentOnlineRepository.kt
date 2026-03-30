@@ -13,44 +13,23 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard.widget.course
+package com.instructure.horizon.data.repository
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class DashboardCourseNetworkDataSource @Inject constructor(
+class CourseEnrollmentOnlineRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
-    private val moduleApi: ModuleAPI.ModuleInterface,
     private val apiPrefs: ApiPrefs,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val getProgramsManager: GetProgramsManager,
-) : DashboardCourseDataSource {
+) {
 
-    override suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
         return horizonGetCoursesManager.getEnrollments(apiPrefs.user?.id ?: -1, forceNetwork = true).dataOrThrow
-    }
-
-    override suspend fun getPrograms(): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork = true)
-    }
-
-    override suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
-        val params = RestParams(isForceReadFromNetwork = true)
-        return moduleApi.getFirstPageModulesWithItems(
-            CanvasContext.Type.COURSE.apiString,
-            courseId,
-            params,
-            includes = listOf("estimated_durations")
-        ).dataOrThrow
     }
 
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {

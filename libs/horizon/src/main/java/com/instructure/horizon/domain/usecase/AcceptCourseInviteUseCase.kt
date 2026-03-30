@@ -13,14 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard.widget.course
+package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.horizon.data.repository.CourseEnrollmentOnlineRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import javax.inject.Inject
 
-interface DashboardCourseDataSource {
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment>
-    suspend fun getPrograms(): List<Program>
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject>
+data class AcceptCourseInviteParams(val courseId: Long, val enrollmentId: Long)
+
+class AcceptCourseInviteUseCase @Inject constructor(
+    private val onlineRepository: CourseEnrollmentOnlineRepository,
+) : BaseUseCase<AcceptCourseInviteParams, Unit>() {
+
+    override suspend fun execute(params: AcceptCourseInviteParams) {
+        onlineRepository.acceptInvite(params.courseId, params.enrollmentId)
+    }
 }
