@@ -133,17 +133,17 @@ class PageDetailsRepositoryTest {
     @Test
     fun `authenticateUrl returns authenticated URL`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://authenticated.url")
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         val result = repository.authenticateUrl("https://example.com/page")
 
         assertEquals("https://authenticated.url", result)
-        coVerify { oAuthInterface.getAuthenticatedSession("https://example.com/page", any()) }
+        coVerify { oAuthInterface.getAuthenticatedSession("https://example.com/page", any(), any()) }
     }
 
     @Test
     fun `authenticateUrl returns original URL on failure`() = runTest {
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         val result = repository.authenticateUrl("https://example.com/page")
 
@@ -153,7 +153,7 @@ class PageDetailsRepositoryTest {
     @Test
     fun `authenticateUrl returns original URL when session URL is null`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://example.com/page/authenticated")
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         val result = repository.authenticateUrl("https://example.com/page")
 
@@ -200,10 +200,10 @@ class PageDetailsRepositoryTest {
     @Test
     fun `authenticateUrl always uses forceNetwork`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://authenticated.url")
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         repository.authenticateUrl("https://example.com")
 
-        coVerify { oAuthInterface.getAuthenticatedSession(any(), match { it.isForceReadFromNetwork }) }
+        coVerify { oAuthInterface.getAuthenticatedSession(any(), match { it.isForceReadFromNetwork }, any()) }
     }
 }

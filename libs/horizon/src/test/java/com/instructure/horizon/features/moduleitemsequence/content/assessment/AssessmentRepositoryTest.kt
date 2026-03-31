@@ -95,13 +95,13 @@ class AssessmentRepositoryTest {
     fun `authenticateUrl returns authenticated URL for LTI tool`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://authenticated.lti.url")
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(testLTITool)
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         val result = repository.authenticateUrl("https://example.com/quiz")
 
         assertEquals("https://authenticated.lti.url", result)
         coVerify { launchDefinitionsApi.getLtiFromAuthenticationUrl("https://example.com/quiz", any()) }
-        coVerify { oAuthInterface.getAuthenticatedSession("https://lti.example.com/tool", any()) }
+        coVerify { oAuthInterface.getAuthenticatedSession("https://lti.example.com/tool", any(), any()) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class AssessmentRepositoryTest {
     fun `authenticateUrl returns original URL when session URL is null`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://example.com/quiz/authenticated")
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(testLTITool)
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         val result = repository.authenticateUrl("https://example.com/quiz")
 
@@ -128,7 +128,7 @@ class AssessmentRepositoryTest {
     @Test
     fun `authenticateUrl returns original URL when authentication fails`() = runTest {
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(testLTITool)
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         val result = repository.authenticateUrl("https://example.com/quiz")
 
@@ -139,12 +139,12 @@ class AssessmentRepositoryTest {
     fun `authenticateUrl always uses forceNetwork`() = runTest {
         val session = AuthenticatedSession(sessionUrl = "https://authenticated.url")
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns DataResult.Success(testLTITool)
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Success(session)
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(session)
 
         repository.authenticateUrl("https://example.com")
 
         coVerify { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), match { it.isForceReadFromNetwork }) }
-        coVerify { oAuthInterface.getAuthenticatedSession(any(), match { it.isForceReadFromNetwork }) }
+        coVerify { oAuthInterface.getAuthenticatedSession(any(), match { it.isForceReadFromNetwork }, any()) }
     }
 
     @Test
