@@ -77,7 +77,7 @@ class GetAuthenticatedSessionUseCaseTest {
     fun `execute returns original URL when authentication fails`() = runTest {
         val targetUrl = "https://canvas.instructure.com/courses/1/conferences/1/join"
 
-        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any()) } returns DataResult.Fail()
+        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) } returns DataResult.Fail()
 
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
