@@ -88,6 +88,11 @@ class InboxDetailsViewModel @Inject constructor(
                     _events.send(InboxDetailsFragmentAction.OpenAttachment(action.attachment))
                 }
             }
+            is MessageAction.OpenMediaAttachment -> {
+                viewModelScope.launch {
+                    _events.send(InboxDetailsFragmentAction.OpenMediaAttachment(action.mediaComment))
+                }
+            }
             is MessageAction.UrlSelected -> {
                 viewModelScope.launch {
                     _events.send(InboxDetailsFragmentAction.UrlSelected(action.url))
