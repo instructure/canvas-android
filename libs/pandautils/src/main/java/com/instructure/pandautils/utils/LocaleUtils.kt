@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.isValid
 import java.time.DayOfWeek
 import java.util.Calendar
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.system.exitProcess
 
 object LocaleUtils {
@@ -66,6 +67,9 @@ object LocaleUtils {
             Locale.Builder().setLanguageTag(localeString).build()
         }
         Locale.setDefault(locale)
+        // Ensure device timezone is used for all date/time formatting
+        val deviceTimeZone = TimeZone.getDefault()
+        TimeZone.setDefault(deviceTimeZone)
         val config = Configuration()
         config.setLocales(LocaleList(locale))
         ContextKeeper.updateLocale(config)

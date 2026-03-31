@@ -17,6 +17,7 @@
 package com.instructure.student.fragment
 
 import android.os.Bundle
+import java.text.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -147,10 +148,13 @@ class AssignmentBasicFragment : ParentFragment() {
         // Assignment description can be null
         var description = when {
             assignment.isLocked -> getLockedInfoHTML(assignment.lockInfo!!, R.string.lockedAssignmentDesc)
-            assignment.lockDate?.before(Calendar.getInstance(Locale.getDefault()).time) == true ->
+            assignment.lockDate?.before(Calendar.getInstance(Locale.getDefault()).time) == true -> {
                 // If an assignment has an available from and until field and it has expired (the current date is after "until" it will have a lock explanation,
                 // but no lock info because it isn't Locked as part of a module
-                assignment.lockExplanation
+                val dateString = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(assignment.lockDate!!)
+                val timeString = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(assignment.lockDate!!)
+                getString(com.instructure.pandautils.R.string.closedSubtext, dateString, timeString)
+            }
             else -> assignment.description
         }
 

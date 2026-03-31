@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.FileDownloader
@@ -61,6 +62,10 @@ class ParentInboxRouter(
 
     override fun routeToAttachment(attachment: Attachment) {
         fileDownloader.downloadFileToDevice(attachment)
+    }
+
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
+        fileDownloader.downloadFileToDevice(mediaComment.url, mediaComment.displayName, mediaComment.contentType)
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {
