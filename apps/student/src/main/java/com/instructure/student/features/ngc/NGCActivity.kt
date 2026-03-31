@@ -17,12 +17,9 @@
 package com.instructure.student.features.ngc
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
@@ -34,8 +31,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.student.features.ngc.navigation.NGCNavigation
@@ -53,6 +52,7 @@ class NGCActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EdgeToEdgeHelper.enableEdgeToEdge(this)
+        setupTheme()
 
         setContent {
             navController = rememberNavController()
@@ -61,6 +61,12 @@ class NGCActivity : BaseCanvasActivity() {
                 NGCNavigation(navController)
             }
         }
+    }
+
+    private fun setupTheme() {
+        ThemePrefs.reapplyCanvasTheme(this)
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
     }
 
     override fun onResume() {

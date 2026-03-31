@@ -20,15 +20,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import com.instructure.horizon.horizonui.foundation.HorizonColors
+import androidx.compose.ui.viewinterop.AndroidView
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.views.CanvasLoadingView
+import com.instructure.pandares.R
 
 @Composable
 fun SplashScreen(
@@ -39,7 +41,6 @@ fun SplashScreen(
 ) {
     val context = LocalContext.current
 
-    // Handle theme application
     LaunchedEffect(uiState.themeToApply) {
         uiState.themeToApply?.let { theme ->
             ThemePrefs.applyCanvasTheme(theme, context)
@@ -47,7 +48,6 @@ fun SplashScreen(
         }
     }
 
-    // Handle navigation when initial data is loaded
     LaunchedEffect(uiState.initialDataLoaded) {
         if (uiState.initialDataLoaded) {
             onInitialDataLoaded()
@@ -58,13 +58,15 @@ fun SplashScreen(
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .background(color = HorizonColors.Surface.pagePrimary())
+            .background(color = colorResource(id = R.color.backgroundLightest))
     ) {
-        if (uiState.loading) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(48.dp),
-                color = HorizonColors.Surface.institution()
-            )
-        }
+        AndroidView(
+            factory = {
+                CanvasLoadingView(it).apply {
+                    setOverrideColor(it.getColor(R.color.login_studentAppTheme))
+                }
+            },
+            modifier = Modifier.size(120.dp)
+        )
     }
 }

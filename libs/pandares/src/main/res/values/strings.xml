@@ -2474,4 +2474,5 @@
     <string name="widgetSettings_widgetsColor">Dashboard Main Color</string>
     <string name="dashboard_globalAnnouncement">Global Announcement</string>
     <string name="forecastWidget_currentWeek">Current week</string>
+    <string name="ngc_dashboardTitle">Dashboard</string>
 </resources>

@@ -18,8 +18,11 @@ package com.instructure.student.features.ngc.dashboard
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Scaffold
@@ -36,20 +39,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.pandautils.compose.SnackbarMessage
-import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
-import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.DefaultDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
-import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.features.dashboard.compose.DashboardBody
 import com.instructure.student.features.dashboard.compose.DashboardUiState
 import com.instructure.student.features.dashboard.compose.DashboardViewModel
@@ -78,7 +86,6 @@ fun DashboardScreenContent(
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter
 ) {
-    val activity = LocalActivity.current
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.refreshing,
         onRefresh = uiState.onRefresh
@@ -100,51 +107,9 @@ fun DashboardScreenContent(
         }
     }
 
-    var showMenu by remember { mutableStateOf(false) }
-
-    val manageOfflineContentClick = rememberWithRequireNetwork {
-        router.routeToManageOfflineContent()
-    }
-
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         contentWindowInsets = WindowInsets(0),
-        topBar = {
-            CanvasThemedAppBar(
-                title = stringResource(id = R.string.dashboard),
-                navIconRes = R.drawable.ic_hamburger,
-                navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
-                navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() },
-                actions = {
-                    OverflowMenu(
-                        showMenu = showMenu,
-                        onDismissRequest = { showMenu = !showMenu },
-                        iconColor = Color(ThemePrefs.primaryTextColor),
-                        modifier = Modifier
-                            .background(color = colorResource(id = R.color.backgroundLightestElevated))
-                    ) {
-                        DropdownMenuItem(onClick = {
-                            showMenu = !showMenu
-                            manageOfflineContentClick()
-                        }) {
-                            Text(
-                                stringResource(R.string.course_menu_manage_offline_content),
-                                color = colorResource(id = R.color.textDarkest)
-                            )
-                        }
-                        DropdownMenuItem(onClick = {
-                            showMenu = !showMenu
-                            router.routeToCustomizeDashboard()
-                        }) {
-                            Text(
-                                stringResource(R.string.customize_dashboard),
-                                color = colorResource(id = R.color.textDarkest)
-                            )
-                        }
-                    }
-                }
-            )
-        },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { data ->
                 Snackbar(
@@ -154,6 +119,53 @@ fun DashboardScreenContent(
             }
         }
     ) { paddingValues ->
-        DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, router)
+        CollapsableHeaderScreen(
+            statusBarColor = colorResource(R.color.backgroundLight),
+            modifier = Modifier.padding(paddingValues),
+            headerContent = { paddingValues ->
+                    DashboardTopBar(
+                        router,
+                        modifier = Modifier
+                            .background(colorResource(R.color.backgroundLight))
+                            .padding(paddingValues)
+                            .height(56.dp)
+                    )
+            },
+            bodyContent = {
+                DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, router)
+            })
+    }
+}
+
+@Composable
+private fun DashboardTopBar(router: DashboardRouter, modifier: Modifier = Modifier) {
+    val manageOfflineContentClick = rememberWithRequireNetwork {
+        router.routeToManageOfflineContent()
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(text = stringResource(R.string.ngc_dashboardTitle), style = HorizonTypography.h2)
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(
+            iconRes = R.drawable.cloud_download,
+            contentDescription = stringResource(com.instructure.horizon.R.string.a11y_dashboardNotebookButtonContentDescription), // TODO
+            onClick = {
+                manageOfflineContentClick()
+            },
+            color = IconButtonColor.Inverse,
+            elevation = HorizonElevation.level4,
+            modifier = Modifier.padding(end = 8.dp)
+        )
+        IconButton(
+            iconRes = R.drawable.edit,
+            contentDescription = stringResource(com.instructure.horizon.R.string.a11y_dashboardInboxContentDescription), // TODO
+            onClick = { router.routeToCustomizeDashboard() },
+            elevation = HorizonElevation.level4,
+            color = IconButtonColor.Inverse,
+        )
     }
 }
