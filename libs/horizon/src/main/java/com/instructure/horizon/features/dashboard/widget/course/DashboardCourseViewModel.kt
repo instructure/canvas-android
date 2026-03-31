@@ -1,31 +1,26 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
 package com.instructure.horizon.features.dashboard.widget.course
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.type.EnrollmentWorkflowState
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.domain.usecase.AcceptCourseInviteParams
-import com.instructure.horizon.domain.usecase.AcceptCourseInviteUseCase
-import com.instructure.horizon.domain.usecase.GetEnrollmentsUseCase
-import com.instructure.horizon.domain.usecase.GetModuleItemsUseCase
-import com.instructure.horizon.domain.usecase.GetProgramsUseCase
+import com.instructure.horizon.domain.usecase.GetDashboardCoursesUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -49,10 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val getEnrollmentsUseCase: GetEnrollmentsUseCase,
-    private val getProgramsUseCase: GetProgramsUseCase,
-    private val getModuleItemsUseCase: GetModuleItemsUseCase,
-    private val acceptCourseInviteUseCase: AcceptCourseInviteUseCase,
+    private val getDashboardCoursesUseCase: GetDashboardCoursesUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
@@ -105,29 +97,17 @@ class DashboardCourseViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
-        var enrollments = getEnrollmentsUseCase()
-        val programs = getProgramsUseCase()
+        val data = getDashboardCoursesUseCase()
 
-        val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
-        if (invitations.isNotEmpty()) {
-            invitations.forEach { enrollment ->
-                acceptCourseInviteUseCase(
-                    AcceptCourseInviteParams(
-                        courseId = enrollment.course?.id?.toLongOrNull() ?: return@forEach,
-                        enrollmentId = enrollment.id?.toLongOrNull() ?: return@forEach,
-                    )
-                )
-            }
-            enrollments = getEnrollmentsUseCase()
-        }
-
-        val courseCardStates = enrollments.mapToDashboardCourseCardState(
+        val courseCardStates = data.enrollments.mapToDashboardCourseCardState(
             context,
-            programs = programs,
-            nextModuleForCourse = { courseId -> fetchNextModuleState(courseId) },
+            programs = data.programs,
+            nextModuleForCourse = { courseId ->
+                courseId?.let { data.nextModuleItemByCourseId[it] }?.let { mapToModuleItemState(courseId, it) }
+            },
         )
 
-        val programCardStates = programs
+        val programCardStates = data.programs
             .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
             .mapToDashboardCourseCardState(context)
 
@@ -139,18 +119,14 @@ class DashboardCourseViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchNextModuleState(courseId: Long?): DashboardCourseCardModuleItemState? {
-        if (courseId == null) return null
-        val modules = getModuleItemsUseCase(courseId)
-        val nextModuleItem = modules.flatMap { it.items }.firstOrNull() ?: return null
-        val formattedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context)
+    private fun mapToModuleItemState(courseId: Long, moduleItem: ModuleItem): DashboardCourseCardModuleItemState {
         return DashboardCourseCardModuleItemState(
-            moduleItemTitle = nextModuleItem.title.orEmpty(),
-            moduleItemType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT
-                             else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
-            dueDate = nextModuleItem.moduleDetails?.dueDate,
-            estimatedDuration = formattedDuration,
-            onClickAction = CardClickAction.NavigateToModuleItem(courseId, nextModuleItem.id),
+            moduleItemTitle = moduleItem.title.orEmpty(),
+            moduleItemType = if (moduleItem.quizLti) LearningObjectType.ASSESSMENT
+                             else LearningObjectType.fromApiString(moduleItem.type.orEmpty()),
+            dueDate = moduleItem.moduleDetails?.dueDate,
+            estimatedDuration = moduleItem.estimatedDuration?.formatIsoDuration(context),
+            onClickAction = CardClickAction.NavigateToModuleItem(courseId, moduleItem.id),
         )
     }
 }

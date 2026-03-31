@@ -26,9 +26,9 @@ import javax.inject.Inject
 class CourseEnrollmentLocalDataSource @Inject constructor(
     private val courseDao: HorizonDashboardCourseDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
-) : CourseEnrollmentDataSource {
+) {
 
-    override suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
         return courseDao.getAll().map { entity ->
             GetCoursesQuery.Enrollment(
                 id = entity.enrollmentId.toString(),

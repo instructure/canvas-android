@@ -26,9 +26,9 @@ class CourseEnrollmentNetworkDataSource @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-) : CourseEnrollmentDataSource {
+) {
 
-    override suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
         return horizonGetCoursesManager.getEnrollments(apiPrefs.user?.id ?: -1, forceNetwork = true).dataOrThrow
     }
 

@@ -21,9 +21,9 @@ import javax.inject.Inject
 
 class ProgramNetworkDataSource @Inject constructor(
     private val getProgramsManager: GetProgramsManager,
-) : ProgramDataSource {
+) {
 
-    override suspend fun getPrograms(): List<Program> {
+    suspend fun getPrograms(): List<Program> {
         return getProgramsManager.getPrograms(forceNetwork = true)
     }
 }

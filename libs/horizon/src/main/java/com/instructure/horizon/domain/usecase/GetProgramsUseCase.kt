@@ -23,7 +23,6 @@ import javax.inject.Inject
 class GetProgramsUseCase @Inject constructor(
     private val repository: ProgramRepository,
 ) : BaseUseCase<Unit, List<Program>>() {
-
     suspend operator fun invoke() = invoke(Unit)
 
     override suspend fun execute(params: Unit) = repository.getPrograms()

@@ -29,9 +29,9 @@ import javax.inject.Inject
 
 class ModuleItemLocalDataSource @Inject constructor(
     private val moduleItemDao: HorizonDashboardModuleItemDao,
-) : ModuleItemDataSource {
+) {
 
-    override suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
         val entity = moduleItemDao.getFirstForCourse(courseId) ?: return emptyList()
         val moduleItem = ModuleItem(
             id = entity.moduleItemId,

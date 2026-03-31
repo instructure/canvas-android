@@ -28,9 +28,9 @@ import javax.inject.Inject
 class ProgramLocalDataSource @Inject constructor(
     private val programDao: HorizonDashboardProgramDao,
     private val courseDao: HorizonDashboardCourseDao,
-) : ProgramDataSource {
+) {
 
-    override suspend fun getPrograms(): List<Program> {
+    suspend fun getPrograms(): List<Program> {
         return programDao.getAll().map { programEntity ->
             val refs = programDao.getRefsForProgram(programEntity.programId)
             Program(

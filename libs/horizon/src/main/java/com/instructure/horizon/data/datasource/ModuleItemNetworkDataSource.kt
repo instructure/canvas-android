@@ -23,9 +23,9 @@ import javax.inject.Inject
 
 class ModuleItemNetworkDataSource @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
-) : ModuleItemDataSource {
+) {
 
-    override suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
         val params = RestParams(isForceReadFromNetwork = true)
         return moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
