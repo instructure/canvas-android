@@ -117,7 +117,7 @@ class ConferenceDetailsNetworkDataSourceTest {
         val result = networkDataSource.getAuthenticatedSession("targetUrl")
 
         TestCase.assertEquals(expected, result)
-        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true)) }
+        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true), any()) }
     }
 
     @Test(expected = IllegalStateException::class)
