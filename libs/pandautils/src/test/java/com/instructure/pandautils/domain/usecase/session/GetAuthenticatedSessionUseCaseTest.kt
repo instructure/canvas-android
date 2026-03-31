@@ -24,6 +24,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -42,6 +43,8 @@ class GetAuthenticatedSessionUseCaseTest {
     fun setUp() {
         useCase = GetAuthenticatedSessionUseCase(oauthApi, apiPrefs)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.mobileConsent } returns true
     }
 
     @After
