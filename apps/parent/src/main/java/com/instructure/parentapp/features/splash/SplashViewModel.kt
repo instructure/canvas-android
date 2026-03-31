@@ -83,18 +83,20 @@ class SplashViewModel @Inject constructor(
                 }
             }
 
-            val sendUsageMetrics = repository.getSendUsageMetrics()
-            if (sendUsageMetrics) {
-                val userWithIds = repository.getSelfWithUuid()
-                val visitorData = mapOf(
-                    "locale" to apiPrefs.effectiveLocale,
-                )
-                val accountData = mapOf(
-                    "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
-                )
-                Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
-            } else {
-                Pendo.endSession()
+            if (apiPrefs.mobileConsent) {
+                val sendUsageMetrics = repository.getSendUsageMetrics()
+                if (sendUsageMetrics) {
+                    val userWithIds = repository.getSelfWithUuid()
+                    val visitorData = mapOf(
+                        "locale" to apiPrefs.effectiveLocale,
+                    )
+                    val accountData = mapOf(
+                        "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
+                    )
+                    Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
+                } else {
+                    Pendo.endSession()
+                }
             }
 
             val students = repository.getStudents()

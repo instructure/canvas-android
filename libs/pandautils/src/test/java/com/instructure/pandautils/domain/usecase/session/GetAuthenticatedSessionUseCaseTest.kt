@@ -24,6 +24,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -42,6 +43,9 @@ class GetAuthenticatedSessionUseCaseTest {
     fun setUp() {
         useCase = GetAuthenticatedSessionUseCase(oauthApi, apiPrefs)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
+        every { apiPrefs.mobileConsent } returns true
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.mobileConsent } returns true
     }
 
     @After
@@ -55,12 +59,12 @@ class GetAuthenticatedSessionUseCaseTest {
         val authenticatedUrl = "https://canvas.instructure.com/session/abc123?return_to=/courses/1/conferences/1/join"
         val authenticatedSession = AuthenticatedSession(sessionUrl = authenticatedUrl)
 
-        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any()) } returns DataResult.Success(authenticatedSession)
+        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) } returns DataResult.Success(authenticatedSession)
 
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(authenticatedUrl, result)
-        coVerify { oauthApi.getAuthenticatedSession(targetUrl, any()) }
+        coVerify { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) }
     }
 
     @Test
@@ -70,14 +74,14 @@ class GetAuthenticatedSessionUseCaseTest {
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(targetUrl, result)
-        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any()) }
+        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 
     @Test
     fun `execute returns original URL when authentication fails`() = runTest {
         val targetUrl = "https://canvas.instructure.com/courses/1/conferences/1/join"
 
-        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any()) } returns DataResult.Fail()
+        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) } returns DataResult.Fail()
 
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
@@ -93,6 +97,6 @@ class GetAuthenticatedSessionUseCaseTest {
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(targetUrl, result)
-        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any()) }
+        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 }
