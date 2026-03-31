@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -22,13 +22,13 @@ import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesMana
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class CourseEnrollmentOnlineRepository @Inject constructor(
+class CourseEnrollmentNetworkDataSource @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-) {
+) : CourseEnrollmentDataSource {
 
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    override suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
         return horizonGetCoursesManager.getEnrollments(apiPrefs.user?.id ?: -1, forceNetwork = true).dataOrThrow
     }
 

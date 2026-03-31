@@ -15,18 +15,15 @@
  */
 package com.instructure.horizon.offline
 
-import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 
-abstract class OfflineSyncUseCase<in Params, out Result>(
-    val syncEnabled: Boolean,
+abstract class OfflineSyncRepository(
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider,
-) : BaseUseCase<Params, Result>() {
-
+) {
     fun isOnline() = networkStateProvider.isOnline()
     suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
     suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = syncEnabled && isOnline() && offlineEnabled()
+    suspend fun shouldSync() = isOnline() && offlineEnabled()
 }

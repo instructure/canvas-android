@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -21,11 +21,11 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleObject
 import javax.inject.Inject
 
-class ModuleItemOnlineRepository @Inject constructor(
+class ModuleItemNetworkDataSource @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
-) {
+) : ModuleItemDataSource {
 
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    override suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
         val params = RestParams(isForceReadFromNetwork = true)
         return moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,

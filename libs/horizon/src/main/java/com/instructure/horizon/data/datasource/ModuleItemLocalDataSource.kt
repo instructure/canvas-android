@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
@@ -27,11 +27,11 @@ import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ModuleItemOfflineRepository @Inject constructor(
+class ModuleItemLocalDataSource @Inject constructor(
     private val moduleItemDao: HorizonDashboardModuleItemDao,
-) {
+) : ModuleItemDataSource {
 
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    override suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
         val entity = moduleItemDao.getFirstForCourse(courseId) ?: return emptyList()
         val moduleItem = ModuleItem(
             id = entity.moduleItemId,

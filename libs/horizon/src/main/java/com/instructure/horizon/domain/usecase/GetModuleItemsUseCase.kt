@@ -16,31 +16,13 @@
 package com.instructure.horizon.domain.usecase
 
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.horizon.data.repository.ModuleItemOfflineRepository
-import com.instructure.horizon.data.repository.ModuleItemOnlineRepository
-import com.instructure.horizon.offline.OfflineSyncUseCase
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.data.repository.ModuleItemRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class GetModuleItemsUseCase @Inject constructor(
-    private val onlineRepository: ModuleItemOnlineRepository,
-    private val offlineRepository: ModuleItemOfflineRepository,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-) : OfflineSyncUseCase<Long, List<ModuleObject>>(
-    syncEnabled = true,
-    networkStateProvider = networkStateProvider,
-    featureFlagProvider = featureFlagProvider,
-) {
+    private val repository: ModuleItemRepository,
+) : BaseUseCase<Long, List<ModuleObject>>() {
 
-    override suspend fun execute(params: Long): List<ModuleObject> {
-        return if (shouldFetchFromNetwork()) {
-            onlineRepository.getModuleItemsForCourse(params).also {
-                if (shouldSync()) offlineRepository.saveModuleItem(params, it)
-            }
-        } else {
-            offlineRepository.getModuleItemsForCourse(params)
-        }
-    }
+    override suspend fun execute(params: Long) = repository.getModuleItemsForCourse(params)
 }

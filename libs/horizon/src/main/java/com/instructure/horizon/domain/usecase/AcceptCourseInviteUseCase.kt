@@ -15,17 +15,17 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.horizon.data.repository.CourseEnrollmentOnlineRepository
+import com.instructure.horizon.data.repository.CourseEnrollmentRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 data class AcceptCourseInviteParams(val courseId: Long, val enrollmentId: Long)
 
 class AcceptCourseInviteUseCase @Inject constructor(
-    private val onlineRepository: CourseEnrollmentOnlineRepository,
+    private val repository: CourseEnrollmentRepository,
 ) : BaseUseCase<AcceptCourseInviteParams, Unit>() {
 
     override suspend fun execute(params: AcceptCourseInviteParams) {
-        onlineRepository.acceptInvite(params.courseId, params.enrollmentId)
+        repository.acceptInvite(params.courseId, params.enrollmentId)
     }
 }

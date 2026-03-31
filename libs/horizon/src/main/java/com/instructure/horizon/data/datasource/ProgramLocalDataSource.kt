@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
@@ -25,12 +25,12 @@ import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import javax.inject.Inject
 
-class ProgramOfflineRepository @Inject constructor(
+class ProgramLocalDataSource @Inject constructor(
     private val programDao: HorizonDashboardProgramDao,
     private val courseDao: HorizonDashboardCourseDao,
-) {
+) : ProgramDataSource {
 
-    suspend fun getPrograms(): List<Program> {
+    override suspend fun getPrograms(): List<Program> {
         return programDao.getAll().map { programEntity ->
             val refs = programDao.getRefsForProgram(programEntity.programId)
             Program(

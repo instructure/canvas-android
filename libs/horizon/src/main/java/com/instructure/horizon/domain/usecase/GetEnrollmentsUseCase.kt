@@ -16,33 +16,15 @@
 package com.instructure.horizon.domain.usecase
 
 import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.horizon.data.repository.CourseEnrollmentOfflineRepository
-import com.instructure.horizon.data.repository.CourseEnrollmentOnlineRepository
-import com.instructure.horizon.offline.OfflineSyncUseCase
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.data.repository.CourseEnrollmentRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class GetEnrollmentsUseCase @Inject constructor(
-    private val onlineRepository: CourseEnrollmentOnlineRepository,
-    private val offlineRepository: CourseEnrollmentOfflineRepository,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-) : OfflineSyncUseCase<Unit, List<GetCoursesQuery.Enrollment>>(
-    syncEnabled = true,
-    networkStateProvider = networkStateProvider,
-    featureFlagProvider = featureFlagProvider,
-) {
+    private val repository: CourseEnrollmentRepository,
+) : BaseUseCase<Unit, List<GetCoursesQuery.Enrollment>>() {
 
     suspend operator fun invoke() = invoke(Unit)
 
-    override suspend fun execute(params: Unit): List<GetCoursesQuery.Enrollment> {
-        return if (shouldFetchFromNetwork()) {
-            onlineRepository.getEnrollments().also {
-                if (shouldSync()) offlineRepository.saveEnrollments(it)
-            }
-        } else {
-            offlineRepository.getEnrollments()
-        }
-    }
+    override suspend fun execute(params: Unit) = repository.getEnrollments()
 }

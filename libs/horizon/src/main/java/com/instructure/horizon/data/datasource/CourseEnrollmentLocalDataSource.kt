@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
@@ -23,12 +23,12 @@ import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
 import com.instructure.horizon.database.sync.HorizonSyncMetadataEntity
 import javax.inject.Inject
 
-class CourseEnrollmentOfflineRepository @Inject constructor(
+class CourseEnrollmentLocalDataSource @Inject constructor(
     private val courseDao: HorizonDashboardCourseDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
-) {
+) : CourseEnrollmentDataSource {
 
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    override suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
         return courseDao.getAll().map { entity ->
             GetCoursesQuery.Enrollment(
                 id = entity.enrollmentId.toString(),

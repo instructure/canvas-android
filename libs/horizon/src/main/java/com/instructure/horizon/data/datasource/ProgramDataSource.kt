@@ -13,17 +13,10 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.data.datasource
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import javax.inject.Inject
 
-class ProgramOnlineRepository @Inject constructor(
-    private val getProgramsManager: GetProgramsManager,
-) {
-
-    suspend fun getPrograms(): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork = true)
-    }
+interface ProgramDataSource {
+    suspend fun getPrograms(): List<Program>
 }
