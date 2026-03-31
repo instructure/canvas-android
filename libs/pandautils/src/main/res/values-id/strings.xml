@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">Pada %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s hingga %2$s</string>
     <string name="schedule_todo_due_text">To Do: %s</string>
+    <string name="schedule_todo_due_text_new">To-do (Harus Dilakukan): %s</string>
     <string name="schedule_due_text">Batas Waktu: %s</string>
     <string name="show_missing_items_title">Tampilkan %d item yang tidak ada</string>
     <string name="hide_missing_items_title">Sembunyikan %d item yang tidak ada</string>
     <string name="schedule_error_message">Tidak dapat mengambil jadwal Anda</string>
     <string name="schedule_todo_title">Harus Dilakukan</string>
+    <string name="schedule_todo_title_new">To-do</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s poin</item>
         <item quantity="one">%s poin</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Catatan planner</string>
     <string name="a11y_quiz">Kuis</string>
     <string name="a11y_todo">Harus Dilakukan</string>
+    <string name="a11y_todo_new">To-do</string>
     <string name="a11y_page">Halaman</string>
     <string name="a11y_assessment_request">Permintaa penilaian</string>
     <string name="a11y_marked_as_done">Ditandai sebagai selesai</string>

@@ -18,17 +18,21 @@ package com.instructure.horizon.interaction.features.notebook
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetLearningLibraryManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeMyContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRedwoodApiManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyModule
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
@@ -50,6 +54,8 @@ class NotebookInteractionTest : HorizonTest() {
     private val fakeGetWidgetsManager = FakeGetWidgetsManager()
     private val fakeGetSkillsManager = FakeGetSkillsManager()
     private val fakeRedwoodApiManager = FakeRedwoodApiManager()
+    private val fakeLearningLibraryManager = FakeGetLearningLibraryManager()
+    private val fakeMyContentManager = FakeMyContentManager()
 
     @BindValue
     @JvmField
@@ -70,6 +76,14 @@ class NotebookInteractionTest : HorizonTest() {
     @BindValue
     @JvmField
     val redwoodApiManager: RedwoodApiManager = fakeRedwoodApiManager
+
+    @BindValue
+    @JvmField
+    val learningLibraryManager: GetLearningLibraryManager = fakeLearningLibraryManager
+
+    @BindValue
+    @JvmField
+    val myContentManager: MyContentManager = fakeMyContentManager
 
     private val notebookPage: HorizonNotebookPage by lazy { HorizonNotebookPage(composeTestRule) }
 

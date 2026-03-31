@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Nästa modulobjekt</string>
     <string name="a11y_nextModule">Nästa modul</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, markerad som %2$s, dubbeltryck för att redigera anteckning</string>
+    <string name="learnCoursesTabLabel">Kurser</string>
+    <string name="learnProgramsTabLabel">Program</string>
     <string name="reportAProblemDescriptionMessage">Registrera ett ärende för ett personligt svar från vårt supportteam.</string>
     <string name="igniteAIEnterAPromptLabel">Ange en prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Läser in svar</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Vänd på kortet</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Det gick inte att läsa in kurser</string>
+    <string name="learnCourseListFilterAll">Alla kurser</string>
+    <string name="learnCourseListFilterNotStarted">Ej startade</string>
+    <string name="learnCourseListFilterInProgress">Pågår</string>
+    <string name="learnCourseListFilterCompleted">Färdig</string>
+    <string name="learnCourseListStartLearningLabel">Börja inlärningen</string>
+    <string name="learnCourseListResumeLearningLabel">Återuppta lärande</string>
+    <string name="learnCourseListViewCourseLabel">Visa kursen</string>
+    <string name="learnCourseListShowMoreLabel">Visa mer</string>
+    <string name="learnCourseListSearchBarPlaceholder">Sök efter kurser</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Del av %1$s</string>
+    <string name="learnCourseListEmptyMessage">Inga resultat hittades. Prova att ändra söktermerna.</string>
+    <string name="learnProgramListFilterAll">Alla program</string>
+    <string name="learnProgramListFilterNotStarted">Ej startade</string>
+    <string name="learnProgramListFilterInProgress">Pågår</string>
+    <string name="learnProgramListFilterCompleted">Färdig</string>
+    <string name="learnProgramListShowMoreLabel">Visa mer</string>
+    <string name="learnProgramListEmptyMessage">Inga resultat hittades. Prova att ändra söktermerna.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Sök efter program</string>
+    <string name="learnProgramListFailedToLoadMessage">Det gick inte att läsa in programmen</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d kurs</item>
+        <item quantity="other">%1$d kurser</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Fel: %1$s</string>
     <string name="a11y_required">Obligatorisk</string>
 </resources>

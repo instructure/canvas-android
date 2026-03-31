@@ -30,6 +30,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -45,8 +46,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
@@ -93,7 +93,14 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     override fun title(): String = getString(R.string.message)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        // Always use light/white status bar icons for better visibility
+        WindowInsetsHelper.setSystemBarsAppearance(requireActivity().window, false)
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Reapply status bar appearance when orientation changes
+        applyTheme()
     }
 
     override fun getFragment(): Fragment {
@@ -141,6 +148,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     companion object {
         const val CONVERSATION_ID = "conversation_id"
         const val UNREAD = "unread"
+        const val SCOPE = "scope"
 
         fun newInstance(): InboxDetailsFragment {
             return InboxDetailsFragment()
@@ -153,10 +161,11 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
             return InboxDetailsFragment().withArgs(route.arguments)
         }
 
-        fun makeRoute(conversationId: Long, unread: Boolean = false): Route {
+        fun makeRoute(conversationId: Long, unread: Boolean = false, scope: InboxApi.Scope = InboxApi.Scope.INBOX): Route {
             val bundle = bundleOf().apply {
                 putLong(Const.CONVERSATION_ID, conversationId)
                 putBoolean(UNREAD, unread)
+                putString(SCOPE, scope.name)
             }
             return Route(null, InboxDetailsFragment::class.java, null, bundle)
         }

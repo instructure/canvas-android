@@ -18,6 +18,10 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.Assignment
@@ -31,6 +35,8 @@ import com.instructure.pandautils.features.discussion.create.CreateDiscussionWeb
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.bind
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
@@ -66,7 +72,19 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     override val recyclerView get() = dueDateRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = DueDatesPresenterFactory(mAssignment)
-    override fun onCreateView(view: View) {}
+    override fun onCreateView(view: View) {
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        view.applyDisplayCutoutInsets()
+
+        view.findViewById<Toolbar>(R.id.toolbar)?.applyTopSystemBarInsets()
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+    }
 
     override fun onResume() {
         super.onResume()

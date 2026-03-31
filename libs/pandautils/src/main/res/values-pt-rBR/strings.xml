@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Em %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Para fazer: %s</string>
+    <string name="schedule_todo_due_text_new">Lista de tarefa: %s</string>
     <string name="schedule_due_text">Vencimento: %s</string>
     <string name="show_missing_items_title">Mostrar %d itens ausentes</string>
     <string name="hide_missing_items_title">Ocultar %d itens ausentes</string>
     <string name="schedule_error_message">Incapaz de buscar sua programação</string>
     <string name="schedule_todo_title">Lista de Tarefas</string>
+    <string name="schedule_todo_title_new">A fazer</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Observação do planejador</string>
     <string name="a11y_quiz">Teste</string>
     <string name="a11y_todo">Lista de Tarefas</string>
+    <string name="a11y_todo_new">A fazer</string>
     <string name="a11y_page">Página</string>
     <string name="a11y_assessment_request">Solicitação de avaliação</string>
     <string name="a11y_marked_as_done">Marcado como concluído</string>

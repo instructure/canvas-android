@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Innlevering feilet</string>
     <string name="submissionStatusFailedSubtitle">Trykk for å vise detaljer</string>
     <string name="submissionAndRubric">Innlevering &amp; Vurderingskriterier</string>
+    <string name="submissionAndFeedback">Innlevering og tilbakemelding</string>
     <string name="commentsAndRubric">Kommentarer &amp; vurderingskriterier</string>
     <string name="errorLoadingAssignment">Det var et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="submitted">Innlevert</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">I dag</string>
+    <string name="tomorrow">I morgen</string>
     <string name="past">Tidligere</string>
     <string name="noDate">Ingen dato</string>
     <string name="future">Fremtidige</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Ingenting å vise</string>
     <string name="Todo">Å gjøre</string>
+    <string name="TodoNew">Gjøremål</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Filtrer etter &#8230;</string>
     <string name="favoriteCoursesLabel">Favorittfag</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grupper</string>
     <string name="groupMembers">Gruppemedlemmer</string>
 
+    <string name="messageGroup">Send melding til gruppe</string>
     <string name="loading">Laster inn&#8230;</string>
     <string name="select_item_to_display">Velg fra listen</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Å gjøre</string>
+    <string name="todoWidgetTitleNew">Gjøremål</string>
     <string name="gradesWidgetTitle">Vurderinger</string>
     <string name="notificationWidgetTitle">Varslinger</string>
     <string name="todoWidgetTitleLong">Canvas - Gjøremål</string>
+    <string name="todoWidgetTitleLongNew">Canvas – Gjøremål</string>
     <string name="gradesWidgetTitleLong">Canvas - klasser</string>
     <string name="gradeWidgetTitleLong">Canvas – vurdering</string>
     <string name="notificationWidgetTitleLong">Canvas - varsler</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Fag</string>
     <string name="toDoList">Gjøremålsliste</string>
+    <string name="toDoListNew">Gjøremålsliste</string>
+
     <string name="notifications">Varslinger</string>
     <string name="pushNotifications">Push-varslinger</string>
     <string name="pushNotificationsError">Push-varslinger har ikke blitt registrert for denne enheten.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Åpne Speedgrader</string>
 
-    <string name="search_todo">todo to do todos todo list</string>
     <string name="search_course">fag fag klasse klasser</string>
     <string name="search_grades">Vurder vurderinger</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Sidetittel må være satt.</string>
     <string name="pageDetails">Sidedetaljer</string>
     <string name="saving">Lagrer</string>
+    <string name="speedGraderSaving">Lagrer</string>
+    <string name="speedGraderSaved">Lagret</string>
+    <string name="speedGraderFailed">Ikke bestått</string>
+    <string name="speedGraderSaveErrorTitle">Obs, noe gikk galt</string>
+    <string name="speedGraderSaveErrorMessage">Det oppsto en feil ved lagring av vurderingsendringen din Du kan prøve igjen, eller prøve senere.</string>
+    <string name="speedGraderSaveErrorContentDescription">Lagring av vurderingen mislyktes. Trykk for detaljer.</string>
+
     <string name="confirmDeleteEvent">Er du sikker du ønsker å slette denne hendelsen?</string>
     <string name="conferencesNotSupported">Videomøter støttes ikke på mobil.</string>
     <string name="filePreviewContentDescription">Forhåndsvisning av filen</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Opptak</string>
     <string name="conferenceInProgress">Videomøte pågår</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferanser (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Videomøte pågår</string>
+    <string name="conferencesWidgetDismissed">Konferanse avvist</string>
     <string name="a11y_criterion_content_description">Kriterievurdering %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">mer informasjon</string>
@@ -1373,6 +1391,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s gjøremålselement</item>
+        <item quantity="other">%s gjøremålselementer</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s gjøremålselement</item>
         <item quantity="other">%s gjøremålselementer</item>
     </plurals>
@@ -1662,7 +1684,9 @@
     <string name="calendarNoEvents">Ingen arrangementer i dag!</string>
     <string name="calendarNoEventsDescription">Det ser ut som dette er en flott dag til å slappe av og lade batteriene.</string>
     <string name="userCalendarToDo">Å gjøre</string>
+    <string name="userCalendarToDoNew">Gjøremål</string>
     <string name="courseToDo">%s Gjøremål</string>
+    <string name="courseToDoNew">%s Gjøremål</string>
     <string name="calendarEventExcused">Fritatt</string>
     <string name="calendarEventMissing">Mangler</string>
     <string name="calendarEventGraded">Vurdert</string>
@@ -1687,21 +1711,30 @@
     <string name="a11y_eventCreatedAnnouncement">Hendelsen %s ble opprettet.</string>
     <string name="a11y_eventUpdatedAnnouncement">Hendelsen %s ble oppdatert</string>
     <string name="a11y_toDoCreatedAnnouncement">Gjøremålet %s ble opprettet.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Gjøremålet %s opprettet.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Gjøremålet %s ble oppdatert</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Gjøremålet %s oppdatert</string>
     <string name="todoScreenTitle">Å gjøre</string>
+    <string name="todoScreenTitleNew">Gjøremål</string>
     <string name="todoDateLabel">Dato</string>
     <string name="todoDescriptionLabel">Beskrivelse</string>
     <string name="todoDeleteConfirmationTitle">Slette gjøremål?</string>
+    <string name="todoDeleteConfirmationTitleNew">Slette gjøremål?</string>
     <string name="todoDeleteConfirmationText">Dette vil slette gjøremålselementet ditt permanent.</string>
+    <string name="todoDeleteConfirmationTextNew">Dette vil slette gjøremålet ditt permanent.</string>
     <string name="todoDeleteErrorMessage">Det oppsto en feil ved sletting av dette gjøremålet. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="todoDeleteErrorMessageNew">Det oppsto en feil ved sletting av dette gjøremålet. Sjekk tilkoblingen din og prøv på nytt.</string>
     <string name="createTodoScreenTitle">Ny i gjøremål</string>
+    <string name="createTodoScreenTitleNew">Nye gjøremål</string>
     <string name="editTodoScreenTitle">Rediger gjøremål</string>
+    <string name="editTodoScreenTitleNew">Rediger gjøremål</string>
     <string name="createToDoTitleHint">Legg til tittel</string>
     <string name="createToDoDateLabel">Dato</string>
     <string name="createToDoTimeLabel">Tid</string>
     <string name="createToDoCalendarLabel">Kalender</string>
     <string name="createToDoDetailsLabel">Detaljer</string>
     <string name="todoSaveErrorMessage">Det oppsto en feil ved lagring av dette gjøremålet. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="todoSaveErrorMessageNew">Det oppsto en feil ved lagring av dette gjøremålet. Sjekk tilkoblingen din og prøv på nytt.</string>
     <string name="selectCalendarScreenTitle">Velg kalender</string>
     <string name="errorContentRetryButton">Forsøk igjen</string>
     <string name="eventLocationLabel">Sted</string>
@@ -1709,6 +1742,7 @@
     <string name="eventDetailsLabel">Detaljer</string>
     <string name="errorLoadingEvent">Det oppsto et problem ved lasting av denne hendelsen. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="errorLoadingTodo">Det oppsto et problem ved lasting av dette gjøremålet. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="errorLoadingTodoNew">Det oppsto en feil ved lasting av dette gjøremålet. Sjekk tilkoblingen din og prøv på nytt.</string>
     <string name="eventDeleteConfirmationTitle">Slette hendelse?</string>
     <string name="eventDeleteConfirmationText">Dette vil slette hendelsen din permanent.</string>
     <string name="eventDeleteErrorMessage">Det oppsto en feil ved sletting av denne hendelsen. Kontroller tilkoblingen og prøv på nytt.</string>
@@ -1725,6 +1759,7 @@
     <string name="eventDeleteScopeAll">Alle hendelser</string>
     <string name="eventDeleteScopeFollowing">Denne og følgende hendelser</string>
     <string name="calendarAddToDo">Legg til gjøremål</string>
+    <string name="calendarAddToDoNew">Legg til gjøremål</string>
     <string name="calendarAddEvent">Legg til arrangement</string>
     <string name="createEventScreenTitle">Ny hendelse</string>
     <string name="editEventScreenTitle">Rediger hendelse</string>
@@ -2103,7 +2138,9 @@
     <string name="widgetNotLoggedInTitle">La oss logge deg inn!</string>
     <string name="widgetToDoNotLoggedInSubtitle">For å se gjøremålene dine, logg inn på kontoen din i appen. Det tar bare et øyeblikk!</string>
     <string name="a11y_widgetToDoOpenToDoList">Åpne gjøremålsliste-skjermen</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Åpne gjøremålsliste-skjermen</string>
     <string name="a11y_widgetToDoCreateNewToDo">Opprett nytt gjøremål</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Opprett nytt gjøremål</string>
     <string name="widgetGradesErrorSubtitle">Vi har problemer med å vise vurderingene dine akkurat nå. Prøv igjen om litt eller gå til appen.</string>
     <string name="widgetGradesNotLoggedInSubtitle">For å se vurderinger, logg inn på kontoen din i appen. Det tar bare et øyeblikk!</string>
     <string name="widgetSingleGradeErrorSubtitle">Vi har problemer med å vise vurderingene dine akkurat nå.</string>
@@ -2111,6 +2148,19 @@
     <string name="widgetSingleGradeSelectCourse">La oss velge et fag</string>
     <string name="widgetGradesErrorLoadingCourses">Det oppsto en feil ved lasting av fag.</string>
     <string name="settingsSwitchExperience">Bytt til Canvas Career</string>
+    <string name="forecastWidgetTitle">Ukentlig oppsummering</string>
+    <string name="forecastWidgetWeekPeriod">Uke %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Mangler</string>
+    <string name="forecastWidgetDue">Forfall</string>
+    <string name="forecastWidgetRecentGrades">Nye vurderinger</string>
+    <string name="forecastWidgetGradeWeight">%d%% av sluttvurdering</string>
+    <string name="forecastWidgetErrorMessage">Vi har problemer med å laste inn oppgavene dine. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="forecastWidgetEmptyMissing">Ingen manglende oppgaver. Du er opptatt!</string>
+    <string name="forecastWidgetEmptyDue">Ingen oppgaver forfaller denne uken.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Ingen nye vurderinger denne uken.</string>
+    <string name="a11y_contentDescription_previousWeek">Forrige uke</string>
+    <string name="a11y_contentDescription_nextWeek">Neste uke</string>
+
     <string name="speedGraderGradeTabTitle">Vurdering og vurderingskriterier</string>
     <string name="speedGraderDetailsTabTitle">Detaljer</string>
     <string name="a11y_contentDescription_expandPanel">Vis panel</string>
@@ -2189,6 +2239,7 @@
     <string name="errorLoadingToDos">Det oppsto en feil under lastingen av gjøremålene dine. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="errorUpdatingToDo">Det oppsto en feil ved oppdatering av gjøremålet. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="noToDosForNow">Nye gjøremål for nå!</string>
+    <string name="noToDosForNowNew">Nye gjøremål for nå!</string>
     <string name="noToDosForNowSubtext">Det ser ut som dette er et godt tidspunkt å slappe av, hvile og lade batteriene.</string>
     <string name="todoSwipeDone">Ferdig</string>
     <string name="todoSwipeUndo">Angre</string>
@@ -2199,8 +2250,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Innstillinger for gjøremålsliste</string>
+    <string name="todoFilterPreferencesNew">Innstillinger for gjøremålsliste</string>
     <string name="todoFilterVisibleItems">Synlige elementer</string>
     <string name="todoFilterShowPersonalToDos">Vis personlige gjøremål</string>
+    <string name="todoFilterShowPersonalToDosNew">Vis personlige gjøremål</string>
     <string name="todoFilterShowCalendarEvents">Vis kalenderoppføringer</string>
     <string name="todoFilterShowCompleted">Vis fullført</string>
     <string name="todoFilterFavoriteCoursesOnly">Kun favorittfag</string>
@@ -2226,6 +2279,9 @@
     <string name="courseInvitationDeclined">Invitasjon til %s avslått</string>
     <string name="courseInvitationDeclineConfirmTitle">Avvis invitasjon</string>
     <string name="courseInvitationDeclineConfirmMessage">Er du sikker på at du vil avslå invitasjonen til %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Fremdrift</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2349,6 +2405,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hei, %s!</string>
 
+    <string name="courses_and_groups">Fag og grupper</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Tilpass oversikt</string>
     <string name="dashboard_widgets">Widgets</string>
@@ -2358,16 +2415,44 @@
     <string name="changing_dashboard_layout">Endre oversikt layout</string>
     <string name="changing_dashboard_layout_message">For å endre oversikt layout, må du starte applikasjonen på nytt</string>
     <string name="restart_now">Start på nytt nå</string>
+    <string name="turn_on_new_dashboard">Slå på den nye oversikten</string>
     <string name="switched_back">Byttet tilbake?</string>
     <string name="switched_back_message">Takk for at du prøver det nye oversikten! Kan du fortelle oss hvorfor du byttet tilbake?</string>
+    <string name="survey_option_hard_to_find">Vanskelig å finne ting</string>
+    <string name="survey_option_prefer_old_layout">Foretrekker det gamle oppsettet</string>
+    <string name="survey_option_something_broken">Noe fungerte ikke som det skal</string>
     <string name="what_could_we_improve">Hva kan vi forbedre?</string>
+    <string name="what_do_you_think_of_new_dashboard">Hva synes du om den nye oversikten?</string>
+    <string name="let_us_know">Gi oss beskjed!</string>
+    <string name="no_app_to_handle_link">Ingen app tilgjengelig for å åpne denne lenken</string>
     <string name="skip">Hopp over</string>
     <string name="widget_setting_show_greeting">Vis hilsen</string>
     <string name="background_color">Bakgrunnsfarge</string>
+    <string name="widget_setting_show_grades">Fagvurderinger</string>
+    <string name="widget_setting_show_color_overlay">Fargeoverlegg for fag</string>
     <string name="offline_content_available">Frakoblet innhold tilgjengelig</string>
     <string name="a11y_contentDescription_moreOptions">Flere alternativer</string>
     <string name="customizeCourse">Skreddersy fag</string>
     <string name="favoriteCoursesAndGroups">Favorittfag og -grupper</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Eksterne verktøy er ikke tilgjengelige i frakoblet modus</string>
+    <string name="widget_weekly_summary">Ukentlig oppsummering</string>
+
+    <string name="dashboardCourseNickname">Kallenavn</string>
+    <string name="dashboardCourseNicknameHint">Skriv kallenavn for faget her</string>
+    <string name="dashboardCourseColor">Fagfarge</string>
+    <string name="widget_toDo">Daglige gjøremål</string>
+    <string name="dailyToDoWidgetTitle">Daglige gjøremål</string>
+    <string name="todoWidget_showCompleted">Vis fullført</string>
+    <string name="todoWidget_emptyTitle">Du er ferdig for nå!</string>
+    <string name="todoWidget_emptyMessage">Det ser ut til at du ikke er ledig denne dagen.\nVil du legge til noen gjøremål?</string>
+    <string name="todoWidget_addTodo">Legg til gjøremål</string>
+    <string name="todoWidget_errorTitle">Obs, noe gikk galt</string>
+    <string name="todoWidget_errorMessage">Vi kunne ikke laste inn gjøremålene dine.\nPrøv igjen eller kom tilbake senere.</string>
+    <string name="todoWidget_refresh">Oppdater</string>
+    <string name="todoWidget_today">I dag</string>
+    <string name="a11y_todoWidget_jumpToToday">Hopp til i dag</string>
+    <string name="widgetSettings_widgetsColor">Hovedfarge på oversikten</string>
+    <string name="dashboard_globalAnnouncement">Global beskjed</string>
+    <string name="forecastWidget_currentWeek">Gjeldende uke</string>
 </resources>

@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">เมื่อ %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s ถึง %2$s</string>
     <string name="schedule_todo_due_text">สิ่งที่ต้องทำ: %s</string>
+    <string name="schedule_todo_due_text_new">สิ่งที่ต้องทำ: %s</string>
     <string name="schedule_due_text">ครบกำหนด: %s</string>
     <string name="show_missing_items_title">แสดง %d รายการที่ขาดหาย</string>
     <string name="hide_missing_items_title">ซ่อน %d รายการที่ขาดหาย</string>
     <string name="schedule_error_message">ไม่สามารถสืบค้นกำหนดเวลาของคุณได้</string>
     <string name="schedule_todo_title">สิ่งที่ต้องทำ</string>
+    <string name="schedule_todo_title_new">สิ่งที่ต้องทำ</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s คะแนน</item>
         <item quantity="one">%s คะแนน</item>
@@ -479,6 +481,7 @@
     <string name="a11y_planner_note">หมายเหตุสำหรับแผนงาน</string>
     <string name="a11y_quiz">แบบทดสอบ</string>
     <string name="a11y_todo">สิ่งที่ต้องทำ</string>
+    <string name="a11y_todo_new">สิ่งที่ต้องทำ</string>
     <string name="a11y_page">หน้าเพจ</string>
     <string name="a11y_assessment_request">คำขอประเมิน</string>
     <string name="a11y_marked_as_done">กำกับว่าเสร็จสิ้นแล้ว</string>

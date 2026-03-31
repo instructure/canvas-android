@@ -62,6 +62,7 @@ import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.UUID
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ProgressWidget(
@@ -175,7 +176,8 @@ private fun UploadProgressCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .pendoTag("progressWidget_uploadCard", true)
+        .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
@@ -248,6 +250,7 @@ private fun UploadInProgressContent(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.TopEnd)
+                .pendoTag("progressWidget_dismissUpload", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_close),
@@ -316,6 +319,7 @@ private fun UploadSuccessContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissUpload", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
@@ -385,6 +389,7 @@ private fun UploadErrorContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissUpload", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
@@ -410,6 +415,7 @@ private fun SyncProgressCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .pendoTag("progressWidget_syncCard", true)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -489,6 +495,7 @@ private fun SyncProgressContent(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.TopEnd)
+                .pendoTag("progressWidget_dismissSync", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_close),
@@ -555,6 +562,7 @@ private fun SyncErrorContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissSync", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),

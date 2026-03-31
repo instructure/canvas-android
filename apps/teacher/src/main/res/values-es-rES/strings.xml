@@ -31,6 +31,7 @@
     <string name="tab_attendance">Asistencia</string>
     <string name="tab_pages">Páginas</string>
     <string name="tab_todo">Tareas pendientes</string>
+    <string name="tab_todo_new">Tareas pendientes</string>
     <string name="content_description_school_logo">Logo de la escuela</string>
     <string name="search_guides">Buscar en las guías de Canvas</string>
     <string name="canvas_guides">Guías de Canvas</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Nada más pendiente.\n Que tengas un buen día.</string>
     <string name="toDoNoSubmissions">No hay entregas para evaluar para esta actividad.</string>
     <string name="errorToDoRouteFailed">Ha habido un error al intentar ver este ítem de tareas pendientes.</string>
+    <string name="errorToDoRouteFailedNew">Se ha producido un error al intentar ver este ítem de tareas pendientes.</string>
     <string name="errorIsDesigner">La inscripción de diseñador no puede ver esto.</string>
 
     <string name="sections">Secciones</string>

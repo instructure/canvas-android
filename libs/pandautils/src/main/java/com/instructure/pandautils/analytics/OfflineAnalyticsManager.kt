@@ -3,8 +3,10 @@ package com.instructure.pandautils.analytics
 import android.content.Context
 import android.os.Bundle
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.instructure.canvasapi2.utils.Analytics
@@ -19,7 +21,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-private val Context.sessionDataStore by preferencesDataStore(name = OfflineAnalyticsManager.SESSION_STORE_NAME)
+private val Context.sessionDataStore by preferencesDataStore(
+    name = OfflineAnalyticsManager.SESSION_STORE_NAME,
+    corruptionHandler = ReplaceFileCorruptionHandler { emptyPreferences() }
+)
 
 class OfflineAnalyticsManager @Inject constructor(
     @ApplicationContext private val context: Context,

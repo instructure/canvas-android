@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Ekki tókst að skila</string>
     <string name="submissionStatusFailedSubtitle">Smelltu til að skoða upplýsingar</string>
     <string name="submissionAndRubric">Skil &amp; matsviðmið</string>
+    <string name="submissionAndFeedback">Skil &amp; endurgjöf</string>
     <string name="commentsAndRubric">Athugasemdir og matsviðmið</string>
     <string name="errorLoadingAssignment">Það kom upp vandamál við að hlaða inn þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="submitted">Skilað</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Í dag</string>
+    <string name="tomorrow">Á morgun</string>
     <string name="past">Fyrri</string>
     <string name="noDate">Engin dagsetning</string>
     <string name="future">Framtíðar</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Einræða</string>
     <string name="noItemsToDisplayShort">Engin hlutir til að sýna</string>
     <string name="Todo">Verkefni</string>
+    <string name="TodoNew">Verkefnalisti</string>
     <string name="todoFilter">Sía námskeið</string>
     <string name="filterByEllipsis">Sía eftir&#8230;</string>
     <string name="favoriteCoursesLabel">Uppáhalds námskeið</string>
@@ -474,6 +477,7 @@
     <string name="groups">Hópar</string>
     <string name="groupMembers">Hópmeðlimir</string>
 
+    <string name="messageGroup">Skilaboð til hóps</string>
     <string name="loading">Sæki&#8230;</string>
     <string name="select_item_to_display">Veldu úr lista</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Verkefni</string>
+    <string name="todoWidgetTitleNew">Verkefnalisti</string>
     <string name="gradesWidgetTitle">Einkunnir</string>
     <string name="notificationWidgetTitle">Tilkynningar</string>
     <string name="todoWidgetTitleLong">Canvas - verkefni</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Verkefnalisti</string>
     <string name="gradesWidgetTitleLong">Canvas - einkunnir</string>
     <string name="gradeWidgetTitleLong">Canvas - einkunn</string>
     <string name="notificationWidgetTitleLong">Canvas - tilkynningar</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Námskeið</string>
     <string name="toDoList">Verkefnalisti</string>
+    <string name="toDoListNew">Verkefnalisti</string>
+
     <string name="notifications">Tilkynningar</string>
     <string name="pushNotifications">Þrýstar tilkynningar</string>
     <string name="pushNotificationsError">Þrýstar tilkynningar hafa ekki verið skráðar fyrir þetta tæki.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Opna Speedgrader</string>
 
-    <string name="search_todo">verkefni verkefnalisti</string>
     <string name="search_course">námskeið bekkur bekkir</string>
     <string name="search_grades">einkunn einkunnir</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Síðutitill þarf að vera stilltur inn.</string>
     <string name="pageDetails">Upplýsingar um síðu</string>
     <string name="saving">Vistar</string>
+    <string name="speedGraderSaving">Vistar</string>
+    <string name="speedGraderSaved">Vistað</string>
+    <string name="speedGraderFailed">Tókst ekki</string>
+    <string name="speedGraderSaveErrorTitle">Úbbs, eitthvað fór úrskeiðis</string>
+    <string name="speedGraderSaveErrorMessage">Villa kom upp við að vista breytinguna á einkunn. Þú getur reynt aftur eða reynt aftur síðar.</string>
+    <string name="speedGraderSaveErrorContentDescription">Vistun einkunnar mistókst. Smelltu til að fá upplýsingar.</string>
+
     <string name="confirmDeleteEvent">Viltu örugglega eyða þessum viðburði?</string>
     <string name="conferencesNotSupported">Ráðstefnur eru ekki enn studdar á farsíma.</string>
     <string name="filePreviewContentDescription">Forskoðun skráar mynd</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Upptökur</string>
     <string name="conferenceInProgress">Ráðstefna í gangi</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Ráðstefnur (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Ráðstefna í gangi</string>
+    <string name="conferencesWidgetDismissed">Ráðstefna hunsuð</string>
     <string name="a11y_criterion_content_description">Viðmiðunarmat %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">frekari upplýsingar</string>
@@ -1372,6 +1390,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s verkefni á verkefnalista</item>
+        <item quantity="other">%s verkefni á verkefnalista</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s verkefni á verkefnalista</item>
         <item quantity="other">%s verkefni á verkefnalista</item>
     </plurals>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Engir viðburðir í dag!</string>
     <string name="calendarNoEventsDescription">Þetta virðist vera góður dagur til að hvílast, slaka á og hlaða batteríin.</string>
     <string name="userCalendarToDo">Verkefnalisti</string>
+    <string name="userCalendarToDoNew">Verkefnalisti</string>
     <string name="courseToDo">%s Verkefni</string>
+    <string name="courseToDoNew">%s verkefnalisti</string>
     <string name="calendarEventExcused">Undanþegið</string>
     <string name="calendarEventMissing">Vantar</string>
     <string name="calendarEventGraded">Metið</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Viðburður %s stofnaður.</string>
     <string name="a11y_eventUpdatedAnnouncement">Viðburður %s uppfærður.</string>
     <string name="a11y_toDoCreatedAnnouncement">Verkefni %s stofnað.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Verkefnalisti %s búinn til.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Verkefni %s uppfært.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Verkefnalisti %s uppfærður.</string>
     <string name="todoScreenTitle">Verkefnalisti</string>
+    <string name="todoScreenTitleNew">Verkefnalisti</string>
     <string name="todoDateLabel">Dagsetning</string>
     <string name="todoDescriptionLabel">Lýsing</string>
     <string name="todoDeleteConfirmationTitle">Eyða verkefni?</string>
+    <string name="todoDeleteConfirmationTitleNew">Eyða verkefnalista?</string>
     <string name="todoDeleteConfirmationText">Þú munt varanlega eyða verkefni þínu.</string>
+    <string name="todoDeleteConfirmationTextNew">Þú munt varanlega eyða verkefnalista þínum.</string>
     <string name="todoDeleteErrorMessage">Villa kom upp við að eyða þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="todoDeleteErrorMessageNew">Villa kom upp við að eyða þessum verkefnalista. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="createTodoScreenTitle">Nýtt verkefni</string>
+    <string name="createTodoScreenTitleNew">Nýr verkefnalisti</string>
     <string name="editTodoScreenTitle">Breyta verkefni</string>
+    <string name="editTodoScreenTitleNew">Breyta verkefnalista</string>
     <string name="createToDoTitleHint">Bæta við titli</string>
     <string name="createToDoDateLabel">Dagsetning</string>
     <string name="createToDoTimeLabel">Tími</string>
     <string name="createToDoCalendarLabel">Dagatal</string>
     <string name="createToDoDetailsLabel">Upplýsingar</string>
     <string name="todoSaveErrorMessage">Villa kom upp við að vista þetta verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="todoSaveErrorMessageNew">Villa kom upp við að vista þennan verkefnalista. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="selectCalendarScreenTitle">Velja dagatal</string>
     <string name="errorContentRetryButton">Reyna aftur</string>
     <string name="eventLocationLabel">Staðsetning</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Upplýsingar</string>
     <string name="errorLoadingEvent">Það kom upp vandamál við að hlaða inn þessum viðburði. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="errorLoadingTodo">Það kom upp vandamál við að hlaða inn þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="errorLoadingTodoNew">Villa kom upp við að hlaða þessum verkefnalista. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="eventDeleteConfirmationTitle">Eyða viðburði?</string>
     <string name="eventDeleteConfirmationText">Þú munt varanlega eyða viðburði þínum.</string>
     <string name="eventDeleteErrorMessage">Villa kom upp við að eyða þessum viðburði. Athugaðu tengingu þína og reyndu aftur.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Allir viðburðir</string>
     <string name="eventDeleteScopeFollowing">Þessi og allir eftirfarandi viðburðir</string>
     <string name="calendarAddToDo">Bæta við Verkefni</string>
+    <string name="calendarAddToDoNew">Bæta við verkefnalista</string>
     <string name="calendarAddEvent">Bæta við viðburði</string>
     <string name="createEventScreenTitle">Nýr viðburður</string>
     <string name="editEventScreenTitle">Breyta viðburði</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Við skulum skrá þig inn!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá verkefnalistana þína. Það tekur stutta stund!</string>
     <string name="a11y_widgetToDoOpenToDoList">Opna skjáinn fyrir verkefnalista</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Opna skjáinn fyrir verkefnalista</string>
     <string name="a11y_widgetToDoCreateNewToDo">Búa til nýjan verkefnalista</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Búa til nýjan verkefnalista</string>
     <string name="widgetGradesErrorSubtitle">Við eigum í vandræðum með að sýna einkunnirnar þínar núna. Reyndu aftur eftir smá stund eða farðu í appið.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá einkunnirnar þínar. Það tekur stutta stund!</string>
     <string name="widgetSingleGradeErrorSubtitle">Við eigum í vandræðum með að sýna einkunnirnar þínar núna.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Við skulum velja námskeið</string>
     <string name="widgetGradesErrorLoadingCourses">Villa við sókn á námskeiðum.</string>
     <string name="settingsSwitchExperience">Skiptu yfir í Canvas Career</string>
+    <string name="forecastWidgetTitle">Vikuleg samantekt</string>
+    <string name="forecastWidgetWeekPeriod">Vika %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Vantar</string>
+    <string name="forecastWidgetDue">Skilafrestur</string>
+    <string name="forecastWidgetRecentGrades">Nýjar einkunnir</string>
+    <string name="forecastWidgetGradeWeight">%d%% af lokaeinkunn</string>
+    <string name="forecastWidgetErrorMessage">Við eigum erfitt með að hlaða inn verkefnum þínum. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="forecastWidgetEmptyMissing">Engin verkefni vantar. Þú ert búin(n) með allt!</string>
+    <string name="forecastWidgetEmptyDue">Engin verkefnaskil þessa viku.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Engar nýjar einkunnir í þessari viku.</string>
+    <string name="a11y_contentDescription_previousWeek">Fyrri vika</string>
+    <string name="a11y_contentDescription_nextWeek">Næsta vika</string>
+
     <string name="speedGraderGradeTabTitle">Einkunn og matskvarði</string>
     <string name="speedGraderDetailsTabTitle">Upplýsingar</string>
     <string name="a11y_contentDescription_expandPanel">Stækka svæði</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Villa við að hlaða verkefnalista þínum. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="errorUpdatingToDo">Það var villa við að uppfæra verkefnalistann. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="noToDosForNow">Engir verkefnalistar í bili!</string>
+    <string name="noToDosForNowNew">Engir verkefnalistar í bili</string>
     <string name="noToDosForNowSubtext">Þetta virðist vera góður tími til að hvílast, slaka á og hlaða batteríin.</string>
     <string name="todoSwipeDone">Lokið</string>
     <string name="todoSwipeUndo">Hætta við</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Kjörstillingar varðandi verkefnalista</string>
+    <string name="todoFilterPreferencesNew">Kjörstillingar varðandi verkefnalista</string>
     <string name="todoFilterVisibleItems">Sýnileg atriði</string>
     <string name="todoFilterShowPersonalToDos">Sýna persónulega verkefnalista</string>
+    <string name="todoFilterShowPersonalToDosNew">Sýna persónulega verkefnalista</string>
     <string name="todoFilterShowCalendarEvents">Sýna viðburði dagatals</string>
     <string name="todoFilterShowCompleted">Sýna lokið</string>
     <string name="todoFilterFavoriteCoursesOnly">Aðeins eftirlætis námskeið</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Boð í %s hafnað</string>
     <string name="courseInvitationDeclineConfirmTitle">Hafna boði</string>
     <string name="courseInvitationDeclineConfirmMessage">Ertu viss um að þú viljir hafna boðinu í %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Framvinda</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Halló, %s</string>
 
+    <string name="courses_and_groups">Námskeið og hópar</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Sérsníða stjórnborð</string>
     <string name="dashboard_widgets">Græjur</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Breyta skipulagi stjórnborðs</string>
     <string name="changing_dashboard_layout_message">Þú verður að endurræsa forritið til að breyta skipulagi stjórnborðs</string>
     <string name="restart_now">Endurræsa núna</string>
+    <string name="turn_on_new_dashboard">Kveikja á nýja stjórnborðinu</string>
     <string name="switched_back">Skipta til baka?</string>
     <string name="switched_back_message">Takk fyrir að prufa nýja stjórnborðið! Geturðu útskýrt af hverju þú skiptir til baka?</string>
+    <string name="survey_option_hard_to_find">Hlutir sem erfitt er að finna</string>
+    <string name="survey_option_prefer_old_layout">Kýs frekar fyrra útlitið</string>
+    <string name="survey_option_something_broken">Eitthvað virkaði ekki sem skildi</string>
     <string name="what_could_we_improve">Hvað getum við gert betur?</string>
+    <string name="what_do_you_think_of_new_dashboard">Hvað finnst þér um nýja stjórnborðið?</string>
+    <string name="let_us_know">Láttu okkur vita!</string>
+    <string name="no_app_to_handle_link">Ekkert app í boði til að opna þennan tengil</string>
     <string name="skip">Sleppa</string>
     <string name="widget_setting_show_greeting">Sýna kveðju</string>
     <string name="background_color">Bakgrunnslitur</string>
+    <string name="widget_setting_show_grades">Námskeiðseinkunnir</string>
+    <string name="widget_setting_show_color_overlay">Yfirlag litar námskeiðs</string>
     <string name="offline_content_available">Efni án nettengingar tiltækt</string>
     <string name="a11y_contentDescription_moreOptions">Fleiri valkostir</string>
     <string name="customizeCourse">Sérsníða námskeið</string>
     <string name="favoriteCoursesAndGroups">Uppáhalds námskeið og hópar</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Ytri tæki eru ekki fáanleg án nettengingar.</string>
+    <string name="widget_weekly_summary">Vikuleg samantekt</string>
+
+    <string name="dashboardCourseNickname">Gælunafn</string>
+    <string name="dashboardCourseNicknameHint">Skrifaðu gælunafn námskeiðs hér</string>
+    <string name="dashboardCourseColor">Litur námskeiðs</string>
+    <string name="widget_toDo">Daglegur verkefnalisti</string>
+    <string name="dailyToDoWidgetTitle">Daglegur verkefnalisti</string>
+    <string name="todoWidget_showCompleted">Sýna lokið</string>
+    <string name="todoWidget_emptyTitle">Þetta er komið að sinni!</string>
+    <string name="todoWidget_emptyMessage">Þú virðist vera laus þennan dag.\nViltu bæta við nokkrum verkefnalistum?</string>
+    <string name="todoWidget_addTodo">Bæta við verkefnalista</string>
+    <string name="todoWidget_errorTitle">Úbbs, eitthvað fór úrskeiðis</string>
+    <string name="todoWidget_errorMessage">Við gátum ekki hlaðið inn verkefnalistum þínum.\nReyndu aftur eða komdu aftur síðar.</string>
+    <string name="todoWidget_refresh">Glæða</string>
+    <string name="todoWidget_today">Í dag</string>
+    <string name="a11y_todoWidget_jumpToToday">Fara á daginn í dag</string>
+    <string name="widgetSettings_widgetsColor">Aðallitur stjórnborðs</string>
+    <string name="dashboard_globalAnnouncement">Almenn tilkynning</string>
+    <string name="forecastWidget_currentWeek">Núverandi vika</string>
 </resources>

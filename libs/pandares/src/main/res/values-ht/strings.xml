@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Soumisyon Echwe</string>
     <string name="submissionStatusFailedSubtitle">Tape pou afiche detay</string>
     <string name="submissionAndRubric">Soumisyon &amp; Ribrik</string>
+    <string name="submissionAndFeedback">Soumisyon &amp; Fidbak</string>
     <string name="commentsAndRubric">Kòmantè &amp; Ribrik</string>
     <string name="errorLoadingAssignment">Te gen yon pwobl pouchaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="submitted">Soumèt</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Jodi a</string>
+    <string name="tomorrow">Demen</string>
     <string name="past">Pase</string>
     <string name="noDate">San Dat</string>
     <string name="future">Fiti</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monològ</string>
     <string name="noItemsToDisplayShort">Pa gen atik pou afiche</string>
     <string name="Todo">Pou Fè</string>
+    <string name="TodoNew">Pou fè</string>
     <string name="todoFilter">Filtè Kou</string>
     <string name="filterByEllipsis">Filtre pa</string>
     <string name="favoriteCoursesLabel">Kou Prefere</string>
@@ -474,6 +477,7 @@
     <string name="groups">Gwoup</string>
     <string name="groupMembers">Manm Gwoup</string>
 
+    <string name="messageGroup">Gwoup mesaj</string>
     <string name="loading">Chajman&#8230;</string>
     <string name="select_item_to_display">Chwazi nan lis la</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Pou Fè</string>
+    <string name="todoWidgetTitleNew">Pou fè</string>
     <string name="gradesWidgetTitle">Nòt</string>
     <string name="notificationWidgetTitle">Notifikasyon</string>
     <string name="todoWidgetTitleLong">Canvas - Pou Fè</string>
+    <string name="todoWidgetTitleLongNew">Canvas Pou fè</string>
     <string name="gradesWidgetTitleLong">Canvas - Klas</string>
     <string name="gradeWidgetTitleLong">Canvas - Klas</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikasyon</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Kou</string>
     <string name="toDoList">Lis sa Pou Fè</string>
+    <string name="toDoListNew">List Tach Pou fè</string>
+
     <string name="notifications">Notifikasyon</string>
     <string name="pushNotifications">Notifikasyon Push</string>
     <string name="pushNotificationsError">Avètisman Push yo pa t anrejistre pou aparèy sa a.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Ouvri Speedgrader</string>
 
-    <string name="search_todo">lis tout sa pou fè</string>
     <string name="search_course">kou kou klas klas</string>
     <string name="search_grades">klas klas</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Tit paj la dwe defini.</string>
     <string name="pageDetails">Detay Paj</string>
     <string name="saving">Anrejistreman</string>
+    <string name="speedGraderSaving">Anrejistreman</string>
+    <string name="speedGraderSaved">Anrejistre</string>
+    <string name="speedGraderFailed">Echèk</string>
+    <string name="speedGraderSaveErrorTitle">Oups, gen yon bagay ki pa mache.</string>
+    <string name="speedGraderSaveErrorMessage">Te gen yon erè pandan w t ap anrejistre modifikasyon nòt ou a. Ou ka eseye ankò, oswa eseye ankò pita.</string>
+    <string name="speedGraderSaveErrorContentDescription">Sovgade nòt la echwe. Peze pou detay.</string>
+
     <string name="confirmDeleteEvent">Èske vrèman ou swete elemine aktivite sa a?</string>
     <string name="conferencesNotSupported">Konferans yo pa posib sou aparèy mobil.</string>
     <string name="filePreviewContentDescription">Fichye apèsi imaj</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Anrejistreman</string>
     <string name="conferenceInProgress">Konferans ap fèt</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Konferans (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Konferans ap fèt</string>
+    <string name="conferencesWidgetDismissed">Konferans lan pa t aksepte</string>
     <string name="a11y_criterion_content_description">Evalyasyon kritè %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">plis enfòmasyon</string>
@@ -1374,6 +1392,10 @@
     <plurals name="a11y_todoBadgeCount">
         <item quantity="one">%s tach pou fè</item>
         <item quantity="other">%s tach pou fè yo</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s bagay pou fè</item>
+        <item quantity="other">%s bagay pou fè</item>
     </plurals>
     <string name="noAnnotationSelected">Pa gen anotasyon ki seleksyone</string>
     <string name="emailNotifications">Avètisman Imèl</string>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Pa gen Aktivite Jodi a!</string>
     <string name="calendarNoEventsDescription">Sanble yon bon jou pou repoze w, amize w epi mete enèji.</string>
     <string name="userCalendarToDo">Pou Fè</string>
+    <string name="userCalendarToDoNew">Pou fè</string>
     <string name="courseToDo">%s Tach</string>
+    <string name="courseToDoNew">%s Pou Fè</string>
     <string name="calendarEventExcused">Egzante</string>
     <string name="calendarEventMissing">Manke</string>
     <string name="calendarEventGraded">Klase</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Evènman %s kreye avèk siksè.</string>
     <string name="a11y_eventUpdatedAnnouncement">Evènman %s aktyalize avèk siksè.</string>
     <string name="a11y_toDoCreatedAnnouncement">Tach %s kreye avèk siksè.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Tach pou fè %s kreye avèk siksè.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Tach %s aktyalize avèk siksè.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Tach pou fè %s aktyalize avèk siksè.</string>
     <string name="todoScreenTitle">Pou Fè</string>
+    <string name="todoScreenTitleNew">Pou fè</string>
     <string name="todoDateLabel">Dat</string>
     <string name="todoDescriptionLabel">Deskripsyon</string>
     <string name="todoDeleteConfirmationTitle">Elimine Lis Tach la?</string>
+    <string name="todoDeleteConfirmationTitleNew">Efase Tach pou Fè?</string>
     <string name="todoDeleteConfirmationText">Sa ap elimine Lis Tach ou yo definitivman.</string>
+    <string name="todoDeleteConfirmationTextNew">Sa ap elimine Tâche pou Fè ou a definitivman.</string>
     <string name="todoDeleteErrorMessage">Te gen erè pou efase Tach sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="todoDeleteErrorMessageNew">Te gen yon erè lè w t ap efase sa pou w fè a. Tanpri verifye koneksyon ou epi eseye ankò.</string>
     <string name="createTodoScreenTitle">Nouvo Tach</string>
+    <string name="createTodoScreenTitleNew">Nouvo Tach pou Fè</string>
     <string name="editTodoScreenTitle">Chanje Tach</string>
+    <string name="editTodoScreenTitleNew">Modifye Tach pou Fè</string>
     <string name="createToDoTitleHint">Ajoute tit</string>
     <string name="createToDoDateLabel">Dat</string>
     <string name="createToDoTimeLabel">Tan</string>
     <string name="createToDoCalendarLabel">Kalandriye</string>
     <string name="createToDoDetailsLabel">Detay</string>
     <string name="todoSaveErrorMessage">Te gen erè pou anrejistre Tach sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="todoSaveErrorMessageNew">Te gen yon erè pou sovgade sa pou w fè a. Tanpri verifye koneksyon w lan epi eseye ankò.</string>
     <string name="selectCalendarScreenTitle">Seleksyone Kalandriye</string>
     <string name="errorContentRetryButton">Re eseye</string>
     <string name="eventLocationLabel">Anplasman</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Detay</string>
     <string name="errorLoadingEvent">Te gen yon pwoblèm nan chajman evènman sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="errorLoadingTodo">Te gen yon pwoblèm nan chajman aktivite sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="errorLoadingTodoNew">Te gen yon pwoblèm pou chaje sa pou w fè a sa a. Tanpri verifye koneksyon w lan epi eseye ankò.</string>
     <string name="eventDeleteConfirmationTitle">Elimine Evènman?</string>
     <string name="eventDeleteConfirmationText">Sa ap elimine aktivite w la definitivman.</string>
     <string name="eventDeleteErrorMessage">Te gen yon erè pou efase evènman sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Tout evènman yo</string>
     <string name="eventDeleteScopeFollowing">Sa a ak tout pwochen aktivite yo</string>
     <string name="calendarAddToDo">Ajoute Lis Tach</string>
+    <string name="calendarAddToDoNew">Ajoute Lis tach</string>
     <string name="calendarAddEvent">Ajoute Evènman</string>
     <string name="createEventScreenTitle">Nouvo Aktivite</string>
     <string name="editEventScreenTitle">Modifye Aktivite</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">An n Konekte w!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Pou w wè sa w gen pou w fè yo, tanpri konekte sou kont ou nan aplikasyon an. L ap pran yon segonn!</string>
     <string name="a11y_widgetToDoOpenToDoList">Ouvri ekran Sa w Gen Pou w Fè</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Ouvri ekran Lis Sa Pou Fè a</string>
     <string name="a11y_widgetToDoCreateNewToDo">Kreye nouvo Bagay pou w Fè</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Kreye nouvo Tach</string>
     <string name="widgetGradesErrorSubtitle">Nou gen difikilte pou montre nòt ou yo pou kounye a. Eseye ankò apre yon ti tan oswa ale sou aplikasyon an.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Pou w wè nòt ou yo, tanpri konekte sou kont ou nan aplikasyon an. L ap pran yon segonn!</string>
     <string name="widgetSingleGradeErrorSubtitle">Nou gen difikilte pou montre nòt ou yo pou kounye a.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">An n chwazi yon kou</string>
     <string name="widgetGradesErrorLoadingCourses">Yon erè fèt pandan chajman kou yo:</string>
     <string name="settingsSwitchExperience">Chanje a Karyè Canvas</string>
+    <string name="forecastWidgetTitle">Rezime Semèn</string>
+    <string name="forecastWidgetWeekPeriod">Semèn %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Manke</string>
+    <string name="forecastWidgetDue">Delè</string>
+    <string name="forecastWidgetRecentGrades">Nouvo Nòt</string>
+    <string name="forecastWidgetGradeWeight">%d%% nan nòt final la</string>
+    <string name="forecastWidgetErrorMessage">Nou\ gen pwoblèm pou chaje devwa ou yo. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="forecastWidgetEmptyMissing">Pa gen okenn devwa ki manke. Yo pran w!</string>
+    <string name="forecastWidgetEmptyDue">Pa gen devwa pou semèn sa a.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Pa gen nouvo nòt semèn sa a.</string>
+    <string name="a11y_contentDescription_previousWeek">Semèn pase</string>
+    <string name="a11y_contentDescription_nextWeek">Semèn pwochen</string>
+
     <string name="speedGraderGradeTabTitle">Nòt &amp; Ribrik</string>
     <string name="speedGraderDetailsTabTitle">Detay</string>
     <string name="a11y_contentDescription_expandPanel">Elaji Panèl</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Te gen yon erè pandan y ap chaje tach pou w fè yo. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="errorUpdatingToDo">Te gen yon erè nan aktyalizasyon tach pou w fè yo. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="noToDosForNow">Sa pou Pa Fè Kounye a!</string>
+    <string name="noToDosForNowNew">Pa gen Tach pou Fè pou kounye a!</string>
     <string name="noToDosForNowSubtext">Sanble se yon bon moman pou repoze, detann, epi rekipere enèji.</string>
     <string name="todoSwipeDone">Fini</string>
     <string name="todoSwipeUndo">Defèt</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferans Lis Tach pou Fè</string>
+    <string name="todoFilterPreferencesNew">Preferans Lis Tach yo</string>
     <string name="todoFilterVisibleItems">Atik Vizib</string>
     <string name="todoFilterShowPersonalToDos">Montre Tach Pèsonèl pou Fè yo</string>
+    <string name="todoFilterShowPersonalToDosNew">Montre Tach Pèsonèl pou Fè yo</string>
     <string name="todoFilterShowCalendarEvents">Montre Evènman ki nan Kalandriye yo</string>
     <string name="todoFilterShowCompleted">Montre sa ki Fini</string>
     <string name="todoFilterFavoriteCoursesOnly">Kou Favori yo Sèlman</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Envitasyon nan %s refize</string>
     <string name="courseInvitationDeclineConfirmTitle">Refize Envitasyon</string>
     <string name="courseInvitationDeclineConfirmMessage">Èske ou sèten ou vle refize envitasyon an pou %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Pwogrè</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Bonjou, %s</string>
 
+    <string name="courses_and_groups">Kou &amp; Gwoup</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Pèsonalize Tablodbò</string>
     <string name="dashboard_widgets">Widgets</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Chanje aranjman tablodbò</string>
     <string name="changing_dashboard_layout_message">Pou chanje aranjman tablodbò a fòk ou redemare aplikasyon an</string>
     <string name="restart_now">Redemare kounye a</string>
+    <string name="turn_on_new_dashboard">Mete nouvo tablodbò a an sèvis.</string>
     <string name="switched_back">Tounen sou sa anvan an?</string>
     <string name="switched_back_message">Mèsi paske w eseye nouvo tablodbò a! Èske ou ka di nou poukisa ou tounen sou sa anvan an?</string>
+    <string name="survey_option_hard_to_find">Bagay ki difisil pou jwenn</string>
+    <string name="survey_option_prefer_old_layout">Mwen prefere ansyen aranjman an</string>
+    <string name="survey_option_something_broken">Yon bagay pa t mache kòrèkteman</string>
     <string name="what_could_we_improve">Kisa nou ta ka amelyore?</string>
+    <string name="what_do_you_think_of_new_dashboard">Kisa w panse de nouvo a tablodbò?</string>
+    <string name="let_us_know">Fè nou konnen!</string>
+    <string name="no_app_to_handle_link">Pa gen okenn aplikasyon ki disponib pou ouvri lyen sa a</string>
     <string name="skip">Sote</string>
     <string name="widget_setting_show_greeting">Montre salitasyon an</string>
     <string name="background_color">Koulè fon</string>
+    <string name="widget_setting_show_grades">Kategori Kou</string>
+    <string name="widget_setting_show_color_overlay">Kouvèti Koulè nan Kou yo</string>
     <string name="offline_content_available">Kontni disponib san entènèt</string>
     <string name="a11y_contentDescription_moreOptions">Plis opsyon</string>
     <string name="customizeCourse">Pèsonalize Kou</string>
     <string name="favoriteCoursesAndGroups">Kou ak Gwoup Prefere</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Zouti Ekstèn yo pa disponib san entènèt.</string>
+    <string name="widget_weekly_summary">Rezime Semèn</string>
+
+    <string name="dashboardCourseNickname">Ti Non Jwèt</string>
+    <string name="dashboardCourseNicknameHint">Ekri ti non kou a isit la</string>
+    <string name="dashboardCourseColor">Koulè Kou</string>
+    <string name="widget_toDo">Lis bagay pou fè chak jou</string>
+    <string name="dailyToDoWidgetTitle">Lis bagay pou fè chak jou</string>
+    <string name="todoWidget_showCompleted">Montre sa ki Fini</string>
+    <string name="todoWidget_emptyTitle">Ou fini pou kounye a!</string>
+    <string name="todoWidget_emptyMessage">Sanble ou lib jodi a.\nÈske w vle ajoute kèk bagay pou fè?</string>
+    <string name="todoWidget_addTodo">Ajoute Lis tach</string>
+    <string name="todoWidget_errorTitle">Oups, gen yon bagay ki pa mache</string>
+    <string name="todoWidget_errorMessage">Nou pa t kapab chaje devwa ou yo.\nEseye ankò, oswa tounen pita.</string>
+    <string name="todoWidget_refresh">Aktyalize</string>
+    <string name="todoWidget_today">Jodi a</string>
+    <string name="a11y_todoWidget_jumpToToday">Ale nan jodi a</string>
+    <string name="widgetSettings_widgetsColor">Koulè prensipal tablodbò a</string>
+    <string name="dashboard_globalAnnouncement">Anons Global</string>
+    <string name="forecastWidget_currentWeek">Semèn aktyèl</string>
 </resources>

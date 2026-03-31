@@ -314,7 +314,7 @@ fun coordsToListOfRectfs(coords: List<List<List<Float>>>?) : MutableList<RectF> 
     return rectList
 }
 
-fun convertListOfRectsToListOfListOfListOfFloats(rects: MutableList<RectF>?): ArrayList<ArrayList<ArrayList<Float>>>? {
+fun convertListOfRectsToListOfListOfListOfFloats(rects: List<RectF>?): ArrayList<ArrayList<ArrayList<Float>>>? {
     if (rects == null || rects.isEmpty()) {
         return null
     }

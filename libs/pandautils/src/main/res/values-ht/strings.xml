@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Nan %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Tach: %s</string>
+    <string name="schedule_todo_due_text_new">Pou fè: %s</string>
     <string name="schedule_due_text">Delè: %s</string>
     <string name="show_missing_items_title">Afiche %d eleman ki manke</string>
     <string name="hide_missing_items_title">Kache %d eleman ki manke</string>
     <string name="schedule_error_message">Enposib pou rekipere agenda w la</string>
     <string name="schedule_todo_title">Pou Fè</string>
+    <string name="schedule_todo_title_new">Pou fè</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pwen</item>
         <item quantity="one">%s pwen</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nòt pou planifikatè</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Pou Fè</string>
+    <string name="a11y_todo_new">Pou fè</string>
     <string name="a11y_page">Paj</string>
     <string name="a11y_assessment_request">Demann evalyasyon</string>
     <string name="a11y_marked_as_done">Make tankou li fini</string>

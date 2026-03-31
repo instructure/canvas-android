@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Consegna non riuscita</string>
     <string name="submissionStatusFailedSubtitle">Tocca per visualizzare dettagli</string>
     <string name="submissionAndRubric">Consegna e Rubrica</string>
+    <string name="submissionAndFeedback">Consegna e feedback</string>
     <string name="commentsAndRubric">Commenti e Rubrica</string>
     <string name="errorLoadingAssignment">Si è verificato un problema durante il caricamento di questo compito. Verificare la connessione e riprovare.</string>
     <string name="submitted">Inviato</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Oggi</string>
+    <string name="tomorrow">Domani</string>
     <string name="past">Precedente</string>
     <string name="noDate">Nessuna data</string>
     <string name="future">Futuro</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monologo</string>
     <string name="noItemsToDisplayShort">Nessun elemento da visualizzare</string>
     <string name="Todo">Elenco attività</string>
+    <string name="TodoNew">Attività da fare</string>
     <string name="todoFilter">Filtra corsi</string>
     <string name="filterByEllipsis">Filtra per...</string>
     <string name="favoriteCoursesLabel">Corsi preferiti</string>
@@ -474,6 +477,7 @@
     <string name="groups">Gruppi</string>
     <string name="groupMembers">Membri del gruppo</string>
 
+    <string name="messageGroup">Invia messaggio a gruppo</string>
     <string name="loading">Caricamento&#8230;</string>
     <string name="select_item_to_display">Seleziona dall’elenco</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Elenco attività</string>
+    <string name="todoWidgetTitleNew">Attività da fare</string>
     <string name="gradesWidgetTitle">Voti</string>
     <string name="notificationWidgetTitle">Notifiche</string>
     <string name="todoWidgetTitleLong">Canvas - Elenco attività</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Attività da fare</string>
     <string name="gradesWidgetTitleLong">Canvas - Voti</string>
     <string name="gradeWidgetTitleLong">Canvas - Voto</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifiche</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Corsi</string>
     <string name="toDoList">Elenco delle attività</string>
+    <string name="toDoListNew">Elenco delle attività da fare</string>
+
     <string name="notifications">Notifiche</string>
     <string name="pushNotifications">Notifiche push</string>
     <string name="pushNotificationsError">Le notifiche push non sono state registrare per questo dispositivo.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Apri SpeedGrader</string>
 
-    <string name="search_todo">elenco attività attività attività attività</string>
     <string name="search_course">corso corsi classe classi</string>
     <string name="search_grades">voto voti</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Il titolo pagina deve essere impostato.</string>
     <string name="pageDetails">Dettagli pagina</string>
     <string name="saving">Salvataggio</string>
+    <string name="speedGraderSaving">Salvataggio</string>
+    <string name="speedGraderSaved">Salvato</string>
+    <string name="speedGraderFailed">Non riuscito</string>
+    <string name="speedGraderSaveErrorTitle">Ops, si è verificato un errore</string>
+    <string name="speedGraderSaveErrorMessage">Si è verificato un errore durante il salvataggio della modifica del voto. Riprova subito o più tardi.</string>
+    <string name="speedGraderSaveErrorContentDescription">Errore salvataggio voto. Tocca per i dettagli.</string>
+
     <string name="confirmDeleteEvent">Eliminare questo evento?</string>
     <string name="conferencesNotSupported">Le conferenze non sono ancora supportate sul dispositivo mobile.</string>
     <string name="filePreviewContentDescription">Immagine anteprima file</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Registrazioni</string>
     <string name="conferenceInProgress">Conferenza in corso</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Conferenze (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Conferenza in corso</string>
+    <string name="conferencesWidgetDismissed">Conferenza ignorata</string>
     <string name="a11y_criterion_content_description">Valutazione basata su criterio %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">maggiori informazioni</string>
@@ -1374,6 +1392,10 @@
     <plurals name="a11y_todoBadgeCount">
         <item quantity="one">%s elemento cose da fare</item>
         <item quantity="other">%s elementi cose da fare</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s elemento da fare</item>
+        <item quantity="other">%s elementi da fare</item>
     </plurals>
     <string name="noAnnotationSelected">Nessuna annotazione selezionata</string>
     <string name="emailNotifications">Notifiche email</string>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Nessun evento oggi!</string>
     <string name="calendarNoEventsDescription">Ottima occasione per riposarsi, rilassarsi e ricaricare le batterie.</string>
     <string name="userCalendarToDo">Elenco attività</string>
+    <string name="userCalendarToDoNew">Attività da fare</string>
     <string name="courseToDo">%s Elenco azioni</string>
+    <string name="courseToDoNew">%s attività da fare</string>
     <string name="calendarEventExcused">Giustificato</string>
     <string name="calendarEventMissing">Mancante</string>
     <string name="calendarEventGraded">Valutato</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Evento %s creato correttamente.</string>
     <string name="a11y_eventUpdatedAnnouncement">Evento %s aggiornato correttamente.</string>
     <string name="a11y_toDoCreatedAnnouncement">Elenco attività %s creato correttamente.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Attività da fare %s creata correttamente.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Elenco attività %s aggiornato correttamente.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Attività da fare %s aggiornata correttamente.</string>
     <string name="todoScreenTitle">Elenco attività</string>
+    <string name="todoScreenTitleNew">Attività da fare</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Descrizione</string>
     <string name="todoDeleteConfirmationTitle">Eliminare Da fare?</string>
+    <string name="todoDeleteConfirmationTitleNew">Eliminare elenco attività?</string>
     <string name="todoDeleteConfirmationText">In questo modo si elimina definitivamente la voce Da fare.</string>
+    <string name="todoDeleteConfirmationTextNew">Questa operazione eliminerà in modo permanente il tuo elemento dell’elenco attività.</string>
     <string name="todoDeleteErrorMessage">Si è verificato un errore di eliminazione di questo elenco azioni. Verifica la connessione e riprova.</string>
+    <string name="todoDeleteErrorMessageNew">Si è verificato un errore durante l\'eliminazione di questa attività da fare. Controllare la connessione e riprovare.</string>
     <string name="createTodoScreenTitle">Nuovo elenco azioni</string>
+    <string name="createTodoScreenTitleNew">Nuovo elenco attività</string>
     <string name="editTodoScreenTitle">Modifica elenco azioni</string>
+    <string name="editTodoScreenTitleNew">Modifica elenco attività</string>
     <string name="createToDoTitleHint">Aggiungi titolo</string>
     <string name="createToDoDateLabel">Data</string>
     <string name="createToDoTimeLabel">Ora</string>
     <string name="createToDoCalendarLabel">Calendario</string>
     <string name="createToDoDetailsLabel">Dettagli</string>
     <string name="todoSaveErrorMessage">Si è verificato un errore durante il salvataggio dell’elenco azioni. Verifica la connessione e riprova.</string>
+    <string name="todoSaveErrorMessageNew">Si è verificato un errore durante il salvataggio di questa attività da fare. Controllare la connessione e riprovare.</string>
     <string name="selectCalendarScreenTitle">Seleziona calendario</string>
     <string name="errorContentRetryButton">Riprova</string>
     <string name="eventLocationLabel">Posizione</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Dettagli</string>
     <string name="errorLoadingEvent">Si è verificato un problema durante il caricamento di questo evento. Verifica la connessione e riprova.</string>
     <string name="errorLoadingTodo">Si è verificato un problema durante il caricamento di queste cosa da fare. Verifica la connessione e riprova.</string>
+    <string name="errorLoadingTodoNew">Si è verificato un problema durante il caricamento di questa attività da fare. Controllare la connessione e riprovare.</string>
     <string name="eventDeleteConfirmationTitle">Eliminare evento?</string>
     <string name="eventDeleteConfirmationText">Questa operazione eliminerà in modo permanente il tuo evento.</string>
     <string name="eventDeleteErrorMessage">Si è verificato un errore di eliminazione di questo elenco. Verifica la connessione e riprova.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Tutti gli eventi</string>
     <string name="eventDeleteScopeFollowing">Questo evento e tutti gli eventi successivi</string>
     <string name="calendarAddToDo">Aggiungi elenco attività</string>
+    <string name="calendarAddToDoNew">Aggiungi attività da fare</string>
     <string name="calendarAddEvent">Aggiungi evento</string>
     <string name="createEventScreenTitle">Nuovo evento</string>
     <string name="editEventScreenTitle">Modifica eventi</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Accedi!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Per vedere la attività da fare, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
     <string name="a11y_widgetToDoOpenToDoList">Schermata Apri attività da fare</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Apri schermata di elenco attività da fare</string>
     <string name="a11y_widgetToDoCreateNewToDo">Crea nuova attività da fare</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Crea nuova attività da fare</string>
     <string name="widgetGradesErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti. Riprova tra un attimo o vai all’app.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
     <string name="widgetSingleGradeErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Scegli un corso</string>
     <string name="widgetGradesErrorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi.</string>
     <string name="settingsSwitchExperience">Passa a Canvas Career</string>
+    <string name="forecastWidgetTitle">Riepilogo settimanale</string>
+    <string name="forecastWidgetWeekPeriod">Settimana %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Mancante</string>
+    <string name="forecastWidgetDue">Scadenza</string>
+    <string name="forecastWidgetRecentGrades">Nuovi voti</string>
+    <string name="forecastWidgetGradeWeight">%d%% di voto finale</string>
+    <string name="forecastWidgetErrorMessage">Si sono verificati dei problemi nel caricamento dei compiti. Verifica la connessione e riprova.</string>
+    <string name="forecastWidgetEmptyMissing">Nessun compito mancante. Sei in pari!</string>
+    <string name="forecastWidgetEmptyDue">Nessun compito in scadenza questa settimana.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Nessun voto questa settimana</string>
+    <string name="a11y_contentDescription_previousWeek">Settimana precedente</string>
+    <string name="a11y_contentDescription_nextWeek">Settimana prossima </string>
+
     <string name="speedGraderGradeTabTitle">Voto e Rubrica</string>
     <string name="speedGraderDetailsTabTitle">Dettagli</string>
     <string name="a11y_contentDescription_expandPanel">Espandi pannello</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">SI è verificato un errore durante il caricamento degli elementi cose da fare. Verifica la connessione e riprova.</string>
     <string name="errorUpdatingToDo">SI è verificato un errore durante il caricamento dell’elemento cose da fare. Verifica la connessione e riprova.</string>
     <string name="noToDosForNow">Nessun a cosa da fare per ora!</string>
+    <string name="noToDosForNowNew">Nessun elenco attività per adesso!</string>
     <string name="noToDosForNowSubtext">Sembra un ottimo momento per riposarsi, rilassarsi e ricaricarsi.</string>
     <string name="todoSwipeDone">Fatto</string>
     <string name="todoSwipeUndo">Annulla</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferenze elenco cose da fare</string>
+    <string name="todoFilterPreferencesNew">Preferenze elenco attività da fare</string>
     <string name="todoFilterVisibleItems">Elementi visibili</string>
     <string name="todoFilterShowPersonalToDos">Mostra cose da fare personali</string>
+    <string name="todoFilterShowPersonalToDosNew">Mostra attività personali</string>
     <string name="todoFilterShowCalendarEvents">Mostra eventi calendario</string>
     <string name="todoFilterShowCompleted">Mostra completato</string>
     <string name="todoFilterFavoriteCoursesOnly">Solo corsi preferiti</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Invito a %s rifiutato</string>
     <string name="courseInvitationDeclineConfirmTitle">Rifiuta invito</string>
     <string name="courseInvitationDeclineConfirmMessage">Vuoi rifiutare l\'invito a %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Avanzamento</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2348,6 +2404,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Ciao, %s</string>
 
+    <string name="courses_and_groups">Corsi e Gruppi</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Personalizza dashboard</string>
     <string name="dashboard_widgets">Widget</string>
@@ -2357,16 +2414,44 @@
     <string name="changing_dashboard_layout">Modifica layout dashboard</string>
     <string name="changing_dashboard_layout_message">Per cambiare il layout della dashboard devi riavviare l’applicazione</string>
     <string name="restart_now">Riavvia adesso</string>
+    <string name="turn_on_new_dashboard">Passa alla nuova dashboard</string>
     <string name="switched_back">Cambiato idea?</string>
     <string name="switched_back_message">Grazie per aver provato la nuova dashboard! Puoi raccontarci perché hai cambiato idea?</string>
+    <string name="survey_option_hard_to_find">Non è facile trovare quello che cerchi</string>
+    <string name="survey_option_prefer_old_layout">Preferisco il layout precedente</string>
+    <string name="survey_option_something_broken">Qualcosa non ha funzionato</string>
     <string name="what_could_we_improve">Cosa possiamo migliorare?</string>
+    <string name="what_do_you_think_of_new_dashboard">Cosa ne pensi della nuova dashboard?</string>
+    <string name="let_us_know">Faccelo sapere!</string>
+    <string name="no_app_to_handle_link">Nessuna app trovata per aprire questo link</string>
     <string name="skip">Ignora</string>
     <string name="widget_setting_show_greeting">Mostra saluto</string>
     <string name="background_color">Colore sfondo</string>
+    <string name="widget_setting_show_grades">Voti corso</string>
+    <string name="widget_setting_show_color_overlay">Sovrapposizione colore corso</string>
     <string name="offline_content_available">Contenuto offline disponibile</string>
     <string name="a11y_contentDescription_moreOptions">Altre opzioni</string>
     <string name="customizeCourse">Personalizza corso</string>
     <string name="favoriteCoursesAndGroups">Corsi e gruppi preferiti</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Gli strumeti esterni non sono disponibili offline.</string>
+    <string name="widget_weekly_summary">Riepilogo settimanale</string>
+
+    <string name="dashboardCourseNickname">Soprannome</string>
+    <string name="dashboardCourseNicknameHint">Scrivi qui il soprannome corso</string>
+    <string name="dashboardCourseColor">Colore corso</string>
+    <string name="widget_toDo">Attività giornaliere</string>
+    <string name="dailyToDoWidgetTitle">Attività giornaliere</string>
+    <string name="todoWidget_showCompleted">Mostra completato</string>
+    <string name="todoWidget_emptyTitle">Hai completato il processo per adesso!</string>
+    <string name="todoWidget_emptyMessage">Sembra che per oggi non ci siano attività.\nVuoi aggiungerne qualcuna?</string>
+    <string name="todoWidget_addTodo">Aggiungi attività da fare</string>
+    <string name="todoWidget_errorTitle">Ops, si è verificato un errore</string>
+    <string name="todoWidget_errorMessage">Impossibile caricare le tue attività.\nRiprova subito oppure più tardi.</string>
+    <string name="todoWidget_refresh">Aggiorna</string>
+    <string name="todoWidget_today">Oggi</string>
+    <string name="a11y_todoWidget_jumpToToday">Passa a oggi</string>
+    <string name="widgetSettings_widgetsColor">Colore principale dashboard</string>
+    <string name="dashboard_globalAnnouncement">Annuncio globale</string>
+    <string name="forecastWidget_currentWeek">Settimana attuale</string>
 </resources>

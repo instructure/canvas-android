@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.asChooserExcludingInstructure
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.items
@@ -59,6 +61,8 @@ class ConferenceListView(
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.subtitle = canvasContext.name
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.recyclerView.applyBottomSystemBarInsets()
 
         // Set up menu
         with(binding.toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)) {

@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Á %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s til %2$s</string>
     <string name="schedule_todo_due_text">Verkefni: %s</string>
+    <string name="schedule_todo_due_text_new">Verkefnalisti: %s</string>
     <string name="schedule_due_text">Skil: %s</string>
     <string name="show_missing_items_title">Sýna %d hluti sem vantar</string>
     <string name="hide_missing_items_title">Fela %d hluti sem vantar</string>
     <string name="schedule_error_message">Get ekki náð í stundaskrá þína</string>
     <string name="schedule_todo_title">Verkefnalisti</string>
+    <string name="schedule_todo_title_new">Verkefnalisti</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s punktur</item>
         <item quantity="one">%s punktur</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Athugasemd skipuleggjara</string>
     <string name="a11y_quiz">Próf</string>
     <string name="a11y_todo">Verkefnalisti</string>
+    <string name="a11y_todo_new">Verkefnalisti</string>
     <string name="a11y_page">Síða</string>
     <string name="a11y_assessment_request">Matsbeiðni</string>
     <string name="a11y_marked_as_done">Merkt sem lokið</string>

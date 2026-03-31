@@ -1,0 +1,552 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.ui.features.learn
+
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.navigation.compose.rememberNavController
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListCollectionUiState
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListItemUiState
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListScreen
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListUiState
+import com.instructure.horizon.horizonui.platform.LoadingState
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+class LearnLearningLibraryListUiTest {
+    @get:Rule
+    val composeTestRule = createComposeRule()
+
+    private val testCollections = listOf(
+        LearnLearningLibraryCollectionState(
+            id = "collection1",
+            name = "Software Engineering Basics",
+            itemCount = 2,
+            items = listOf(
+                LearnLearningLibraryCollectionItemState(
+                    id = "item1",
+                    imageUrl = null,
+                    name = "Introduction to Programming",
+                    description = null,
+                    isBookmarked = false,
+                    bookmarkLoading = false,
+                    canEnroll = true,
+                    type = CollectionItemType.COURSE,
+                    route = null,
+                    chips = listOf(
+                        LearnLearningLibraryCollectionItemChipState(label = "Course"),
+                        LearnLearningLibraryCollectionItemChipState(label = "60 mins")
+                    )
+                ),
+                LearnLearningLibraryCollectionItemState(
+                    id = "item2",
+                    imageUrl = null,
+                    name = "Advanced Algorithms",
+                    description = null,
+                    isBookmarked = true,
+                    bookmarkLoading = false,
+                    canEnroll = false,
+                    type = CollectionItemType.PAGE,
+                    route = null,
+                    chips = listOf(
+                        LearnLearningLibraryCollectionItemChipState(label = "Page")
+                    )
+                )
+            )
+        ),
+        LearnLearningLibraryCollectionState(
+            id = "collection2",
+            name = "Data Science Fundamentals",
+            itemCount = 1,
+            items = listOf(
+                LearnLearningLibraryCollectionItemState(
+                    id = "item3",
+                    imageUrl = null,
+                    name = "Machine Learning",
+                    description = null,
+                    isBookmarked = false,
+                    bookmarkLoading = false,
+                    canEnroll = false,
+                    type = CollectionItemType.COURSE,
+                    route = null,
+                    chips = listOf(
+                        LearnLearningLibraryCollectionItemChipState(label = "Course")
+                    )
+                )
+            )
+        ),
+        LearnLearningLibraryCollectionState(
+            id = "collection3",
+            name = "Web Development",
+            itemCount = 1,
+            items = listOf(
+                LearnLearningLibraryCollectionItemState(
+                    id = "item4",
+                    imageUrl = null,
+                    name = "React Basics",
+                    description = null,
+                    isBookmarked = false,
+                    bookmarkLoading = false,
+                    canEnroll = true,
+                    type = CollectionItemType.COURSE,
+                    route = null,
+                    chips = listOf(
+                        LearnLearningLibraryCollectionItemChipState(label = "Course")
+                    )
+                )
+            )
+        )
+    )
+
+    private val testItems = listOf(
+        LearnLearningLibraryCollectionItemState(
+            id = "item1",
+            imageUrl = null,
+            name = "Introduction to Programming",
+            description = null,
+            isBookmarked = false,
+            bookmarkLoading = false,
+            canEnroll = true,
+            type = CollectionItemType.COURSE,
+            route = null,
+            chips = listOf(
+                LearnLearningLibraryCollectionItemChipState(label = "Course"),
+                LearnLearningLibraryCollectionItemChipState(label = "60 mins")
+            )
+        ),
+        LearnLearningLibraryCollectionItemState(
+            id = "item2",
+            imageUrl = null,
+            name = "Machine Learning",
+            description = null,
+            isBookmarked = true,
+            bookmarkLoading = false,
+            canEnroll = false,
+            type = CollectionItemType.COURSE,
+            route = null,
+            chips = listOf(
+                LearnLearningLibraryCollectionItemChipState(label = "Course")
+            )
+        )
+    )
+
+    @Test
+    fun testLoadingStateDisplaysSpinner() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                loadingState = LoadingState(isLoading = true)
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithTag("LoadingSpinner").assertIsDisplayed()
+    }
+
+    @Test
+    fun testItemLoadingStateDisplaysSpinnerWhenFilterActive() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                loadingState = LoadingState(isLoading = true)
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithTag("LoadingSpinner").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAllCollectionsDisplayed() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Software Engineering Basics"))
+        composeTestRule.onNodeWithText("Software Engineering Basics", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Data Science Fundamentals"))
+        composeTestRule.onNodeWithText("Data Science Fundamentals", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Web Development"))
+        composeTestRule.onNodeWithText("Web Development", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSingleFilteredCollectionDisplayed() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = listOf(testCollections[1]),
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Data Science Fundamentals", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Software Engineering Basics", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testEmptyCollectionsShowsNoCollectionNames() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = emptyList()
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Software Engineering Basics", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testCollectionItemNameDisplayedInsideCollection() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onRoot().performScrollToNode(hasText("Introduction to Programming"))
+        composeTestRule.onNodeWithText("Introduction to Programming", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testShowMoreButtonDisplayedInCollectionViewWhenMoreCollectionsAvailable() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 2
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Show more"))
+        composeTestRule.onNodeWithText("Show more", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testShowMoreButtonNotDisplayedInCollectionViewWhenAllCollectionsVisible() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Show more", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testHiddenCollectionNotDisplayedWhenBeyondPageSize() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 2
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Web Development", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testItemListDisplayedWhenFilterActive() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(items = testItems)
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Introduction to Programming", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testItemListDisplayedWhenSearchQuerySet() {
+        val state = LearnLearningLibraryListUiState(
+            searchQuery = TextFieldValue("python"),
+            itemState = LearnLearningLibraryListItemUiState(items = testItems)
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Introduction to Programming", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testMultipleItemsDisplayedInItemView() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(items = testItems)
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onRoot().performScrollToNode(hasText("Introduction to Programming"))
+        composeTestRule.onNodeWithText("Introduction to Programming", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onRoot().performScrollToNode(hasText("Machine Learning"))
+        composeTestRule.onNodeWithText("Machine Learning", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testCollectionsNotShownWhenFiltersActive() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            collectionState = LearnLearningLibraryListCollectionUiState(collections = testCollections),
+            itemState = LearnLearningLibraryListItemUiState(items = testItems)
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Software Engineering Basics", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testEmptyMessageDisplayedWhenFilteredItemsAreEmpty() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(items = emptyList())
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("No results found. Try adjusting your search terms.", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun testEnrollButtonDisplayedForEligibleItem() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = listOf(testItems[0])
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Enroll", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testEnrollButtonNotDisplayedWhenItemAlreadyEnrolled() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = listOf(testItems[1])
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Enroll", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testBookmarkButtonDisplayedOnNonBookmarkedItem() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = listOf(testItems[0])
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithContentDescription("Bookmark").assertIsDisplayed()
+    }
+
+    @Test
+    fun testRemoveBookmarkButtonDisplayedForBookmarkedItem() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = listOf(testItems[1])
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithContentDescription("Remove bookmark").assertIsDisplayed()
+    }
+
+    @Test
+    fun testItemChipDisplayed() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = listOf(testItems[0])
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Course", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("60 mins", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testShowMoreButtonDisplayedInItemViewWhenMoreButton() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = testItems,
+                showMoreButton = true
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Show more"))
+        composeTestRule.onNodeWithText("Show more", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testShowMoreButtonNotDisplayedInItemViewWhenNotLoading() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(
+                items = testItems,
+                isMoreButtonLoading = false
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("Show more", useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun testFilterButtonDisplayed() {
+        val state = LearnLearningLibraryListUiState(
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithContentDescription("Filter").assertIsDisplayed()
+    }
+
+    @Test
+    fun testFilterButtonBadgeDisplayedWhenFiltersActive() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 1,
+            itemState = LearnLearningLibraryListItemUiState(items = testItems)
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("1", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testFilterButtonNoBadgeWhenNoFiltersActive() {
+        val state = LearnLearningLibraryListUiState(
+            activeFilterCount = 0,
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
+        )
+
+        composeTestRule.setContent {
+            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
+        }
+
+        composeTestRule.onNodeWithText("0", useUnmergedTree = true).assertDoesNotExist()
+    }
+}

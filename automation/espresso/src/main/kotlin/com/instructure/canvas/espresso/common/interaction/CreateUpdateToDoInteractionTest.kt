@@ -47,7 +47,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemDetails("New Todo", "To Do")
+        calendarScreenPage.assertItemDetails("New Todo", "To-do")
     }
 
     @Test
@@ -63,7 +63,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemDetails("New Todo", "To Do")
+        calendarScreenPage.assertItemDetails("New Todo", "To-do")
     }
 
     @Test
@@ -99,7 +99,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemDetails("New Todo", "$canvasContextName To Do")
+        calendarScreenPage.assertItemDetails("New Todo", "$canvasContextName To-do")
     }
 
     @Test
@@ -134,13 +134,13 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         goToEditToDo(data)
 
         composeTestRule.waitForIdle()
-        calendarToDoCreateUpdatePage.assertPageTitle("Edit To Do")
+        calendarToDoCreateUpdatePage.assertPageTitle("Edit To-do")
         calendarToDoCreateUpdatePage.assertTodoTitle("Test Todo")
         calendarToDoCreateUpdatePage.typeTodoTitle("Updated Title")
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemDetails("Updated Title", "To Do")
+        calendarScreenPage.assertItemDetails("Updated Title", "To-do")
     }
 
     @Test
@@ -167,7 +167,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         calendarScreenPage.swipeEventsLeft()
-        calendarScreenPage.assertItemDetails("Test Todo", "To Do")
+        calendarScreenPage.assertItemDetails("Test Todo", "To-do")
     }
 
     @Test
@@ -223,7 +223,7 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.assertItemDetails("Test Todo", "$canvasContextName To Do")
+        calendarScreenPage.assertItemDetails("Test Todo", "$canvasContextName To-do")
     }
 
     @Test

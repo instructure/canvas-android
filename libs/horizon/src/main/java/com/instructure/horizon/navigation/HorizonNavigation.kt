@@ -15,8 +15,11 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -57,6 +60,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -73,7 +77,8 @@ sealed class MainNavigationRoute(val route: String) {
         val moduleItemId: Long? = null,
         val moduleItemAssetType: String? = null,
         val moduleItemAssetId: String? = null,
-        val scrollToNoteId: String? = null
+        val scrollToNoteId: String? = null,
+        val showMyProgressButton: Boolean = true
     ) :
         MainNavigationRoute("module_item_sequence")
 
@@ -97,11 +102,16 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val bottomBarVisible = isBottomBarVisible(navController)
 
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
-        val animatedBottomPadding = if (bottomBarVisible) innerPadding.calculateBottomPadding() else 0.dp
+        // Keep the bottomBar behind the keyboard
+        val animatedBottomPadding = if (bottomBarVisible && WindowInsets.ime.asPaddingValues().calculateBottomPadding() == 0.dp)
+            innerPadding.calculateBottomPadding()
+        else
+            0.dp
 
         NavHost(
             enterTransition = { enterTransition() },
@@ -177,7 +187,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = assignmentId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -214,7 +226,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = quizId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -249,7 +263,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = pageId
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }

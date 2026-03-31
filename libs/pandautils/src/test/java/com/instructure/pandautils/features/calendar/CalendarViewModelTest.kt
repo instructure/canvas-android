@@ -110,7 +110,7 @@ class CalendarViewModelTest {
             "${args[0]} ${args[1]} - ${args[2]}"
         }
 
-        every { context.getString(eq(R.string.courseToDo), any()) } answers {
+        every { context.getString(eq(R.string.courseToDoNew), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} To Do"
         }
@@ -129,7 +129,7 @@ class CalendarViewModelTest {
         every { context.getString(R.string.calendarEventMissing) } returns "missing"
         every { context.getString(R.string.calendarEventGraded) } returns "graded"
         every { context.getString(R.string.calendarEventSubmitted) } returns "needs grading"
-        every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "To Do"
         every { context.getString(eq(R.string.calendarEventPoints), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} pts"
@@ -936,24 +936,31 @@ class CalendarViewModelTest {
                 3,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
-                submissionState = SubmissionState(graded = true)
+                submissionState = SubmissionState(graded = true, postedAt = Date())
             ),
             createPlannerItem(
-                2,
+                1,
                 4,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
-                submissionState = SubmissionState(needsGrading = true)
+                submissionState = SubmissionState(graded = true, postedAt = null)
             ),
             createPlannerItem(
                 2,
                 5,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(needsGrading = true)
+            ),
+            createPlannerItem(
+                2,
+                6,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
                 pointsPossible = 10.0,
                 submissionState = SubmissionState()
             ),
-            createPlannerItem(2, 6, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12), submissionState = SubmissionState()),
+            createPlannerItem(2, 7, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12), submissionState = SubmissionState()),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
         initViewModel()
@@ -963,8 +970,9 @@ class CalendarViewModelTest {
         assertEquals("missing", currentPageEvents[1].status)
         assertEquals("graded", currentPageEvents[2].status)
         assertEquals("needs grading", currentPageEvents[3].status)
-        assertEquals("10 pts", currentPageEvents[4].status)
-        assertNull(currentPageEvents[5].status)
+        assertEquals("needs grading", currentPageEvents[4].status)
+        assertEquals("10 pts", currentPageEvents[5].status)
+        assertNull(currentPageEvents[6].status)
     }
 
     @Test

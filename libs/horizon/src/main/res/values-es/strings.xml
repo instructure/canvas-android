@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Ítem del módulo siguiente</string>
     <string name="a11y_nextModule">Módulo siguiente</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marcado como %2$s, toque dos veces para editar la nota</string>
+    <string name="learnCoursesTabLabel">Cursos</string>
+    <string name="learnProgramsTabLabel">Programas</string>
     <string name="reportAProblemDescriptionMessage">Presentar un ticket para obtener una respuesta personal de nuestro equipo de asistencia técnica.</string>
     <string name="igniteAIEnterAPromptLabel">Ingresar un mensaje</string>
     <string name="a11y_igniteAiLoadingContentDescription">Cargando respuesta</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Voltear la tarjeta</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">No se pudieron cargar los cursos</string>
+    <string name="learnCourseListFilterAll">Todos los cursos</string>
+    <string name="learnCourseListFilterNotStarted">No iniciado</string>
+    <string name="learnCourseListFilterInProgress">En progreso</string>
+    <string name="learnCourseListFilterCompleted">Completado</string>
+    <string name="learnCourseListStartLearningLabel">Comenzar a aprender</string>
+    <string name="learnCourseListResumeLearningLabel">Reanudar aprendizaje</string>
+    <string name="learnCourseListViewCourseLabel">Ver curso</string>
+    <string name="learnCourseListShowMoreLabel">Mostrar más</string>
+    <string name="learnCourseListSearchBarPlaceholder">Buscar cursos</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Parte de %1$s</string>
+    <string name="learnCourseListEmptyMessage">No se encontraron resultados. Ajuste los términos de búsqueda.</string>
+    <string name="learnProgramListFilterAll">Todos los programas</string>
+    <string name="learnProgramListFilterNotStarted">No iniciado</string>
+    <string name="learnProgramListFilterInProgress">En progreso</string>
+    <string name="learnProgramListFilterCompleted">Completado</string>
+    <string name="learnProgramListShowMoreLabel">Mostrar más</string>
+    <string name="learnProgramListEmptyMessage">No se encontraron resultados. Ajuste los términos de búsqueda.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Buscar programas</string>
+    <string name="learnProgramListFailedToLoadMessage">No se pudieron cargar los programas</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d curso</item>
+        <item quantity="other">%1$d cursos</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Obligatorio</string>
 </resources>

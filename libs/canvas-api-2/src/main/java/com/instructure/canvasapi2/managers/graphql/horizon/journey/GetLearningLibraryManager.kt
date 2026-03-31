@@ -1,0 +1,439 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.canvasapi2.managers.graphql.horizon.journey
+
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.di.JourneyApolloClient
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryModuleInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageCursor
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.canvasapi2.models.journey.learninglibrary.RecommendationSourceContext
+import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
+import com.instructure.canvasapi2.models.journey.learninglibrary.toModel
+import com.instructure.journey.EnrollLearningLibraryItemMutation
+import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
+import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
+import com.instructure.journey.GetLearningLibraryCollectionItemQuery
+import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
+import com.instructure.journey.GetLearningLibraryRecommendationsQuery
+import com.instructure.journey.ToggleLearningLibraryItemIsBookmarkedMutation
+import com.instructure.journey.type.EnrollLearnerInCollectionItemInput
+import com.instructure.journey.type.ToggleCollectionItemBookmarkInput
+import javax.inject.Inject
+
+interface GetLearningLibraryManager {
+    suspend fun getLearningLibraryCollectionItems(
+        cursor: String? = null,
+        limit: Int? = null,
+        forward: Boolean? = null,
+        bookmarkedOnly: Boolean? = null,
+        searchTerm: String? = null,
+        types: List<CollectionItemType>? = null,
+        completedOnly: Boolean? = null,
+        sortBy: CollectionItemSortOption? = null,
+        forceNetwork: Boolean = false
+    ): LearningLibraryCollectionItemsResponse
+
+    suspend fun getEnrolledLearningLibraryCollections(
+        itemLimitPerCollection: Int? = null,
+        forceNetwork: Boolean = false
+    ): EnrolledLearningLibraryCollectionsResponse
+
+    suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean = false
+    ): EnrolledLearningLibraryCollection
+
+    suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean
+
+    suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem
+
+    suspend fun getLearningLibraryItem(itemId: String, forceNetwork: Boolean): LearningLibraryCollectionItem
+
+    suspend fun getLearningLibraryRecommendations(forceNetwork: Boolean): List<LearningLibraryRecommendation>
+}
+
+class GetLearningLibraryManagerImpl @Inject constructor(
+    @JourneyApolloClient private val journeyClient: ApolloClient,
+): GetLearningLibraryManager {
+    override suspend fun getLearningLibraryCollectionItems(
+        cursor: String?,
+        limit: Int?,
+        forward: Boolean?,
+        bookmarkedOnly: Boolean?,
+        searchTerm: String?,
+        types: List<CollectionItemType>?,
+        completedOnly: Boolean?,
+        sortBy: CollectionItemSortOption?,
+        forceNetwork: Boolean
+    ): LearningLibraryCollectionItemsResponse {
+        val query = GetLearningLibraryCollectionItemsQuery(
+            Optional.presentIfNotNull(cursor),
+            Optional.presentIfNotNull(limit),
+            Optional.presentIfNotNull(forward),
+            Optional.presentIfNotNull(bookmarkedOnly),
+            Optional.presentIfNotNull(searchTerm),
+            Optional.presentIfNotNull(types?.map { it.toApolloType() }),
+            Optional.presentIfNotNull(completedOnly),
+            sortBy = Optional.presentIfNotNull(sortBy?.toApolloModel())
+        )
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().learningLibraryCollectionItems
+
+        return LearningLibraryCollectionItemsResponse(
+            items = result.items.map { item ->
+                LearningLibraryCollectionItem(
+                    id = item.id,
+                    libraryId = item.libraryId,
+                    itemType = item.itemType.toModel(),
+                    displayOrder = item.displayOrder,
+                    canvasCourse = item.canvasCourse?.let { course ->
+                        CanvasCourseInfo(
+                            courseId = course.courseId,
+                            canvasUrl = course.canvasUrl,
+                            courseName = course.courseName,
+                            courseImageUrl = course.courseImageUrl,
+                            moduleCount = course.moduleCount,
+                            moduleItemCount = course.moduleItemCount,
+                            estimatedDurationMinutes = course.estimatedDurationMinutes
+                        )
+                    },
+                    moduleInfo = if (item.canvasModuleItemId != null) {
+                        LearningLibraryModuleInfo(
+                            moduleId = item.canvasModuleId,
+                            moduleItemId = item.canvasModuleItemId,
+                            resourceId = item.canvasResourceId,
+                            moduleItemType = item.itemType.toModuleItemType()?.name
+                        )
+                    } else {
+                        null
+                    },
+                    programId = item.programId,
+                    programCourseId = item.programCourseId,
+                    createdAt = item.createdAt,
+                    updatedAt = item.updatedAt,
+                    isBookmarked = item.isBookmarked,
+                    completionPercentage = item.completionPercentage,
+                    isEnrolledInCanvas = item.isEnrolledInCanvas,
+                    canvasEnrollmentId = item.canvasEnrollmentId
+                )
+            },
+            pageInfo = LearningLibraryPageInfo(
+                nextCursor = result.pageInfo.nextCursor,
+                previousCursor = result.pageInfo.previousCursor,
+                hasNextPage = result.pageInfo.hasNextPage,
+                hasPreviousPage = result.pageInfo.hasPreviousPage,
+                totalCount = result.pageInfo.totalCount,
+                pageCursors = result.pageInfo.pageCursors?.mapNotNull {
+                    LearningLibraryPageCursor(
+                        cursor = it.cursor ?: return@mapNotNull null,
+                        page = it.page
+                    )
+                }
+            )
+        )
+    }
+
+    override suspend fun getEnrolledLearningLibraryCollections(
+        itemLimitPerCollection: Int?,
+        forceNetwork: Boolean
+    ): EnrolledLearningLibraryCollectionsResponse {
+        val query = GetEnrolledLearningLibraryCollectionsQuery(
+            Optional.presentIfNotNull(itemLimitPerCollection)
+        )
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().enrolledLearningLibraryCollections
+
+        return EnrolledLearningLibraryCollectionsResponse(
+            collections = result.collections.map { collection ->
+                EnrolledLearningLibraryCollection(
+                    id = collection.id,
+                    name = collection.name,
+                    publicName = collection.publicName,
+                    description = collection.description,
+                    createdAt = collection.createdAt,
+                    updatedAt = collection.updatedAt,
+                    totalItemCount = collection.totalItemCount,
+                    items = collection.items.map { item ->
+                        LearningLibraryCollectionItem(
+                            id = item.id,
+                            libraryId = item.libraryId,
+                            itemType = item.itemType.toModel(),
+                            displayOrder = item.displayOrder,
+                            canvasCourse = item.canvasCourse?.let { course ->
+                                CanvasCourseInfo(
+                                    courseId = course.courseId,
+                                    canvasUrl = course.canvasUrl,
+                                    courseName = course.courseName,
+                                    courseImageUrl = course.courseImageUrl,
+                                    moduleCount = course.moduleCount,
+                                    moduleItemCount = course.moduleItemCount,
+                                    estimatedDurationMinutes = course.estimatedDurationMinutes
+                                )
+                            },
+                            moduleInfo = if (item.canvasModuleItemId != null) {
+                                LearningLibraryModuleInfo(
+                                    moduleId = item.canvasModuleId,
+                                    moduleItemId = item.canvasModuleItemId,
+                                    resourceId = item.canvasResourceId,
+                                    moduleItemType = item.itemType.toModuleItemType()?.name
+                                )
+                            } else {
+                                null
+                            },
+                            programId = item.programId,
+                            programCourseId = item.programCourseId,
+                            createdAt = item.createdAt,
+                            updatedAt = item.updatedAt,
+                            isBookmarked = item.isBookmarked,
+                            completionPercentage = item.completionPercentage,
+                            isEnrolledInCanvas = item.isEnrolledInCanvas,
+                            canvasEnrollmentId = item.canvasEnrollmentId
+                        )
+                    }
+                )
+            }
+        )
+    }
+
+    override suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean
+    ): EnrolledLearningLibraryCollection {
+        val query = GetEnrolledLearningLibraryCollectionQuery(id)
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().enrolledLearningLibraryCollection
+
+        return EnrolledLearningLibraryCollection(
+            id = result.id,
+            name = result.name,
+            publicName = result.publicName,
+            description = result.description,
+            createdAt = result.createdAt,
+            updatedAt = result.updatedAt,
+            totalItemCount = result.totalItemCount,
+            items = result.items.map { item ->
+                LearningLibraryCollectionItem(
+                    id = item.id,
+                    libraryId = item.libraryId,
+                    itemType = item.itemType.toModel(),
+                    displayOrder = item.displayOrder,
+                    canvasCourse = item.canvasCourse?.let { course ->
+                        CanvasCourseInfo(
+                            courseId = course.courseId,
+                            canvasUrl = course.canvasUrl,
+                            courseName = course.courseName,
+                            courseImageUrl = course.courseImageUrl,
+                            moduleCount = course.moduleCount,
+                            moduleItemCount = course.moduleItemCount,
+                            estimatedDurationMinutes = course.estimatedDurationMinutes
+                        )
+                    },
+                    moduleInfo = if (item.canvasModuleItemId != null) {
+                        LearningLibraryModuleInfo(
+                            moduleId = item.canvasModuleId,
+                            moduleItemId = item.canvasModuleItemId,
+                            resourceId = item.canvasResourceId,
+                            moduleItemType = item.itemType.toModuleItemType()?.name
+                        )
+                    } else {
+                        null
+                    },
+                    programId = item.programId,
+                    programCourseId = item.programCourseId,
+                    createdAt = item.createdAt,
+                    updatedAt = item.updatedAt,
+                    isBookmarked = item.isBookmarked,
+                    completionPercentage = item.completionPercentage,
+                    isEnrolledInCanvas = item.isEnrolledInCanvas,
+                    canvasEnrollmentId = item.canvasEnrollmentId
+                )
+            }
+        )
+    }
+
+    override suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
+        val mutation = ToggleLearningLibraryItemIsBookmarkedMutation(
+            ToggleCollectionItemBookmarkInput(itemId)
+        )
+        val result = journeyClient.enqueueMutation(mutation).dataOrThrow().toggleCollectionItemBookmark
+
+        return result.isBookmarked
+    }
+
+    override suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem {
+        val mutation = EnrollLearningLibraryItemMutation(
+            EnrollLearnerInCollectionItemInput(itemId)
+        )
+        val result = journeyClient.enqueueMutation(mutation).dataOrThrow().enrollLearnerInCollectionItem
+
+        return LearningLibraryCollectionItem(
+            id = result.item.id,
+            libraryId = result.item.libraryId,
+            itemType = result.item.itemType.toModel(),
+            displayOrder = result.item.displayOrder,
+            canvasCourse = result.item.canvasCourse?.let { course ->
+                CanvasCourseInfo(
+                    courseId = course.courseId,
+                    canvasUrl = course.canvasUrl,
+                    courseName = course.courseName,
+                    courseImageUrl = course.courseImageUrl,
+                    moduleCount = course.moduleCount,
+                    moduleItemCount = course.moduleItemCount,
+                    estimatedDurationMinutes = course.estimatedDurationMinutes
+                )
+            },
+            moduleInfo = if (result.item.canvasModuleItemId != null) {
+                LearningLibraryModuleInfo(
+                    moduleId = result.item.canvasModuleId,
+                    moduleItemId = result.item.canvasModuleItemId,
+                    resourceId = result.item.canvasResourceId,
+                    moduleItemType = result.item.itemType.toModuleItemType()?.name
+                )
+            } else {
+                null
+            },
+            programId = result.item.programId,
+            programCourseId = result.item.programCourseId,
+            createdAt = result.item.createdAt,
+            updatedAt = result.item.updatedAt,
+            isBookmarked = result.item.isBookmarked,
+            completionPercentage = result.item.completionPercentage,
+            isEnrolledInCanvas = result.item.isEnrolledInCanvas,
+            canvasEnrollmentId = result.item.canvasEnrollmentId
+        )
+    }
+
+    override suspend fun getLearningLibraryItem(itemId: String, forceNetwork: Boolean): LearningLibraryCollectionItem {
+        val query = GetLearningLibraryCollectionItemQuery(itemId)
+
+        val result = journeyClient.enqueueQuery(query, forceNetwork).dataOrThrow().learningLibraryCollectionItem
+
+        return LearningLibraryCollectionItem(
+            id = result.id,
+            libraryId = result.libraryId,
+            itemType = result.itemType.toModel(),
+            displayOrder = result.displayOrder,
+            canvasCourse = result.canvasCourse?.let { course ->
+                CanvasCourseInfo(
+                    courseId = course.courseId,
+                    canvasUrl = course.canvasUrl,
+                    courseName = course.courseName,
+                    courseImageUrl = course.courseImageUrl,
+                    moduleCount = course.moduleCount,
+                    moduleItemCount = course.moduleItemCount,
+                    estimatedDurationMinutes = course.estimatedDurationMinutes
+                )
+            },
+            moduleInfo = if (result.canvasModuleItemId != null) {
+                LearningLibraryModuleInfo(
+                    moduleId = result.canvasModuleId,
+                    moduleItemId = result.canvasModuleItemId,
+                    resourceId = result.canvasResourceId,
+                    moduleItemType = result.itemType.toModuleItemType()?.name
+                )
+            } else {
+                null
+            },
+            programId = result.programId,
+            programCourseId = result.programCourseId,
+            createdAt = result.createdAt,
+            updatedAt = result.updatedAt,
+            isBookmarked = result.isBookmarked,
+            completionPercentage = result.completionPercentage,
+            isEnrolledInCanvas = result.isEnrolledInCanvas,
+            canvasEnrollmentId = result.canvasEnrollmentId
+        )
+    }
+
+    override suspend fun getLearningLibraryRecommendations(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
+        val query = GetLearningLibraryRecommendationsQuery()
+        val result = journeyClient.enqueueQuery(query, forceNetwork).dataOrThrow().learningRecommendations.recommendations
+
+        return result.mapNotNull { recommendation ->
+            LearningLibraryRecommendation(
+                courseId = recommendation.courseId,
+                primaryReason = recommendation.primaryReason.toModel(),
+                sourceContext = RecommendationSourceContext(
+                    sourceCourseId = recommendation.sourceContext?.sourceCourseId,
+                    sourceCourseName = recommendation.sourceContext?.sourceCourseName,
+                    sourceSkillName = recommendation.sourceContext?.sourceSkillName
+                ),
+                popularityCount = recommendation.popularityCount,
+                item = recommendation.membership?.let { membership->
+                    LearningLibraryCollectionItem(
+                        id = membership.id,
+                        libraryId = membership.libraryId,
+                        itemType = membership.itemType.toModel(),
+                        displayOrder = membership.displayOrder,
+                        canvasCourse = membership.canvasCourse?.let { course ->
+                            CanvasCourseInfo(
+                                courseId = course.courseId,
+                                canvasUrl = course.canvasUrl,
+                                courseName = course.courseName,
+                                courseImageUrl = course.courseImageUrl,
+                                moduleCount = course.moduleCount,
+                                moduleItemCount = course.moduleItemCount,
+                                estimatedDurationMinutes = course.estimatedDurationMinutes
+                            )
+                        },
+                        moduleInfo = if (membership.canvasModuleItemId != null) {
+                            LearningLibraryModuleInfo(
+                                moduleId = membership.canvasModuleId,
+                                moduleItemId = membership.canvasModuleItemId,
+                                resourceId = membership.canvasResourceId,
+                                moduleItemType = membership.itemType.toModuleItemType()?.name
+                            )
+                        } else {
+                            null
+                        },
+                        programId = membership.programId,
+                        programCourseId = membership.programCourseId,
+                        createdAt = membership.createdAt,
+                        updatedAt = membership.updatedAt,
+                        isBookmarked = membership.isBookmarked,
+                        completionPercentage = membership.completionPercentage,
+                        isEnrolledInCanvas = membership.isEnrolledInCanvas,
+                        canvasEnrollmentId = membership.canvasEnrollmentId
+                    )
+                } ?: return@mapNotNull null
+            )
+        }
+    }
+
+}
+
+private fun com.instructure.journey.type.CollectionItemType.toModuleItemType(): ModuleItem.Type? {
+    return when(this) {
+        com.instructure.journey.type.CollectionItemType.PAGE -> ModuleItem.Type.Page
+        com.instructure.journey.type.CollectionItemType.ASSIGNMENT -> ModuleItem.Type.Assignment
+        com.instructure.journey.type.CollectionItemType.QUIZ -> ModuleItem.Type.Quiz
+        com.instructure.journey.type.CollectionItemType.EXTERNAL_URL -> ModuleItem.Type.ExternalUrl
+        com.instructure.journey.type.CollectionItemType.EXTERNAL_TOOL -> ModuleItem.Type.ExternalTool
+        com.instructure.journey.type.CollectionItemType.FILE -> ModuleItem.Type.File
+        else -> null
+    }
+}

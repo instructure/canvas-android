@@ -31,6 +31,7 @@
     <string name="tab_attendance">Anwesenheit</string>
     <string name="tab_pages">Seiten</string>
     <string name="tab_todo">Zu erledigen</string>
+    <string name="tab_todo_new">Aufgaben</string>
     <string name="content_description_school_logo">Logo der Schule</string>
     <string name="search_guides">Die Canvas-Anleitungen durchsuchen</string>
     <string name="canvas_guides">Canvas-Leitfäden</string>
@@ -353,7 +354,7 @@
     <string name="letter_grade">Buchstaben-Note</string>
     <string name="excuse_student">Student entschuldigen</string>
     <string name="excuseGroup">Gruppe entschuldigen</string>
-    <string name="complete_grade">Fertigstellen</string>
+    <string name="complete_grade">Vollständig</string>
     <string name="incomplete_grade">Unvollständig</string>
     <string name="not_graded">Unbenotet</string>
     <string name="excused">Entschuldigt</string>
@@ -546,7 +547,7 @@
     </string-array>
     <string name="quizStatusUntaken">Nicht erledigt</string>
 
-    <string name="quizStatusComplete">Fertigstellen</string>
+    <string name="quizStatusComplete">Vollständig</string>
     <string name="quizStatusPendingReview">Ausstehende Überprüfung</string>
     <string name="quizStatusInProgress">In Arbeit</string>
     <string name="quizStatusNotStarted">Nicht begonnen</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Nichts weiter zu tun.\n Genießen Sie Ihren Tag!</string>
     <string name="toDoNoSubmissions">Für diese Aufgabe sind keine Abgaben zu benoten.</string>
     <string name="errorToDoRouteFailed">Fehler beim Anzeigen dieser Aufgabe.</string>
+    <string name="errorToDoRouteFailedNew">Bei der Ansicht des To-Do-Elements ist ein Fehler aufgetreten.</string>
     <string name="errorIsDesigner">Designer-Anmeldung kann dies nicht anzeigen.</string>
 
     <string name="sections">Abschnitte</string>

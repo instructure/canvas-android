@@ -31,6 +31,7 @@
     <string name="tab_attendance">Presenoldeb</string>
     <string name="tab_pages">Tudalennau</string>
     <string name="tab_todo">Tasgau i’w Gwneud</string>
+    <string name="tab_todo_new">Tasg i’w Gwneud</string>
     <string name="content_description_school_logo">Logo’r Ysgol</string>
     <string name="search_guides">Chwilio drwy Ganllawiau Canvas</string>
     <string name="canvas_guides">Canllawiau Canvas</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Dim byd arall i\'w wneud!\n Mwynhewch eich diwrnod.</string>
     <string name="toDoNoSubmissions">Does dim cyflwyniadau i’w graddio ar gyfer yr aseiniad hwn.</string>
     <string name="errorToDoRouteFailed">Gwall wrth geisio gweld yr eitem i’w gwneud.</string>
+    <string name="errorToDoRouteFailedNew">Cafwyd gwall wrth geisio gweld yr eitem i’w gwneud.</string>
     <string name="errorIsDesigner">Does dim modd i ymrestriadau dylunydd weld hwn.</string>
 
     <string name="sections">Adrannau</string>

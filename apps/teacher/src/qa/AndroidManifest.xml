@@ -32,6 +32,11 @@
 
     <application tools:ignore="GoogleAppIndexingWarning">
 
+        <meta-data
+            android:name="nutrient_automatic_initialize"
+            android:value="true"
+            tools:replace="android:value" />
+
         <activity android:name=".SingleFragmentTestActivity" />
 
     </application>

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -40,6 +41,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment.Companion.MEDIA_SOURCE
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment.Companion.PICKER_MODE
 import com.instructure.student.mobius.common.ui.MobiusFragment
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_SUBMISSION_UPLOAD_PICKER)
 abstract class BasePickerSubmissionUploadFragment :
@@ -51,6 +53,9 @@ abstract class BasePickerSubmissionUploadFragment :
     private val mediaUri by NullableParcelableArg<Uri>(key = Const.PASSED_URI, default = null)
     private var attemptId by LongArg(key = Const.SUBMISSION_ATTEMPT)
     private val initialMediaSource by NullableStringArg(key = MEDIA_SOURCE)
+
+    @Inject
+    lateinit var documentScannerManager: DocumentScannerManager
 
     override fun makeUpdate() = PickerSubmissionUploadUpdate()
 
@@ -68,6 +73,7 @@ abstract class BasePickerSubmissionUploadFragment :
         mode,
         mediaUri,
         attemptId = attemptId.takeIf { it != INVALID_ATTEMPT },
-        mediaSource = initialMediaSource
+        mediaSource = initialMediaSource,
+        scannerAvailable = documentScannerManager.isDeviceSupported()
     )
 }

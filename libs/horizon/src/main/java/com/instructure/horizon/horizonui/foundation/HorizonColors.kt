@@ -162,6 +162,7 @@ object HorizonColors {
     }
 
     object PrimitivesCopper {
+        val copper12 = Color(0xFFFFE5D3)
         @Composable
         fun copper30() = colorResource(R.color.primitives_copper30)
         @Composable
@@ -178,6 +179,7 @@ object HorizonColors {
         fun copper70() = colorResource(R.color.primitives_copper70)
         @Composable
         fun copper90() = colorResource(R.color.primitives_copper90)
+        val copper90 = Color(0xFF77360B)
         @Composable
         fun copper110() = colorResource(R.color.primitives_copper110)
     }

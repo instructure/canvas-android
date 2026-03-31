@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Mír an chéad mhodúil eile</string>
     <string name="a11y_nextModule">An chéad mhodúl eile</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marcáilte mar %2$s, tapáil faoi dhó chun nóta a chur in eagar</string>
+    <string name="learnCoursesTabLabel">Cúrsaí</string>
+    <string name="learnProgramsTabLabel">Cláir</string>
     <string name="reportAProblemDescriptionMessage">Comhdaigh ticéad le haghaidh freagra pearsanta ónár bhfoireann tacaíochta.</string>
     <string name="igniteAIEnterAPromptLabel">Cuir isteach leid</string>
     <string name="a11y_igniteAiLoadingContentDescription">Freagra á lódáil</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Cas an cárta</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Theip ar chúrsaí a lódáil</string>
+    <string name="learnCourseListFilterAll">Cúrsaí Ar Fad</string>
+    <string name="learnCourseListFilterNotStarted">Níor tosaíodh</string>
+    <string name="learnCourseListFilterInProgress">Ar siúl</string>
+    <string name="learnCourseListFilterCompleted">Críochnaithe</string>
+    <string name="learnCourseListStartLearningLabel">Tosaigh ag foghlaim</string>
+    <string name="learnCourseListResumeLearningLabel">Lean ar aghaidh ag foghlaim</string>
+    <string name="learnCourseListViewCourseLabel">Féach ar an gcúrsa</string>
+    <string name="learnCourseListShowMoreLabel">Taispeáin tuilleadh</string>
+    <string name="learnCourseListSearchBarPlaceholder">Cuardaigh cúrsaí</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Cuid de %1$s</string>
+    <string name="learnCourseListEmptyMessage">Níor aimsíodh aon torthaí. Bain triail as do théarmaí cuardaigh a choigeartú.</string>
+    <string name="learnProgramListFilterAll">Gach clár</string>
+    <string name="learnProgramListFilterNotStarted">Níor tosaíodh</string>
+    <string name="learnProgramListFilterInProgress">Ar siúl</string>
+    <string name="learnProgramListFilterCompleted">Críochnaithe</string>
+    <string name="learnProgramListShowMoreLabel">Taispeáin tuilleadh</string>
+    <string name="learnProgramListEmptyMessage">Níor aimsíodh aon torthaí. Bain triail as do théarmaí cuardaigh a choigeartú.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Cuardaigh cláir</string>
+    <string name="learnProgramListFailedToLoadMessage">Theip ar lódáil na cláir</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d cúrsa</item>
+        <item quantity="other">%1$d cúrsa</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Earráid: %1$s</string>
     <string name="a11y_required">Ag teastáil</string>
 </resources>

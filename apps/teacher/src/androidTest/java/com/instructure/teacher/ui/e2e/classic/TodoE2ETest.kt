@@ -65,11 +65,11 @@ class TodoE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Navigate to 'To Do' Page.")
+        Log.d(STEP_TAG, "Navigate to 'To-do' Page.")
         dashboardPage.openTodo()
         todoPage.waitForRender()
 
-        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed because there are no To Do items yet.")
+        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed because there are no To-do items yet.")
         todoPage.assertEmptyView()
 
         Log.d(PREPARATION_TAG, "Seed a submission for '${testAssignment.name}' assignment with '${student.name}' student.")
@@ -90,7 +90,7 @@ class TodoE2ETest : TeacherTest() {
 
         // region Make seeded quiz published manually
 
-        // We need to make the seeded quiz manually published because if we seed it published by default, seeding a submission for it will be automatically 'Graded' status so won't be displayed among the 'To Do' items.
+        // We need to make the seeded quiz manually published because if we seed it published by default, seeding a submission for it will be automatically 'Graded' status so won't be displayed among the 'To-do' items.
         Log.d(STEP_TAG, "Click on the '${testQuiz.title}' quiz.")
         quizListPage.clickQuiz(testQuiz.title)
 
@@ -112,30 +112,30 @@ class TodoE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page.")
         pressBackButton(3)
 
-        Log.d(STEP_TAG, "Navigate to 'To Do' Page.")
+        Log.d(STEP_TAG, "Navigate to 'To-do' Page.")
         dashboardPage.openTodo()
         todoPage.waitForRender()
 
-        Log.d(ASSERTION_TAG, "Assert that the previously seeded '${testAssignment.name}' assignment is displayed as a To Do element for the '${course.name}' course." +
+        Log.d(ASSERTION_TAG, "Assert that the previously seeded '${testAssignment.name}' assignment is displayed as a To-do element for the '${course.name}' course." +
                 "Assert that the '1 Needs Grading' text is under the corresponding assignment's details.")
         todoPage.assertTodoElementDetailsDisplayed(course.name, testAssignment.name)
         todoPage.assertNeedsGradingCountOfTodoElement(assignments[0].name, 1)
 
-        Log.d(ASSERTION_TAG, "Assert that the previously seeded '${testQuiz.title}' quiz is displayed as a To Do element for the '${course.name}' course." +
+        Log.d(ASSERTION_TAG, "Assert that the previously seeded '${testQuiz.title}' quiz is displayed as a To-do element for the '${course.name}' course." +
                 "Assert that the '1 Needs Grading' text is under the corresponding quiz's details.")
         todoPage.assertTodoElementDetailsDisplayed(course.name, testQuiz.title)
         todoPage.assertNeedsGradingCountOfTodoElement(testQuiz.title, 1)
 
-        Log.d(ASSERTION_TAG, "Assert that the 'To Do' element count is 2, since we have a quiz and an assignment which needs to be graded.")
+        Log.d(ASSERTION_TAG, "Assert that the 'To-do' element count is 2, since we have a quiz and an assignment which needs to be graded.")
         todoPage.assertTodoElementCount(2)
 
         Log.d(PREPARATION_TAG, "Grade the previously seeded '${testAssignment.name}' assignment for '${student.name}' student.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "15")
 
-        Log.d(STEP_TAG, "Refresh the To Do Page.")
+        Log.d(STEP_TAG, "Refresh the To-do Page.")
         todoPage.refresh()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'To Do' element count is 1, since we just graded the '${testAssignment.id}' assignment but we haven't graded the '${testQuiz.title}' quiz yet.")
+        Log.d(ASSERTION_TAG, "Assert that the 'To-do' element count is 1, since we just graded the '${testAssignment.id}' assignment but we haven't graded the '${testQuiz.title}' quiz yet.")
         todoPage.assertTodoElementCount(1)
     }
 

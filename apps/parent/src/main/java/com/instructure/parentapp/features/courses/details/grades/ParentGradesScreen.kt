@@ -47,5 +47,5 @@ internal fun ParentGradesScreen(
         }
     }
 
-    GradesScreen(gradesUiState, gradesViewModel::handleAction, ParentPrefs.currentStudent.studentColor)
+    GradesScreen(gradesUiState, gradesViewModel::handleAction, ParentPrefs.currentStudent.studentColor, applyInsets = false)
 }

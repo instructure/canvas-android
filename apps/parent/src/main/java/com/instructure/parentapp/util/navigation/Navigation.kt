@@ -21,6 +21,7 @@ import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
@@ -56,7 +57,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private val globalAnnouncementDetails = "$baseUrl/account_notifications/{$announcementId}"
     private val assignmentDetails = "$baseUrl/courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
     private val inboxCompose = "$baseUrl/conversations/compose/{${InboxComposeOptions.COMPOSE_PARAMETERS}}"
-    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}?unread={${InboxDetailsFragment.UNREAD}}"
+    private val inboxDetails = "$baseUrl/conversations/{${InboxDetailsFragment.CONVERSATION_ID}}?unread={${InboxDetailsFragment.UNREAD}}&scope={${InboxDetailsFragment.SCOPE}}"
     private val calendarEvent = "$baseUrl/{${EventFragment.CONTEXT_TYPE}}/{${EventFragment.CONTEXT_ID}}/calendar_events/{${EventFragment.SCHEDULE_ITEM_ID}}"
     private val createEvent = "$baseUrl/create-event/{${CreateUpdateEventFragment.INITIAL_DATE}}"
     private val updateEvent = "$baseUrl/update-event/{${CreateUpdateEventFragment.SCHEDULE_ITEM}}"
@@ -83,7 +84,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
     fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
     fun inboxComposeRoute(options: InboxComposeOptions) = "$baseUrl/conversations/compose/${InboxComposeOptionsParametersType.serializeAsValue(options)}"
-    fun inboxDetailsRoute(conversationId: Long, unread: Boolean) = "$baseUrl/conversations/$conversationId?unread=$unread"
+    fun inboxDetailsRoute(conversationId: Long, unread: Boolean, scope: InboxApi.Scope = InboxApi.Scope.INBOX) = "$baseUrl/conversations/$conversationId?unread=$unread&scope=${scope.name}"
     fun createAccount(domain: String, accountId: String, pairingCode: String) = "$baseUrl/account_creation?pairing_code=$pairingCode&domain=$domain&accountId=$accountId"
     fun courseDetailsRoute(id: Long) = "$baseUrl/courses/$id"
     fun calendarEventRoute(contextTypeString: String, contextId: Long, eventId: Long) = "$baseUrl/$contextTypeString/$contextId/calendar_events/$eventId"
@@ -139,6 +140,11 @@ class Navigation(apiPrefs: ApiPrefs) {
                     type = NavType.BoolType
                     nullable = false
                     defaultValue = false
+                }
+                argument(InboxDetailsFragment.SCOPE) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
                 }
             }
             fragment<ManageStudentsFragment>(manageStudents)

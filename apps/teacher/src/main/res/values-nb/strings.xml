@@ -31,6 +31,7 @@
     <string name="tab_attendance">Oppmøte</string>
     <string name="tab_pages">Sider</string>
     <string name="tab_todo">Å gjøre</string>
+    <string name="tab_todo_new">Gjøremål</string>
     <string name="content_description_school_logo">Skolens Logo</string>
     <string name="search_guides">Søk i Canvas-guidene</string>
     <string name="canvas_guides">Canvas-guider</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">Ingen flere oppgaver!\n Ha en fin dag.</string>
     <string name="toDoNoSubmissions">Det finnes ingen innleveringer å gi vurderinger til for denne oppgaven.</string>
     <string name="errorToDoRouteFailed">En feil oppsto under visning av dette gjøremålselementet.</string>
+    <string name="errorToDoRouteFailedNew">En feil oppsto under visning av dette gjøremålselementet.</string>
     <string name="errorIsDesigner">Designer påmelding kan ikke vise dette.</string>
 
     <string name="sections">Seksjoner</string>

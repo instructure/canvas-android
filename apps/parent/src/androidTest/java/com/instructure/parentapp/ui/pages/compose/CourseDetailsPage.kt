@@ -18,19 +18,26 @@
 package com.instructure.parentapp.ui.pages.compose
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyChild
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.assertTextColor
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.pandautils.utils.toFormattedString
 
 
 class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
@@ -75,5 +82,98 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickComposeMessageFAB() {
         composeTestRule.onNodeWithContentDescription("Send a message about this course").performClick()
+    }
+
+    fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", dueAtStringSecondCheckpoint: String? = null, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignmentName, dueAtString, dueAtStringSecondCheckpoint, expectedGrade, hasCheckPoints = true)
+    }
+
+    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, secondCheckpointDueAt: String? = null, expectedGradeLabel: String? = null, assignmentStatus: String? = null, hasCheckPoints : Boolean = false) {
+
+        // Check if the assignment is a discussion with checkpoints, if yes, we are expecting 2 due dates for the 2 checkpoints.
+        if(hasCheckPoints) {
+            if (assignmentDueAt == null || assignmentDueAt == "No due date") {
+                composeTestRule.onAllNodes(
+                    hasText("No due date").and(
+                        hasParent(hasAnyDescendant(hasText(assignmentName)))
+                    ),
+                    true
+                ).assertCountEquals(2)
+            }
+            else {
+                if(secondCheckpointDueAt != null) {
+                    composeTestRule.onAllNodes(
+                        hasText(assignmentDueAt).and(
+                            hasParent(hasAnyDescendant(hasText(assignmentName)))
+                        ),
+                        true
+                    ).assertCountEquals(1)
+                    composeTestRule.onAllNodes(
+                        hasText(secondCheckpointDueAt).and(
+                            hasParent(hasAnyDescendant(hasText(assignmentName)))
+                        ),
+                        true
+                    ).assertCountEquals(1)
+                }
+                else {
+                    composeTestRule.onAllNodes(
+                        hasText(assignmentDueAt).and(
+                            hasParent(hasAnyDescendant(hasText(assignmentName)))
+                        ),
+                        true
+                    ).assertCountEquals(2)
+                }
+            }
+        }
+        else {
+            // Check that either the assignment due date is present, or "No Due Date" is displayed
+            if (assignmentDueAt != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(
+                            hasAnyDescendant(
+                                hasText(
+                                    "Due ${
+                                        assignmentDueAt.toDate()!!.toFormattedString()
+                                    }"
+                                )
+                            )
+                        )
+                    )
+                )
+                    .assertIsDisplayed()
+            } else {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(hasAnyDescendant(hasText("No due date")))
+                    )
+                )
+                    .assertIsDisplayed()
+            }
+        }
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
+            // Check that grade is present, if that is specified
+            if (expectedGradeLabel != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(hasAnyDescendant(hasText(expectedGradeLabel, substring = true)))
+                    )
+                )
+                    .assertIsDisplayed()
+            }
+        }
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
+            if(assignmentStatus != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentStatus).and(
+                        hasAnyAncestor(hasAnyChild(hasText(assignmentName)))
+                    ),
+                    useUnmergedTree = true
+                )
+                    .assertIsDisplayed()
+            }
+        }
     }
 }

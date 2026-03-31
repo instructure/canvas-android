@@ -31,6 +31,7 @@
     <string name="tab_attendance">Uczestnictwo</string>
     <string name="tab_pages">Strony</string>
     <string name="tab_todo">Lista zadań</string>
+    <string name="tab_todo_new">Lista zadań</string>
     <string name="content_description_school_logo">Logo szkoły</string>
     <string name="search_guides">Wyszukaj przewodniki Canvas</string>
     <string name="canvas_guides">Przewodniki Canvas</string>
@@ -866,6 +867,7 @@
     <string name="toDoEmpty">Nic więcej do zrobienia!\n Korzystaj z dnia.</string>
     <string name="toDoNoSubmissions">Brak zgłoszeń do oceny dla tego zadania.</string>
     <string name="errorToDoRouteFailed">Podczas wyświetlania tego elementu listy zadań wystąpił błąd.</string>
+    <string name="errorToDoRouteFailedNew">Podczas wyświetlania tego elementu listy zadań wystąpił błąd.</string>
     <string name="errorIsDesigner">Rejestrujący nie może tego wyświetlać.</string>
 
     <string name="sections">Sekcje</string>

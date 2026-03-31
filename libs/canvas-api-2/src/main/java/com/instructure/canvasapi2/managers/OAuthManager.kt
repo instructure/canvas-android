@@ -50,9 +50,9 @@ object OAuthManager {
 
     fun getAuthenticatedSessionAsync(targetUrl: String) = apiAsync<AuthenticatedSession> { getAuthenticatedSession(targetUrl, it) }
 
-    fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>, domain: String? = null) {
+    fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>, domain: String? = null, shouldRefreshToken: Boolean = true) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(isForceReadFromNetwork = true, domain = domain)
+        val params = RestParams(isForceReadFromNetwork = true, domain = domain, shouldRefreshToken = shouldRefreshToken)
         Logger.d("targetURL to be authed: $targetUrl")
         val userId = ApiPrefs.user?.id
         if (ApiPrefs.isMasquerading && userId != null) {

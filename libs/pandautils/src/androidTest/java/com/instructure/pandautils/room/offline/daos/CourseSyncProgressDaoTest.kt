@@ -32,6 +32,7 @@ import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -196,6 +197,29 @@ class CourseSyncProgressDaoTest {
         result.observeForever { }
 
         assertEquals(entities, result.value)
+    }
+
+    @Test
+    fun testFindAllFlow() = runTest {
+        val entities = listOf(
+            CourseSyncProgressEntity(
+                1L,
+                "Course 1",
+                CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
+                progressState = ProgressState.IN_PROGRESS
+            ),
+            CourseSyncProgressEntity(
+                2L,
+                "Course 2",
+                CourseSyncSettingsEntity.TABS.associateWith { TabSyncData(it, ProgressState.IN_PROGRESS) },
+                progressState = ProgressState.IN_PROGRESS
+            )
+        )
+
+        courseSyncProgressDao.insertAll(entities)
+
+        val result = courseSyncProgressDao.findAllFlow().first()
+        assertEquals(entities, result)
     }
 
     @Test

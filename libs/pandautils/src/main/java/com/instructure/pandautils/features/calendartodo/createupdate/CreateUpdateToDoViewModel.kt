@@ -230,7 +230,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     saving = false,
-                    errorSnack = resources.getString(R.string.todoSaveErrorMessage)
+                    errorSnack = resources.getString(R.string.todoSaveErrorMessageNew)
                 )
             }
         }

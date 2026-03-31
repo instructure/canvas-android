@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Element del mòdul següent</string>
     <string name="a11y_nextModule">Mòdul següent</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, s’ha marcat com a %2$s, toqueu-hi dues vegades per editar la nota</string>
+    <string name="learnCoursesTabLabel">Assignatures</string>
+    <string name="learnProgramsTabLabel">Programes</string>
     <string name="reportAProblemDescriptionMessage">Presenteu una sol·licitud de resposta personal del nostre equip de suport tècnic.</string>
     <string name="igniteAIEnterAPromptLabel">Introduïu una sol·licitud</string>
     <string name="a11y_igniteAiLoadingContentDescription">S’està carregant la resposta</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Feu voltar la targeta</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">No s\'han pogut carregar les assignatures</string>
+    <string name="learnCourseListFilterAll">Totes les assignatures</string>
+    <string name="learnCourseListFilterNotStarted">No s’ha iniciat</string>
+    <string name="learnCourseListFilterInProgress">En curs</string>
+    <string name="learnCourseListFilterCompleted">S’ha completat</string>
+    <string name="learnCourseListStartLearningLabel">Comenceu a aprendre</string>
+    <string name="learnCourseListResumeLearningLabel">Repreneu l’aprenentatge</string>
+    <string name="learnCourseListViewCourseLabel">Visualitzeu l\'assignatura</string>
+    <string name="learnCourseListShowMoreLabel">Mostreu-ne més</string>
+    <string name="learnCourseListSearchBarPlaceholder">Cerqueu assignatures</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Part de %1$s</string>
+    <string name="learnCourseListEmptyMessage">No s\'ha trobat cap resultat. Proveu d’ajustar els termes de cerca.</string>
+    <string name="learnProgramListFilterAll">Tots els programes</string>
+    <string name="learnProgramListFilterNotStarted">No s’ha iniciat</string>
+    <string name="learnProgramListFilterInProgress">En curs</string>
+    <string name="learnProgramListFilterCompleted">S’ha completat</string>
+    <string name="learnProgramListShowMoreLabel">Mostreu-ne més</string>
+    <string name="learnProgramListEmptyMessage">No s\'ha trobat cap resultat. Proveu d’ajustar els termes de cerca.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Cerqueu programes</string>
+    <string name="learnProgramListFailedToLoadMessage">No s\'han pogut carregar els programes</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d assignatura</item>
+        <item quantity="other">%1$d assignatures</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Obligatori</string>
 </resources>

@@ -21,8 +21,10 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -105,6 +107,7 @@ private fun SpeedGraderCommentLibraryScreen(
 ) {
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
+        contentWindowInsets = WindowInsets.ime,
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.toolbarCommentLibrary),
@@ -148,7 +151,7 @@ private fun SpeedGraderCommentLibraryContent(
         } else {
             LazyColumn(
                 contentPadding = PaddingValues(horizontal = 16.dp),
-                modifier = modifier
+                modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .testTag("commentLibraryListColumn"),

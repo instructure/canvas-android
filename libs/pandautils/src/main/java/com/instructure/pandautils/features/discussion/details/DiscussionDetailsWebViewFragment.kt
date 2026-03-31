@@ -41,6 +41,7 @@ import com.instructure.pandautils.features.discussion.DiscussionSharedAction
 import com.instructure.pandautils.features.discussion.DiscussionSharedEvents
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -48,6 +49,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setMenu
@@ -79,6 +82,7 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
     private var discussionTopicHeaderId: Long by LongArg(default = 0L, key = DISCUSSION_TOPIC_HEADER_ID)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
 
     private val viewModel: DiscussionDetailsWebViewViewModel by viewModels()
 
@@ -190,6 +194,10 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     }
 
     private fun setupToolbar(title: String) = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+        if (!isInModulesPager) {
+            discussionWebView.applyBottomSystemBarInsets()
+        }
         toolbar.title = title
 
         if (discussionDetailsWebViewFragmentBehavior.showBackButton) {
@@ -210,19 +218,22 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
         const val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         const val DISCUSSION_TOPIC_HEADER_ID = "discussion_topic_header_id"
         const val DISCUSSION_TOPIC = "discussion_topic"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader, isInModulesPager: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
                 putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeader.id)
+                putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)
         }
 
-        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long): Route {
+        fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, isInModulesPager: Boolean = false): Route {
             val bundle = Bundle().apply {
                 putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
+                putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
             }
 
             return Route(null, DiscussionDetailsWebViewFragment::class.java, canvasContext, bundle)

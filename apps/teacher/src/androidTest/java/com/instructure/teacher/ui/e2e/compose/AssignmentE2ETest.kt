@@ -16,8 +16,11 @@
  */
 package com.instructure.teacher.ui.e2e.compose
 
+import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -27,6 +30,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.SectionsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
@@ -35,6 +39,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -434,12 +439,71 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
         speedGraderPage.assertMediaCommentPreviewDisplayed()
 
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the audio.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current audio position.")
+        val firstAudioPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First audio position: $firstAudioPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume audio playback, wait for audio to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the audio position again.")
+        val secondAudioPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second audio position: $secondAudioPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the audio position has changed, confirming audio is playing.")
+        assert(firstAudioPositionText != secondAudioPositionText) {
+            "Audio position did not change. First: $firstAudioPositionText, Second: $secondAudioPositionText"
+        }
+
         Log.d(STEP_TAG, "Navigate back. Click on the previously uploaded video comment.")
         Espresso.pressBack()
         speedGraderPage.clickOnMediaComment("Media Upload - Video")
 
         Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
         speedGraderPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to SpeedGrader.")
+        Espresso.pressBack()
     }
 
     @E2E
@@ -661,6 +725,98 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.assertHasSubmission(2)
         assignmentSubmissionListPage.assertHasStudentSubmission(student)
         assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testVideoFileUploadSubmissionE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'File Upload' assignment for '${course.name}' course.")
+        val videoUploadAssignment = AssignmentsApi.createAssignment(
+            AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
+
+        Log.d(PREPARATION_TAG, "Upload the mp4 file from assets as an assignment submission file.")
+        val videoFileName = "test_video.mp4"
+        val videoFileBytes = InstrumentationRegistry.getInstrumentation().context.assets.open(videoFileName).readBytes()
+        val uploadInfo = FileUploadsApi.uploadFile(
+            courseId = course.id,
+            assignmentId = videoUploadAssignment.id,
+            file = videoFileBytes,
+            fileName = videoFileName,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG, "Submit '${videoUploadAssignment.name}' assignment for '${student.name}' student with the uploaded mp4 file.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, videoUploadAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to its Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${videoUploadAssignment.name}' assignment.")
+        assignmentListPage.clickAssignment(videoUploadAssignment)
+
+        Log.d(STEP_TAG, "Open '${student.name}' student's submission in SpeedGrader.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(STEP_TAG, "Expand then collapse the SpeedGrader panel to show the video submission content in full.")
+        speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.clickCollapsePanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' attachment is displayed in SpeedGrader.")
+        speedGraderPage.assertSelectedAttachmentItemDisplayed(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
     }
 
 }
