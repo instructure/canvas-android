@@ -55,12 +55,12 @@ class GetAuthenticatedSessionUseCaseTest {
         val authenticatedUrl = "https://canvas.instructure.com/session/abc123?return_to=/courses/1/conferences/1/join"
         val authenticatedSession = AuthenticatedSession(sessionUrl = authenticatedUrl)
 
-        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any()) } returns DataResult.Success(authenticatedSession)
+        coEvery { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) } returns DataResult.Success(authenticatedSession)
 
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(authenticatedUrl, result)
-        coVerify { oauthApi.getAuthenticatedSession(targetUrl, any()) }
+        coVerify { oauthApi.getAuthenticatedSession(targetUrl, any(), any()) }
     }
 
     @Test
@@ -70,7 +70,7 @@ class GetAuthenticatedSessionUseCaseTest {
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(targetUrl, result)
-        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any()) }
+        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 
     @Test
@@ -93,6 +93,6 @@ class GetAuthenticatedSessionUseCaseTest {
         val result = useCase(GetAuthenticatedSessionUseCase.Params(targetUrl))
 
         assertEquals(targetUrl, result)
-        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any()) }
+        coVerify(exactly = 0) { oauthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 }
