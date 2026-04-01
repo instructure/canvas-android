@@ -106,7 +106,11 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val unreadDisplayCount = if (discussionTopicHeader.unreadCount > 99) context.getString(R.string.max_count)
         else discussionTopicHeader.unreadCount.localized
 
-        if (discussionTopicHeader.unreadCount != 0) {
+        if (discussionTopicHeader.unreadCount != 0 || discussionTopicHeader.readState?.equals(
+                DiscussionTopicHeader.ReadState.UNREAD.name,
+                ignoreCase = true
+            ) == true
+        ) {
             statusIndicator.setVisible()
         } else {
             statusIndicator.setInvisible()

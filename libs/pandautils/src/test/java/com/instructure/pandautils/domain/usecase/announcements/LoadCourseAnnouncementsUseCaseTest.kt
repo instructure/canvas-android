@@ -148,4 +148,25 @@ class LoadCourseAnnouncementsUseCaseTest {
 
         useCase(params)
     }
+
+    @Test
+    fun `execute returns announcements with lowercase unread status using case insensitive matching`() = runTest {
+        val courseId = 1L
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
+
+        val announcements = listOf(
+            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = "unread"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "Unread"),
+            DiscussionTopicHeader(id = 3, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name)
+        )
+
+        coEvery {
+            announcementRepository.getCourseAnnouncements(courseId, any())
+        } returns DataResult.Success(announcements)
+
+        val result = useCase(params)
+
+        assertEquals(2, result.size)
+        assertEquals(listOf(1L, 2L), result.map { it.id })
+    }
 }
