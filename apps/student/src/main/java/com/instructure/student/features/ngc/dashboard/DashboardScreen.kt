@@ -16,7 +16,6 @@
  */
 package com.instructure.student.features.ngc.dashboard
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,9 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,8 +46,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.IconButton
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
@@ -61,7 +56,9 @@ import com.instructure.student.R
 import com.instructure.student.features.dashboard.compose.DashboardBody
 import com.instructure.student.features.dashboard.compose.DashboardUiState
 import com.instructure.student.features.dashboard.compose.DashboardViewModel
-import com.instructure.student.features.ngc.navigation.NgcComposeNavigationHandler
+import com.instructure.student.features.ngc.designsystem.DSIconButton
+import com.instructure.student.features.ngc.designsystem.DSIconButtonColor
+import com.instructure.student.features.ngc.navigation.NGCComposeNavigationHandler
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -69,7 +66,7 @@ fun DashboardScreen(navController: NavHostController) {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    val navigationHandler = remember { NgcComposeNavigationHandler(navController) }
+    val navigationHandler = remember { NGCComposeNavigationHandler(navController) }
 
     DashboardScreenContent(
         uiState = uiState,
@@ -153,22 +150,22 @@ private fun DashboardTopBar(navigationHandler: DashboardNavigationHandler, modif
     ) {
         Text(text = stringResource(R.string.ngc_dashboardTitle), style = HorizonTypography.h2)
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(
+        DSIconButton(
             iconRes = R.drawable.cloud_download,
-            contentDescription = stringResource(com.instructure.horizon.R.string.a11y_dashboardNotebookButtonContentDescription), // TODO
+            contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription), // TODO
             onClick = {
                 manageOfflineContentClick()
             },
-            color = IconButtonColor.Inverse,
+            color = DSIconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
             modifier = Modifier.padding(end = 8.dp)
         )
-        IconButton(
+        DSIconButton(
             iconRes = R.drawable.edit,
-            contentDescription = stringResource(com.instructure.horizon.R.string.a11y_dashboardInboxContentDescription), // TODO
+            contentDescription = stringResource(R.string.a11y_dashboardInboxContentDescription), // TODO
             onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.Inverse,
+            color = DSIconButtonColor.Inverse,
         )
     }
 }

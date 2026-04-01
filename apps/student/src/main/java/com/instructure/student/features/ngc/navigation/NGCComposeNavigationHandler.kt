@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
  * As NGC screens are implemented, this handler should be updated to use NavController
  * navigation to navigate to the actual screens.
  */
-class NgcComposeNavigationHandler(
+class NGCComposeNavigationHandler(
     private val navController: NavController
 ) : DashboardNavigationHandler {
 

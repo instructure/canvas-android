@@ -34,8 +34,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.student.features.ngc.designsystem.DesignSystem
+import com.instructure.student.features.ngc.designsystem.LocalDesignSystem
+import com.instructure.student.features.ngc.designsystem.NGCTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +52,9 @@ fun NGCTheme(courseColor: Color = LocalCourseColor.current, content: @Composable
                 getRippleAlpha(isSystemInDarkTheme())
             ),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
-//            LocalTextStyle provides HorizonTypography.p1, // Use this for now until the abstract design system
+            LocalTextStyle provides NGCTypography.p1,
             LocalCourseColor provides courseColor,
+            LocalDesignSystem provides DesignSystem.NextGenCanvas,
             content = content
         )
     }
