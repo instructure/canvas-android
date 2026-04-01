@@ -482,31 +482,11 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
             val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
 
-            // Register stamp appearance generators only when stamps are present, and only after the network
-            // roundtrip above — by this point PSPDFKit has finished its initial render, avoiding blank pages.
             // AnnotationType.TEXT is the CanvaDoc API type for stamp (point) annotations, which are converted
-            // to PSPDFKit StampAnnotations via convertTextType().
-            if (!stampAppearanceGeneratorsRegistered && sortedAnnotationList.any { it.annotationType == CanvaDocAnnotation.AnnotationType.TEXT }) {
-                stampAppearanceGeneratorsRegistered = true
-                val generators = withContext(Dispatchers.IO) {
-                    mapOf(
-                        blackStampSubject to AssetAppearanceStreamGenerator(blackStampFile),
-                        blueStampSubject to AssetAppearanceStreamGenerator(blueStampFile),
-                        brownStampSubject to AssetAppearanceStreamGenerator(brownStampFile),
-                        greenStampSubject to AssetAppearanceStreamGenerator(greenStampFile),
-                        navyStampSubject to AssetAppearanceStreamGenerator(navyStampFile),
-                        orangeStampSubject to AssetAppearanceStreamGenerator(orangeStampFile),
-                        pinkStampSubject to AssetAppearanceStreamGenerator(pinkStampFile),
-                        purpleStampSubject to AssetAppearanceStreamGenerator(purpleStampFile),
-                        redStampSubject to AssetAppearanceStreamGenerator(redStampFile),
-                        yellowStampSubject to AssetAppearanceStreamGenerator(yellowStampFile)
-                    )
-                }
-                val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
-                pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
-                generators.forEach { (subject, generator) ->
-                    customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(subject, generator)
-                }
+            // to PSPDFKit StampAnnotations via convertTextType(). Register generators only after this network
+            // roundtrip — by this point PSPDFKit has finished its initial render, avoiding blank pages.
+            if (sortedAnnotationList.any { it.annotationType == CanvaDocAnnotation.AnnotationType.TEXT }) {
+                registerStampAppearanceGenerators()
             }
 
             for (item in sortedAnnotationList) {
@@ -1092,6 +1072,30 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         )
 
         return stamps
+    }
+
+    private suspend fun registerStampAppearanceGenerators() {
+        if (stampAppearanceGeneratorsRegistered) return
+        val generators = withContext(Dispatchers.IO) {
+            mapOf(
+                blackStampSubject to AssetAppearanceStreamGenerator(blackStampFile),
+                blueStampSubject to AssetAppearanceStreamGenerator(blueStampFile),
+                brownStampSubject to AssetAppearanceStreamGenerator(brownStampFile),
+                greenStampSubject to AssetAppearanceStreamGenerator(greenStampFile),
+                navyStampSubject to AssetAppearanceStreamGenerator(navyStampFile),
+                orangeStampSubject to AssetAppearanceStreamGenerator(orangeStampFile),
+                pinkStampSubject to AssetAppearanceStreamGenerator(pinkStampFile),
+                purpleStampSubject to AssetAppearanceStreamGenerator(purpleStampFile),
+                redStampSubject to AssetAppearanceStreamGenerator(redStampFile),
+                yellowStampSubject to AssetAppearanceStreamGenerator(yellowStampFile)
+            )
+        }
+        val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
+        pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
+        generators.forEach { (subject, generator) ->
+            customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(subject, generator)
+        }
+        stampAppearanceGeneratorsRegistered = true
     }
 
     //endregion
