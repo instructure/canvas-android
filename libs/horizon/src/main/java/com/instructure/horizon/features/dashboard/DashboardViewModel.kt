@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
-import com.instructure.horizon.database.sync.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider

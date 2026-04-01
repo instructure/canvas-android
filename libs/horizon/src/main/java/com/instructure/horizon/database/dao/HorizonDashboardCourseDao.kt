@@ -13,13 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.course
+package com.instructure.horizon.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -17,15 +17,15 @@ package com.instructure.horizon.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.instructure.horizon.database.course.HorizonDashboardCourseDao
-import com.instructure.horizon.database.course.HorizonDashboardCourseEntity
-import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemEntity
-import com.instructure.horizon.database.program.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.program.HorizonDashboardProgramDao
-import com.instructure.horizon.database.program.HorizonDashboardProgramEntity
-import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
-import com.instructure.horizon.database.sync.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
+import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
+import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
+import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @Database(
     entities = [

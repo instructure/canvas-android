@@ -18,10 +18,10 @@ package com.instructure.horizon.di
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.HorizonDatabaseProvider
-import com.instructure.horizon.database.course.HorizonDashboardCourseDao
-import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.program.HorizonDashboardProgramDao
-import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
+import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
+import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

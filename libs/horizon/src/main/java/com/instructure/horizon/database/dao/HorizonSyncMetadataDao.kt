@@ -13,16 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.program
+package com.instructure.horizon.database.dao
 
-import androidx.room.Entity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
-@Entity(
-    tableName = "horizon_dashboard_program_course_refs",
-    primaryKeys = ["programId", "courseId"]
-)
-data class HorizonDashboardProgramCourseRef(
-    val programId: String,
-    val courseId: Long,
-    val enrollmentStatus: String?,
-)
+@Dao
+interface HorizonSyncMetadataDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(entity: HorizonSyncMetadataEntity)
+
+    @Query("SELECT lastSyncedAtMs FROM horizon_sync_metadata WHERE `key` = :key")
+    suspend fun getLastSyncedAt(key: String): Long?
+}

@@ -13,12 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.program
+package com.instructure.horizon.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
 
 @Dao
 interface HorizonDashboardProgramDao {

@@ -13,13 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.program
+package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "horizon_dashboard_programs")
-data class HorizonDashboardProgramEntity(
-    @PrimaryKey val programId: String,
-    val programName: String,
-)
+@Entity(tableName = "horizon_sync_metadata")
+data class HorizonSyncMetadataEntity(
+    @PrimaryKey val key: String,
+    val lastSyncedAtMs: Long,
+) {
+    companion object {
+        const val KEY_DASHBOARD_COURSES = "dashboard_courses"
+    }
+}

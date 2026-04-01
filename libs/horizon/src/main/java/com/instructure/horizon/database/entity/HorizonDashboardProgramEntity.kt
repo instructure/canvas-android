@@ -13,22 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.moduleitem
+package com.instructure.horizon.database.entity
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Dao
-interface HorizonDashboardModuleItemDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(items: List<HorizonDashboardModuleItemEntity>)
-
-    @Query("SELECT * FROM horizon_dashboard_module_items WHERE courseId = :courseId LIMIT 1")
-    suspend fun getFirstForCourse(courseId: Long): HorizonDashboardModuleItemEntity?
-
-    @Query("DELETE FROM horizon_dashboard_module_items")
-    suspend fun deleteAll()
-}
+@Entity(tableName = "horizon_dashboard_programs")
+data class HorizonDashboardProgramEntity(
+    @PrimaryKey val programId: String,
+    val programName: String,
+)

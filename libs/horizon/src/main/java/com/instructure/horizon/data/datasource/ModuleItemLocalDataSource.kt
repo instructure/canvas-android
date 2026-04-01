@@ -18,8 +18,8 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.moduleitem.HorizonDashboardModuleItemEntity
+import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
+import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.model.LearningObjectType
 import java.text.SimpleDateFormat
 import java.util.Date

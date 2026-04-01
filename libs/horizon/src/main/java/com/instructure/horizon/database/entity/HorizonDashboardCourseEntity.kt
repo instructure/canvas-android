@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.course
+package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
 import androidx.room.Index

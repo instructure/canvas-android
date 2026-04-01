@@ -17,10 +17,10 @@ package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.database.course.HorizonDashboardCourseDao
-import com.instructure.horizon.database.program.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.program.HorizonDashboardProgramDao
-import com.instructure.horizon.database.program.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import javax.inject.Inject

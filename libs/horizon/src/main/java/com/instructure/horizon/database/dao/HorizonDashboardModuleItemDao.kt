@@ -13,19 +13,23 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.sync
+package com.instructure.horizon.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 
 @Dao
-interface HorizonSyncMetadataDao {
+interface HorizonDashboardModuleItemDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(entity: HorizonSyncMetadataEntity)
+    suspend fun insertAll(items: List<HorizonDashboardModuleItemEntity>)
 
-    @Query("SELECT lastSyncedAtMs FROM horizon_sync_metadata WHERE `key` = :key")
-    suspend fun getLastSyncedAt(key: String): Long?
+    @Query("SELECT * FROM horizon_dashboard_module_items WHERE courseId = :courseId LIMIT 1")
+    suspend fun getFirstForCourse(courseId: Long): HorizonDashboardModuleItemEntity?
+
+    @Query("DELETE FROM horizon_dashboard_module_items")
+    suspend fun deleteAll()
 }

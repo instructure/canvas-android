@@ -17,10 +17,10 @@ package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
-import com.instructure.horizon.database.course.HorizonDashboardCourseDao
-import com.instructure.horizon.database.course.HorizonDashboardCourseEntity
-import com.instructure.horizon.database.sync.HorizonSyncMetadataDao
-import com.instructure.horizon.database.sync.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import javax.inject.Inject
 
 class CourseEnrollmentLocalDataSource @Inject constructor(
