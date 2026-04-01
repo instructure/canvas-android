@@ -170,6 +170,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private var currentAnnotationModeType: AnnotationType? = null
     private var isUpdatingWithNoNetwork = false
     private var stampRaceFlag = true
+    private var stampAppearanceGeneratorsRegistered = false
 
     @get:ColorRes
     abstract val progressColor: Int
@@ -457,6 +458,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private val documentListener = object : DocumentListener {
         override fun onDocumentLoaded(pdfDocument: PdfDocument) {
             setupPdfAnnotationDefaults()
+            stampAppearanceGeneratorsRegistered = false
 
             docSession.rotations?.let { rotations ->
                 pdfFragment?.document?.let {
@@ -482,7 +484,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
             // Register stamp appearance generators only when stamps are present, and only after the network
             // roundtrip above — by this point PSPDFKit has finished its initial render, avoiding blank pages.
-            if (sortedAnnotationList.any { it.annotationType == CanvaDocAnnotation.AnnotationType.TEXT }) {
+            // AnnotationType.TEXT is the CanvaDoc API type for stamp (point) annotations, which are converted
+            // to PSPDFKit StampAnnotations via convertTextType().
+            if (!stampAppearanceGeneratorsRegistered && sortedAnnotationList.any { it.annotationType == CanvaDocAnnotation.AnnotationType.TEXT }) {
+                stampAppearanceGeneratorsRegistered = true
                 val generators = withContext(Dispatchers.IO) {
                     mapOf(
                         blackStampSubject to AssetAppearanceStreamGenerator(blackStampFile),
