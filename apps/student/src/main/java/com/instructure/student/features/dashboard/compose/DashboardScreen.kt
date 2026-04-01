@@ -74,7 +74,8 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
+import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidget
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
@@ -91,7 +92,9 @@ import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun DashboardScreen(router: DashboardRouter) {
+fun DashboardScreen(
+    navigationHandler: DashboardNavigationHandler
+) {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -100,7 +103,7 @@ fun DashboardScreen(router: DashboardRouter) {
         refreshSignal = viewModel.refreshSignal,
         snackbarMessageFlow = viewModel.snackbarMessage,
         onShowSnackbar = viewModel::showSnackbar,
-        router = router
+        navigationHandler = navigationHandler
     )
 }
 
@@ -111,7 +114,7 @@ fun DashboardScreenContent(
     refreshSignal: SharedFlow<Unit>,
     snackbarMessageFlow: SharedFlow<SnackbarMessage>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter
+    navigationHandler: DashboardNavigationHandler
 ) {
     val activity = LocalActivity.current
     val pullRefreshState = rememberPullRefreshState(
@@ -138,7 +141,7 @@ fun DashboardScreenContent(
     var showMenu by remember { mutableStateOf(false) }
 
     val manageOfflineContentClick = rememberWithRequireNetwork {
-        router.routeToManageOfflineContent()
+        navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToManageOfflineContent)
     }
 
     Scaffold(
@@ -169,7 +172,7 @@ fun DashboardScreenContent(
                         }
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu
-                            router.routeToCustomizeDashboard()
+                            navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard)
                         }) {
                             Text(
                                 stringResource(R.string.customize_dashboard),
@@ -189,7 +192,7 @@ fun DashboardScreenContent(
             }
         }
     ) { paddingValues ->
-        DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, router)
+        DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, navigationHandler)
     }
 }
 
@@ -201,7 +204,7 @@ fun DashboardBody(
     uiState: DashboardUiState,
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter
+    navigationHandler: DashboardNavigationHandler
 ) {
     Box(
         modifier = Modifier
@@ -244,7 +247,7 @@ fun DashboardBody(
                     widgets = uiState.widgets,
                     refreshSignal = refreshSignal,
                     onShowSnackbar = onShowSnackbar,
-                    router = router,
+                    navigationHandler = navigationHandler,
                     color = uiState.color,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -267,7 +270,7 @@ private fun WidgetList(
     widgets: List<WidgetMetadata>,
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter,
+    navigationHandler: DashboardNavigationHandler,
     color: ThemedColor,
     modifier: Modifier = Modifier
 ) {
@@ -286,12 +289,12 @@ private fun WidgetList(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = Modifier.padding(top = 16.dp))
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, navigationHandler, modifier = Modifier.padding(top = 16.dp))
         }
 
         item {
             CustomizeDashboardButton(
-                onClick = { router.routeToCustomizeDashboard() },
+                onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
                 color = Color(color.color()),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -307,7 +310,7 @@ private fun GetWidgetComposable(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter,
+    navigationHandler: DashboardNavigationHandler,
     modifier: Modifier = Modifier
 ) {
     return when (widgetId) {
@@ -315,6 +318,7 @@ private fun GetWidgetComposable(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
+            onNavigationEvent = navigationHandler::handleProgressNavigation,
             modifier = modifier
         )
 
@@ -322,11 +326,17 @@ private fun GetWidgetComposable(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
+            onNavigationEvent = navigationHandler::handleConferencesNavigation,
             modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal, modifier = modifier)
-        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onNavigationEvent = navigationHandler::handleCoursesNavigation,
+            modifier = modifier
+        )
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
@@ -337,12 +347,25 @@ private fun GetWidgetComposable(
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onAnnouncementClick = router::routeToGlobalAnnouncement,
+            onAnnouncementClick = { subject, message ->
+                navigationHandler.handleDashboardNavigation(
+                    DashboardNavigationEvent.Dashboard.NavigateToGlobalAnnouncement(subject, message)
+                )
+            },
             modifier = modifier
         )
 
-        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal, modifier = modifier)
-        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(
+            refreshSignal = refreshSignal,
+            onNavigationEvent = navigationHandler::handleForecastNavigation,
+            modifier = modifier
+        )
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(
+            refreshSignal = refreshSignal,
+            onShowSnackbar = onShowSnackbar,
+            onNavigationEvent = navigationHandler::handleTodoNavigation,
+            modifier = modifier
+        )
 
         else -> {}
     }

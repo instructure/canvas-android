@@ -60,7 +60,7 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
         }
 
         composable(NGCNavigationRoute.Dashboard.route) {
-            DashboardScreen()
+            DashboardScreen(navController)
         }
     }
 }

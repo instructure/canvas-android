@@ -46,7 +46,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.instructure.horizon.horizonui.foundation.HorizonColors
+import androidx.navigation.NavHostController
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.IconButton
@@ -54,26 +54,29 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
-import com.instructure.pandautils.features.dashboard.DefaultDashboardRouter
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
+import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.compose.DashboardBody
 import com.instructure.student.features.dashboard.compose.DashboardUiState
 import com.instructure.student.features.dashboard.compose.DashboardViewModel
+import com.instructure.student.features.ngc.navigation.NgcComposeNavigationHandler
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(navController: NavHostController) {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+
+    val navigationHandler = remember { NgcComposeNavigationHandler(navController) }
 
     DashboardScreenContent(
         uiState = uiState,
         refreshSignal = viewModel.refreshSignal,
         snackbarMessageFlow = viewModel.snackbarMessage,
         onShowSnackbar = viewModel::showSnackbar,
-        router = DefaultDashboardRouter() // TODO Handle routing later
+        navigationHandler = navigationHandler
     )
 }
 
@@ -84,7 +87,7 @@ fun DashboardScreenContent(
     refreshSignal: SharedFlow<Unit>,
     snackbarMessageFlow: SharedFlow<SnackbarMessage>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter
+    navigationHandler: DashboardNavigationHandler
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.refreshing,
@@ -124,7 +127,7 @@ fun DashboardScreenContent(
             modifier = Modifier.padding(paddingValues),
             headerContent = { paddingValues ->
                     DashboardTopBar(
-                        router,
+                        navigationHandler,
                         modifier = Modifier
                             .background(colorResource(R.color.backgroundLight))
                             .padding(paddingValues)
@@ -132,15 +135,15 @@ fun DashboardScreenContent(
                     )
             },
             bodyContent = {
-                DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, router)
+                DashboardBody(paddingValues, pullRefreshState, uiState, refreshSignal, onShowSnackbar, navigationHandler)
             })
     }
 }
 
 @Composable
-private fun DashboardTopBar(router: DashboardRouter, modifier: Modifier = Modifier) {
+private fun DashboardTopBar(navigationHandler: DashboardNavigationHandler, modifier: Modifier = Modifier) {
     val manageOfflineContentClick = rememberWithRequireNetwork {
-        router.routeToManageOfflineContent()
+        navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToManageOfflineContent)
     }
 
     Row(
@@ -163,7 +166,7 @@ private fun DashboardTopBar(router: DashboardRouter, modifier: Modifier = Modifi
         IconButton(
             iconRes = R.drawable.edit,
             contentDescription = stringResource(com.instructure.horizon.R.string.a11y_dashboardInboxContentDescription), // TODO
-            onClick = { router.routeToCustomizeDashboard() },
+            onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
         )

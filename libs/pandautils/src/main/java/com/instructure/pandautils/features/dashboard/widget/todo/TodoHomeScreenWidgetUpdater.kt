@@ -13,23 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.dashboard
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+package com.instructure.pandautils.features.dashboard.widget.todo
 
-class DefaultDashboardRouter : DashboardRouter {
-    override fun routeToGlobalAnnouncement(subject: String, message: String) = Unit
-
-    override fun routeToSubmissionDetails(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        attemptId: Long
-    ) = Unit
-
-    override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) = Unit
-
-    override fun routeToSyncProgress() = Unit
-
-    override fun restartApp() = Unit
+interface TodoHomeScreenWidgetUpdater {
+    fun updateWidget(forceRefresh: Boolean = true)
 }

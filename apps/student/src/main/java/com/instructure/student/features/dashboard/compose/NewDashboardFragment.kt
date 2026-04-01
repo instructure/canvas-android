@@ -20,23 +20,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.student.features.dashboard.StudentFragmentNavigationHandler
 import com.instructure.student.fragment.ParentFragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 //This needed to be named NewDashboardFragment because Pendo tracking would break otherwise.
 @AndroidEntryPoint
 class NewDashboardFragment : ParentFragment() {
-
-    @Inject
-    lateinit var router: DashboardRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,8 +42,9 @@ class NewDashboardFragment : ParentFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
+                val navigationHandler = remember { StudentFragmentNavigationHandler(requireActivity()) }
                 CanvasTheme {
-                    DashboardScreen(router = router)
+                    DashboardScreen(navigationHandler = navigationHandler)
                 }
             }
         }
