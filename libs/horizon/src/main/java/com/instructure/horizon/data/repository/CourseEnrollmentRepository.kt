@@ -42,4 +42,8 @@ class CourseEnrollmentRepository @Inject constructor(
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
         networkDataSource.acceptInvite(courseId, enrollmentId)
     }
+
+    override suspend fun sync() {
+        TODO("Not yet implemented")
+    }
 }

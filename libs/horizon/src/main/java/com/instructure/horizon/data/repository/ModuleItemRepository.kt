@@ -38,4 +38,8 @@ class ModuleItemRepository @Inject constructor(
             localDataSource.getModuleItemsForCourse(courseId)
         }
     }
+
+    override suspend fun sync() {
+        TODO("Not yet implemented")
+    }
 }
