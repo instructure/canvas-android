@@ -15,9 +15,9 @@
  */
 package com.instructure.horizon.data.datasource
 
-import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
@@ -28,8 +28,11 @@ class CourseEnrollmentNetworkDataSource @Inject constructor(
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
 ) {
 
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
-        return horizonGetCoursesManager.getEnrollments(apiPrefs.user?.id ?: -1, forceNetwork = true).dataOrThrow
+    suspend fun getEnrollments(): List<DashboardEnrollment> {
+        return horizonGetCoursesManager.getDashboardEnrollments(
+            userId = apiPrefs.user?.id ?: -1,
+            forceNetwork = true,
+        ).dataOrThrow
     }
 
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {

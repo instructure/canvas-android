@@ -26,6 +26,7 @@ import javax.inject.Inject
 class ProgramRepository @Inject constructor(
     private val networkDataSource: ProgramNetworkDataSource,
     private val localDataSource: ProgramLocalDataSource,
+    private val enrollmentRepository: CourseEnrollmentRepository,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
@@ -33,7 +34,12 @@ class ProgramRepository @Inject constructor(
     suspend fun getPrograms(): List<Program> {
         return if (shouldFetchFromNetwork()) {
             networkDataSource.getPrograms()
-                .also { if (shouldSync()) localDataSource.savePrograms(it) }
+                .also { programs ->
+                    if (shouldSync()) {
+                        val enrolledCourseIds = enrollmentRepository.getEnrolledCourseIds().toSet()
+                        localDataSource.savePrograms(programs, enrolledCourseIds)
+                    }
+                }
         } else {
             localDataSource.getPrograms()
         }

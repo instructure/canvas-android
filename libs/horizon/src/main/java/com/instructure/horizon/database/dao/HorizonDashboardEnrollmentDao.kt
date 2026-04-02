@@ -20,32 +20,25 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
-import kotlinx.coroutines.flow.Flow
+import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 
 @Dao
-abstract class HorizonDashboardCourseDao {
+interface HorizonDashboardEnrollmentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract suspend fun insertAll(entities: List<HorizonDashboardCourseEntity>)
+    suspend fun insertAll(entities: List<HorizonDashboardEnrollmentEntity>)
 
-    @Query("SELECT * FROM horizon_dashboard_courses")
-    abstract fun observeAll(): Flow<List<HorizonDashboardCourseEntity>>
+    @Query("SELECT * FROM horizon_dashboard_enrollments")
+    suspend fun getAll(): List<HorizonDashboardEnrollmentEntity>
 
-    @Query("SELECT * FROM horizon_dashboard_courses")
-    abstract suspend fun getAll(): List<HorizonDashboardCourseEntity>
+    @Query("SELECT courseId FROM horizon_dashboard_enrollments")
+    suspend fun getAllCourseIds(): List<Long>
 
-    @Query("SELECT courseId FROM horizon_dashboard_courses")
-    abstract suspend fun getAllCourseIds(): List<Long>
-
-    @Query("SELECT COUNT(*) FROM horizon_dashboard_courses")
-    abstract suspend fun count(): Int
-
-    @Query("DELETE FROM horizon_dashboard_courses")
-    abstract suspend fun deleteAll()
+    @Query("DELETE FROM horizon_dashboard_enrollments")
+    suspend fun deleteAll()
 
     @Transaction
-    open suspend fun replaceAll(entities: List<HorizonDashboardCourseEntity>) {
+    suspend fun replaceAll(entities: List<HorizonDashboardEnrollmentEntity>) {
         deleteAll()
         insertAll(entities)
     }

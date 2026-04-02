@@ -15,68 +15,54 @@
  */
 package com.instructure.horizon.data.datasource
 
-import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.type.EnrollmentWorkflowState
-import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
+import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
-import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
+import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import javax.inject.Inject
 
 class CourseEnrollmentLocalDataSource @Inject constructor(
-    private val courseDao: HorizonDashboardCourseDao,
+    private val enrollmentDao: HorizonDashboardEnrollmentDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
 
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
-        return courseDao.getAll().map { entity ->
-            GetCoursesQuery.Enrollment(
-                id = entity.enrollmentId.toString(),
-                state = EnrollmentWorkflowState.safeValueOf(entity.enrollmentState),
-                lastActivityAt = null,
-                course = GetCoursesQuery.Course(
-                    id = entity.courseId.toString(),
-                    name = entity.courseName,
-                    image_download_url = entity.courseImageUrl,
-                    syllabus_body = null,
-                    account = null,
-                    usersConnection = GetCoursesQuery.UsersConnection(
-                        nodes = listOf(
-                            GetCoursesQuery.Node(
-                                courseProgression = GetCoursesQuery.CourseProgression(
-                                    requirements = GetCoursesQuery.Requirements(
-                                        completionPercentage = entity.completionPercentage,
-                                    ),
-                                    incompleteModulesConnection = null,
-                                )
-                            )
-                        )
-                    ),
-                )
+    suspend fun getEnrollments(): List<DashboardEnrollment> {
+        return enrollmentDao.getAll().map { entity ->
+            DashboardEnrollment(
+                enrollmentId = entity.enrollmentId,
+                enrollmentState = entity.enrollmentState,
+                courseId = entity.courseId,
+                courseName = entity.courseName,
+                courseImageUrl = entity.courseImageUrl,
+                courseSyllabus = entity.courseSyllabus,
+                institutionName = entity.institutionName,
+                completionPercentage = entity.completionPercentage,
             )
         }
     }
 
-    suspend fun saveEnrollments(enrollments: List<GetCoursesQuery.Enrollment>) {
-        val entities = enrollments.mapNotNull { enrollment ->
-            val course = enrollment.course ?: return@mapNotNull null
-            val completionPercentage = course.usersConnection?.nodes
-                ?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0
-            HorizonDashboardCourseEntity(
-                enrollmentId = enrollment.id?.toLongOrNull() ?: return@mapNotNull null,
-                courseId = course.id.toLongOrNull() ?: return@mapNotNull null,
-                courseName = course.name,
-                courseImageUrl = course.image_download_url,
-                completionPercentage = completionPercentage,
-                enrollmentState = enrollment.state.rawValue,
+    suspend fun saveEnrollments(enrollments: List<DashboardEnrollment>) {
+        val entities = enrollments.map { enrollment ->
+            HorizonDashboardEnrollmentEntity(
+                enrollmentId = enrollment.enrollmentId,
+                enrollmentState = enrollment.enrollmentState,
+                courseId = enrollment.courseId,
+                courseName = enrollment.courseName,
+                courseImageUrl = enrollment.courseImageUrl,
+                courseSyllabus = enrollment.courseSyllabus,
+                institutionName = enrollment.institutionName,
+                completionPercentage = enrollment.completionPercentage,
             )
         }
-        courseDao.replaceAll(entities)
+        enrollmentDao.replaceAll(entities)
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
-                key = HorizonSyncMetadataEntity.KEY_DASHBOARD_COURSES,
+                key = HorizonSyncMetadataEntity.KEY_DASHBOARD_ENROLLMENTS,
                 lastSyncedAtMs = System.currentTimeMillis(),
             )
         )
     }
+
+    suspend fun getAllCourseIds(): List<Long> = enrollmentDao.getAllCourseIds()
 }

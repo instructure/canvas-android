@@ -15,9 +15,9 @@
  */
 package com.instructure.horizon.data.repository
 
-import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.data.datasource.ModuleItemLocalDataSource
 import com.instructure.horizon.data.datasource.ModuleItemNetworkDataSource
+import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -30,12 +30,12 @@ class ModuleItemRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
         return if (shouldFetchFromNetwork()) {
-            networkDataSource.getModuleItemsForCourse(courseId)
-                .also { if (shouldSync()) localDataSource.saveModuleItem(courseId, it) }
+            networkDataSource.getNextModuleItemForCourse(courseId)
+                .also { item -> if (shouldSync() && item != null) localDataSource.saveNextModuleItem(item) }
         } else {
-            localDataSource.getModuleItemsForCourse(courseId)
+            localDataSource.getNextModuleItemForCourse(courseId)
         }
     }
 

@@ -13,16 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.domain.usecase
+package com.instructure.horizon.database.entity
 
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.horizon.data.repository.ModuleItemRepository
-import com.instructure.pandautils.domain.usecase.BaseUseCase
-import javax.inject.Inject
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class GetModuleItemsUseCase @Inject constructor(
-    private val repository: ModuleItemRepository,
-) : BaseUseCase<Long, List<ModuleObject>>() {
-
-    override suspend fun execute(params: Long) = repository.getModuleItemsForCourse(params)
-}
+@Entity(tableName = "horizon_dashboard_enrollments")
+data class HorizonDashboardEnrollmentEntity(
+    @PrimaryKey val enrollmentId: Long,
+    val enrollmentState: String,
+    val courseId: Long,
+    val courseName: String,
+    val courseImageUrl: String?,
+    val courseSyllabus: String?,
+    val institutionName: String?,
+    val completionPercentage: Double,
+)

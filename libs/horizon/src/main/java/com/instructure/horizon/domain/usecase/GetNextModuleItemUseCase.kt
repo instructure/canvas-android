@@ -15,16 +15,14 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
-import com.instructure.horizon.data.repository.CourseEnrollmentRepository
+import com.instructure.horizon.data.repository.ModuleItemRepository
+import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-class GetEnrollmentsUseCase @Inject constructor(
-    private val repository: CourseEnrollmentRepository,
-) : BaseUseCase<Unit, List<DashboardEnrollment>>() {
+class GetNextModuleItemUseCase @Inject constructor(
+    private val repository: ModuleItemRepository,
+) : BaseUseCase<Long, DashboardNextModuleItem?>() {
 
-    suspend operator fun invoke() = invoke(Unit)
-
-    override suspend fun execute(params: Unit) = repository.getEnrollments()
+    override suspend fun execute(params: Long) = repository.getNextModuleItemForCourse(params)
 }

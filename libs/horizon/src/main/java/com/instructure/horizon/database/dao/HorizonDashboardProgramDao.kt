@@ -19,6 +19,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
 
@@ -34,9 +35,6 @@ interface HorizonDashboardProgramDao {
     @Query("SELECT * FROM horizon_dashboard_programs")
     suspend fun getAll(): List<HorizonDashboardProgramEntity>
 
-    @Query("SELECT * FROM horizon_dashboard_program_course_refs WHERE courseId = :courseId")
-    suspend fun getRefsForCourse(courseId: Long): List<HorizonDashboardProgramCourseRef>
-
     @Query("SELECT * FROM horizon_dashboard_program_course_refs WHERE programId = :programId")
     suspend fun getRefsForProgram(programId: String): List<HorizonDashboardProgramCourseRef>
 
@@ -45,4 +43,15 @@ interface HorizonDashboardProgramDao {
 
     @Query("DELETE FROM horizon_dashboard_program_course_refs")
     suspend fun deleteAllRefs()
+
+    @Transaction
+    suspend fun replaceAll(
+        programs: List<HorizonDashboardProgramEntity>,
+        refs: List<HorizonDashboardProgramCourseRef>,
+    ) {
+        deleteAllRefs()
+        deleteAll()
+        insertAll(programs)
+        insertAllRefs(refs)
+    }
 }

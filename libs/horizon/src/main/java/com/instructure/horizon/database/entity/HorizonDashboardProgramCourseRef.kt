@@ -24,5 +24,10 @@ import androidx.room.Entity
 data class HorizonDashboardProgramCourseRef(
     val programId: String,
     val courseId: Long,
+    val requirementId: String,
+    val progressId: String,
+    val required: Boolean,
+    val progress: Double,
     val enrollmentStatus: String?,
+    val sortOrder: Int,
 )

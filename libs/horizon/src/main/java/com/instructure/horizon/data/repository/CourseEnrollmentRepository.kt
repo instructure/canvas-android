@@ -15,7 +15,7 @@
  */
 package com.instructure.horizon.data.repository
 
-import com.instructure.canvasapi2.GetCoursesQuery
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
 import com.instructure.horizon.data.datasource.CourseEnrollmentLocalDataSource
 import com.instructure.horizon.data.datasource.CourseEnrollmentNetworkDataSource
 import com.instructure.horizon.offline.OfflineSyncRepository
@@ -30,7 +30,7 @@ class CourseEnrollmentRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun getEnrollments(): List<GetCoursesQuery.Enrollment> {
+    suspend fun getEnrollments(): List<DashboardEnrollment> {
         return if (shouldFetchFromNetwork()) {
             networkDataSource.getEnrollments()
                 .also { if (shouldSync()) localDataSource.saveEnrollments(it) }
@@ -38,6 +38,8 @@ class CourseEnrollmentRepository @Inject constructor(
             localDataSource.getEnrollments()
         }
     }
+
+    suspend fun getEnrolledCourseIds(): List<Long> = localDataSource.getAllCourseIds()
 
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
         networkDataSource.acceptInvite(courseId, enrollmentId)

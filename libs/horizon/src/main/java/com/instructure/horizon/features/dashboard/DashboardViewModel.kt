@@ -82,7 +82,7 @@ class DashboardViewModel @Inject constructor(
                 .collect { isOnline ->
                     if (featureFlagProvider.offlineEnabled()) {
                         val lastSyncedAt = if (!isOnline) {
-                            syncMetadataDao.getLastSyncedAt(HorizonSyncMetadataEntity.KEY_DASHBOARD_COURSES)
+                            syncMetadataDao.getLastSyncedAt(HorizonSyncMetadataEntity.KEY_DASHBOARD_ENROLLMENTS)
                         } else {
                             null
                         }

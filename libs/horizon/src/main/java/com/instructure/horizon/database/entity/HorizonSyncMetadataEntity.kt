@@ -24,6 +24,8 @@ data class HorizonSyncMetadataEntity(
     val lastSyncedAtMs: Long,
 ) {
     companion object {
-        const val KEY_DASHBOARD_COURSES = "dashboard_courses"
+        const val KEY_DASHBOARD_ENROLLMENTS = "dashboard_enrollments"
+        const val KEY_DASHBOARD_PROGRAMS = "dashboard_programs"
+        const val KEY_DASHBOARD_MODULE_ITEMS = "dashboard_module_items"
     }
 }

@@ -15,23 +15,24 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.GetCoursesQuery
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.type.EnrollmentWorkflowState
+import com.instructure.horizon.model.DashboardNextModuleItem
+import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 data class DashboardCoursesData(
-    val enrollments: List<GetCoursesQuery.Enrollment>,
+    val enrollments: List<DashboardEnrollment>,
     val programs: List<Program>,
-    val nextModuleItemByCourseId: Map<Long, ModuleItem?>,
+    val unenrolledPrograms: List<Program>,
+    val nextModuleItemByCourseId: Map<Long, DashboardNextModuleItem?>,
 )
 
 class GetDashboardCoursesUseCase @Inject constructor(
     private val getEnrollmentsUseCase: GetEnrollmentsUseCase,
     private val getProgramsUseCase: GetProgramsUseCase,
-    private val getModuleItemsUseCase: GetModuleItemsUseCase,
+    private val getNextModuleItemUseCase: GetNextModuleItemUseCase,
     private val acceptCourseInviteUseCase: AcceptCourseInviteUseCase,
 ) : BaseUseCase<Unit, DashboardCoursesData>() {
 
@@ -41,13 +42,13 @@ class GetDashboardCoursesUseCase @Inject constructor(
         var enrollments = getEnrollmentsUseCase()
         val programs = getProgramsUseCase()
 
-        val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
+        val invitations = enrollments.filter { it.enrollmentState == DashboardEnrollment.STATE_INVITED }
         if (invitations.isNotEmpty()) {
             invitations.forEach { enrollment ->
                 acceptCourseInviteUseCase(
                     AcceptCourseInviteParams(
-                        courseId = enrollment.course?.id?.toLongOrNull() ?: return@forEach,
-                        enrollmentId = enrollment.id?.toLongOrNull() ?: return@forEach,
+                        courseId = enrollment.courseId,
+                        enrollmentId = enrollment.enrollmentId,
                     )
                 )
             }
@@ -55,15 +56,19 @@ class GetDashboardCoursesUseCase @Inject constructor(
         }
 
         val nextModuleItemByCourseId = enrollments
-            .filter { it.state == EnrollmentWorkflowState.active }
-            .mapNotNull { it.course?.id?.toLongOrNull() }
-            .associate { courseId ->
-                courseId to getModuleItemsUseCase(courseId).flatMap { it.items }.firstOrNull()
+            .filter { it.enrollmentState == DashboardEnrollment.STATE_ACTIVE }
+            .associate { enrollment ->
+                enrollment.courseId to getNextModuleItemUseCase(enrollment.courseId)
             }
+
+        val unenrolledPrograms = programs.filter { program ->
+            program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }
+        }
 
         return DashboardCoursesData(
             enrollments = enrollments,
             programs = programs,
+            unenrolledPrograms = unenrolledPrograms,
             nextModuleItemByCourseId = nextModuleItemByCourseId,
         )
     }

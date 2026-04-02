@@ -17,17 +17,16 @@ package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
 import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import java.util.Date
 import javax.inject.Inject
 
 class ProgramLocalDataSource @Inject constructor(
     private val programDao: HorizonDashboardProgramDao,
-    private val courseDao: HorizonDashboardCourseDao,
 ) {
 
     suspend fun getPrograms(): List<Program> {
@@ -36,42 +35,55 @@ class ProgramLocalDataSource @Inject constructor(
             Program(
                 id = programEntity.programId,
                 name = programEntity.programName,
-                description = null,
-                startDate = null,
-                endDate = null,
-                variant = ProgramVariantType.UNKNOWN__,
-                sortedRequirements = refs.map { ref ->
+                description = programEntity.description,
+                startDate = programEntity.startDateMs?.let { Date(it) },
+                endDate = programEntity.endDateMs?.let { Date(it) },
+                variant = ProgramVariantType.safeValueOf(programEntity.variant),
+                courseCompletionCount = programEntity.courseCompletionCount,
+                sortedRequirements = refs.sortedBy { it.sortOrder }.map { ref ->
                     ProgramRequirement(
-                        id = "",
-                        progressId = "",
+                        id = ref.requirementId,
+                        progressId = ref.progressId,
                         courseId = ref.courseId,
-                        required = false,
+                        required = ref.required,
+                        progress = ref.progress,
                         enrollmentStatus = ref.enrollmentStatus?.let {
                             ProgramProgressCourseEnrollmentStatus.safeValueOf(it)
                         },
                     )
-                }
+                },
             )
         }
     }
 
-    suspend fun savePrograms(programs: List<Program>) {
-        val courseIds = courseDao.getAllCourseIds().toSet()
-        val programEntities = programs.map { HorizonDashboardProgramEntity(it.id, it.name) }
+    suspend fun savePrograms(programs: List<Program>, enrolledCourseIds: Set<Long>) {
+        val programEntities = programs.map { program ->
+            HorizonDashboardProgramEntity(
+                programId = program.id,
+                programName = program.name,
+                description = program.description,
+                startDateMs = program.startDate?.time,
+                endDateMs = program.endDate?.time,
+                variant = program.variant.rawValue,
+                courseCompletionCount = program.courseCompletionCount,
+            )
+        }
         val refs = programs.flatMap { program ->
             program.sortedRequirements
-                .filter { it.courseId in courseIds }
-                .map { req ->
+                .filter { it.courseId in enrolledCourseIds }
+                .mapIndexed { index, req ->
                     HorizonDashboardProgramCourseRef(
                         programId = program.id,
                         courseId = req.courseId,
+                        requirementId = req.id,
+                        progressId = req.progressId,
+                        required = req.required,
+                        progress = req.progress,
                         enrollmentStatus = req.enrollmentStatus?.rawValue,
+                        sortOrder = index,
                     )
                 }
         }
-        programDao.deleteAllRefs()
-        programDao.deleteAll()
-        programDao.insertAll(programEntities)
-        programDao.insertAllRefs(refs)
+        programDao.replaceAll(programEntities, refs)
     }
 }

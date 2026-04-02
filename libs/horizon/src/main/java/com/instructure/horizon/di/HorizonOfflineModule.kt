@@ -18,7 +18,7 @@ package com.instructure.horizon.di
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.HorizonDatabaseProvider
-import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
@@ -41,8 +41,8 @@ class HorizonOfflineModule {
     }
 
     @Provides
-    fun provideHorizonDashboardCourseDao(db: HorizonDatabase): HorizonDashboardCourseDao {
-        return db.dashboardCourseDao()
+    fun provideHorizonDashboardEnrollmentDao(db: HorizonDatabase): HorizonDashboardEnrollmentDao {
+        return db.dashboardEnrollmentDao()
     }
 
     @Provides

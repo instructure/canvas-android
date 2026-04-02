@@ -19,6 +19,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 
 @Dao
@@ -30,6 +31,15 @@ interface HorizonDashboardModuleItemDao {
     @Query("SELECT * FROM horizon_dashboard_module_items WHERE courseId = :courseId LIMIT 1")
     suspend fun getFirstForCourse(courseId: Long): HorizonDashboardModuleItemEntity?
 
+    @Query("DELETE FROM horizon_dashboard_module_items WHERE courseId = :courseId")
+    suspend fun deleteForCourse(courseId: Long)
+
     @Query("DELETE FROM horizon_dashboard_module_items")
     suspend fun deleteAll()
+
+    @Transaction
+    suspend fun replaceForCourse(entity: HorizonDashboardModuleItemEntity) {
+        deleteForCourse(entity.courseId)
+        insertAll(listOf(entity))
+    }
 }

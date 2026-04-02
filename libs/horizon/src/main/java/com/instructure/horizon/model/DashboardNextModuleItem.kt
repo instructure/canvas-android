@@ -13,21 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.model
 
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import java.util.Date
 
-@Entity(
-    tableName = "horizon_dashboard_courses",
-    indices = [Index("courseId")]
-)
-data class HorizonDashboardCourseEntity(
-    @PrimaryKey val enrollmentId: Long,
+data class DashboardNextModuleItem(
+    val moduleItemId: Long,
     val courseId: Long,
-    val courseName: String,
-    val courseImageUrl: String?,
-    val completionPercentage: Double,
-    val enrollmentState: String,
+    val title: String,
+    val type: LearningObjectType,
+    val dueDate: Date?,
+    val estimatedDuration: String?,
+    val isQuizLti: Boolean,
 )

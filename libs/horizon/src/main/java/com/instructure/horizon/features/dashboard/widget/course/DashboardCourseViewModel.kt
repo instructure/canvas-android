@@ -17,7 +17,6 @@ package com.instructure.horizon.features.dashboard.widget.course
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetDashboardCoursesUseCase
@@ -27,9 +26,8 @@ import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
-import com.instructure.horizon.model.LearningObjectType
+import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatIsoDuration
@@ -103,13 +101,11 @@ class DashboardCourseViewModel @Inject constructor(
             context,
             programs = data.programs,
             nextModuleForCourse = { courseId ->
-                courseId?.let { data.nextModuleItemByCourseId[it] }?.let { mapToModuleItemState(courseId, it) }
+                data.nextModuleItemByCourseId[courseId]?.let { mapToModuleItemState(it) }
             },
         )
 
-        val programCardStates = data.programs
-            .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
-            .mapToDashboardCourseCardState(context)
+        val programCardStates = data.unenrolledPrograms.mapToDashboardCourseCardState(context)
 
         _uiState.update {
             it.copy(
@@ -119,14 +115,13 @@ class DashboardCourseViewModel @Inject constructor(
         }
     }
 
-    private fun mapToModuleItemState(courseId: Long, moduleItem: ModuleItem): DashboardCourseCardModuleItemState {
+    private fun mapToModuleItemState(moduleItem: DashboardNextModuleItem): DashboardCourseCardModuleItemState {
         return DashboardCourseCardModuleItemState(
-            moduleItemTitle = moduleItem.title.orEmpty(),
-            moduleItemType = if (moduleItem.quizLti) LearningObjectType.ASSESSMENT
-                             else LearningObjectType.fromApiString(moduleItem.type.orEmpty()),
-            dueDate = moduleItem.moduleDetails?.dueDate,
+            moduleItemTitle = moduleItem.title,
+            moduleItemType = moduleItem.type,
+            dueDate = moduleItem.dueDate,
             estimatedDuration = moduleItem.estimatedDuration?.formatIsoDuration(context),
-            onClickAction = CardClickAction.NavigateToModuleItem(courseId, moduleItem.id),
+            onClickAction = CardClickAction.NavigateToModuleItem(moduleItem.courseId, moduleItem.moduleItemId),
         )
     }
 }

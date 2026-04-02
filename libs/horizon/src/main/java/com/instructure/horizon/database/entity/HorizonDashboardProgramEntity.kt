@@ -22,4 +22,9 @@ import androidx.room.PrimaryKey
 data class HorizonDashboardProgramEntity(
     @PrimaryKey val programId: String,
     val programName: String,
+    val description: String?,
+    val startDateMs: Long?,
+    val endDateMs: Long?,
+    val variant: String,
+    val courseCompletionCount: Int?,
 )

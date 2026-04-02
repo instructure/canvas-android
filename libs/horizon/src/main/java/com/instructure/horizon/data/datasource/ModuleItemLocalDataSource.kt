@@ -15,56 +15,40 @@
  */
 package com.instructure.horizon.data.datasource
 
-import com.instructure.canvasapi2.models.ModuleContentDetails
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
+import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.horizon.model.LearningObjectType
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 import javax.inject.Inject
 
 class ModuleItemLocalDataSource @Inject constructor(
     private val moduleItemDao: HorizonDashboardModuleItemDao,
 ) {
 
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
-        val entity = moduleItemDao.getFirstForCourse(courseId) ?: return emptyList()
-        val moduleItem = ModuleItem(
-            id = entity.moduleItemId,
-            moduleId = 0L,
+    suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
+        val entity = moduleItemDao.getFirstForCourse(courseId) ?: return null
+        return DashboardNextModuleItem(
+            moduleItemId = entity.moduleItemId,
+            courseId = entity.courseId,
             title = entity.moduleItemTitle,
-            type = entity.moduleItemType,
-            quizLti = entity.isQuizLti,
+            type = LearningObjectType.valueOf(entity.moduleItemType),
+            dueDate = entity.dueDateMs?.let { Date(it) },
             estimatedDuration = entity.estimatedDuration,
-            moduleDetails = entity.dueDateMs?.let { ms ->
-                ModuleContentDetails(dueAt = isoFormatter.format(Date(ms)))
-            },
+            isQuizLti = entity.isQuizLti,
         )
-        return listOf(ModuleObject(items = listOf(moduleItem)))
     }
 
-    suspend fun saveModuleItem(courseId: Long, modules: List<ModuleObject>) {
-        val firstItem = modules.flatMap { it.items }.firstOrNull() ?: return
+    suspend fun saveNextModuleItem(item: DashboardNextModuleItem) {
         val entity = HorizonDashboardModuleItemEntity(
-            moduleItemId = firstItem.id,
-            courseId = courseId,
-            moduleItemTitle = firstItem.title.orEmpty(),
-            moduleItemType = if (firstItem.quizLti) LearningObjectType.ASSESSMENT.name
-                             else LearningObjectType.fromApiString(firstItem.type.orEmpty()).name,
-            dueDateMs = firstItem.moduleDetails?.dueDate?.time,
-            estimatedDuration = firstItem.estimatedDuration,
-            isQuizLti = firstItem.quizLti,
+            moduleItemId = item.moduleItemId,
+            courseId = item.courseId,
+            moduleItemTitle = item.title,
+            moduleItemType = item.type.name,
+            dueDateMs = item.dueDate?.time,
+            estimatedDuration = item.estimatedDuration,
+            isQuizLti = item.isQuizLti,
         )
-        moduleItemDao.insertAll(listOf(entity))
-    }
-
-    companion object {
-        private val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+00:00", Locale.US).apply {
-            timeZone = TimeZone.getTimeZone("UTC")
-        }
+        moduleItemDao.replaceForCourse(entity)
     }
 }

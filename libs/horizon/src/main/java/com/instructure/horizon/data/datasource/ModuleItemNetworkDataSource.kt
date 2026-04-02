@@ -18,20 +18,32 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.horizon.model.DashboardNextModuleItem
+import com.instructure.horizon.model.LearningObjectType
 import javax.inject.Inject
 
 class ModuleItemNetworkDataSource @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
 ) {
 
-    suspend fun getModuleItemsForCourse(courseId: Long): List<ModuleObject> {
+    suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
         val params = RestParams(isForceReadFromNetwork = true)
-        return moduleApi.getFirstPageModulesWithItems(
+        val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,
             params,
             includes = listOf("estimated_durations"),
         ).dataOrThrow
+        val item = modules.flatMap { it.items }.firstOrNull() ?: return null
+        return DashboardNextModuleItem(
+            moduleItemId = item.id,
+            courseId = courseId,
+            title = item.title.orEmpty(),
+            type = if (item.quizLti) LearningObjectType.ASSESSMENT
+                   else LearningObjectType.fromApiString(item.type.orEmpty()),
+            dueDate = item.moduleDetails?.dueDate,
+            estimatedDuration = item.estimatedDuration,
+            isQuizLti = item.quizLti,
+        )
     }
 }

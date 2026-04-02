@@ -17,11 +17,11 @@ package com.instructure.horizon.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.instructure.horizon.database.dao.HorizonDashboardCourseDao
+import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
-import com.instructure.horizon.database.entity.HorizonDashboardCourseEntity
+import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
@@ -29,16 +29,16 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @Database(
     entities = [
-        HorizonDashboardCourseEntity::class,
+        HorizonDashboardEnrollmentEntity::class,
         HorizonDashboardProgramEntity::class,
         HorizonDashboardProgramCourseRef::class,
         HorizonDashboardModuleItemEntity::class,
         HorizonSyncMetadataEntity::class,
     ],
-    version = 1,
+    version = 2,
 )
 abstract class HorizonDatabase : RoomDatabase() {
-    abstract fun dashboardCourseDao(): HorizonDashboardCourseDao
+    abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
     abstract fun dashboardProgramDao(): HorizonDashboardProgramDao
     abstract fun dashboardModuleItemDao(): HorizonDashboardModuleItemDao
     abstract fun syncMetadataDao(): HorizonSyncMetadataDao
