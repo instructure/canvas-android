@@ -90,6 +90,12 @@ dependencies {
         isTransitive = true
     }
 
+    /* Room */
+    implementation(Libs.ROOM)
+    implementation(Libs.ROOM_COROUTINES)
+    ksp(Libs.ROOM_COMPILER)
+    testImplementation(Libs.ROOM_TEST)
+
     /* Android Test Dependencies */
     androidTestImplementation(project(":espresso"))
     androidTestImplementation(project(":dataseedingapi"))
