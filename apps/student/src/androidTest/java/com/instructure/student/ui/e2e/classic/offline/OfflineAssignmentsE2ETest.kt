@@ -242,7 +242,7 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed.")
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page by clicking on the submission.")

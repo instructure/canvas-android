@@ -132,7 +132,7 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarTitle()
         assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the assignment status for '${student2.name}' student is 'Not Submitted' and the 'Submission & Rubric' label is displayed and the submission type is 'Text Entry'.")
+        Log.d(ASSERTION_TAG, "Assert that the assignment status for '${student2.name}' student is 'Not Submitted' and the 'Submission & Feedback' label is displayed and the submission type is 'Text Entry'.")
         assignmentDetailsPage.assertStatusNotSubmitted()
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")

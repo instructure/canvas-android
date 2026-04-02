@@ -109,7 +109,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.goToSubmissionDetails()
 
@@ -542,7 +542,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed.")
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page.")
@@ -557,7 +557,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
@@ -1112,7 +1112,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
@@ -1124,7 +1124,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         textSubmissionUploadPage.clickToolbarBackButton()
         textSubmissionUploadPage.clickDontSaveDraft()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
         assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
