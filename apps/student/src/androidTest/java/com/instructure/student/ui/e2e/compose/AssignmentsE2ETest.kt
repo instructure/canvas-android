@@ -110,7 +110,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertStatusNotSubmitted()
 
         Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.goToSubmissionDetails()
 
         Log.d(ASSERTION_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
@@ -125,7 +125,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
@@ -133,7 +133,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(ASSERTION_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
         assignmentDetailsPage.assertAttemptSpinnerDisplayed()
@@ -543,7 +543,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertStatusNotSubmitted()
 
         Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page.")
         assignmentDetailsPage.goToSubmissionDetails()
@@ -560,7 +560,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Rubric' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 13 points.")
         val textGrade = SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "13")
@@ -1113,7 +1113,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
         Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
         assignmentDetailsPage.clickSubmit()
@@ -1125,7 +1125,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         textSubmissionUploadPage.clickDontSaveDraft()
 
         Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
         assignmentDetailsPage.clickSubmit()

@@ -1,20 +1,18 @@
-//
-// Copyright (C) 2018-present Instructure, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
-
+/*
+ * Copyright (C) 2018 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -35,6 +33,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 object SubmissionsApi {
     interface SubmissionsService {
@@ -64,6 +63,14 @@ object SubmissionsApi {
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long,
                 @Body gradeSubmission: GradeSubmissionWrapper
+        ): Call<SubmissionApiModel>
+
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}")
+        fun gradeSubmissionWithRubric(
+                @Path("courseId") courseId: Long,
+                @Path("assignmentId") assignmentId: Long,
+                @Path("studentId") studentId: Long,
+                @QueryMap rubricAssessment: Map<String, String>
         ): Call<SubmissionApiModel>
 
     }
@@ -122,6 +129,31 @@ object SubmissionsApi {
                 .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)))
                 .execute()
                 .body()!!
+    }
+
+    data class RubricAssessmentEntry(
+        val points: Double,
+        val ratingId: String? = null
+    )
+
+    fun gradeSubmissionWithRubric(
+        teacherToken: String,
+        courseId: Long,
+        assignmentId: Long,
+        studentId: Long,
+        rubricAssessment: Map<String, RubricAssessmentEntry>
+    ): SubmissionApiModel {
+        val queryMap = mutableMapOf<String, String>()
+        for ((criterionId, entry) in rubricAssessment) {
+            queryMap["rubric_assessment[$criterionId][points]"] = entry.points.toString()
+            if (entry.ratingId != null) {
+                queryMap["rubric_assessment[$criterionId][rating_id]"] = entry.ratingId
+            }
+        }
+        return submissionsService(teacherToken)
+            .gradeSubmissionWithRubric(courseId, assignmentId, studentId, queryMap)
+            .execute()
+            .body()!!
     }
 
     //

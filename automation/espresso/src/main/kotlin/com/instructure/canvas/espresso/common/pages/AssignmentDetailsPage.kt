@@ -175,7 +175,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.gradeCell)).scrollTo().click()
     }
 
-    fun assertSubmissionAndRubricLabel() {
+    fun assertSubmissionAndFeedbackLabel() {
         onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).assertDisplayed()
     }
 

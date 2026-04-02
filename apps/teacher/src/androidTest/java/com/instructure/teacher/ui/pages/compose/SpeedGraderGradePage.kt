@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package com.instructure.teacher.ui.pages.compose
 
 import androidx.compose.ui.semantics.getOrNull
@@ -129,12 +128,14 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
     }
 
     /**
-     * Enters a note in the rubric note input field.
+     * Enters a note in the rubric note input field for the given criterion.
+     * Scrolls via the note container (outside AnimatedContent) so the scroll chain is not broken.
      *
+     * @param criterionId The ID of the criterion whose note field should be targeted.
      * @param note The note text to enter.
      */
-    fun enterRubricNote(note: String) {
-        composeTestRule.onNode(hasTestTag("rubricNoteInput"), useUnmergedTree = true)
+    fun enterRubricNote(note: String, criterionId: String) {
+        composeTestRule.onNode(hasTestTag("rubricNoteInput") and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId")), useUnmergedTree = true)
             .performScrollTo()
             .performTextReplacement(note)
         composeTestRule.waitForIdle()
@@ -163,11 +164,27 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
     }
 
     /**
-     * Clicks the send button to submit the rubric note.
+     * Clicks the send button to submit the rubric note for the given criterion.
+     *
+     * @param criterionId The ID of the criterion whose note send button should be clicked.
      */
-    fun clickSendRubricNoteButton() {
-        composeTestRule.onNode((hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription))), useUnmergedTree = true)
+    fun clickSendRubricNoteButton(criterionId: String) {
+        composeTestRule.onNode((hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription)) and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId"))), useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Clicks the edit button on a submitted rubric note for the given criterion.
+     *
+     * @param criterionId The ID of the criterion whose note edit button should be clicked.
+     */
+    fun clickEditRubricNoteButton(criterionId: String) {
+        composeTestRule.onNode(
+            hasContentDescription(getStringFromResource(R.string.content_description_edit_rubric_comment)) and
+                    hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId")),
+            useUnmergedTree = true
+        ).performClick()
         composeTestRule.waitForIdle()
     }
 

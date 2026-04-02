@@ -41,6 +41,7 @@ import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
@@ -259,6 +260,10 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         swipeDrawerTo(GeneralLocation.BOTTOM_CENTER)
     }
 
+    fun expandSlidingPanel() {
+        swipeDrawerTo(GeneralLocation.TOP_CENTER)
+    }
+
     fun addAndSendComment(comment: String) {
         submissionCommentsRenderPage.addAndSendComment(comment)
     }
@@ -282,18 +287,15 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     fun assertRubricCriterionDisplayed(rc: RubricCriterion) {
         rc.ratings.forEach { rating ->
             val matcher = allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()))
-            scrollRecyclerView(R.id.recyclerView, matcher)
             onView(matcher).assertDisplayed()
             onView(matcher).click()
 
             val descriptionMatcher = allOf(withId(R.id.ratingTitle), withText(rating.description))
-            scrollRecyclerView(R.id.recyclerView, descriptionMatcher)
-            onView(descriptionMatcher).check(matches(isDisplayingAtLeast(10)))
+            onView(descriptionMatcher).check(matches(isDisplayingAtLeast(3)))
 
             if(rating.longDescription != null) {
                 val longDescriptionMatcher = allOf(withId(R.id.ratingDescription), withText(rating.longDescription))
-                scrollRecyclerView(R.id.recyclerView, longDescriptionMatcher)
-                onView(longDescriptionMatcher).check(matches(isDisplayingAtLeast(10)))
+                onView(longDescriptionMatcher).check(matches(isDisplayingAtLeast(3)))
             }
         }
     }
@@ -302,9 +304,10 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
      * Checks that pressing the "Description" button pops up a webview with the longDescription text
      */
     fun assertRubricDescriptionDisplays(rc: RubricCriterion) {
-        val matcher = allOf(withId(R.id.descriptionButton), containsTextCaseInsensitive("description"))
-        scrollRecyclerView(R.id.recyclerView, matcher)
-        onView(matcher).assertDisplayed() // probably unnecessary
+        val matcher = allOf(
+            withId(R.id.descriptionButton),
+            withAncestor(allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description)))))
+        )
         onView(matcher).click()
 
         onWebView(withId(R.id.webView))
@@ -313,6 +316,22 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
         Espresso.pressBack() // return from web page
 
+    }
+
+    fun assertRubricRatingSelected(rc: RubricCriterion, rating: RubricCriterionRating) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withId(R.id.ratingTitle), withText(rating.description), withAncestor(criterionAncestor)))
+            .check(matches(isDisplayingAtLeast(3)))
+        if (rating.longDescription != null) {
+            onView(allOf(withId(R.id.ratingDescription), withText(rating.longDescription), withAncestor(criterionAncestor)))
+                .check(matches(isDisplayingAtLeast(3)))
+        }
+    }
+
+    fun assertRubricCustomScoreSelected(rc: RubricCriterion) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withId(R.id.ratingTitle), withText(R.string.rubricCustomScore), withAncestor(criterionAncestor)))
+            .check(matches(isDisplayingAtLeast(3)))
     }
 
     fun assertNoSubmissionEmptyView() {

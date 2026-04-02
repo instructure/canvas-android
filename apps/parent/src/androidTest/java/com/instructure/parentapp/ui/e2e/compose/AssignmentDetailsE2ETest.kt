@@ -134,7 +134,7 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the assignment status for '${student2.name}' student is 'Not Submitted' and the 'Submission & Rubric' label is displayed and the submission type is 'Text Entry'.")
         assignmentDetailsPage.assertStatusNotSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
         assignmentDetailsPage.assertReminderViewDisplayed()
         assignmentDetailsPage.assertNoDescriptionViewDisplayed()
