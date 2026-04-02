@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -49,7 +49,7 @@ class DashboardViewModel @Inject constructor(
     private val dashboardEventHandler: DashboardEventHandler,
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val syncMetadataDao: HorizonSyncMetadataDao,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
@@ -82,7 +82,7 @@ class DashboardViewModel @Inject constructor(
                 .collect { isOnline ->
                     if (featureFlagProvider.offlineEnabled()) {
                         val lastSyncedAt = if (!isOnline) {
-                            syncMetadataDao.getLastSyncedAt(SyncDataType.DASHBOARD_ENROLLMENTS)
+                            getLastSyncedAtUseCase(SyncDataType.DASHBOARD_ENROLLMENTS)
                         } else {
                             null
                         }
