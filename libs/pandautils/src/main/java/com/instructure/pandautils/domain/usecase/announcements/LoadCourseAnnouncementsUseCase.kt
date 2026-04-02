@@ -35,7 +35,7 @@ class LoadCourseAnnouncementsUseCase @Inject constructor(
 
         // Filter for unread announcements only
         return announcements.filter { announcement ->
-        announcement.unreadCount > 0 || announcement.readState.equals(DiscussionTopicHeader.ReadState.UNREAD.name, ignoreCase = true)
+            announcement.unreadCount > 0 || announcement.status == DiscussionTopicHeader.ReadState.UNREAD
         }
     }
 }
