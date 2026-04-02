@@ -18,6 +18,7 @@ package com.instructure.pandautils.data.repository.user
 
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.CookieConsentResponse
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.utils.DataResult
 
@@ -25,4 +26,6 @@ interface UserRepository {
     suspend fun getAccount(forceRefresh: Boolean): DataResult<Account>
     suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse>
     suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions>
+    suspend fun getCookieConsentData(namespace: String): DataResult<CookieConsentResponse>
+    suspend fun putCookieConsentData(namespace: String, consent: Boolean): DataResult<CookieConsentResponse>
 }

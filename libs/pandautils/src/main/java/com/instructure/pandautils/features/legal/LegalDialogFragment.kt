@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.DialogLegalBinding
+import com.instructure.pandautils.features.cookieconsent.CookieConsentBottomSheetDialogFragment
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.descendants
@@ -45,6 +47,9 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
 
     @Inject
     lateinit var legalRouter: LegalRouter
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var termsJob: Job? = null
     private var html: String = ""
@@ -68,6 +73,10 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
             binding.termsOfUse.setVisible(html.isNotBlank())
             // Now set the rest of the items visible
             binding.privacyPolicy.setVisible()
+
+            if (featureFlagProvider.checkCookieConsentFlag()) {
+                binding.cookieConsent.setVisible()
+            }
         } catch {
             // Something went wrong, make everything visible
             binding.root.descendants.forEach { it.setVisible() }
@@ -94,6 +103,14 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
         }
 
         binding.privacyPolicy.accessibilityClassName(Button::class.java.name)
+
+        binding.cookieConsent.setOnClickListener {
+            CookieConsentBottomSheetDialogFragment.newInstance(fromSettings = true)
+                .show(parentFragmentManager, CookieConsentBottomSheetDialogFragment.TAG)
+            dialog.dismiss()
+        }
+
+        binding.cookieConsent.accessibilityClassName(Button::class.java.name)
 
         dialog.setCanceledOnTouchOutside(true)
         return dialog

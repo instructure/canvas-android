@@ -47,7 +47,9 @@ class AppManager : BaseAppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        schedulePandataUpload()
+        if (com.instructure.canvasapi2.utils.ApiPrefs.mobileConsent) {
+            schedulePandataUpload()
+        }
         initPendo()
     }
 
