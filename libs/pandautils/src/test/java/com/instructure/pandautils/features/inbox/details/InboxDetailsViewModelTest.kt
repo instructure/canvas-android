@@ -448,7 +448,7 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
-    fun `Test archiving conversation shows archived snackbar`() = runTest {
+    fun `Test archiving conversation shows archived toast`() = runTest {
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.ARCHIVED
         val newConversation = conversation.copy(workflowState = newState)
@@ -466,9 +466,49 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
-    fun `Test unarchiving conversation shows unarchived snackbar`() = runTest {
+    fun `Test unarchiving conversation shows unarchived toast`() = runTest {
+        val archivedConversation = conversation.copy(workflowState = Conversation.WorkflowState.ARCHIVED)
+        coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(archivedConversation)
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.READ
+        val newConversation = archivedConversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(archivedConversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(archivedConversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+    }
+
+    @Test
+    fun `Test marking conversation as read shows correct toast`() = runTest {
+        val unreadConversation = conversation.copy(workflowState = Conversation.WorkflowState.UNREAD)
+        coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(unreadConversation)
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.READ
+        val newConversation = unreadConversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(unreadConversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(unreadConversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationMarkedAsRead)), events[0])
+    }
+
+    @Test
+    fun `Test marking conversation as unread shows correct toast`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.UNREAD
         val newConversation = conversation.copy(workflowState = newState)
 
         coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
@@ -480,7 +520,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
 
-        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationMarkedAsUnread)), events[0])
     }
 
     @Test
