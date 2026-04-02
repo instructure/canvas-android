@@ -276,13 +276,19 @@ class InboxDetailsViewModel @Inject constructor(
 
     private fun updateState(conversationId: Long, state: Conversation.WorkflowState) {
         viewModelScope.launch {
+            val previousState = uiState.value.conversation?.workflowState
             val result = repository.updateState(conversationId, state)
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = it.conversation?.copy(workflowState = result.dataOrNull?.workflowState)) }
-                val message = if (state == Conversation.WorkflowState.ARCHIVED) {
-                    context.getString(R.string.conversationArchived)
-                } else {
-                    context.getString(R.string.conversationUnarchived)
+                val message = when (state) {
+                    Conversation.WorkflowState.ARCHIVED -> context.getString(R.string.conversationArchived)
+                    Conversation.WorkflowState.READ -> if (previousState == Conversation.WorkflowState.ARCHIVED) {
+                        context.getString(R.string.conversationUnarchived)
+                    } else {
+                        context.getString(R.string.conversationMarkedAsRead)
+                    }
+                    Conversation.WorkflowState.UNREAD -> context.getString(R.string.conversationMarkedAsUnread)
+                    else -> context.getString(R.string.conversationUnarchived)
                 }
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(message))
                 refreshParentFragment()
