@@ -173,7 +173,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                 submissionState = getSubmissionStateLabel(
                     submissionFields?.state,
                     submissionFields?.customGradeStatus,
-                    submissionFields?.statusTag
+                    submissionFields?.statusTag,
+                    submissionFields?.grade
                 ),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
@@ -202,7 +203,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                 submissionState = getSubmissionStateLabel(
                     submissionFields?.state,
                     submissionFields?.customGradeStatus,
-                    submissionFields?.statusTag
+                    submissionFields?.statusTag,
+                    submissionFields?.grade
                 )
             )
         }
@@ -211,7 +213,8 @@ class SpeedGraderContentViewModel @Inject constructor(
     private fun getSubmissionStateLabel(
         submissionState: SubmissionState?,
         customGradeStatus: String?,
-        statusTag: SubmissionStatusTagType?
+        statusTag: SubmissionStatusTagType?,
+        grade: String?
     ): SubmissionStateLabel {
         return when {
             statusTag == SubmissionStatusTagType.excused -> SubmissionStateLabel.Excused
@@ -222,7 +225,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 customGradeStatus
             )
 
-            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+            submissionState == SubmissionState.graded && grade != null -> SubmissionStateLabel.Graded
 
             statusTag == SubmissionStatusTagType.late -> SubmissionStateLabel.Late
             statusTag == SubmissionStatusTagType.missing -> SubmissionStateLabel.Missing
@@ -230,7 +233,8 @@ class SpeedGraderContentViewModel @Inject constructor(
             submissionState in setOf(
                 SubmissionState.submitted,
                 SubmissionState.ungraded,
-                SubmissionState.pending_review
+                SubmissionState.pending_review,
+                SubmissionState.graded
             ) -> SubmissionStateLabel.Submitted
 
             submissionState == SubmissionState.unsubmitted -> SubmissionStateLabel.NotSubmitted
