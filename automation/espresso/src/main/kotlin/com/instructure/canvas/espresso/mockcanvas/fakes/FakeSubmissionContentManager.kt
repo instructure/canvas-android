@@ -136,7 +136,8 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             mediaObject = mediaObject,
             user = user,
             assignment = fragmentAssignment,
-            customGradeStatus = null
+            customGradeStatus = null,
+            grade = submission?.grade
         )
 
         val edges = if (submissionHistory.isNotEmpty()) {
