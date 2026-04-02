@@ -24,7 +24,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
-import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -82,7 +82,7 @@ class DashboardViewModel @Inject constructor(
                 .collect { isOnline ->
                     if (featureFlagProvider.offlineEnabled()) {
                         val lastSyncedAt = if (!isOnline) {
-                            syncMetadataDao.getLastSyncedAt(HorizonSyncMetadataEntity.KEY_DASHBOARD_ENROLLMENTS)
+                            syncMetadataDao.getLastSyncedAt(SyncDataType.DASHBOARD_ENROLLMENTS)
                         } else {
                             null
                         }

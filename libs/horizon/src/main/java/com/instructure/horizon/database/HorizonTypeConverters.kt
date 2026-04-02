@@ -13,21 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.dao
+package com.instructure.horizon.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import androidx.room.TypeConverter
 import com.instructure.horizon.database.entity.SyncDataType
 
-@Dao
-interface HorizonSyncMetadataDao {
+class HorizonTypeConverters {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsert(entity: HorizonSyncMetadataEntity)
+    @TypeConverter
+    fun fromSyncDataType(value: SyncDataType): String = value.name
 
-    @Query("SELECT lastSyncedAtMs FROM horizon_sync_metadata WHERE dataType = :dataType")
-    suspend fun getLastSyncedAt(dataType: SyncDataType): Long?
+    @TypeConverter
+    fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
 }

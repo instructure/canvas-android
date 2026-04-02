@@ -18,14 +18,14 @@ package com.instructure.horizon.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+enum class SyncDataType {
+    DASHBOARD_ENROLLMENTS,
+    DASHBOARD_PROGRAMS,
+    DASHBOARD_MODULE_ITEMS,
+}
+
 @Entity(tableName = "horizon_sync_metadata")
 data class HorizonSyncMetadataEntity(
-    @PrimaryKey val key: String,
+    @PrimaryKey val dataType: SyncDataType,
     val lastSyncedAtMs: Long,
-) {
-    companion object {
-        const val KEY_DASHBOARD_ENROLLMENTS = "dashboard_enrollments"
-        const val KEY_DASHBOARD_PROGRAMS = "dashboard_programs"
-        const val KEY_DASHBOARD_MODULE_ITEMS = "dashboard_module_items"
-    }
-}
+)

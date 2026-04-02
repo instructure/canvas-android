@@ -17,6 +17,7 @@ package com.instructure.horizon.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
@@ -27,6 +28,7 @@ import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
+@TypeConverters(HorizonTypeConverters::class)
 @Database(
     entities = [
         HorizonDashboardEnrollmentEntity::class,

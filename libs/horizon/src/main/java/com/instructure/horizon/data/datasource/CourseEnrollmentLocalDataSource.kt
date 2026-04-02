@@ -20,6 +20,7 @@ import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.entity.SyncDataType
 import javax.inject.Inject
 
 class CourseEnrollmentLocalDataSource @Inject constructor(
@@ -58,7 +59,7 @@ class CourseEnrollmentLocalDataSource @Inject constructor(
         enrollmentDao.replaceAll(entities)
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
-                key = HorizonSyncMetadataEntity.KEY_DASHBOARD_ENROLLMENTS,
+                dataType = SyncDataType.DASHBOARD_ENROLLMENTS,
                 lastSyncedAtMs = System.currentTimeMillis(),
             )
         )
