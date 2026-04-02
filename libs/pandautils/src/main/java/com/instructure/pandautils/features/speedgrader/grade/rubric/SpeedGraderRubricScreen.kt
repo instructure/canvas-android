@@ -381,7 +381,7 @@ private fun RubricNote(
 ) {
     var editMode by remember { mutableStateOf(assessment?.comments.isNullOrEmpty()) }
     val haptic = LocalHapticFeedback.current
-    Column {
+    Column(modifier = Modifier.testTag("rubricNoteInput-$criterionId")) {
         Text(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
             text = stringResource(R.string.rubricNote),

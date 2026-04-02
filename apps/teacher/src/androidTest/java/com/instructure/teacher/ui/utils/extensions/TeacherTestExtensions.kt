@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.teacher.ui.utils.extensions
 
 import android.app.Activity
@@ -29,6 +28,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ConversationsApi
@@ -37,6 +37,7 @@ import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.RubricsApi
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
@@ -51,6 +52,7 @@ import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.dataseeding.model.QuizListApiModel
 import com.instructure.dataseeding.model.QuizSubmissionApiModel
+import com.instructure.dataseeding.model.RubricApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -429,4 +431,35 @@ fun TeacherTest.routeTo(route: String) {
 
 fun TeacherTest.routeTo(route: Route, activity: FragmentActivity) {
     RouteMatcher.route(activity, route)
+}
+
+fun seedRubricWithAssignment(
+    courseId: Long,
+    assignmentId: Long,
+    teacherToken: String,
+    title: String = "Test Rubric",
+    criteria: List<RubricCriterion>
+): RubricApiModel {
+    val created = RubricsApi.createRubricWithAssignment(
+        courseId = courseId,
+        assignmentId = assignmentId,
+        teacherToken = teacherToken,
+        title = title,
+        criteria = criteria.map { criterion ->
+            RubricsApi.RubricCriterionRequest(
+                description = criterion.description ?: "",
+                points = criterion.points,
+                longDescription = criterion.longDescription,
+                ratings = criterion.ratings.map { rating ->
+                    RubricsApi.RatingRequest(
+                        description = rating.description ?: "",
+                        points = rating.points,
+                        longDescription = rating.longDescription
+                    )
+                }
+            )
+        }
+    )
+    val assignment = AssignmentsApi.getAssignment(courseId, assignmentId, teacherToken)
+    return created.copy(criteria = assignment.rubric ?: emptyList())
 }

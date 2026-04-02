@@ -210,7 +210,7 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there IS a submission for it. Navigate back to Assignment List Page.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.assertStatusSubmitted()
 
         Log.d(ASSERTION_TAG, "Assert that the (Re)submit Assignment button is not enabled as submitting assignments is not supported in offline mode.")
@@ -242,8 +242,8 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page by clicking on the submission.")
         assignmentDetailsPage.goToSubmissionDetails()

@@ -327,8 +327,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Full Marks")
 
         val noteText = "Great work on this criterion!"
-        speedGraderGradePage.enterRubricNote(noteText)
-        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.enterRubricNote(noteText, rubricCriterion.id.orEmpty())
+        speedGraderGradePage.clickSendRubricNoteButton(rubricCriterion.id.orEmpty())
         speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
@@ -349,8 +349,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Passable")
 
         val noteText = "Great work on this criterion!"
-        speedGraderGradePage.enterRubricNote(noteText)
-        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.enterRubricNote(noteText, rubricCriterion.id.orEmpty())
+        speedGraderGradePage.clickSendRubricNoteButton(rubricCriterion.id.orEmpty())
         speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
