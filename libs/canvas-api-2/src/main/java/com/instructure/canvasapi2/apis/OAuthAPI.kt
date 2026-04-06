@@ -51,10 +51,10 @@ object OAuthAPI {
                 @Field("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
-        fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
+        fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Query("mobile_consent") mobileConsent: Boolean = ApiPrefs.mobileConsent): Call<AuthenticatedSession>
 
         @GET("/login/session_token")
-        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams): DataResult<AuthenticatedSession>
+        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams, @Query("mobile_consent") mobileConsent: Boolean = ApiPrefs.mobileConsent): DataResult<AuthenticatedSession>
 
         @GET("/api/v1/login/session_token")
         fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>
