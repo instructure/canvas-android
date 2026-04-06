@@ -39,8 +39,12 @@ import org.hamcrest.Matchers
 
 class NotificationPage : BasePage() {
 
-    fun assertNotificationDisplayed(title: String) {
-        val matcher = allOf(containsTextCaseInsensitive(title), withId(R.id.title))
+    fun assertNotificationDisplayed(title: String, contains: Boolean = false) {
+        val matcher = if (contains) {
+            allOf(containsTextCaseInsensitive(title), withId(R.id.title))
+        } else {
+            allOf(withText(title), withId(R.id.title))
+        }
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).assertDisplayed()
     }
@@ -70,8 +74,12 @@ class NotificationPage : BasePage() {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
-    fun clickNotification(title: String) {
-        val matcher = allOf(containsTextCaseInsensitive(title), withId(R.id.title))
+    fun clickNotification(title: String, contains: Boolean = false) {
+        val matcher = if (contains) {
+            allOf(containsTextCaseInsensitive(title), withId(R.id.title))
+        } else {
+            allOf(withText(title), withId(R.id.title))
+        }
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).click()
     }
