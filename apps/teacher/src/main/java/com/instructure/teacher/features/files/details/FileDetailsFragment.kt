@@ -26,6 +26,8 @@ import androidx.fragment.app.Fragment
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.BooleanArg
@@ -43,11 +45,24 @@ import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@PageView
 class FileDetailsFragment : BaseCanvasFragment() {
 
     private val viewModel: FileDetailsViewModel by viewModels()
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
     private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
+
+    @PageViewUrl
+    fun makePageViewUrl(): String {
+        val fileData = viewModel.data.value?.fileData ?: return ""
+        return when (fileData) {
+            is FileViewData.Pdf -> fileData.url
+            is FileViewData.Media -> fileData.url
+            is FileViewData.Image -> fileData.url
+            is FileViewData.Html -> fileData.url
+            is FileViewData.Other -> fileData.url
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_file_details, container, false)

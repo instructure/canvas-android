@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.coerceAtLeast
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.canvasapi2.utils.rangeWithin
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
@@ -44,13 +46,17 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 @AndroidEntryPoint
+@PageView("courses/{courseId}/gradebook/speed_grader?assignment_id={assignmentId}")
 class SpeedGraderFragment : BaseCanvasFragment() {
+
+    @get:PageViewUrlParam("courseId")
+    val courseId: Long by LongArg(key = Const.COURSE_ID)
+    @get:PageViewUrlParam("assignmentId")
+    val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
 
     private val viewModel: SpeedGraderViewModel by viewModels()
 
     private val sharedViewModel: SpeedGraderSharedViewModel by activityViewModels()
-
-    private val courseId by LongArg(key = Const.COURSE_ID)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
