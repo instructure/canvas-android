@@ -77,6 +77,7 @@ import org.junit.Rule
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class AssignmentDetailsViewModelTest {
@@ -188,16 +189,19 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Load partially locked assignment`() {
-        val lockedExplanation = "locked"
+        val lockDate = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }.time
+        val dateString = java.text.DateFormat.getDateInstance(java.text.DateFormat.LONG, Locale.getDefault()).format(lockDate)
+        val timeString = java.text.DateFormat.getTimeInstance(java.text.DateFormat.SHORT, Locale.getDefault()).format(lockDate)
+        val expectedLockedMessage = "This assignment was locked on $dateString at $timeString."
 
-        every { resources.getString(R.string.errorLoadingAssignment) } returns lockedExplanation
+        every { resources.getString(R.string.errorLoadingAssignment) } returns ""
+        every { resources.getString(R.string.closedSubtext, dateString, timeString) } returns expectedLockedMessage
 
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         val assignment = Assignment(
-            lockExplanation = lockedExplanation,
-            lockAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }.time.toApiString()
+            lockAt = lockDate.toApiString()
         )
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
@@ -205,7 +209,7 @@ class AssignmentDetailsViewModelTest {
 
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(false, viewModel.data.value?.fullLocked)
-        assertEquals(lockedExplanation, viewModel.data.value?.lockedMessage)
+        assertEquals(expectedLockedMessage, viewModel.data.value?.lockedMessage)
     }
 
     @Test

@@ -149,6 +149,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         .copyPastEnabled(false)
         .contentEditingEnabled(false)
         .annotationPopupToolbarEnabled(false)
+        // Disable autosave to prevent PdfFragment.onStop() from calling save() synchronously
+        // on the main thread, which blocks until the native save completes and causes an ANR.
+        // Annotations are saved explicitly via the canvas doc API, not via PSPDFKit autosave.
+        .autosaveEnabled(false)
         .build()
 
     private val annotationCreationToolbar = AnnotationCreationToolbar(context)
@@ -162,12 +166,11 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private var pdfContentJob: Job? = null
     private var annotationsJob: Job? = null
     private var sendCommentJob: Job? = null
-    private var appearanceGeneratorsJob: Job? = null
     private var currentAnnotationModeTool: AnnotationTool? = null
     private var currentAnnotationModeType: AnnotationType? = null
     private var isUpdatingWithNoNetwork = false
     private var stampRaceFlag = true
-    private var appearanceGeneratorsLoaded = false
+    private var stampAppearanceGeneratorsRegistered = false
 
     @get:ColorRes
     abstract val progressColor: Int
@@ -210,7 +213,6 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
-        appearanceGeneratorsJob?.cancel()
     }
 
     protected fun unregisterPdfFragmentListeners() {
@@ -456,7 +458,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private val documentListener = object : DocumentListener {
         override fun onDocumentLoaded(pdfDocument: PdfDocument) {
             setupPdfAnnotationDefaults()
-            loadCustomAppearanceGeneratorsAsync()
+            stampAppearanceGeneratorsRegistered = false
 
             docSession.rotations?.let { rotations ->
                 pdfFragment?.document?.let {
@@ -464,8 +466,9 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                 }
             }
 
-            pdfFragment?.enterAnnotationCreationMode()
-            if (docSession.annotationMetadata?.canRead() != true) return
+            val metadata = docSession.annotationMetadata
+            if (metadata?.canWrite() == true) pdfFragment?.enterAnnotationCreationMode()
+            if (metadata?.canRead() != true) return
             loadAnnotations()
         }
     }
@@ -478,6 +481,14 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             // Grab all the annotations and sort them by type (descending).
             // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
             val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
+
+            // AnnotationType.TEXT is the CanvaDoc API type for stamp (point) annotations, which are converted
+            // to PSPDFKit StampAnnotations via convertTextType(). Register generators only after this network
+            // roundtrip — by this point PSPDFKit has finished its initial render, avoiding blank pages.
+            if (sortedAnnotationList.any { it.annotationType == CanvaDocAnnotation.AnnotationType.TEXT }) {
+                registerStampAppearanceGenerators()
+            }
+
             for (item in sortedAnnotationList) {
                 if (item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
                     // Grab the annotation comments and store them to be displayed later when user selects annotation
@@ -1063,55 +1074,30 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         return stamps
     }
 
-    private fun loadCustomAppearanceGeneratorsAsync() {
-        // Avoid loading multiple times
-        if (appearanceGeneratorsLoaded) return
-        appearanceGeneratorsLoaded = true
-
-        // Load appearance generators asynchronously to prevent ANR
-        // These generators load and parse PDF files from assets, which can cause blocking I/O
-        appearanceGeneratorsJob = viewScope.tryLaunch {
-            // Perform I/O operations on background thread
-            val generators = withContext(Dispatchers.IO) {
-                // Create appearance stream generators with a PDF containing vector logo.
-                // This reads and parses 10 PDF files from assets, which can block the main thread
-                val black = AssetAppearanceStreamGenerator(blackStampFile)
-                val blue = AssetAppearanceStreamGenerator(blueStampFile)
-                val brown = AssetAppearanceStreamGenerator(brownStampFile)
-                val green = AssetAppearanceStreamGenerator(greenStampFile)
-                val navy = AssetAppearanceStreamGenerator(navyStampFile)
-                val orange = AssetAppearanceStreamGenerator(orangeStampFile)
-                val pink = AssetAppearanceStreamGenerator(pinkStampFile)
-                val purple = AssetAppearanceStreamGenerator(purpleStampFile)
-                val red = AssetAppearanceStreamGenerator(redStampFile)
-                val yellow = AssetAppearanceStreamGenerator(yellowStampFile)
-
-                mapOf(
-                    blackStampSubject to black,
-                    blueStampSubject to blue,
-                    brownStampSubject to brown,
-                    greenStampSubject to green,
-                    navyStampSubject to navy,
-                    orangeStampSubject to orange,
-                    pinkStampSubject to pink,
-                    purpleStampSubject to purple,
-                    redStampSubject to red,
-                    yellowStampSubject to yellow
-                )
-            }
-
-            // Register on main thread after loading completes
-            val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
-            pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
-
-            // Register created appearance stream generator for the custom subject.
-            generators.forEach { (subject, generator) ->
-                customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(subject, generator)
-            }
-        } catch {
-            appearanceGeneratorsLoaded = false
+    private suspend fun registerStampAppearanceGenerators() {
+        if (stampAppearanceGeneratorsRegistered) return
+        val generators = withContext(Dispatchers.IO) {
+            mapOf(
+                blackStampSubject to AssetAppearanceStreamGenerator(blackStampFile),
+                blueStampSubject to AssetAppearanceStreamGenerator(blueStampFile),
+                brownStampSubject to AssetAppearanceStreamGenerator(brownStampFile),
+                greenStampSubject to AssetAppearanceStreamGenerator(greenStampFile),
+                navyStampSubject to AssetAppearanceStreamGenerator(navyStampFile),
+                orangeStampSubject to AssetAppearanceStreamGenerator(orangeStampFile),
+                pinkStampSubject to AssetAppearanceStreamGenerator(pinkStampFile),
+                purpleStampSubject to AssetAppearanceStreamGenerator(purpleStampFile),
+                redStampSubject to AssetAppearanceStreamGenerator(redStampFile),
+                yellowStampSubject to AssetAppearanceStreamGenerator(yellowStampFile)
+            )
         }
+        val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
+        pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
+        generators.forEach { (subject, generator) ->
+            customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(subject, generator)
+        }
+        stampAppearanceGeneratorsRegistered = true
     }
+
     //endregion
 
     open fun configureEditMenuItemGrouping(toolbarMenuItems: MutableList<ContextualToolbarMenuItem>): MutableList<ContextualToolbarMenuItem> {

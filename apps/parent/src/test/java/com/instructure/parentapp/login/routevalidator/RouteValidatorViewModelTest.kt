@@ -153,7 +153,7 @@ class RouteValidatorViewModelTest {
         every { apiPrefs.getValidToken() } returns ""
         every { qrLogin.verifySSOLoginUri(any()) } returns true
         coEvery { qrLogin.performSSOLogin(any(), any(), any()) } returns OAuthTokenResponse()
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
 
         createViewModel()
 
@@ -177,7 +177,7 @@ class RouteValidatorViewModelTest {
             realUser = TokenUser(1, "", ""),
             user = TokenUser(1, "", "")
         )
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(AuthenticatedSession("sessionUrl"))
 
         createViewModel()
 
