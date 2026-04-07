@@ -394,6 +394,7 @@ class LoginE2ETest : StudentTest() {
         loginSignInPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testFindSchoolPageObjects() {
 
@@ -404,6 +405,7 @@ class LoginE2ETest : StudentTest() {
         loginFindSchoolPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginLandingPageObjects() {
 
@@ -411,6 +413,7 @@ class LoginE2ETest : StudentTest() {
         loginLandingPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginSignInPageObjects() {
 

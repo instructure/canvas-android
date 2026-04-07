@@ -13,22 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.file.upload.scanner
+package com.instructure.pandautils.di
 
-import android.app.Activity
-import android.content.Intent
-import android.content.IntentSender
-import android.net.Uri
-import com.google.android.gms.tasks.Task
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManagerImpl
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-data class DocumentScanResult(
-    val pdfUri: Uri?,
-    val pageUris: List<Uri>
-)
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DocumentScannerModule {
 
-interface DocumentScannerManager {
-    fun isDeviceSupported(): Boolean
-    fun getStartScanIntent(activity: Activity, pageLimit: Int = 50): Task<IntentSender>
-    fun handleScanResultFromIntent(intent: Intent?): DocumentScanResult
-    fun generateFileName(): String
+    @Binds
+    @Singleton
+    abstract fun bindDocumentScannerManager(impl: DocumentScannerManagerImpl): DocumentScannerManager
 }

@@ -42,10 +42,13 @@ import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDocumentScannerManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.di.DocumentScannerModule
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -61,16 +64,23 @@ import org.junit.Test
 import java.io.File
 
 @HiltAndroidTest
-@UninstallModules(CustomGradeStatusModule::class)
+@UninstallModules(CustomGradeStatusModule::class, DocumentScannerModule::class)
 class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField
     val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
+    private val fakeScanner = FakeDocumentScannerManager()
+
+    @BindValue
+    @JvmField
+    val documentScannerManager: DocumentScannerManager = fakeScanner
+
     override fun displaysPageObjects() = Unit
 
     private val mockedFileName = "sample.jpg" // A file in our assets area
+    private val scannerFileName = "samplepdf.pdf" // A PDF file in our assets area, because the scanner makes a PDF.
     private lateinit var activity : Activity
     private lateinit var activityResult: Instrumentation.ActivityResult
 
@@ -82,12 +92,18 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
         //Clear file upload cache dir.
         File(getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
-        // Copy our sample file from the assets area to the external cache dir
+        val dir = activity.externalCacheDir
+
+        // Copy our sample files from the assets area to the external cache dir
         copyAssetFileToExternalCache(activity, mockedFileName)
+        copyAssetFileToExternalCache(activity, scannerFileName)
+
+        // Configure the scanner fake with the PDF file URI
+        fakeScanner.scannerSupported = true
+        fakeScanner.scanResultUri = Uri.fromFile(File(dir?.path, scannerFileName))
 
         // Now create an ActivityResult that points to the sample file in the external cache dir
         val resultData = Intent()
-        val dir = activity.externalCacheDir
         val file = File(dir?.path, mockedFileName)
         val uri = Uri.fromFile(file)
         resultData.data = uri
@@ -255,6 +271,33 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
         // we're not yet processing the binary jpg data correctly in our mocked server.
         // But the file name should still be displayed, so we're going to be
         // happy with that.
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testFab_scanner() {
+        goToSubmissionPicker()
+        pickerSubmissionUploadPage.chooseScanner()
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+        pickerSubmissionUploadPage.assertFileDisplayed(scannerFileName)
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testFab_scannerNotAvailable() {
+        fakeScanner.scannerSupported = false
+        goToSubmissionPicker()
+        pickerSubmissionUploadPage.assertScannerButtonNotDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testDeleteFileAfterScan() {
+        goToSubmissionPicker()
+        pickerSubmissionUploadPage.chooseScanner()
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+        pickerSubmissionUploadPage.clickDeleteButton()
+        pickerSubmissionUploadPage.assertEmptyViewDisplayed()
     }
 
     // Seed course, user, assignment and navigate to submission picker for assignment
