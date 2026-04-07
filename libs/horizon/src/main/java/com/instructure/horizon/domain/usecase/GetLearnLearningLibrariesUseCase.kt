@@ -13,17 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.datasource
+package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-class ProgramNetworkDataSource @Inject constructor(
-    private val getProgramsManager: GetProgramsManager,
-) {
+class GetLearnLearningLibrariesUseCase @Inject constructor(
+    private val repository: LearnLearningLibraryRepository,
+) : BaseUseCase<Int, List<EnrolledLearningLibraryCollection>>() {
 
-    suspend fun getPrograms(forceRefresh: Boolean): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork = forceRefresh)
+    override suspend fun execute(params: Int): List<EnrolledLearningLibraryCollection> {
+        return repository.getEnrolledLearningLibraries(params)
     }
 }

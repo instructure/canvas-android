@@ -30,9 +30,9 @@ class CourseEnrollmentRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun getEnrollments(): List<DashboardEnrollment> {
+    suspend fun getEnrollments(forceRefresh: Boolean = false): List<DashboardEnrollment> {
         return if (shouldFetchFromNetwork()) {
-            networkDataSource.getEnrollments()
+            networkDataSource.getEnrollments(forceRefresh)
                 .also { if (shouldSync()) localDataSource.saveEnrollments(it) }
         } else {
             localDataSource.getEnrollments()

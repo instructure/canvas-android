@@ -21,11 +21,18 @@ import androidx.room.TypeConverters
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
+import com.instructure.horizon.database.dao.HorizonLearnItemDao
+import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.entity.HorizonLearnCollectionEntity
+import com.instructure.horizon.database.entity.HorizonLearnCollectionItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @TypeConverters(HorizonTypeConverters::class)
@@ -36,12 +43,19 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonDashboardProgramCourseRef::class,
         HorizonDashboardModuleItemEntity::class,
         HorizonSyncMetadataEntity::class,
+        HorizonLearnItemEntity::class,
+        HorizonLearnCollectionEntity::class,
+        HorizonLearnCollectionItemEntity::class,
+        HorizonLearnSavedItemEntity::class,
     ],
-    version = 2,
+    version = 3,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
     abstract fun dashboardProgramDao(): HorizonDashboardProgramDao
     abstract fun dashboardModuleItemDao(): HorizonDashboardModuleItemDao
     abstract fun syncMetadataDao(): HorizonSyncMetadataDao
+    abstract fun learnItemDao(): HorizonLearnItemDao
+    abstract fun learnCollectionDao(): HorizonLearnCollectionDao
+    abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao
 }

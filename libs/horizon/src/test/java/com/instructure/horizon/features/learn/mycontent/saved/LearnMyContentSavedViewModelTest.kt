@@ -24,9 +24,14 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
+import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
-import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -51,8 +56,12 @@ import java.util.Date
 class LearnMyContentSavedViewModelTest {
 
     private val resources: Resources = mockk(relaxed = true)
-    private val myContentRepository: LearnMyContentRepository = mockk(relaxed = true)
-    private val savedContentRepository: LearnMyContentSavedRepository = mockk(relaxed = true)
+    private val getLearnLearningLibraryItemsUseCase: GetLearnLearningLibraryItemsUseCase = mockk(relaxed = true)
+    private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase = mockk(relaxed = true)
+    private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase = mockk(relaxed = true)
+    private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyResponse = LearningLibraryCollectionItemsResponse(
@@ -66,10 +75,10 @@ class LearnMyContentSavedViewModelTest {
         every { resources.getString(any()) } returns ""
         every { resources.getString(any(), *anyVararg()) } returns ""
         every { resources.getQuantityString(any(), any(), *anyVararg()) } returns ""
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns emptyResponse
-        coEvery { myContentRepository.getFirstPageModulesWithItems(any(), any()) } returns emptyList()
-        coEvery { savedContentRepository.getLearningLibraryRecommendedItems(any()) } returns emptyList()
-        coEvery { savedContentRepository.toggleLearningLibraryItemIsBookmarked(any()) } returns false
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns emptyResponse
+        coEvery { getLearnLearningLibraryRecommendationsUseCase(any()) } returns emptyList()
+        coEvery { toggleLearnLearningLibraryItemBookmarkUseCase(any()) } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
     }
 
     @After
@@ -85,19 +94,19 @@ class LearnMyContentSavedViewModelTest {
     }
 
     @Test
-    fun `onFiltersChanged calls getBookmarkedLearningLibraryItems`() = runTest {
+    fun `onFiltersChanged calls use case with bookmarkedOnly true`() = runTest {
         val viewModel = getViewModel()
 
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         coVerify {
-            myContentRepository.getBookmarkedLearningLibraryItems(
-                afterCursor = null,
-                searchQuery = null,
-                sortBy = CollectionItemSortOption.MOST_RECENT,
-                types = null,
-                forceNetwork = false,
-            )
+            getLearnLearningLibraryItemsUseCase(match {
+                it.cursor == null &&
+                it.searchQuery == null &&
+                it.sortBy == CollectionItemSortOption.MOST_RECENT &&
+                it.typeFilter == null &&
+                it.bookmarkedOnly == true
+            })
         }
     }
 
@@ -107,7 +116,7 @@ class LearnMyContentSavedViewModelTest {
 
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
-        coVerify { savedContentRepository.getLearningLibraryRecommendedItems(false) }
+        coVerify { getLearnLearningLibraryRecommendationsUseCase(match { !it.forceRefresh }) }
     }
 
     @Test
@@ -117,13 +126,11 @@ class LearnMyContentSavedViewModelTest {
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.Courses)
 
         coVerify {
-            myContentRepository.getBookmarkedLearningLibraryItems(
-                afterCursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                types = listOf(CollectionItemType.COURSE),
-                forceNetwork = false,
-            )
+            getLearnLearningLibraryItemsUseCase(match {
+                it.cursor == null &&
+                it.typeFilter == CollectionItemType.COURSE &&
+                it.bookmarkedOnly == true
+            })
         }
     }
 
@@ -134,19 +141,13 @@ class LearnMyContentSavedViewModelTest {
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         coVerify {
-            myContentRepository.getBookmarkedLearningLibraryItems(
-                afterCursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                types = null,
-                forceNetwork = false,
-            )
+            getLearnLearningLibraryItemsUseCase(match { it.typeFilter == null && it.bookmarkedOnly == true })
         }
     }
 
     @Test
     fun `Successful load populates contentCards`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1", name = "Saved Course")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
@@ -160,7 +161,7 @@ class LearnMyContentSavedViewModelTest {
 
     @Test
     fun `Load error sets isError true`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
@@ -170,7 +171,7 @@ class LearnMyContentSavedViewModelTest {
 
     @Test
     fun `showMoreButton is true when pageInfo has next page`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem()),
             pageInfo = LearningLibraryPageInfo("cursor1", null, true, false, 10, null)
         )
@@ -182,31 +183,25 @@ class LearnMyContentSavedViewModelTest {
     }
 
     @Test
-    fun `Refresh fetches recommendations with forceNetwork true`() = runTest {
+    fun `Refresh re-fetches recommendations`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         viewModel.uiState.value.loadingState.onRefresh()
 
-        coVerify { savedContentRepository.getLearningLibraryRecommendedItems(true) }
+        coVerify { getLearnLearningLibraryRecommendationsUseCase(match { !it.forceRefresh }) }
+        coVerify { getLearnLearningLibraryRecommendationsUseCase(match { it.forceRefresh }) }
     }
 
     @Test
-    fun `Refresh calls getBookmarkedLearningLibraryItems with forceNetwork true`() = runTest {
+    fun `Refresh re-fetches bookmarked items`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         viewModel.uiState.value.loadingState.onRefresh()
 
-        coVerify {
-            myContentRepository.getBookmarkedLearningLibraryItems(
-                afterCursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                types = null,
-                forceNetwork = true,
-            )
-        }
+        coVerify { getLearnLearningLibraryItemsUseCase(match { !it.forceRefresh }) }
+        coVerify { getLearnLearningLibraryItemsUseCase(match { it.forceRefresh }) }
     }
 
     @Test
@@ -219,8 +214,8 @@ class LearnMyContentSavedViewModelTest {
             items = listOf(createTestCollectionItem(id = "item2")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 2, null)
         )
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(null, any(), any(), any(), any(), any()) } returns firstPage
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems("cursor1", any(), any(), any(), any(), any()) } returns secondPage
+        coEvery { getLearnLearningLibraryItemsUseCase(match { it.cursor == null }) } returns firstPage
+        coEvery { getLearnLearningLibraryItemsUseCase(match { it.cursor == "cursor1" }) } returns secondPage
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
@@ -231,7 +226,7 @@ class LearnMyContentSavedViewModelTest {
 
     @Test
     fun `onBookmarkItem sets bookmarkLoading true then removes item on success`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
@@ -245,7 +240,7 @@ class LearnMyContentSavedViewModelTest {
 
     @Test
     fun `onBookmarkItem calls toggleLearningLibraryItemIsBookmarked`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
@@ -254,16 +249,16 @@ class LearnMyContentSavedViewModelTest {
 
         viewModel.onBookmarkItem("item1")
 
-        coVerify { savedContentRepository.toggleLearningLibraryItemIsBookmarked("item1") }
+        coVerify { toggleLearnLearningLibraryItemBookmarkUseCase(match { it.itemId == "item1" }) }
     }
 
     @Test
     fun `onBookmarkItem error keeps item in list with bookmarkLoading false`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
-        coEvery { savedContentRepository.toggleLearningLibraryItemIsBookmarked("item1") } throws Exception("Network error")
+        coEvery { toggleLearnLearningLibraryItemBookmarkUseCase(match { it.itemId == "item1" }) } throws Exception("Network error")
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
@@ -276,12 +271,12 @@ class LearnMyContentSavedViewModelTest {
 
     @Test
     fun `onBookmarkItem error shows snackbar message`() = runTest {
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
         every { resources.getString(R.string.learnMyContentSavedFailedToBookmarkErrorMessage) } returns "Failed to save"
-        coEvery { savedContentRepository.toggleLearningLibraryItemIsBookmarked("item1") } throws Exception("Network error")
+        coEvery { toggleLearnLearningLibraryItemBookmarkUseCase(match { it.itemId == "item1" }) } throws Exception("Network error")
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
@@ -294,7 +289,7 @@ class LearnMyContentSavedViewModelTest {
     fun `Refresh error shows snackbar`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), true) } throws Exception("Network error")
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } throws Exception("Network error")
 
         viewModel.uiState.value.loadingState.onRefresh()
 
@@ -306,7 +301,7 @@ class LearnMyContentSavedViewModelTest {
     fun `Dismiss snackbar clears snackbar message`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
-        coEvery { myContentRepository.getBookmarkedLearningLibraryItems(any(), any(), any(), any(), any(), true) } throws Exception("Error")
+        coEvery { getLearnLearningLibraryItemsUseCase(any()) } throws Exception("Error")
         viewModel.uiState.value.loadingState.onRefresh()
 
         viewModel.uiState.value.loadingState.onSnackbarDismiss()
@@ -314,7 +309,10 @@ class LearnMyContentSavedViewModelTest {
         assertNull(viewModel.uiState.value.loadingState.snackbarMessage)
     }
 
-    private fun getViewModel() = LearnMyContentSavedViewModel(resources, myContentRepository, savedContentRepository)
+    private fun getViewModel() = LearnMyContentSavedViewModel(
+        resources, getLearnLearningLibraryItemsUseCase, getLearnLearningLibraryRecommendationsUseCase,
+        toggleLearnLearningLibraryItemBookmarkUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider
+    )
 
     private fun createTestCollectionItem(
         id: String = "testItem",

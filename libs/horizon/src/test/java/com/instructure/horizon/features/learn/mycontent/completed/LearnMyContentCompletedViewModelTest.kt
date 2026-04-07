@@ -19,14 +19,15 @@ package com.instructure.horizon.features.learn.mycontent.completed
 import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
-import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
-import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
 import com.instructure.canvasapi2.models.journey.mycontent.ProgramEnrollmentItem
+import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsUseCase
+import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
-import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -50,7 +51,10 @@ import java.util.Date
 class LearnMyContentCompletedViewModelTest {
 
     private val resources: Resources = mockk(relaxed = true)
-    private val repository: LearnMyContentRepository = mockk(relaxed = true)
+    private val getLearnMyContentCompletedItemsUseCase: GetLearnMyContentCompletedItemsUseCase = mockk(relaxed = true)
+    private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyResponse = LearnItemsResponse(
@@ -64,8 +68,8 @@ class LearnMyContentCompletedViewModelTest {
         every { resources.getString(any()) } returns ""
         every { resources.getString(any(), *anyVararg()) } returns ""
         every { resources.getQuantityString(any(), any(), *anyVararg()) } returns ""
-        coEvery { repository.getLearnItems(any(), any(), any(), any(), any(), any()) } returns emptyResponse
-        coEvery { repository.getFirstPageModulesWithItems(any(), any()) } returns emptyList()
+        coEvery { getLearnMyContentCompletedItemsUseCase(any()) } returns emptyResponse
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
     }
 
     @After
@@ -74,38 +78,18 @@ class LearnMyContentCompletedViewModelTest {
     }
 
     @Test
-    fun `onFiltersChanged triggers load with COMPLETED status only`() = runTest {
+    fun `onFiltersChanged triggers load`() = runTest {
         val viewModel = getViewModel()
 
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         coVerify {
-            repository.getLearnItems(
-                cursor = null,
-                searchQuery = null,
-                sortBy = CollectionItemSortOption.MOST_RECENT,
-                status = listOf(LearnItemStatus.COMPLETED),
-                itemTypes = null,
-                forceNetwork = false,
-            )
-        }
-    }
-
-    @Test
-    fun `onFiltersChanged does NOT pass IN_PROGRESS or NOT_STARTED status`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
-
-        coVerify(exactly = 0) {
-            repository.getLearnItems(
-                status = match { it.contains(LearnItemStatus.IN_PROGRESS) || it.contains(LearnItemStatus.NOT_STARTED) },
-                cursor = any(),
-                searchQuery = any(),
-                sortBy = any(),
-                itemTypes = any(),
-                forceNetwork = any(),
-            )
+            getLearnMyContentCompletedItemsUseCase(match {
+                it.cursor == null &&
+                it.searchQuery == null &&
+                it.sortBy == CollectionItemSortOption.MOST_RECENT &&
+                it.itemTypes == null
+            })
         }
     }
 
@@ -116,14 +100,11 @@ class LearnMyContentCompletedViewModelTest {
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.Programs)
 
         coVerify {
-            repository.getLearnItems(
-                cursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                status = listOf(LearnItemStatus.COMPLETED),
-                itemTypes = listOf(LearnItemType.PROGRAM),
-                forceNetwork = false,
-            )
+            getLearnMyContentCompletedItemsUseCase(match {
+                it.cursor == null &&
+                it.sortBy == CollectionItemSortOption.MOST_RECENT &&
+                it.itemTypes == listOf(LearnItemType.PROGRAM)
+            })
         }
     }
 
@@ -134,20 +115,17 @@ class LearnMyContentCompletedViewModelTest {
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.Courses)
 
         coVerify {
-            repository.getLearnItems(
-                cursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                status = listOf(LearnItemStatus.COMPLETED),
-                itemTypes = listOf(LearnItemType.COURSE),
-                forceNetwork = false,
-            )
+            getLearnMyContentCompletedItemsUseCase(match {
+                it.cursor == null &&
+                it.sortBy == CollectionItemSortOption.MOST_RECENT &&
+                it.itemTypes == listOf(LearnItemType.COURSE)
+            })
         }
     }
 
     @Test
     fun `Successful load populates contentCards`() = runTest {
-        coEvery { repository.getLearnItems(any(), any(), any(), any(), any(), any()) } returns LearnItemsResponse(
+        coEvery { getLearnMyContentCompletedItemsUseCase(any()) } returns LearnItemsResponse(
             items = listOf(createTestProgramItem(name = "Completed Program")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 1, null)
         )
@@ -161,7 +139,7 @@ class LearnMyContentCompletedViewModelTest {
 
     @Test
     fun `Load error sets isError true`() = runTest {
-        coEvery { repository.getLearnItems(any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { getLearnMyContentCompletedItemsUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
@@ -171,7 +149,7 @@ class LearnMyContentCompletedViewModelTest {
 
     @Test
     fun `showMoreButton is true when pageInfo has next page`() = runTest {
-        coEvery { repository.getLearnItems(any(), any(), any(), any(), any(), any()) } returns LearnItemsResponse(
+        coEvery { getLearnMyContentCompletedItemsUseCase(any()) } returns LearnItemsResponse(
             items = listOf(createTestProgramItem()),
             pageInfo = LearningLibraryPageInfo("cursor1", null, true, false, 10, null)
         )
@@ -183,29 +161,21 @@ class LearnMyContentCompletedViewModelTest {
     }
 
     @Test
-    fun `Refresh calls repository with forceNetwork true`() = runTest {
+    fun `Refresh re-fetches items`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
         viewModel.uiState.value.loadingState.onRefresh()
 
-        coVerify {
-            repository.getLearnItems(
-                cursor = null,
-                searchQuery = null,
-                sortBy = any(),
-                status = listOf(LearnItemStatus.COMPLETED),
-                itemTypes = null,
-                forceNetwork = true,
-            )
-        }
+        coVerify { getLearnMyContentCompletedItemsUseCase(match { !it.forceRefresh }) }
+        coVerify { getLearnMyContentCompletedItemsUseCase(match { it.forceRefresh }) }
     }
 
     @Test
     fun `Refresh error shows snackbar message`() = runTest {
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
-        coEvery { repository.getLearnItems(any(), any(), any(), any(), any(), true) } throws Exception("Network error")
+        coEvery { getLearnMyContentCompletedItemsUseCase(any()) } throws Exception("Network error")
 
         viewModel.uiState.value.loadingState.onRefresh()
 
@@ -223,8 +193,8 @@ class LearnMyContentCompletedViewModelTest {
             items = listOf(createTestProgramItem(id = "p2", name = "Second")),
             pageInfo = LearningLibraryPageInfo(null, null, false, false, 2, null)
         )
-        coEvery { repository.getLearnItems(null, any(), any(), any(), any(), any()) } returns firstPage
-        coEvery { repository.getLearnItems("cursor1", any(), any(), any(), any(), any()) } returns secondPage
+        coEvery { getLearnMyContentCompletedItemsUseCase(match { it.cursor == null }) } returns firstPage
+        coEvery { getLearnMyContentCompletedItemsUseCase(match { it.cursor == "cursor1" }) } returns secondPage
         val viewModel = getViewModel()
         viewModel.onFiltersChanged("", LearnLearningLibrarySortOption.MostRecent, LearnLearningLibraryTypeFilter.All)
 
@@ -235,7 +205,9 @@ class LearnMyContentCompletedViewModelTest {
         assertEquals("Second", viewModel.uiState.value.contentCards[1].name)
     }
 
-    private fun getViewModel() = LearnMyContentCompletedViewModel(resources, repository)
+    private fun getViewModel() = LearnMyContentCompletedViewModel(
+        resources, getLearnMyContentCompletedItemsUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider
+    )
 
     private fun createTestProgramItem(
         id: String = "program1",

@@ -31,9 +31,9 @@ class ProgramRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun getPrograms(): List<Program> {
+    suspend fun getPrograms(forceRefresh: Boolean = false): List<Program> {
         return if (shouldFetchFromNetwork()) {
-            networkDataSource.getPrograms()
+            networkDataSource.getPrograms(forceRefresh)
                 .also { programs ->
                     if (shouldSync()) {
                         val enrolledCourseIds = enrollmentRepository.getEnrolledCourseIds().toSet()

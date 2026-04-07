@@ -22,6 +22,9 @@ enum class SyncDataType {
     DASHBOARD_ENROLLMENTS,
     DASHBOARD_PROGRAMS,
     DASHBOARD_MODULE_ITEMS,
+    LEARN_MY_CONTENT_ITEMS,
+    LEARN_SAVED_ITEMS,
+    LEARN_LIBRARY_COLLECTIONS,
 }
 
 @Entity(tableName = "horizon_sync_metadata")

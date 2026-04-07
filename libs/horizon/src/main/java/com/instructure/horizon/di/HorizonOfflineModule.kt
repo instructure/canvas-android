@@ -21,6 +21,9 @@ import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
+import com.instructure.horizon.database.dao.HorizonLearnItemDao
+import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import dagger.Module
 import dagger.Provides
@@ -58,5 +61,20 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonSyncMetadataDao(db: HorizonDatabase): HorizonSyncMetadataDao {
         return db.syncMetadataDao()
+    }
+
+    @Provides
+    fun provideHorizonLearnItemDao(db: HorizonDatabase): HorizonLearnItemDao {
+        return db.learnItemDao()
+    }
+
+    @Provides
+    fun provideHorizonLearnCollectionDao(db: HorizonDatabase): HorizonLearnCollectionDao {
+        return db.learnCollectionDao()
+    }
+
+    @Provides
+    fun provideHorizonLearnSavedItemDao(db: HorizonDatabase): HorizonLearnSavedItemDao {
+        return db.learnSavedItemDao()
     }
 }

@@ -13,17 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.datasource
+package com.instructure.horizon.database.entity
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import javax.inject.Inject
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class ProgramNetworkDataSource @Inject constructor(
-    private val getProgramsManager: GetProgramsManager,
-) {
-
-    suspend fun getPrograms(forceRefresh: Boolean): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork = forceRefresh)
-    }
-}
+@Entity(tableName = "horizon_learn_collections")
+data class HorizonLearnCollectionEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val publicName: String?,
+    val description: String?,
+    val createdAtMs: Long,
+    val updatedAtMs: Long,
+    val totalItemCount: Int,
+)

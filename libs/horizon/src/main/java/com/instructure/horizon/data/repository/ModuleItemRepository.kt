@@ -30,9 +30,9 @@ class ModuleItemRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
+    suspend fun getNextModuleItemForCourse(courseId: Long, forceRefresh: Boolean = false): DashboardNextModuleItem? {
         return if (shouldFetchFromNetwork()) {
-            networkDataSource.getNextModuleItemForCourse(courseId)
+            networkDataSource.getNextModuleItemForCourse(courseId, forceRefresh)
                 .also { item -> if (shouldSync() && item != null) localDataSource.saveNextModuleItem(item) }
         } else {
             localDataSource.getNextModuleItemForCourse(courseId)
