@@ -92,9 +92,9 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     private val binding by viewBinding(FragmentStudentContextBinding::bind)
 
     @get:PageViewUrlParam("userId")
-    private var mStudentId by LongArg()
+    var mStudentId by LongArg()
     @get:PageViewUrlParam("courseId")
-    private var mCourseId by LongArg()
+    var mCourseId by LongArg()
 
     private var mLaunchSubmissions by BooleanArg()
     private var needToForceNetwork = false

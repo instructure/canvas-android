@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
@@ -46,7 +47,7 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
     private val summaryAllowed: Boolean by BooleanArg(key = SUMMARY_ALLOWED)
 
     @PageViewUrl
-    fun makePageViewUrl(): String = "/courses/${course.id}/syllabus/edit"
+    fun makePageViewUrl(): String = "${ApiPrefs.fullDomain}/courses/${course.id}/syllabus/edit"
 
     override fun makeEffectHandler(): EffectHandler<EditSyllabusView, EditSyllabusEvent, EditSyllabusEffect> = EditSyllabusEffectHandler()
 

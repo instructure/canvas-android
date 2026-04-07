@@ -58,7 +58,7 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
 
     private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     @get:PageViewUrlParam("moduleItemId")
-    private val moduleItemId by LongArg(key = RouterParams.MODULE_ITEM_ID, default = -1L)
+    val moduleItemId by LongArg(key = RouterParams.MODULE_ITEM_ID, default = -1L)
     private val assetType by StringArg(key = ASSET_TYPE)
     private val assetId by StringArg(key = ASSET_ID)
     private val route: Route by ParcelableArg(key = ROUTE)
