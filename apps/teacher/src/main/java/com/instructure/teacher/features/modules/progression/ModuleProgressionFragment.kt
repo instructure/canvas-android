@@ -26,6 +26,8 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.binding.viewBinding
@@ -48,12 +50,14 @@ import com.instructure.teacher.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
+@PageView("modules/{moduleItemId}")
 class ModuleProgressionFragment : BaseCanvasFragment() {
 
     private val viewModel: ModuleProgressionViewModel by viewModels()
     private val binding by viewBinding(FragmentModuleProgressionBinding::bind)
 
     private val canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+    @get:PageViewUrlParam("moduleItemId")
     private val moduleItemId by LongArg(key = RouterParams.MODULE_ITEM_ID, default = -1L)
     private val assetType by StringArg(key = ASSET_TYPE)
     private val assetId by StringArg(key = ASSET_ID)

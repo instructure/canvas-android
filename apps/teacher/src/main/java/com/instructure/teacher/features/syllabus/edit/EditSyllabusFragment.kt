@@ -22,6 +22,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_SYLLABUS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.interfaces.NavigationCallbacks
@@ -34,12 +37,16 @@ import com.instructure.teacher.mobius.common.ui.UpdateInit
 
 private const val SUMMARY_ALLOWED = "summaryAllowed"
 
+@PageView
 @ScreenView(SCREEN_VIEW_EDIT_SYLLABUS)
 class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect,
         EditSyllabusView, EditSyllabusViewState, FragmentEditSyllabusBinding>(), NavigationCallbacks {
 
     private val course by ParcelableArg<Course>()
     private val summaryAllowed: Boolean by BooleanArg(key = SUMMARY_ALLOWED)
+
+    @PageViewUrl
+    fun makePageViewUrl(): String = "/courses/${course.id}/syllabus/edit"
 
     override fun makeEffectHandler(): EffectHandler<EditSyllabusView, EditSyllabusEvent, EditSyllabusEffect> = EditSyllabusEffectHandler()
 

@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -32,6 +33,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 //This needed to be named NewDashboardFragment because Pendo tracking would break otherwise.
+@PageView
 @AndroidEntryPoint
 class NewDashboardFragment : ParentFragment() {
 
