@@ -28,7 +28,8 @@ import javax.inject.Inject
 class CookieConsentViewModel @Inject constructor(
     private val getCookieConsentUseCase: GetCookieConsentUseCase,
     private val setCookieConsentUseCase: SetCookieConsentUseCase,
-    private val namespace: CookieConsentNamespace
+    private val namespace: CookieConsentNamespace,
+    private val analyticsConsentHandler: AnalyticsConsentHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -73,6 +74,11 @@ class CookieConsentViewModel @Inject constructor(
             _uiState.update { it.copy(saving = true) }
             try {
                 setCookieConsentUseCase(SetCookieConsentUseCase.Params(namespace, consent))
+                if (consent) {
+                    analyticsConsentHandler.onConsentGranted()
+                } else {
+                    analyticsConsentHandler.onConsentRevoked()
+                }
                 _uiState.update {
                     it.copy(
                         showDialog = false,

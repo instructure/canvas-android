@@ -16,16 +16,14 @@
 package com.instructure.loginapi.login.features.cookieconsent
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.instructure.pandautils.base.BaseCanvasActivity
-import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentContent
 import com.instructure.pandautils.features.cookieconsent.CookieConsentViewModel
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
@@ -41,42 +39,23 @@ class CookieConsentActivity : BaseCanvasActivity() {
     @Inject
     lateinit var router: CookieConsentRouter
 
-    @Inject
-    lateinit var analyticsConsentHandler: AnalyticsConsentHandler
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         EdgeToEdgeHelper.enableEdgeToEdge(this)
 
         viewModel.checkAndShowIfNeeded()
 
-        setContent {
-            val uiState by viewModel.uiState.collectAsState()
-            CookieConsentContent(
-                uiState = uiState,
-            )
-        }
+        setContentView(ComposeView(this).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                CookieConsentContent(uiState = uiState)
+            }
+        })
 
-        observeUiState()
-    }
-
-    private fun observeUiState() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    state.errorMessage?.let {
-                        Toast.makeText(this@CookieConsentActivity, it, Toast.LENGTH_SHORT).show()
-                        state.onErrorDismissed()
-                    }
-
-                    state.consentResult?.let { result ->
-                        if (result.needed) {
-                            if (result.consentGiven) {
-                                analyticsConsentHandler.onConsentGranted()
-                            } else {
-                                analyticsConsentHandler.onConsentRevoked()
-                            }
-                        }
+                    state.consentResult?.let {
                         state.onConsentResultHandled()
                         proceedToApp()
                     }

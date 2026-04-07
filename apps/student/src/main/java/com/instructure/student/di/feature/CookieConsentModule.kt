@@ -16,7 +16,12 @@
 package com.instructure.student.di.feature
 
 import android.content.Context
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
 import dagger.Module
@@ -25,6 +30,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import sdk.pendo.io.Pendo
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -39,19 +45,17 @@ class CookieConsentModule {
     fun provideAnalyticsConsentHandler(@ApplicationContext context: Context): AnalyticsConsentHandler {
         return object : AnalyticsConsentHandler {
             override fun onConsentGranted() {
-                // Pendo session will be started on next app launch via CallbackActivity
-                // Re-schedule pandata upload
                 val workManager = WorkManager.getInstance(context)
-                val workRequest = androidx.work.PeriodicWorkRequestBuilder<com.instructure.pandautils.analytics.pageview.PageViewUploadWorker>(
-                    15, java.util.concurrent.TimeUnit.MINUTES
+                val workRequest = PeriodicWorkRequestBuilder<PageViewUploadWorker>(
+                    15, TimeUnit.MINUTES
                 ).setConstraints(
-                    androidx.work.Constraints.Builder()
-                        .setRequiredNetworkType(androidx.work.NetworkType.CONNECTED)
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
                         .build()
                 ).build()
                 workManager.enqueueUniquePeriodicWork(
                     "pageView-student",
-                    androidx.work.ExistingPeriodicWorkPolicy.KEEP,
+                    ExistingPeriodicWorkPolicy.KEEP,
                     workRequest
                 )
             }

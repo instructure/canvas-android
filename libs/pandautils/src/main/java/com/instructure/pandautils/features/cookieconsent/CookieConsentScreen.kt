@@ -36,8 +36,13 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -55,41 +60,54 @@ fun CookieConsentContent(
     uiState: CookieConsentUiState,
     modifier: Modifier = Modifier
 ) {
-    if (!uiState.showDialog) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(color = colorResource(id = R.color.backgroundLightest))
-        ) {
-            if (uiState.loading) {
-                val loadingColorRes = when (uiState.namespace) {
-                    CookieConsentNamespace.STUDENT -> R.color.login_studentAppTheme
-                    CookieConsentNamespace.TEACHER -> R.color.login_teacherAppTheme
-                    CookieConsentNamespace.PARENT -> R.color.login_parentAppTheme
-                }
-                AndroidView(
-                    factory = {
-                        CanvasLoadingView(it).apply {
-                            setOverrideColor(it.getColor(loadingColorRes))
-                        }
-                    },
-                    modifier = Modifier
-                        .size(120.dp)
-                        .align(Alignment.Center)
-                )
-            }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    uiState.errorMessage?.let { message ->
+        LaunchedEffect(message) {
+            snackbarHostState.showSnackbar(message)
+            uiState.onErrorDismissed()
         }
-        return
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .background(colorResource(R.color.backgroundLightest))
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = colorResource(R.color.backgroundLightest)
+    ) { paddingValues ->
+        if (!uiState.showDialog) {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (uiState.loading) {
+                    val loadingColorRes = when (uiState.namespace) {
+                        CookieConsentNamespace.STUDENT -> R.color.login_studentAppTheme
+                        CookieConsentNamespace.TEACHER -> R.color.login_teacherAppTheme
+                        CookieConsentNamespace.PARENT -> R.color.login_parentAppTheme
+                    }
+                    AndroidView(
+                        factory = {
+                            CanvasLoadingView(it).apply {
+                                setOverrideColor(it.getColor(loadingColorRes))
+                            }
+                        },
+                        modifier = Modifier
+                            .size(120.dp)
+                            .align(Alignment.Center)
+                    )
+                }
+            }
+            return@Scaffold
+        }
+
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
         Text(
             text = stringResource(R.string.cookieConsentTitle),
             fontSize = 22.sp,
@@ -154,6 +172,7 @@ fun CookieConsentContent(
                 fontSize = 16.sp,
             )
         }
+    }
     }
 }
 

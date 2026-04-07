@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -31,17 +30,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
+import com.instructure.pandautils.compose.CanvasTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragment() {
 
     private val viewModel: CookieConsentViewModel by viewModels()
-
-    @Inject
-    lateinit var analyticsConsentHandler: AnalyticsConsentHandler
 
     private val fromSettings: Boolean
         get() = arguments?.getBoolean(ARG_FROM_SETTINGS, false) ?: false
@@ -59,7 +55,9 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
         return ComposeView(requireContext()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
-                CookieConsentContent(uiState = uiState)
+                CanvasTheme {
+                    CookieConsentContent(uiState = uiState)
+                }
             }
         }
     }
@@ -75,7 +73,16 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
             viewModel.checkAndShowIfNeeded()
         }
 
-        observeUiState()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    state.consentResult?.let {
+                        state.onConsentResultHandled()
+                        dismiss()
+                    }
+                }
+            }
+        }
     }
 
     private fun expandBottomSheet(view: View) {
@@ -87,31 +94,6 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
             val behavior = BottomSheetBehavior.from(bottomSheet)
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
             behavior.peekHeight = 0
-        }
-    }
-
-    private fun observeUiState() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    state.errorMessage?.let {
-                        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                        state.onErrorDismissed()
-                    }
-
-                    state.consentResult?.let { result ->
-                        if (result.needed) {
-                            if (result.consentGiven) {
-                                analyticsConsentHandler.onConsentGranted()
-                            } else {
-                                analyticsConsentHandler.onConsentRevoked()
-                            }
-                        }
-                        state.onConsentResultHandled()
-                        dismiss()
-                    }
-                }
-            }
         }
     }
 
