@@ -106,8 +106,14 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
-        const val SUCCESS_URL = "/canvas/login?code="
-        const val ERROR_URL = "/canvas/login?error=access_denied"
+        val SUCCESS_URL_COLLECTION = listOf(
+            "/canvas/login?code=", //success url
+            "login/oauth2/auth?code=" //legacy success url (needed for the fallback redirect_uri)
+        )
+        val ERROR_URL_COLLECTION = listOf(
+            "/canvas/login?error=access_denied", //error url
+            "/login/oauth2/auth?error=access_denied" //legacy error url (needed for the fallback redirect_uri)
+        )
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -240,13 +246,14 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         private fun handleShouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (overrideUrlLoading(view, url)) return true
             return when {
-                url.contains(SUCCESS_URL) -> {
+                SUCCESS_URL_COLLECTION.any { url.contains(it) } -> {
+                    val responseUrl = SUCCESS_URL_COLLECTION.first { url.contains(it) }
                     domain = accountDomain.domain!!
-                    val oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length)
+                    val oAuthRequest = url.substring(url.indexOf(responseUrl) + responseUrl.length)
                     getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
                     true
                 }
-                url.contains(ERROR_URL) -> {
+                ERROR_URL_COLLECTION.any { url.contains(it) } -> {
                     clearCookies()
                     loadUrl(view, authenticationURL, headers)
                     true

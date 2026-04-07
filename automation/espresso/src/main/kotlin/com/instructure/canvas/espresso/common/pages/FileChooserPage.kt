@@ -43,6 +43,7 @@ class FileChooserPage : BasePage() {
     private val cameraButton by OnViewWithId(R.id.fromCamera)
     private val galleryButton by OnViewWithId(R.id.fromGallery)
     private val deviceButton by OnViewWithId(R.id.fromDevice)
+    private val scannerButton by OnViewWithId(R.id.fromScanner)
     private val chooseFileTitle by OnViewWithId(R.id.chooseFileTitle)
     private val chooseFileSubtitle by OnViewWithId(R.id.chooseFileSubtitle)
     private val fileChooserTitle by WaitForViewWithId(R.id.alertTitle)
@@ -65,6 +66,10 @@ class FileChooserPage : BasePage() {
 
     fun chooseDevice() {
         deviceButton.scrollTo().click()
+    }
+
+    fun chooseScanner() {
+        scannerButton.scrollTo().click()
     }
 
     fun clickOkay() {

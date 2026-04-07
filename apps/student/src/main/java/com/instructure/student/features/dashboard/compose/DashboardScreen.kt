@@ -21,6 +21,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,8 +30,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
@@ -267,23 +268,22 @@ private fun WidgetList(
         else -> 1
     }
 
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(bottom = 16.dp)) {
-        items(
-            items = widgets,
-            key = { it.id }
-        ) { metadata ->
+    Column(
+        modifier = modifier
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 16.dp)
+    ) {
+        widgets.forEach { metadata ->
             GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = Modifier.padding(top = 16.dp))
         }
 
-        item {
-            CustomizeDashboardButton(
-                onClick = { router.routeToCustomizeDashboard() },
-                color = Color(color.color()),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            )
-        }
+        CustomizeDashboardButton(
+            onClick = { router.routeToCustomizeDashboard() },
+            color = Color(color.color()),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        )
     }
 }
 

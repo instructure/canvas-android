@@ -127,6 +127,9 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
             is InboxDetailsFragmentAction.OpenAttachment -> {
                 inboxRouter.routeToAttachment(action.attachment)
             }
+            is InboxDetailsFragmentAction.OpenMediaAttachment -> {
+                inboxRouter.routeToMediaAttachment(action.mediaComment)
+            }
             is InboxDetailsFragmentAction.UpdateParentFragment -> {
                 sharedEvents.sendEvent(lifecycleScope, InboxSharedAction.RefreshListScreen)
             }
