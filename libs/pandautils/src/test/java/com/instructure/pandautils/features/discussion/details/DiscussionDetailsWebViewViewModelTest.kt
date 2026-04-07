@@ -21,6 +21,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -55,6 +56,7 @@ class DiscussionDetailsWebViewViewModelTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
     private val discussionManager: DiscussionManager = mockk(relaxed = true)
+    private val discussionApi: DiscussionAPI.DiscussionInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val oAuthManager: OAuthManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -81,7 +83,7 @@ class DiscussionDetailsWebViewViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        viewModel = DiscussionDetailsWebViewViewModel(oAuthManager, apiPrefs, discussionManager, resources, localeObject, timezoneObject)
+        viewModel = DiscussionDetailsWebViewViewModel(oAuthManager, apiPrefs, discussionManager, discussionApi, resources, localeObject, timezoneObject)
     }
 
     @After
