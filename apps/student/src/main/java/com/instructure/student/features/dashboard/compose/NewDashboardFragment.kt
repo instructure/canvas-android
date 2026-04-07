@@ -27,7 +27,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.student.features.dashboard.StudentFragmentNavigationHandler
+import com.instructure.student.features.dashboard.RouteMatcherNavigationHandler
 import com.instructure.student.fragment.ParentFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,7 +42,7 @@ class NewDashboardFragment : ParentFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val navigationHandler = remember { StudentFragmentNavigationHandler(requireActivity()) }
+                val navigationHandler = remember { RouteMatcherNavigationHandler(requireActivity()) }
                 CanvasTheme {
                     DashboardScreen(navigationHandler = navigationHandler)
                 }

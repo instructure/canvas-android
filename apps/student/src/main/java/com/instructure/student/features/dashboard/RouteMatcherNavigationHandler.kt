@@ -48,7 +48,7 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.router.RouteMatcher
 
-class StudentFragmentNavigationHandler(
+class RouteMatcherNavigationHandler(
     private val activity: FragmentActivity
 ) : DashboardNavigationHandler {
 
