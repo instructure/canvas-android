@@ -354,11 +354,23 @@ class SpeedGraderContentViewModelTest {
     @Test
     fun `fetchData updates uiState with GRADED state`() = runTest {
         coEvery { submissionFields.state } returns SubmissionState.graded
+        coEvery { submissionFields.grade } returns "A"
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
 
         assertEquals(SubmissionStateLabel.Graded, viewModel.uiState.value.submissionState)
+    }
+
+    @Test
+    fun `fetchData updates uiState with Submitted state when workflow state is graded but grade is null`() = runTest {
+        coEvery { submissionFields.state } returns SubmissionState.graded
+        coEvery { submissionFields.grade } returns null
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.Submitted, viewModel.uiState.value.submissionState)
     }
 
     @Test
@@ -482,6 +494,7 @@ class SpeedGraderContentViewModelTest {
         assertEquals(SubmissionStateLabel.Submitted, viewModel.uiState.value.submissionState)
 
         coEvery { submissionFields.state } returns SubmissionState.graded
+        coEvery { submissionFields.grade } returns "A"
 
         gradingEventHandler.postEvent(GradingEvent.GradeChanged)
 
