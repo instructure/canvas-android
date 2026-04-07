@@ -262,6 +262,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics enabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns true
+        coEvery { apiPrefs.mobileConsent } returns true
 
         createViewModel()
 
@@ -275,6 +276,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics disabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns false
+        coEvery { apiPrefs.mobileConsent } returns true
 
         createViewModel()
 
