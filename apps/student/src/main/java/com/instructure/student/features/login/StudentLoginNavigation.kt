@@ -31,7 +31,7 @@ import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.ngc.NGCActivity
+import com.instructure.ngc.NGCActivity
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.widget.NotificationWidgetProvider
 import com.instructure.student.widget.grades.list.GradesWidgetReceiver

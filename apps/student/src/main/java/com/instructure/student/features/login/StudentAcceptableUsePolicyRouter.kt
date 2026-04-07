@@ -31,7 +31,7 @@ import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.ngc.NGCActivity
+import com.instructure.ngc.NGCActivity
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentAcceptableUsePolicyRouter(

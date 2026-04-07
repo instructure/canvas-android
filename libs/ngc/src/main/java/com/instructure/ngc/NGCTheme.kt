@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,11 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
- *
  */
 
-package com.instructure.student.features.ngc
+package com.instructure.ngc
 
 import android.content.Context
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -33,22 +31,23 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import com.instructure.horizon.R
+import com.instructure.ngc.designsystem.DesignSystem
+import com.instructure.ngc.designsystem.LocalDesignSystem
+import com.instructure.ngc.designsystem.NGCTypography
 import com.instructure.pandautils.compose.LocalCourseColor
-import com.instructure.student.features.ngc.designsystem.DesignSystem
-import com.instructure.student.features.ngc.designsystem.LocalDesignSystem
-import com.instructure.student.features.ngc.designsystem.NGCTypography
+import com.instructure.pandautils.R as PandaR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NGCTheme(courseColor: Color = LocalCourseColor.current, content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = MaterialTheme.colorScheme.copy(
-            surfaceContainerLow = colorResource(R.color.backgroundLight),
+            surfaceContainerLow = colorResource(PandaR.color.backgroundLight),
         )
     ) {
         CompositionLocalProvider(
-            LocalRippleConfiguration provides RippleConfiguration(color = colorResource(id = R.color.backgroundDark),
+            LocalRippleConfiguration provides RippleConfiguration(
+                color = colorResource(id = PandaR.color.backgroundDark),
                 getRippleAlpha(isSystemInDarkTheme())
             ),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
@@ -76,11 +75,10 @@ private fun getRippleAlpha(isSystemInDarkTheme: Boolean): RippleAlpha {
             hoveredAlpha = 0.08f
         )
     }
-
 }
 
 private fun getCustomTextSelectionColors(context: Context): TextSelectionColors {
-    val color = Color(context.getColor(R.color.textDarkest))
+    val color = Color(context.getColor(PandaR.color.textDarkest))
     return TextSelectionColors(
         handleColor = color,
         backgroundColor = color.copy(alpha = 0.4f)

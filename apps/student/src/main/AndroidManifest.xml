@@ -281,7 +281,7 @@
         <activity android:name=".activity.StudentLoginWithQRActivity" />
 
         <activity
-            android:name=".features.ngc.NGCActivity"
+            android:name="com.instructure.ngc.NGCActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:label="@string/student_app_name"
