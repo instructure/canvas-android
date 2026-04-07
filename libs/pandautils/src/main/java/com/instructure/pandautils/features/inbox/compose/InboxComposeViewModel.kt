@@ -21,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
@@ -62,7 +63,8 @@ class InboxComposeViewModel @Inject constructor(
     private val inboxComposeRepository: InboxComposeRepository,
     private val attachmentDao: AttachmentDao,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val inboxComposeBehavior: InboxComposeBehavior
+    private val inboxComposeBehavior: InboxComposeBehavior,
+    private val workManager: WorkManager
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -226,7 +228,15 @@ class InboxComposeViewModel @Inject constructor(
         _uiState.update { it.copy(attachments = it.attachments + placeholderAttachments) }
     }
 
-    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
+    fun onWorkStarted(uuid: UUID) {
+        viewModelScope.launch {
+            workManager.getWorkInfoByIdFlow(uuid).collect { workInfo ->
+                workInfo?.let { updateAttachments(uuid, it) }
+            }
+        }
+    }
+
+    private fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
         viewModelScope.launch {
             uuid?.let { workerId ->
                 val status = workInfo.state.toAttachmentCardStatus()
