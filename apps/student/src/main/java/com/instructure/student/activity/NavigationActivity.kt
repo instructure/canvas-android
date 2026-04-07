@@ -457,6 +457,23 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun setupWindowInsets() = with(binding) {
+        // Consume navigation bar bottom inset at the CoordinatorLayout level so Snackbars
+        // shown inside it don't add extra bottom margin (the bottomBarContainer handles that space).
+        ViewCompat.setOnApplyWindowInsetsListener(fullScreenCoordinatorLayout) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(navigationBars.left, navigationBars.top, navigationBars.right, 0)
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(displayCutout.left, displayCutout.top, displayCutout.right, 0)
+                )
+                .build()
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
@@ -473,10 +490,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 0
             )
 
-            // Consume horizontal insets so child ComposeViews don't apply them again
-            // Also consume bottom insets when offline indicator is visible
+            // Consume horizontal and bottom insets so child views don't apply them again.
+            // The bottomBarContainer handles the navigation bar bottom space, so we consume it here
+            // to prevent the CoordinatorLayout from double-counting it (e.g. for Snackbar positioning).
             val masquerading = ApiPrefs.isMasquerading
-            val consumeBottom = offlineIndicator.root.visibility == View.VISIBLE
             WindowInsetsCompat.Builder(insets)
                 .setInsets(
                     WindowInsetsCompat.Type.navigationBars(),
@@ -484,7 +501,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         0, // Consume left
                         if (masquerading) 0 else navigationBars.top,
                         0, // Consume right
-                        if (consumeBottom) 0 else navigationBars.bottom
+                        0  // Consume bottom — handled by bottomBarContainer
                     )
                 )
                 .setInsets(
@@ -505,7 +522,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
             if (isLandscape) {
-                // In landscape, use both padding for content and margins to move the bar away from edges
+                // In landscape, apply left/right padding and margins to move the bar away from edges
                 val leftInset = maxOf(navigationBars.left, displayCutout.left)
                 val rightInset = maxOf(navigationBars.right, displayCutout.right)
 
@@ -516,13 +533,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     view.paddingBottom
                 )
 
-                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                view.updateLayoutParams<LinearLayout.LayoutParams> {
                     this.leftMargin = leftInset
                     this.rightMargin = rightInset
-                    this.bottomMargin = navigationBars.bottom
+                    this.bottomMargin = 0
+                    height = 56.toPx + navigationBars.bottom
                 }
             } else {
-                // In portrait, only apply display cutout and bottom navigation bar
+                // In portrait, extend the height to draw behind the Android navigation bar (edge-to-edge)
                 view.setPadding(
                     displayCutout.left,
                     view.paddingTop,
@@ -530,10 +548,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     view.paddingBottom
                 )
 
-                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                view.updateLayoutParams<LinearLayout.LayoutParams> {
                     this.leftMargin = 0
                     this.rightMargin = 0
-                    this.bottomMargin = navigationBars.bottom
+                    this.bottomMargin = 0
+                    height = 56.toPx + navigationBars.bottom
                 }
             }
 
@@ -544,14 +563,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             layoutParams?.bottomMargin = if (bottomBarContainer.isVisible) 0 else navigationBars.bottom
             offlineIndicator.root.layoutParams = layoutParams
 
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
-            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            bottomBarContainer.updateLayoutParams<LinearLayout.LayoutParams> {
-                height = 56.toPx + navigationBars.bottom
-            }
             insets
         }
 
