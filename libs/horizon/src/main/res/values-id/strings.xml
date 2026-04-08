@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Item modul selanjutnya</string>
     <string name="a11y_nextModule">Modul selanjutnya</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, ditandai sebagai %2$s, ketuk dua kali untuk mengedit catatan</string>
+    <string name="learnCoursesTabLabel">Kursus</string>
+    <string name="learnProgramsTabLabel">Programs</string>
     <string name="reportAProblemDescriptionMessage">Ajukan tiket untuk respons pribadi dari tim dukungan kami.</string>
     <string name="igniteAIEnterAPromptLabel">Masukkan prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Memuat respons</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Balik kartu</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Gagal memuat kursus</string>
+    <string name="learnCourseListFilterAll">Semua kursus</string>
+    <string name="learnCourseListFilterNotStarted">Tidak dimulai</string>
+    <string name="learnCourseListFilterInProgress">Sedang berlangsung</string>
+    <string name="learnCourseListFilterCompleted">Selesai</string>
+    <string name="learnCourseListStartLearningLabel">Mulai pembelajaran</string>
+    <string name="learnCourseListResumeLearningLabel">Lanjutkan pembelajaran</string>
+    <string name="learnCourseListViewCourseLabel">Lihat kursus</string>
+    <string name="learnCourseListShowMoreLabel">Tampilkan lebih banyak</string>
+    <string name="learnCourseListSearchBarPlaceholder">Cari kursus</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Bagian dari %1$s</string>
+    <string name="learnCourseListEmptyMessage">Hasil tidak ditemukan. Cobalah menyesuaikan istilah pencarian Anda.</string>
+    <string name="learnProgramListFilterAll">Semua program</string>
+    <string name="learnProgramListFilterNotStarted">Tidak dimulai</string>
+    <string name="learnProgramListFilterInProgress">Sedang berlangsung</string>
+    <string name="learnProgramListFilterCompleted">Selesai</string>
+    <string name="learnProgramListShowMoreLabel">Tampilkan lebih banyak</string>
+    <string name="learnProgramListEmptyMessage">Hasil tidak ditemukan. Cobalah menyesuaikan istilah pencarian Anda.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Cari program</string>
+    <string name="learnProgramListFailedToLoadMessage">Gagal memuat program</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d kursus</item>
+        <item quantity="other">Kursus %1$d.</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Kesalahan: %1$s</string>
     <string name="a11y_required">Dibutuhkan</string>
 </resources>

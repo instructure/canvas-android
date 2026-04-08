@@ -39,7 +39,7 @@ class SimpleWebViewRepositoryTest {
     fun `Get authenticated session successfully returns data`() = runTest {
         val expected = "sessionUrl"
 
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(AuthenticatedSession(sessionUrl = expected))
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(AuthenticatedSession(sessionUrl = expected))
 
         val result = repository.getAuthenticatedSession("url")
         Assert.assertEquals(expected, result)
@@ -47,7 +47,7 @@ class SimpleWebViewRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Get authenticated session fails throws exception`() = runTest {
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         repository.getAuthenticatedSession("url")
     }

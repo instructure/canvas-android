@@ -936,24 +936,31 @@ class CalendarViewModelTest {
                 3,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
-                submissionState = SubmissionState(graded = true)
+                submissionState = SubmissionState(graded = true, postedAt = Date())
             ),
             createPlannerItem(
-                2,
+                1,
                 4,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
-                submissionState = SubmissionState(needsGrading = true)
+                submissionState = SubmissionState(graded = true, postedAt = null)
             ),
             createPlannerItem(
                 2,
                 5,
                 PlannableType.ASSIGNMENT,
                 createDate(2023, 4, 20, 12),
+                submissionState = SubmissionState(needsGrading = true)
+            ),
+            createPlannerItem(
+                2,
+                6,
+                PlannableType.ASSIGNMENT,
+                createDate(2023, 4, 20, 12),
                 pointsPossible = 10.0,
                 submissionState = SubmissionState()
             ),
-            createPlannerItem(2, 6, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12), submissionState = SubmissionState()),
+            createPlannerItem(2, 7, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12), submissionState = SubmissionState()),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
         initViewModel()
@@ -963,8 +970,9 @@ class CalendarViewModelTest {
         assertEquals("missing", currentPageEvents[1].status)
         assertEquals("graded", currentPageEvents[2].status)
         assertEquals("needs grading", currentPageEvents[3].status)
-        assertEquals("10 pts", currentPageEvents[4].status)
-        assertNull(currentPageEvents[5].status)
+        assertEquals("needs grading", currentPageEvents[4].status)
+        assertEquals("10 pts", currentPageEvents[5].status)
+        assertNull(currentPageEvents[6].status)
     }
 
     @Test

@@ -36,10 +36,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.features.learn.course.list.LearnCourseListScreen
-import com.instructure.horizon.features.learn.course.list.LearnCourseListViewModel
-import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
-import com.instructure.horizon.features.learn.program.list.LearnProgramListViewModel
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListScreen
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListViewModel
+import com.instructure.horizon.features.learn.mycontent.LearnMyContentScreen
+import com.instructure.horizon.features.learn.mycontent.LearnMyContentViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
@@ -81,15 +81,15 @@ fun LearnScreen(
     ) { paddingValues ->
         HorizontalPager(pagerState, Modifier.padding(paddingValues)) { pageIndex ->
             when(LearnTab.entries[pageIndex]) {
-                LearnTab.COURSES -> {
-                    val viewModel = hiltViewModel<LearnCourseListViewModel>()
-                    val state by viewModel.state.collectAsState()
-                    LearnCourseListScreen(state, navController)
-                }
-                LearnTab.PROGRAMS -> {
-                    val viewModel = hiltViewModel<LearnProgramListViewModel>()
+                LearnTab.MY_CONTENT -> {
+                    val viewModel = hiltViewModel<LearnMyContentViewModel>()
                     val state by viewModel.uiState.collectAsState()
-                    LearnProgramListScreen(state, navController)
+                    LearnMyContentScreen(state, navController)
+                }
+                LearnTab.BROWSE -> {
+                    val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
+                    val state by viewModel.uiState.collectAsState()
+                    LearnLearningLibraryListScreen(state, navController)
                 }
             }
         }

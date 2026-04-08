@@ -459,11 +459,13 @@
     <string name="schedule_calendar_event_due_text">O %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s do %2$s</string>
     <string name="schedule_todo_due_text">Lista zadań: %s</string>
+    <string name="schedule_todo_due_text_new">Lista zadań: %s</string>
     <string name="schedule_due_text">Termin: %s</string>
     <string name="show_missing_items_title">Pokaż brakujące elementy: %d</string>
     <string name="hide_missing_items_title">Ukryj brakujące elementy: %d</string>
     <string name="schedule_error_message">Nie można pobrać harmonogramu</string>
     <string name="schedule_todo_title">Lista zadań</string>
+    <string name="schedule_todo_title_new">Lista zadań</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pkt</item>
         <item quantity="one">%s pkt</item>
@@ -492,6 +494,7 @@
     <string name="a11y_planner_note">Notatka planera</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Lista zadań</string>
+    <string name="a11y_todo_new">Lista zadań</string>
     <string name="a11y_page">Strona</string>
     <string name="a11y_assessment_request">Prośba o ocenę</string>
     <string name="a11y_marked_as_done">Oznaczono jako gotowe</string>

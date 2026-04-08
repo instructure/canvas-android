@@ -49,6 +49,7 @@
     <string name="submissionStatusFailedTitle">فشل الإرسال</string>
     <string name="submissionStatusFailedSubtitle">اضغط لعرض التفاصيل</string>
     <string name="submissionAndRubric">الإرسال ومقياس التقييم</string>
+    <string name="submissionAndFeedback">الإرسال والملاحظات</string>
     <string name="commentsAndRubric">التعليقات ونماذج التقييم (الروبرك)</string>
     <string name="errorLoadingAssignment">حدثت مشكلة أثناء تحميل هذه المهمة. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="submitted">تم الإرسال</string>
@@ -238,6 +239,7 @@
 
     <!-- Date strings -->
     <string name="today">اليوم</string>
+    <string name="tomorrow">غدًا</string>
     <string name="past">الماضي</string>
     <string name="noDate">بلا تاريخ</string>
     <string name="future">المستقبل</string>
@@ -310,6 +312,7 @@
     <string name="monologue">مونولوج</string>
     <string name="noItemsToDisplayShort">لا توجد عناصر للعرض</string>
     <string name="Todo">قائمة مهام</string>
+    <string name="TodoNew">المهمة</string>
     <string name="todoFilter">تصفية المساقات</string>
     <string name="filterByEllipsis">التصفية حسب...</string>
     <string name="favoriteCoursesLabel">المساقات المفضلة</string>
@@ -517,6 +520,7 @@
     <string name="groups">المجموعات</string>
     <string name="groupMembers">أعضاء المجموعة</string>
 
+    <string name="messageGroup">إرسال رسالة إلى المجموعة</string>
     <string name="loading">جارٍ التحميل&#8230;</string>
     <string name="select_item_to_display">الاختيار من القائمة</string>
 
@@ -733,9 +737,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">قائمة مهام</string>
+    <string name="todoWidgetTitleNew">المهمة</string>
     <string name="gradesWidgetTitle">الدرجات</string>
     <string name="notificationWidgetTitle">الإعلامات</string>
     <string name="todoWidgetTitleLong">Canvas - قائمة المهام</string>
+    <string name="todoWidgetTitleLongNew">Canvas - المهمة</string>
     <string name="gradesWidgetTitleLong">Canvas - الدرجات</string>
     <string name="gradeWidgetTitleLong">Canvas - الدرجة</string>
     <string name="notificationWidgetTitleLong">Canvas - الإعلامات</string>
@@ -771,6 +777,8 @@
     <!-- Tablet Strings -->
     <string name="courses">المساقات</string>
     <string name="toDoList">قائمة المهام</string>
+    <string name="toDoListNew">قائمة المهام</string>
+
     <string name="notifications">الإعلامات</string>
     <string name="pushNotifications">الإعلامات الفورية</string>
     <string name="pushNotificationsError">لم يتم تسجيل الإعلامات لهذا الجهاز.</string>
@@ -785,7 +793,6 @@
 
     <string name="launchSpeedgrader">فتح SpeedGrader</string>
 
-    <string name="search_todo">قائمة ما يجب القيام به</string>
     <string name="search_course">مساق مساقات صف صفوف</string>
     <string name="search_grades">درجة درجات</string>
 
@@ -1148,6 +1155,13 @@
     <string name="pageTitleMustBeSet">يجب تعيين عنوان الصفحة.</string>
     <string name="pageDetails">تفاصيل الصفحة</string>
     <string name="saving">جارٍ الحفظ</string>
+    <string name="speedGraderSaving">جارٍ الحفظ</string>
+    <string name="speedGraderSaved">تم الحفظ</string>
+    <string name="speedGraderFailed">فشل</string>
+    <string name="speedGraderSaveErrorTitle">عذرًا حدث خطأ ما</string>
+    <string name="speedGraderSaveErrorMessage">حدث خطأ أثناء حفظ تعديل درجتك. يمكنك إعادة المحاولة الآن أو لاحقًا.</string>
+    <string name="speedGraderSaveErrorContentDescription">فشل حفظ الدرجة. اضغط لمعرفة التفاصيل.</string>
+
     <string name="confirmDeleteEvent">هل ترغب بالتأكيد في حذف هذا الحدث؟</string>
     <string name="conferencesNotSupported">لم يتم بعد دعم المؤتمرات على الأجهزة المحمولة.</string>
     <string name="filePreviewContentDescription">صورة معاينة الملف</string>
@@ -1308,6 +1322,10 @@
     <string name="recordings">التسجيلات</string>
     <string name="conferenceInProgress">المؤتمر قيد التقدم</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">مؤتمرات (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">المؤتمر قيد التقدم</string>
+    <string name="conferencesWidgetDismissed">تم إبعاد المؤتمر</string>
     <string name="a11y_criterion_content_description">تصنيف المعيار %s</string>
     <string name="a11y_criterion_description_content_description">%s، %s</string>
     <string name="a11y_criterion_button_click_description">معلومات إضافية</string>
@@ -1469,6 +1487,14 @@
         <item quantity="few">%s من عناصر قائمة المهام</item>
         <item quantity="many">%s من عناصر قائمة المهام</item>
         <item quantity="other">%s من عناصر قائمة المهام</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="zero">%s من عناصر المهام</item>
+        <item quantity="one">%s عنصر مهمة</item>
+        <item quantity="two">%s من عناصر المهام</item>
+        <item quantity="few">%s من عناصر المهام</item>
+        <item quantity="many">%s من عناصر المهام</item>
+        <item quantity="other">%s من عناصر المهام</item>
     </plurals>
     <string name="noAnnotationSelected">لم يتم تحديد تعليق توضيحي</string>
     <string name="emailNotifications">إعلامات البريد الإلكتروني</string>
@@ -1776,7 +1802,9 @@
     <string name="calendarNoEvents">لا توجد أحداث اليوم!</string>
     <string name="calendarNoEventsDescription">يبدو أنه يوم رائع للراحة والاسترخاء وتجديد النشاط.</string>
     <string name="userCalendarToDo">قائمة المهام</string>
+    <string name="userCalendarToDoNew">المهمة</string>
     <string name="courseToDo">قائمة مهام %s</string>
+    <string name="courseToDoNew">%s مهمة</string>
     <string name="calendarEventExcused">معفى</string>
     <string name="calendarEventMissing">مفقود</string>
     <string name="calendarEventGraded">تم تقييم الدرجة</string>
@@ -1801,21 +1829,30 @@
     <string name="a11y_eventCreatedAnnouncement">تم إنشاء الحدث %s بنجاح.</string>
     <string name="a11y_eventUpdatedAnnouncement">تم تحديث الحدث %s بنجاح.</string>
     <string name="a11y_toDoCreatedAnnouncement">تم إنشاء قائمة المهام %s بنجاح.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">تم إنشاء %s مهمة بنجاح.</string>
     <string name="a11y_toDoUpdatedAnnouncement">تم تحديث قائمة المهام %s بنجاح.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">تم تحديث %s مهام بنجاح.</string>
     <string name="todoScreenTitle">قائمة المهام</string>
+    <string name="todoScreenTitleNew">المهمة</string>
     <string name="todoDateLabel">التاريخ</string>
     <string name="todoDescriptionLabel">الوصف</string>
     <string name="todoDeleteConfirmationTitle">هل تريد حذف قائمة المهام؟</string>
+    <string name="todoDeleteConfirmationTitleNew">هل تريد حذف المهمة؟</string>
     <string name="todoDeleteConfirmationText">سيؤدي هذا إلى حذف عنصر قائمة المهام الخاص بك بشكل دائم.</string>
+    <string name="todoDeleteConfirmationTextNew">سيؤدي هذا إلى حذف عنصر المهمة لديك بشكل نهائي.</string>
     <string name="todoDeleteErrorMessage">حدث خطأ أثناء حذف قائمة المهام هذه. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="todoDeleteErrorMessageNew">حدث خطأ أثناء حذف هذه المهمة. يُرجى التحقق من اتصالك وإعادة المحاولة مرة أخرى.</string>
     <string name="createTodoScreenTitle">قائمة مهام جديدة</string>
+    <string name="createTodoScreenTitleNew">مهمة جديدة</string>
     <string name="editTodoScreenTitle">تحرير قائم مهام</string>
+    <string name="editTodoScreenTitleNew">تحرير المهمة</string>
     <string name="createToDoTitleHint">إضافة عنوان</string>
     <string name="createToDoDateLabel">التاريخ</string>
     <string name="createToDoTimeLabel">الوقت</string>
     <string name="createToDoCalendarLabel">التقويم</string>
     <string name="createToDoDetailsLabel">التفاصيل</string>
     <string name="todoSaveErrorMessage">حدث خطأ أثناء حفظ قائمة المهام هذه. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="todoSaveErrorMessageNew">حدث خطأ أثناء حفظ هذه المهمة. يُرجى التحقق من اتصالك وإعادة المحاولة مرة أخرى.</string>
     <string name="selectCalendarScreenTitle">حدد تقويمًا</string>
     <string name="errorContentRetryButton">إعادة المحاولة</string>
     <string name="eventLocationLabel">الموقع</string>
@@ -1823,6 +1860,7 @@
     <string name="eventDetailsLabel">التفاصيل</string>
     <string name="errorLoadingEvent">حدثت مشكلة أثناء تحميل هذا الحدث. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="errorLoadingTodo">حدثت مشكلة أثناء تحميل قائمة المهام هذه. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="errorLoadingTodoNew">حدثت مشكلة أثناء تحميل هذه المهمة. يُرجى التحقق من اتصالك وإعادة المحاولة مرة أخرى.</string>
     <string name="eventDeleteConfirmationTitle">هل تريد الحذف؟</string>
     <string name="eventDeleteConfirmationText">سيؤدي هذا إلى حذف الحدث الخاص بك بشكل دائم.</string>
     <string name="eventDeleteErrorMessage">حدث خطأ أثناء حذف هذا الحدث. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
@@ -1843,6 +1881,7 @@
     <string name="eventDeleteScopeAll">جميع الأحداث</string>
     <string name="eventDeleteScopeFollowing">هذا وكل الأحداث التالية</string>
     <string name="calendarAddToDo">إضافة قائمة مهام</string>
+    <string name="calendarAddToDoNew">إضافة مهمة</string>
     <string name="calendarAddEvent">إضافة حدث</string>
     <string name="createEventScreenTitle">حدث جديد</string>
     <string name="editEventScreenTitle">تحرير الحدث</string>
@@ -2245,7 +2284,9 @@
     <string name="widgetNotLoggedInTitle">فلنساعدك في تسجيل الدخول!</string>
     <string name="widgetToDoNotLoggedInSubtitle">لتر قائمة مهامك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
     <string name="a11y_widgetToDoOpenToDoList">فتح شاشة قائمة المهام</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">فتح شاشة قائمة المهام</string>
     <string name="a11y_widgetToDoCreateNewToDo">إنشاء مهمة جديدة</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">إنشاء مهمة جديدة</string>
     <string name="widgetGradesErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
     <string name="widgetGradesNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
     <string name="widgetSingleGradeErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي.</string>
@@ -2253,6 +2294,19 @@
     <string name="widgetSingleGradeSelectCourse">فلنختر مساقًا</string>
     <string name="widgetGradesErrorLoadingCourses">حدث خطأ أثناء تحميل المساقات.</string>
     <string name="settingsSwitchExperience">تبديل إلى Canvas Career</string>
+    <string name="forecastWidgetTitle">الموجز الأسبوعي</string>
+    <string name="forecastWidgetWeekPeriod">الأسبوع %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">مفقود</string>
+    <string name="forecastWidgetDue">الاستحقاق</string>
+    <string name="forecastWidgetRecentGrades">درجات جديدة</string>
+    <string name="forecastWidgetGradeWeight">%d%% من الدرجة النهائية</string>
+    <string name="forecastWidgetErrorMessage">نواجه مشكلة في تحميل مهامك يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="forecastWidgetEmptyMissing">لا توجد مهام فائتة. لقد اطلعت عليها جميعًا!</string>
+    <string name="forecastWidgetEmptyDue">لا توجد مهام مستحقة لهذا الأسبوع.</string>
+    <string name="forecastWidgetEmptyRecentGrades">لا توجد درجات جديدة في هذا الأسبوع.</string>
+    <string name="a11y_contentDescription_previousWeek">الأسبوع السابق</string>
+    <string name="a11y_contentDescription_nextWeek">الأسبوع القادم</string>
+
     <string name="speedGraderGradeTabTitle">الصف الدراسي ومقياس التقييم روبرك</string>
     <string name="speedGraderDetailsTabTitle">التفاصيل</string>
     <string name="a11y_contentDescription_expandPanel">توسعة اللوحة</string>
@@ -2339,6 +2393,7 @@
     <string name="errorLoadingToDos">وقع خطأ أثناء تحميل عناصر قائم المهام الخاصة بك. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="errorUpdatingToDo">وقع خطأ أثناء تحدث عنصر قائم المهام الخاص بك. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="noToDosForNow">لا توجد قوائم مهام في الوقت الحالي!</string>
+    <string name="noToDosForNowNew">لا توجد مهام في الوقت الحالي!</string>
     <string name="noToDosForNowSubtext">يبدو أننا في وقت رائع للراحة والاسترخاء والاستعداد للعمل من جديد.</string>
     <string name="todoSwipeDone">تم</string>
     <string name="todoSwipeUndo">تراجع</string>
@@ -2349,8 +2404,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">تفضيلات قائمة المهام</string>
+    <string name="todoFilterPreferencesNew">تفضيلات قائمة المهام</string>
     <string name="todoFilterVisibleItems">عناصر ظاهرة</string>
     <string name="todoFilterShowPersonalToDos">إظهار قوائم المهام الشخصية</string>
+    <string name="todoFilterShowPersonalToDosNew">إظهار المهام الشخصية</string>
     <string name="todoFilterShowCalendarEvents">إظهار أحداث التقويم</string>
     <string name="todoFilterShowCompleted">إظهار المكتمل</string>
     <string name="todoFilterFavoriteCoursesOnly">تفضيل الدورات التدريبية فقط</string>
@@ -2376,6 +2433,9 @@
     <string name="courseInvitationDeclined">تم رفض الدعوة إلى %s</string>
     <string name="courseInvitationDeclineConfirmTitle">رفض الدعوة</string>
     <string name="courseInvitationDeclineConfirmMessage">هل أنت متأكد من أنك تريد رفض الدعوة إلى %s؟</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">التقدم</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2499,6 +2559,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">مرحبًا يا %s</string>
 
+    <string name="courses_and_groups">المساقات والمجموعات</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">تخصيص لوحة المعلومات</string>
     <string name="dashboard_widgets">عناصر واجهة المستخدم</string>
@@ -2508,16 +2569,44 @@
     <string name="changing_dashboard_layout">جارٍ تغيير تخطيط لوحة المعلومات</string>
     <string name="changing_dashboard_layout_message">لتغيير تخطيط لوحة المعلومات، عليك أن تعيد تشغيل التطبيق</string>
     <string name="restart_now">إعادة التشغيل الآن</string>
+    <string name="turn_on_new_dashboard">قم بتشغيل لوحة المعلومات الجديدة.</string>
     <string name="switched_back">هل تريد التبديل إلى الشكل القديم؟</string>
     <string name="switched_back_message">شكرًا لك على تجربة لوحة المعلومات الجديدة! هل من الممكن أن تخبرنا لماذا قمت بالرجوع إلى الشكل القديم؟</string>
+    <string name="survey_option_hard_to_find">من الصعب العثور على الأشياء</string>
+    <string name="survey_option_prefer_old_layout">أفضل التخطيط القديم</string>
+    <string name="survey_option_something_broken">هناك شيء ما لا يعمل كما يجب</string>
     <string name="what_could_we_improve">ما الذي يمكننا أن نحسنه؟</string>
+    <string name="what_do_you_think_of_new_dashboard">ما رأيك في لوحة المعلومات الجديدة؟</string>
+    <string name="let_us_know">دعنا نعرف!</string>
+    <string name="no_app_to_handle_link">لا يتوفر تطبيق لفتح هذا الارتباط</string>
     <string name="skip">تخطي</string>
     <string name="widget_setting_show_greeting">إظهار شاشة الترحيب</string>
     <string name="background_color">لون الخلفية</string>
+    <string name="widget_setting_show_grades">درجات المساق</string>
+    <string name="widget_setting_show_color_overlay">تراكب لون المساق</string>
     <string name="offline_content_available">يتوفر محتوى بدون اتصال</string>
     <string name="a11y_contentDescription_moreOptions">المزيد من الخيارات</string>
     <string name="customizeCourse">تخصيص مساق</string>
     <string name="favoriteCoursesAndGroups">تفضيل المساقات والمجموعات</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">الأدوات الخارجية غير متوفرة بدون اتصال.</string>
+    <string name="widget_weekly_summary">الموجز الأسبوعي</string>
+
+    <string name="dashboardCourseNickname">اللقب</string>
+    <string name="dashboardCourseNicknameHint">اكتب لقب المساق هنا</string>
+    <string name="dashboardCourseColor">لون المساق</string>
+    <string name="widget_toDo">قائمة المهام اليومية</string>
+    <string name="dailyToDoWidgetTitle">قائمة المهام اليومية</string>
+    <string name="todoWidget_showCompleted">إظهار المكتمل</string>
+    <string name="todoWidget_emptyTitle">أنت جاهز تمامًا في الوقت الحالي!</string>
+    <string name="todoWidget_emptyMessage">يبدو أنك لست متفرغًا لهذا اليوم.\nهل تريد إضافة بعض قوائم المهام؟</string>
+    <string name="todoWidget_addTodo">إضافة مهمة</string>
+    <string name="todoWidget_errorTitle">عذرًا، حدث خطأ ما</string>
+    <string name="todoWidget_errorMessage">لم نتمكن من تحميل قوائم المهام.\nأعد المحاولة، أو عد لاحقًا.</string>
+    <string name="todoWidget_refresh">تحديث</string>
+    <string name="todoWidget_today">اليوم</string>
+    <string name="a11y_todoWidget_jumpToToday">الانتقال إلى اليوم</string>
+    <string name="widgetSettings_widgetsColor">اللون الرئيسي للوحة المعلومات</string>
+    <string name="dashboard_globalAnnouncement">الإعلان العام</string>
+    <string name="forecastWidget_currentWeek">الأسبوع الحالي</string>
 </resources>

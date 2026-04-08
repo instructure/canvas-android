@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Næsta námsefnisatriði</string>
     <string name="a11y_nextModule">Næsta námsefni</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, merkt sem %2$s, pikkaðu tvisvar til að breyta glósu</string>
+    <string name="learnCoursesTabLabel">Námskeið</string>
+    <string name="learnProgramsTabLabel">Brautir</string>
     <string name="reportAProblemDescriptionMessage">Skrá beiðni um persónulegt svar frá hjálparsveit okkar.</string>
     <string name="igniteAIEnterAPromptLabel">Settu inn kvaðningu</string>
     <string name="a11y_igniteAiLoadingContentDescription">Hleður svar</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Snúa kortinu</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Ekki tókst að hlaða inn námskeiðum</string>
+    <string name="learnCourseListFilterAll">Öll námskeið</string>
+    <string name="learnCourseListFilterNotStarted">Ekki byrjað</string>
+    <string name="learnCourseListFilterInProgress">Í gangi</string>
+    <string name="learnCourseListFilterCompleted">Lokið</string>
+    <string name="learnCourseListStartLearningLabel">Hefja nám</string>
+    <string name="learnCourseListResumeLearningLabel">Halda áfram námi</string>
+    <string name="learnCourseListViewCourseLabel">Skoða námskeið</string>
+    <string name="learnCourseListShowMoreLabel">Sýna meira</string>
+    <string name="learnCourseListSearchBarPlaceholder">Leita í námskeiðum</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Hluti af %1$s</string>
+    <string name="learnCourseListEmptyMessage">Engar niðurstöður fundust. Prófaðu að breyta leitarorðinu.</string>
+    <string name="learnProgramListFilterAll">Allar brautir</string>
+    <string name="learnProgramListFilterNotStarted">Ekki byrjað</string>
+    <string name="learnProgramListFilterInProgress">Í gangi</string>
+    <string name="learnProgramListFilterCompleted">Lokið</string>
+    <string name="learnProgramListShowMoreLabel">Sýna meira</string>
+    <string name="learnProgramListEmptyMessage">Engar niðurstöður fundust. Prófaðu að breyta leitarorðinu.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Leita að brautum</string>
+    <string name="learnProgramListFailedToLoadMessage">Ekki tókst að hlaða inn brautum</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d námskeið</item>
+        <item quantity="other">%1$d námskeið</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Villa: %1$s</string>
     <string name="a11y_required">Krafist</string>
 </resources>

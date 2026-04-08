@@ -31,6 +31,7 @@
     <string name="tab_attendance">Aanwezigheid</string>
     <string name="tab_pages">Pagina\'s</string>
     <string name="tab_todo">To-do lijst</string>
+    <string name="tab_todo_new">Opdracht</string>
     <string name="content_description_school_logo">Schoollogo</string>
     <string name="search_guides">In Canvas-handleidingen zoeken</string>
     <string name="canvas_guides">Canvas-handleidingen</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Dat was alles!\n Een fijne dag gewenst.</string>
     <string name="toDoNoSubmissions">Er zijn geen inzendingen die voor deze opdracht moeten worden beoordeeld.</string>
     <string name="errorToDoRouteFailed">Er is een fout opgetreden bij het weergeven van dit To-do-item.</string>
+    <string name="errorToDoRouteFailedNew">Er is een fout opgetreden bij het weergeven van dit item van de lijst met opdrachten.</string>
     <string name="errorIsDesigner">Ontwerperinschrijving kan dit niet zien.</string>
 
     <string name="sections">Secties</string>

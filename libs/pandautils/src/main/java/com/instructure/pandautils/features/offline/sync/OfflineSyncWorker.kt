@@ -173,7 +173,6 @@ class OfflineSyncWorker @AssistedInject constructor(
 
         withContext(Dispatchers.Main) {
             aggregateProgressObserver.progressData.removeObserver(progressObserver)
-            aggregateProgressObserver.onCleared()
         }
 
         if (courseProgresses.isNotEmpty() && fileProgresses.isNotEmpty()) {

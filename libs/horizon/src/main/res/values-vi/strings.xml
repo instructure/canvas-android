@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Mục học phần tiếp theo</string>
     <string name="a11y_nextModule">Học phần tiếp theo</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, được đánh dấu là %2$s, nhấn đúp để chỉnh sửa ghi chú</string>
+    <string name="learnCoursesTabLabel">Các khóa học</string>
+    <string name="learnProgramsTabLabel">Chương Trình</string>
     <string name="reportAProblemDescriptionMessage">Gửi phiếu yêu cầu phản hồi cá nhân từ nhóm hỗ trợ của chúng tôi.</string>
     <string name="igniteAIEnterAPromptLabel">Nhập một lời nhắc</string>
     <string name="a11y_igniteAiLoadingContentDescription">Đang tải phản hồi</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Lật thẻ</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Không tải được các khóa học</string>
+    <string name="learnCourseListFilterAll">Tất cả các khóa học</string>
+    <string name="learnCourseListFilterNotStarted">Chưa bắt đầu</string>
+    <string name="learnCourseListFilterInProgress">Trong tiến trình</string>
+    <string name="learnCourseListFilterCompleted">Đã hoàn thành</string>
+    <string name="learnCourseListStartLearningLabel">Bắt đầu học</string>
+    <string name="learnCourseListResumeLearningLabel">Tiếp tục học</string>
+    <string name="learnCourseListViewCourseLabel">Xem khóa học</string>
+    <string name="learnCourseListShowMoreLabel">Hiển thị thêm</string>
+    <string name="learnCourseListSearchBarPlaceholder">Tìm kiếm khóa học</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Một phần của %1$s</string>
+    <string name="learnCourseListEmptyMessage">Không tìm thấy kết quả. Thử điều chỉnh từ khóa tìm kiếm.</string>
+    <string name="learnProgramListFilterAll">Tất cả các chương trình</string>
+    <string name="learnProgramListFilterNotStarted">Chưa bắt đầu</string>
+    <string name="learnProgramListFilterInProgress">Trong tiến trình</string>
+    <string name="learnProgramListFilterCompleted">Đã hoàn thành</string>
+    <string name="learnProgramListShowMoreLabel">Hiển thị thêm</string>
+    <string name="learnProgramListEmptyMessage">Không tìm thấy kết quả. Thử điều chỉnh từ khóa tìm kiếm.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Tìm kiếm chương trình</string>
+    <string name="learnProgramListFailedToLoadMessage">Không tải được chương trình</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d khóa học</item>
+        <item quantity="other">%1$d khóa học</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Lỗi: %1$s</string>
     <string name="a11y_required">Bắt Buộc</string>
 </resources>

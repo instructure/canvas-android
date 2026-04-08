@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Næste modulelement</string>
     <string name="a11y_nextModule">Næste modul</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, markeret som %2$s, dobbelttryk for at redigere noten</string>
+    <string name="learnCoursesTabLabel">Fag</string>
+    <string name="learnProgramsTabLabel">Programmer</string>
     <string name="reportAProblemDescriptionMessage">Indsend besked for et personligt svar fra vores supportteam</string>
     <string name="igniteAIEnterAPromptLabel">Indtast en prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Indlæser svar</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Vend kortet</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Kunne ikke indlæse fag</string>
+    <string name="learnCourseListFilterAll">Alle fag</string>
+    <string name="learnCourseListFilterNotStarted">Ikke startet</string>
+    <string name="learnCourseListFilterInProgress">I gang</string>
+    <string name="learnCourseListFilterCompleted">Fuldført</string>
+    <string name="learnCourseListStartLearningLabel">Begynd at lære</string>
+    <string name="learnCourseListResumeLearningLabel">Genoptag læring</string>
+    <string name="learnCourseListViewCourseLabel">Vis fag</string>
+    <string name="learnCourseListShowMoreLabel">Vis mere</string>
+    <string name="learnCourseListSearchBarPlaceholder">Søg fag</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">En del af %1$s</string>
+    <string name="learnCourseListEmptyMessage">Ingen resultater fundet. Prøv at justere dine søgeord.</string>
+    <string name="learnProgramListFilterAll">Alle programmer</string>
+    <string name="learnProgramListFilterNotStarted">Ikke startet</string>
+    <string name="learnProgramListFilterInProgress">I gang</string>
+    <string name="learnProgramListFilterCompleted">Fuldført</string>
+    <string name="learnProgramListShowMoreLabel">Vis mere</string>
+    <string name="learnProgramListEmptyMessage">Ingen resultater fundet. Prøv at justere dine søgeord.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Søg i programmer</string>
+    <string name="learnProgramListFailedToLoadMessage">Kunne ikke indlæse programmer</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d fag</item>
+        <item quantity="other">%1$d fag</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Fejl: %1$s</string>
     <string name="a11y_required">Påkrævet</string>
 </resources>

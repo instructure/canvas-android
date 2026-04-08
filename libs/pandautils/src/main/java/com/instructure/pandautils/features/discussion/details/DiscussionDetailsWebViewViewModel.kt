@@ -21,6 +21,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -39,6 +41,7 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
         private val oauthManager: OAuthManager,
         private val apiPrefs: ApiPrefs,
         private val discussionManager: DiscussionManager,
+        private val discussionApi: DiscussionAPI.DiscussionInterface,
         private val resources: Resources,
         private val locale: Locale,
         private val timezone: TimeZone
@@ -64,6 +67,9 @@ class DiscussionDetailsWebViewViewModel @Inject constructor(
                 val authenticatedUrl = "$sessionUrl&embed=true&session_locale=$locale&session_timezone=$timezone"
 
                 _data.postValue(DiscussionDetailsWebViewViewData(authenticatedUrl, header?.title ?: resources.getString(R.string.discussion)))
+
+                val params = RestParams(isForceReadFromNetwork = true)
+                discussionApi.markAllDiscussionTopicEntriesRead(canvasContext.apiContext(), canvasContext.id, id, params)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _state.postValue(ViewState.Error(resources.getString(R.string.errorOccurred)))

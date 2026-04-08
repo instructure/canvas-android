@@ -112,17 +112,15 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
-        workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
-            workInfo?.let {
-                viewModel.updateAttachments(uuid, workInfo)
-            }
-        }
+        uuid?.let { viewModel.onWorkStarted(it) }
     }
 
     private fun handleAction(action: InboxComposeViewModelAction) {
         when (action) {
             is InboxComposeViewModelAction.NavigateBack -> {
-                requireActivity().onBackPressed()
+                if (isAdded && !parentFragmentManager.isStateSaved) {
+                    requireActivity().onBackPressed()
+                }
             }
             is InboxComposeViewModelAction.OpenAttachmentPicker -> {
                 val bundle = FileUploadDialogFragment.createMessageAttachmentsBundle(arrayListOf())

@@ -38,7 +38,6 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import com.instructure.pandautils.utils.orDefault
 import okhttp3.Request
-import okio.Source
 import okio.buffer
 import okio.sink
 import java.io.File
@@ -253,13 +252,15 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             file
         )
 
+        val resolvedType = contentResolver.getType(fileUri)
+
         // Sometimes the CanvasWebView download listener won't be able to resolve the
         // contentDisposition which causes the contentResolver to be unable to determine the
         // mime type since the file name will have no extension. In that case, we use the mime type.
-        if (contentResolver.getType(fileUri)!!.contains("octet-stream") && mimeType!!.contains("pdf")) {
+        if (resolvedType.orEmpty().contains("octet-stream") && !mimeType.isNullOrEmpty()) {
             intent.setDataAndType(fileUri, mimeType)
         } else {
-            intent.setDataAndType(fileUri, contentResolver.getType(fileUri))
+            intent.setDataAndType(fileUri, resolvedType)
         }
 
         // We know that we can always handle pdf intents with pspdfkit, so we don't want to error out here
@@ -289,7 +290,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             }
 
             // Extract headers from response (headers are available before reading the body)
-            var responseMimeType = resp.header("Content-Type")
+            var responseMimeType = normalizeMimeType(resp.header("Content-Type"))
             var responseFilename: String? = null
 
             // Parse filename from Content-Disposition header
@@ -365,6 +366,11 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
                 filename = responseFilename
             )
         }
+    }
+
+    private fun normalizeMimeType(mimeType: String?): String? = when (mimeType) {
+        "application/mp4" -> "video/mp4"
+        else -> mimeType
     }
 
     private fun guessMimeTypeFromFilename(filename: String): String? {

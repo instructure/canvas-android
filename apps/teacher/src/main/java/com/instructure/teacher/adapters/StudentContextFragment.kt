@@ -35,6 +35,8 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
@@ -80,6 +82,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
+@PageView(url = "courses/{courseId}/users/{userId}")
 @AndroidEntryPoint
 class StudentContextFragment : PresenterFragment<StudentContextPresenter, StudentContextView>(), StudentContextView {
 
@@ -88,8 +91,11 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
 
     private val binding by viewBinding(FragmentStudentContextBinding::bind)
 
-    private var mStudentId by LongArg()
-    private var mCourseId by LongArg()
+    @get:PageViewUrlParam("userId")
+    var mStudentId by LongArg()
+    @get:PageViewUrlParam("courseId")
+    var mCourseId by LongArg()
+
     private var mLaunchSubmissions by BooleanArg()
     private var needToForceNetwork = false
     private var mHasLoaded = false

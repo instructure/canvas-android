@@ -144,7 +144,6 @@ class DashboardNotificationsViewModel @Inject constructor(
     override fun onCleared() {
         _data.value?.uploadItems?.forEach { it.clear() }
         aggregateProgressObserver.progressData.removeObserver(syncProgressObserver)
-        aggregateProgressObserver.onCleared()
         fileUploads.removeObserver(runningWorkersObserver)
         super.onCleared()
     }

@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Eitem modiwl nesaf</string>
     <string name="a11y_nextModule">Modiwl nesaf</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, wedi’i farcio fel %2$s, tapiwch ddwywaith i olygu’r nodyn</string>
+    <string name="learnCoursesTabLabel">Cyrsiau</string>
+    <string name="learnProgramsTabLabel">Rhaglenni</string>
     <string name="reportAProblemDescriptionMessage">Gallwch ffeilio tocyn i gael ymateb personol gan ein tîm cymorth.</string>
     <string name="igniteAIEnterAPromptLabel">Rhowch awgrym</string>
     <string name="a11y_igniteAiLoadingContentDescription">Wrthi’n llwytho ymateb</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Troi’r cerdyn drosodd</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Wedi methu llwytho cyrsiau</string>
+    <string name="learnCourseListFilterAll">Pob cwrs</string>
+    <string name="learnCourseListFilterNotStarted">Heb ddechrau</string>
+    <string name="learnCourseListFilterInProgress">Ar y gweill</string>
+    <string name="learnCourseListFilterCompleted">Wedi cwblhau</string>
+    <string name="learnCourseListStartLearningLabel">Dechrau dysgu</string>
+    <string name="learnCourseListResumeLearningLabel">Ailddechrau dysgu</string>
+    <string name="learnCourseListViewCourseLabel">Gweld cwrs</string>
+    <string name="learnCourseListShowMoreLabel">Dangos mwy</string>
+    <string name="learnCourseListSearchBarPlaceholder">Chwilio am gyrsiau</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Rhan o %1$s</string>
+    <string name="learnCourseListEmptyMessage">Heb ddod o hyd i ganlyniadau. Rhowch gynnig ar newid eich termau chwilio.</string>
+    <string name="learnProgramListFilterAll">Pob rhaglen</string>
+    <string name="learnProgramListFilterNotStarted">Heb ddechrau</string>
+    <string name="learnProgramListFilterInProgress">Ar y gweill</string>
+    <string name="learnProgramListFilterCompleted">Wedi cwblhau</string>
+    <string name="learnProgramListShowMoreLabel">Dangos mwy</string>
+    <string name="learnProgramListEmptyMessage">Heb ddod o hyd i ganlyniadau. Rhowch gynnig ar newid eich termau chwilio.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Chwilio am raglenni</string>
+    <string name="learnProgramListFailedToLoadMessage">Wedi methu llwytho rhaglenni</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d cwrs</item>
+        <item quantity="other">%1$d o gyrsiau</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Gwall: %1$s</string>
     <string name="a11y_required">Gofynnol</string>
 </resources>

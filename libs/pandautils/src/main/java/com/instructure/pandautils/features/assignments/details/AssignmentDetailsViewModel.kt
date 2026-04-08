@@ -446,7 +446,11 @@ class AssignmentDetailsViewModel @Inject constructor(
             )
         }
 
-        val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
+        val partialLockedMessage = assignment.lockDate?.takeIf { it.before(Date()) }?.let {
+            val dateString = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault()).format(it)
+            val timeString = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(it)
+            resources.getString(R.string.closedSubtext, dateString, timeString)
+        }.orEmpty()
 
         val submissionHistory = assignment.submission?.submissionHistory
         val attempts = submissionHistory?.let { history ->

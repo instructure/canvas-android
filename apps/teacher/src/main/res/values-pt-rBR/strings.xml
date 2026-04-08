@@ -31,6 +31,7 @@
     <string name="tab_attendance">Frequência</string>
     <string name="tab_pages">Páginas</string>
     <string name="tab_todo">Lista de Tarefas</string>
+    <string name="tab_todo_new">A fazer</string>
     <string name="content_description_school_logo">Logo da Escola</string>
     <string name="search_guides">Pesquisar no Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
@@ -843,6 +844,7 @@
     <string name="toDoEmpty">Nada mais para fazer!\n Aproveite o seu dia.</string>
     <string name="toDoNoSubmissions">Não há envios para avaliar para essa tarefa.</string>
     <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar visualizar o item da lista de tarefas.</string>
+    <string name="errorToDoRouteFailedNew">Ocorreu um erro ao tentar visualizar este item da lista de tarefas.</string>
     <string name="errorIsDesigner">A matrícula de designer não pode visualizar isso.</string>
 
     <string name="sections">Turmas</string>

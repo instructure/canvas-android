@@ -129,6 +129,7 @@ private fun AppBar(
                 conversation = uiState.conversation,
                 showDeleteButton = uiState.showDeleteButton,
                 showReplyAllButton = uiState.showReplyAllButton,
+                showArchiveOption = uiState.showArchiveOption,
                 actionHandler = actionHandler
             )
         },
@@ -305,6 +306,7 @@ private fun AppBarMenu(
     conversation: Conversation?,
     showDeleteButton: Boolean,
     showReplyAllButton: Boolean,
+    showArchiveOption: Boolean,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -387,36 +389,38 @@ private fun AppBarMenu(
                 }
             }
 
-            if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        actionHandler(
-                            InboxDetailsAction.UpdateState(
-                                conversation.id,
-                                Conversation.WorkflowState.ARCHIVED
+            if (showArchiveOption) {
+                if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
+                    DropdownMenuItem(
+                        onClick = {
+                            showMenu = !showMenu
+                            actionHandler(
+                                InboxDetailsAction.UpdateState(
+                                    conversation.id,
+                                    Conversation.WorkflowState.ARCHIVED
+                                )
                             )
+                        }
+                    ) {
+                        MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
+                    }
+                } else {
+                    DropdownMenuItem(
+                        onClick = {
+                            showMenu = !showMenu
+                            actionHandler(
+                                InboxDetailsAction.UpdateState(
+                                    conversation.id,
+                                    Conversation.WorkflowState.READ
+                                )
+                            )
+                        }
+                    ) {
+                        MessageMenuItem(
+                            R.drawable.ic_unarchive,
+                            stringResource(id = R.string.unarchive)
                         )
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
-                }
-            } else {
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        actionHandler(
-                            InboxDetailsAction.UpdateState(
-                                conversation.id,
-                                Conversation.WorkflowState.READ
-                            )
-                        )
-                    }
-                ) {
-                    MessageMenuItem(
-                        R.drawable.ic_unarchive,
-                        stringResource(id = R.string.unarchive)
-                    )
                 }
             }
 

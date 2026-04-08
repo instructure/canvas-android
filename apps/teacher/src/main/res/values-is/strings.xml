@@ -31,6 +31,7 @@
     <string name="tab_attendance">Mæting</string>
     <string name="tab_pages">Síður</string>
     <string name="tab_todo">Verkefni</string>
+    <string name="tab_todo_new">Verkefnalisti</string>
     <string name="content_description_school_logo">Myndmerki skóla</string>
     <string name="search_guides">Leita í leiðbeiningum Canvas</string>
     <string name="canvas_guides">Canvas leiðarvísar</string>
@@ -843,6 +844,7 @@
     <string name="toDoEmpty">Ekkert annað á dagskrá!\n Njóttu dagsins.</string>
     <string name="toDoNoSubmissions">Þetta verkefni er ekki með nein skil sem bíða mats.</string>
     <string name="errorToDoRouteFailed">Villa kom upp við að skoða þetta verkefni á verkefnalista.</string>
+    <string name="errorToDoRouteFailedNew">Villa kom upp við að skoða þetta verkefni á verkefnalista.</string>
     <string name="errorIsDesigner">Hönnuðu innritun sér þetta ekki.</string>
 
     <string name="sections">Fylki</string>

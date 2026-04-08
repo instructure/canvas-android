@@ -94,6 +94,7 @@ import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.toast
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit) {
@@ -304,6 +305,7 @@ private fun WidgetListItem(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .testTag("moveUpButton_${widgetItem.metadata.id}")
+                                    .pendoTag("moveUpButton", true)
                             ) {
                                 Icon(
                                     modifier = Modifier.rotate(180f),
@@ -330,6 +332,7 @@ private fun WidgetListItem(
                                 modifier = Modifier
                                     .size(24.dp)
                                     .testTag("moveDownButton_${widgetItem.metadata.id}")
+                                    .pendoTag("moveDownButton", true)
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_chevron_down_small),
@@ -351,7 +354,7 @@ private fun WidgetListItem(
                 CanvasSwitch(
                     checked = widgetItem.metadata.isVisible,
                     onCheckedChange = { onToggleVisibility() },
-                    modifier = Modifier.testTag("visibilitySwitch_${widgetItem.metadata.id}")
+                    modifier = Modifier.testTag("visibilitySwitch_${widgetItem.metadata.id}").pendoTag("widgetVisibilitySwitch", true)
                 )
             }
             if (hasSettings) {
@@ -466,7 +469,8 @@ private fun BooleanSettingRow(
 
         CanvasSwitch(
             checked = checked,
-            onCheckedChange = onCheckedChange
+            onCheckedChange = onCheckedChange,
+            modifier = Modifier.pendoTag("widgetSettingSwitch", true)
         )
     }
 }
@@ -566,7 +570,9 @@ private fun ConfirmationDialog(
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.textButtonColor)
                 ),
-                modifier = Modifier.testTag("confirmationDialogConfirmButton")
+                modifier = Modifier
+                    .testTag("confirmationDialogConfirmButton")
+                    .pendoTag("confirmationDialogRestartButton", true)
             ) {
                 Text(
                     text = stringResource(R.string.restart_now)
@@ -579,7 +585,9 @@ private fun ConfirmationDialog(
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.textButtonColor)
                 ),
-                modifier = Modifier.testTag("confirmationDialogDismissButton")
+                modifier = Modifier
+                    .testTag("confirmationDialogDismissButton")
+                    .pendoTag("confirmationDialogCancelButton", true)
             ) {
                 Text(
                     text = stringResource(R.string.cancel)
@@ -596,9 +604,18 @@ private data class SurveyOptionData(
 )
 
 private val SURVEY_OPTIONS = listOf(
-    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, R.string.survey_option_hard_to_find),
-    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, R.string.survey_option_prefer_old_layout),
-    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_SOMETHING_BROKEN, R.string.survey_option_something_broken)
+    SurveyOptionData(
+        AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND,
+        R.string.survey_option_hard_to_find
+    ),
+    SurveyOptionData(
+        AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT,
+        R.string.survey_option_prefer_old_layout
+    ),
+    SurveyOptionData(
+        AnalyticsEventConstants.SURVEY_OPTION_SOMETHING_BROKEN,
+        R.string.survey_option_something_broken
+    )
 )
 
 @Composable
@@ -675,7 +692,7 @@ private fun SurveyDialog(
                     contentColor = Color(ThemePrefs.textButtonColor),
                     disabledContentColor = Color(ThemePrefs.textButtonColor).copy(alpha = 0.6f),
                 ),
-                modifier = Modifier.testTag("surveyDialogSubmitButton")
+                modifier = Modifier.testTag("surveyDialogSubmitButton").pendoTag("surveyDialogSubmitButton", true)
             ) {
                 Text(
                     text = stringResource(R.string.submit)
@@ -691,7 +708,7 @@ private fun SurveyDialog(
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.textButtonColor),
                 ),
-                modifier = Modifier.testTag("surveyDialogSkipButton")
+                modifier = Modifier.testTag("surveyDialogSkipButton").pendoTag("surveyDialogSkipButton", true)
             ) {
                 Text(
                     text = stringResource(R.string.skip)
@@ -780,6 +797,7 @@ private fun FeedbackButton(
             modifier = Modifier
                 .height(30.dp)
                 .testTag(testTag)
+                .pendoTag("surveyDialogLetUsKnowButton", true)
         ) {
             Text(
                 text = stringResource(R.string.let_us_know),
@@ -804,27 +822,14 @@ private fun CustomizeDashboardScreenPreview() {
     CanvasTheme {
         CustomizeDashboardScreenContent(
             uiState = CustomizeDashboardUiState(
+                globalSettings = listOf(
+                    WidgetSettingItem(
+                        key = "Dashboard Main Color",
+                        value = "#FF0000",
+                        type = SettingType.COLOR
+                    )
+                ),
                 widgets = listOf(
-                    WidgetItem(
-                        metadata = WidgetMetadata(
-                            id = WidgetMetadata.WIDGET_ID_WELCOME,
-                            position = 0,
-                            isVisible = true
-                        ),
-                        displayName = "Hello, [Riley]",
-                        settings = listOf(
-                            WidgetSettingItem(
-                                key = "showGreeting",
-                                value = false,
-                                type = SettingType.BOOLEAN
-                            ),
-                            WidgetSettingItem(
-                                key = "backgroundColor",
-                                value = 0x2573DF,
-                                type = SettingType.COLOR
-                            )
-                        )
-                    ),
                     WidgetItem(
                         metadata = WidgetMetadata(
                             id = WidgetMetadata.WIDGET_ID_WELCOME,
@@ -842,6 +847,26 @@ private fun CustomizeDashboardScreenPreview() {
                                 key = "backgroundColor",
                                 value = 0x2573DF,
                                 type = SettingType.COLOR
+                            )
+                        )
+                    ),
+                    WidgetItem(
+                        metadata = WidgetMetadata(
+                            id = WidgetMetadata.WIDGET_ID_COURSES,
+                            position = 1,
+                            isVisible = true
+                        ),
+                        displayName = "Courses",
+                        settings = listOf(
+                            WidgetSettingItem(
+                                key = CoursesConfig.KEY_SHOW_GRADES,
+                                value = true,
+                                type = SettingType.BOOLEAN
+                            ),
+                            WidgetSettingItem(
+                                key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY,
+                                value = false,
+                                type = SettingType.BOOLEAN
                             )
                         )
                     )

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Theip ar Uaslódáil</string>
     <string name="submissionStatusFailedSubtitle">Tapáil chun sonraí a fheiceáil</string>
     <string name="submissionAndRubric">Uaslódáil &amp; rúibric</string>
+    <string name="submissionAndFeedback">Uaslódáil agus Aiseolas</string>
     <string name="commentsAndRubric">Ráitis &amp; Rúibric</string>
     <string name="errorLoadingAssignment">Bhí fadhb ann agus an tasc seo á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="submitted">Curtha isteach</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Inniu</string>
+    <string name="tomorrow">Amárach</string>
     <string name="past">Caite</string>
     <string name="noDate">Gan Dáta</string>
     <string name="future">Todhchaí</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monalóg</string>
     <string name="noItemsToDisplayShort">Níl aon mhíreanna le taispeáint</string>
     <string name="Todo">Le Déanamh</string>
+    <string name="TodoNew">Le Déanamh</string>
     <string name="todoFilter">Scag Cúrsaí</string>
     <string name="filterByEllipsis">Scag de réir&#8230;</string>
     <string name="favoriteCoursesLabel">Cúrsaí is Fearr</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grúpaí</string>
     <string name="groupMembers">Baill an Ghrúpa</string>
 
+    <string name="messageGroup">Grúpa teachtaireachtaí</string>
     <string name="loading">Ag lódáil&#8230;</string>
     <string name="select_item_to_display">Roghnaigh ón liosta</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Le Déanamh</string>
+    <string name="todoWidgetTitleNew">Le Déanamh</string>
     <string name="gradesWidgetTitle">Marcanna</string>
     <string name="notificationWidgetTitle">Fógraí</string>
     <string name="todoWidgetTitleLong">Canvas - Le Déanamh</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Le Déanamh</string>
     <string name="gradesWidgetTitleLong">Canvas - Marcanna</string>
     <string name="gradeWidgetTitleLong">Canvas - Marc</string>
     <string name="notificationWidgetTitleLong">Canvas- Fógraí</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Cúrsaí</string>
     <string name="toDoList">Liosta Le Déanamh</string>
+    <string name="toDoListNew">Liosta Le Déanamh</string>
+
     <string name="notifications">Fógraí</string>
     <string name="pushNotifications">Brúfhógraí</string>
     <string name="pushNotificationsError">Níor cláraíodh Brúfhógraí don ghléas seo.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Oscail SpeedGrader</string>
 
-    <string name="search_todo">le déanamh le déanamh le déanamh liosta le déanamh</string>
     <string name="search_course">cúrsaí cúrsa rang ranganna</string>
     <string name="search_grades">marc marcanna</string>
 
@@ -1078,6 +1085,13 @@
     <string name="pageTitleMustBeSet">Ní mór teideal an leathanaigh a shocrú.</string>
     <string name="pageDetails">Sonraí Leathanaigh</string>
     <string name="saving">Ag Sábháil</string>
+    <string name="speedGraderSaving">Ag Sábháil</string>
+    <string name="speedGraderSaved">Sábháilte</string>
+    <string name="speedGraderFailed">Theip air</string>
+    <string name="speedGraderSaveErrorTitle">Ó, chuaigh rud éigin mícheart.</string>
+    <string name="speedGraderSaveErrorMessage">Tharla earráid agus do mhodhnú mairc á shábháil. Is féidir leat iarracht eile a dhéanamh, nó iarracht eile a dhéanamh níos déanaí.</string>
+    <string name="speedGraderSaveErrorContentDescription">Theip ar shábháil an mhairc. Tapáil le haghaidh sonraí.</string>
+
     <string name="confirmDeleteEvent">An bhfuil tú cinnte gur mian leat an t-imeacht seo a scriosadh?</string>
     <string name="conferencesNotSupported">Ní thacaítear fós le comhdhálacha ar fhóin phóca.</string>
     <string name="filePreviewContentDescription">Íomhá réamhamharc comhaid</string>
@@ -1224,6 +1238,10 @@
     <string name="recordings">Taifeadtaí</string>
     <string name="conferenceInProgress">Comhdháil ar siúl</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Comhdhálacha (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Comhdháil ar siúl</string>
+    <string name="conferencesWidgetDismissed">Comhdháil curtha ar ceal</string>
     <string name="a11y_criterion_content_description">Rátáil critéir %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">Tuilleadh eolais</string>
@@ -1380,6 +1398,10 @@
     <plurals name="a11y_todoBadgeCount">
         <item quantity="one">%s mír le déanamh</item>
         <item quantity="other">%s mír le déanamh</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s m(h)ír le déanamh</item>
+        <item quantity="other">%s m(h)ír le déanamh</item>
     </plurals>
     <string name="noAnnotationSelected">Níl aon nóta mínithe roghnaithe</string>
 
@@ -1671,7 +1693,9 @@
     <string name="calendarNoEvents">Níl aon Imeachtaí inniu!</string>
     <string name="calendarNoEventsDescription">Breathnaíonn sé cosúil le lá iontach chun sos a ghlacadh, scíth a ligean, agus d\'anáil a tharraingt.</string>
     <string name="userCalendarToDo">Le Déanamh</string>
+    <string name="userCalendarToDoNew">Le Déanamh</string>
     <string name="courseToDo">%s Le Déanamh</string>
+    <string name="courseToDoNew">%s Le déanamh</string>
     <string name="calendarEventExcused">Leithscéal faighte</string>
     <string name="calendarEventMissing">Ar iarraidh</string>
     <string name="calendarEventGraded">Marcáilte</string>
@@ -1697,21 +1721,30 @@
     <string name="a11y_eventCreatedAnnouncement">Cruthaíodh an t-imeacht seo go rathúil: %s.</string>
     <string name="a11y_eventUpdatedAnnouncement">Nuashonraíodh an t-imeacht seo go rathúil: %s.</string>
     <string name="a11y_toDoCreatedAnnouncement">Cruthaíodh an Le Déanamh seo go rathúil: %s.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">D’éirigh leis an Le Déanamh %s a chruthú.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Nuashonraíodh an Le Déanamh seo go rathúil: %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">D’éirigh leis an Le Déanamh %s a nuashonrú.</string>
     <string name="todoScreenTitle">Le Déanamh</string>
+    <string name="todoScreenTitleNew">Le Déanamh</string>
     <string name="todoDateLabel">Dáta</string>
     <string name="todoDescriptionLabel">Cur síos</string>
     <string name="todoDeleteConfirmationTitle">Scrios Le Déanamh?</string>
+    <string name="todoDeleteConfirmationTitleNew">Scrios an Rud le Déanamh?</string>
     <string name="todoDeleteConfirmationText">Scriosfaidh sé seo do mhír Le Déanamh go buan.</string>
+    <string name="todoDeleteConfirmationTextNew">Scriosfaidh sé seo do mhír Le Déanamh go buan.</string>
     <string name="todoDeleteErrorMessage">Tharla earráid agus an Le Déanamh seo á scriosadh. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="todoDeleteErrorMessageNew">Tharla earráid agus an tasc seo á scriosadh. Seiceáil do nasc agus déan iarracht arís.</string>
     <string name="createTodoScreenTitle">Le Déanamh Nua</string>
+    <string name="createTodoScreenTitleNew">Rud le Déanamh Nua</string>
     <string name="editTodoScreenTitle">Cuir Le Déanamh in Eagar</string>
+    <string name="editTodoScreenTitleNew">Cuir an Rud le Déanamh in Eagar</string>
     <string name="createToDoTitleHint">Cuir teideal leis</string>
     <string name="createToDoDateLabel">Dáta</string>
     <string name="createToDoTimeLabel">Am</string>
     <string name="createToDoCalendarLabel">Féilire</string>
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">Tharla earráid agus an Le Déanamh seo á shábháil. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="todoSaveErrorMessageNew">Tharla earráid agus an tasc seo á shábháil. Seiceáil do nasc agus déan iarracht arís.</string>
     <string name="selectCalendarScreenTitle">Roghnaigh Féilire</string>
 
     <string name="errorContentRetryButton">Bain triail eile as</string>
@@ -1721,6 +1754,7 @@
     <string name="eventDetailsLabel">Sonraí</string>
     <string name="errorLoadingEvent">Tharla fadhb agus an t-imeacht seo á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="errorLoadingTodo">Tharla fadhb agus an le déanamh seo á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="errorLoadingTodoNew">Bhí fadhb ann an tasc seo a luchtú. Seiceáil do nasc agus déan iarracht arís.</string>
     <string name="eventDeleteConfirmationTitle">Scrios Imeacht?</string>
     <string name="eventDeleteConfirmationText">Scriosfaidh sé seo d\'imeacht go buan.</string>
     <string name="eventDeleteErrorMessage">Tharla earráid agus an t-imeacht seo á scriosadh. Seiceáil do cheangal agus bain triail eile as.</string>
@@ -1737,6 +1771,7 @@
     <string name="eventDeleteScopeAll">Imeachtaí ar fad</string>
     <string name="eventDeleteScopeFollowing">Seo agus gach imeacht ina dhiaidh</string>
     <string name="calendarAddToDo">Cuir Le Déanamh</string>
+    <string name="calendarAddToDoNew">Cuir \'Le Déanamh\' leis</string>
     <string name="calendarAddEvent">Cuir Imeacht leis</string>
 
     <string name="createEventScreenTitle">Imeacht Nua</string>
@@ -2117,7 +2152,9 @@
     <string name="widgetNotLoggedInTitle">Lig dúinn tú a logáil isteach!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Chun do liosta le déanamh a fheiceáil, logáil isteach i do chuntas san aip le do thoil. Ní thógfaidh sé ach soicind!</string>
     <string name="a11y_widgetToDoOpenToDoList">Oscail scáileán Liosta Le Déanamh</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Oscail an scáileán liosta le déanamh</string>
     <string name="a11y_widgetToDoCreateNewToDo">Cruthaigh Tasc Nua</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Cruthaigh Tasc Nua</string>
     <string name="widgetGradesErrorSubtitle">Tá deacrachtaí againn do mharcanna a thaispeáint faoi láthair. Bain triail eile as ar ball nó téigh chuig an aip.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Chun do mharcanna a fheiceáil, logáil isteach i do chuntas san aip le do thoil. Ní thógfaidh sé ach soicind!</string>
     <string name="widgetSingleGradeErrorSubtitle">Tá deacrachtaí againn do mharcanna a thaispeáint faoi láthair.</string>
@@ -2125,6 +2162,19 @@
     <string name="widgetSingleGradeSelectCourse">Roghnaímis cúrsa</string>
     <string name="widgetGradesErrorLoadingCourses">Tharla earráid agus cúrsaí á lódáil.</string>
     <string name="settingsSwitchExperience">Téigh go Canvas Career</string>
+    <string name="forecastWidgetTitle">Achoimre Sheachtainiúil</string>
+    <string name="forecastWidgetWeekPeriod">Seachtain %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Ar iarraidh</string>
+    <string name="forecastWidgetDue">Dlite</string>
+    <string name="forecastWidgetRecentGrades">Marcanna Nua</string>
+    <string name="forecastWidgetGradeWeight">%d%% den mharc deiridh</string>
+    <string name="forecastWidgetErrorMessage">Tá deacracht againn do chuid tascanna a lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="forecastWidgetEmptyMissing">Gan aon tascanna ar iarraidh. Tá tú suas chun dáta ar fad!</string>
+    <string name="forecastWidgetEmptyDue">Níl aon obair bhaile le déanamh an tseachtain seo.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Níl aon mharc nua ann an tseachtain seo.</string>
+    <string name="a11y_contentDescription_previousWeek">An tseachtain roimhe sin</string>
+    <string name="a11y_contentDescription_nextWeek">An tseachtain seo chugainn</string>
+
     <string name="speedGraderGradeTabTitle">Marc &amp; Rúibric</string>
     <string name="speedGraderDetailsTabTitle">Sonraí</string>
     <string name="a11y_contentDescription_expandPanel">Leathnaigh an painéal</string>
@@ -2203,6 +2253,7 @@
     <string name="errorLoadingToDos">Tharla earráid agus do chuid míreanna le déanamh á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="errorUpdatingToDo">Tharla earráid agus an mhír le déanamh á nuashonrú. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="noToDosForNow">Gan aon Rudaí le Déanamh faoi láthair!</string>
+    <string name="noToDosForNowNew">Gan aon Rud le Déanamh faoi láthair!</string>
     <string name="noToDosForNowSubtext">Dealraíonn sé gur am iontach é chun scíth a ligean, suaimhneas a ligean agus athlódáil.</string>
     <string name="todoSwipeDone">Déanta</string>
     <string name="todoSwipeUndo">Cealaigh</string>
@@ -2213,8 +2264,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Roghanna liosta le déanamh</string>
+    <string name="todoFilterPreferencesNew">Roghanna liosta le déanamh</string>
     <string name="todoFilterVisibleItems">Míreanna Infheicthe</string>
     <string name="todoFilterShowPersonalToDos">Taispeáin Rudaí Pearsanta le Déanamh</string>
+    <string name="todoFilterShowPersonalToDosNew">Taispeáin Leideanna Pearsanta</string>
     <string name="todoFilterShowCalendarEvents">Taispeáin Imeachtaí Féilire</string>
     <string name="todoFilterShowCompleted">Taispeáin Críochnaithe</string>
     <string name="todoFilterFavoriteCoursesOnly">Cúrsaí is Fearr Leat Amháin</string>
@@ -2240,6 +2293,9 @@
     <string name="courseInvitationDeclined">Cuireadh chuig %s diúltaithe</string>
     <string name="courseInvitationDeclineConfirmTitle">Diúltaigh don Chuireadh</string>
     <string name="courseInvitationDeclineConfirmMessage">An bhfuil tú cinnte gur mian leat an cuireadh a dhiúltú chuig %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Dul chun cinn</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2363,6 +2419,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Haigh, %s</string>
 
+    <string name="courses_and_groups">Cúrsaí agus Grúpaí</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Saincheap an Deais</string>
     <string name="dashboard_widgets">Giuirléidí</string>
@@ -2372,16 +2429,44 @@
     <string name="changing_dashboard_layout">Leagan amach an deais rialaithe a athrú</string>
     <string name="changing_dashboard_layout_message">Chun leagan amach an deais rialaithe a athrú, ní mór duit an feidhmchlár a atosú.</string>
     <string name="restart_now">Atosaigh anois</string>
+    <string name="turn_on_new_dashboard">Cuir an deais nua ar siúl</string>
     <string name="switched_back">Ar athraigh tú ar ais?</string>
     <string name="switched_back_message">Go raibh maith agat as an deais nua a thriail! An bhféadfá a insint dúinn cén fáth ar athraigh tú ar ais?</string>
+    <string name="survey_option_hard_to_find">Deacair rudaí a aimsiú</string>
+    <string name="survey_option_prefer_old_layout">Is fearr liom an seanleagan amach</string>
+    <string name="survey_option_something_broken">Níor oibrigh rud éigin i gceart</string>
     <string name="what_could_we_improve">Cad a d’fhéadfaimis a fheabhsú?</string>
+    <string name="what_do_you_think_of_new_dashboard">Cad a cheapann tú faoin bpainéal nua?</string>
+    <string name="let_us_know">Cuir in iúl dúinn!</string>
+    <string name="no_app_to_handle_link">Níl aon aip ar fáil chun an nasc seo a oscailt</string>
     <string name="skip">Scipeáil</string>
     <string name="widget_setting_show_greeting">Taispeáin beannú</string>
     <string name="background_color">Dath an chúlra</string>
+    <string name="widget_setting_show_grades">Marcanna an Chúrsa</string>
+    <string name="widget_setting_show_color_overlay">Forleagan Dathanna Cúrsa</string>
     <string name="offline_content_available">Ábhar as líne ar fáil</string>
     <string name="a11y_contentDescription_moreOptions">Tuilleadh roghanna</string>
     <string name="customizeCourse">Saincheap an Cúrsa</string>
     <string name="favoriteCoursesAndGroups">Cúrsaí agus Grúpaí is Fearr Leat</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Níl Uirlisí Seachtracha ar fáil as líne.</string>
+    <string name="widget_weekly_summary">Achoimre Sheachtainiúil</string>
+
+    <string name="dashboardCourseNickname">Leasainm</string>
+    <string name="dashboardCourseNicknameHint">Scríobh leasainm an chúrsa anseo</string>
+    <string name="dashboardCourseColor">Dath an Chúrsa</string>
+    <string name="widget_toDo">Le déanamh laethúil</string>
+    <string name="dailyToDoWidgetTitle">Le déanamh laethúil</string>
+    <string name="todoWidget_showCompleted">Taispeáin Críochnaithe</string>
+    <string name="todoWidget_emptyTitle">Tá tú críochnaithe anois!</string>
+    <string name="todoWidget_emptyMessage">Is cosúil go bhfuil tú saor don lá seo.\nAr mhaith leat roinnt Tascanna a chur leis?</string>
+    <string name="todoWidget_addTodo">Cuir \'Le Déanamh\' leis</string>
+    <string name="todoWidget_errorTitle">Ó, chuaigh rud éigin mícheart.</string>
+    <string name="todoWidget_errorMessage">Ní raibh muid in ann do Chur le Déanamh a luchtú.\nDéan iarracht arís, nó tar ar ais níos déanaí.</string>
+    <string name="todoWidget_refresh">Athnuaigh</string>
+    <string name="todoWidget_today">Inniu</string>
+    <string name="a11y_todoWidget_jumpToToday">Léim go dtí an lá inniu</string>
+    <string name="widgetSettings_widgetsColor">Príomh-Dath an Phainéal</string>
+    <string name="dashboard_globalAnnouncement">Fógra Uilíoch</string>
+    <string name="forecastWidget_currentWeek">An tseachtain reatha</string>
 </resources>

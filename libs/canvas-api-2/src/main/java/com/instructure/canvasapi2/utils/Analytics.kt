@@ -217,4 +217,6 @@ object AnalyticsParamConstants {
 
     //dashboard survey
     const val SELECTED_REASON = "selected_reason"
+
+    const val NEW_DASHBOARD_ENABLED = "new_dashboard_enabled"
 }

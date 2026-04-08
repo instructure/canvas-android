@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandares.R
@@ -48,6 +49,11 @@ class InboxDetailsViewModel @Inject constructor(
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
     val unread: Boolean = savedStateHandle.get<Boolean>(InboxDetailsFragment.UNREAD) ?: false
+    private val scope: InboxApi.Scope = try {
+        InboxApi.Scope.valueOf(savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) ?: InboxApi.Scope.INBOX.name)
+    } catch (_: Exception) {
+        InboxApi.Scope.INBOX
+    }
 
     private val _uiState = MutableStateFlow(InboxDetailsUiState())
     val uiState = _uiState.asStateFlow()
@@ -62,7 +68,8 @@ class InboxDetailsViewModel @Inject constructor(
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
-            showBackButton = behavior.getShowBackButton(context)
+            showBackButton = behavior.getShowBackButton(context),
+            showArchiveOption = scope != InboxApi.Scope.SENT
         ) }
         viewModelScope.launch {
             checkAndApplyFeatureFlagRestrictions()
@@ -79,6 +86,11 @@ class InboxDetailsViewModel @Inject constructor(
             is MessageAction.OpenAttachment -> {
                 viewModelScope.launch {
                     _events.send(InboxDetailsFragmentAction.OpenAttachment(action.attachment))
+                }
+            }
+            is MessageAction.OpenMediaAttachment -> {
+                viewModelScope.launch {
+                    _events.send(InboxDetailsFragmentAction.OpenMediaAttachment(action.mediaComment))
                 }
             }
             is MessageAction.UrlSelected -> {
@@ -264,10 +276,21 @@ class InboxDetailsViewModel @Inject constructor(
 
     private fun updateState(conversationId: Long, state: Conversation.WorkflowState) {
         viewModelScope.launch {
+            val previousState = uiState.value.conversation?.workflowState
             val result = repository.updateState(conversationId, state)
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = it.conversation?.copy(workflowState = result.dataOrNull?.workflowState)) }
-
+                val message = when (state) {
+                    Conversation.WorkflowState.ARCHIVED -> context.getString(R.string.conversationArchived)
+                    Conversation.WorkflowState.READ -> if (previousState == Conversation.WorkflowState.ARCHIVED) {
+                        context.getString(R.string.conversationUnarchived)
+                    } else {
+                        context.getString(R.string.conversationMarkedAsRead)
+                    }
+                    Conversation.WorkflowState.UNREAD -> context.getString(R.string.conversationMarkedAsUnread)
+                    else -> context.getString(R.string.conversationUnarchived)
+                }
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(message))
                 refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))

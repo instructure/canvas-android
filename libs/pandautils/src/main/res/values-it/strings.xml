@@ -449,11 +449,13 @@
     <string name="schedule_calendar_event_due_text">Alle %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Elenco attività: %s</string>
+    <string name="schedule_todo_due_text_new">Attività da fare: %s</string>
     <string name="schedule_due_text">Scadenza: %s</string>
     <string name="show_missing_items_title">Mostra %d elementi mancanti</string>
     <string name="hide_missing_items_title">Nascondi %d elementi mancanti</string>
     <string name="schedule_error_message">Impossibile recuperare programma</string>
     <string name="schedule_todo_title">Elenco attività</string>
+    <string name="schedule_todo_title_new">Attività da fare</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nota agenda</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Elenco attività</string>
+    <string name="a11y_todo_new">Attività da fare</string>
     <string name="a11y_page">Pagina</string>
     <string name="a11y_assessment_request">Richiesta di valutazione</string>
     <string name="a11y_marked_as_done">Contrassegnato come fatto</string>

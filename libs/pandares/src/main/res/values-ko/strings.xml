@@ -45,6 +45,7 @@
     <string name="submissionStatusFailedTitle">제출 실패</string>
     <string name="submissionStatusFailedSubtitle">탭하여 세부 정보 보기</string>
     <string name="submissionAndRubric">제출 및 루브릭</string>
+    <string name="submissionAndFeedback">제출 및 피드백</string>
     <string name="commentsAndRubric">댓글 및 루브릭</string>
     <string name="errorLoadingAssignment">이 과제를 로드하는 데 문제가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="submitted">제출됨</string>
@@ -214,6 +215,7 @@
 
     <!-- Date strings -->
     <string name="today">오늘</string>
+    <string name="tomorrow">내일</string>
     <string name="past">과거</string>
     <string name="noDate">날짜 없음</string>
     <string name="future">미래</string>
@@ -273,6 +275,7 @@
     <string name="checkBoxWhatIfGradeOption">가상 점수 표시</string>
     <string name="whatIfDialogText">가상 점수</string>
     <string name="whatIfScoreExceedsMaximum">점수는 최대 점수를 초과할 수 없습니다</string>
+    <string name="whatIfScoreExceedsMaximumWarning">점수가 최대 점수를 초과합니다</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s/%2$s점, %3$s</string>
     <string name="inbox">수신함</string>
@@ -285,6 +288,7 @@
     <string name="monologue">독백</string>
     <string name="noItemsToDisplayShort">표시할 항목 없음</string>
     <string name="Todo">할 일</string>
+    <string name="TodoNew">할 일</string>
     <string name="todoFilter">과목 필터링</string>
     <string name="filterByEllipsis">필터링 기준</string>
     <string name="favoriteCoursesLabel">즐겨 찾는 과목</string>
@@ -462,6 +466,7 @@
     <string name="groups">그룹</string>
     <string name="groupMembers">그룹 구성원</string>
 
+    <string name="messageGroup">메시지 그룹</string>
     <string name="loading">로드&#8230;</string>
     <string name="select_item_to_display">목록에서 선택</string>
 
@@ -678,9 +683,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">할 일</string>
+    <string name="todoWidgetTitleNew">할 일</string>
     <string name="gradesWidgetTitle">성적</string>
     <string name="notificationWidgetTitle">알림</string>
     <string name="todoWidgetTitleLong">Canvas - 할 일</string>
+    <string name="todoWidgetTitleLongNew">Canvas - 할 일</string>
     <string name="gradesWidgetTitleLong">Canvas - 성적</string>
     <string name="gradeWidgetTitleLong">Canvas - 성적</string>
     <string name="notificationWidgetTitleLong">Canvas - 알림</string>
@@ -716,6 +723,8 @@
     <!-- Tablet Strings -->
     <string name="courses">과목</string>
     <string name="toDoList">할 일 목록</string>
+    <string name="toDoListNew">할 일 목록</string>
+
     <string name="notifications">알림</string>
     <string name="pushNotifications">푸시 알림</string>
     <string name="pushNotificationsError">이 장치에는 푸시 알림이 등록되지 않았습니다.</string>
@@ -730,7 +739,6 @@
 
     <string name="launchSpeedgrader">SpeedGrader 열기</string>
 
-    <string name="search_todo">할일 할 일 할일 할일 목록</string>
     <string name="search_course">과목 과목 수업 수업</string>
     <string name="search_grades">성적 성적</string>
 
@@ -1059,6 +1067,13 @@
     <string name="pageTitleMustBeSet">페이지 제목을 설정해야 합니다.</string>
     <string name="pageDetails">페이지 세부 정보</string>
     <string name="saving">저장</string>
+    <string name="speedGraderSaving">저장</string>
+    <string name="speedGraderSaved">저장됨</string>
+    <string name="speedGraderFailed">실패</string>
+    <string name="speedGraderSaveErrorTitle">죄송합니다. 문제가 발생했습니다</string>
+    <string name="speedGraderSaveErrorMessage">성적 수정을 저장하는 동안 오류가 있었습니다. 다시 시도하거나 나중에 다시 시도할 수 있습니다.</string>
+    <string name="speedGraderSaveErrorContentDescription">성적을 저장하지 못했습니다. 탭하여 세부 정보를 확인합니다.</string>
+
     <string name="confirmDeleteEvent">이 이벤트를 삭제하시겠습니까?</string>
     <string name="conferencesNotSupported">모바일에서는 아직 컨퍼런스를 지원하지 않습니다.</string>
     <string name="filePreviewContentDescription">파일 미리 보기 이미지</string>
@@ -1202,6 +1217,10 @@
     <string name="recordings">녹화</string>
     <string name="conferenceInProgress">진행 중인 컨퍼런스</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">컨퍼런스(%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">진행 중인 컨퍼런스</string>
+    <string name="conferencesWidgetDismissed">해제된 컨퍼런스</string>
     <string name="a11y_criterion_content_description">조건 등급 %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">자세한 정보</string>
@@ -1356,6 +1375,9 @@
 
     <plurals name="a11y_todoBadgeCount">
         <item quantity="other">%s 할 일 항목</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="other">%s개 할 일 항목</item>
     </plurals>
     <string name="noAnnotationSelected">선택된 알림 없음</string>
 
@@ -1642,7 +1664,9 @@
     <string name="calendarNoEvents">오늘 이벤트가 없습니다.</string>
     <string name="calendarNoEventsDescription">오늘은 편하게 쉬고 활력을 충전하기 좋은 날입니다.</string>
     <string name="userCalendarToDo">할 일</string>
+    <string name="userCalendarToDoNew">할 일</string>
     <string name="courseToDo">%s 할 일</string>
+    <string name="courseToDoNew">%s 할 일</string>
     <string name="calendarEventExcused">인정됨</string>
     <string name="calendarEventMissing">누락됨</string>
     <string name="calendarEventGraded">채점됨</string>
@@ -1667,22 +1691,31 @@
     <string name="a11y_eventCreatedAnnouncement">이벤트 %s을(를) 만들었습니다.</string>
     <string name="a11y_eventUpdatedAnnouncement">이벤트 %s을(를) 업데이트했습니다.</string>
     <string name="a11y_toDoCreatedAnnouncement">할 일 %s을(를) 만들었습니다.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">할 일 %s을(를) 만들었습니다.</string>
     <string name="a11y_toDoUpdatedAnnouncement">할 일 %s을(를) 업데이트했습니다.</string>
 
+    <string name="a11y_toDoUpdatedAnnouncementNew">할 일 %s을(를) 업데이트했습니다.</string>
     <string name="todoScreenTitle">할 일</string>
+    <string name="todoScreenTitleNew">할 일</string>
     <string name="todoDateLabel">날짜</string>
     <string name="todoDescriptionLabel">설명</string>
     <string name="todoDeleteConfirmationTitle">할 일을 삭제하시겠습니까?</string>
+    <string name="todoDeleteConfirmationTitleNew">할 일을 삭제하시겠습니까?</string>
     <string name="todoDeleteConfirmationText">이렇게 하면 할 일 항목이 영구적으로 삭제됩니다.</string>
+    <string name="todoDeleteConfirmationTextNew">이렇게 하면 할 일 항목이 영구적으로 삭제됩니다.</string>
     <string name="todoDeleteErrorMessage">이 할 일 목록을 삭제하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="todoDeleteErrorMessageNew">이 할 일을 삭제하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="createTodoScreenTitle">새 할 일</string>
+    <string name="createTodoScreenTitleNew">새 할 일</string>
     <string name="editTodoScreenTitle">할 일 편집</string>
+    <string name="editTodoScreenTitleNew">할 일 편집</string>
     <string name="createToDoTitleHint">제목 추가</string>
     <string name="createToDoDateLabel">날짜</string>
     <string name="createToDoTimeLabel">시간</string>
     <string name="createToDoCalendarLabel">캘린더</string>
     <string name="createToDoDetailsLabel">세부 정보</string>
     <string name="todoSaveErrorMessage">이 할 일 목록을 저장 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="todoSaveErrorMessageNew">이 할 일을 저장하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="selectCalendarScreenTitle">캘린더 선택</string>
 
     <string name="errorContentRetryButton">다시 시도</string>
@@ -1692,6 +1725,7 @@
     <string name="eventDetailsLabel">세부 정보</string>
     <string name="errorLoadingEvent">이 이벤트를 로드하는 데 문제가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="errorLoadingTodo">이 할 일을 로드하는 데 문제가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="errorLoadingTodoNew">이 할 일을 로드하는 데 문제가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="eventDeleteConfirmationTitle">이벤트를 삭제하시겠습니까?</string>
     <string name="eventDeleteConfirmationText">이렇게 하면 이벤트가 영구적으로 삭제됩니다.</string>
     <string name="eventDeleteErrorMessage">이 이벤트를 삭제하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
@@ -1707,6 +1741,7 @@
     <string name="eventDeleteScopeAll">모든 이벤트</string>
     <string name="eventDeleteScopeFollowing">이것 및 모든 다음 이벤트</string>
     <string name="calendarAddToDo">할 일 추가</string>
+    <string name="calendarAddToDoNew">할 일 추가</string>
     <string name="calendarAddEvent">이벤트 추가</string>
 
     <string name="createEventScreenTitle">새 이벤트</string>
@@ -1905,6 +1940,15 @@
     <string name="courseDetailsMessageContentDescription">이 과목에 대한 메시지 보내기</string>
     <string name="gradeLockedContentDescription">성적이 잠김</string>
     <string name="gradesRefreshFailed">성적을 새로 고치지 못함</string>
+    <string name="showWhatIfScore">가상 점수 표시</string>
+    <string name="editWhatIfScore">가상 점수 편집</string>
+    <string name="editWhatIfScoreTitle">가상 점수 편집</string>
+    <string name="whatIfScoreLabel">가상</string>
+    <string name="whatIfScoreCurrentGraded">점수 %1$.0f/%2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">채점하지 않음, 최대 점수 %.0f</string>
+    <string name="whatIfScoreDisplay">가상: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">채점된 과제에 기반, 및 가상 점수</string>
+    <string name="clearWhatIfScore">가상 점수 지우기</string>
     <string name="chooseACourseToMessage">과목을 선택하여 메시지 보내기</string>
     <string name="regardingHiddenMessage">관련 항목: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">관련 항목: %1$s, 과제 - %2$s</string>
@@ -2072,8 +2116,10 @@
     <string name="widgetNotLoggedInTitle">로그인하겠습니다!</string>
     <string name="widgetToDoNotLoggedInSubtitle">할 일을 보려면 앱에서 로그인하세요. 많은 시간이 걸리지 않습니다.</string>
     <string name="a11y_widgetToDoOpenToDoList">할 일 목록 열기 화면</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">할 일 목록 열기 화면</string>
     <string name="a11y_widgetToDoCreateNewToDo">새 할 일 만들기</string>
 
+    <string name="a11y_widgetToDoCreateNewToDoNew">새 할 일 만들기</string>
     <string name="widgetGradesErrorSubtitle">지금은 성적을 표시하는 데 문제가 있습니다. 잠시 후에 다시 시도하거나 앱을 사용하세요.</string>
     <string name="widgetGradesNotLoggedInSubtitle">성적을 보려면 앱에서 로그인하세요. 많은 시간이 걸리지 않습니다.</string>
     <string name="widgetSingleGradeErrorSubtitle">지금은 성적을 표시하는 데 문제가 있습니다.</string>
@@ -2081,6 +2127,19 @@
     <string name="widgetSingleGradeSelectCourse">과목을 선택하세요</string>
     <string name="widgetGradesErrorLoadingCourses">과목을 로드하는 데 오류가 발생했습니다.</string>
     <string name="settingsSwitchExperience">Canvas Career로 전환</string>
+
+    <string name="forecastWidgetTitle">주간 요약</string>
+    <string name="forecastWidgetWeekPeriod">주 %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">누락됨</string>
+    <string name="forecastWidgetDue">기한</string>
+    <string name="forecastWidgetRecentGrades">새 점수</string>
+    <string name="forecastWidgetGradeWeight">%d%% 최종 성적</string>
+    <string name="forecastWidgetErrorMessage">과제를 로드하는 데 문제가 있습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="forecastWidgetEmptyMissing">누락된 과제가 없습니다. 모두 확인했습니다!</string>
+    <string name="forecastWidgetEmptyDue">이번 주에 기한인 과제 없음</string>
+    <string name="forecastWidgetEmptyRecentGrades">이번주에는 새 성적이 없습니다.</string>
+    <string name="a11y_contentDescription_previousWeek">이전 주</string>
+    <string name="a11y_contentDescription_nextWeek">다음 주</string>
 
     <string name="speedGraderGradeTabTitle">성적 및 루브릭</string>
     <string name="speedGraderDetailsTabTitle">세부 정보</string>
@@ -2157,6 +2216,7 @@
     <string name="errorLoadingToDos">할 일 항목을 로드하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="errorUpdatingToDo">할 일 항목을 업데이트하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="noToDosForNow">지금은 할 일이 없습니다.</string>
+    <string name="noToDosForNowNew">지금은 할 일이 없습니다.</string>
     <string name="noToDosForNowSubtext">오늘은 편하게 쉬고 활력을 충전하기 좋은 날입니다.</string>
     <string name="todoSwipeDone">완료</string>
     <string name="todoSwipeUndo">실행 취소</string>
@@ -2167,8 +2227,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">할 일 목록 기본 설정</string>
+    <string name="todoFilterPreferencesNew">할 일 목록 기본 설정</string>
     <string name="todoFilterVisibleItems">표시되는 항목</string>
     <string name="todoFilterShowPersonalToDos">개인 할 일 표시</string>
+    <string name="todoFilterShowPersonalToDosNew">개인 할 일 표시</string>
     <string name="todoFilterShowCalendarEvents">캘린더 이벤트 표시</string>
     <string name="todoFilterShowCompleted">완료됨 표시</string>
     <string name="todoFilterFavoriteCoursesOnly">즐겨찾기 과목만</string>
@@ -2195,6 +2257,9 @@
     <string name="courseInvitationDeclined">%s에 초대를 거절했습니다</string>
     <string name="courseInvitationDeclineConfirmTitle">초대 거절</string>
     <string name="courseInvitationDeclineConfirmMessage">%s에 초대를 거절하시겠습니까?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">진행률</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2319,6 +2384,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">안녕하세요, %s 님</string>
 
+    <string name="courses_and_groups">과목 및 그룹</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">대시보드 사용자 지정</string>
     <string name="dashboard_widgets">위젯</string>
@@ -2328,16 +2394,44 @@
     <string name="changing_dashboard_layout">대시보드 레이아웃 변경</string>
     <string name="changing_dashboard_layout_message">대시보드 레이아웃을 변경하려면 애플리케이션을 다시 시작해야 합니다</string>
     <string name="restart_now">지금 다시 시작</string>
+    <string name="turn_on_new_dashboard">새 대시보드 활성화</string>
     <string name="switched_back">되돌리시겠습니까?</string>
     <string name="switched_back_message">새 대시보드를 시도해 주셔서 감사합니다. 되돌린 이유를 알려주시겠습니까?</string>
+    <string name="survey_option_hard_to_find">항목을 찾기 어려움</string>
+    <string name="survey_option_prefer_old_layout">이전 레이아웃을 선호</string>
+    <string name="survey_option_something_broken">올바로 작동하지 않은 것이 있음</string>
     <string name="what_could_we_improve">저희가 어떻게 개선할 수 있습니까?</string>
+    <string name="what_do_you_think_of_new_dashboard">새 대시보드에 대해 어떻게 생각하십니까?</string>
+    <string name="let_us_know">저희에게 알려주세요!</string>
+    <string name="no_app_to_handle_link">이 링크를 열기에 사용할 수 있는 앱이 없습니다</string>
     <string name="skip">건너뛰기</string>
     <string name="widget_setting_show_greeting">인사 표시</string>
     <string name="background_color">배경 색</string>
+    <string name="widget_setting_show_grades">과목 점수</string>
+    <string name="widget_setting_show_color_overlay">과목 색 오버레이</string>
     <string name="offline_content_available">오프라인 콘텐츠 사용할 수 있음</string>
     <string name="a11y_contentDescription_moreOptions">더 많은 옵션</string>
     <string name="customizeCourse">과목 사용자 지정</string>
     <string name="favoriteCoursesAndGroups">즐겨 찾는 과목 및 그룹</string>
     <string name="collapsibleSectionTitle">%1$s(%2$d)</string>
     <string name="ltiToolsOffline">외부 도구는 오프라인에 사용할 수 없습니다.</string>
+    <string name="widget_weekly_summary">주간 요약</string>
+
+    <string name="dashboardCourseNickname">별칭</string>
+    <string name="dashboardCourseNicknameHint">여기에 과목 별칭 쓰기</string>
+    <string name="dashboardCourseColor">과목 색</string>
+    <string name="widget_toDo">매일 할 일</string>
+    <string name="dailyToDoWidgetTitle">매일 할 일</string>
+    <string name="todoWidget_showCompleted">완료됨 표시</string>
+    <string name="todoWidget_emptyTitle">현재는 모두 완료되었습니다.</string>
+    <string name="todoWidget_emptyMessage">오늘은 할 일이 없는 것 같습니다.\n할 일을 추가하시겠습니까?</string>
+    <string name="todoWidget_addTodo">할 일 추가</string>
+    <string name="todoWidget_errorTitle">죄송합니다. 문제가 발생했습니다</string>
+    <string name="todoWidget_errorMessage">할 일을 로드할 수 없었습니다.\n다시 시도하거나 나중에 돌아오세요.</string>
+    <string name="todoWidget_refresh">새로 고치기</string>
+    <string name="todoWidget_today">오늘</string>
+    <string name="a11y_todoWidget_jumpToToday">오늘로 이동</string>
+    <string name="widgetSettings_widgetsColor">대시보드 주요 색</string>
+    <string name="dashboard_globalAnnouncement">전역 공지</string>
+    <string name="forecastWidget_currentWeek">현재 주</string>
 </resources>

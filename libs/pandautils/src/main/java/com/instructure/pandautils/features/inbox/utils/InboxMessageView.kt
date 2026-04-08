@@ -58,6 +58,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -132,6 +133,22 @@ private fun InboxMessageDetailsView(
                 attachmentCardItem,
                 onSelect = { actionHandler(MessageAction.OpenAttachment(attachment)) },
                 onRemove = {})
+        }
+
+        messageState.message?.mediaComment?.let { mediaComment ->
+            Spacer(modifier = Modifier.height(16.dp))
+
+            val mediaAttachment = Attachment(
+                contentType = mediaComment.contentType,
+                filename = mediaComment.displayName ?: mediaComment._fileName,
+                url = mediaComment.url,
+            )
+            val attachmentCardItem = AttachmentCardItem(mediaAttachment, AttachmentStatus.UPLOADED, readOnly = true, showFileSize = false)
+            AttachmentCard(
+                attachmentCardItem,
+                onSelect = { actionHandler(MessageAction.OpenMediaAttachment(mediaComment)) },
+                onRemove = {}
+            )
         }
 
         if (messageState.enabledActions  && !messageState.cannotReply) {
