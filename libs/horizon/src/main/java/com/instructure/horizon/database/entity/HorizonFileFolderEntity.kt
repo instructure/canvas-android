@@ -13,23 +13,15 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database
+package com.instructure.horizon.database.entity
 
-import androidx.room.TypeConverter
-import com.instructure.horizon.database.entity.SyncDataType
-import java.util.Date
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class HorizonTypeConverters {
-
-    @TypeConverter
-    fun fromSyncDataType(value: SyncDataType): String = value.name
-
-    @TypeConverter
-    fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
-
-    @TypeConverter
-    fun fromDate(value: Date?): Long? = value?.time
-
-    @TypeConverter
-    fun toDate(value: Long?): Date? = value?.let { Date(it) }
-}
+@Entity
+data class HorizonFileFolderEntity(
+    @PrimaryKey
+    val id: Long,
+    val url: String,
+    val displayName: String,
+)

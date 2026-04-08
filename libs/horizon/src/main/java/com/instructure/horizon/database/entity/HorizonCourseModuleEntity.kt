@@ -16,22 +16,23 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_ITEMS,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-}
-
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
+/**
+ * Stores [com.instructure.canvasapi2.models.ModuleObject] header data per course for offline use.
+ * [prerequisiteIds] is stored as a comma-separated list of Long IDs, or an empty string if none.
+ */
+@Entity(
+    tableName = "horizon_course_modules",
+    indices = [Index("courseId")]
+)
+data class HorizonCourseModuleEntity(
+    @PrimaryKey val moduleId: Long,
+    val courseId: Long,
+    val name: String?,
+    val position: Int,
+    val state: String?,
+    val estimatedDuration: String?,
+    val prerequisiteIds: String,
 )

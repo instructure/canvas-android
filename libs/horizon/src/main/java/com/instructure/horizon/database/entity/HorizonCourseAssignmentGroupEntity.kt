@@ -13,23 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database
+package com.instructure.horizon.database.entity
 
-import androidx.room.TypeConverter
-import com.instructure.horizon.database.entity.SyncDataType
-import java.util.Date
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-class HorizonTypeConverters {
-
-    @TypeConverter
-    fun fromSyncDataType(value: SyncDataType): String = value.name
-
-    @TypeConverter
-    fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
-
-    @TypeConverter
-    fun fromDate(value: Date?): Long? = value?.time
-
-    @TypeConverter
-    fun toDate(value: Long?): Date? = value?.let { Date(it) }
-}
+/**
+ * Stores [com.instructure.canvasapi2.models.AssignmentGroup] data per course for offline use.
+ */
+@Entity(
+    tableName = "horizon_course_assignment_groups",
+    indices = [Index("courseId")]
+)
+data class HorizonCourseAssignmentGroupEntity(
+    @PrimaryKey val groupId: Long,
+    val courseId: Long,
+    val name: String?,
+    val groupWeight: Double,
+)

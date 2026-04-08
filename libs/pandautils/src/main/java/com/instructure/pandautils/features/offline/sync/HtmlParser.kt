@@ -17,7 +17,7 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.net.Uri
+import androidx.core.net.toUri
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.StudioMediaMetadata
@@ -78,8 +78,21 @@ class HtmlParser(
                 val (newHtml, shouldSyncFile) = replaceInternalFileUrl(resultHtml, courseId, fileId, imageUrl)
                 resultHtml = newHtml
                 if (shouldSyncFile) internalFileIds.add(fileId)
-            } else {
-                val fileUri = Uri.parse(imageUrl)
+            } else if (imageUrl.toUri().isRelative) {
+                val relativeInternalFileRegex = Regex(".*files/(\\d+)")
+                val fileId = relativeInternalFileRegex.find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
+                if (fileId != null) {
+                    val (newHtml, shouldSyncFile) = replaceInternalFileUrl(
+                        resultHtml,
+                        courseId,
+                        fileId,
+                        imageUrl
+                    )
+                    resultHtml = newHtml
+                    if (shouldSyncFile) internalFileIds.add(fileId)
+                }
+            } else  {
+                val fileUri = imageUrl.toUri()
                 val fileName = fileUri.lastPathSegment
                 if (fileName != null && fileUri.scheme == "https") { // We don't allow cleartext traffic in the app.
                     resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName, courseId)}")

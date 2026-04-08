@@ -18,7 +18,6 @@ package com.instructure.horizon.features.learn.program.details
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
@@ -44,6 +43,10 @@ import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.sum
 import com.instructure.pandautils.utils.toFormattedString
+import com.instructure.horizon.data.repository.ProgramRepository
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,10 +60,12 @@ import kotlin.time.Duration
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val repository: ProgramDetailsRepository,
+    private val repository: ProgramRepository,
     private val dashboardEventHandler: DashboardEventHandler,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
 
     private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
 
@@ -303,6 +308,14 @@ class ProgramDetailsViewModel @Inject constructor(
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
             return (totalProgress / (courseCompletionCount * 100)) * 100
         }
+    }
+
+    override fun onNetworkRestored() {
+        loadData()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level; no action needed here
     }
 
     private fun refreshProgram() {

@@ -13,23 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database
+package com.instructure.horizon.database.entity
 
-import androidx.room.TypeConverter
-import com.instructure.horizon.database.entity.SyncDataType
-import java.util.Date
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class HorizonTypeConverters {
-
-    @TypeConverter
-    fun fromSyncDataType(value: SyncDataType): String = value.name
-
-    @TypeConverter
-    fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
-
-    @TypeConverter
-    fun fromDate(value: Date?): Long? = value?.time
-
-    @TypeConverter
-    fun toDate(value: Long?): Date? = value?.let { Date(it) }
-}
+/**
+ * Stores course data needed by the Program Details and Course Details screens offline.
+ * [moduleItemsDurations] is stored as a comma-separated list of ISO 8601 duration strings.
+ */
+@Entity(tableName = "horizon_learn_courses")
+data class HorizonLearnCourseEntity(
+    @PrimaryKey val courseId: Long,
+    val courseName: String,
+    val progress: Double,
+    val courseSyllabus: String?,
+    val startDateMs: Long?,
+    val endDateMs: Long?,
+    val moduleItemsDurations: String,
+)

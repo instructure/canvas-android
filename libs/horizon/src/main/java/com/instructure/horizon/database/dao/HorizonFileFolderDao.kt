@@ -13,23 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database
+package com.instructure.horizon.database.dao
 
-import androidx.room.TypeConverter
-import com.instructure.horizon.database.entity.SyncDataType
-import java.util.Date
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonFileFolderEntity
 
-class HorizonTypeConverters {
+@Dao
+interface HorizonFileFolderDao {
 
-    @TypeConverter
-    fun fromSyncDataType(value: SyncDataType): String = value.name
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(fileFolder: HorizonFileFolderEntity)
 
-    @TypeConverter
-    fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
-
-    @TypeConverter
-    fun fromDate(value: Date?): Long? = value?.time
-
-    @TypeConverter
-    fun toDate(value: Long?): Date? = value?.let { Date(it) }
+    @Query("SELECT * FROM HorizonFileFolderEntity WHERE id = :id")
+    suspend fun findById(id: Long): HorizonFileFolderEntity?
 }

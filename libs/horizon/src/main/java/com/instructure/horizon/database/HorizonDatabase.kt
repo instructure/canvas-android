@@ -18,21 +18,34 @@ package com.instructure.horizon.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonFileFolderDao
 import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
+import com.instructure.horizon.database.dao.HorizonLearnCourseDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
+import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonCourseAssignmentEntity
+import com.instructure.horizon.database.entity.HorizonCourseAssignmentGroupEntity
+import com.instructure.horizon.database.entity.HorizonCourseGradeEntity
+import com.instructure.horizon.database.entity.HorizonCourseModuleEntity
+import com.instructure.horizon.database.entity.HorizonCourseModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.entity.HorizonFileFolderEntity
 import com.instructure.horizon.database.entity.HorizonLearnCollectionEntity
 import com.instructure.horizon.database.entity.HorizonLearnCollectionItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnCourseEntity
 import com.instructure.horizon.database.entity.HorizonLearnItemEntity
 import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
+import com.instructure.horizon.database.entity.HorizonLocalFileEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @TypeConverters(HorizonTypeConverters::class)
@@ -47,8 +60,16 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonLearnCollectionEntity::class,
         HorizonLearnCollectionItemEntity::class,
         HorizonLearnSavedItemEntity::class,
+        HorizonLearnCourseEntity::class,
+        HorizonCourseModuleEntity::class,
+        HorizonCourseModuleItemEntity::class,
+        HorizonCourseAssignmentGroupEntity::class,
+        HorizonCourseAssignmentEntity::class,
+        HorizonCourseGradeEntity::class,
+        HorizonLocalFileEntity::class,
+        HorizonFileFolderEntity::class,
     ],
-    version = 3,
+    version = 5,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -58,4 +79,9 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun learnItemDao(): HorizonLearnItemDao
     abstract fun learnCollectionDao(): HorizonLearnCollectionDao
     abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao
+    abstract fun learnCourseDao(): HorizonLearnCourseDao
+    abstract fun courseModuleDao(): HorizonCourseModuleDao
+    abstract fun courseScoreDao(): HorizonCourseScoreDao
+    abstract fun localFileDao(): HorizonLocalFileDao
+    abstract fun fileFolderDao(): HorizonFileFolderDao
 }

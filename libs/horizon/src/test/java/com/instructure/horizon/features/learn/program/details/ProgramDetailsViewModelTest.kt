@@ -25,11 +25,14 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.R
+import com.instructure.horizon.data.repository.ProgramRepository
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.learn.program.details.components.CourseCardStatus
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,9 +56,11 @@ import java.util.Locale
 class ProgramDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
-    private val repository: ProgramDetailsRepository = mockk(relaxed = true)
+    private val repository: ProgramRepository = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testProgramId = "program123"
@@ -68,6 +73,8 @@ class ProgramDetailsViewModelTest {
         every { context.getSharedPreferences(any(), any()) } returns sharedPrefs
         every { sharedPrefs.getInt(any(), any()) } returns 0
 
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
         ContextKeeper.appContext = context
         every { savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) } returns testProgramId
         every { context.getString(any()) } returns ""
@@ -649,7 +656,7 @@ class ProgramDetailsViewModelTest {
     }
 
     private fun getViewModel(): ProgramDetailsViewModel {
-        val viewModel = ProgramDetailsViewModel(context, resources, repository, dashboardEventHandler, savedStateHandle)
+        val viewModel = ProgramDetailsViewModel(context, resources, repository, dashboardEventHandler, savedStateHandle, networkStateProvider, featureFlagProvider)
         testDispatcher.scheduler.advanceUntilIdle()
         return viewModel
     }

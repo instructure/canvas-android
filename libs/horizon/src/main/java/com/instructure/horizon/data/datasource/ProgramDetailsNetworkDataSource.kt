@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.program.details
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
@@ -25,19 +25,19 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class ProgramDetailsRepository @Inject constructor(
+class ProgramDetailsNetworkDataSource @Inject constructor(
     private val getProgramsManager: GetProgramsManager,
-    private val getCoursesManager: HorizonGetCoursesManager
+    private val getCoursesManager: HorizonGetCoursesManager,
 ) {
-    suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = false): Program {
-        val program = getProgramsManager.getPrograms(forceNetwork).find { it.id == programId }
+
+    suspend fun getProgramDetails(programId: String, forceRefresh: Boolean): Program {
+        return getProgramsManager.getPrograms(forceRefresh).find { it.id == programId }
             ?: throw IllegalArgumentException("Program with id $programId not found")
-        return program
     }
 
-    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
+    suspend fun getCoursesById(courseIds: List<Long>, forceRefresh: Boolean): List<CourseWithModuleItemDurations> = coroutineScope {
         courseIds.map { id ->
-            async { getCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
+            async { getCoursesManager.getProgramCourses(id, forceRefresh).dataOrThrow }
         }.awaitAll()
     }
 
