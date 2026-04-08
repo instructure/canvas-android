@@ -45,6 +45,7 @@ query SubmissionContent(
 fragment SubmissionFields on SubmissionInterface {
     groupId
     state
+    grade
     attempt
     body
     url
