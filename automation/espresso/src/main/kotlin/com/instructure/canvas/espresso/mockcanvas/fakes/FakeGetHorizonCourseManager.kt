@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
@@ -87,6 +88,33 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 )
             )
         )
+    }
+
+    override suspend fun getDashboardEnrollments(
+        userId: Long,
+        forceNetwork: Boolean
+    ): DataResult<List<DashboardEnrollment>> {
+        val enrollments = MockCanvas.data.enrollments.values.toList()
+        val courses = getCourses()
+        val dashboardEnrollments = courses.mapIndexedNotNull { index, course ->
+            val enrollmentId = enrollments.getOrNull(index)?.id ?: return@mapIndexedNotNull null
+            val state = when (index) {
+                1 -> DashboardEnrollment.STATE_COMPLETED
+                2 -> DashboardEnrollment.STATE_INVITED
+                else -> DashboardEnrollment.STATE_ACTIVE
+            }
+            DashboardEnrollment(
+                enrollmentId = enrollmentId,
+                enrollmentState = state,
+                courseId = course.courseId,
+                courseName = course.courseName,
+                courseImageUrl = course.courseImageUrl,
+                courseSyllabus = course.courseSyllabus,
+                institutionName = null,
+                completionPercentage = course.progress * 100.0,
+            )
+        }
+        return DataResult.Success(dashboardEnrollments)
     }
 
     override suspend fun getProgramCourses(

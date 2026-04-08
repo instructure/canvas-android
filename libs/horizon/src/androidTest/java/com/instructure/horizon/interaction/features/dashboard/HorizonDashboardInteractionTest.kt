@@ -105,7 +105,7 @@ class HorizonDashboardInteractionTest: HorizonTest() {
         dashboardPage.assertCourseCardDisplayed(
             course1.name,
             listOf(programs[0].name),
-            fakeGetHorizonCourseManager.getCourses().first().progress,
+            fakeGetHorizonCourseManager.getCourses().first().progress * 100,
             moduleItem1.title
         )
     }

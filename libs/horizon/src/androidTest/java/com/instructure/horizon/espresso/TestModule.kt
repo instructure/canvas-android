@@ -1,8 +1,11 @@
 package com.instructure.horizon.espresso
 
+import android.content.Context
 import android.content.Intent
+import androidx.room.Room
 import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import dagger.hilt.android.qualifiers.ApplicationContext
 import com.instructure.pandautils.features.about.AboutRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
@@ -98,8 +101,11 @@ object HorizonTestModule {
     }
 
     @Provides
-    fun provideAppDatabase(): AppDatabase {
-        throw NotImplementedError("This is a test module. Implementation not required.")
+    @javax.inject.Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
     }
 
     @Provides
