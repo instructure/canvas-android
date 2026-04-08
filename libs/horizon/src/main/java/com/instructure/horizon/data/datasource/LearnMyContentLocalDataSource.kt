@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.data.datasource
 
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItem
@@ -34,14 +35,47 @@ class LearnMyContentLocalDataSource @Inject constructor(
     private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
 
-    suspend fun getLearnItems(queryKey: String): LearnItemsResponse {
-        val items = learnItemDao.getByQueryKey(queryKey).map { it.toModel() }
+    suspend fun getLearnItems(
+        queryKey: String,
+        searchQuery: String?,
+        sortBy: CollectionItemSortOption?,
+        itemTypes: List<LearnItemType>?,
+        cursor: String?,
+    ): LearnItemsResponse {
+        var items = learnItemDao.getByQueryKey(queryKey).map { it.toModel() }
+
+        if (!itemTypes.isNullOrEmpty()) {
+            items = items.filter { item ->
+                itemTypes.any { type ->
+                    when (type) {
+                        LearnItemType.PROGRAM -> item is ProgramEnrollmentItem
+                        LearnItemType.COURSE -> item is CourseEnrollmentItem
+                    }
+                }
+            }
+        }
+
+        if (!searchQuery.isNullOrBlank()) {
+            items = items.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
+
+        items = when (sortBy) {
+            CollectionItemSortOption.NAME_A_Z -> items.sortedBy { it.name }
+            CollectionItemSortOption.NAME_Z_A -> items.sortedByDescending { it.name }
+            CollectionItemSortOption.MOST_RECENT -> items.sortedByDescending { it.enrolledAt?.time ?: 0L }
+            CollectionItemSortOption.LEAST_RECENT -> items.sortedBy { it.enrolledAt?.time ?: Long.MAX_VALUE }
+            null -> items.sortedBy { it.position }
+        }
+
+        val offset = cursor?.toIntOrNull() ?: 0
+        val page = items.drop(offset).take(PAGE_SIZE)
+        val hasNextPage = offset + PAGE_SIZE < items.size
         return LearnItemsResponse(
-            items = items,
+            items = page,
             pageInfo = LearningLibraryPageInfo(
-                nextCursor = null,
+                nextCursor = if (hasNextPage) (offset + PAGE_SIZE).toString() else null,
                 previousCursor = null,
-                hasNextPage = false,
+                hasNextPage = hasNextPage,
                 hasPreviousPage = false,
                 totalCount = items.size,
                 pageCursors = null,
@@ -50,14 +84,25 @@ class LearnMyContentLocalDataSource @Inject constructor(
     }
 
     suspend fun saveLearnItems(items: List<LearnItem>, queryKey: String) {
-        val entities = items.map { it.toEntity(queryKey) }
-        learnItemDao.replaceByQueryKey(entities, queryKey)
+        learnItemDao.replaceByQueryKey(items.map { it.toEntity(queryKey) }, queryKey)
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
-                dataType = SyncDataType.LEARN_MY_CONTENT_ITEMS,
+                dataType = syncDataTypeFor(queryKey),
                 lastSyncedAtMs = System.currentTimeMillis(),
             )
         )
+    }
+
+    private fun syncDataTypeFor(queryKey: String): SyncDataType = when (queryKey) {
+        QUERY_KEY_IN_PROGRESS -> SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS
+        QUERY_KEY_COMPLETED -> SyncDataType.LEARN_MY_CONTENT_COMPLETED
+        else -> throw IllegalArgumentException("Unknown queryKey: $queryKey")
+    }
+
+    companion object {
+        const val QUERY_KEY_IN_PROGRESS = "IN_PROGRESS"
+        const val QUERY_KEY_COMPLETED = "COMPLETED"
+        private const val PAGE_SIZE = 4
     }
 
     private fun HorizonLearnItemEntity.toModel(): LearnItem {

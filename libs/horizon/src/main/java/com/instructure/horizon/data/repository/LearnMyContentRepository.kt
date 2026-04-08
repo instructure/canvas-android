@@ -16,6 +16,7 @@
 package com.instructure.horizon.data.repository
 
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItem
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
@@ -44,14 +45,32 @@ class LearnMyContentRepository @Inject constructor(
     ): LearnItemsResponse {
         return if (shouldFetchFromNetwork()) {
             networkDataSource.getLearnItems(cursor, searchQuery, sortBy, status, itemTypes, forceRefresh)
-                .also { response ->
+                .also {
                     if (shouldSync() && cursor == null) {
-                        localDataSource.saveLearnItems(response.items, queryKey)
+                        depaginateAndSync(status, queryKey)
                     }
                 }
         } else {
-            localDataSource.getLearnItems(queryKey)
+            localDataSource.getLearnItems(queryKey, searchQuery, sortBy, itemTypes, cursor)
         }
+    }
+
+    private suspend fun depaginateAndSync(status: List<LearnItemStatus>?, queryKey: String) {
+        val allItems = mutableListOf<LearnItem>()
+        var nextCursor: String? = null
+        do {
+            val page = networkDataSource.getLearnItems(
+                cursor = nextCursor,
+                searchQuery = null,
+                sortBy = null,
+                status = status,
+                itemTypes = null,
+                forceRefresh = true,
+            )
+            allItems.addAll(page.items)
+            nextCursor = if (page.pageInfo.hasNextPage) page.pageInfo.nextCursor else null
+        } while (nextCursor != null)
+        localDataSource.saveLearnItems(allItems, queryKey)
     }
 
     override suspend fun sync() {
