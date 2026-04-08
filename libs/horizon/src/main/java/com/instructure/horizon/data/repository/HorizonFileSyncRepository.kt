@@ -17,9 +17,11 @@ import com.instructure.pandautils.features.offline.sync.HtmlParsingResult
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Date
 import javax.inject.Inject
@@ -35,7 +37,7 @@ class HorizonFileSyncRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
-    suspend fun syncHtmlFiles(courseId: Long, parsingResult: HtmlParsingResult) {
+    suspend fun syncHtmlFiles(courseId: Long, parsingResult: HtmlParsingResult) = withContext(Dispatchers.IO) {
         val alreadyDownloadedIds = localFileDao.findByCourseId(courseId).map { it.id }.toSet()
         val internalFileIdsToSync = parsingResult.internalFileIds.filterNot { alreadyDownloadedIds.contains(it) }
 
