@@ -23,19 +23,20 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
+import com.instructure.dataseeding.model.RubricAssessmentEntry
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedAssignmentSubmission
+import com.instructure.student.ui.utils.extensions.seedAssignmentWithRubric
 import com.instructure.student.ui.utils.extensions.seedData
-import com.instructure.student.ui.utils.extensions.seedRubricWithAssignment
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -72,7 +73,7 @@ class RubricE2ETest : StudentComposeTest() {
             description = "Writing Quality",
             longDescription = "Evaluates the overall quality of written expression and clarity.",
             points = 10.0,
-            ratings = mutableListOf(
+            ratings = listOf(
                 RubricCriterionRating(description = "Excellent", longDescription = "Demonstrates outstanding writing skills with clear and compelling expression.", points = 10.0),
                 RubricCriterionRating(description = "Satisfactory", longDescription = "Meets basic writing requirements with adequate clarity.", points = 5.0),
                 RubricCriterionRating(description = "Poor", longDescription = "Does not meet writing standards; lacks clarity and structure.", points = 0.0)
@@ -83,7 +84,7 @@ class RubricE2ETest : StudentComposeTest() {
             description = "Research Depth",
             longDescription = null,
             points = 9.0,
-            ratings = mutableListOf(
+            ratings = listOf(
                 RubricCriterionRating(description = "Exceptional", longDescription = "Thorough and comprehensive research with strong source diversity.", points = 9.0),
                 RubricCriterionRating(description = "Proficient", longDescription = "Well-researched with only minor gaps in coverage.", points = 7.0),
                 RubricCriterionRating(description = "Developing", longDescription = "Adequate research coverage but missing important perspectives.", points = 4.0),
@@ -93,7 +94,7 @@ class RubricE2ETest : StudentComposeTest() {
         )
 
         Log.d(PREPARATION_TAG, "Creating a rubric with 2 criteria and associating it with '${assignment.name}' assignment.")
-        val rubric = seedRubricWithAssignment(
+        val rubric = seedAssignmentWithRubric(
             courseId = course.id,
             assignmentId = assignment.id,
             teacherToken = teacher.token,
@@ -134,7 +135,7 @@ class RubricE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Open the 'Rubric' tab in Submission Details.")
         submissionDetailsPage.openRubric()
 
-        Log.d(STEP_TAG, "Expand the sliding panel to see all of the Rubric criterion.")
+        Log.d(STEP_TAG, "Expand the sliding panel to see all of the Rubric criteria.")
         submissionDetailsPage.expandSlidingPanel()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Writing Quality' criterion description button is displayed and opens the long description.")
@@ -156,8 +157,8 @@ class RubricE2ETest : StudentComposeTest() {
             assignmentId = assignment.id,
             studentId = student.id,
             rubricAssessment = mapOf(
-                writingQualityCriterionResponse.id to SubmissionsApi.RubricAssessmentEntry(points = 0.0, ratingId = poorRating.id),
-                researchDepthCriterionResponse.id to SubmissionsApi.RubricAssessmentEntry(points = 3.0)
+                writingQualityCriterionResponse.id to RubricAssessmentEntry(points = 0.0, ratingId = poorRating.id),
+                researchDepthCriterionResponse.id to RubricAssessmentEntry(points = 3.0)
             )
         )
 
@@ -172,11 +173,29 @@ class RubricE2ETest : StudentComposeTest() {
         submissionDetailsPage.openRubric()
         submissionDetailsPage.expandSlidingPanel()
 
+        val writingQualityPoorRating = writingQualityCriterion.ratings.first { it.description == "Poor" }
+        val writingQualitySatisfactoryRating = writingQualityCriterion.ratings.first { it.description == "Satisfactory" }
+
         Log.d(ASSERTION_TAG, "Assert that the 'Writing Quality' 'Poor' rating is pre-selected as a defined rubric grade.")
-        submissionDetailsPage.assertRubricRatingSelected(writingQualityCriterion, writingQualityCriterion.ratings.first { it.description == "Poor" })
+        submissionDetailsPage.assertRubricRatingSelected(writingQualityCriterion, writingQualityPoorRating)
 
         Log.d(ASSERTION_TAG, "Assert that 'Research Depth' shows a custom score as pre-selected.")
         submissionDetailsPage.assertRubricCustomScoreSelected(researchDepthCriterion)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Poor' rating is the actually assessed/graded rating (filled indicator).")
+        submissionDetailsPage.assertRubricRatingIsAssessed(writingQualityCriterion, writingQualityPoorRating)
+
+        Log.d(STEP_TAG, "Tap on the 'Satisfactory' rating to preview its description without changing the actual grade.")
+        submissionDetailsPage.clickRubricRating(writingQualityCriterion, writingQualitySatisfactoryRating)
+
+        Log.d(ASSERTION_TAG, "Assert that 'Satisfactory' description is shown after tapping it.")
+        submissionDetailsPage.assertRubricRatingSelected(writingQualityCriterion, writingQualitySatisfactoryRating)
+
+        Log.d(ASSERTION_TAG, "Assert that 'Poor' is still the actual graded rating (filled indicator) even though 'Satisfactory' was tapped.")
+        submissionDetailsPage.assertRubricRatingIsAssessed(writingQualityCriterion, writingQualityPoorRating)
+
+        Log.d(ASSERTION_TAG, "Assert that 'Satisfactory' is only preview selected (outlined indicator), not actually graded.")
+        submissionDetailsPage.assertRubricRatingIsPreviewSelected(writingQualityCriterion, writingQualitySatisfactoryRating)
     }
 
 }

@@ -25,11 +25,11 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.dataseeding.api.LatePolicyApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.LatePolicy
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
@@ -43,9 +43,9 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.classic.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.extensions.seedAssignmentWithRubric
 import com.instructure.teacher.ui.utils.extensions.seedAssignments
 import com.instructure.teacher.ui.utils.extensions.seedData
-import com.instructure.teacher.ui.utils.extensions.seedRubricWithAssignment
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
@@ -532,7 +532,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
             description = "Writing Quality",
             longDescription = "Evaluates the overall quality of written expression and clarity.",
             points = 10.0,
-            ratings = mutableListOf(
+            ratings = listOf(
                 RubricCriterionRating(description = "Excellent", longDescription = "Demonstrates outstanding writing skills with clear and compelling expression.", points = 10.0),
                 RubricCriterionRating(description = "Satisfactory", longDescription = "Meets basic writing requirements with adequate clarity.", points = 5.0),
                 RubricCriterionRating(description = "Poor", longDescription = "Does not meet writing standards; lacks clarity and structure.", points = 0.0)
@@ -543,7 +543,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
             description = "Research Depth",
             longDescription = null,
             points = 9.0,
-            ratings = mutableListOf(
+            ratings = listOf(
                 RubricCriterionRating(description = "Exceptional", longDescription = "Thorough and comprehensive research with strong source diversity.", points = 9.0),
                 RubricCriterionRating(description = "Proficient", longDescription = "Well-researched with only minor gaps in coverage.", points = 7.0),
                 RubricCriterionRating(description = "Developing", longDescription = "Adequate research coverage but missing important perspectives.", points = 4.0),
@@ -555,7 +555,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Creating a rubric with 2 criteria and associating it with '${assignment[0].name}' assignment. " +
                 "Criterion 1 ('Writing Quality') has a criterion description and 3 ratings. " +
                 "Criterion 2 ('Research Depth') has no criterion description and 5 ratings.")
-        val rubric = seedRubricWithAssignment(
+        val rubric = seedAssignmentWithRubric(
             courseId = course.id,
             assignmentId = assignment[0].id,
             teacherToken = teacher.token,
@@ -598,8 +598,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the 'Rubrics' label is displayed and both criteria are shown.")
         speedGraderGradePage.assertRubricsLabelDisplayed()
-        speedGraderGradePage.assertRubricCriterionDisplayed(writingQualityCriterion.description!!)
-        speedGraderGradePage.assertRubricCriterionDisplayed(researchDepthCriterion.description!!)
+        speedGraderGradePage.assertRubricCriterionDisplayed(writingQualityCriterion.description)
+        speedGraderGradePage.assertRubricCriterionDisplayed(researchDepthCriterion.description)
 
         Log.d(STEP_TAG, "Select the 'Poor' (0 pts) defined rating for the '${writingQualityCriterion.description}' criterion by tapping the point box.")
         speedGraderGradePage.clickRubricRatingPointBox("0")

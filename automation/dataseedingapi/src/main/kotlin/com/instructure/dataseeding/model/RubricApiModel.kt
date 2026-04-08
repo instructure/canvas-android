@@ -18,6 +18,21 @@ package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
 
+data class RubricCriterionRating(
+    val id: String? = null,
+    val description: String,
+    val points: Double,
+    val longDescription: String? = null
+)
+
+data class RubricCriterion(
+    val id: String? = null,
+    val description: String,
+    val points: Double,
+    val ratings: List<RubricCriterionRating>,
+    val longDescription: String? = null
+)
+
 data class RubricCriterionRatingApiModel(
     val description: String,
     val points: Double,

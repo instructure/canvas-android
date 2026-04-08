@@ -335,6 +335,7 @@ private fun RubricCriterion(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 16.dp)
+                    .testTag("rubricCriterionScoreInput")
             ) {
                 Text(
                     stringResource(R.string.rubricScore),

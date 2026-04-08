@@ -20,6 +20,7 @@ import com.instructure.dataseeding.model.CreateRubricModel
 import com.instructure.dataseeding.model.CreateRubricWrapper
 import com.instructure.dataseeding.model.RubricApiModel
 import com.instructure.dataseeding.model.RubricAssociationModel
+import com.instructure.dataseeding.model.RubricCriterion
 import com.instructure.dataseeding.model.RubricCriterionApiModel
 import com.instructure.dataseeding.model.RubricCriterionRatingApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -41,25 +42,12 @@ object RubricsApi {
     private fun rubricsService(token: String): RubricsService =
         CanvasNetworkAdapter.retrofitWithToken(token).create(RubricsService::class.java)
 
-    data class RatingRequest(
-        val description: String,
-        val points: Double,
-        val longDescription: String? = null
-    )
-
-    data class RubricCriterionRequest(
-        val description: String,
-        val points: Double,
-        val ratings: List<RatingRequest>,
-        val longDescription: String? = null
-    )
-
-    fun createRubricWithAssignment(
+    fun createAssignmentWithRubric(
         courseId: Long,
         assignmentId: Long,
         teacherToken: String,
         title: String = "Test Rubric",
-        criteria: List<RubricCriterionRequest>
+        criteria: List<RubricCriterion>
     ): RubricApiModel {
         val criteriaMap = criteria.mapIndexed { index, criterion ->
             index.toString() to RubricCriterionApiModel(

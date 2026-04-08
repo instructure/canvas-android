@@ -21,6 +21,7 @@ import com.instructure.dataseeding.model.CreateSubmissionCommentWrapper
 import com.instructure.dataseeding.model.FileType
 import com.instructure.dataseeding.model.GradeSubmission
 import com.instructure.dataseeding.model.GradeSubmissionWrapper
+import com.instructure.dataseeding.model.RubricAssessmentEntry
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmissionWrapper
@@ -33,7 +34,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.QueryMap
 
 object SubmissionsApi {
     interface SubmissionsService {
@@ -63,14 +63,6 @@ object SubmissionsApi {
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long,
                 @Body gradeSubmission: GradeSubmissionWrapper
-        ): Call<SubmissionApiModel>
-
-        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}")
-        fun gradeSubmissionWithRubric(
-                @Path("courseId") courseId: Long,
-                @Path("assignmentId") assignmentId: Long,
-                @Path("studentId") studentId: Long,
-                @QueryMap rubricAssessment: Map<String, String>
         ): Call<SubmissionApiModel>
 
     }
@@ -131,11 +123,6 @@ object SubmissionsApi {
                 .body()!!
     }
 
-    data class RubricAssessmentEntry(
-        val points: Double,
-        val ratingId: String? = null
-    )
-
     fun gradeSubmissionWithRubric(
         teacherToken: String,
         courseId: Long,
@@ -143,15 +130,13 @@ object SubmissionsApi {
         studentId: Long,
         rubricAssessment: Map<String, RubricAssessmentEntry>
     ): SubmissionApiModel {
-        val queryMap = mutableMapOf<String, String>()
-        for ((criterionId, entry) in rubricAssessment) {
-            queryMap["rubric_assessment[$criterionId][points]"] = entry.points.toString()
-            if (entry.ratingId != null) {
-                queryMap["rubric_assessment[$criterionId][rating_id]"] = entry.ratingId
-            }
-        }
         return submissionsService(teacherToken)
-            .gradeSubmissionWithRubric(courseId, assignmentId, studentId, queryMap)
+            .gradeSubmission(courseId, assignmentId, studentId,
+                GradeSubmissionWrapper(
+                    submission = GradeSubmission(excused = false),
+                    rubricAssessment = rubricAssessment
+                )
+            )
             .execute()
             .body()!!
     }

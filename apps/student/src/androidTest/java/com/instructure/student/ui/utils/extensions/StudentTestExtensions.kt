@@ -32,7 +32,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
@@ -49,6 +48,7 @@ import com.instructure.dataseeding.model.EnrollmentTypes
 import com.instructure.dataseeding.model.FileType
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.RubricApiModel
+import com.instructure.dataseeding.model.RubricCriterion
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -348,32 +348,19 @@ fun uploadTextFile(
     )
 }
 
-fun seedRubricWithAssignment(
+fun seedAssignmentWithRubric(
     courseId: Long,
     assignmentId: Long,
     teacherToken: String,
     title: String = "Test Rubric",
     criteria: List<RubricCriterion>
 ): RubricApiModel {
-    val created = RubricsApi.createRubricWithAssignment(
+    val created = RubricsApi.createAssignmentWithRubric(
         courseId = courseId,
         assignmentId = assignmentId,
         teacherToken = teacherToken,
         title = title,
-        criteria = criteria.map { criterion ->
-            RubricsApi.RubricCriterionRequest(
-                description = criterion.description ?: "",
-                points = criterion.points,
-                longDescription = criterion.longDescription,
-                ratings = criterion.ratings.map { rating ->
-                    RubricsApi.RatingRequest(
-                        description = rating.description ?: "",
-                        points = rating.points,
-                        longDescription = rating.longDescription
-                    )
-                }
-            )
-        }
+        criteria = criteria
     )
     val assignment = AssignmentsApi.getAssignment(courseId, assignmentId, teacherToken)
     return created.copy(criteria = assignment.rubric ?: emptyList())

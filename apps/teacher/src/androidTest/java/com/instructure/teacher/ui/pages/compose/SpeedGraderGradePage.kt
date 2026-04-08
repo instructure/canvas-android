@@ -27,6 +27,8 @@ import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -119,8 +121,13 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param criterionId The ID of the rubric criterion.
      * @param score The score value to enter.
      */
-    fun enterRubricScore(criterionId: String, score: String) {
-        composeTestRule.onNode(hasTestTag("rubricCriterionScoreInput-$criterionId"), useUnmergedTree = true)
+    fun enterRubricScore(criterionId: String? = null, score: String) {
+        val selector = if (criterionId != null) {
+            hasTestTag("rubricCriterionScoreInput-$criterionId")
+        } else {
+            hasParent(hasTestTag("rubricCriterionScoreInput")) and hasSetTextAction()
+        }
+        composeTestRule.onNode(selector, useUnmergedTree = true)
             .performScrollTo()
             .performTextReplacement(score)
         composeTestRule.waitForIdle()
@@ -134,8 +141,13 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param criterionId The ID of the criterion whose note field should be targeted.
      * @param note The note text to enter.
      */
-    fun enterRubricNote(note: String, criterionId: String) {
-        composeTestRule.onNode(hasTestTag("rubricNoteInput") and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId")), useUnmergedTree = true)
+    fun enterRubricNote(note: String, criterionId: String? = null) {
+        val selector = if (criterionId != null) {
+            hasTestTag("rubricNoteInput") and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId"))
+        } else {
+            hasTestTag("rubricNoteInput")
+        }
+        composeTestRule.onNode(selector, useUnmergedTree = true)
             .performScrollTo()
             .performTextReplacement(note)
         composeTestRule.waitForIdle()
@@ -168,8 +180,13 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      *
      * @param criterionId The ID of the criterion whose note send button should be clicked.
      */
-    fun clickSendRubricNoteButton(criterionId: String) {
-        composeTestRule.onNode((hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription)) and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId"))), useUnmergedTree = true)
+    fun clickSendRubricNoteButton(criterionId: String? = null) {
+        val selector = if (criterionId != null) {
+            hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription)) and hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId"))
+        } else {
+            hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription))
+        }
+        composeTestRule.onNode(selector, useUnmergedTree = true)
             .performClick()
         composeTestRule.waitForIdle()
     }
@@ -179,12 +196,14 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      *
      * @param criterionId The ID of the criterion whose note edit button should be clicked.
      */
-    fun clickEditRubricNoteButton(criterionId: String) {
-        composeTestRule.onNode(
+    fun clickEditRubricNoteButton(criterionId: String? = null) {
+        val selector = if (criterionId != null) {
             hasContentDescription(getStringFromResource(R.string.content_description_edit_rubric_comment)) and
-                    hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId")),
-            useUnmergedTree = true
-        ).performClick()
+                    hasAnyAncestor(hasTestTag("rubricNoteInput-$criterionId"))
+        } else {
+            hasContentDescription(getStringFromResource(R.string.content_description_edit_rubric_comment))
+        }
+        composeTestRule.onNode(selector, useUnmergedTree = true).performClick()
         composeTestRule.waitForIdle()
     }
 
