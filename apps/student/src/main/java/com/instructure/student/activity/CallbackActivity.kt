@@ -214,6 +214,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     private suspend fun setupPendoTracking() {
+        if (!ApiPrefs.mobileConsent) return
+
         val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
