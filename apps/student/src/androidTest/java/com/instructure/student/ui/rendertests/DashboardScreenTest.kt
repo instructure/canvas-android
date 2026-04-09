@@ -23,11 +23,11 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
+import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
+import com.instructure.pandautils.features.dashboard.compose.DashboardUiState
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.student.features.dashboard.compose.DashboardScreenContent
-import com.instructure.student.features.dashboard.compose.DashboardUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -40,12 +40,13 @@ class DashboardScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private val mockRouter = object : DashboardRouter {
-        override fun routeToGlobalAnnouncement(subject: String, message: String) {}
-        override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {}
-        override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {}
-        override fun routeToSyncProgress() {}
-        override fun restartApp() {}
+    private val mockNavigationHandler = object : DashboardNavigationHandler {
+        override fun handleCoursesNavigation(event: DashboardNavigationEvent.Courses) {}
+        override fun handleTodoNavigation(event: DashboardNavigationEvent.Todo) {}
+        override fun handleForecastNavigation(event: DashboardNavigationEvent.Forecast) {}
+        override fun handleProgressNavigation(event: DashboardNavigationEvent.Progress) {}
+        override fun handleConferencesNavigation(event: DashboardNavigationEvent.Conferences) {}
+        override fun handleDashboardNavigation(event: DashboardNavigationEvent.Dashboard) {}
     }
 
     @Test
@@ -64,7 +65,7 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = mockRouter
+                navigationHandler = mockNavigationHandler
             )
         }
 
@@ -88,7 +89,7 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = mockRouter
+                navigationHandler = mockNavigationHandler
             )
         }
 
@@ -112,7 +113,7 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = mockRouter
+                navigationHandler = mockNavigationHandler
             )
         }
 
@@ -136,7 +137,7 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = mockRouter
+                navigationHandler = mockNavigationHandler
             )
         }
 
@@ -165,7 +166,7 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = mockRouter
+                navigationHandler = mockNavigationHandler
             )
         }
 
@@ -174,14 +175,19 @@ class DashboardScreenTest {
     }
 
     @Test
-    fun testCustomizeDashboardButtonCallsRouter() {
-        var routerCalled = false
-        val testRouter = object : DashboardRouter {
-            override fun routeToGlobalAnnouncement(subject: String, message: String) {}
-            override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {}
-            override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {}
-            override fun routeToSyncProgress() {}
-            override fun restartApp() {}
+    fun testCustomizeDashboardButtonCallsNavigationHandler() {
+        var navigationCalled = false
+        val testNavigationHandler = object : DashboardNavigationHandler {
+            override fun handleCoursesNavigation(event: DashboardNavigationEvent.Courses) {}
+            override fun handleTodoNavigation(event: DashboardNavigationEvent.Todo) {}
+            override fun handleForecastNavigation(event: DashboardNavigationEvent.Forecast) {}
+            override fun handleProgressNavigation(event: DashboardNavigationEvent.Progress) {}
+            override fun handleConferencesNavigation(event: DashboardNavigationEvent.Conferences) {}
+            override fun handleDashboardNavigation(event: DashboardNavigationEvent.Dashboard) {
+                if (event is DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) {
+                    navigationCalled = true
+                }
+            }
         }
 
         val mockWidgets = listOf(
@@ -202,13 +208,13 @@ class DashboardScreenTest {
                 refreshSignal = MutableSharedFlow(),
                 snackbarMessageFlow = MutableSharedFlow(),
                 onShowSnackbar = { _, _, _ -> },
-                router = testRouter
+                navigationHandler = testNavigationHandler
             )
         }
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Customize Dashboard").performClick()
 
-        assertTrue("Router's routeToCustomizeDashboard should be called", routerCalled)
+        assertTrue("NavigationHandler's handleDashboardNavigation should be called", navigationCalled)
     }
 }
