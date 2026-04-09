@@ -18,17 +18,17 @@ package com.instructure.horizon.di
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.HorizonDatabaseProvider
+import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
 import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
-import com.instructure.horizon.database.dao.HorizonLearnCourseDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import dagger.Module
 import dagger.Provides
@@ -54,8 +54,8 @@ class HorizonOfflineModule {
     }
 
     @Provides
-    fun provideHorizonDashboardProgramDao(db: HorizonDatabase): HorizonDashboardProgramDao {
-        return db.dashboardProgramDao()
+    fun provideHorizonProgramDao(db: HorizonDatabase): HorizonProgramDao {
+        return db.programDao()
     }
 
     @Provides
@@ -84,8 +84,8 @@ class HorizonOfflineModule {
     }
 
     @Provides
-    fun provideHorizonLearnCourseDao(db: HorizonDatabase): HorizonLearnCourseDao {
-        return db.learnCourseDao()
+    fun provideHorizonCourseDao(db: HorizonDatabase): HorizonCourseDao {
+        return db.courseDao()
     }
 
     @Provides

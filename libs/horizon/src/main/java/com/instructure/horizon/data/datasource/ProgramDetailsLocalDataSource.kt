@@ -18,37 +18,48 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
-import com.instructure.horizon.database.dao.HorizonLearnCourseDao
-import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
-import com.instructure.horizon.database.entity.HorizonLearnCourseEntity
+import com.instructure.horizon.database.dao.HorizonCourseDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.entity.HorizonCourseEntity
+import com.instructure.horizon.database.entity.HorizonProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import java.util.Date
 import javax.inject.Inject
 
 class ProgramDetailsLocalDataSource @Inject constructor(
-    private val programDao: HorizonDashboardProgramDao,
-    private val learnCourseDao: HorizonLearnCourseDao,
+    private val programDao: HorizonProgramDao,
+    private val courseDao: HorizonCourseDao,
 ) {
 
     suspend fun getProgramDetails(programId: String): Program {
-        val entity = programDao.getAll().find { it.programId == programId }
+        val entity = programDao.getById(programId)
             ?: throw IllegalArgumentException("Program with id $programId not found in cache")
         val refs = programDao.getRefsForProgram(programId)
         return entity.toProgram(refs)
     }
 
     suspend fun getCoursesById(courseIds: List<Long>): List<CourseWithModuleItemDurations> {
-        return learnCourseDao.getByCourseIds(courseIds).map { it.toCourseWithModuleItemDurations() }
+        return courseDao.getByCourseIds(courseIds).map { it.toCourseWithModuleItemDurations() }
     }
 
     suspend fun saveCourses(courses: List<CourseWithModuleItemDurations>) {
-        learnCourseDao.insertAll(courses.map { it.toEntity() })
+        courses.forEach { course ->
+            courseDao.insertIfAbsent(listOf(course.toDefaultEntity()))
+            courseDao.updateProgramCourseFields(
+                courseId = course.courseId,
+                name = course.courseName,
+                startAtMs = course.startDate?.time,
+                endAtMs = course.endDate?.time,
+                moduleItemsDurations = course.moduleItemsDuration.joinToString(","),
+            )
+        }
     }
 
-    private fun HorizonDashboardProgramEntity.toProgram(refs: List<HorizonDashboardProgramCourseRef>): Program {
+    private fun HorizonProgramEntity.toProgram(
+        refs: List<HorizonProgramCourseRef>
+    ): Program {
         val requirements = refs.sortedBy { it.sortOrder }.map { ref ->
             ProgramRequirement(
                 id = ref.requirementId,
@@ -63,7 +74,7 @@ class ProgramDetailsLocalDataSource @Inject constructor(
         }
         return Program(
             id = programId,
-            name = programName,
+            name = name,
             description = description,
             startDate = startDateMs?.let { Date(it) },
             endDate = endDateMs?.let { Date(it) },
@@ -73,24 +84,32 @@ class ProgramDetailsLocalDataSource @Inject constructor(
         )
     }
 
-    private fun HorizonLearnCourseEntity.toCourseWithModuleItemDurations(): CourseWithModuleItemDurations {
+    private fun HorizonCourseEntity.toCourseWithModuleItemDurations(): CourseWithModuleItemDurations {
         return CourseWithModuleItemDurations(
             courseId = courseId,
-            courseName = courseName,
+            courseName = name,
             moduleItemsDuration = if (moduleItemsDurations.isEmpty()) emptyList() else moduleItemsDurations.split(","),
-            startDate = startDateMs?.let { Date(it) },
-            endDate = endDateMs?.let { Date(it) },
+            startDate = startAtMs?.let { Date(it) },
+            endDate = endAtMs?.let { Date(it) },
         )
     }
 
-    private fun CourseWithModuleItemDurations.toEntity(): HorizonLearnCourseEntity {
-        return HorizonLearnCourseEntity(
+    private fun CourseWithModuleItemDurations.toDefaultEntity(): HorizonCourseEntity {
+        return HorizonCourseEntity(
             courseId = courseId,
-            courseName = courseName,
+            name = courseName,
             progress = 0.0,
+            imageUrl = null,
+            startAtMs = startDate?.time,
+            endAtMs = endDate?.time,
+            requirementCount = null,
+            requirementCompletedCount = null,
+            completedAtMs = null,
+            grade = null,
+            workflowState = null,
+            lastActivityAtMs = null,
+            enrolledAtMs = null,
             courseSyllabus = null,
-            startDateMs = startDate?.time,
-            endDateMs = endDate?.time,
             moduleItemsDurations = moduleItemsDuration.joinToString(","),
         )
     }

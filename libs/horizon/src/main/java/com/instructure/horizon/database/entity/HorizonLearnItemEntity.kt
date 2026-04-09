@@ -20,9 +20,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * Flattened entity for both [com.instructure.canvasapi2.models.journey.mycontent.ProgramEnrollmentItem]
- * and [com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem].
- * [queryKey] identifies which fetch bucket this item belongs to (e.g. "IN_PROGRESS" or "COMPLETED").
+ * Lightweight list-metadata entity. Stores the ordering and bucketing information for items
+ * shown on the My Content screen. Domain data (course/program fields) lives in the unified
+ * [HorizonCourseEntity] and [HorizonProgramEntity] tables, keyed by [id].
  */
 @Entity(
     tableName = "horizon_learn_items",
@@ -32,26 +32,5 @@ data class HorizonLearnItemEntity(
     @PrimaryKey val id: String,
     val queryKey: String,
     val itemType: String,
-    val name: String,
     val position: Int,
-    val enrolledAtMs: Long?,
-    val completionPercentage: Double?,
-    // ProgramEnrollmentItem-specific fields
-    val startDateMs: Long?,
-    val endDateMs: Long?,
-    val enrollmentStatus: String?,
-    val description: String?,
-    val variant: String?,
-    val estimatedDurationMinutes: Int?,
-    val courseCount: Int?,
-    // CourseEnrollmentItem-specific fields
-    val startAtMs: Long?,
-    val endAtMs: Long?,
-    val requirementCount: Int?,
-    val requirementCompletedCount: Int?,
-    val completedAtMs: Long?,
-    val grade: Double?,
-    val imageUrl: String?,
-    val workflowState: String?,
-    val lastActivityAtMs: Long?,
 )

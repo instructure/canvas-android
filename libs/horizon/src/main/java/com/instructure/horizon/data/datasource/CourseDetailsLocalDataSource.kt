@@ -18,13 +18,13 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
-import com.instructure.horizon.database.dao.HorizonLearnCourseDao
-import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
-import com.instructure.horizon.database.entity.HorizonLearnCourseEntity
-import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.dao.HorizonCourseDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonCourseEntity
+import com.instructure.horizon.database.entity.HorizonProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonProgramEntity
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
@@ -32,13 +32,13 @@ import java.util.Date
 import javax.inject.Inject
 
 class CourseDetailsLocalDataSource @Inject constructor(
-    private val learnCourseDao: HorizonLearnCourseDao,
-    private val programDao: HorizonDashboardProgramDao,
+    private val courseDao: HorizonCourseDao,
+    private val programDao: HorizonProgramDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
 
     suspend fun getCourse(courseId: Long): CourseWithProgress {
-        val entity = learnCourseDao.getByCourseId(courseId)
+        val entity = courseDao.getByCourseId(courseId)
             ?: throw IllegalStateException("Course $courseId not found in cache")
         return entity.toCourseWithProgress()
     }
@@ -53,7 +53,31 @@ class CourseDetailsLocalDataSource @Inject constructor(
     }
 
     suspend fun saveCourseDetails(course: CourseWithProgress, programs: List<Program>) {
-        learnCourseDao.insertAll(listOf(course.toEntity()))
+        courseDao.insertIfAbsent(listOf(course.toDefaultEntity()))
+        courseDao.updateCourseDetailsFields(
+            courseId = course.courseId,
+            name = course.courseName,
+            progress = course.progress,
+            imageUrl = course.courseImageUrl,
+            courseSyllabus = course.courseSyllabus,
+        )
+        val programEntities = programs.map { it.toEntity() }
+        val refs = programs.flatMap { program ->
+            program.sortedRequirements.mapIndexed { index, req ->
+                HorizonProgramCourseRef(
+                    programId = program.id,
+                    courseId = req.courseId,
+                    requirementId = req.id,
+                    progressId = req.progressId,
+                    required = req.required,
+                    progress = req.progress,
+                    enrollmentStatus = req.enrollmentStatus?.rawValue,
+                    sortOrder = index,
+                )
+            }
+        }
+        programDao.insertAll(programEntities)
+        programDao.insertAllRefs(refs)
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
                 dataType = SyncDataType.COURSE_DETAILS,
@@ -62,29 +86,54 @@ class CourseDetailsLocalDataSource @Inject constructor(
         )
     }
 
-    private fun HorizonLearnCourseEntity.toCourseWithProgress(): CourseWithProgress {
+    private fun HorizonCourseEntity.toCourseWithProgress(): CourseWithProgress {
         return CourseWithProgress(
             courseId = courseId,
-            courseName = courseName,
-            courseImageUrl = null,
+            courseName = name,
+            courseImageUrl = imageUrl,
             courseSyllabus = courseSyllabus,
             progress = progress,
         )
     }
 
-    private fun CourseWithProgress.toEntity(): HorizonLearnCourseEntity {
-        return HorizonLearnCourseEntity(
+    private fun CourseWithProgress.toDefaultEntity(): HorizonCourseEntity {
+        return HorizonCourseEntity(
             courseId = courseId,
-            courseName = courseName,
+            name = courseName,
             progress = progress,
+            imageUrl = courseImageUrl,
+            startAtMs = null,
+            endAtMs = null,
+            requirementCount = null,
+            requirementCompletedCount = null,
+            completedAtMs = null,
+            grade = null,
+            workflowState = null,
+            lastActivityAtMs = null,
+            enrolledAtMs = null,
             courseSyllabus = courseSyllabus,
-            startDateMs = null,
-            endDateMs = null,
             moduleItemsDurations = "",
         )
     }
 
-    private fun HorizonDashboardProgramEntity.toProgram(refs: List<HorizonDashboardProgramCourseRef>): Program {
+    private fun Program.toEntity(): HorizonProgramEntity {
+        return HorizonProgramEntity(
+            programId = id,
+            name = name,
+            description = description,
+            startDateMs = startDate?.time,
+            endDateMs = endDate?.time,
+            variant = variant.rawValue,
+            estimatedDurationMinutes = null,
+            courseCount = sortedRequirements.size,
+            courseCompletionCount = courseCompletionCount,
+            enrolledAtMs = null,
+            completionPercentage = null,
+            enrollmentStatus = null,
+        )
+    }
+
+    private fun HorizonProgramEntity.toProgram(refs: List<HorizonProgramCourseRef>): Program {
         val requirements = refs.sortedBy { it.sortOrder }.map { ref ->
             ProgramRequirement(
                 id = ref.requirementId,
@@ -99,7 +148,7 @@ class CourseDetailsLocalDataSource @Inject constructor(
         }
         return Program(
             id = programId,
-            name = programName,
+            name = name,
             description = description,
             startDate = startDateMs?.let { Date(it) },
             endDate = endDateMs?.let { Date(it) },

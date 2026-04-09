@@ -22,9 +22,13 @@ import com.instructure.canvasapi2.models.journey.mycontent.LearnItem
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
 import com.instructure.canvasapi2.models.journey.mycontent.ProgramEnrollmentItem
+import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonCourseEntity
 import com.instructure.horizon.database.entity.HorizonLearnItemEntity
+import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import com.instructure.horizon.database.entity.SyncDataType
 import java.util.Date
@@ -32,6 +36,8 @@ import javax.inject.Inject
 
 class LearnMyContentLocalDataSource @Inject constructor(
     private val learnItemDao: HorizonLearnItemDao,
+    private val courseDao: HorizonCourseDao,
+    private val programDao: HorizonProgramDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
 
@@ -42,7 +48,21 @@ class LearnMyContentLocalDataSource @Inject constructor(
         itemTypes: List<LearnItemType>?,
         cursor: String?,
     ): LearnItemsResponse {
-        var items = learnItemDao.getByQueryKey(queryKey).map { it.toModel() }
+        val listItems = learnItemDao.getByQueryKey(queryKey)
+
+        var items: List<LearnItem> = listItems.mapNotNull { listItem ->
+            when (listItem.itemType) {
+                LearnItemType.COURSE.name -> {
+                    val entity = courseDao.getByCourseId(listItem.id.toLong()) ?: return@mapNotNull null
+                    entity.toCourseEnrollmentItem(listItem.position)
+                }
+                LearnItemType.PROGRAM.name -> {
+                    val entity = programDao.getById(listItem.id) ?: return@mapNotNull null
+                    entity.toProgramEnrollmentItem(listItem.position)
+                }
+                else -> null
+            }
+        }
 
         if (!itemTypes.isNullOrEmpty()) {
             items = items.filter { item ->
@@ -84,7 +104,33 @@ class LearnMyContentLocalDataSource @Inject constructor(
     }
 
     suspend fun saveLearnItems(items: List<LearnItem>, queryKey: String) {
-        learnItemDao.replaceByQueryKey(items.map { it.toEntity(queryKey) }, queryKey)
+        items.forEach { item ->
+            when (item) {
+                is CourseEnrollmentItem -> {
+                    val courseId = item.id.toLong()
+                    courseDao.insertIfAbsent(listOf(item.toDefaultEntity()))
+                    courseDao.updateEnrollmentFields(
+                        courseId = courseId,
+                        name = item.name,
+                        progress = item.completionPercentage ?: 0.0,
+                        imageUrl = item.imageUrl,
+                        startAtMs = item.startAt?.time,
+                        endAtMs = item.endAt?.time,
+                        requirementCount = item.requirementCount,
+                        requirementCompletedCount = item.requirementCompletedCount,
+                        completedAtMs = item.completedAt?.time,
+                        grade = item.grade,
+                        workflowState = item.workflowState,
+                        lastActivityAtMs = item.lastActivityAt?.time,
+                        enrolledAtMs = item.enrolledAt?.time,
+                    )
+                }
+                is ProgramEnrollmentItem -> {
+                    programDao.insertAll(listOf(item.toDefaultEntity()))
+                }
+            }
+        }
+        learnItemDao.replaceByQueryKey(items.map { it.toListEntity(queryKey) }, queryKey)
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
                 dataType = syncDataTypeFor(queryKey),
@@ -105,93 +151,88 @@ class LearnMyContentLocalDataSource @Inject constructor(
         private const val PAGE_SIZE = 4
     }
 
-    private fun HorizonLearnItemEntity.toModel(): LearnItem {
-        return when (itemType) {
-            LearnItemType.PROGRAM.name -> ProgramEnrollmentItem(
-                id = id,
-                name = name,
-                position = position,
-                enrolledAt = enrolledAtMs?.let { Date(it) },
-                completionPercentage = completionPercentage,
-                startDate = startDateMs?.let { Date(it) },
-                endDate = endDateMs?.let { Date(it) },
-                status = enrollmentStatus.orEmpty(),
-                description = description,
-                variant = variant.orEmpty(),
-                estimatedDurationMinutes = estimatedDurationMinutes,
-                courseCount = courseCount ?: 0,
-            )
-            else -> CourseEnrollmentItem(
-                id = id,
-                name = name,
-                position = position,
-                enrolledAt = enrolledAtMs?.let { Date(it) },
-                completionPercentage = completionPercentage,
-                startAt = startAtMs?.let { Date(it) },
-                endAt = endAtMs?.let { Date(it) },
-                requirementCount = requirementCount,
-                requirementCompletedCount = requirementCompletedCount,
-                completedAt = completedAtMs?.let { Date(it) },
-                grade = grade,
-                imageUrl = imageUrl,
-                workflowState = workflowState.orEmpty(),
-                lastActivityAt = lastActivityAtMs?.let { Date(it) },
-            )
-        }
+    private fun HorizonCourseEntity.toCourseEnrollmentItem(position: Int): CourseEnrollmentItem {
+        return CourseEnrollmentItem(
+            id = courseId.toString(),
+            name = name,
+            position = position,
+            enrolledAt = enrolledAtMs?.let { Date(it) },
+            completionPercentage = progress,
+            startAt = startAtMs?.let { Date(it) },
+            endAt = endAtMs?.let { Date(it) },
+            requirementCount = requirementCount,
+            requirementCompletedCount = requirementCompletedCount,
+            completedAt = completedAtMs?.let { Date(it) },
+            grade = grade,
+            imageUrl = imageUrl,
+            workflowState = workflowState.orEmpty(),
+            lastActivityAt = lastActivityAtMs?.let { Date(it) },
+        )
     }
 
-    private fun LearnItem.toEntity(queryKey: String): HorizonLearnItemEntity {
-        return when (this) {
-            is ProgramEnrollmentItem -> HorizonLearnItemEntity(
-                id = id,
-                queryKey = queryKey,
-                itemType = LearnItemType.PROGRAM.name,
-                name = name,
-                position = position,
-                enrolledAtMs = enrolledAt?.time,
-                completionPercentage = completionPercentage,
-                startDateMs = startDate?.time,
-                endDateMs = endDate?.time,
-                enrollmentStatus = status,
-                description = description,
-                variant = variant,
-                estimatedDurationMinutes = estimatedDurationMinutes,
-                courseCount = courseCount,
-                startAtMs = null,
-                endAtMs = null,
-                requirementCount = null,
-                requirementCompletedCount = null,
-                completedAtMs = null,
-                grade = null,
-                imageUrl = null,
-                workflowState = null,
-                lastActivityAtMs = null,
-            )
-            is CourseEnrollmentItem -> HorizonLearnItemEntity(
-                id = id,
-                queryKey = queryKey,
-                itemType = LearnItemType.COURSE.name,
-                name = name,
-                position = position,
-                enrolledAtMs = enrolledAt?.time,
-                completionPercentage = completionPercentage,
-                startDateMs = null,
-                endDateMs = null,
-                enrollmentStatus = null,
-                description = null,
-                variant = null,
-                estimatedDurationMinutes = null,
-                courseCount = null,
-                startAtMs = startAt?.time,
-                endAtMs = endAt?.time,
-                requirementCount = requirementCount,
-                requirementCompletedCount = requirementCompletedCount,
-                completedAtMs = completedAt?.time,
-                grade = grade,
-                imageUrl = imageUrl,
-                workflowState = workflowState,
-                lastActivityAtMs = lastActivityAt?.time,
-            )
-        }
+    private fun HorizonProgramEntity.toProgramEnrollmentItem(position: Int): ProgramEnrollmentItem {
+        return ProgramEnrollmentItem(
+            id = programId,
+            name = name,
+            position = position,
+            enrolledAt = enrolledAtMs?.let { Date(it) },
+            completionPercentage = completionPercentage,
+            startDate = startDateMs?.let { Date(it) },
+            endDate = endDateMs?.let { Date(it) },
+            status = enrollmentStatus.orEmpty(),
+            description = description,
+            variant = variant,
+            estimatedDurationMinutes = estimatedDurationMinutes,
+            courseCount = courseCount ?: 0,
+        )
+    }
+
+    private fun CourseEnrollmentItem.toDefaultEntity(): HorizonCourseEntity {
+        return HorizonCourseEntity(
+            courseId = id.toLong(),
+            name = name,
+            progress = completionPercentage ?: 0.0,
+            imageUrl = imageUrl,
+            startAtMs = startAt?.time,
+            endAtMs = endAt?.time,
+            requirementCount = requirementCount,
+            requirementCompletedCount = requirementCompletedCount,
+            completedAtMs = completedAt?.time,
+            grade = grade,
+            workflowState = workflowState,
+            lastActivityAtMs = lastActivityAt?.time,
+            enrolledAtMs = enrolledAt?.time,
+            courseSyllabus = null,
+            moduleItemsDurations = "",
+        )
+    }
+
+    private fun ProgramEnrollmentItem.toDefaultEntity(): HorizonProgramEntity {
+        return HorizonProgramEntity(
+            programId = id,
+            name = name,
+            description = description,
+            startDateMs = startDate?.time,
+            endDateMs = endDate?.time,
+            variant = variant,
+            estimatedDurationMinutes = estimatedDurationMinutes,
+            courseCount = courseCount,
+            courseCompletionCount = null,
+            enrolledAtMs = enrolledAt?.time,
+            completionPercentage = completionPercentage,
+            enrollmentStatus = status,
+        )
+    }
+
+    private fun LearnItem.toListEntity(queryKey: String): HorizonLearnItemEntity {
+        return HorizonLearnItemEntity(
+            id = id,
+            queryKey = queryKey,
+            itemType = when (this) {
+                is CourseEnrollmentItem -> LearnItemType.COURSE.name
+                is ProgramEnrollmentItem -> LearnItemType.PROGRAM.name
+            },
+            position = position,
+        )
     }
 }

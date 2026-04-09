@@ -19,16 +19,22 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Stores course data needed by the Program Details and Course Details screens offline.
- * [moduleItemsDurations] is stored as a comma-separated list of ISO 8601 duration strings.
+ * Unified entity for program data, used by both the My Content list screen and the Program
+ * Details screen. Merges fields from [ProgramEnrollmentItem] (list) and the
+ * [Program] domain model (details) to ensure data consistency when offline.
  */
-@Entity(tableName = "horizon_learn_courses")
-data class HorizonLearnCourseEntity(
-    @PrimaryKey val courseId: Long,
-    val courseName: String,
-    val progress: Double,
-    val courseSyllabus: String?,
+@Entity(tableName = "horizon_programs")
+data class HorizonProgramEntity(
+    @PrimaryKey val programId: String,
+    val name: String,
+    val description: String?,
     val startDateMs: Long?,
     val endDateMs: Long?,
-    val moduleItemsDurations: String,
+    val variant: String,
+    val estimatedDurationMinutes: Int?,
+    val courseCount: Int?,
+    val courseCompletionCount: Int?,
+    val enrolledAtMs: Long?,
+    val completionPercentage: Double?,
+    val enrollmentStatus: String?,
 )

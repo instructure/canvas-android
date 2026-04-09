@@ -20,35 +20,35 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.entity.HorizonProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonProgramEntity
 
 @Dao
-interface HorizonDashboardProgramDao {
+interface HorizonProgramDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(programs: List<HorizonDashboardProgramEntity>)
+    suspend fun insertAll(programs: List<HorizonProgramEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllRefs(refs: List<HorizonDashboardProgramCourseRef>)
+    suspend fun insertAllRefs(refs: List<HorizonProgramCourseRef>)
 
-    @Query("SELECT * FROM horizon_dashboard_programs")
-    suspend fun getAll(): List<HorizonDashboardProgramEntity>
+    @Query("SELECT * FROM horizon_programs")
+    suspend fun getAll(): List<HorizonProgramEntity>
 
-    @Query("SELECT * FROM horizon_dashboard_program_course_refs WHERE programId = :programId")
-    suspend fun getRefsForProgram(programId: String): List<HorizonDashboardProgramCourseRef>
+    @Query("SELECT * FROM horizon_programs WHERE programId = :programId")
+    suspend fun getById(programId: String): HorizonProgramEntity?
 
-    @Query("DELETE FROM horizon_dashboard_programs")
+    @Query("SELECT * FROM horizon_program_course_refs WHERE programId = :programId")
+    suspend fun getRefsForProgram(programId: String): List<HorizonProgramCourseRef>
+
+    @Query("DELETE FROM horizon_programs")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM horizon_dashboard_program_course_refs")
+    @Query("DELETE FROM horizon_program_course_refs")
     suspend fun deleteAllRefs()
 
     @Transaction
-    suspend fun replaceAll(
-        programs: List<HorizonDashboardProgramEntity>,
-        refs: List<HorizonDashboardProgramCourseRef>,
-    ) {
+    suspend fun replaceAll(programs: List<HorizonProgramEntity>, refs: List<HorizonProgramCourseRef>) {
         deleteAllRefs()
         deleteAll()
         insertAll(programs)

@@ -18,17 +18,17 @@ package com.instructure.horizon.espresso
 import android.content.Context
 import androidx.room.Room
 import com.instructure.horizon.database.HorizonDatabase
+import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
 import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
-import com.instructure.horizon.database.dao.HorizonLearnCourseDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.di.HorizonOfflineModule
 import dagger.Module
@@ -54,7 +54,7 @@ object HorizonOfflineTestModule {
     fun provideHorizonDashboardEnrollmentDao(db: HorizonDatabase): HorizonDashboardEnrollmentDao = db.dashboardEnrollmentDao()
 
     @Provides
-    fun provideHorizonDashboardProgramDao(db: HorizonDatabase): HorizonDashboardProgramDao = db.dashboardProgramDao()
+    fun provideHorizonProgramDao(db: HorizonDatabase): HorizonProgramDao = db.programDao()
 
     @Provides
     fun provideHorizonDashboardModuleItemDao(db: HorizonDatabase): HorizonDashboardModuleItemDao = db.dashboardModuleItemDao()
@@ -72,7 +72,7 @@ object HorizonOfflineTestModule {
     fun provideHorizonLearnSavedItemDao(db: HorizonDatabase): HorizonLearnSavedItemDao = db.learnSavedItemDao()
 
     @Provides
-    fun provideHorizonLearnCourseDao(db: HorizonDatabase): HorizonLearnCourseDao = db.learnCourseDao()
+    fun provideHorizonCourseDao(db: HorizonDatabase): HorizonCourseDao = db.courseDao()
 
     @Provides
     fun provideHorizonCourseModuleDao(db: HorizonDatabase): HorizonCourseModuleDao = db.courseModuleDao()
