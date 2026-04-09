@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.teacher.ui.utils.extensions
 
 import android.app.Activity
@@ -37,6 +36,7 @@ import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.RubricsApi
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
@@ -51,6 +51,8 @@ import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.dataseeding.model.QuizListApiModel
 import com.instructure.dataseeding.model.QuizSubmissionApiModel
+import com.instructure.dataseeding.model.RubricApiModel
+import com.instructure.dataseeding.model.RubricCriterion
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -429,4 +431,22 @@ fun TeacherTest.routeTo(route: String) {
 
 fun TeacherTest.routeTo(route: Route, activity: FragmentActivity) {
     RouteMatcher.route(activity, route)
+}
+
+fun seedAssignmentWithRubric(
+    courseId: Long,
+    assignmentId: Long,
+    teacherToken: String,
+    title: String = "Test Rubric",
+    criteria: List<RubricCriterion>
+): RubricApiModel {
+    val created = RubricsApi.createAssignmentWithRubric(
+        courseId = courseId,
+        assignmentId = assignmentId,
+        teacherToken = teacherToken,
+        title = title,
+        criteria = criteria
+    )
+    val assignment = AssignmentsApi.getAssignment(courseId, assignmentId, teacherToken)
+    return created.copy(criteria = assignment.rubric ?: emptyList())
 }
