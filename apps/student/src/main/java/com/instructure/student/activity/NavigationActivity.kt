@@ -457,29 +457,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     private fun setupWindowInsets() = with(binding) {
-        // Consume navigation bar bottom inset at the CoordinatorLayout level so Snackbars
-        // shown inside it don't add extra bottom margin (the bottomBarContainer handles that space).
-        ViewCompat.setOnApplyWindowInsetsListener(fullScreenCoordinatorLayout) { view, insets ->
-            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            WindowInsetsCompat.Builder(insets)
-                .setInsets(
-                    WindowInsetsCompat.Type.navigationBars(),
-                    Insets.of(navigationBars.left, navigationBars.top, navigationBars.right, 0)
-                )
-                .setInsets(
-                    WindowInsetsCompat.Type.displayCutout(),
-                    Insets.of(displayCutout.left, displayCutout.top, displayCutout.right, 0)
-                )
-                .build()
-        }
-
         ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
 
-            // Apply both navigation bar and display cutout insets
-            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
             val leftPadding = maxOf(navigationBars.left, displayCutout.left)
             val rightPadding = maxOf(navigationBars.right, displayCutout.right)
 
@@ -490,10 +471,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 0
             )
 
-            // Consume horizontal and bottom insets so child views don't apply them again.
-            // The bottomBarContainer handles the navigation bar bottom space, so we consume it here
-            // to prevent the CoordinatorLayout from double-counting it (e.g. for Snackbar positioning).
             val masquerading = ApiPrefs.isMasquerading
+            // When the offline indicator is visible it sits between the content area and the bottom bar,
+            // so child screens must not add extra bottom padding — that would create a gap above it.
+            val consumeBottom = offlineIndicator.root.isVisible
             WindowInsetsCompat.Builder(insets)
                 .setInsets(
                     WindowInsetsCompat.Type.navigationBars(),
@@ -501,7 +482,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         0, // Consume left
                         if (masquerading) 0 else navigationBars.top,
                         0, // Consume right
-                        0  // Consume bottom — handled by bottomBarContainer
+                        if (consumeBottom) 0 else navigationBars.bottom
                     )
                 )
                 .setInsets(
