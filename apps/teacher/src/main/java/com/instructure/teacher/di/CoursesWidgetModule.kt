@@ -16,9 +16,7 @@
 
 package com.instructure.teacher.di
 
-import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
-import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetBehavior
 import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetRouter
 import dagger.Module
 import dagger.Provides
@@ -32,12 +30,5 @@ class CoursesWidgetModule {
     @Provides
     fun provideCoursesWidgetRouter(): CoursesWidgetRouter {
         return TeacherCoursesWidgetRouter()
-    }
-
-    @Provides
-    fun provideCoursesWidgetBehavior(
-        teacherCoursesWidgetBehavior: TeacherCoursesWidgetBehavior
-    ): CoursesWidgetBehavior {
-        return teacherCoursesWidgetBehavior
     }
 }

@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Resources
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -41,6 +40,7 @@ import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesPar
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getAssignmentIcon
@@ -51,8 +51,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
@@ -74,7 +77,6 @@ class ForecastWidgetViewModel @Inject constructor(
     private val loadCourseUseCase: LoadCourseUseCase,
     private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase,
     private val assignmentWeightCalculator: AssignmentWeightCalculator,
-    private val forecastWidgetRouter: ForecastWidgetRouter,
     private val apiPrefs: ApiPrefs,
     private val crashlytics: FirebaseCrashlytics,
     private val resources: Resources
@@ -100,6 +102,9 @@ class ForecastWidgetViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<ForecastWidgetUiState> = _uiState.asStateFlow()
+
+    private val _navigationEvents = MutableSharedFlow<DashboardNavigationEvent.Forecast>()
+    val navigationEvents: SharedFlow<DashboardNavigationEvent.Forecast> = _navigationEvents.asSharedFlow()
 
     init {
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
@@ -165,8 +170,16 @@ class ForecastWidgetViewModel @Inject constructor(
         _uiState.update { it.copy(selectedSection = newSection) }
     }
 
-    private fun onAssignmentClick(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
-        forecastWidgetRouter.routeToAssignmentDetails(activity, assignmentId, courseId)
+    private fun onAssignmentClick(assignmentId: Long, courseId: Long) {
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Forecast.NavigateToAssignment(assignmentId, courseId))
+        }
+    }
+
+    private fun onPlannerItemClick(htmlUrl: String) {
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Forecast.NavigateToPlannerItem(htmlUrl))
+        }
     }
 
     private fun retry() {
@@ -272,7 +285,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     weight = weight,
                     iconRes = assignment.getAssignmentIcon(),
                     url = assignment.htmlUrl.orEmpty(),
-                    onClick = { onAssignmentClick(it, assignment.discussionTopicHeader?.assignmentId ?: assignment.id, assignment.courseId)}
+                    onClick = { onAssignmentClick(assignment.discussionTopicHeader?.assignmentId ?: assignment.id, assignment.courseId) }
                 )
             }
     }
@@ -287,6 +300,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     item.submissionState?.submitted == true -> SubmissionStateLabel.Submitted
                     else -> SubmissionStateLabel.None
                 }
+                val url = item.getUrl(apiPrefs)
                 AssignmentItem(
                     courseId = item.courseId ?: 0,
                     courseName = item.contextName.orEmpty(),
@@ -298,9 +312,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     iconRes = item.getIconForPlannerItem(),
                     url = item.htmlUrl.orEmpty(),
                     submissionStateLabel = submissionStateLabel,
-                    onClick = {
-                        forecastWidgetRouter.routeToPlannerItem(it, item.getUrl(apiPrefs))
-                    }
+                    onClick = { onPlannerItemClick(url) }
                 )
             }
     }
@@ -326,7 +338,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     url = submission.assignmentUrl ?: "",
                     score = submission.score,
                     grade = formatGrade(submission, course),
-                    onClick = { onAssignmentClick(it, submission.assignmentId, submission.courseId)}
+                    onClick = { onAssignmentClick(submission.assignmentId, submission.courseId) }
                 )
             }
     }
