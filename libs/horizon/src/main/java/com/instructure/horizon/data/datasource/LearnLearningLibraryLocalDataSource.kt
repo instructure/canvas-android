@@ -42,7 +42,7 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
     suspend fun getEnrolledLearningLibraries(): List<EnrolledLearningLibraryCollection> {
         val collections = collectionDao.getAllCollections()
         return collections.map { collection ->
-            val items = collectionDao.getItemsByCollectionId(collection.id).map { it.toModel() }
+            val items = collectionDao.getItemsByCollectionId(collection.id).mapNotNull { it.toModel() }
             collection.toModel(items)
         }
     }
@@ -62,7 +62,7 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
     }
 
     suspend fun getSavedItems(): LearningLibraryCollectionItemsResponse {
-        val items = savedItemDao.getAll().map { it.toModel() }
+        val items = savedItemDao.getAll().mapNotNull { it.toModel() }
         return LearningLibraryCollectionItemsResponse(
             items = items,
             pageInfo = LearningLibraryPageInfo(
@@ -100,7 +100,8 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
         )
     }
 
-    private fun HorizonLearnCollectionItemEntity.toModel(): LearningLibraryCollectionItem {
+    private fun HorizonLearnCollectionItemEntity.toModel(): LearningLibraryCollectionItem? {
+        val resolvedItemType = CollectionItemType.safeValueOf(itemType) ?: return null
         val canvasCourse = if (canvasCourseId != null && canvasUrl != null) {
             CanvasCourseInfo(
                 courseId = canvasCourseId,
@@ -123,7 +124,7 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
         return LearningLibraryCollectionItem(
             id = id,
             libraryId = libraryId,
-            itemType = CollectionItemType.valueOf(itemType),
+            itemType = resolvedItemType,
             displayOrder = displayOrder,
             canvasCourse = canvasCourse,
             moduleInfo = moduleInfo,
@@ -138,7 +139,8 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
         )
     }
 
-    private fun HorizonLearnSavedItemEntity.toModel(): LearningLibraryCollectionItem {
+    private fun HorizonLearnSavedItemEntity.toModel(): LearningLibraryCollectionItem? {
+        val resolvedItemType = CollectionItemType.safeValueOf(itemType) ?: return null
         val canvasCourse = if (canvasCourseId != null && canvasUrl != null) {
             CanvasCourseInfo(
                 courseId = canvasCourseId,
@@ -161,7 +163,7 @@ class LearnLearningLibraryLocalDataSource @Inject constructor(
         return LearningLibraryCollectionItem(
             id = id,
             libraryId = libraryId,
-            itemType = CollectionItemType.valueOf(itemType),
+            itemType = resolvedItemType,
             displayOrder = displayOrder,
             canvasCourse = canvasCourse,
             moduleInfo = moduleInfo,

@@ -111,7 +111,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 courseImageUrl = course.courseImageUrl,
                 courseSyllabus = course.courseSyllabus,
                 institutionName = null,
-                completionPercentage = course.progress * 100.0,
+                completionPercentage = course.progress,
             )
         }
         return DataResult.Success(dashboardEnrollments)
@@ -140,7 +140,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 courseName = courses[0].name,
                 courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 1",
-                progress = 0.25
+                progress = 25.0
             )
         } else { null }
         val completedCourse = if (courses.size > 1) {
@@ -149,7 +149,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 courseName = courses[1].name,
                 courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 2",
-                progress = 1.0
+                progress = 100.0
             )
         } else { null }
         val invitedCourse = if (courses.size > 2) {

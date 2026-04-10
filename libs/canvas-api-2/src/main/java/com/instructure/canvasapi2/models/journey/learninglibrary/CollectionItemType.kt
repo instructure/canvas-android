@@ -26,7 +26,11 @@ enum class CollectionItemType {
     EXTERNAL_URL,
     EXTERNAL_TOOL,
     FILE,
-    PROGRAM
+    PROGRAM;
+
+    companion object {
+        fun safeValueOf(name: String): CollectionItemType? = entries.find { it.name == name }
+    }
 }
 
 fun ApolloCollectionItemType.toModel(): CollectionItemType {
