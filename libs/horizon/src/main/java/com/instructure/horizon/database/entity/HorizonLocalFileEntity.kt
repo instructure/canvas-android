@@ -19,7 +19,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity
+@Entity(tableName = "HorizonLocalFileEntity")
 data class HorizonLocalFileEntity(
     @PrimaryKey
     val id: Long,

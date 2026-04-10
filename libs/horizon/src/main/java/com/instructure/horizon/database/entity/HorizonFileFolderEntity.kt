@@ -18,7 +18,7 @@ package com.instructure.horizon.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "HorizonFileFolderEntity")
 data class HorizonFileFolderEntity(
     @PrimaryKey
     val id: Long,

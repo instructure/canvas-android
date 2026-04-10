@@ -44,8 +44,7 @@ class HorizonOfflineModule {
         provider: HorizonDatabaseProvider,
         apiPrefs: ApiPrefs,
     ): HorizonDatabase {
-        val userId = apiPrefs.user?.id ?: -1L
-        return provider.getDatabase(userId)
+        return provider.getDatabase(apiPrefs.user?.id)
     }
 
     @Provides

@@ -48,7 +48,7 @@ class CourseDetailsLocalDataSource @Inject constructor(
         return allPrograms.mapNotNull { programEntity ->
             val refs = programDao.getRefsForProgram(programEntity.programId)
             val program = programEntity.toProgram(refs)
-            if (program.sortedRequirements.firstOrNull()?.courseId == courseId) program else null
+            if (program.sortedRequirements.any { it.courseId == courseId }) program else null
         }
     }
 

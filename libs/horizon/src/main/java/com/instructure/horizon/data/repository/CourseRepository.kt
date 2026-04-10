@@ -45,7 +45,7 @@ class CourseRepository @Inject constructor(
                 .also { course ->
                     if (shouldSync()) {
                         val parsedSyllabus = htmlParser.createHtmlStringWithLocalFiles(course.courseSyllabus, course.courseId)
-                        val programs = courseDetailsNetworkDataSource.getProgramsForCourse(courseId, forceRefresh = false)
+                        val programs = courseDetailsNetworkDataSource.getProgramsForCourse(courseId, forceRefresh)
                         courseDetailsLocalDataSource.saveCourseDetails(course.copy(courseSyllabus = parsedSyllabus.htmlWithLocalFileLinks), programs)
                         fileSyncRepository.syncHtmlFiles(course.courseId, parsedSyllabus)
                     }
