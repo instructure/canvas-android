@@ -167,7 +167,7 @@ private fun NGCDashboardTopBar(navigationHandler: DashboardNavigationHandler, mo
         Spacer(modifier = Modifier.weight(1f))
         DSIconButton(
             iconRes = R.drawable.cloud_download,
-            contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription),
+            contentDescription = stringResource(R.string.a11y_dashboardManageOfflineContentDescription),
             onClick = {
                 manageOfflineContentClick()
             },
@@ -177,7 +177,7 @@ private fun NGCDashboardTopBar(navigationHandler: DashboardNavigationHandler, mo
         )
         DSIconButton(
             iconRes = R.drawable.edit,
-            contentDescription = stringResource(R.string.a11y_dashboardInboxContentDescription),
+            contentDescription = stringResource(R.string.a11y_dashboardCustomizeDashboardContentDescription),
             onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
             elevation = 4.dp,
             color = DSIconButtonColor.Inverse,

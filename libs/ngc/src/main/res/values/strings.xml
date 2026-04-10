@@ -20,6 +20,6 @@
     <string name="ngc_dashboardTitle">Dashboard</string>
 
     <!-- Accessibility -->
-    <string name="a11y_dashboardNotebookButtonContentDescription">Notebook</string>
-    <string name="a11y_dashboardInboxContentDescription">Inbox</string>
+    <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>
+    <string name="a11y_dashboardCustomizeDashboardContentDescription">Customize dashboard</string>
 </resources>

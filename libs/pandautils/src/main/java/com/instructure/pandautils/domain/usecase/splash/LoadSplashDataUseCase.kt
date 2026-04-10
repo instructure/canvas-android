@@ -32,7 +32,7 @@ class LoadSplashDataUseCase @Inject constructor(
 ) : BaseUseCase<LoadSplashDataUseCase.Params, SplashData>() {
 
     data class Params(
-        val forceRefresh: Boolean = true // TODO change to false in production
+        val forceRefresh: Boolean = false
     )
 
     override suspend fun execute(params: Params): SplashData {
