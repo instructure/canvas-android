@@ -54,6 +54,7 @@ class ProgramRepository @Inject constructor(
     suspend fun getProgramDetails(programId: String, forceRefresh: Boolean = false): Program {
         return if (shouldFetchFromNetwork()) {
             programDetailsNetworkDataSource.getProgramDetails(programId, forceRefresh)
+                .also { if (shouldSync()) programDetailsLocalDataSource.saveProgramDetails(it) }
         } else {
             programDetailsLocalDataSource.getProgramDetails(programId)
         }

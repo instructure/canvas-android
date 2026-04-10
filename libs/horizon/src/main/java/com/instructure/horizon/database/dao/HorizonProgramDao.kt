@@ -47,11 +47,21 @@ interface HorizonProgramDao {
     @Query("DELETE FROM horizon_program_course_refs")
     suspend fun deleteAllRefs()
 
+    @Query("DELETE FROM horizon_program_course_refs WHERE programId = :programId")
+    suspend fun deleteRefsForProgram(programId: String)
+
     @Transaction
     suspend fun replaceAll(programs: List<HorizonProgramEntity>, refs: List<HorizonProgramCourseRef>) {
         deleteAllRefs()
         deleteAll()
         insertAll(programs)
+        insertAllRefs(refs)
+    }
+
+    @Transaction
+    suspend fun upsertProgram(program: HorizonProgramEntity, refs: List<HorizonProgramCourseRef>) {
+        insertAll(listOf(program))
+        deleteRefsForProgram(program.programId)
         insertAllRefs(refs)
     }
 }

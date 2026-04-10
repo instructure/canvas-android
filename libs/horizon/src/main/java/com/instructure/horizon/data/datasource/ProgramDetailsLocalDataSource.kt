@@ -44,6 +44,36 @@ class ProgramDetailsLocalDataSource @Inject constructor(
         return courseDao.getByCourseIds(courseIds).map { it.toCourseWithModuleItemDurations() }
     }
 
+    suspend fun saveProgramDetails(program: Program) {
+        val entity = HorizonProgramEntity(
+            programId = program.id,
+            name = program.name,
+            description = program.description,
+            startDateMs = program.startDate?.time,
+            endDateMs = program.endDate?.time,
+            variant = program.variant.rawValue,
+            estimatedDurationMinutes = null,
+            courseCount = program.sortedRequirements.size,
+            courseCompletionCount = program.courseCompletionCount,
+            enrolledAtMs = null,
+            completionPercentage = null,
+            enrollmentStatus = null,
+        )
+        val refs = program.sortedRequirements.mapIndexed { index, req ->
+            HorizonProgramCourseRef(
+                programId = program.id,
+                courseId = req.courseId,
+                requirementId = req.id,
+                progressId = req.progressId,
+                required = req.required,
+                progress = req.progress,
+                enrollmentStatus = req.enrollmentStatus?.rawValue,
+                sortOrder = index,
+            )
+        }
+        programDao.upsertProgram(entity, refs)
+    }
+
     suspend fun saveCourses(courses: List<CourseWithModuleItemDurations>) {
         courses.forEach { course ->
             courseDao.insertIfAbsent(listOf(course.toDefaultEntity()))

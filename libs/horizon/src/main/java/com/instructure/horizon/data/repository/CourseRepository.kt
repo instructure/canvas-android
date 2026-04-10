@@ -22,6 +22,7 @@ import com.instructure.horizon.data.datasource.CourseDetailsLocalDataSource
 import com.instructure.horizon.data.datasource.CourseDetailsNetworkDataSource
 import com.instructure.horizon.data.datasource.CourseProgressLocalDataSource
 import com.instructure.horizon.data.datasource.CourseProgressNetworkDataSource
+import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -33,7 +34,7 @@ class CourseRepository @Inject constructor(
     private val courseDetailsLocalDataSource: CourseDetailsLocalDataSource,
     private val courseProgressNetworkDataSource: CourseProgressNetworkDataSource,
     private val courseProgressLocalDataSource: CourseProgressLocalDataSource,
-    private val htmlParser: HtmlParser,
+    @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,

@@ -15,9 +15,13 @@
  */
 package com.instructure.horizon.di
 
+import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.HorizonDatabaseProvider
+import com.instructure.horizon.offline.HorizonHtmlParserFileSource
+import com.instructure.pandautils.features.offline.sync.HtmlParser
+import dagger.hilt.android.qualifiers.ApplicationContext
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
@@ -106,4 +110,12 @@ class HorizonOfflineModule {
     fun provideHorizonFileFolderDao(db: HorizonDatabase): HorizonFileFolderDao {
         return db.fileFolderDao()
     }
+
+    @Provides
+    @HorizonHtmlParserQualifier
+    fun provideHorizonHtmlParser(
+        fileSource: HorizonHtmlParserFileSource,
+        apiPrefs: ApiPrefs,
+        @ApplicationContext context: Context,
+    ): HtmlParser = HtmlParser(fileSource, apiPrefs, context)
 }
