@@ -14,15 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.parentapp.utils.extensions
 
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvasapi2.models.User
+import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.SeedApi
+import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.utils.ParentTest
+
+const val K5_SUB_ACCOUNT_ID = 181364L
 
 
 fun ParentTest.tokenLogin(user: CanvasUserApiModel) {
@@ -90,4 +93,37 @@ fun seedData(
         modules = modules
     )
     return SeedApi.seedData(request)
+}
+
+fun seedDataForK5(
+    teachers: Int = 0,
+    courses: Int = 0,
+    students: Int = 0,
+    parents: Int = 0,
+    homeroomCourses: Int = 0,
+    announcements: Int = 0
+): SeedApi.SeededDataApiModel {
+
+    val request = SeedApi.SeedDataRequest(
+        teachers = teachers,
+        students = students,
+        courses = courses,
+        homeroomCourses = homeroomCourses,
+        announcements = announcements,
+        accountId = K5_SUB_ACCOUNT_ID
+    )
+    val data = SeedApi.seedDataForSubAccount(request)
+
+    val observedStudents = data.studentsList.take(students)
+    repeat(parents) {
+        val parent = UserApi.createCanvasUser()
+        data.addParents(parent)
+        observedStudents.forEach { student ->
+            data.coursesList.forEach { course ->
+                data.addEnrollments(EnrollmentsApi.enrollUserAsObserver(course.id, parent.id, student.id))
+            }
+        }
+    }
+
+    return data
 }
