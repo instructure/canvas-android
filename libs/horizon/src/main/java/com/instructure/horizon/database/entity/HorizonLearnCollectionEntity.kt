@@ -13,9 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.database.entity
 
-enum class SyncPolicy {
-    ALWAYS_REPLACE,
-    SKIP_IF_PRESENT,
-}
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "horizon_learn_collections")
+data class HorizonLearnCollectionEntity(
+    @PrimaryKey val id: String,
+    val name: String,
+    val publicName: String?,
+    val description: String?,
+    val createdAtMs: Long,
+    val updatedAtMs: Long,
+    val totalItemCount: Int,
+)

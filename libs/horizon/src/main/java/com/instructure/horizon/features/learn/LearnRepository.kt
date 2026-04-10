@@ -15,14 +15,16 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
 import javax.inject.Inject
 
 class LearnRepository @Inject constructor(
-    private val getLearningLibraryManager: GetLearningLibraryManager,
+    private val learningLibraryRepository: LearnLearningLibraryRepository,
 ) {
-    suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
-        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(4, forceNetwork).collections
+    private val itemLimitPerCollection = 4
+
+    suspend fun getEnrolledLearningLibraries(): List<EnrolledLearningLibraryCollection> {
+        return learningLibraryRepository.getEnrolledLearningLibraries(itemLimitPerCollection)
     }
 }

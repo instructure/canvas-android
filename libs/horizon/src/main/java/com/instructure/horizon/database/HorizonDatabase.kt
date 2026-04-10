@@ -18,30 +18,70 @@ package com.instructure.horizon.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.instructure.horizon.database.dao.HorizonCourseDao
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
+import com.instructure.horizon.database.dao.HorizonFileFolderDao
+import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
+import com.instructure.horizon.database.dao.HorizonLearnItemDao
+import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
+import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonCourseAssignmentEntity
+import com.instructure.horizon.database.entity.HorizonCourseAssignmentGroupEntity
+import com.instructure.horizon.database.entity.HorizonCourseEntity
+import com.instructure.horizon.database.entity.HorizonCourseGradeEntity
+import com.instructure.horizon.database.entity.HorizonCourseModuleEntity
+import com.instructure.horizon.database.entity.HorizonCourseModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
-import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.entity.HorizonFileFolderEntity
+import com.instructure.horizon.database.entity.HorizonLearnCollectionEntity
+import com.instructure.horizon.database.entity.HorizonLearnCollectionItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
+import com.instructure.horizon.database.entity.HorizonLocalFileEntity
+import com.instructure.horizon.database.entity.HorizonProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @TypeConverters(HorizonTypeConverters::class)
 @Database(
     entities = [
         HorizonDashboardEnrollmentEntity::class,
-        HorizonDashboardProgramEntity::class,
-        HorizonDashboardProgramCourseRef::class,
+        HorizonProgramEntity::class,
+        HorizonProgramCourseRef::class,
         HorizonDashboardModuleItemEntity::class,
         HorizonSyncMetadataEntity::class,
+        HorizonLearnItemEntity::class,
+        HorizonLearnCollectionEntity::class,
+        HorizonLearnCollectionItemEntity::class,
+        HorizonLearnSavedItemEntity::class,
+        HorizonCourseEntity::class,
+        HorizonCourseModuleEntity::class,
+        HorizonCourseModuleItemEntity::class,
+        HorizonCourseAssignmentGroupEntity::class,
+        HorizonCourseAssignmentEntity::class,
+        HorizonCourseGradeEntity::class,
+        HorizonLocalFileEntity::class,
+        HorizonFileFolderEntity::class,
     ],
-    version = 2,
+    version = 7,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
-    abstract fun dashboardProgramDao(): HorizonDashboardProgramDao
+    abstract fun programDao(): HorizonProgramDao
     abstract fun dashboardModuleItemDao(): HorizonDashboardModuleItemDao
     abstract fun syncMetadataDao(): HorizonSyncMetadataDao
+    abstract fun learnItemDao(): HorizonLearnItemDao
+    abstract fun learnCollectionDao(): HorizonLearnCollectionDao
+    abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao
+    abstract fun courseDao(): HorizonCourseDao
+    abstract fun courseModuleDao(): HorizonCourseModuleDao
+    abstract fun courseScoreDao(): HorizonCourseScoreDao
+    abstract fun localFileDao(): HorizonLocalFileDao
+    abstract fun fileFolderDao(): HorizonFileFolderDao
 }

@@ -28,10 +28,12 @@ class CourseEnrollmentNetworkDataSource @Inject constructor(
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
 ) {
 
-    suspend fun getEnrollments(): List<DashboardEnrollment> {
+    suspend fun getEnrollments(
+        forceRefresh: Boolean,
+    ): List<DashboardEnrollment> {
         return horizonGetCoursesManager.getDashboardEnrollments(
             userId = apiPrefs.user?.id ?: -1,
-            forceNetwork = true,
+            forceNetwork = forceRefresh,
         ).dataOrThrow
     }
 
