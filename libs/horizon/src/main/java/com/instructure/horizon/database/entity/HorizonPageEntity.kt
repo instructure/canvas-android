@@ -16,14 +16,22 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "HorizonFileFolderEntity")
-data class HorizonFileFolderEntity(
-    @PrimaryKey
-    val id: Long,
-    val url: String,
-    val displayName: String,
-    val contentType: String? = null,
-    val thumbnailUrl: String? = null,
+/**
+ * Stores page content for offline access.
+ * [body] contains the parsed HTML with local file references replacing remote URLs.
+ * [pageUrl] is the slug used by the Pages API (e.g. "introduction-to-kotlin").
+ */
+@Entity(
+    tableName = "horizon_pages",
+    indices = [Index("courseId"), Index("pageUrl")]
+)
+data class HorizonPageEntity(
+    @PrimaryKey val pageId: Long,
+    val courseId: Long,
+    val pageUrl: String,
+    val title: String?,
+    val body: String?,
 )

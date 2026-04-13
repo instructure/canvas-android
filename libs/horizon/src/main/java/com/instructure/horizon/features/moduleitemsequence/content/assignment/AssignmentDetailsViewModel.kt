@@ -19,11 +19,16 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -32,6 +37,7 @@ import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.localisedFormat
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,8 +50,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val assignmentDetailsRepository: AssignmentDetailsRepository,
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val oAuthApi: OAuthAPI.OAuthInterface,
+    private val horizonGetCommentsManager: HorizonGetCommentsManager,
+    private val apiPrefs: ApiPrefs,
     private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -83,7 +92,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun loadData() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
-            val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = false))
             _assignmentFlow.value = assignment
             val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
             val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
@@ -98,7 +107,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
-            val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+            val hasUnreadComments = horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, apiPrefs.user?.id.orDefault(), false) > 0
 
             aiAssistContextProvider.aiAssistContext = AiAssistContext(
                 contextString = assignment.description.orEmpty(),
@@ -215,9 +224,10 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun ltiButtonPressed(ltiUrl: String) {
         viewModelScope.launch {
             try {
-                val authenticatedSessionURL =
-                    assignmentDetailsRepository.authenticateUrl(ltiUrl)
-
+                val authenticatedSessionURL = oAuthApi.getAuthenticatedSession(
+                    ltiUrl,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull?.sessionUrl ?: ltiUrl
                 _uiState.update { it.copy(urlToOpen = authenticatedSessionURL) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(urlToOpen = ltiUrl) }
@@ -242,7 +252,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private suspend fun updateAssignment() {
-        val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
+        val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = true))
         _assignmentFlow.value = assignment
         val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
         val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()

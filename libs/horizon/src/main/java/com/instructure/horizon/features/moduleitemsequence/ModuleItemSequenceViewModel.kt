@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -56,6 +57,7 @@ import javax.inject.Inject
 class ModuleItemSequenceViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ModuleItemSequenceRepository,
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle,
@@ -522,7 +524,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private suspend fun getAssignment(item: ModuleItem?, forceNetwork: Boolean): Assignment? {
         if (item?.type != Type.Assignment.name) return null
 
-        return repository.getAssignment(item.contentId, courseId, forceNetwork = forceNetwork)
+        return getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, item.contentId, forceNetwork))
     }
 
     private fun getAttemptCount(assignment: Assignment?): String? {

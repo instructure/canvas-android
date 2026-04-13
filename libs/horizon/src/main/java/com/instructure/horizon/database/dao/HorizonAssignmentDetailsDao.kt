@@ -13,17 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.database.dao
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonAssignmentDetailsEntity
 
-@Entity(tableName = "HorizonFileFolderEntity")
-data class HorizonFileFolderEntity(
-    @PrimaryKey
-    val id: Long,
-    val url: String,
-    val displayName: String,
-    val contentType: String? = null,
-    val thumbnailUrl: String? = null,
-)
+@Dao
+interface HorizonAssignmentDetailsDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAssignment(assignment: HorizonAssignmentDetailsEntity)
+
+    @Query("SELECT * FROM horizon_assignment_details WHERE assignmentId = :assignmentId LIMIT 1")
+    suspend fun getAssignment(assignmentId: Long): HorizonAssignmentDetailsEntity?
+}

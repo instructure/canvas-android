@@ -17,17 +17,17 @@
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.DataResult
 import com.instructure.canvasapi2.models.Page
+import com.instructure.horizon.domain.usecase.GetPageDetailsUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository
-import com.instructure.horizon.features.notebook.common.model.Note
-import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -51,8 +51,10 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PageDetailsViewModelTest {
-    private val repository: PageDetailsRepository = mockk(relaxed = true)
+    private val getPageDetailsUseCase: GetPageDetailsUseCase = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
+    private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
+    private val redwoodApi: RedwoodApiManager = mockk(relaxed = true)
     private val addNoteRepository: AddNoteRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -66,34 +68,27 @@ class PageDetailsViewModelTest {
         body = "<p>Test content</p>"
     )
 
-    private val testNotes = listOf(
-        Note(
-            id = "1",
-            objectId = "1",
-            objectType = NoteObjectType.PAGE,
-            userText = "comment 1",
-            highlightedText = NoteHighlightedData(
-                selectedText = "highlighted text 1",
-                range = NoteHighlightedDataRange(1, 5, "start", "end"),
-                textPosition = NoteHighlightedDataTextPosition(1, 5)
-            ),
-            type = NotebookType.Important,
-            updatedAt = Date(),
-            courseId = 1,
+    private fun makeNoteNode(id: String, userText: String) = QueryNotesQuery.Node(
+        id = id,
+        userText = userText,
+        createdAt = Date(),
+        updatedAt = Date(),
+        rootAccountUuid = "",
+        userId = "1",
+        courseId = courseId.toString(),
+        objectId = testPage.id.toString(),
+        objectType = "Page",
+        reaction = listOf("Important"),
+        highlightData = null
+    )
+
+    private val testNotesResponse = QueryNotesQuery.Notes(
+        edges = listOf(
+            QueryNotesQuery.Edge(cursor = "cursor1", node = makeNoteNode("1", "comment 1")),
+            QueryNotesQuery.Edge(cursor = "cursor2", node = makeNoteNode("2", "comment 2")),
         ),
-        Note(
-            id = "2",
-            objectId = "1",
-            objectType = NoteObjectType.PAGE,
-            userText = "comment 2",
-            highlightedText = NoteHighlightedData(
-                selectedText = "highlighted text 2",
-                range = NoteHighlightedDataRange(10, 15, "start", "end"),
-                textPosition = NoteHighlightedDataTextPosition(10, 15)
-            ),
-            type = NotebookType.Confusing,
-            updatedAt = Date(),
-            courseId = 1,
+        pageInfo = QueryNotesQuery.PageInfo(
+            hasNextPage = false, hasPreviousPage = false, endCursor = null, startCursor = null
         )
     )
 
@@ -102,9 +97,10 @@ class PageDetailsViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns courseId
         every { savedStateHandle.get<String>(ModuleItemContent.Page.PAGE_URL) } returns pageUrl
-        coEvery { repository.getPageDetails(any(), any()) } returns testPage
-        coEvery { repository.getNotes(any(), any()) } returns testNotes
-        coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
+        coEvery { getPageDetailsUseCase(any()) } returns testPage
+        coEvery { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotesResponse
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns
+            DataResult.Success(AuthenticatedSession(sessionUrl = "https://authenticated.url"))
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } answers { firstArg() }
         coEvery { addNoteRepository.addNote(any(), any(), any(), any(), any(), any()) } returns Unit
     }
@@ -123,7 +119,7 @@ class PageDetailsViewModelTest {
         assertEquals("<p>Test content</p>", viewModel.uiState.value.pageHtmlContent)
         assertEquals(100L, viewModel.uiState.value.pageId)
         assertEquals(pageUrl, viewModel.uiState.value.pageUrl)
-        coVerify { repository.getPageDetails(courseId, pageUrl) }
+        coVerify { getPageDetailsUseCase(GetPageDetailsUseCase.Params(courseId, pageUrl)) }
     }
 
     @Test
@@ -142,12 +138,12 @@ class PageDetailsViewModelTest {
 
         assertEquals(2, viewModel.uiState.value.notes.size)
         assertEquals("comment 1", viewModel.uiState.value.notes.first().userText)
-        coVerify { repository.getNotes(courseId, 100L) }
+        coVerify { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
     fun `Test notes loading failure does not fail page load`() = runTest {
-        coEvery { repository.getNotes(any(), any()) } throws Exception("Notes error")
+        coEvery { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) } throws Exception("Notes error")
 
         val viewModel = getViewModel()
 
@@ -163,12 +159,12 @@ class PageDetailsViewModelTest {
         viewModel.uiState.value.ltiButtonPressed?.invoke("https://lti.url")
 
         assertEquals("https://authenticated.url", viewModel.uiState.value.urlToOpen)
-        coVerify { repository.authenticateUrl("https://lti.url") }
+        coVerify { oAuthApi.getAuthenticatedSession("https://lti.url", any()) }
     }
 
     @Test
     fun `Test LTI authentication failure returns original URL`() = runTest {
-        coEvery { repository.authenticateUrl(any()) } throws Exception("Auth error")
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } throws Exception("Auth error")
 
         val viewModel = getViewModel()
 
@@ -190,10 +186,10 @@ class PageDetailsViewModelTest {
     @Test
     fun `Test add note creates note and refreshes`() = runTest {
         val viewModel = getViewModel()
-        val highlightedData = NoteHighlightedData(
+        val highlightedData = com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData(
             selectedText = "highlighted text",
-            range = NoteHighlightedDataRange(1, 5, "start", "end"),
-            textPosition = NoteHighlightedDataTextPosition(1, 5)
+            range = com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange(1, 5, "start", "end"),
+            textPosition = com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition(1, 5)
         )
 
         viewModel.uiState.value.addNote(highlightedData, "Important")
@@ -204,16 +200,25 @@ class PageDetailsViewModelTest {
             objectType = "Page",
             highlightedData = highlightedData,
             userComment = "",
-            type = NotebookType.Important
+            type = com.instructure.horizon.features.notebook.common.model.NotebookType.Important
         ) }
 
-        coVerify(atLeast = 2) { repository.getNotes(courseId, 100L) }
+        coVerify(atLeast = 2) { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
     fun `Test refresh notes updates state`() = runTest {
-        val updatedNotes = testNotes + testNotes.last().copy(userText = "New note")
-        coEvery { repository.getNotes(any(), any()) } returns testNotes andThen updatedNotes
+        val updatedNotesResponse = QueryNotesQuery.Notes(
+            edges = testNotesResponse.edges.orEmpty() + QueryNotesQuery.Edge(
+                cursor = "cursor3",
+                node = makeNoteNode("3", "New note")
+            ),
+            pageInfo = QueryNotesQuery.PageInfo(
+                hasNextPage = false, hasPreviousPage = false, endCursor = null, startCursor = null
+            )
+        )
+        coEvery { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) } returnsMany
+            listOf(testNotesResponse, updatedNotesResponse)
 
         val viewModel = getViewModel()
         assertEquals(2, viewModel.uiState.value.notes.size)
@@ -227,15 +232,14 @@ class PageDetailsViewModelTest {
     @Test
     fun `Test refresh notes handles error`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getNotes(any(), any()) } throws Exception("Error")
+        coEvery { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) } throws Exception("Error")
 
-        // Should not crash
         viewModel.refreshNotes()
     }
 
     @Test
     fun `Test page load error sets error state`() = runTest {
-        coEvery { repository.getPageDetails(any(), any()) } throws Exception("Error")
+        coEvery { getPageDetailsUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
 
@@ -252,8 +256,10 @@ class PageDetailsViewModelTest {
 
     private fun getViewModel(): PageDetailsViewModel {
         return PageDetailsViewModel(
-            repository,
+            getPageDetailsUseCase,
             htmlContentFormatter,
+            oAuthApi,
+            redwoodApi,
             addNoteRepository,
             savedStateHandle
         )

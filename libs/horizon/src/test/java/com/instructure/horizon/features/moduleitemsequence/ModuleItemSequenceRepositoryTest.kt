@@ -16,16 +16,18 @@
  */
 package com.instructure.horizon.features.moduleitemsequence
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -40,9 +42,12 @@ import org.junit.Test
 
 class ModuleItemSequenceRepositoryTest {
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
-    private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
+    private val courseRepository: CourseRepository = mockk(relaxed = true)
+    private val courseModuleDao: HorizonCourseModuleDao = mockk(relaxed = true)
     private val horizonGetCommentsManager: HorizonGetCommentsManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private val userId = 1L
     private val courseId = 1L
@@ -50,6 +55,8 @@ class ModuleItemSequenceRepositoryTest {
     @Before
     fun setup() {
         every { apiPrefs.user } returns User(id = userId, name = "Test User")
+        // featureFlagProvider.offlineEnabled() returns false by default (relaxed mock),
+        // so shouldFetchFromNetwork() = isOnline() || !offlineEnabled() = false || true = true
     }
 
     @Test
@@ -76,35 +83,12 @@ class ModuleItemSequenceRepositoryTest {
             ModuleItem(id = 1L, title = "Item 1"),
             ModuleItem(id = 2L, title = "Item 2")
         ))
-        coEvery { moduleApi.getFirstPageModulesWithItems(any(), any(), any(), any()) } returns
-            DataResult.Success(listOf(module))
+        coEvery { courseRepository.getModuleItems(any(), any()) } returns listOf(module)
 
         val result = getRepository().getModulesWithItems(courseId, false)
 
         assertEquals(1, result.size)
         assertEquals(module, result[0])
-    }
-
-    @Test
-    fun `Test modules with incomplete items fetches all items`() = runTest {
-        val incompleteModule = ModuleObject(id = 1L, name = "Module 1", itemCount = 3, items = listOf(
-            ModuleItem(id = 1L, title = "Item 1")
-        ))
-        val allItems = listOf(
-            ModuleItem(id = 1L, title = "Item 1"),
-            ModuleItem(id = 2L, title = "Item 2"),
-            ModuleItem(id = 3L, title = "Item 3")
-        )
-
-        coEvery { moduleApi.getFirstPageModulesWithItems(any(), any(), any(), any()) } returns
-            DataResult.Success(listOf(incompleteModule))
-        coEvery { moduleApi.getFirstPageModuleItems(any(), any(), any(), any(), any()) } returns
-            DataResult.Success(allItems)
-
-        val result = getRepository().getModulesWithItems(courseId, false)
-
-        assertEquals(1, result.size)
-        assertEquals(3, result[0].items.size)
     }
 
     @Test
@@ -151,17 +135,6 @@ class ModuleItemSequenceRepositoryTest {
     }
 
     @Test
-    fun `Test successful assignment retrieval`() = runTest {
-        val assignment = Assignment(id = 1L, name = "Assignment 1")
-        coEvery { assignmentApi.getAssignmentWithHistory(any(), any(), any()) } returns
-            DataResult.Success(assignment)
-
-        val result = getRepository().getAssignment(1L, courseId, false)
-
-        assertEquals(assignment, result)
-    }
-
-    @Test
     fun `Test has unread comments returns true when count greater than zero`() = runTest {
         coEvery { horizonGetCommentsManager.getUnreadCommentsCount(any(), any(), any()) } returns 5
 
@@ -187,6 +160,14 @@ class ModuleItemSequenceRepositoryTest {
     }
 
     private fun getRepository(): ModuleItemSequenceRepository {
-        return ModuleItemSequenceRepository(moduleApi, assignmentApi, horizonGetCommentsManager, apiPrefs)
+        return ModuleItemSequenceRepository(
+            moduleApi,
+            courseRepository,
+            courseModuleDao,
+            horizonGetCommentsManager,
+            apiPrefs,
+            networkStateProvider,
+            featureFlagProvider,
+        )
     }
 }

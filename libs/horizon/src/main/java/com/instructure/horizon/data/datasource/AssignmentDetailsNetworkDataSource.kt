@@ -13,17 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.data.datasource
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Assignment
+import javax.inject.Inject
 
-@Entity(tableName = "HorizonFileFolderEntity")
-data class HorizonFileFolderEntity(
-    @PrimaryKey
-    val id: Long,
-    val url: String,
-    val displayName: String,
-    val contentType: String? = null,
-    val thumbnailUrl: String? = null,
-)
+class AssignmentDetailsNetworkDataSource @Inject constructor(
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+) {
+
+    suspend fun getAssignment(courseId: Long, assignmentId: Long, forceRefresh: Boolean): Assignment {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
+    }
+}

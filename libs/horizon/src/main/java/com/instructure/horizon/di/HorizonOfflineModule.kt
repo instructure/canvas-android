@@ -22,6 +22,7 @@ import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.horizon.offline.HorizonHtmlParserFileSource
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
@@ -32,6 +33,7 @@ import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import dagger.Module
@@ -109,6 +111,16 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonFileFolderDao(db: HorizonDatabase): HorizonFileFolderDao {
         return db.fileFolderDao()
+    }
+
+    @Provides
+    fun provideHorizonPageDao(db: HorizonDatabase): HorizonPageDao {
+        return db.pageDao()
+    }
+
+    @Provides
+    fun provideHorizonAssignmentDetailsDao(db: HorizonDatabase): HorizonAssignmentDetailsDao {
+        return db.assignmentDetailsDao()
     }
 
     @Provides

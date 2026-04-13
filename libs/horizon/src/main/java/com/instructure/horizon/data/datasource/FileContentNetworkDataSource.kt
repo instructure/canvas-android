@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,23 +13,24 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.moduleitemsequence.content.file
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.horizon.data.repository.HorizonFileSyncRepository
 import javax.inject.Inject
 
-class FileDetailsRepository @Inject constructor(
+class FileContentNetworkDataSource @Inject constructor(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
-    private val oAuthApi: OAuthAPI.OAuthInterface
+    private val fileSyncRepository: HorizonFileSyncRepository,
 ) {
-    suspend fun getFileFolderFromURL(url: String): FileFolder? {
+
+    suspend fun getFileDetails(url: String): FileFolder? {
         return fileFolderApi.getFileFolderFromURL(url, RestParams()).dataOrNull
     }
 
-    suspend fun getAuthenticatedFileUrl(fileUrl: String): String {
-        return oAuthApi.getAuthenticatedSession("$fileUrl?display=borderless", RestParams(isForceReadFromNetwork = true)).dataOrThrow.sessionUrl
+    suspend fun downloadFile(fileId: Long, courseId: Long) {
+        fileSyncRepository.downloadFile(fileId, courseId)
     }
 }

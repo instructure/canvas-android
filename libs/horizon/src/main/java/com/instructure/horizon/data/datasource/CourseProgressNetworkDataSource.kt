@@ -18,6 +18,7 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class CourseProgressNetworkDataSource @Inject constructor(
 
     suspend fun getModuleItems(courseId: Long, forceRefresh: Boolean): List<ModuleObject> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        return moduleApi.getFirstPageModulesWithItems(
+        val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,
             params,
@@ -36,5 +37,24 @@ class CourseProgressNetworkDataSource @Inject constructor(
         )
             .depaginate { moduleApi.getNextPageModuleObjectList(it, params) }
             .dataOrThrow
+
+        return modules.map { module ->
+            if (module.itemCount != module.items.size) {
+                module.copy(items = getAllModuleItems(courseId, module.id))
+            } else {
+                module
+            }
+        }
+    }
+
+    private suspend fun getAllModuleItems(courseId: Long, moduleId: Long): List<ModuleItem> {
+        val params = RestParams()
+        return moduleApi.getFirstPageModuleItems(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            params,
+            includes = listOf("estimated_durations")
+        ).depaginate { moduleApi.getNextPageModuleItemList(it, params) }.dataOrThrow
     }
 }
