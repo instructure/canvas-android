@@ -17,6 +17,7 @@ package com.instructure.horizon.espresso
 
 import android.content.Context
 import androidx.room.Room
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
@@ -30,7 +31,10 @@ import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.di.HorizonOfflineModule
+import com.instructure.horizon.offline.HorizonHtmlParserFileSource
+import com.instructure.pandautils.features.offline.sync.HtmlParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -85,4 +89,12 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonFileFolderDao(db: HorizonDatabase): HorizonFileFolderDao = db.fileFolderDao()
+
+    @Provides
+    @HorizonHtmlParserQualifier
+    fun provideHorizonHtmlParser(
+        fileSource: HorizonHtmlParserFileSource,
+        apiPrefs: ApiPrefs,
+        @ApplicationContext context: Context,
+    ): HtmlParser = HtmlParser(fileSource, apiPrefs, context)
 }
