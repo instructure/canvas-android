@@ -22,9 +22,11 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemT
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
 import javax.inject.Inject
 
 class LearnLearningLibraryListRepository @Inject constructor(
+    private val learningLibraryRepository: LearnLearningLibraryRepository,
     private val getLearningLibraryManager: GetLearningLibraryManager,
 ) {
     private val itemLimitPerCollection = 4
@@ -37,29 +39,29 @@ class LearnLearningLibraryListRepository @Inject constructor(
         bookmarkedOnly: Boolean = false,
         completedOnly: Boolean = false,
         sortBy: CollectionItemSortOption? = null,
-        forceNetwork: Boolean
+        forceRefresh: Boolean = false,
     ): LearningLibraryCollectionItemsResponse {
-        return getLearningLibraryManager.getLearningLibraryCollectionItems(
+        return learningLibraryRepository.getLearningLibraryItems(
             cursor = afterCursor,
             limit = limit,
+            searchQuery = searchQuery,
+            typeFilter = typeFilter,
             bookmarkedOnly = bookmarkedOnly,
             completedOnly = completedOnly,
-            searchTerm = searchQuery,
-            types = typeFilter?.let { listOf(it) },
             sortBy = sortBy,
-            forceNetwork = forceNetwork
+            forceRefresh = forceRefresh,
         )
     }
 
-    suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
-        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(itemLimitPerCollection, forceNetwork).collections
+    suspend fun getEnrolledLearningLibraries(forceRefresh: Boolean = false): List<EnrolledLearningLibraryCollection> {
+        return learningLibraryRepository.getEnrolledLearningLibraries(itemLimitPerCollection, forceRefresh)
     }
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
         return getLearningLibraryManager.toggleLearningLibraryItemIsBookmarked(itemId)
     }
 
-    suspend fun getLearningLibraryRecommendedItems(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
-        return getLearningLibraryManager.getLearningLibraryRecommendations(forceNetwork)
+    suspend fun getLearningLibraryRecommendedItems(forceRefresh: Boolean = false): List<LearningLibraryRecommendation> {
+        return getLearningLibraryManager.getLearningLibraryRecommendations(forceNetwork = forceRefresh)
     }
 }

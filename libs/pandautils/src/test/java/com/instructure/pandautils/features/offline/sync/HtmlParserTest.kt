@@ -18,17 +18,9 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
-import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.StudioCaption
 import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.room.offline.daos.FileFolderDao
-import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.LocalFileDao
-import com.instructure.pandautils.room.offline.entities.FileSyncSettingsEntity
-import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -42,18 +34,14 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.io.File
-import java.util.Date
 
 class HtmlParserTest {
 
-    private var localFileDao: LocalFileDao = mockk(relaxed = true)
+    private val fileSource: HtmlParserFileSource = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val fileFolderDao: FileFolderDao = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
-    private val fileSyncSettingsDao: FileSyncSettingsDao = mockk(relaxed = true)
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
 
-    private val htmlParser = HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
+    private val htmlParser = HtmlParser(fileSource, apiPrefs, context)
 
     @Before
     fun setup() {
@@ -67,6 +55,7 @@ class HtmlParserTest {
             mockk<Uri>() {
                 every { lastPathSegment } returns url.split("/").last()
                 every { scheme } returns "https"
+                every { isRelative } returns false
             }
         }
     }
@@ -102,7 +91,7 @@ class HtmlParserTest {
             "<hr />" +
             "<img src=\"https://mobiledev.instructure.com/files/123456/download\" alt=\"\" />"
 
-        coEvery { localFileDao.findById(123456) } returns LocalFileEntity(123456, 1L, Date(), "/files/1/123456_filename.jpg")
+        coEvery { fileSource.findLocalFilePath(123456) } returns "/files/1/123456_filename.jpg"
 
         val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L)
         val expectedHtml = "<p>This is an Assignment. You can tell when you look at it from the Calendar or from the Modules page because it has the Canvas Assignments Icon displayed next to it: &nbsp;<i class=\"icon-assignment\"></i>&nbsp;</p>\n" +
@@ -120,11 +109,7 @@ class HtmlParserTest {
             "<hr />" +
             "<img src=\"https://mobiledev.instructure.com/files/123456/download\" alt=\"\" />"
 
-        coEvery { fileFolderApi.getCourseFile(1L, 123456, any()) } returns DataResult.Success(
-            FileFolder(id = 123456, displayName = "filenameFromNetwork.jpg")
-        )
-
-        coEvery { fileSyncSettingsDao.findById(123456) } returns null
+        coEvery { fileSource.findDisplayName(123456, 1L) } returns "filenameFromNetwork.jpg"
 
         val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L)
         val expectedHtml = "<p>This is an Assignment. You can tell when you look at it from the Calendar or from the Modules page because it has the Canvas Assignments Icon displayed next to it: &nbsp;<i class=\"icon-assignment\"></i>&nbsp;</p>\n" +
@@ -165,11 +150,7 @@ class HtmlParserTest {
             "<p>Internal public:</p>\n" +
             "<p><img id=\"789\" src=\"https://mobiledev.instructure.com/courses/1/files/789/preview\" alt=\"image2.png\" /></p>"
 
-        coEvery { fileFolderApi.getCourseFile(1L, 123456, any()) } returns DataResult.Success(
-            FileFolder(id = 123456)
-        )
-        coEvery { fileSyncSettingsDao.findById(123456) } returns null
-        coEvery { localFileDao.findById(789) } returns LocalFileEntity(789, 1L, Date(), "/files/1/789_image2.png")
+        coEvery { fileSource.findLocalFilePath(789) } returns "/files/1/789_image2.png"
 
         val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L)
 
@@ -200,8 +181,7 @@ class HtmlParserTest {
             "<p>File not synced:</p>\n" +
             "<p><a class=\"instructure_file_link instructure_scribd_file inline_disabled\" href=\"https://mobiledev.instructure.com/courses/1L/files/1234?wrap=1\" target=\"_blank\" rel=\"noopener\" data-api-endpoint=\"https://mobiledev.instructure.com/api/v1/courses/1L/files/1234\" data-api-returntype=\"File\">file.pdf</a></p>"
 
-        coEvery { fileSyncSettingsDao.findById(1234) } returns FileSyncSettingsEntity(1234, "name", 1L, "")
-        coEvery { fileSyncSettingsDao.findById(678) } returns null
+        coEvery { fileSource.isRegisteredForSync(1234) } returns true
 
         val result = htmlParser.createHtmlStringWithLocalFiles(html, 1L)
 
@@ -406,8 +386,7 @@ class HtmlParserTest {
             <iframe class="lti-embed" src="https://test.instructure.com/courses/67278/external_tools/retrieve?display=borderless&amp;url=https%3A%2F%2Ftest.instructuremedia.com%2Flti%2Flaunch%3Fcustom_arc_launch_type%3Dembed%26custom_arc_media_id%3Dvideo-new%26custom_arc_start_at%3D0" width="800" height="880"></iframe>
         """.trimIndent()
 
-        coEvery { localFileDao.findById(123456) } returns LocalFileEntity(123456, 1L, Date(), "/files/1/123456_internal.jpg")
-        coEvery { fileSyncSettingsDao.findById(789) } returns null
+        coEvery { fileSource.findLocalFilePath(123456) } returns "/files/1/123456_internal.jpg"
 
         val studioMetaData = listOf(
             StudioMediaMetadata(1, "video-old", "Old Video", "video/mp4", 1000, emptyList(), "https://studio/media/video-old"),

@@ -16,15 +16,18 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "horizon_dashboard_programs")
-data class HorizonDashboardProgramEntity(
-    @PrimaryKey val programId: String,
-    val programName: String,
-    val description: String?,
-    val startDateMs: Long?,
-    val endDateMs: Long?,
-    val variant: String,
-    val courseCompletionCount: Int?,
+@Entity(
+    tableName = "horizon_program_course_refs",
+    primaryKeys = ["programId", "courseId"]
+)
+data class HorizonProgramCourseRef(
+    val programId: String,
+    val courseId: Long,
+    val requirementId: String,
+    val progressId: String,
+    val required: Boolean,
+    val progress: Double,
+    val enrollmentStatus: String?,
+    val sortOrder: Int,
 )

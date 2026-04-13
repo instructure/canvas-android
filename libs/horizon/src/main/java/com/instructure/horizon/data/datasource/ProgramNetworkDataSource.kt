@@ -23,7 +23,7 @@ class ProgramNetworkDataSource @Inject constructor(
     private val getProgramsManager: GetProgramsManager,
 ) {
 
-    suspend fun getPrograms(): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork = true)
+    suspend fun getPrograms(forceRefresh: Boolean): List<Program> {
+        return getProgramsManager.getPrograms(forceNetwork = forceRefresh)
     }
 }

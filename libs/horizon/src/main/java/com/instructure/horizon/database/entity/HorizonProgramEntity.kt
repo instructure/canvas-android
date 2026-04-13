@@ -16,18 +16,25 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Entity(
-    tableName = "horizon_dashboard_program_course_refs",
-    primaryKeys = ["programId", "courseId"]
-)
-data class HorizonDashboardProgramCourseRef(
-    val programId: String,
-    val courseId: Long,
-    val requirementId: String,
-    val progressId: String,
-    val required: Boolean,
-    val progress: Double,
+/**
+ * Unified entity for program data, used by both the My Content list screen and the Program
+ * Details screen. Merges fields from [ProgramEnrollmentItem] (list) and the
+ * [Program] domain model (details) to ensure data consistency when offline.
+ */
+@Entity(tableName = "horizon_programs")
+data class HorizonProgramEntity(
+    @PrimaryKey val programId: String,
+    val name: String,
+    val description: String?,
+    val startDateMs: Long?,
+    val endDateMs: Long?,
+    val variant: String,
+    val estimatedDurationMinutes: Int?,
+    val courseCount: Int?,
+    val courseCompletionCount: Int?,
+    val enrolledAtMs: Long?,
+    val completionPercentage: Double?,
     val enrollmentStatus: String?,
-    val sortOrder: Int,
 )
