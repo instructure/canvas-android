@@ -81,4 +81,32 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/cookieConsent"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/listPreferredItemHeightSmall"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:visibility="gone"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/ic_admin" />
+
+        <TextView
+            android:id="@+id/cookieConsentLabel"
+            style="@style/TextFont.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:text="@string/cookieConsent"
+            android:textColor="@color/textDarkest"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
 </LinearLayout>

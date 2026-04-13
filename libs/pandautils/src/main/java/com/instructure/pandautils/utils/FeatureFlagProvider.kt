@@ -26,6 +26,7 @@ import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFl
 
 const val FEATURE_FLAG_OFFLINE = "mobile_offline_mode"
 const val FEATURE_FLAG_WIDGET_DASHBOARD = "widget_dashboard"
+const val FEATURE_FLAG_COOKIE_CONSENT = "cookie_consent_necessary"
 class FeatureFlagProvider(
     private val userManager: UserManager,
     private val apiPrefs: ApiPrefs,
@@ -66,6 +67,10 @@ class FeatureFlagProvider(
 
     suspend fun checkWidgetDashboardFlag(): Boolean {
         return checkEnvironmentFeatureFlag(FEATURE_FLAG_WIDGET_DASHBOARD)
+    }
+
+    suspend fun checkCookieConsentFlag(): Boolean {
+        return checkEnvironmentFeatureFlag(FEATURE_FLAG_COOKIE_CONSENT)
     }
 
     suspend fun checkRestrictStudentAccessFlag(): Boolean {

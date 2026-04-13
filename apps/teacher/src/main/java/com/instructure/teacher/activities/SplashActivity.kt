@@ -233,6 +233,8 @@ class SplashActivity : BaseCanvasActivity() {
     }
 
     private suspend fun setupPendoTracking(user: User) {
+        if (!ApiPrefs.mobileConsent) return
+
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
         if (sendUsageMetrics) {
