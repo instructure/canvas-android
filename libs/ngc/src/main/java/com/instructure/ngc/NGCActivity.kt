@@ -75,6 +75,8 @@ class NGCActivity : BaseCanvasActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (!::navController.isInitialized) return
+
         if (hasLocalNotificationLink(intent.extras) ||
             hasUnreadPushNotification(intent.extras)
         ) {

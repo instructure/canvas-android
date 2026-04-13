@@ -51,9 +51,8 @@ import androidx.navigation.NavHostController
 import com.instructure.ngc.R
 import com.instructure.ngc.designsystem.DSIconButton
 import com.instructure.ngc.designsystem.DSIconButtonColor
-import com.instructure.ngc.designsystem.NGCTypography
+import com.instructure.ngc.designsystem.currentTypography
 import com.instructure.ngc.navigation.NGCComposeNavigationHandler
-import com.instructure.pandautils.R as PandaR
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
@@ -63,6 +62,7 @@ import com.instructure.pandautils.features.dashboard.compose.DashboardUiState
 import com.instructure.pandautils.features.dashboard.compose.DashboardViewModel
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.flow.SharedFlow
+import com.instructure.pandautils.R as PandaR
 
 @Composable
 fun NGCDashboardScreen(navController: NavHostController) {
@@ -163,14 +163,12 @@ private fun NGCDashboardTopBar(navigationHandler: DashboardNavigationHandler, mo
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
-        Text(text = stringResource(R.string.ngc_dashboardTitle), style = NGCTypography.h2)
+        Text(text = stringResource(R.string.ngc_dashboardTitle), style = currentTypography.h2)
         Spacer(modifier = Modifier.weight(1f))
         DSIconButton(
             iconRes = R.drawable.cloud_download,
             contentDescription = stringResource(R.string.a11y_dashboardManageOfflineContentDescription),
-            onClick = {
-                manageOfflineContentClick()
-            },
+            onClick = manageOfflineContentClick,
             color = DSIconButtonColor.Inverse,
             elevation = 4.dp,
             modifier = Modifier.padding(end = 8.dp)

@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.domain.usecase.splash
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
@@ -39,12 +40,13 @@ class LoadSplashDataUseCaseTest {
     private val userRepository: UserRepository = mockk(relaxed = true)
     private val themeRepository: ThemeRepository = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var useCase: LoadSplashDataUseCase
 
     @Before
     fun setup() {
-        useCase = LoadSplashDataUseCase(userRepository, themeRepository, featureFlagProvider)
+        useCase = LoadSplashDataUseCase(userRepository, themeRepository, featureFlagProvider, firebaseCrashlytics)
     }
 
     @Test

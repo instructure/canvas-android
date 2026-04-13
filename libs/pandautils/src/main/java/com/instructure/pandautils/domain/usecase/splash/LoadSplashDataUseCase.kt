@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.domain.usecase.splash
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
@@ -23,35 +24,42 @@ import com.instructure.pandautils.data.repository.theme.ThemeRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class LoadSplashDataUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val themeRepository: ThemeRepository,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : BaseUseCase<LoadSplashDataUseCase.Params, SplashData>() {
 
     data class Params(
         val forceRefresh: Boolean = false
     )
 
-    override suspend fun execute(params: Params): SplashData {
-        val user = userRepository.getSelf(forceRefresh = params.forceRefresh).dataOrNull
-        val colors = userRepository.getColors(forceRefresh = params.forceRefresh).dataOrNull
-        val theme = themeRepository.getTheme(forceRefresh = params.forceRefresh).dataOrNull
-        val canBecomeUser = userRepository.getBecomeUserPermission(forceRefresh = params.forceRefresh).dataOrNull?.becomeUser
-
-        try {
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
-        } catch (_: Exception) {
-            // Log error but don't block app startup
+    override suspend fun execute(params: Params): SplashData = coroutineScope {
+        val userDeferred = async { userRepository.getSelf(forceRefresh = params.forceRefresh).dataOrNull }
+        val colorsDeferred = async { userRepository.getColors(forceRefresh = params.forceRefresh).dataOrNull }
+        val themeDeferred = async { themeRepository.getTheme(forceRefresh = params.forceRefresh).dataOrNull }
+        val canBecomeUserDeferred = async { userRepository.getBecomeUserPermission(forceRefresh = params.forceRefresh).dataOrNull?.becomeUser }
+        val featureFlagsDeferred = async {
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: Exception) {
+                // Log error but don't block app startup
+                firebaseCrashlytics.recordException(e)
+            }
         }
 
-        return SplashData(
-            user = user,
-            colors = colors,
-            theme = theme,
-            canBecomeUser = canBecomeUser
+        featureFlagsDeferred.await()
+
+        SplashData(
+            user = userDeferred.await(),
+            colors = colorsDeferred.await(),
+            theme = themeDeferred.await(),
+            canBecomeUser = canBecomeUserDeferred.await()
         )
     }
 }
