@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ShimmerBox
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
@@ -65,14 +66,22 @@ import com.instructure.pandautils.compose.composables.TodayButton
 import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDate
 import java.util.Date
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ForecastWidget(
     refreshSignal: SharedFlow<Unit>,
+    onNavigationEvent: (DashboardNavigationEvent.Forecast) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: ForecastWidgetViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
+        }
+    }
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
@@ -115,7 +124,8 @@ fun ForecastWidgetContent(
                     title = stringResource(R.string.forecastWidget_currentWeek),
                     onClick = uiState.onJumpToCurrentWeek,
                     buttonColor = Color(uiState.backgroundColor.color()),
-                    textColor = colorResource(R.color.textLightest)
+                    textColor = colorResource(R.color.textLightest),
+                    modifier = Modifier.pendoTag("forecastWidget_currentWeekButton", true)
                 )
             } else {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -344,6 +354,7 @@ private fun ForecastWidgetErrorState(
         buttonText = stringResource(R.string.retry),
         buttonClick = onRetry,
         modifier = modifier
+            .pendoTag("forecastWidget_retryButton", true)
             .padding(top = 8.dp)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(14.dp))
             .background(

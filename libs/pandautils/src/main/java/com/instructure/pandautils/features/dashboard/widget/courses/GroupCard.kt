@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import android.content.res.Configuration
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,24 +50,21 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun GroupCard(
     groupCard: GroupCardItem,
-    onGroupClick: (FragmentActivity, Long) -> Unit,
+    onGroupClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    onMessageClick: ((FragmentActivity, Long) -> Unit)
+    onMessageClick: ((Long) -> Unit)
 ) {
-    val activity = LocalActivity.current?.getFragmentActivityOrNull()
-
     val cardShape = RoundedCornerShape(16.dp)
 
     Card(
@@ -85,7 +81,8 @@ fun GroupCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(76.dp)
-                .clickable { activity?.let { onGroupClick(it, groupCard.id) } },
+                .pendoTag("coursesWidget_groupCard", true)
+                .clickable { onGroupClick(groupCard.id) },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -174,7 +171,8 @@ fun GroupCard(
                     .padding(end = 16.dp)
                     .clip(CircleShape)
                     .size(48.dp)
-                    .clickable { activity?.let { onMessageClick.invoke(it, groupCard.id) } },
+                    .pendoTag("coursesWidget_groupMessage", true)
+                    .clickable { onMessageClick.invoke(groupCard.id) },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -246,8 +244,8 @@ private fun GroupCardPreview() {
             parentCourseName = "Introduction to Computer Science",
             memberCount = 5
         ),
-        onGroupClick = {_, _ -> },
-        onMessageClick = {_, _ -> }
+        onGroupClick = { },
+        onMessageClick = { }
     )
 }
 

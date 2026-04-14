@@ -16,6 +16,7 @@
  */
 package com.instructure.dataseeding.api
 
+import com.google.gson.JsonObject
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CommunicationChannel
 import com.instructure.dataseeding.model.CreateUser
@@ -27,10 +28,16 @@ import com.instructure.dataseeding.model.User
 import com.instructure.dataseeding.model.UserSettingsApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
+import okhttp3.Cookie
+import okhttp3.CookieJar
+import okhttp3.FormBody
+import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
-import org.jsoup.Connection
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.jsoup.Jsoup
-import org.jsoup.nodes.FormElement
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -128,7 +135,7 @@ object UserApi {
     }
 
     /**
-     * Gets an access token for the userApiModel as described [here](https://canvas.instructure.com/doc/api/file.oauth_endpoints.html)
+     * Gets an access token for the userApiModel as described [here](https://sso.canvaslms.com/doc/api/file.oauth_endpoints.html)
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return An [String] access token for the userApiModel. NOTE: the token has an expiration of 1 hour.
      */
@@ -154,23 +161,81 @@ object UserApi {
     }
 
     /**
-     * Gets an authentication code for the userApiModel as described [here](https://canvas.instructure.com/doc/api/file.oauth_endpoints.html)
+     * Gets an authentication code for the userApiModel as described [here](https://sso.canvaslms.com/doc/api/file.oauth_endpoints.html)
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return The [String] auth code to be used to acquire the userApiModel's access token
      */
     private fun getAuthCode(userApiModel: CanvasUserApiModel, domain: String = CanvasNetworkAdapter.canvasDomain): String {
-        val loginPageResponse = Jsoup.connect("https://$domain/login/oauth2/auth")
-                .method(Connection.Method.GET)
-                .data("client_id", CanvasNetworkAdapter.clientId)
-                .data("response_type", "code")
-                .data("redirect_uri", CanvasNetworkAdapter.redirectUri)
-                .execute()
-        val loginForm = loginPageResponse.parse().select("form").first() as FormElement
-        loginForm.getElementById("pseudonym_session_unique_id").`val`(userApiModel.loginId)
-        loginForm.getElementById("pseudonym_session_password").`val`(userApiModel.password)
-        val authFormResponse = loginForm.submit().cookies(loginPageResponse.cookies()).execute()
-        val authForm = authFormResponse.parse().select("form").first() as FormElement
-        val responseUrl = authForm.submit().cookies(authFormResponse.cookies()).execute().url().toString()
-        return responseUrl.toHttpUrlOrNull()?.queryParameter("code") ?: throw RuntimeException("/login/oauth2/auth failed!")
+        val cookieStore = mutableMapOf<String, MutableMap<String, Cookie>>()
+        val cookieJar = object : CookieJar {
+            override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+                cookieStore.getOrPut(url.host) { mutableMapOf() }.apply { cookies.forEach { put(it.name, it) } }
+            }
+            override fun loadForRequest(url: HttpUrl): List<Cookie> =
+                cookieStore[url.host]?.values?.toList() ?: emptyList()
+        }
+        val httpClient = OkHttpClient.Builder().followRedirects(true).cookieJar(cookieJar).build()
+
+        val loginPageUrl = "https://$domain/login/oauth2/auth".toHttpUrlOrNull()!!
+            .newBuilder()
+            .addQueryParameter("client_id", CanvasNetworkAdapter.clientId)
+            .addQueryParameter("response_type", "code")
+            .addQueryParameter("redirect_uri", CanvasNetworkAdapter.redirectUri)
+            .build()
+        val loginPageResponse = httpClient.newCall(Request.Builder().url(loginPageUrl).get().build()).execute()
+        val loginPageHtml = loginPageResponse.body?.string() ?: ""
+
+        val csrfToken = loginPageResponse.header("X-Csrf-Token")
+            ?: Jsoup.parse(loginPageHtml).select("meta[name=csrf-token]").attr("content").takeIf { it.isNotEmpty() }
+            ?: cookieStore[domain]?.values
+                ?.firstOrNull { it.name.equals("_csrf_token", ignoreCase = true) }
+                ?.value?.let { java.net.URLDecoder.decode(it, "UTF-8") }
+            ?: throw RuntimeException(
+                "CSRF token not found.\nResponse headers: ${loginPageResponse.headers}\n" +
+                "Cookies on $domain: ${cookieStore[domain]?.keys}\nAll cookies: ${cookieStore.mapValues { it.value.keys }}"
+            )
+
+        val loginJson = JsonObject().apply {
+            addProperty("authenticity_token", csrfToken)
+            add("pseudonym_session", JsonObject().apply {
+                addProperty("unique_id", userApiModel.loginId)
+                addProperty("password", userApiModel.password)
+                addProperty("remember_me", "0")
+            })
+        }.toString()
+        val loginResponse = httpClient.newCall(
+            Request.Builder()
+                .url("https://$domain/login/canvas")
+                .post(loginJson.toRequestBody("application/json".toMediaType()))
+                .build()
+        ).execute()
+        val loginStatusCode = loginResponse.code
+        val loginResponseHtml = loginResponse.body?.string() ?: ""
+        val loginFinalUrl = loginResponse.request.url.toString()
+
+        // If the code is already in the URL (no consent step needed), return it directly
+        loginFinalUrl.toHttpUrlOrNull()?.queryParameter("code")?.let { return it }
+
+        val consentForm = Jsoup.parse(loginResponseHtml, "https://$domain").select("form").first()
+            ?: throw RuntimeException(
+                "OAuth consent form not found at: $loginFinalUrl (HTTP $loginStatusCode)\n" +
+                "CSRF token used: $csrfToken\n" +
+                "Cookies on $domain: ${cookieStore[domain]?.keys}\n" +
+                "HTML:\n$loginResponseHtml"
+            )
+        val formAction = consentForm.attr("abs:action").takeIf { it.isNotEmpty() }
+            ?: throw RuntimeException("Consent form action attribute missing. HTML:\n${consentForm.outerHtml()}")
+        val formBodyBuilder = FormBody.Builder()
+        consentForm.select("input[name], select[name], textarea[name]").forEach { el ->
+            formBodyBuilder.add(el.attr("name"), el.`val`())
+        }
+        val consentResponse = httpClient.newCall(
+            Request.Builder().url(formAction).post(formBodyBuilder.build()).build()
+        ).execute()
+        consentResponse.body?.close()
+
+        val finalUrl = consentResponse.request.url.toString()
+        return finalUrl.toHttpUrlOrNull()?.queryParameter("code")
+            ?: throw RuntimeException("/login/oauth2/auth failed! Final URL: $finalUrl")
     }
 }

@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">รายการหน่วยการเรียนถัดไป</string>
     <string name="a11y_nextModule">หน่วยการเรียนถัดไป</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, กำกับเป็น %2$s กดสองครั้งเพื่อแก้ไขหมายเหตุ</string>
+    <string name="learnCoursesTabLabel">บทเรียน</string>
+    <string name="learnProgramsTabLabel">หลักสูตร</string>
     <string name="reportAProblemDescriptionMessage">แจ้งตั๋วรับบริการสำหรับการตอบกลับส่วนบุคคลจากทีมงานให้บริการของเรา</string>
     <string name="igniteAIEnterAPromptLabel">กรอกข้อความแจ้ง</string>
     <string name="a11y_igniteAiLoadingContentDescription">กำลังโหลดคำตอบ</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">พลิกบัตรข้อมูล</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">ไม่สามารถโหลดบทเรียนได้</string>
+    <string name="learnCourseListFilterAll">บทเรียนทั้งหมด</string>
+    <string name="learnCourseListFilterNotStarted">ไม่ได้เริ่มต้น</string>
+    <string name="learnCourseListFilterInProgress">กำลังดำเนินการ</string>
+    <string name="learnCourseListFilterCompleted">เสร็จสิ้นแล้ว</string>
+    <string name="learnCourseListStartLearningLabel">เริ่มการเรียนรู้</string>
+    <string name="learnCourseListResumeLearningLabel">เรียนรู้ต่อ</string>
+    <string name="learnCourseListViewCourseLabel">ดูบทเรียน</string>
+    <string name="learnCourseListShowMoreLabel">แสดงเพิ่มเติม</string>
+    <string name="learnCourseListSearchBarPlaceholder">ค้นหาบทเรียน</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">ส่วนเนื้อหาจาก %1$s</string>
+    <string name="learnCourseListEmptyMessage">ไม่พบผลลัพธ์ ลองปรับคำค้นหาของคุณ</string>
+    <string name="learnProgramListFilterAll">ทุกหลักสูตร</string>
+    <string name="learnProgramListFilterNotStarted">ไม่ได้เริ่มต้น</string>
+    <string name="learnProgramListFilterInProgress">กำลังดำเนินการ</string>
+    <string name="learnProgramListFilterCompleted">เสร็จสิ้นแล้ว</string>
+    <string name="learnProgramListShowMoreLabel">แสดงเพิ่มเติม</string>
+    <string name="learnProgramListEmptyMessage">ไม่พบผลลัพธ์ ลองปรับคำค้นหาของคุณ</string>
+    <string name="learnProgramListSearchBarPlaceholder">ค้นหาหลักสูตร</string>
+    <string name="learnProgramListFailedToLoadMessage">ไม่สามารถโหลดหลักสูตรได้</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d บทเรียน</item>
+        <item quantity="other">%1$d บทเรียน</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">ข้อผิดพลาด: %1$s</string>
     <string name="a11y_required">บังคับ</string>
 </resources>

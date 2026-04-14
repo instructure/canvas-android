@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.apis.AccountDomainInterface
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -23,10 +24,14 @@ import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepository
+import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepositoryImpl
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
 import com.instructure.pandautils.data.repository.announcement.AnnouncementLocalDataSource
@@ -45,6 +50,10 @@ import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameR
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
+import com.instructure.pandautils.data.repository.features.FeaturesRepository
+import com.instructure.pandautils.data.repository.features.FeaturesRepositoryImpl
+import com.instructure.pandautils.data.repository.theme.ThemeRepository
+import com.instructure.pandautils.data.repository.theme.ThemeRepositoryImpl
 import com.instructure.pandautils.data.repository.group.GroupLocalDataSource
 import com.instructure.pandautils.data.repository.group.GroupNetworkDataSource
 import com.instructure.pandautils.data.repository.group.GroupRepository
@@ -101,7 +110,12 @@ class RepositoryModule {
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider
     ): CourseRepository {
-        return CourseRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return CourseRepositoryImpl(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider
+        )
     }
 
     @Provides
@@ -142,7 +156,12 @@ class RepositoryModule {
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider
     ): AnnouncementRepository {
-        return AnnouncementRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return AnnouncementRepositoryImpl(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider
+        )
     }
 
     @Provides
@@ -173,7 +192,12 @@ class RepositoryModule {
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider
     ): GroupRepository {
-        return GroupRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return GroupRepositoryImpl(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider
+        )
     }
 
     @Provides
@@ -207,5 +231,29 @@ class RepositoryModule {
         conferencesApi: ConferencesApi.ConferencesInterface
     ): ConferenceRepository {
         return ConferenceRepositoryImpl(conferencesApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideAccountDomainRepository(
+        accountDomainApi: AccountDomainInterface
+    ): AccountDomainRepository {
+        return AccountDomainRepositoryImpl(accountDomainApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideThemeRepository(
+        themeApi: ThemeAPI.ThemeInterface
+    ): ThemeRepository {
+        return ThemeRepositoryImpl(themeApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideFeaturesRepository(
+        featuresApi: FeaturesAPI.FeaturesInterface
+    ): FeaturesRepository {
+        return FeaturesRepositoryImpl(featuresApi)
     }
 }

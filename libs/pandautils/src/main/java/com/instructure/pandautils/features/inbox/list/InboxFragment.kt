@@ -70,6 +70,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
@@ -110,6 +111,11 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
 
     private var confirmationSnackbar: Snackbar? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -124,7 +130,6 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
@@ -351,6 +356,9 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         // Teacher/Student apps have bottom navigation that handles bottom insets, so use padding
         if (requireContext().packageName == AppType.PARENT.packageName) {
             binding.addMessage.applyBottomAndRightSystemBarMargin()
+            // Parent app has no bottom bar, so apply bottom padding to the list
+            binding.inboxRecyclerView.clipToPadding = false
+            binding.inboxRecyclerView.applyBottomSystemBarInsets()
         } else {
             binding.addMessage.applyBottomAndRightSystemBarPadding()
         }

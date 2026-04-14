@@ -17,10 +17,8 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
@@ -30,8 +28,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
 import com.instructure.pandautils.compose.composables.calendar.CalendarPageUiState
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
-import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
 import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesUseCase
 import com.instructure.pandautils.domain.usecase.planner.CreatePlannerOverrideUseCase
@@ -39,6 +37,7 @@ import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideUseCase
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
@@ -52,7 +51,6 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
-import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -60,8 +58,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -80,7 +78,6 @@ import java.util.Locale
 class TodoWidgetViewModelTest {
 
     private val context: Context = mockk(relaxed = true)
-    private val todoWidgetBehavior: TodoWidgetBehavior = mockk(relaxed = true)
     private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
     private val toDoStateMapper: ToDoStateMapper = mockk(relaxed = true)
     private val loadPlannerItemsUseCase: LoadPlannerItemsUseCase = mockk(relaxed = true)
@@ -133,10 +130,11 @@ class TodoWidgetViewModelTest {
         unmockkAll()
     }
 
+    private val todoHomeScreenWidgetUpdater: TodoHomeScreenWidgetUpdater = mockk(relaxed = true)
+
     private fun createViewModel(): TodoWidgetViewModel {
         return TodoWidgetViewModel(
             context = context,
-            todoWidgetBehavior = todoWidgetBehavior,
             calendarStateMapper = calendarStateMapper,
             toDoStateMapper = toDoStateMapper,
             loadPlannerItemsUseCase = loadPlannerItemsUseCase,
@@ -146,6 +144,7 @@ class TodoWidgetViewModelTest {
             networkStateProvider = networkStateProvider,
             calendarSharedEvents = calendarSharedEvents,
             observeGlobalConfigUseCase = observeGlobalConfigUseCase,
+            todoHomeScreenWidgetUpdater = todoHomeScreenWidgetUpdater,
             crashlytics = crashlytics,
             clock = fixedClock
         )
@@ -225,24 +224,42 @@ class TodoWidgetViewModelTest {
     }
 
     @Test
-    fun `onTodoClick delegates to behavior`() = runTest {
+    fun `onTodoClick emits navigation event`() = runTest {
         viewModel = createViewModel()
-        val activity = mockk<FragmentActivity>()
         val htmlUrl = "https://instructure.com/test"
 
-        viewModel.uiState.value.onTodoClick(activity, htmlUrl)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Todo>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { todoWidgetBehavior.onTodoClick(activity, htmlUrl) }
+        viewModel.uiState.value.onTodoClick(htmlUrl)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Todo.NavigateToTodo
+        assertEquals(htmlUrl, event.htmlUrl)
+
+        job.cancel()
     }
 
     @Test
-    fun `onAddTodoClick delegates to behavior with selected date`() = runTest {
+    fun `onAddTodoClick emits navigation event with selected date`() = runTest {
         viewModel = createViewModel()
-        val activity = mockk<FragmentActivity>()
+        advanceUntilIdle()
 
-        viewModel.uiState.value.onAddTodoClick(activity)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Todo>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { todoWidgetBehavior.onAddTodoClick(activity, any()) }
+        viewModel.uiState.value.onAddTodoClick()
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        assertTrue(navigationEvents[0] is DashboardNavigationEvent.Todo.CreateTodo)
+
+        job.cancel()
     }
 
     @Test

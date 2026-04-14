@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.conferences
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,23 +55,31 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import kotlinx.coroutines.flow.SharedFlow
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ConferencesWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    onNavigationEvent: (DashboardNavigationEvent.Conferences) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: ConferencesViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
+        }
+    }
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
@@ -111,7 +118,6 @@ fun ConferencesWidgetContent(
         return
     }
 
-    val activity = LocalActivity.current as? FragmentActivity ?: return
     val conferencePages = uiState.conferences.chunked(columns)
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -145,7 +151,7 @@ fun ConferencesWidgetContent(
                     ConferenceCard(
                         conference = conference,
                         isJoining = uiState.joiningConferenceId == conference.id,
-                        onJoin = { uiState.onJoinConference(activity, conference) },
+                        onJoin = { uiState.onJoinConference(conference) },
                         onDismiss = { uiState.onDismissConference(conference) },
                         modifier = Modifier.weight(1f)
                     )
@@ -180,6 +186,7 @@ private fun ConferenceCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .pendoTag("conferencesWidget_joinConference", true)
             .clickable(enabled = !isJoining, onClick = onJoin),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -246,7 +253,7 @@ private fun ConferenceCard(
             } else {
                 IconButton(
                     onClick = onDismiss,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp).pendoTag("conferencesWidget_dismissConference", true)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),

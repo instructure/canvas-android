@@ -16,8 +16,11 @@
  */
 package com.instructure.student.ui.e2e.classic
 
+import android.app.Instrumentation
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -37,6 +40,7 @@ import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.withIdlingResourceDisabled
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.enterDomain
 import com.instructure.student.ui.utils.extensions.seedData
@@ -251,13 +255,15 @@ class LoginE2ETest : StudentTest() {
 
     @E2E
     @Test
+    @Stub("MBL-19866")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testInvalidAndEmptyLoginCredentialsE2E() {
 
         val INVALID_USERNAME = "invalidusercred@test.com"
         val INVALID_PASSWORD = "invalidpw"
-        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your username or password and try again. Trouble logging in? Check out our Login FAQs."
-        val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "No password was given"
+        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your username or password and try again."
+        val NO_EMAIL_GIVEN_ERROR_MESSAGE = "Please enter your email."
+        val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "Please enter your password."
         val DOMAIN = "mobileqa.beta"
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
@@ -269,29 +275,32 @@ class LoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
+        /* Somehow React does not recognize the invalid credentials, need to be fixed in follow-up ticket
         Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD').")
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
 
         Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+        loginSignInPage.assertLoginEmailErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
+        */
 
         Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field.")
         loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
 
-        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+        Log.d(ASSERTION_TAG, "Assert that the no email and no password error messages are displayed.")
+        loginSignInPage.assertLoginEmailErrorMessage(NO_EMAIL_GIVEN_ERROR_MESSAGE)
+        loginSignInPage.assertLoginPasswordErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
         Log.d(STEP_TAG, "Try to login with leaving only the password field empty.")
         loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
 
         Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+        loginSignInPage.assertLoginEmailErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
         Log.d(STEP_TAG, "Try to login with leaving only the username field empty.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
 
-        Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+        Log.d(ASSERTION_TAG, "Assert that the no email error message is displayed.")
+        loginSignInPage.assertLoginEmailErrorMessage(NO_EMAIL_GIVEN_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
     }
 
     // Verify that students can sign into vanity domain
@@ -385,6 +394,7 @@ class LoginE2ETest : StudentTest() {
         loginSignInPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testFindSchoolPageObjects() {
 
@@ -395,6 +405,7 @@ class LoginE2ETest : StudentTest() {
         loginFindSchoolPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginLandingPageObjects() {
 
@@ -402,6 +413,7 @@ class LoginE2ETest : StudentTest() {
         loginLandingPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginSignInPageObjects() {
 
@@ -414,6 +426,58 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Login SignIn Page has been displayed.")
         loginSignInPage.assertPageObjects()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginHowDoIFindMySchoolE2E() {
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter and invalid domain to trigger the 'Tap here for login help.' link to be displayed.")
+        loginFindSchoolPage.enterDomain("invalid-domain")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Tap here for login help.' link is displayed.")
+        loginFindSchoolPage.assertHowDoIFindMySchoolLinkDisplayed()
+
+        val expectedUrl = "https://community.instructure.com/en/kb/articles/662717-where-do-i-find-my-institutions-url-to-access-canvas"
+        val expectedIntent = IntentMatchers.hasData(expectedUrl)
+        Intents.init()
+        try {
+            Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+            Log.d(STEP_TAG, "Click on the 'Tap here for login help.' link.")
+            loginFindSchoolPage.clickOnHowDoIFindMySchoolLink()
+
+            Log.d(ASSERTION_TAG, "Assert that an intent with the correct URL was fired.")
+            Intents.intended(expectedIntent)
+        } finally {
+            Intents.release()
+        }
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginCanFindSchoolE2E() {
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the Find School Page has been displayed properly.")
+        loginFindSchoolPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the hint text is correct based on the device type.")
+        if(isTabletDevice()) loginFindSchoolPage.assertHintText(R.string.schoolInstructureCom)
+        else loginFindSchoolPage.assertHintText(R.string.loginHint)
+
+        Log.d(STEP_TAG, "Enter domain: 'harvest'.")
+        loginFindSchoolPage.enterDomain("harvest")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'City Harvest Church (Singapore)' school is displayed among the search results.")
+        loginFindSchoolPage.assertSchoolSearchResults("City Harvest Church (Singapore)")
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {

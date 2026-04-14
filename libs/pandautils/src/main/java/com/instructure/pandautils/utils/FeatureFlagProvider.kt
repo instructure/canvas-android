@@ -45,7 +45,7 @@ class FeatureFlagProvider(
     }
 
     suspend fun fetchEnvironmentFeatureFlags() {
-        val restParams = RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true)
+        val restParams = RestParams(isForceReadFromNetwork = true)
         val featureFlags = featuresApi.getEnvironmentFeatureFlags(restParams).dataOrNull ?: return
         apiPrefs.user?.id?.let {
             environmentFeatureFlags.insert(EnvironmentFeatureFlags(it, featureFlags))

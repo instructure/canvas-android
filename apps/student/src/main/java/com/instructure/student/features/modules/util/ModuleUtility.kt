@@ -31,12 +31,14 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment.Companion.makeRoute
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.R
+import com.instructure.pandautils.features.offline.sync.StudioOfflineVideoHelper
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
+import com.instructure.student.features.modules.progression.StudioVideoFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.InternalWebviewFragment.Companion.makeRoute
@@ -53,7 +55,8 @@ object ModuleUtility {
         isOnline: Boolean,
         syncedTabs: Set<String>,
         syncedFileIds: List<Long>,
-        context: Context
+        context: Context,
+        studioOfflineVideoHelper: StudioOfflineVideoHelper? = null
     ): Fragment? = when (item.type) {
         "Page" -> PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, item.title, item.pageUrl, navigatedFromModules))
         "Assignment" -> {
@@ -85,6 +88,22 @@ object ModuleUtility {
         "ExternalUrl", "ExternalTool" -> {
             if (item.isLocked()) {
                 LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
+            } else if (!isOnline && studioOfflineVideoHelper != null) {
+                val mediaId = studioOfflineVideoHelper.getStudioMediaId(item.externalUrl)
+                if (mediaId != null && studioOfflineVideoHelper.isStudioVideoAvailableOffline(mediaId)) {
+                    StudioVideoFragment.newInstance(
+                        StudioVideoFragment.makeRoute(
+                            course.id,
+                            studioOfflineVideoHelper.getStudioVideoUri(mediaId),
+                            item.title ?: "",
+                            studioOfflineVideoHelper.getStudioPosterUri(mediaId)
+                        )
+                    )
+                } else {
+                    NotAvailableOfflineFragment.newInstance(
+                        NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescription))
+                    )
+                }
             } else {
                 createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
                     val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()

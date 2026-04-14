@@ -117,13 +117,15 @@ fun AttachmentCard(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(Modifier.height(8.dp))
+                if (attachmentCardItem.showFileSize) {
+                    Spacer(Modifier.height(8.dp))
 
-                Text(
-                    Formatter.formatFileSize(LocalContext.current, attachment.size),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp,
-                )
+                    Text(
+                        Formatter.formatFileSize(LocalContext.current, attachment.size),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(8.dp))

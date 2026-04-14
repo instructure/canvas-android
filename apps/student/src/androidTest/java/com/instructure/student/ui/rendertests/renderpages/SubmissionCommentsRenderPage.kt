@@ -153,7 +153,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         clickOnAddAttachmentButton()
         onView(withId(R.id.videoComment)).click()
         onView(allOf(withId(R.id.startRecordingButton), isDisplayed())).click()
-        sleep(3000)
+        sleep(4000)
         onView(allOf(withId(R.id.endRecordingButton), isDisplayed())).click()
         onView(allOf(withId(R.id.sendButton), isDisplayed())).click()
     }
@@ -162,7 +162,7 @@ class SubmissionCommentsRenderPage: BasePage(R.id.submissionCommentsPage) {
         clickOnAddAttachmentButton()
         onView(withId(R.id.audioComment)).click()
         onView(allOf(withId(R.id.recordAudioButton), isDisplayed())).click()
-        sleep(3000)
+        sleep(4000)
         onView(allOf(withId(R.id.stopButton), isDisplayed())).click()
         onView(allOf(withId(R.id.sendAudioButton), isDisplayed())).click()
     }

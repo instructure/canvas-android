@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.progress
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,25 +53,31 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.offline.sync.ProgressState
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.UUID
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ProgressWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    onNavigationEvent: (DashboardNavigationEvent.Progress) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: ProgressViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val activity = LocalActivity.current?.getFragmentActivityOrNull()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
+        }
+    }
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
@@ -90,8 +95,7 @@ fun ProgressWidget(
     ProgressWidgetContent(
         modifier = modifier,
         uiState = uiState,
-        columns = columns,
-        activity = activity
+        columns = columns
     )
 }
 
@@ -99,8 +103,7 @@ fun ProgressWidget(
 fun ProgressWidgetContent(
     modifier: Modifier = Modifier,
     uiState: ProgressUiState,
-    columns: Int,
-    activity: FragmentActivity? = null
+    columns: Int
 ) {
     if (uiState.loading) {
         Box(modifier = Modifier
@@ -138,13 +141,13 @@ fun ProgressWidgetContent(
                         when (item) {
                             is ProgressCardData.Upload -> UploadProgressCard(
                                 item = item.data,
-                                onClick = { activity?.let { uiState.onUploadClick(it, item.data) } },
+                                onClick = { uiState.onUploadClick(item.data) },
                                 onDismiss = { uiState.onUploadDismiss(item.data) },
                                 modifier = Modifier.weight(1f)
                             )
                             is ProgressCardData.Sync -> SyncProgressCard(
                                 item = item.data,
-                                onClick = { activity?.let { uiState.onSyncClick(it) } },
+                                onClick = { uiState.onSyncClick() },
                                 onDismiss = { uiState.onSyncDismiss() },
                                 modifier = Modifier.weight(1f)
                             )
@@ -175,7 +178,8 @@ private fun UploadProgressCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .pendoTag("progressWidget_uploadCard", true)
+        .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
@@ -248,6 +252,7 @@ private fun UploadInProgressContent(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.TopEnd)
+                .pendoTag("progressWidget_dismissUpload", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_close),
@@ -316,6 +321,7 @@ private fun UploadSuccessContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissUpload", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
@@ -385,6 +391,7 @@ private fun UploadErrorContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissUpload", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
@@ -410,6 +417,7 @@ private fun SyncProgressCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .pendoTag("progressWidget_syncCard", true)
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -489,6 +497,7 @@ private fun SyncProgressContent(
             modifier = Modifier
                 .size(20.dp)
                 .align(Alignment.TopEnd)
+                .pendoTag("progressWidget_dismissSync", true)
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_close),
@@ -555,6 +564,7 @@ private fun SyncErrorContent(
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.TopEnd)
+                    .pendoTag("progressWidget_dismissSync", true)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_close),

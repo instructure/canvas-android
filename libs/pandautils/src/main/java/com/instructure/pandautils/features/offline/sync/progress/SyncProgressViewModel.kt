@@ -149,7 +149,6 @@ class SyncProgressViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        aggregateProgressObserver.onCleared()
         _data.value?.items?.forEach { it.onCleared() }
     }
 }

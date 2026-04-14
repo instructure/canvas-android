@@ -503,10 +503,35 @@
     <string name="a11y_nextModuleItem">下一个模块项目</string>
     <string name="a11y_nextModule">下一个模块</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s，标记为%2$s，双击以编辑笔记</string>
+    <string name="learnCoursesTabLabel">课程</string>
+    <string name="learnProgramsTabLabel">项目</string>
     <string name="reportAProblemDescriptionMessage">向我们的支持团队提问。</string>
     <string name="igniteAIEnterAPromptLabel">输入提示</string>
     <string name="a11y_igniteAiLoadingContentDescription">加载回应</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">翻转卡片</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">加载课程失败</string>
+    <string name="learnCourseListFilterAll">所有课程</string>
+    <string name="learnCourseListFilterNotStarted">未开始</string>
+    <string name="learnCourseListFilterInProgress">进行中</string>
+    <string name="learnCourseListFilterCompleted">已完成</string>
+    <string name="learnCourseListStartLearningLabel">开始学习</string>
+    <string name="learnCourseListResumeLearningLabel">恢复学习</string>
+    <string name="learnCourseListViewCourseLabel">查看课程</string>
+    <string name="learnCourseListShowMoreLabel">显示更多</string>
+    <string name="learnCourseListSearchBarPlaceholder">搜索课程</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">%1$s 的一部分</string>
+    <string name="learnCourseListEmptyMessage">未找到结果。尝试调整搜索词。</string>
+    <string name="learnProgramListFilterAll">所有计划</string>
+    <string name="learnProgramListFilterNotStarted">未开始</string>
+    <string name="learnProgramListFilterInProgress">进行中</string>
+    <string name="learnProgramListFilterCompleted">已完成</string>
+    <string name="learnProgramListShowMoreLabel">显示更多</string>
+    <string name="learnProgramListEmptyMessage">未找到结果。尝试调整搜索词</string>
+    <string name="learnProgramListSearchBarPlaceholder">搜索计划</string>
+    <string name="learnProgramListFailedToLoadMessage">加载计划失败</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="other">%1$d 门课程</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">错误：%1$s</string>
     <string name="a11y_required">必填</string>
 </resources>

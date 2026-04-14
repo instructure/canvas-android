@@ -191,7 +191,6 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     private fun setupViews(assignment: Assignment) = with(binding) {
         if (!isInModulesPager) {
-            swipeRefreshLayout.applyBottomSystemBarMargin()
             viewDiscussionButton.applyBottomSystemBarMargin()
         }
 
@@ -389,6 +388,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             viewDiscussionButton.setTextColor(ThemePrefs.buttonTextColor)
             viewDiscussionButton.setVisible()
         } else {
+            swipeRefreshLayout.applyBottomSystemBarMargin()
             viewDiscussionButton.setGone()
         }
     }
@@ -498,6 +498,10 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
+        if (needToForceNetwork) {
+            needToForceNetwork = false
+            presenter.loadData(true)
+        }
     }
 
     override fun onStart() {

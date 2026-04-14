@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">%s पर</string>
     <string name="schedule_calendar_event_interval_text">%1$s से %2$s तक</string>
     <string name="schedule_todo_due_text">करने के लिए: %s</string>
+    <string name="schedule_todo_due_text_new">करने के लिए: %s</string>
     <string name="schedule_due_text">नियत: %s</string>
     <string name="show_missing_items_title">%d लापता आइटमें दिखाएं</string>
     <string name="hide_missing_items_title">%d लापता आइटमें छिपाएं</string>
     <string name="schedule_error_message">आपका शेड्यूल लाने में असमर्थ</string>
     <string name="schedule_todo_title">करने के लिए</string>
+    <string name="schedule_todo_title_new">करने के लिए</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s पॉइंट</item>
         <item quantity="one">%s पॉइंट</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">योजनाकर्ता नोट</string>
     <string name="a11y_quiz">प्रश्नोत्तरी</string>
     <string name="a11y_todo">करने के लिए</string>
+    <string name="a11y_todo_new">करने के लिए</string>
     <string name="a11y_page">पेज</string>
     <string name="a11y_assessment_request">आकलन का अनुरोध</string>
     <string name="a11y_marked_as_done">हो गया के रूप में चिह्नित किया गया</string>

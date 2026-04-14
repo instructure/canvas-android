@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -35,6 +34,7 @@ import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideUseCase
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -47,8 +47,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
@@ -65,7 +68,6 @@ import javax.inject.Inject
 @HiltViewModel
 class TodoWidgetViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val todoWidgetBehavior: TodoWidgetBehavior,
     private val calendarStateMapper: CalendarStateMapper,
     private val toDoStateMapper: ToDoStateMapper,
     private val loadPlannerItemsUseCase: LoadPlannerItemsUseCase,
@@ -75,6 +77,7 @@ class TodoWidgetViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val calendarSharedEvents: CalendarSharedEvents,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val todoHomeScreenWidgetUpdater: TodoHomeScreenWidgetUpdater,
     private val crashlytics: FirebaseCrashlytics,
     private val clock: Clock
 ) : ViewModel() {
@@ -84,6 +87,9 @@ class TodoWidgetViewModel @Inject constructor(
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
     private var showCompleted = false
     private var courseMap = mapOf<Long, Course>()
+
+    private val _navigationEvents = MutableSharedFlow<DashboardNavigationEvent.Todo>()
+    val navigationEvents: SharedFlow<DashboardNavigationEvent.Todo> = _navigationEvents.asSharedFlow()
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
@@ -123,13 +129,17 @@ class TodoWidgetViewModel @Inject constructor(
         loadVisibleWeeks()
     }
 
-    private fun onTodoClick(activity: FragmentActivity, htmlUrl: String) {
-        todoWidgetBehavior.onTodoClick(activity, htmlUrl)
+    private fun onTodoClick(htmlUrl: String) {
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Todo.NavigateToTodo(htmlUrl))
+        }
     }
 
-    private fun onAddTodoClick(activity: FragmentActivity) {
+    private fun onAddTodoClick() {
         val dateString = selectedDay.atTime(12, 0).toApiStringSafe()
-        todoWidgetBehavior.onAddTodoClick(activity, dateString)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Todo.CreateTodo(dateString))
+        }
     }
 
     private fun toggleShowCompleted() {
@@ -542,7 +552,7 @@ class TodoWidgetViewModel @Inject constructor(
 
             // Invalidate planner cache
             CanvasRestAdapter.clearCacheUrls("planner")
-            todoWidgetBehavior.updateWidget(true)
+            todoHomeScreenWidgetUpdater.updateWidget(true)
             _uiState.update { _uiState.value.copy(updateToDoCount = true, calendarBodyUiState = calendarBodyUiState) }
             true
         } catch (e: Exception) {

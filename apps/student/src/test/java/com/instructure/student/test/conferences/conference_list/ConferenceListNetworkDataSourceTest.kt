@@ -24,14 +24,19 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ConferenceList
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.student.mobius.conferences.conference_list.datasource.ConferenceListNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -43,7 +48,14 @@ class ConferenceListNetworkDataSourceTest {
 
     @Before
     fun setup() {
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.mobileConsent } returns true
         networkDataSource = ConferenceListNetworkDataSource(conferencesApi, oAuthApi)
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -112,17 +124,17 @@ class ConferenceListNetworkDataSourceTest {
     @Test
     fun `Return authenticated session api model`() = runTest {
         val expected = AuthenticatedSession("url")
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(expected)
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(expected)
 
         val result = networkDataSource.getAuthenticatedSession("targetUrl")
 
         TestCase.assertEquals(expected, result)
-        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true)) }
+        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true), any()) }
     }
 
     @Test(expected = IllegalStateException::class)
     fun `Throws exception if authenticated session call fails`() = runTest {
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         networkDataSource.getAuthenticatedSession("targetUrl")
     }

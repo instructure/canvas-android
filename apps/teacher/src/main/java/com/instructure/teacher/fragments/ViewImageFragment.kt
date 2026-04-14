@@ -48,6 +48,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
@@ -101,6 +102,9 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
         }
 
         if (showToolbar) setupToolbar() else binding.toolbar.setGone()
+
+        binding.photoView.applyBottomSystemBarInsets()
+        binding.errorContainer.applyBottomSystemBarInsets()
     }
 
     private fun setupToolbar() = with(binding) {
@@ -181,12 +185,13 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
             p1: Any?,
             target: Target<Bitmap>,
             p3: Boolean
-        ): Boolean = with(binding) {
-            photoView.setGone()
-            progressBar.setGone()
-            errorContainer.setVisible()
-            ViewStyler.themeButton(openExternallyButton)
-            openExternallyButton.onClick { uri?.viewExternally(requireContext(), contentType) }
+        ): Boolean {
+            if (view == null) return false
+            binding.photoView.setGone()
+            binding.progressBar.setGone()
+            binding.errorContainer.setVisible()
+            ViewStyler.themeButton(binding.openExternallyButton)
+            binding.openExternallyButton.onClick { uri?.viewExternally(requireContext(), contentType) }
             return false
         }
 
@@ -197,6 +202,7 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
             dataSource: DataSource,
             p4: Boolean
         ): Boolean {
+            if (view == null) return false
             binding.progressBar.setGone()
 
             // Try to set the background color using palette if we can

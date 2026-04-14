@@ -17,7 +17,6 @@
 package com.instructure.teacher.ui.e2e.compose
 
 import android.util.Log
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -26,10 +25,16 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.LatePolicyApi
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.LatePolicy
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.hours
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.retry
@@ -38,6 +43,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.classic.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedAssignmentSubmission
+import com.instructure.teacher.ui.utils.extensions.seedAssignmentWithRubric
 import com.instructure.teacher.ui.utils.extensions.seedAssignments
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -51,7 +57,6 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @OptIn(ExperimentalTestApi::class)
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
@@ -101,6 +106,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
+        dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course)
@@ -130,10 +136,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${noSubStudent.name}' student has '-' as score as it's submission is not submitted yet.")
         assignmentSubmissionListPage.assertStudentScoreText(noSubStudent.name, "-")
 
-        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page and click on 'View All Submission' arrow icon.")
         Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Click on 'View All Submission' arrow icon.")
         assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(STEP_TAG, "Click on '${student.name}' student's avatar.")
@@ -254,7 +258,380 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
             assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
             assignmentSubmissionListPage.assertGradesHidden(student.name)
         }
+    }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderQuickAccessButtonAndSwipeE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val sortedStudents = data.studentsList.sortedBy { it.sortableName.lowercase() }
+        val firstSubmittedStudent = sortedStudents[0]
+        val secondGradedStudent = sortedStudents[1]
+        val thirdNoSubmissionStudent = sortedStudents[2]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${firstSubmittedStudent.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(
+                SubmissionsApi.SubmissionSeedInfo(
+                    amount = 1,
+                    submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )
+            ),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = firstSubmittedStudent.token
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${secondGradedStudent.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(
+                SubmissionsApi.SubmissionSeedInfo(
+                    amount = 1,
+                    submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )
+            ),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = secondGradedStudent.token
+        )
+
+        Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${secondGradedStudent.name}' student.")
+        SubmissionsApi.gradeSubmission(
+            teacher.token,
+            course.id,
+            assignment[0].id,
+            secondGradedStudent.id,
+            postedGrade = "15"
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open the SpeedGrader by clicking on the SpeedGrader quick access button.")
+        assignmentDetailsPage.openSpeedGrader()
+
+        Log.d(ASSERTION_TAG, "Assert that the the initial (first) student is '${firstSubmittedStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(firstSubmittedStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Submitted")
+
+        Log.d(STEP_TAG, "Swipe to the next (second) student.")
+        speedGraderPage.swipeToNextStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the current student is '${secondGradedStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(secondGradedStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Graded")
+
+        Log.d(STEP_TAG, "Swipe to the next (third) student.")
+        speedGraderPage.swipeToNextStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the current student is '${thirdNoSubmissionStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(thirdNoSubmissionStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Not Submitted")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderLatePenaltyE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with a due date 12 hours in the past.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 12.hours.ago.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 100.0
+        )
+
+        Log.d(PREPARATION_TAG, "Creating a late policy for '${course.name}' course: 10% deduction per day.")
+        LatePolicyApi.createLatePolicy(
+            courseId = course.id,
+            latePolicy = LatePolicy(
+                missingSubmissionDeductionEnabled = false,
+                missingSubmissionDeduction = 0,
+                lateSubmissionDeductionEnabled = true,
+                lateSubmissionDeduction = 10,
+                lateSubmissionInterval = "day",
+                lateSubmissionMinimumPercentEnabled = false,
+                lateSubmissionMinimumPercent = 0
+            ),
+            teacherToken = teacher.token
+        )
+
+        Log.d(PREPARATION_TAG, "Seeding a late submission for '${assignment[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(PREPARATION_TAG, "Grading the late submission for '${student.name}' student with 100 points.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment[0].id, student.id, postedGrade = "100")
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions and click on '${student.name}' student's submission.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed in SpeedGrader.")
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button' to show the grade panel.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the entered score is '100'.")
+        speedGraderGradePage.assertCurrentEnteredScore("100")
+
+        Log.d(ASSERTION_TAG, "Assert that the submission is 0.5 days late (12 hours).")
+        speedGraderGradePage.assertDaysLate("0.5")
+
+        Log.d(ASSERTION_TAG, "Assert that the late penalty value is '10' (10% per day × 1 interval × 100 pts).")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("10")
+
+        Log.d(ASSERTION_TAG, "Assert that the Points row shows '100 / 100 pts' (the raw entered grade before penalty).")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("100 / 100 pts")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '90 / 100 pts'.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("90 / 100 pts")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderOvergradingE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 10 max points.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 10.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions and click on '${student.name}' student's submission.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed in SpeedGrader.")
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button' to show the grade panel.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment's max points is '10'.")
+        speedGraderGradePage.assertPointsPossible("10")
+
+        Log.d(ASSERTION_TAG, "Assert that the status is 'None' (submission is on-time, no late penalty applies).")
+        speedGraderGradePage.assertSelectedStatusText("None")
+
+        Log.d(STEP_TAG, "Enter '15' as the new grade (above the max of 10 points).")
+        speedGraderGradePage.enterNewGrade("15")
+
+        Log.d(ASSERTION_TAG, "Assert that the entered score is '15'.")
+        speedGraderGradePage.assertCurrentEnteredScore("15")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade points value is '15 / 10 pts' (overgraded above the 10 pts maximum).")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("15 / 10 pts")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '15 / 10 pts'.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("15 / 10 pts")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.RUBRICS, TestCategory.E2E)
+    fun testSpeedGraderRubricGradingE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 10 max points.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 10.0
+        )
+
+        val writingQualityCriterion = RubricCriterion(
+            description = "Writing Quality",
+            longDescription = "Evaluates the overall quality of written expression and clarity.",
+            points = 10.0,
+            ratings = listOf(
+                RubricCriterionRating(description = "Excellent", longDescription = "Demonstrates outstanding writing skills with clear and compelling expression.", points = 10.0),
+                RubricCriterionRating(description = "Satisfactory", longDescription = "Meets basic writing requirements with adequate clarity.", points = 5.0),
+                RubricCriterionRating(description = "Poor", longDescription = "Does not meet writing standards; lacks clarity and structure.", points = 0.0)
+            )
+        )
+
+        val researchDepthCriterion = RubricCriterion(
+            description = "Research Depth",
+            longDescription = null,
+            points = 9.0,
+            ratings = listOf(
+                RubricCriterionRating(description = "Exceptional", longDescription = "Thorough and comprehensive research with strong source diversity.", points = 9.0),
+                RubricCriterionRating(description = "Proficient", longDescription = "Well-researched with only minor gaps in coverage.", points = 7.0),
+                RubricCriterionRating(description = "Developing", longDescription = "Adequate research coverage but missing important perspectives.", points = 4.0),
+                RubricCriterionRating(description = "Beginning", longDescription = "Limited research depth with significant gaps.", points = 2.0),
+                RubricCriterionRating(description = "Not good", longDescription = "Insufficient research; sources are missing or unreliable.", points = 1.0)
+            )
+        )
+
+        Log.d(PREPARATION_TAG, "Creating a rubric with 2 criteria and associating it with '${assignment[0].name}' assignment. " +
+                "Criterion 1 ('Writing Quality') has a criterion description and 3 ratings. " +
+                "Criterion 2 ('Research Depth') has no criterion description and 5 ratings.")
+        val rubric = seedAssignmentWithRubric(
+            courseId = course.id,
+            assignmentId = assignment[0].id,
+            teacherToken = teacher.token,
+            title = "Test Rubric",
+            criteria = listOf(writingQualityCriterion, researchDepthCriterion)
+        )
+
+        Log.d(PREPARATION_TAG, "Seeding a submission for '${assignment[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions and click on '${student.name}' student's submission.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed in SpeedGrader.")
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button' to show the grade panel and navigate to the 'Grade & Rubric' tab.")
+        speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Rubrics' label is displayed and both criteria are shown.")
+        speedGraderGradePage.assertRubricsLabelDisplayed()
+        speedGraderGradePage.assertRubricCriterionDisplayed(writingQualityCriterion.description)
+        speedGraderGradePage.assertRubricCriterionDisplayed(researchDepthCriterion.description)
+
+        Log.d(STEP_TAG, "Select the 'Poor' (0 pts) defined rating for the '${writingQualityCriterion.description}' criterion by tapping the point box.")
+        speedGraderGradePage.clickRubricRatingPointBox("0")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Poor' rating description is displayed after selecting it.")
+        speedGraderGradePage.assertRubricRatingDescriptionDisplayed("Poor")
+
+        val writingQualityNote = "Keep working on clarity and structure."
+        val writingQualityCriterionResponse = rubric.criteria.first { it.description == writingQualityCriterion.description }
+        Log.d(STEP_TAG, "Enter a rubric note '$writingQualityNote' for '${writingQualityCriterion.description}' and submit it.")
+        speedGraderGradePage.enterRubricNote(writingQualityNote, writingQualityCriterionResponse.id)
+        speedGraderGradePage.clickSendRubricNoteButton(writingQualityCriterionResponse.id)
+
+        Log.d(ASSERTION_TAG, "Assert that the rubric note '$writingQualityNote' is displayed with an edit button.")
+        speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(writingQualityNote)
+
+        val editedWritingQualityNote = "Revised: Good effort, keep improving!"
+        Log.d(STEP_TAG, "Click the edit button on the rubric note and change it to '$editedWritingQualityNote'.")
+        speedGraderGradePage.clickEditRubricNoteButton(writingQualityCriterionResponse.id)
+        speedGraderGradePage.enterRubricNote(editedWritingQualityNote, writingQualityCriterionResponse.id)
+        speedGraderGradePage.clickSendRubricNoteButton(writingQualityCriterionResponse.id)
+
+        Log.d(ASSERTION_TAG, "Assert that the edited rubric note '$editedWritingQualityNote' is displayed with an edit button.")
+        speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(editedWritingQualityNote)
+
+        Log.d(STEP_TAG, "Enter a custom score of 3 pts for the '${researchDepthCriterion.description}' criterion via the score input field.")
+        val researchDepthCriterionResponse = rubric.criteria.first { it.description == researchDepthCriterion.description }
+        speedGraderGradePage.enterRubricScore(researchDepthCriterionResponse.id, "3")
+
+        Log.d(ASSERTION_TAG, "Assert that no defined rating description is shown for '${researchDepthCriterion.description}' since a custom score was entered.")
+        speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Exceptional")
+        speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Proficient")
     }
 
 }

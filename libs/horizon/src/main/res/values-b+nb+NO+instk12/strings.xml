@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Neste modulelement</string>
     <string name="a11y_nextModule">Neste modul</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, merket som %2$s, dobbelttrykk for å redigere notatet</string>
+    <string name="learnCoursesTabLabel">Fag</string>
+    <string name="learnProgramsTabLabel">Programmer</string>
     <string name="reportAProblemDescriptionMessage">Send inn en personlig melding for personlig respons fra vårt support-team.</string>
     <string name="igniteAIEnterAPromptLabel">Skriv inn et spørsmål</string>
     <string name="a11y_igniteAiLoadingContentDescription">Laster inn svar</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Snu kortet</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Kunne ikke laste inn fag</string>
+    <string name="learnCourseListFilterAll">Alle åpne fag</string>
+    <string name="learnCourseListFilterNotStarted">Ikke startet</string>
+    <string name="learnCourseListFilterInProgress">Pågår</string>
+    <string name="learnCourseListFilterCompleted">Fullført</string>
+    <string name="learnCourseListStartLearningLabel">Begynn å lære</string>
+    <string name="learnCourseListResumeLearningLabel">Fortsett læring</string>
+    <string name="learnCourseListViewCourseLabel">Vis fag</string>
+    <string name="learnCourseListShowMoreLabel">Vis mer</string>
+    <string name="learnCourseListSearchBarPlaceholder">Søk etter fag</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Del av %1$s</string>
+    <string name="learnCourseListEmptyMessage">Fant ingen resultater. Prøv å endre søkeordene dine.</string>
+    <string name="learnProgramListFilterAll">Alle programmer</string>
+    <string name="learnProgramListFilterNotStarted">Ikke startet</string>
+    <string name="learnProgramListFilterInProgress">Pågår</string>
+    <string name="learnProgramListFilterCompleted">Fullført</string>
+    <string name="learnProgramListShowMoreLabel">Vis mer</string>
+    <string name="learnProgramListEmptyMessage">Fant ingen resultater. Prøv å endre søkeordene dine.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Søk etter programmer</string>
+    <string name="learnProgramListFailedToLoadMessage">Kunne ikke laste inn programmer</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d fag</item>
+        <item quantity="other">%1$d fag</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Feil: %1$s</string>
     <string name="a11y_required">Obligatorisk</string>
 </resources>

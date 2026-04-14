@@ -1,0 +1,40 @@
+query GetLearningLibraryRecommendations {
+    learningRecommendations {
+    recommendations {
+        courseId
+        primaryReason
+        sourceContext {
+            sourceCourseId
+            sourceCourseName
+            sourceSkillName
+        }
+        popularityCount
+        membership {
+            id
+            libraryId
+            itemType
+            displayOrder
+            canvasCourse {
+                courseId
+                canvasUrl
+                courseName
+                courseImageUrl
+                moduleCount
+                moduleItemCount
+                estimatedDurationMinutes
+            }
+            programId
+            programCourseId
+            createdAt
+            updatedAt
+            isBookmarked
+            completionPercentage
+            isEnrolledInCanvas
+            canvasEnrollmentId
+            canvasModuleId
+            canvasModuleItemId
+            canvasResourceId
+        }
+    }
+  }
+}

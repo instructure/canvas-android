@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">L\'entrega ha fallat</string>
     <string name="submissionStatusFailedSubtitle">Toqueu per veure\'n els detalls</string>
     <string name="submissionAndRubric">Entrega i rúbrica</string>
+    <string name="submissionAndFeedback">Entrega i comentaris</string>
     <string name="commentsAndRubric">Comentaris i rúbrica</string>
     <string name="errorLoadingAssignment">S\'ha produït un problema en carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
     <string name="submitted">Entregat</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Avui</string>
+    <string name="tomorrow">Demà</string>
     <string name="past">Passat</string>
     <string name="noDate">Sense data</string>
     <string name="future">Futur</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monòleg</string>
     <string name="noItemsToDisplayShort">No hi ha cap element per mostrar</string>
     <string name="Todo">Tasques pendents</string>
+    <string name="TodoNew">Tasques pendents</string>
     <string name="todoFilter">Filtra les assignatures</string>
     <string name="filterByEllipsis">Filtra per&#8230;</string>
     <string name="favoriteCoursesLabel">Assignatures preferides</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grups</string>
     <string name="groupMembers">Membres del grup</string>
 
+    <string name="messageGroup">Envieu un missatge al grup</string>
     <string name="loading">S\'està carregant&#8230;</string>
     <string name="select_item_to_display">Seleccioneu a la llista</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasques pendents</string>
+    <string name="todoWidgetTitleNew">Tasques pendents</string>
     <string name="gradesWidgetTitle">Notes</string>
     <string name="notificationWidgetTitle">Notificacions</string>
     <string name="todoWidgetTitleLong">Canvas: tasques pendents</string>
+    <string name="todoWidgetTitleLongNew">Canvas: tasques pendents</string>
     <string name="gradesWidgetTitleLong">Canvas: notes</string>
     <string name="gradeWidgetTitleLong">Canvas: nota</string>
     <string name="notificationWidgetTitleLong">Canvas: notificacions</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Assignatures</string>
     <string name="toDoList">Llista de tasques pendents</string>
+    <string name="toDoListNew">Llista de Tasques pendents</string>
+
     <string name="notifications">Notificacions</string>
     <string name="pushNotifications">Notificacions d\'inserció</string>
     <string name="pushNotificationsError">No s\'han registrat les notificacions d\'inserció per a aquest dispositiu.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Obre SpeedGrader</string>
 
-    <string name="search_todo">llista de tasques pendents</string>
     <string name="search_course">assignatura assignatures classe classes</string>
     <string name="search_grades">nota notes</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">S\'ha d\'establir el títol de la pàgina.</string>
     <string name="pageDetails">Detalls de la pàgina</string>
     <string name="saving">S\'està desant</string>
+    <string name="speedGraderSaving">S\'està desant</string>
+    <string name="speedGraderSaved">S’ha desat</string>
+    <string name="speedGraderFailed">No s\'ha pogut</string>
+    <string name="speedGraderSaveErrorTitle">Ui, s’ha produït un error</string>
+    <string name="speedGraderSaveErrorMessage">S\'ha produït un error en desar la modificació de la nota Podeu tornar a provar-ho ara o més endavant.</string>
+    <string name="speedGraderSaveErrorContentDescription">No s’ha pogut desar la nota. Toqueu-hi per obtenir-ne informació.</string>
+
     <string name="confirmDeleteEvent">Segur que voleu suprimir aquest esdeveniment?</string>
     <string name="conferencesNotSupported">Encara no s\'admeten conferències als dispositius mòbils.</string>
     <string name="filePreviewContentDescription">Imatge de visualització prèvia de fitxer</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Enregistraments</string>
     <string name="conferenceInProgress">Conferència en curs</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Conferències (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Conferència en curs</string>
+    <string name="conferencesWidgetDismissed">S’ha rebutjat la conferència</string>
     <string name="a11y_criterion_content_description">Classificació del criteri %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">més informació</string>
@@ -1373,6 +1391,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element de Tasques pendents</item>
+        <item quantity="other">%s elements de Tasques pendents</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s element de Tasques pendents</item>
         <item quantity="other">%s elements de Tasques pendents</item>
     </plurals>
@@ -1662,7 +1684,9 @@
     <string name="calendarNoEvents">Avui no hi ha cap esdeveniment.</string>
     <string name="calendarNoEventsDescription">Sembla un dia fabulós per descansar, relaxar-se i carregar piles.</string>
     <string name="userCalendarToDo">Tasques pendents</string>
+    <string name="userCalendarToDoNew">Tasques pendents</string>
     <string name="courseToDo">Tasques pendents de %s</string>
+    <string name="courseToDoNew">%s tasques pendents</string>
     <string name="calendarEventExcused">Justificat</string>
     <string name="calendarEventMissing">No presentat</string>
     <string name="calendarEventGraded">Qualificat</string>
@@ -1687,21 +1711,30 @@
     <string name="a11y_eventCreatedAnnouncement">S\'ha creat correctament l\'esdeveniment %s.</string>
     <string name="a11y_eventUpdatedAnnouncement">S\'ha actualitzat correctament l\'esdeveniment %s.</string>
     <string name="a11y_toDoCreatedAnnouncement">S\'ha creat correctament la llista de tasques pendents %s.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">S\'ha creat correctament la tasca pendent %s.</string>
     <string name="a11y_toDoUpdatedAnnouncement">S\'ha actualitzat correctament la llista de tasques pendents %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">S\'ha actualitzat correctament la tasca pendent %s.</string>
     <string name="todoScreenTitle">Tasques pendents</string>
+    <string name="todoScreenTitleNew">Tasques pendents</string>
     <string name="todoDateLabel">Data</string>
     <string name="todoDescriptionLabel">Descripció</string>
     <string name="todoDeleteConfirmationTitle">Voleu suprimir les tasques pendents?</string>
+    <string name="todoDeleteConfirmationTitleNew">Voleu suprimir les tasques pendents?</string>
     <string name="todoDeleteConfirmationText">Suprimireu permanentment l’element Tasques pendents.</string>
+    <string name="todoDeleteConfirmationTextNew">D\'aquesta manera, se suprimirà permanentment l’element de Tasques pendents.</string>
     <string name="todoDeleteErrorMessage">S\'ha produït un error en carregar aquestes tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="todoDeleteErrorMessageNew">S’ha produït un error en suprimir aquesta tasca pendent. Comproveu la connexió i torneu a provar-ho.</string>
     <string name="createTodoScreenTitle">Noves tasques pendents</string>
+    <string name="createTodoScreenTitleNew">Noves tasques pendents</string>
     <string name="editTodoScreenTitle">Edita les tasques pendents</string>
+    <string name="editTodoScreenTitleNew">Editeu les tasques pendents</string>
     <string name="createToDoTitleHint">Afegeix un títol</string>
     <string name="createToDoDateLabel">Data</string>
     <string name="createToDoTimeLabel">Hora</string>
     <string name="createToDoCalendarLabel">Calendari</string>
     <string name="createToDoDetailsLabel">Informació</string>
     <string name="todoSaveErrorMessage">S\'ha produït un error en desar aquestes tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="todoSaveErrorMessageNew">S’ha produït un error en desar aquesta tasca pendent. Comproveu la connexió i torneu a provar-ho.</string>
     <string name="selectCalendarScreenTitle">Selecciona un calendari</string>
     <string name="errorContentRetryButton">Torna a provar-ho</string>
     <string name="eventLocationLabel">Ubicació</string>
@@ -1709,6 +1742,7 @@
     <string name="eventDetailsLabel">Informació</string>
     <string name="errorLoadingEvent">S\'ha produït un problema en carregar aquest esdeveniment. Reviseu la connexió i torneu a provar-ho.</string>
     <string name="errorLoadingTodo">S\'ha produït un problema en carregar aquesta llista de tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="errorLoadingTodoNew">S’ha produït un error en carregar aquesta tasca pendent. Comproveu la connexió i torneu a provar-ho.</string>
     <string name="eventDeleteConfirmationTitle">Voleu suprimir l\'esdeveniment?</string>
     <string name="eventDeleteConfirmationText">D’aquesta manera, se suprimirà permanentment el vostre esdeveniment.</string>
     <string name="eventDeleteErrorMessage">S\'ha produït un error en suprimir aquest esdeveniment. Reviseu la connexió i torneu a provar-ho.</string>
@@ -1725,6 +1759,7 @@
     <string name="eventDeleteScopeAll">Tots els esdeveniments</string>
     <string name="eventDeleteScopeFollowing">Aquest i tots els esdeveniments següents</string>
     <string name="calendarAddToDo">Afegeix les tasques pendents</string>
+    <string name="calendarAddToDoNew">Afegiu-hi les tasques pendents</string>
     <string name="calendarAddEvent">Afegeix un esdeveniment</string>
     <string name="createEventScreenTitle">Esdeveniment nou</string>
     <string name="editEventScreenTitle">Edita l\'esdeveniment</string>
@@ -2103,7 +2138,9 @@
     <string name="widgetNotLoggedInTitle">Anem a fer que inicieu la sessió!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Per consultar les tasques pendents, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
     <string name="a11y_widgetToDoOpenToDoList">Obriu la pantalla de la llista de tasques pendents</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Obriu la pantalla de la llista de tasques pendents</string>
     <string name="a11y_widgetToDoCreateNewToDo">Creeu una llista nova de tasques pendents</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Creeu una nova tasca pendent</string>
     <string name="widgetGradesErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
     <string name="widgetSingleGradeErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment.</string>
@@ -2111,6 +2148,19 @@
     <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
     <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
     <string name="settingsSwitchExperience">Canvia al Canvas Career</string>
+    <string name="forecastWidgetTitle">Resum setmanal</string>
+    <string name="forecastWidgetWeekPeriod">Setmana %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">No presentat</string>
+    <string name="forecastWidgetDue">Data de lliurament</string>
+    <string name="forecastWidgetRecentGrades">Notes noves</string>
+    <string name="forecastWidgetGradeWeight">Nota final de %d%%</string>
+    <string name="forecastWidgetErrorMessage">Tenim problemes per carregar les vostres activitats. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="forecastWidgetEmptyMissing">No hi ha cap activitat no presentada. Esteu completament al dia.</string>
+    <string name="forecastWidgetEmptyDue">No hi ha cap activitat que s’hagi de lliurar aquesta setmana.</string>
+    <string name="forecastWidgetEmptyRecentGrades">No hi ha cap nota nova aquesta setmana.</string>
+    <string name="a11y_contentDescription_previousWeek">La setmana anterior</string>
+    <string name="a11y_contentDescription_nextWeek">La setmana que ve</string>
+
     <string name="speedGraderGradeTabTitle">Nota i rúbrica</string>
     <string name="speedGraderDetailsTabTitle">Informació</string>
     <string name="a11y_contentDescription_expandPanel">Desplegueu la subfinestra</string>
@@ -2189,6 +2239,7 @@
     <string name="errorLoadingToDos">S\'ha produït un error en carregar els elements de Tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
     <string name="errorUpdatingToDo">S\'ha produït un error en actualitzar l’element de Tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
     <string name="noToDosForNow">No hi ha cap tasca pendent per ara</string>
+    <string name="noToDosForNowNew">No hi ha cap tasca pendent per ara</string>
     <string name="noToDosForNowSubtext">Sembla un moment perfecte per descansar, relaxar-se i carregar les piles.</string>
     <string name="todoSwipeDone">Fet</string>
     <string name="todoSwipeUndo">Desfés-ho</string>
@@ -2199,8 +2250,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferències de la llista de tasques pendents</string>
+    <string name="todoFilterPreferencesNew">Preferències de la llista de tasques pendents</string>
     <string name="todoFilterVisibleItems">Elements visibles</string>
     <string name="todoFilterShowPersonalToDos">Mostreu les tasques pendents personals</string>
+    <string name="todoFilterShowPersonalToDosNew">Mostreu les tasques pendents personals</string>
     <string name="todoFilterShowCalendarEvents">Mostreu els esdeveniments del calendari</string>
     <string name="todoFilterShowCompleted">Mostreu els elements finalitzats</string>
     <string name="todoFilterFavoriteCoursesOnly">Només les assignatures preferides</string>
@@ -2226,6 +2279,9 @@
     <string name="courseInvitationDeclined">S’ha rebutjat la invitació a %s</string>
     <string name="courseInvitationDeclineConfirmTitle">Rebutgeu la invitació</string>
     <string name="courseInvitationDeclineConfirmMessage">Segur que voleu rebutjar la invitació a %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Progrés</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2349,6 +2405,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hola, %s</string>
 
+    <string name="courses_and_groups">Assignatures i grups</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Personalitzeu el panell de control</string>
     <string name="dashboard_widgets">Ginys</string>
@@ -2358,16 +2415,44 @@
     <string name="changing_dashboard_layout">S’està canviant el disseny del panell de control</string>
     <string name="changing_dashboard_layout_message">Per canviar el disseny del panell de control, heu de reiniciar l\'aplicació</string>
     <string name="restart_now">Reinicia-la ara</string>
+    <string name="turn_on_new_dashboard">Activeu el panell de control nou</string>
     <string name="switched_back">Heu tornat a canviar a la versió anterior?</string>
     <string name="switched_back_message">Gràcies per provar el nou panell de control Podríeu indicar-nos per què heu tornat a canviar a la versió anterior?</string>
+    <string name="survey_option_hard_to_find">Costa cercar coses</string>
+    <string name="survey_option_prefer_old_layout">Prefereixo el disseny antic</string>
+    <string name="survey_option_something_broken">Alguna cosa no ha anat bé</string>
     <string name="what_could_we_improve">Què podríem millorar?</string>
+    <string name="what_do_you_think_of_new_dashboard">Què penseu del panell de control nou?</string>
+    <string name="let_us_know">Feu-nos-ho saber!</string>
+    <string name="no_app_to_handle_link">No hi ha cap aplicació disponible per obrir aquest enllaç</string>
     <string name="skip">Omet-ho</string>
     <string name="widget_setting_show_greeting">Mostreu la salutació</string>
     <string name="background_color">Color del fons</string>
+    <string name="widget_setting_show_grades">Notes de l\'assignatura</string>
+    <string name="widget_setting_show_color_overlay">Superposició dels colors de l\'assignatura</string>
     <string name="offline_content_available">Hi ha contingut sense connexió disponible</string>
     <string name="a11y_contentDescription_moreOptions">Més opcions</string>
     <string name="customizeCourse">Personalitzeu l\'assignatura</string>
     <string name="favoriteCoursesAndGroups">Assignatures i grups preferits</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Les eines externes no estan disponibles sense connexió.</string>
+    <string name="widget_weekly_summary">Resum setmanal</string>
+
+    <string name="dashboardCourseNickname">Àlies</string>
+    <string name="dashboardCourseNicknameHint">Escriviu aquí l’àlies per a l’assignatura</string>
+    <string name="dashboardCourseColor">Color de l\'assignatura</string>
+    <string name="widget_toDo">Tasques pendents diàries</string>
+    <string name="dailyToDoWidgetTitle">Tasques pendents diàries</string>
+    <string name="todoWidget_showCompleted">Mostreu els elements finalitzats</string>
+    <string name="todoWidget_emptyTitle">Ja ho teniu tot fet de moment!</string>
+    <string name="todoWidget_emptyMessage">Sembla que aquest dia esteu lliure.\nVoleu afegir-hi alguna tasca pendent?</string>
+    <string name="todoWidget_addTodo">Afegiu-hi les tasques pendents</string>
+    <string name="todoWidget_errorTitle">Ui, s’ha produït un error</string>
+    <string name="todoWidget_errorMessage">No hem pogut carregar les tasques pendents.\nProveu-ho de nou o torneu més endavant.</string>
+    <string name="todoWidget_refresh">Actualitza-ho</string>
+    <string name="todoWidget_today">Avui</string>
+    <string name="a11y_todoWidget_jumpToToday">Salteu a Avui</string>
+    <string name="widgetSettings_widgetsColor">Color principal del panell de control</string>
+    <string name="dashboard_globalAnnouncement">Anunci global</string>
+    <string name="forecastWidget_currentWeek">Setmana actual</string>
 </resources>

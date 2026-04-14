@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -62,6 +63,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
 
         binding.sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
         binding.sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
+        binding.sourceScanner.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.ScannerClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {
@@ -80,6 +82,13 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
 
     override fun applyTheme() {
         ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        context.getActivityOrNull()?.let {
+            ViewStyler.setStatusBarLightDelayed(it)
+        }
     }
 
     override fun render(state: PickerSubmissionUploadViewState) = with(binding) {
@@ -118,6 +127,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         sourceCamera.setVisible(visibilities.sourceCamera)
         sourceDevice.setVisible(visibilities.sourceFile)
         sourceGallery.setVisible(visibilities.sourceGallery)
+        sourceScanner.setVisible(visibilities.sourceScanner)
     }
 
     fun getSelectFileIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {

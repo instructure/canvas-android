@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Próximo item do módulo</string>
     <string name="a11y_nextModule">Próximo módulo,</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s marcado como %2$s, toque duas vezes para editar a nota</string>
+    <string name="learnCoursesTabLabel">Disciplinas</string>
+    <string name="learnProgramsTabLabel">Programas</string>
     <string name="reportAProblemDescriptionMessage">Registar um bilhete para obter uma resposta pessoal da nossa equipa de suporte.</string>
     <string name="igniteAIEnterAPromptLabel">Introduzir uma sugestão</string>
     <string name="a11y_igniteAiLoadingContentDescription">A carregar resposta</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Virar o cartão</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Falha ao carregar disciplinas</string>
+    <string name="learnCourseListFilterAll">Todas as disciplinas</string>
+    <string name="learnCourseListFilterNotStarted">Não iniciado</string>
+    <string name="learnCourseListFilterInProgress">Em curso</string>
+    <string name="learnCourseListFilterCompleted">Concluído</string>
+    <string name="learnCourseListStartLearningLabel">Começar a aprender</string>
+    <string name="learnCourseListResumeLearningLabel">Retomar a aprendizagem</string>
+    <string name="learnCourseListViewCourseLabel">Ver disciplina</string>
+    <string name="learnCourseListShowMoreLabel">Mostrar mais</string>
+    <string name="learnCourseListSearchBarPlaceholder">Procurar disciplinas</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Parte de %1$s</string>
+    <string name="learnCourseListEmptyMessage">Sem resultados Tente ajustar os seus termos de busca.</string>
+    <string name="learnProgramListFilterAll">Todos os programas</string>
+    <string name="learnProgramListFilterNotStarted">Não iniciado</string>
+    <string name="learnProgramListFilterInProgress">Em curso</string>
+    <string name="learnProgramListFilterCompleted">Concluído</string>
+    <string name="learnProgramListShowMoreLabel">Mostrar mais</string>
+    <string name="learnProgramListEmptyMessage">Sem resultados Tente ajustar os seus termos de busca.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Buscar programas</string>
+    <string name="learnProgramListFailedToLoadMessage">Falha ao carregar programas</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d disciplina</item>
+        <item quantity="other">%1$d disciplinas</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Erro: %1$s</string>
     <string name="a11y_required">Necessário</string>
 </resources>

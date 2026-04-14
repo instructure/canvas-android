@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -38,6 +40,7 @@ const val CRASHLYTICS_EXPERIENCE_KEY = "experience"
 const val ACADEMIC_EXPERIENCE = "academic"
 const val CAREER_EXPERIENCE = "career"
 const val ELEMENTARY_EXPERIENCE = "elementary"
+const val NEXT_GEN_CANVAS_EXPERIENCE = "next_gen_canvas"
 
 
 /**
@@ -83,6 +86,12 @@ class LoginViewModel @Inject constructor(
     }
 
     private suspend fun getExperience(checkElementary: Boolean): Experience {
+        val isNextGenCanvas = RemoteConfigUtils.getBoolean(RemoteConfigParam.NEXT_GEN_CANVAS)
+        if (isNextGenCanvas) {
+            crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, NEXT_GEN_CANVAS_EXPERIENCE)
+            return Experience.NextGenCanvas
+        }
+
         val canvasCareerView = apiPrefs.canvasCareerView
 
         if (canvasCareerView != null) {
@@ -148,4 +157,5 @@ sealed class LoginResultAction {
 sealed class Experience {
     data class Academic(val elementary: Boolean) : Experience()
     data object Career : Experience()
+    data object NextGenCanvas : Experience()
 }

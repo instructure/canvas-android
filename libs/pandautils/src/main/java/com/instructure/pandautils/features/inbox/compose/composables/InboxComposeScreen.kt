@@ -189,8 +189,8 @@ private fun InboxComposeScreenContent(
     }
     Column(
         Modifier
-            .verticalScroll(rememberScrollState())
             .padding(padding)
+            .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .testTag("InboxComposeScreenContent")
     ) {

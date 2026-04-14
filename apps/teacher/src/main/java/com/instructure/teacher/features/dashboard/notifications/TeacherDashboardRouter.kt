@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.teacher.activities.LoginActivity
@@ -47,12 +46,6 @@ class TeacherDashboardRouter(private val activity: FragmentActivity) : Dashboard
     }
 
     override fun routeToSyncProgress() = Unit
-
-    override fun routeToManageOfflineContent() = Unit
-
-    override fun routeToCustomizeDashboard() {
-        RouteMatcher.route(activity, CustomizeDashboardFragment.makeRoute(), )
-    }
 
     override fun restartApp() {
         val startupIntent = Intent(ContextKeeper.appContext, LoginActivity::class.java)

@@ -24,11 +24,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
@@ -39,7 +40,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -50,7 +50,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -69,6 +68,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasScaffold
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -80,7 +80,6 @@ import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.InboxMessageView
 import com.instructure.pandautils.features.inbox.utils.MessageAction
 import com.instructure.pandautils.utils.ScreenState
-import com.instructure.pandautils.utils.ThemePrefs
 import java.time.ZonedDateTime
 
 @Composable
@@ -112,42 +111,33 @@ private fun AppBar(
     val context = LocalContext.current
     val isTeacherApp = context.packageName.contains("teacher")
 
-    TopAppBar(
-        title = {
+    CanvasThemedAppBar(
+        content = {
             Text(
                 text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
         },
-        navigationIcon = if (uiState.showBackButton) {
-            {
-                IconButton(onClick = { actionHandler(InboxDetailsAction.CloseFragment) }) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_back_arrow),
-                        contentDescription = stringResource(id = R.string.back)
-                    )
-                }
-            }
-        } else null,
+        navIconRes = if (uiState.showBackButton) R.drawable.ic_back_arrow else null,
+        navIconContentDescription = stringResource(id = R.string.back),
+        navigationActionClick = {
+            actionHandler(InboxDetailsAction.CloseFragment)
+        },
         actions = {
             AppBarMenu(
                 conversation = uiState.conversation,
                 showDeleteButton = uiState.showDeleteButton,
                 showReplyAllButton = uiState.showReplyAllButton,
+                showArchiveOption = uiState.showArchiveOption,
                 actionHandler = actionHandler
             )
         },
-        backgroundColor = Color(color = ThemePrefs.primaryColor),
-        contentColor = Color(color = ThemePrefs.primaryTextColor),
-        elevation = 0.dp,
         modifier = Modifier
-            .testTag("toolbar")
             .then(
-                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 else Modifier
-            ),
-        windowInsets = WindowInsets.statusBars
+            )
     )
 }
 @OptIn(ExperimentalMaterialApi::class)
@@ -168,7 +158,7 @@ private fun InboxDetailsScreenContent(
     Box(
         modifier = Modifier
             .then(
-                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 else Modifier
             )
             .fillMaxSize()
@@ -316,6 +306,7 @@ private fun AppBarMenu(
     conversation: Conversation?,
     showDeleteButton: Boolean,
     showReplyAllButton: Boolean,
+    showArchiveOption: Boolean,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
@@ -398,36 +389,38 @@ private fun AppBarMenu(
                 }
             }
 
-            if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        actionHandler(
-                            InboxDetailsAction.UpdateState(
-                                conversation.id,
-                                Conversation.WorkflowState.ARCHIVED
+            if (showArchiveOption) {
+                if (conversation.workflowState != Conversation.WorkflowState.ARCHIVED) {
+                    DropdownMenuItem(
+                        onClick = {
+                            showMenu = !showMenu
+                            actionHandler(
+                                InboxDetailsAction.UpdateState(
+                                    conversation.id,
+                                    Conversation.WorkflowState.ARCHIVED
+                                )
                             )
+                        }
+                    ) {
+                        MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
+                    }
+                } else {
+                    DropdownMenuItem(
+                        onClick = {
+                            showMenu = !showMenu
+                            actionHandler(
+                                InboxDetailsAction.UpdateState(
+                                    conversation.id,
+                                    Conversation.WorkflowState.READ
+                                )
+                            )
+                        }
+                    ) {
+                        MessageMenuItem(
+                            R.drawable.ic_unarchive,
+                            stringResource(id = R.string.unarchive)
                         )
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_archive, stringResource(id = R.string.archive))
-                }
-            } else {
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        actionHandler(
-                            InboxDetailsAction.UpdateState(
-                                conversation.id,
-                                Conversation.WorkflowState.READ
-                            )
-                        )
-                    }
-                ) {
-                    MessageMenuItem(
-                        R.drawable.ic_unarchive,
-                        stringResource(id = R.string.unarchive)
-                    )
                 }
             }
 

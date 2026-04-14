@@ -34,7 +34,7 @@ import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
@@ -170,7 +170,8 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     private fun setupToolbar() = with(binding) {
         quizListToolbar.applyTopSystemBarInsets()
-        swipeRefreshLayout.applyBottomSystemBarInsets()
+        swipeRefreshLayout.applyImeAndSystemBarInsets()
+        quizRecyclerView.clipToPadding = false
         quizListToolbar.title = getString(R.string.tab_quizzes)
         quizListToolbar.subtitle = canvasContext.name
         quizListToolbar.setupBackButton(this@QuizListFragment)

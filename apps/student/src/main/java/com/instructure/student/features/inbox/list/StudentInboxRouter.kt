@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
@@ -34,7 +35,7 @@ import com.instructure.student.router.RouteMatcher.openMedia
 class StudentInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
-        val route = InboxDetailsFragment.makeRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD)
+        val route = InboxDetailsFragment.makeRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD, scope)
         RouteMatcher.route(activity, route)
     }
 
@@ -60,6 +61,10 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun routeToAttachment(attachment: Attachment) {
         openMedia(activity, attachment.url)
+    }
+
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
+        openMedia(activity, mediaComment.url)
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {

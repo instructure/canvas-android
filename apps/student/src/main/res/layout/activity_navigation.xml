@@ -57,16 +57,24 @@
             android:layout_height="1dp"
             android:background="@color/backgroundLight" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomBar"
+        <FrameLayout
+            android:id="@+id/bottomBarContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:background="@color/backgroundLightestElevated"
-            app:elevation="0dp"
-            app:itemIconTint="@color/textDarkest"
-            app:itemTextColor="@color/textDarkest"
-            app:labelVisibilityMode="labeled" />
+            android:layout_height="56dp"
+            android:background="@color/backgroundLightestElevated">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:background="@color/backgroundLightestElevated"
+                app:elevation="0dp"
+                app:itemIconTint="@color/textDarkest"
+                app:itemTextColor="@color/textDarkest"
+                app:labelVisibilityMode="labeled" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
