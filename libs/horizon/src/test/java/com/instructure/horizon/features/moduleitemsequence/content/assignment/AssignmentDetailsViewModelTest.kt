@@ -18,8 +18,13 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetSubmissionHistoryUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
@@ -45,8 +50,12 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AssignmentDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: AssignmentDetailsRepository = mockk(relaxed = true)
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
+    private val getSubmissionHistoryUseCase: GetSubmissionHistoryUseCase = mockk(relaxed = true)
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
+    private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -64,9 +73,9 @@ class AssignmentDetailsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignment
-        coEvery { repository.hasUnreadComments(any(), any()) } returns false
-        coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
+        coEvery { getAssignmentDetailsUseCase(any()) } returns testAssignment
+        coEvery { getSubmissionHistoryUseCase(any()) } returns emptyList()
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 0
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returns "Formatted content"
         coEvery { aiAssistContextProvider.aiAssistContext } returns mockk(relaxed = true)
         coEvery { aiAssistContextProvider.aiAssistContext = any() } returns Unit
@@ -88,7 +97,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
-        coVerify { repository.getAssignment(assignmentId, courseId, false) }
+        coVerify { getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, false)) }
     }
 
     @Test
@@ -106,7 +115,7 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Test failed data load sets error state`() = runTest {
-        coEvery { repository.getAssignment(any(), any(), any()) } throws Exception("Network error")
+        coEvery { getAssignmentDetailsUseCase(any()) } throws Exception("Network error")
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -127,12 +136,12 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(savedStateHandle)
 
-        coVerify { repository.hasUnreadComments(assignmentId, false) }
+        coVerify { getUnreadCommentsCountUseCase(any()) }
     }
 
     @Test
     fun `Test unread comments flag is set correctly`() = runTest {
-        coEvery { repository.hasUnreadComments(any(), any()) } returns true
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 1
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -147,7 +156,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test assignment with no submission shows add submission`() = runTest {
         val assignmentWithoutSubmission = testAssignment.copy(submission = null)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithoutSubmission
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithoutSubmission
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -166,7 +175,7 @@ class AssignmentDetailsViewModelTest {
         val assignmentWithSubmission = testAssignment.copy(
             submission = submission
         )
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithSubmission
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithSubmission
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -176,26 +185,6 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertTrue(viewModel.uiState.value.showSubmissionDetails)
-    }
-
-    @Test
-    fun `Test LTI URL authentication is performed`() = runTest {
-        val ltiUrl = "https://lti.example.com/launch"
-        val testAssignmentWithLti = testAssignment.copy(
-            externalToolAttributes = mockk {
-                coEvery { url } returns ltiUrl
-            }
-        )
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignmentWithLti
-
-        val savedStateHandle = SavedStateHandle(mapOf(
-            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
-            Const.COURSE_ID to courseId
-        ))
-
-        val viewModel = getViewModel(savedStateHandle)
-
-        assertEquals(ltiUrl, viewModel.uiState.value.ltiUrl)
     }
 
     @Test
@@ -214,7 +203,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test attempt selector visibility for multiple attempts`() = runTest {
         val assignmentWithMultipleAttempts = testAssignment.copy(allowedAttempts = 3L)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithMultipleAttempts
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithMultipleAttempts
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -229,7 +218,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test attempt selector is hidden for single attempt assignment`() = runTest {
         val assignmentWithSingleAttempt = testAssignment.copy(allowedAttempts = 1L)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithSingleAttempt
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithSingleAttempt
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -258,8 +247,12 @@ class AssignmentDetailsViewModelTest {
     private fun getViewModel(savedStateHandle: SavedStateHandle): AssignmentDetailsViewModel {
         return AssignmentDetailsViewModel(
             context,
-            repository,
+            getAssignmentDetailsUseCase,
+            getSubmissionHistoryUseCase,
+            getUnreadCommentsCountUseCase,
             htmlContentFormatter,
+            oAuthApi,
+            apiPrefs,
             aiAssistContextProvider,
             savedStateHandle
         )

@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -29,6 +28,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetSubmissionHistoryUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -51,9 +52,10 @@ import javax.inject.Inject
 class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
+    private val getSubmissionHistoryUseCase: GetSubmissionHistoryUseCase,
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val oAuthApi: OAuthAPI.OAuthInterface,
-    private val horizonGetCommentsManager: HorizonGetCommentsManager,
     private val apiPrefs: ApiPrefs,
     private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle
@@ -94,8 +96,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = false))
             _assignmentFlow.value = assignment
-            val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
-            val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
+            val attempts = getSubmissionHistoryUseCase(GetSubmissionHistoryUseCase.Params(courseId, assignmentId, apiPrefs.user?.id.orDefault()))
+            val lastActualSubmission = attempts.lastGradedOrSubmitted()
             val submissions = if (lastActualSubmission != null) {
                 mapSubmissions(attempts)
             } else {
@@ -107,7 +109,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
-            val hasUnreadComments = horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, apiPrefs.user?.id.orDefault(), false) > 0
+            val hasUnreadComments = getUnreadCommentsCountUseCase(
+                GetUnreadCommentsCountUseCase.Params(assignmentId, apiPrefs.user?.id.orDefault())
+            ) > 0
 
             aiAssistContextProvider.aiAssistContext = AiAssistContext(
                 contextString = assignment.description.orEmpty(),
@@ -254,8 +258,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     private suspend fun updateAssignment() {
         val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = true))
         _assignmentFlow.value = assignment
-        val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
-        val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
+        val attempts = getSubmissionHistoryUseCase(GetSubmissionHistoryUseCase.Params(courseId, assignmentId, apiPrefs.user?.id.orDefault(), forceRefresh = true))
+        val lastActualSubmission = attempts.lastGradedOrSubmitted()
         val submissions = if (lastActualSubmission != null) {
             mapSubmissions(attempts)
         } else {
@@ -356,6 +360,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(openCommentsBottomSheetParams = null)
         }
+    }
+
+    private fun List<Submission>.lastGradedOrSubmitted(): Submission? {
+        return filter { it.workflowState == "graded" || it.workflowState == "submitted" }
+            .maxByOrNull { it.attempt }
     }
 
     private fun formatScore(value: Double): String {

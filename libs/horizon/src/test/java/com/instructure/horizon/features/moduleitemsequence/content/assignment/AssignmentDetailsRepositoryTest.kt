@@ -16,122 +16,121 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.horizon.data.datasource.AssignmentDetailsLocalDataSource
+import com.instructure.horizon.data.datasource.AssignmentDetailsNetworkDataSource
+import com.instructure.horizon.data.datasource.SubmissionLocalDataSource
+import com.instructure.horizon.data.repository.AssignmentDetailsRepository
+import com.instructure.horizon.data.repository.HorizonFileSyncRepository
+import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.features.offline.sync.HtmlParsingResult
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
-import io.mockk.every
+import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
+import org.junit.After
 import org.junit.Test
 
 class AssignmentDetailsRepositoryTest {
-    private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
-    private val oAuthInterface: OAuthAPI.OAuthInterface = mockk(relaxed = true)
-    private val horizonGetCommentsManager: HorizonGetCommentsManager = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val networkDataSource: AssignmentDetailsNetworkDataSource = mockk(relaxed = true)
+    private val localDataSource: AssignmentDetailsLocalDataSource = mockk(relaxed = true)
+    private val submissionLocalDataSource: SubmissionLocalDataSource = mockk(relaxed = true)
+    private val htmlParser: HtmlParser = mockk(relaxed = true)
+    private val fileSyncRepository: HorizonFileSyncRepository = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val userId = 1L
     private val courseId = 1L
-    private val assignmentId = 1L
+    private val assignmentId = 10L
+    private val testAssignment = Assignment(id = assignmentId, name = "Test Assignment", pointsPossible = 100.0)
 
-    @Before
-    fun setup() {
-        every { apiPrefs.user } returns User(id = userId, name = "Test User")
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
-    fun `Test successful assignment retrieval`() = runTest {
-        val assignment = Assignment(id = assignmentId, name = "Test Assignment", pointsPossible = 100.0)
-        coEvery { assignmentApi.getAssignmentWithHistory(courseId, assignmentId, any()) } returns
-            DataResult.Success(assignment)
+    fun `getAssignment fetches from network when online`() = runTest {
+        coEvery { networkDataSource.getAssignment(courseId, assignmentId, false) } returns testAssignment
+        coEvery { htmlParser.createHtmlStringWithLocalFiles(any(), any()) } returns HtmlParsingResult("", emptySet(), emptySet(), emptySet())
 
-        val result = getRepository().getAssignment(assignmentId, courseId, false)
+        val result = getRepository().getAssignment(courseId, assignmentId, false)
 
-        assertEquals(assignment, result)
+        assertEquals(testAssignment, result)
+        coVerify { networkDataSource.getAssignment(courseId, assignmentId, false) }
     }
 
     @Test(expected = IllegalStateException::class)
-    fun `Test failed assignment retrieval throws exception`() = runTest {
-        coEvery { assignmentApi.getAssignmentWithHistory(courseId, assignmentId, any()) } returns
-            DataResult.Fail()
+    fun `getAssignment throws when offline and no cached data`() = runTest {
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.getAssignment(assignmentId) } returns null
 
-        getRepository().getAssignment(assignmentId, courseId, false)
+        getRepository().getAssignment(courseId, assignmentId, false)
     }
 
     @Test
-    fun `Test successful URL authentication`() = runTest {
-        val originalUrl = "https://example.com/file"
-        val authenticatedUrl = "https://example.com/file?session=xyz"
-        val session = AuthenticatedSession(sessionUrl = authenticatedUrl)
+    fun `getAssignment returns cached data when offline`() = runTest {
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.getAssignment(assignmentId) } returns testAssignment
 
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns
-            DataResult.Success(session)
+        val result = getRepository().getAssignment(courseId, assignmentId, false)
 
-        val result = getRepository().authenticateUrl(originalUrl)
-
-        assertEquals(authenticatedUrl, result)
+        assertEquals(testAssignment, result)
+        coVerify { localDataSource.getAssignment(assignmentId) }
     }
 
     @Test
-    fun `Test URL authentication fallback on failure`() = runTest {
-        val originalUrl = "https://example.com/file"
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns DataResult.Fail()
+    fun `getAssignment saves to local when online and sync enabled`() = runTest {
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getAssignment(courseId, assignmentId, false) } returns testAssignment
+        coEvery { htmlParser.createHtmlStringWithLocalFiles(any(), any()) } returns HtmlParsingResult("parsed", emptySet(), emptySet(), emptySet())
 
-        val result = getRepository().authenticateUrl(originalUrl)
+        getRepository().getAssignment(courseId, assignmentId, false)
 
-        assertEquals(originalUrl, result)
+        coVerify { localDataSource.saveAssignment(testAssignment, courseId, "parsed") }
     }
 
     @Test
-    fun `Test URL authentication fallback on null session`() = runTest {
-        val originalUrl = "https://example.com/file"
-        coEvery { oAuthInterface.getAuthenticatedSession(originalUrl, any()) } returns DataResult.Fail()
+    fun `getAssignment saves submission history when online and sync enabled`() = runTest {
+        val submission = Submission(id = 1L, attempt = 1L, workflowState = "submitted")
+        val assignmentWithSubmission = testAssignment.copy(
+            submission = Submission(submissionHistory = listOf(submission))
+        )
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getAssignment(courseId, assignmentId, false) } returns assignmentWithSubmission
+        coEvery { htmlParser.createHtmlStringWithLocalFiles(any(), any()) } returns HtmlParsingResult("", emptySet(), emptySet(), emptySet())
 
-        val result = getRepository().authenticateUrl(originalUrl)
+        getRepository().getAssignment(courseId, assignmentId, false)
 
-        assertEquals(originalUrl, result)
+        coVerify { submissionLocalDataSource.saveSubmissions(assignmentId, listOf(submission)) }
     }
 
     @Test
-    fun `Test has unread comments returns true when count greater than zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, userId, false) } returns 3
+    fun `getAssignment passes forceRefresh to network data source`() = runTest {
+        coEvery { networkDataSource.getAssignment(courseId, assignmentId, true) } returns testAssignment
+        coEvery { htmlParser.createHtmlStringWithLocalFiles(any(), any()) } returns HtmlParsingResult("", emptySet(), emptySet(), emptySet())
 
-        val result = getRepository().hasUnreadComments(assignmentId, false)
+        getRepository().getAssignment(courseId, assignmentId, true)
 
-        assertTrue(result)
+        coVerify { networkDataSource.getAssignment(courseId, assignmentId, true) }
     }
 
-    @Test
-    fun `Test has unread comments returns false when count is zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, userId, false) } returns 0
-
-        val result = getRepository().hasUnreadComments(assignmentId, false)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `Test force network parameter is passed correctly`() = runTest {
-        val assignment = Assignment(id = assignmentId, name = "Test Assignment")
-        coEvery { assignmentApi.getAssignmentWithHistory(courseId, assignmentId, any()) } returns
-            DataResult.Success(assignment)
-
-        getRepository().getAssignment(assignmentId, courseId, true)
-
-        coEvery { assignmentApi.getAssignmentWithHistory(courseId, assignmentId, match { it.isForceReadFromNetwork }) }
-    }
-
-    private fun getRepository(): AssignmentDetailsRepository {
-        return AssignmentDetailsRepository(assignmentApi, oAuthInterface, horizonGetCommentsManager, apiPrefs)
-    }
+    private fun getRepository() = AssignmentDetailsRepository(
+        networkDataSource,
+        localDataSource,
+        submissionLocalDataSource,
+        htmlParser,
+        fileSyncRepository,
+        networkStateProvider,
+        featureFlagProvider,
+    )
 }

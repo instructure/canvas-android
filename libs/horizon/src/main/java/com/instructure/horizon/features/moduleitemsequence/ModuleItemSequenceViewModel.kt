@@ -297,6 +297,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
         _uiState.update {
             it.copy(
+                loadingState = it.loadingState.copy(isError = false),
                 notebookButtonEnabled = false,
                 aiAssistButtonEnabled = false
             )

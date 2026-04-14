@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import com.instructure.canvasapi2.apis.ModuleAPI
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
@@ -26,6 +25,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.data.repository.CourseRepository
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -44,7 +44,7 @@ class ModuleItemSequenceRepositoryTest {
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val courseRepository: CourseRepository = mockk(relaxed = true)
     private val courseModuleDao: HorizonCourseModuleDao = mockk(relaxed = true)
-    private val horizonGetCommentsManager: HorizonGetCommentsManager = mockk(relaxed = true)
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
@@ -136,7 +136,7 @@ class ModuleItemSequenceRepositoryTest {
 
     @Test
     fun `Test has unread comments returns true when count greater than zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(any(), any(), any()) } returns 5
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 5
 
         val result = getRepository().hasUnreadComments(1L, false)
 
@@ -145,7 +145,7 @@ class ModuleItemSequenceRepositoryTest {
 
     @Test
     fun `Test has unread comments returns false when count is zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(any(), any(), any()) } returns 0
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 0
 
         val result = getRepository().hasUnreadComments(1L, false)
 
@@ -164,7 +164,7 @@ class ModuleItemSequenceRepositoryTest {
             moduleApi,
             courseRepository,
             courseModuleDao,
-            horizonGetCommentsManager,
+            getUnreadCommentsCountUseCase,
             apiPrefs,
             networkStateProvider,
             featureFlagProvider,

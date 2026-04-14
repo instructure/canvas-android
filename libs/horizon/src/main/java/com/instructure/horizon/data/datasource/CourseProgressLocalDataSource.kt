@@ -76,7 +76,10 @@ class CourseProgressLocalDataSource @Inject constructor(
                 completed = completionRequirementCompleted,
             )
         }
-        val moduleDetails = if (pointsPossible != null || dueAt != null || lockedForUser || lockExplanation != null) {
+        val moduleDetails = if (
+            pointsPossible != null || dueAt != null || lockedForUser || lockExplanation != null ||
+            hidden != null || locked != null
+        ) {
             ModuleContentDetails(
                 pointsPossible = pointsPossible,
                 dueAt = dueAt,
@@ -84,21 +87,28 @@ class CourseProgressLocalDataSource @Inject constructor(
                 lockExplanation = lockExplanation,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
+                hidden = hidden,
+                locked = locked,
             )
         } else null
         return ModuleItem(
             id = itemId,
             moduleId = moduleId,
             position = position,
+            indent = indent,
             title = title,
             type = type,
             htmlUrl = htmlUrl,
             url = url,
+            contentId = contentId,
+            externalUrl = externalUrl,
+            pageUrl = pageUrl,
+            published = published,
+            unpublishable = unpublishable,
             completionRequirement = completionRequirement,
             moduleDetails = moduleDetails,
             quizLti = quizLti,
             estimatedDuration = estimatedDuration,
-            pageUrl = pageUrl,
         )
     }
 
@@ -121,9 +131,15 @@ class CourseProgressLocalDataSource @Inject constructor(
             courseId = courseId,
             title = title,
             position = position,
+            indent = indent,
             type = type,
             htmlUrl = htmlUrl,
             url = url,
+            contentId = contentId,
+            externalUrl = externalUrl,
+            pageUrl = pageUrl,
+            published = published,
+            unpublishable = unpublishable,
             completionRequirementType = completionRequirement?.type,
             completionRequirementMinScore = completionRequirement?.minScore ?: 0.0,
             completionRequirementCompleted = completionRequirement?.completed ?: false,
@@ -133,9 +149,10 @@ class CourseProgressLocalDataSource @Inject constructor(
             lockExplanation = moduleDetails?.lockExplanation,
             lockAt = moduleDetails?.lockAt,
             unlockAt = moduleDetails?.unlockAt,
+            hidden = moduleDetails?.hidden,
+            locked = moduleDetails?.locked,
             quizLti = quizLti,
             estimatedDuration = estimatedDuration,
-            pageUrl = pageUrl,
         )
     }
 }

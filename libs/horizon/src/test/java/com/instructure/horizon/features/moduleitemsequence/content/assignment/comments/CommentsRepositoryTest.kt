@@ -23,6 +23,9 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CommentsData
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.AssignmentCommentsLocalDataSource
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -38,6 +41,9 @@ import java.util.Date
 class CommentsRepositoryTest {
     private val getCommentsManager: HorizonGetCommentsManager = mockk(relaxed = true)
     private val submissionApi: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
+    private val localDataSource: AssignmentCommentsLocalDataSource = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var repository: CommentsRepository
 
@@ -66,7 +72,7 @@ class CommentsRepositoryTest {
 
     @Before
     fun setup() {
-        repository = CommentsRepository(getCommentsManager, submissionApi)
+        repository = CommentsRepository(getCommentsManager, submissionApi, localDataSource, networkStateProvider, featureFlagProvider)
     }
 
     @After

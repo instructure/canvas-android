@@ -37,9 +37,15 @@ data class HorizonCourseModuleItemEntity(
     val courseId: Long,
     val title: String?,
     val position: Int,
+    val indent: Int,
     val type: String?,
     val htmlUrl: String?,
     val url: String?,
+    val contentId: Long,
+    val externalUrl: String?,
+    val pageUrl: String?,
+    val published: Boolean?,
+    val unpublishable: Boolean,
     // ModuleCompletionRequirement flattened
     val completionRequirementType: String?,
     val completionRequirementMinScore: Double,
@@ -51,8 +57,9 @@ data class HorizonCourseModuleItemEntity(
     val lockExplanation: String?,
     val lockAt: String?,
     val unlockAt: String?,
+    val hidden: Boolean?,
+    val locked: Boolean?,
     // Other
     val quizLti: Boolean,
     val estimatedDuration: String?,
-    val pageUrl: String?,
 )

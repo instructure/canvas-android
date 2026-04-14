@@ -18,6 +18,7 @@ package com.instructure.horizon.data.repository
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.horizon.data.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.horizon.data.datasource.AssignmentDetailsNetworkDataSource
+import com.instructure.horizon.data.datasource.SubmissionLocalDataSource
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class AssignmentDetailsRepository @Inject constructor(
     private val networkDataSource: AssignmentDetailsNetworkDataSource,
     private val localDataSource: AssignmentDetailsLocalDataSource,
+    private val submissionLocalDataSource: SubmissionLocalDataSource,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
     networkStateProvider: NetworkStateProvider,
@@ -41,6 +43,8 @@ class AssignmentDetailsRepository @Inject constructor(
                     val parsingResult = htmlParser.createHtmlStringWithLocalFiles(assignment.description, courseId)
                     localDataSource.saveAssignment(assignment, courseId, parsingResult.htmlWithLocalFileLinks)
                     fileSyncRepository.syncHtmlFiles(courseId, parsingResult)
+                    val submissionHistory = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
+                    submissionLocalDataSource.saveSubmissions(assignment.id, submissionHistory)
                 }
             }
         } else {

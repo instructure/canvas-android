@@ -17,7 +17,6 @@ package com.instructure.horizon.features.moduleitemsequence
 
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleContentDetails
@@ -30,6 +29,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.data.repository.CourseRepository
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.entity.HorizonCourseModuleItemEntity
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -41,7 +41,7 @@ class ModuleItemSequenceRepository @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val courseRepository: CourseRepository,
     private val courseModuleDao: HorizonCourseModuleDao,
-    private val horizonGetCommentsManager: HorizonGetCommentsManager,
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase,
     private val apiPrefs: ApiPrefs,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
@@ -124,7 +124,9 @@ class ModuleItemSequenceRepository @Inject constructor(
 
     suspend fun hasUnreadComments(assignmentId: Long?, forceNetwork: Boolean = false): Boolean {
         if (assignmentId == null) return false
-        return horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, apiPrefs.user?.id.orDefault(), forceNetwork) > 0
+        return getUnreadCommentsCountUseCase(
+            GetUnreadCommentsCountUseCase.Params(assignmentId, apiPrefs.user?.id.orDefault(), forceNetwork)
+        ) > 0
     }
 
     private fun HorizonCourseModuleItemEntity.toModuleItem(): ModuleItem {
@@ -135,7 +137,10 @@ class ModuleItemSequenceRepository @Inject constructor(
                 completed = completionRequirementCompleted,
             )
         }
-        val moduleDetails = if (pointsPossible != null || dueAt != null || lockedForUser || lockExplanation != null) {
+        val moduleDetails = if (
+            pointsPossible != null || dueAt != null || lockedForUser || lockExplanation != null ||
+            hidden != null || locked != null
+        ) {
             ModuleContentDetails(
                 pointsPossible = pointsPossible,
                 dueAt = dueAt,
@@ -143,17 +148,24 @@ class ModuleItemSequenceRepository @Inject constructor(
                 lockExplanation = lockExplanation,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
+                hidden = hidden,
+                locked = locked,
             )
         } else null
         return ModuleItem(
             id = itemId,
             moduleId = moduleId,
             position = position,
+            indent = indent,
             title = title,
             type = type,
             htmlUrl = htmlUrl,
             url = url,
+            contentId = contentId,
+            externalUrl = externalUrl,
             pageUrl = pageUrl,
+            published = published,
+            unpublishable = unpublishable,
             completionRequirement = completionRequirement,
             moduleDetails = moduleDetails,
             quizLti = quizLti,

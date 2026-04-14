@@ -29,6 +29,7 @@ enum class SyncDataType {
     COURSE_DETAILS,
     COURSE_MODULES,
     COURSE_SCORES,
+    ASSIGNMENT_COMMENTS,
 }
 
 @Entity(tableName = "horizon_sync_metadata")
