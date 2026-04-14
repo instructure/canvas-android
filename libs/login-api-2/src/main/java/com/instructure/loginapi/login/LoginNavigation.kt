@@ -25,6 +25,7 @@ import com.instructure.loginapi.login.viewmodel.LoginViewModel
 
 const val CANVAS_FOR_ELEMENTARY = "canvas_for_elementary"
 const val CANVAS_CAREER = "canvas_career"
+const val NEXT_GEN_CANVAS = "next_gen_canvas"
 
 abstract class LoginNavigation(
     private val activity: FragmentActivity
@@ -57,10 +58,10 @@ abstract class LoginNavigation(
 
     private fun showPolicy(experience: Experience) {
         val intent = Intent(activity, AcceptableUsePolicyActivity::class.java)
-        if (experience is Experience.Academic) {
-            intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
-        } else if (experience is Experience.Career) {
-            intent.putExtra(CANVAS_CAREER, true)
+        when (experience) {
+            is Experience.Academic -> intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
+            is Experience.Career -> intent.putExtra(CANVAS_CAREER, true)
+            is Experience.NextGenCanvas -> intent.putExtra(NEXT_GEN_CANVAS, true)
         }
         activity.startActivity(intent)
     }

@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import android.content.res.Configuration
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,10 +55,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 import sdk.pendo.io.pendoTag
 import sh.calvin.reorderable.ReorderableItem
@@ -69,6 +68,7 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 fun CoursesWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
+    onNavigationEvent: (DashboardNavigationEvent.Courses) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CoursesWidgetViewModel = hiltViewModel()
@@ -77,6 +77,12 @@ fun CoursesWidget(
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
             viewModel.refresh()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
         }
     }
 
@@ -93,7 +99,6 @@ fun CoursesWidgetContent(
     uiState: CoursesWidgetUiState,
     columns: Int = 1
 ) {
-    val activity = LocalActivity.current?.getFragmentActivityOrNull()
     Column(modifier = modifier.fillMaxWidth()) {
         if (uiState.isLoading) {
             CoursesWidgetLoadingState(columns = columns)
@@ -177,7 +182,7 @@ fun CoursesWidgetContent(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 Button(
-                    onClick = { activity?.let { uiState.onAllCourses(it) } },
+                    onClick = { uiState.onAllCourses() },
                     shape = RoundedCornerShape(24.dp),
                     modifier = Modifier.height(30.dp).pendoTag("coursesWidget_allCoursesButton", true),
                     contentPadding = PaddingValues(
