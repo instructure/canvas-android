@@ -54,4 +54,5 @@ data class HorizonCourseModuleItemEntity(
     // Other
     val quizLti: Boolean,
     val estimatedDuration: String?,
+    val pageUrl: String?,
 )

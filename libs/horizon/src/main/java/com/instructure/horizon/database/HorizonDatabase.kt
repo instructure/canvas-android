@@ -75,7 +75,7 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonPageEntity::class,
         HorizonAssignmentDetailsEntity::class,
     ],
-    version = 8,
+    version = 9,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao

@@ -153,6 +153,7 @@ class ModuleItemSequenceRepository @Inject constructor(
             type = type,
             htmlUrl = htmlUrl,
             url = url,
+            pageUrl = pageUrl,
             completionRequirement = completionRequirement,
             moduleDetails = moduleDetails,
             quizLti = quizLti,

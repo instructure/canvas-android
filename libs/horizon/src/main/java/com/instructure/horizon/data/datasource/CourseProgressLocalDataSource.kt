@@ -98,6 +98,7 @@ class CourseProgressLocalDataSource @Inject constructor(
             moduleDetails = moduleDetails,
             quizLti = quizLti,
             estimatedDuration = estimatedDuration,
+            pageUrl = pageUrl,
         )
     }
 
@@ -134,6 +135,7 @@ class CourseProgressLocalDataSource @Inject constructor(
             unlockAt = moduleDetails?.unlockAt,
             quizLti = quizLti,
             estimatedDuration = estimatedDuration,
+            pageUrl = pageUrl,
         )
     }
 }
