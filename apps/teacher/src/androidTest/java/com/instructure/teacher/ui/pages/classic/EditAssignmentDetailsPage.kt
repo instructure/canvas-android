@@ -29,6 +29,7 @@ import com.instructure.canvas.espresso.withIndex
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -115,6 +116,13 @@ class EditAssignmentDetailsPage : BasePage() {
      * Edits the assignees for the assignment.
      */
     fun editAssignees() = waitScrollClick(R.id.assignTo)
+
+    /**
+     * Asserts that the assignee field contains the specified [assignee] text.
+     */
+    fun assertContainsAssignee(assignee: String) {
+        onViewWithId(R.id.assignTo).assertContainsText(assignee)
+    }
 
     /**
      * Clicks on the edit due date field.

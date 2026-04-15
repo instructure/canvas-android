@@ -28,14 +28,18 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.GradingPeriodsApi
 import com.instructure.dataseeding.api.SectionsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -51,6 +55,9 @@ import com.instructure.teacher.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.Locale
+import com.instructure.teacher.R as TeacherR
 
 @HiltAndroidTest
 class AssignmentE2ETest : TeacherComposeTest() {
@@ -92,9 +99,10 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentListPage.assertDisplaysNoAssignmentsView()
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignmentDueCal = 1.days.fromNow
         val assignment = seedAssignments(
                 courseId = course.id,
-                dueAt = 1.days.fromNow.iso8601,
+                dueAt = assignmentDueCal.iso8601,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
                 teacherToken = teacher.token,
                 pointsPossible = 15.0
@@ -304,16 +312,14 @@ class AssignmentE2ETest : TeacherComposeTest() {
         editAssignmentDetailsPage.clickOnDisplayGradeAsSpinner()
         editAssignmentDetailsPage.selectGradeType("Percentage")
 
-        // TODO: Fix this - MBL-19110
-        /*
-        Log.d(STEP_TAG, "Click on the 'Due Time' section and edit the hour and minutes to 1:30 PM.")
+        Log.d(STEP_TAG, "Edit the due date to Dec 12, 2030 and the due time to 1:30 AM.")
         editAssignmentDetailsPage.clickEditDueDate()
-        editAssignmentDetailsPage.editDate(2022,12,12)
+        editAssignmentDetailsPage.editDate(2030, 12, 12)
         editAssignmentDetailsPage.clickEditDueTime()
         editAssignmentDetailsPage.editTime(1, 30)
 
-        Log.d(ASSERTION_TAG, "Assert that the changes have been applied on Edit Assignment Details page.")
-        editAssignmentDetailsPage.assertTimeChanged(1, 30, R.id.dueTime)
+        Log.d(ASSERTION_TAG, "Assert that the due time change has been applied on the Edit Assignment Details page.")
+        editAssignmentDetailsPage.assertTimeChanged(1, 30, TeacherR.id.dueTime)
 
         Log.d(STEP_TAG, "Click on 'Assigned To' spinner and select '${student.name}' besides 'Everyone'.")
         editAssignmentDetailsPage.editAssignees()
@@ -321,43 +327,41 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assigneeListPage.toggleAssignees(listOf(student.name))
 
         val expectedAssignees = listOf(student.name, "Everyone else")
-        Log.d(ASSERTION_TAG, "Assert that '${student.name}' and 'Everyone else' is selected as well.")
+        Log.d(ASSERTION_TAG, "Assert that '${student.name}' and 'Everyone else' are selected.")
         assigneeListPage.assertAssigneesSelected(expectedAssignees)
 
         Log.d(STEP_TAG, "Save and close the assignee list.")
         assigneeListPage.saveAndClose()
 
-        val assignText = editAssignmentDetailsPage.onViewWithId(R.id.assignTo)
-        Log.d(ASSERTION_TAG, "Assert that on the Assignment Details Page both the '${student.name}' and the 'Everyone else' values are set.")
-        for (assignee in expectedAssignees) assignText.assertContainsText(assignee)
+        Log.d(ASSERTION_TAG, "Assert that on the Edit Assignment Details Page both '${student.name}' and 'Everyone else' are set as assignees.")
+        expectedAssignees.forEach { editAssignmentDetailsPage.assertContainsAssignee(it) }
 
-        Log.d(STEP_TAG, "Save the assignment.")
+        Log.d(STEP_TAG, "Save the assignment and refresh the page.")
         editAssignmentDetailsPage.saveAssignment()
-
-        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the points of '$newAssignmentName' assignment has been changed to 20.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the points of '$newAssignmentName' assignment has been changed to 20.")
         assignmentDetailsPage.assertAssignmentPointsChanged("20")
 
         Log.d(ASSERTION_TAG, "Assert that there are multiple due dates set, so the 'Multiple Due Dates' string is displayed on the 'Due Dates' section.")
         assignmentDetailsPage.assertMultipleDueDates()
 
-        Log.d(STEP_TAG, "Open Due Dates Page.")
-        assignmentDetailsPage.openAllDatesPage()
+        Log.d(STEP_TAG, "Open the Due Dates Page.")
+        assignmentDetailsPage.openDueDatesPage()
 
         Log.d(ASSERTION_TAG, "Assert that there are 2 different due dates set.")
         assignmentDueDatesPage.assertDueDatesCount(2)
 
-        Log.d(ASSERTION_TAG, "Assert that there is a due date set for '${student.name}' student especially and another one for everyone else.")
+        Log.d(ASSERTION_TAG, "Assert that there is a due date set for '${student.name}' specifically and another one for 'Everyone else'.")
         assignmentDueDatesPage.assertDueFor(student.name)
-        assignmentDueDatesPage.assertDueFor(R.string.everyone_else)
+        assignmentDueDatesPage.assertDueFor(TeacherR.string.everyone_else)
 
-        val dueDateForEveryoneElse = "Dec 12 at 1:30 AM"
-        val dueDateForStudentSpecially = "Dec 12 at 9:30 AM"
-        Log.d(ASSERTION_TAG, "Assert that the there is a due date with '$dueDateForEveryoneElse' value and another one with '$dueDateForStudentSpecially'.")
-        assignmentDueDatesPage.assertDueDateTime("Due $dueDateForEveryoneElse")
-        assignmentDueDatesPage.assertDueDateTime("Due $dueDateForStudentSpecially")
-        */
+        val dueDateForEveryoneElse = "Dec 12, 2030 at 1:30 AM"
+        val dueDateForStudentSpecially = SimpleDateFormat("MMM d, yyyy 'at' h:mm a", Locale.getDefault()).format(assignmentDueCal.time)
+        Log.d(ASSERTION_TAG, "Assert that the due date for 'Everyone else' is '$dueDateForEveryoneElse' and for '${student.name}' is '$dueDateForStudentSpecially'.")
+        assignmentDueDatesPage.assertDueDateTime(dueDateForEveryoneElse)
+        assignmentDueDatesPage.assertDueDateTime(dueDateForStudentSpecially)
     }
 
     @E2E
@@ -817,4 +821,245 @@ class AssignmentE2ETest : TeacherComposeTest() {
         }
     }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testGradingPeriodFiltersAndGroupByAssignmentsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data with a grading period enabled.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, gradingPeriods = true)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Fetching the grading period for '${course.name}' course.")
+        val gradingPeriod = GradingPeriodsApi.getGradingPeriodsOfCourse(course.id).gradingPeriods.last()
+
+        Log.d(PREPARATION_TAG, "Seeding an assignment due within the grading period (2 days from now) for '${course.name}' course.")
+        val assignmentInPeriod = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 10.0, dueAt = 2.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Submit '${assignmentInPeriod.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignmentInPeriod.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
+
+        Log.d(PREPARATION_TAG, "Creating a custom assignment group 'Custom Group' for '${course.name}' course.")
+        val customGroup = AssignmentGroupsApi.createAssignmentGroup(teacher.token, course.id, name = "Custom Group")
+
+        Log.d(PREPARATION_TAG, "Seeding an assignment due outside the grading period (30 days ago) in the 'Custom Group' assignment group for '${course.name}' course.")
+        val assignmentOutsidePeriod = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 10.0, dueAt = 30.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), assignmentGroupId = customGroup.id)
+
+        Log.d(PREPARATION_TAG, "Seeding a quiz assignment due within the grading period (2 days from now) for '${course.name}' course.")
+        val quizAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 10.0, dueAt = 2.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_QUIZ))
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to its Assignments Tab.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header shows '${gradingPeriod.title}' as the current grading period is pre-selected by default.")
+        assignmentListPage.assertGradingPeriodLabel(gradingPeriod.title)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentInPeriod.name}' and '${quizAssignment.name}' are displayed by default (within the grading period) and '${assignmentOutsidePeriod.name}' is NOT.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod, needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+
+        Log.d(STEP_TAG, "Switch the grading period filter to 'All Grading Periods'.")
+        assignmentListPage.filterAssignments("Grading Period", AssignmentListPage.FilterOption.GradingPeriod("All Grading Periods"))
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header now shows 'All'.")
+        assignmentListPage.assertGradingPeriodLabel()
+
+        Log.d(ASSERTION_TAG, "Assert that all assignments are visible when 'All Grading Periods' is selected.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+
+        Log.d(STEP_TAG, "Filter the Assignment Filter to 'Needs Grading'.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NeedsGrading)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${assignmentInPeriod.name}' is displayed (it has an ungraded submission) and '${assignmentOutsidePeriod.name}' and '${quizAssignment.name}' are NOT.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod, needsGradingCount = 1)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+        assignmentListPage.assertAssignmentNotDisplayed(quizAssignment.name)
+
+        Log.d(STEP_TAG, "Filter the Assignment Filter to 'Not Submitted'.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NoSubmission)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentOutsidePeriod.name}' and '${quizAssignment.name}' are displayed (no submission) and '${assignmentInPeriod.name}' is NOT.")
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentInPeriod.name)
+
+        Log.d(STEP_TAG, "Reset the Assignment Filter back to 'All Assignments'.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.All)
+
+        Log.d(STEP_TAG, "Click on '${quizAssignment.name}' assignment to navigate to its details page.")
+        assignmentListPage.clickAssignment(quizAssignment)
+        quizDetailsPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Edit Page and unpublish '${quizAssignment.name}' by toggling the publish switch.")
+        quizDetailsPage.openEditPage()
+        editAssignmentDetailsPage.clickPublishSwitch()
+        editAssignmentDetailsPage.saveAssignment()
+        quizDetailsPage.assertQuizUnpublished()
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment List Page.")
+        Espresso.pressBack()
+        composeTestRule.waitForIdle()
+
+        Log.d(ASSERTION_TAG, "Assert that '${quizAssignment.name}' is now shown as 'Unpublished' on the assignment list.")
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.assertPublishedState(quizAssignment.name, false)
+
+        Log.d(STEP_TAG, "Filter the Status Filter to 'Unpublished'.")
+        assignmentListPage.filterAssignments("Status Filter", AssignmentListPage.FilterOption.Unpublished)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${quizAssignment.name}' is displayed (it is unpublished) and the published assignments are NOT.")
+        assignmentListPage.assertHasAssignment(quizAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentInPeriod.name)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+
+        Log.d(STEP_TAG, "Filter the Status Filter to 'Published'.")
+        assignmentListPage.filterAssignments("Status Filter", AssignmentListPage.FilterOption.Published)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentInPeriod.name}' and '${assignmentOutsidePeriod.name}' are displayed (published) and '${quizAssignment.name}' is NOT (unpublished).")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+        assignmentListPage.assertAssignmentNotDisplayed(quizAssignment.name)
+
+        Log.d(STEP_TAG, "Reset the Status Filter back to 'All Assignments'.")
+        assignmentListPage.filterAssignments("Status Filter", AssignmentListPage.FilterOption.All)
+
+        Log.d(STEP_TAG, "Group assignments by 'Assignment Group'.")
+        assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.AssignmentGroup)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Assignments' and '${customGroup.name}' groups are displayed with the corresponding assignments inside.")
+        assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
+        assignmentListPage.assertAssignmentGroupDisplayed(customGroup.name)
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+
+        Log.d(STEP_TAG, "Collapse the '${customGroup.name}' assignment group.")
+        assignmentListPage.expandCollapseAssignmentGroup(customGroup.name)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentOutsidePeriod.name}' is NOT displayed when its group is collapsed.")
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentInPeriod.name}' and '${quizAssignment.name}' in the 'Assignments' group are still displayed.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+
+        Log.d(STEP_TAG, "Expand the '${customGroup.name}' group back.")
+        assignmentListPage.expandCollapseAssignmentGroup(customGroup.name)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentOutsidePeriod.name}' is visible again.")
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+
+        Log.d(STEP_TAG, "Group assignments by 'Assignment Type'.")
+        assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.AssignmentType)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Assignments' and 'Quizzes' type groups are displayed with the corresponding assignments inside.")
+        assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
+        assignmentListPage.assertAssignmentGroupDisplayed("Quizzes")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+
+        Log.d(STEP_TAG, "Collapse the 'Quizzes' type group.")
+        assignmentListPage.expandCollapseAssignmentGroup("Quizzes")
+
+        Log.d(ASSERTION_TAG, "Assert that '${quizAssignment.name}' is NOT displayed when the 'Quizzes' type group is collapsed.")
+        assignmentListPage.assertAssignmentNotDisplayed(quizAssignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the text entry assignments in the 'Assignments' group are still displayed.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+
+        Log.d(STEP_TAG, "Expand the 'Quizzes' type group back.")
+        assignmentListPage.expandCollapseAssignmentGroup("Quizzes")
+
+        Log.d(ASSERTION_TAG, "Assert that '${quizAssignment.name}' is visible again.")
+        assignmentListPage.assertHasAssignment(quizAssignment)
+
+        Log.d(STEP_TAG, "Switch back to the '${gradingPeriod.title}' grading period.")
+        assignmentListPage.filterAssignments("Grading Period", AssignmentListPage.FilterOption.GradingPeriod(gradingPeriod.title))
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header shows '${gradingPeriod.title}' again.")
+        assignmentListPage.assertGradingPeriodLabel(gradingPeriod.title)
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignmentInPeriod.name}' and '${quizAssignment.name}' are displayed (within the period) and '${assignmentOutsidePeriod.name}' is NOT.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod, needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(quizAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testMultipleAssignmentsWithSearchE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding a 'Letter Grade' assignment for '${course.name}' course.")
+        val letterGradeAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Submit '${letterGradeAssignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, letterGradeAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
+
+        Log.d(PREPARATION_TAG, "Seeding a 'Points' assignment for '${course.name}' course.")
+        val pointsAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Submit '${pointsAssignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to its Assignments Tab.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that both '${letterGradeAssignment.name}' and '${pointsAssignment.name}' assignments are displayed, each with 1 submission needing grading.")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment, needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(pointsAssignment, needsGradingCount = 1)
+
+        Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
+        assignmentListPage.searchBar.clickOnSearchButton()
+
+        Log.d(STEP_TAG, "Type the name of the '${letterGradeAssignment.name}' assignment into the search bar.")
+        assignmentListPage.searchBar.typeToSearchBar(letterGradeAssignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${letterGradeAssignment.name}' is displayed and '${pointsAssignment.name}' is not.")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(pointsAssignment.name)
+
+        Log.d(STEP_TAG, "Clear the search input.")
+        assignmentListPage.searchBar.clickOnClearSearchButton()
+
+        Log.d(ASSERTION_TAG, "Assert that both assignments are visible again after clearing the search.")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment, needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(pointsAssignment, needsGradingCount = 1)
+
+        Log.d(STEP_TAG, "Type a search query that does not match any assignment.")
+        assignmentListPage.searchBar.typeToSearchBar("xxxxxxxxxxx")
+
+        Log.d(ASSERTION_TAG, "Assert that the empty state ('No Assignments') view is displayed when no assignments match the search query.")
+        assignmentListPage.assertDisplaysNoAssignmentsView()
+
+        Log.d(STEP_TAG, "Close the search bar.")
+        assignmentListPage.searchBar.pressSearchBarButton()
+
+        Log.d(ASSERTION_TAG, "Assert that both assignments are displayed again after closing the search bar.")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment, needsGradingCount = 1)
+        assignmentListPage.assertHasAssignment(pointsAssignment, needsGradingCount = 1)
+    }
 }
