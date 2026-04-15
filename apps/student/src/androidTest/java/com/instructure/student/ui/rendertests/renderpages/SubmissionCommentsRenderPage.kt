@@ -23,8 +23,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.DirectlyPopulateEditText
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.DirectlyPopulateEditText
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed

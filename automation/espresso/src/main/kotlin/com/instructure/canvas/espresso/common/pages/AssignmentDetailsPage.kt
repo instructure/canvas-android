@@ -41,10 +41,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvas.espresso.withResourceIdContaining
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.stringContainsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.utils.withResourceIdContaining
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions

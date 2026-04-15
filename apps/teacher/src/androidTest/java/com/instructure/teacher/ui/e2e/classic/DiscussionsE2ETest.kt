@@ -24,7 +24,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.espresso.getCustomDateCalendar
 import com.instructure.teacher.ui.utils.TeacherComposeTest

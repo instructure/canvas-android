@@ -25,7 +25,7 @@ import com.instructure.canvas.espresso.StringConstants.HelpMenu
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.extensions.seedData

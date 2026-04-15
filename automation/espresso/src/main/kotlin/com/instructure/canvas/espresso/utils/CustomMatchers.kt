@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.canvas.espresso
+package com.instructure.canvas.espresso.utils
 
 import android.content.Intent
 import android.content.res.Resources
@@ -41,10 +41,8 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.util.HumanReadables
 import androidx.test.espresso.util.TreeIterables
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
@@ -54,14 +52,12 @@ import com.instructure.espresso.ActivityHelper
 import com.instructure.pandautils.utils.ColorUtils
 import junit.framework.AssertionFailedError
 import org.hamcrest.BaseMatcher
-import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 
-//
-// This is a repo for useful custom matchers
-//
+// This is file is for Espresso and/or Compose UI matchers.
 
 /**
  * Matches if the view is a TextView and its text contains [textToMatch], case insensitive
@@ -83,8 +79,10 @@ fun containsTextCaseInsensitive(textToMatch: String) : Matcher<View> {
     }
 }
 
-// Similar to containsTextCaseInsensitive(), but operates on a String rather than a TextView.
-// Originally created to combat situations where a content description contains garbage characters.
+/**
+ * Similar to containsTextCaseInsensitive(), but operates on a String rather than a TextView.
+ * Originally created to combat situations where a content description contains garbage characters.
+ */
 fun stringContainsTextCaseInsensitive(textToMatch: String) : Matcher<String> {
     return object: BaseMatcher<String>() {
         override fun matches(item: Any?): Boolean {
@@ -103,28 +101,12 @@ fun stringContainsTextCaseInsensitive(textToMatch: String) : Matcher<String> {
 }
 
 /**
- * Returns true if the element with the given resource id is currently displayed, false otherwise.
+ * Returns if the radio button is checked or not.
+ * @param checked True if the radio button should be checked, false otherwise.
+ * @param index The index of the radio button to check.
+ * @param getText A function to get the text of the checked radio button.
  */
-fun isElementDisplayed(resourceId: Int) : Boolean {
-    try {
-        onView(withId(resourceId)).check(matches(isDisplayed()))
-        return true
-    }
-    catch(t: Throwable) {
-        return false
-    }
-}
-
-inline fun <reified T : View> typedViewCondition(crossinline onCheckCondition: (T) -> Boolean): Matcher<View> {
-    return object : BaseMatcher<View>() {
-        override fun matches(item: Any?): Boolean = (item as? T)?.let(onCheckCondition) ?: false
-        override fun describeTo(description: Description?) {
-            description?.appendText("matches view type '${T::class.java.simpleName}' and fulfills the given condition")
-        }
-    }
-}
-
-fun checked(checked: Boolean = true, index: Int = 0, getText: (String) -> Unit = {}): BoundedMatcher<View, RadioButton> {
+fun isRadioButtonChecked(checked: Boolean = true, index: Int = 0, getText: (String) -> Unit = {}): BoundedMatcher<View, RadioButton> {
     return object : BoundedMatcher<View, RadioButton>(RadioButton::class.java) {
         var currentIndex = 0
         override fun describeTo(description: Description) {
@@ -378,54 +360,9 @@ object SwipeRefreshLayoutMatchers {
     }
 }
 
-object ViewSizeMatcher {
-    fun hasWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
-        override fun describeTo(description: Description) {
-            description.appendText("has a width of ${pixels}px")
-        }
-
-        override fun matchesSafely(view: View): Boolean = view.width == pixels
-    }
-
-    fun hasHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
-        override fun describeTo(description: Description) {
-            description.appendText("has a height of ${pixels}px")
-        }
-
-        override fun matchesSafely(view: View): Boolean = view.height == pixels
-    }
-
-    fun hasMinWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
-        override fun describeTo(description: Description) {
-            description.appendText("has a minimum width of ${pixels}px")
-        }
-
-        override fun matchesSafely(view: View): Boolean = view.width >= pixels
-    }
-
-    fun hasMinHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
-        override fun describeTo(description: Description) {
-            description.appendText("has a minimum height of ${pixels}px")
-        }
-
-        override fun matchesSafely(view: View): Boolean = view.height >= pixels
-    }
-}
-
-fun ViewInteraction.assertLineCount(lineCount: Int) {
-    val matcher = object : TypeSafeMatcher<View>() {
-        override fun matchesSafely(item: View): Boolean {
-            return (item as TextView).lineCount == lineCount
-        }
-
-        override fun describeTo(description: Description) {
-            description.appendText("isTextInLines")
-        }
-    }
-    check(matches(matcher))
-}
-
-
+/**
+ * Get the view reference from a ViewInteraction
+ */
 fun ViewInteraction.getView(): View {
     lateinit var matchingView: View
     perform(object : ViewAction {
@@ -442,60 +379,11 @@ fun ViewInteraction.getView(): View {
     return matchingView
 }
 
-fun ViewInteraction.assertCompletelyAbove(other: ViewInteraction) {
-    val view1 = getView()
-    val view2 = other.getView()
-    val location1 = view1.locationOnScreen
-    val location2 = view2.locationOnScreen
-    val isAbove = location1[1] + view1.height <= location2[1]
-    assertThat("completely above", isAbove, `is`(true))
-}
-
-fun ViewInteraction.assertCompletelyBelow(other: ViewInteraction) {
-    val view1 = getView()
-    val view2 = other.getView()
-    val location1 = view1.locationOnScreen
-    val location2 = view2.locationOnScreen
-    val isAbove = location2[1] + view2.height <= location1[1]
-    assertThat("completely below", isAbove, `is`(true))
-}
-
-val View.locationOnScreen get() = IntArray(2).apply { getLocationOnScreen(this) }
-
-
 /**
- * Asserts that the TextView uses the specified font size in scaled pixels
+ * Custom matcher for intent and their data
+ * @param intentType The type of the specific intent
+ * @param dataMatcher The data to match in the intent
  */
-fun ViewInteraction.assertFontSizeSP(expectedSP: Float) {
-    val matcher = object : TypeSafeMatcher<View>(View::class.java) {
-
-        override fun matchesSafely(target: View): Boolean {
-            if (target !is TextView) return false
-            val actualSP = target.textSize / target.getResources().displayMetrics.scaledDensity
-            return actualSP.compareTo(expectedSP) == 0
-        }
-
-        override fun describeTo(description: Description) {
-            description.appendText("with fontSize: ${expectedSP}px")
-        }
-    }
-    check(matches(matcher))
-}
-
-fun ViewInteraction.assertIsRefreshing(isRefreshing: Boolean) {
-    val matcher = object : BoundedMatcher<View, SwipeRefreshLayout>(SwipeRefreshLayout::class.java) {
-
-        override fun describeTo(description: Description) {
-            description.appendText(if (isRefreshing) "is refreshing" else "is not refreshing")
-        }
-
-        override fun matchesSafely(view: SwipeRefreshLayout): Boolean {
-            return view.isRefreshing == isRefreshing
-        }
-    }
-    check(matches(matcher))
-}
-
 class IntentActionMatcher(private val intentType: String, private val dataMatcher: String) : TypeSafeMatcher<Intent>() {
 
     override fun describeTo(description: Description?) {
@@ -507,13 +395,13 @@ class IntentActionMatcher(private val intentType: String, private val dataMatche
     }
 }
 
-// Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
 /**
  * Matches ImageView (or ImageButton) with the drawable associated with [resourceId].  If [resourceId] < 0, will
  * match against "no drawable" / "drawable is null".
  *
- * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
- * prior to matching.
+ * Source: https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
+ *
+ * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored prior to matching.
  */
 class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(
     ImageView::class.java) {
@@ -552,7 +440,7 @@ class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : Ty
 
 /**
  * Matches views whose resource ID contains the specified substring.
- * Useful for matching PSPDFKit or other third-party library views with dynamic resource IDs.
+ * Useful for matching PSPDFKit (aka. Nutrient) or other third-party library views with dynamic resource IDs.
  */
 fun withResourceIdContaining(substring: String) = object : TypeSafeMatcher<View>() {
     override fun describeTo(description: Description) {
@@ -566,5 +454,56 @@ fun withResourceIdContaining(substring: String) = object : TypeSafeMatcher<View>
             ""
         }
         return resourceId.contains(substring, ignoreCase = true)
+    }
+}
+
+/**
+ * Returns a matcher for the SwipeRefreshLayout if one is available, otherwise null.
+ */
+fun getSwipeRefreshLayoutMatcher(): Matcher<View>? {
+    val swipeRefreshLayoutMatcher = allOf(isAssignableFrom(SwipeRefreshLayout::class.java), isDisplayed())
+    try {
+        onView(swipeRefreshLayoutMatcher).check(matches(isDisplayed()));
+        return swipeRefreshLayoutMatcher
+    }
+    catch(e: Exception) {
+        return null
+    }
+}
+
+/**
+ * This object collects the different view size matchers.
+ */
+object ViewSizeMatcher {
+    fun hasWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a width of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.width == pixels
+    }
+
+    fun hasHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a height of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.height == pixels
+    }
+
+    fun hasMinWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a minimum width of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.width >= pixels
+    }
+
+    fun hasMinHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a minimum height of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.height >= pixels
     }
 }

@@ -17,8 +17,8 @@
 package com.instructure.student.ui.pages.compose
 
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import com.instructure.canvas.espresso.TypeInRCETextEditor
-import com.instructure.canvas.espresso.explicitClick
+import com.instructure.canvas.espresso.utils.TypeInRCETextEditor
+import com.instructure.canvas.espresso.utils.explicitClick
 import com.instructure.composetest.clickToolbarIconButton
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText

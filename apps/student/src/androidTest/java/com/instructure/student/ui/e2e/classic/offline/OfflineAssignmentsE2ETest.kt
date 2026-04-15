@@ -24,8 +24,8 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
-import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
