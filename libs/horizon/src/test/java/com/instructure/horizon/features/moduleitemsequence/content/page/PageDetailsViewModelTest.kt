@@ -20,8 +20,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.models.DataResult
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.domain.usecase.GetPageDetailsUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository
@@ -79,7 +79,7 @@ class PageDetailsViewModelTest {
         objectId = testPage.id.toString(),
         objectType = "Page",
         reaction = listOf("Important"),
-        highlightData = null
+        highlightData = ""
     )
 
     private val testNotesResponse = QueryNotesQuery.Notes(

@@ -172,10 +172,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test assignment with submission shows submission details`() = runTest {
         val submission = Submission(attempt = 1L, workflowState = "submitted")
-        val assignmentWithSubmission = testAssignment.copy(
-            submission = submission
-        )
-        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithSubmission
+        coEvery { getSubmissionHistoryUseCase(any()) } returns listOf(submission)
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,

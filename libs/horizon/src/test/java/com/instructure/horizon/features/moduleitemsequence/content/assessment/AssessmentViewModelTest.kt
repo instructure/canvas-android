@@ -17,7 +17,13 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assessment
 
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
@@ -43,7 +49,9 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AssessmentViewModelTest {
-    private val repository: AssessmentRepository = mockk(relaxed = true)
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
+    private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface = mockk(relaxed = true)
+    private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -60,8 +68,11 @@ class AssessmentViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { savedStateHandle.get<Long>(ModuleItemContent.Assignment.ASSIGNMENT_ID) } returns assignmentId
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns courseId
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignment
-        coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
+        coEvery { getAssignmentDetailsUseCase(any()) } returns testAssignment
+        coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns
+            DataResult.Success(LTITool(url = "https://lti.url"))
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns
+            DataResult.Success(AuthenticatedSession(sessionUrl = "https://authenticated.url"))
     }
 
     @After
@@ -76,7 +87,7 @@ class AssessmentViewModelTest {
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
         assertEquals("Test Quiz", viewModel.uiState.value.assessmentName)
-        coVerify { repository.getAssignment(assignmentId, courseId, false) }
+        coVerify { getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId)) }
     }
 
     @Test
@@ -89,12 +100,11 @@ class AssessmentViewModelTest {
         assertEquals("https://authenticated.url", viewModel.uiState.value.urlToLoad)
         viewModel.uiState.value.onAssessmentLoaded()
         assertFalse(viewModel.uiState.value.assessmentLoading)
-        coVerify { repository.authenticateUrl("https://example.com/quiz/1") }
     }
 
     @Test
     fun `Test start quiz with authentication error`() = runTest {
-        coEvery { repository.authenticateUrl(any()) } throws Exception("Auth error")
+        coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } throws Exception("Auth error")
 
         val viewModel = getViewModel()
 
@@ -148,7 +158,7 @@ class AssessmentViewModelTest {
 
     @Test
     fun `Test load error sets error state`() = runTest {
-        coEvery { repository.getAssignment(any(), any(), any()) } throws Exception("Error")
+        coEvery { getAssignmentDetailsUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
 
@@ -157,7 +167,7 @@ class AssessmentViewModelTest {
 
     @Test
     fun `Test start quiz with null assessment URL`() = runTest {
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignment.copy(url = null)
+        coEvery { getAssignmentDetailsUseCase(any()) } returns testAssignment.copy(url = null)
 
         val viewModel = getViewModel()
 
@@ -179,6 +189,6 @@ class AssessmentViewModelTest {
     }
 
     private fun getViewModel(): AssessmentViewModel {
-        return AssessmentViewModel(repository, savedStateHandle)
+        return AssessmentViewModel(getAssignmentDetailsUseCase, launchDefinitionsApi, oAuthApi, savedStateHandle)
     }
 }
