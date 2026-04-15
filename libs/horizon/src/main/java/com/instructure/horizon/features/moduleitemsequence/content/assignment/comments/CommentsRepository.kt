@@ -21,12 +21,20 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CommentsData
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.AssignmentCommentsLocalDataSource
+import com.instructure.horizon.offline.OfflineSyncRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class CommentsRepository @Inject constructor(
     private val getCommentsManager: HorizonGetCommentsManager,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
-) {
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val localDataSource: AssignmentCommentsLocalDataSource,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
+
     suspend fun getComments(
         assignmentId: Long,
         userId: Long,
@@ -36,15 +44,31 @@ class CommentsRepository @Inject constructor(
         endCursor: String? = null,
         nextPage: Boolean = false
     ): CommentsData {
-        return getCommentsManager.getComments(
-            assignmentId = assignmentId,
-            userId = userId,
-            attempt = attempt,
-            forceNetwork = forceNetwork,
-            startCursor = startCursor,
-            endCursor = endCursor,
-            nextPage = nextPage
-        )
+        return if (shouldFetchFromNetwork()) {
+            val commentsData = getCommentsManager.getComments(
+                assignmentId = assignmentId,
+                userId = userId,
+                attempt = attempt,
+                forceNetwork = forceNetwork,
+                startCursor = startCursor,
+                endCursor = endCursor,
+                nextPage = nextPage
+            )
+            if (shouldSync() && startCursor == null && endCursor == null && !nextPage) {
+                localDataSource.saveComments(assignmentId, attempt, commentsData)
+            }
+            commentsData
+        } else {
+            localDataSource.getComments(assignmentId, attempt)
+        }
+    }
+
+    suspend fun getUnreadCommentCount(assignmentId: Long, userId: Long, forceNetwork: Boolean): Int {
+        return if (shouldFetchFromNetwork()) {
+            getCommentsManager.getUnreadCommentsCount(assignmentId, userId, forceNetwork)
+        } else {
+            localDataSource.getUnreadCommentCount(assignmentId)
+        }
     }
 
     suspend fun postComment(
@@ -64,5 +88,9 @@ class CommentsRepository @Inject constructor(
             emptyList(),
             RestParams()
         )
+    }
+
+    override suspend fun sync() {
+        TODO("Not yet implemented")
     }
 }

@@ -24,4 +24,6 @@ data class HorizonFileFolderEntity(
     val id: Long,
     val url: String,
     val displayName: String,
+    val contentType: String? = null,
+    val thumbnailUrl: String? = null,
 )

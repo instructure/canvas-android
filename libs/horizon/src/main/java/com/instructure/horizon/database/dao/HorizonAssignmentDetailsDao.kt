@@ -13,27 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.database.dao
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonAssignmentDetailsEntity
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_IN_PROGRESS,
-    LEARN_MY_CONTENT_COMPLETED,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-    ASSIGNMENT_COMMENTS,
+@Dao
+interface HorizonAssignmentDetailsDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveAssignment(assignment: HorizonAssignmentDetailsEntity)
+
+    @Query("SELECT * FROM horizon_assignment_details WHERE assignmentId = :assignmentId LIMIT 1")
+    suspend fun getAssignment(assignmentId: Long): HorizonAssignmentDetailsEntity?
 }
-
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
-)

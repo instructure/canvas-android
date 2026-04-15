@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
@@ -50,6 +51,7 @@ import org.junit.Test
 class ModuleItemSequenceViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: ModuleItemSequenceRepository = mockk(relaxed = true)
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
@@ -86,7 +88,7 @@ class ModuleItemSequenceViewModelTest {
         coEvery { repository.getModuleItemSequence(any(), any(), any()) } returns ModuleItemSequence()
         coEvery { repository.getModulesWithItems(any(), any()) } returns listOf(testModule)
         coEvery { repository.getModuleItem(any(), any(), any()) } returns testModuleItem
-        coEvery { repository.getAssignment(any(), any(), any()) } returns Assignment(id = 1L)
+        coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(id = 1L)
         coEvery { repository.hasUnreadComments(any(), any()) } returns false
         coEvery { moduleItemCardStateMapper.mapModuleItemToCardState(any(), any()) } returns mockk(relaxed = true)
     }
@@ -124,17 +126,16 @@ class ModuleItemSequenceViewModelTest {
 
     @Test
     fun `Test assignment is fetched for module item`() = runTest {
-        coEvery { repository.getAssignment(any(), any(), any()) } returns Assignment(id = 123L, name = "Test Assignment")
+        coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(id = 123L, name = "Test Assignment")
 
         val viewModel = getViewModel(savedStateHandle)
 
-        coVerify { repository.getAssignment(any(), courseId, any()) }
+        coVerify { getAssignmentDetailsUseCase(any()) }
     }
 
     @Test
     fun `Test unread comments check is performed`() = runTest {
-        val assignment = Assignment(id = 123L)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignment
+        coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(id = 123L)
 
         val viewModel = getViewModel(savedStateHandle)
 
@@ -145,6 +146,7 @@ class ModuleItemSequenceViewModelTest {
         return ModuleItemSequenceViewModel(
             context,
             repository,
+            getAssignmentDetailsUseCase,
             moduleItemCardStateMapper,
             aiAssistContextProvider,
             savedStateHandle,

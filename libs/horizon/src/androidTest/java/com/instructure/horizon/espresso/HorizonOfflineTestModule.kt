@@ -19,6 +19,8 @@ import android.content.Context
 import androidx.room.Room
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
+import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
+import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
@@ -29,7 +31,9 @@ import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.di.HorizonOfflineModule
@@ -89,6 +93,18 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonFileFolderDao(db: HorizonDatabase): HorizonFileFolderDao = db.fileFolderDao()
+
+    @Provides
+    fun provideHorizonPageDao(db: HorizonDatabase): HorizonPageDao = db.pageDao()
+
+    @Provides
+    fun provideHorizonAssignmentDetailsDao(db: HorizonDatabase): HorizonAssignmentDetailsDao = db.assignmentDetailsDao()
+
+    @Provides
+    fun provideHorizonAssignmentCommentDao(db: HorizonDatabase): HorizonAssignmentCommentDao = db.assignmentCommentDao()
+
+    @Provides
+    fun provideHorizonSubmissionDao(db: HorizonDatabase): HorizonSubmissionDao = db.submissionDao()
 
     @Provides
     @HorizonHtmlParserQualifier

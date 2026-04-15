@@ -18,6 +18,9 @@ package com.instructure.horizon.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
+import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
+import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
@@ -28,8 +31,14 @@ import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonAssignmentCommentAttachmentEntity
+import com.instructure.horizon.database.entity.HorizonAssignmentCommentEntity
+import com.instructure.horizon.database.entity.HorizonAssignmentDetailsEntity
+import com.instructure.horizon.database.entity.HorizonSubmissionAttachmentEntity
+import com.instructure.horizon.database.entity.HorizonSubmissionEntity
 import com.instructure.horizon.database.entity.HorizonCourseAssignmentEntity
 import com.instructure.horizon.database.entity.HorizonCourseAssignmentGroupEntity
 import com.instructure.horizon.database.entity.HorizonCourseEntity
@@ -44,6 +53,7 @@ import com.instructure.horizon.database.entity.HorizonLearnCollectionItemEntity
 import com.instructure.horizon.database.entity.HorizonLearnItemEntity
 import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
 import com.instructure.horizon.database.entity.HorizonLocalFileEntity
+import com.instructure.horizon.database.entity.HorizonPageEntity
 import com.instructure.horizon.database.entity.HorizonProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
@@ -68,8 +78,14 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonCourseGradeEntity::class,
         HorizonLocalFileEntity::class,
         HorizonFileFolderEntity::class,
+        HorizonPageEntity::class,
+        HorizonAssignmentDetailsEntity::class,
+        HorizonAssignmentCommentEntity::class,
+        HorizonAssignmentCommentAttachmentEntity::class,
+        HorizonSubmissionEntity::class,
+        HorizonSubmissionAttachmentEntity::class,
     ],
-    version = 7,
+    version = 13,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -84,4 +100,8 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun courseScoreDao(): HorizonCourseScoreDao
     abstract fun localFileDao(): HorizonLocalFileDao
     abstract fun fileFolderDao(): HorizonFileFolderDao
+    abstract fun pageDao(): HorizonPageDao
+    abstract fun assignmentDetailsDao(): HorizonAssignmentDetailsDao
+    abstract fun assignmentCommentDao(): HorizonAssignmentCommentDao
+    abstract fun submissionDao(): HorizonSubmissionDao
 }

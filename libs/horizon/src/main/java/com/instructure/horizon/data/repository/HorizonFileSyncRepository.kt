@@ -37,6 +37,10 @@ class HorizonFileSyncRepository @Inject constructor(
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
 
+    suspend fun downloadFile(fileId: Long, courseId: Long) {
+        downloadInternalFile(fileId, courseId)
+    }
+
     suspend fun syncHtmlFiles(courseId: Long, parsingResult: HtmlParsingResult) = withContext(Dispatchers.IO) {
         val alreadyDownloadedIds = localFileDao.findByCourseId(courseId).map { it.id }.toSet()
         val internalFileIdsToSync = parsingResult.internalFileIds.filterNot { alreadyDownloadedIds.contains(it) }
