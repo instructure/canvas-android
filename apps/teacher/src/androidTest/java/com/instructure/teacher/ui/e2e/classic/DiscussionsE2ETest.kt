@@ -105,8 +105,8 @@ class DiscussionsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '$discussionEntryMessage' discussion entry message is displayed.")
         discussionDetailsPage.assertDiscussionEntryMessageDisplayed(discussionEntryMessage)
 
-        Log.d(ASSERTION_TAG, "Assert that there is 1 reply and that is unread.")
-        discussionDetailsPage.assertReplyCounter(1, 1)
+        Log.d(ASSERTION_TAG, "Assert that there is '1 Reply' for the opened discussion'.")
+        discussionDetailsPage.assertReplyCounter(1)
 
         Log.d(STEP_TAG, "Expand the replies and wait for the reply to be displayed.")
         discussionDetailsPage.clickOnExpandRepliesButton()
