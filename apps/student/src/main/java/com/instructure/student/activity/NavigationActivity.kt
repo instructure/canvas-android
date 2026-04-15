@@ -134,7 +134,6 @@ import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityNavigationBinding
@@ -475,6 +474,25 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             // When the offline indicator is visible it sits between the content area and the bottom bar,
             // so child screens must not add extra bottom padding — that would create a gap above it.
             val consumeBottom = offlineIndicator.root.isVisible
+
+            // The IME inset is measured from the screen bottom, but the fullscreen CoordinatorLayout
+            // ends above the views below it (offline indicator, divider, bottom bar). Subtract their
+            // combined height so child screens only pad by the amount the keyboard actually overlaps
+            // the content area — otherwise a blank gap appears above the keyboard.
+            //
+            // Siblings of fullScreenCoordinatorLayout (bottomBarContainer, offlineIndicator) receive
+            // raw system insets independently — the modifications returned by fullscreen's listener
+            // do not propagate to them. So bottomBarContainer always sets offlineIndicator.bottomMargin
+            // = navigationBars.bottom when the bottom bar is hidden. We mirror that logic here so that
+            // heightBelowContent accounts for the offline indicator's nav-bar clearance margin.
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val expectedBottomBarHeight = if (bottomBarContainer.isVisible) (bottomBarContainer.minimumHeight + navigationBars.bottom) else 0
+            val expectedOfflineMargin = if (bottomBarContainer.isVisible) 0 else navigationBars.bottom
+            val heightBelowContent = expectedBottomBarHeight +
+                (if (bottomBarDivider.isVisible) bottomBarDivider.height else 0) +
+                (if (offlineIndicator.root.isVisible) offlineIndicator.root.height + expectedOfflineMargin else 0)
+            val adjustedImeBottom = maxOf(0, ime.bottom - heightBelowContent)
+
             WindowInsetsCompat.Builder(insets)
                 .setInsets(
                     WindowInsetsCompat.Type.navigationBars(),
@@ -493,6 +511,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         0, // Consume right
                         displayCutout.bottom
                     )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.ime(),
+                    Insets.of(0, 0, 0, adjustedImeBottom)
                 )
                 .build()
         }
@@ -518,7 +540,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     this.leftMargin = leftInset
                     this.rightMargin = rightInset
                     this.bottomMargin = 0
-                    height = 56.toPx + navigationBars.bottom
+                    height = view.minimumHeight + navigationBars.bottom
                 }
             } else {
                 // In portrait, extend the height to draw behind the Android navigation bar (edge-to-edge)
@@ -533,7 +555,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     this.leftMargin = 0
                     this.rightMargin = 0
                     this.bottomMargin = 0
-                    height = 56.toPx + navigationBars.bottom
+                    height = view.minimumHeight + navigationBars.bottom
                 }
             }
 

@@ -25,9 +25,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -110,12 +107,7 @@ class EditDashboardFragment : BaseCanvasFragment() {
                 editDashboardRouter.routeCourse(action.canvasContext)
             }
             is EditDashboardItemAction.ShowSnackBar -> {
-                val snackbar = Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG)
-                // The CoordinatorLayout is already positioned above the bottom bar, so the Snackbar
-                // must not apply navigationBars.bottom as extra margin (it would double-count the space).
-                ViewCompat.setOnApplyWindowInsetsListener(snackbar.view) { _, _ -> WindowInsetsCompat.CONSUMED }
-                snackbar.show()
-                view?.announceForAccessibility(requireContext().getString(action.res))
+                editDashboardRouter.showSnackbar(this, action.res)
             }
             else -> {}
         }
