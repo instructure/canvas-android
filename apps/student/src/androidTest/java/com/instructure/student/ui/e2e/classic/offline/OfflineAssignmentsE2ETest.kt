@@ -34,6 +34,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -188,7 +189,10 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the assignment '${gradedAssignment.name}' is displayed, " +
                 "while '${notSubmittedAssignment.name}', '${submittedAssignment.name}', and '${otherTypeAssignment.name}' are not displayed on the assignment list.")
-        assignmentListPage.assertHasAssignment(gradedAssignment)
+
+        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry block here because the grading status might not be updated to 'Graded' immediately as grading sometimes slow on beta.
+            assignmentListPage.assertHasAssignment(gradedAssignment)
+        }
         assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(submittedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
