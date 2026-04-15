@@ -633,7 +633,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentDetailsPage.assertDueForString("1 student")
 
         Log.d(ASSERTION_TAG, "Assert that the 'Not Submitted' section counter is 1 (out of 1).")
-        refresh() // This should be removed once MBL-18991 bug will be fixed (because this should be refreshed automatically after saving the assignment)
         assignmentDetailsPage.assertNotSubmitted(1,1)
 
         Log.d(STEP_TAG, "Open the 'All Submissions' page.")
@@ -676,8 +675,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentDetailsPage.assertMultipleDueDates()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Not Submitted' section counter is 1 (out of 1).")
-        refresh() // This should be removed once MBL-18991 bug will be fixed (because this should be refreshed automatically after saving the assignment)
-        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry logic here because sometimes the 'Assign To' update on an assignment needs some time to propagate.
+        retryWithIncreasingDelay(times = 50, maxDelay = 6000, catchBlock = { refresh() }) { // We need this retry logic here because sometimes the 'Assign To' update on an assignment needs some time to propagate.
             assignmentDetailsPage.assertNotSubmitted(2, 2)
         }
 
