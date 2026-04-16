@@ -38,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 290
-        versionName = '8.7.0'
+        versionCode = 291
+        versionName = '8.7.1'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -237,6 +237,7 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':interactions')
     implementation project(path: ':horizon')
+    implementation project(path: ':ngc')
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

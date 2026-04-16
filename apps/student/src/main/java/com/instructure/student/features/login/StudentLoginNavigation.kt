@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.ngc.NGCActivity
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.widget.NotificationWidgetProvider
 import com.instructure.student.widget.grades.list.GradesWidgetReceiver
@@ -57,6 +58,14 @@ class StudentLoginNavigation(
             Experience.Career -> {
                 disableWidgets(activity)
                 val intent = Intent(activity, HorizonActivity::class.java)
+                activity.intent?.extras?.let { extras ->
+                    intent.putExtras(extras)
+                }
+                intent
+            }
+            Experience.NextGenCanvas -> {
+                disableWidgets(activity)
+                val intent = Intent(activity, NGCActivity::class.java)
                 activity.intent?.extras?.let { extras ->
                     intent.putExtras(extras)
                 }

@@ -17,13 +17,13 @@
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Resources
-import androidx.fragment.app.FragmentActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
@@ -32,7 +32,7 @@ import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignme
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesParams
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
-import com.instructure.pandautils.compose.composables.SubmissionStateLabel
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
@@ -49,13 +49,13 @@ import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.unmockkStatic
-import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -78,7 +78,6 @@ class ForecastWidgetViewModelTest {
     private val loadCourseUseCase: LoadCourseUseCase = mockk(relaxed = true)
     private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase = mockk(relaxed = true)
     private val assignmentWeightCalculator: AssignmentWeightCalculator = mockk(relaxed = true)
-    private val forecastWidgetRouter: ForecastWidgetRouter = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -124,7 +123,6 @@ class ForecastWidgetViewModelTest {
             loadCourseUseCase = loadCourseUseCase,
             loadAssignmentGroupsUseCase = loadAssignmentGroupsUseCase,
             assignmentWeightCalculator = assignmentWeightCalculator,
-            forecastWidgetRouter = forecastWidgetRouter,
             apiPrefs = apiPrefs,
             crashlytics = crashlytics,
             resources = resources
@@ -345,8 +343,7 @@ class ForecastWidgetViewModelTest {
     }
 
     @Test
-    fun `onAssignmentClick calls router`() = runTest {
-        val activity: FragmentActivity = mockk(relaxed = true)
+    fun `onAssignmentClick emits navigation event`() = runTest {
         val assignment = mockk<Assignment>(relaxed = true) {
             every { id } returns 123L
             every { courseId } returns 456L
@@ -361,15 +358,25 @@ class ForecastWidgetViewModelTest {
         viewModel = createViewModel()
         advanceUntilIdle()
 
-        val assignmentItem = viewModel.uiState.value.missingAssignments.first()
-        assignmentItem.onClick?.invoke(activity)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Forecast>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { forecastWidgetRouter.routeToAssignmentDetails(activity, 123L, 456L) }
+        val assignmentItem = viewModel.uiState.value.missingAssignments.first()
+        assignmentItem.onClick?.invoke()
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Forecast.NavigateToAssignment
+        assertEquals(123L, event.assignmentId)
+        assertEquals(456L, event.courseId)
+
+        job.cancel()
     }
 
     @Test
-    fun `onPlannerItemClick calls router`() = runTest {
-        val activity: FragmentActivity = mockk(relaxed = true)
+    fun `onPlannerItemClick emits navigation event`() = runTest {
         val expectedUrl = "https://example.com/planner/item"
         val plannerItem = mockk<PlannerItem>(relaxed = true) {
             every { courseId } returns 789L
@@ -390,10 +397,20 @@ class ForecastWidgetViewModelTest {
         viewModel = createViewModel()
         advanceUntilIdle()
 
-        val assignmentItem = viewModel.uiState.value.dueAssignments.first()
-        assignmentItem.onClick?.invoke(activity)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Forecast>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { forecastWidgetRouter.routeToPlannerItem(activity, expectedUrl) }
+        val assignmentItem = viewModel.uiState.value.dueAssignments.first()
+        assignmentItem.onClick?.invoke()
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Forecast.NavigateToPlannerItem
+        assertEquals(expectedUrl, event.htmlUrl)
+
+        job.cancel()
     }
 
     @Test
