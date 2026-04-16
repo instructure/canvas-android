@@ -48,6 +48,7 @@ object Versions {
     const val LIVEDATA = "1.9.0"
     const val REORDERABLE = "2.4.0"
     const val MLKIT_DOCUMENT_SCANNER = "16.0.0"
+    const val MLKIT_GENAI_PROMPT = "1.0.0-beta1"
 }
 
 object Libs {
@@ -97,6 +98,7 @@ object Libs {
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
     const val MATERIAL_DESIGN = "com.google.android.material:material:1.13.0"
     const val MLKIT_DOCUMENT_SCANNER = "com.google.android.gms:play-services-mlkit-document-scanner:${Versions.MLKIT_DOCUMENT_SCANNER}"
+    const val MLKIT_GENAI_PROMPT = "com.google.mlkit:genai-prompt:${Versions.MLKIT_GENAI_PROMPT}"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"

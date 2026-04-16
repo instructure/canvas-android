@@ -244,6 +244,7 @@ dependencies {
     implementation project(path: ':llm-llamacpp')
     implementation project(path: ':llm-litert')
     implementation project(path: ':ngc')
+    implementation Libs.MLKIT_GENAI_PROMPT
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

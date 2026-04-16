@@ -17,10 +17,19 @@
 package com.instructure.student.features.pages.details
 
 import android.os.Bundle
+import android.text.Html as AndroidHtml
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
 import androidx.lifecycle.lifecycleScope
+import com.google.mlkit.genai.common.FeatureStatus
+import com.google.mlkit.genai.prompt.Generation
+import com.google.mlkit.genai.prompt.TextPart
+import com.google.mlkit.genai.prompt.generateContentRequest
+import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.builders.RestBuilder
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
@@ -136,6 +145,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getCanvasWebView()?.onExplainTextSelected = { selectedText -> explainText(selectedText) }
         getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
             override fun launchInternalWebViewFragment(url: String) = loadInternalWebView(activity, makeRoute(canvasContext, url, isLTITool))
@@ -261,6 +271,101 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         toolbar.title = title()
 
         checkCanEdit()
+    }
+
+    private fun explainText(selectedText: String) {
+        val findingText = getString(com.instructure.pandares.R.string.findingRelevantPages)
+        val bottomSheet = ExplainBottomSheet().apply {
+            this.selectedText = selectedText
+            this.statusText = findingText
+        }
+        bottomSheet.show(childFragmentManager, ExplainBottomSheet.TAG)
+
+        lifecycleScope.tryLaunch {
+            val generativeModel = Generation.getClient()
+            if (generativeModel.checkStatus() != FeatureStatus.AVAILABLE) {
+                bottomSheet.isLoading = false
+                bottomSheet.explanationText = getString(com.instructure.pandares.R.string.aiUnavailable)
+                return@tryLaunch
+            }
+
+            // Step 1: Fetch page titles and ask which are relevant
+            val params = RestParams(isForceReadFromNetwork = true)
+            val pagesApi = RestBuilder().build(PageAPI.PagesInterface::class.java, params)
+            val pagesResult = pagesApi.getFirstPagePages(canvasContext.id, "courses", params)
+            val allPages = pagesResult.dataOrNull.orEmpty()
+
+            if (allPages.isEmpty()) {
+                bottomSheet.statusText = getString(com.instructure.pandares.R.string.generatingExplanation)
+                generativeModel.generateContentStream(
+                    generateContentRequest(TextPart("Explain in simple terms: \"$selectedText\"")) {
+                        temperature = 0.3f
+                        maxOutputTokens = 256
+                    }
+                ).collect { chunk ->
+                    val token = chunk.candidates.firstOrNull()?.text ?: ""
+                    bottomSheet.explanationText += token
+                }
+                bottomSheet.isLoading = false
+                return@tryLaunch
+            }
+
+            val titlesPrompt = buildString {
+                append("Which of these course pages are most relevant to explain: \"$selectedText\"?\n\nPages:\n")
+                allPages.forEachIndexed { i, p -> append("${i + 1}. ${p.title}\n") }
+                append("\nReturn only the numbers of the 1-2 most relevant pages, comma-separated.")
+            }
+
+            val pickResponse = generativeModel.generateContent(
+                generateContentRequest(TextPart(titlesPrompt)) {
+                    temperature = 0.1f
+                    maxOutputTokens = 20
+                }
+            )
+            val pickText = pickResponse.candidates.firstOrNull()?.text ?: ""
+            Log.d("ExplainFeature", "Pick response: $pickText")
+
+            val indices = pickText.replace(Regex("[^0-9,]"), "")
+                .split(",")
+                .mapNotNull { it.trim().toIntOrNull() }
+                .filter { it in 1..allPages.size }
+                .map { it - 1 }
+                .take(2)
+
+            // Step 2: Fetch relevant page bodies and explain
+            bottomSheet.statusText = getString(com.instructure.pandares.R.string.generatingExplanation)
+
+            val contextParts = buildString {
+                for (idx in indices) {
+                    val p = allPages[idx]
+                    val detailResult = pagesApi.getDetailedPage("courses", canvasContext.id, p.url ?: continue, params)
+                    val body = detailResult.dataOrNull?.body ?: continue
+                    val plainText = AndroidHtml.fromHtml(body, AndroidHtml.FROM_HTML_MODE_COMPACT).toString().trim()
+                    append("--- ${p.title} ---\n${plainText.take(1000)}\n\n")
+                }
+            }
+
+            val explainPrompt = if (contextParts.isNotBlank()) {
+                "Explain in simple terms: \"$selectedText\"\n\nContext from course pages:\n$contextParts"
+            } else {
+                "Explain in simple terms: \"$selectedText\""
+            }
+
+            generativeModel.generateContentStream(
+                generateContentRequest(TextPart(explainPrompt)) {
+                    temperature = 0.3f
+                    maxOutputTokens = 256
+                }
+            ).collect { chunk ->
+                val token = chunk.candidates.firstOrNull()?.text ?: ""
+                bottomSheet.explanationText += token
+            }
+            bottomSheet.isLoading = false
+        } catch {
+            Log.e("ExplainFeature", "Explain failed", it)
+            bottomSheet.isLoading = false
+            bottomSheet.explanationText = "Something went wrong. Please try again."
+        }
     }
 
     /**

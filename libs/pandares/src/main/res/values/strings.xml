@@ -454,6 +454,12 @@
     <string name="inboxMessageFailedToOpenUrl">Failed to open url</string>
     <string name="previousMessages">Previous Messages</string>
     <string name="suggestingReplies">Suggesting replies…</string>
+    <string name="explain">Explain</string>
+    <string name="findingRelevantPages">Finding relevant pages…</string>
+    <string name="generatingExplanation">Generating explanation…</string>
+    <string name="aiExplanation">AI Explanation</string>
+    <string name="aiExplanationDisclaimer">Generated on-device. May not be accurate.</string>
+    <string name="aiUnavailable">AI features are not available on this device.</string>
     <plurals name="people">
         <item quantity="one">%d Person</item>
         <item quantity="other">%d People</item>

@@ -48,9 +48,12 @@ import android.provider.MediaStore
 import android.text.Html
 import android.util.AttributeSet
 import android.util.Patterns
+import android.view.ActionMode
 import android.view.ContextMenu
+import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.MimeTypeMap
@@ -110,6 +113,8 @@ class CanvasWebView @JvmOverloads constructor(
     private var shouldInjectStudioScript: Boolean = false
     private var currentBaseUrl: String? = null
     private var currentHtmlContent: String? = null
+
+    var onExplainTextSelected: ((String) -> Unit)? = null
 
     interface CanvasWebViewClientCallback {
         fun openMediaFromWebView(mime: String, url: String, filename: String)
@@ -987,10 +992,54 @@ class CanvasWebView @JvmOverloads constructor(
         }
     }
 
+    override fun startActionMode(callback: ActionMode.Callback, type: Int): ActionMode? {
+        if (onExplainTextSelected == null || type != ActionMode.TYPE_FLOATING) {
+            return super.startActionMode(callback, type)
+        }
+
+        val originalCallback2 = callback as? ActionMode.Callback2
+
+        val wrappedCallback = object : ActionMode.Callback2() {
+            override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean {
+                val result = callback.onCreateActionMode(mode, menu)
+                menu.add(Menu.NONE, EXPLAIN_ACTION_ID, Menu.FIRST, R.string.explain)
+                    .setIcon(R.drawable.ic_ai_sparkle)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                return result
+            }
+
+            override fun onPrepareActionMode(mode: ActionMode, menu: Menu) = callback.onPrepareActionMode(mode, menu)
+
+            override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+                if (item.itemId == EXPLAIN_ACTION_ID) {
+                    evaluateJavascript("window.getSelection().toString()") { raw ->
+                        val text = raw?.trim('"')?.replace("\\n", "\n")?.trim()
+                        if (!text.isNullOrBlank()) {
+                            onExplainTextSelected?.invoke(text)
+                        }
+                        mode.finish()
+                    }
+                    return true
+                }
+                return callback.onActionItemClicked(mode, item)
+            }
+
+            override fun onDestroyActionMode(mode: ActionMode) = callback.onDestroyActionMode(mode)
+
+            override fun onGetContentRect(mode: ActionMode, view: View, outRect: android.graphics.Rect) {
+                originalCallback2?.onGetContentRect(mode, view, outRect)
+                    ?: super.onGetContentRect(mode, view, outRect)
+            }
+        }
+
+        return super.startActionMode(wrappedCallback, type)
+    }
+
     companion object {
         private const val VIDEO_PICKER_RESULT_CODE = 1202
         private const val COPY_LINK_ID = 9357
         private const val SHARE_LINK_ID = 9358
+        private const val EXPLAIN_ACTION_ID = 9359
 
         fun getReferrer(shouldIncludeProtocol: Boolean = false): String {
             return if (shouldIncludeProtocol) ApiPrefs.fullDomain else ApiPrefs.domain
