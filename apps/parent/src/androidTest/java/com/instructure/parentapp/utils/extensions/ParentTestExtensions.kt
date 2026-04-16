@@ -25,7 +25,7 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.utils.ParentTest
 
-const val K5_SUB_ACCOUNT_ID = 181364L
+const val SUB_ACCOUNT_ID = 181364L
 
 
 fun ParentTest.tokenLogin(user: CanvasUserApiModel) {
@@ -110,7 +110,7 @@ fun seedDataForK5(
         courses = courses,
         homeroomCourses = homeroomCourses,
         announcements = announcements,
-        accountId = K5_SUB_ACCOUNT_ID
+        accountId = SUB_ACCOUNT_ID
     )
     val data = SeedApi.seedDataForSubAccount(request)
 
