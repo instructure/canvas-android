@@ -53,8 +53,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.getFragmentActivity
-import java.util.Date
+ import java.util.Date
 import sdk.pendo.io.pendoTag
 
 @Composable
@@ -71,7 +70,7 @@ fun AssignmentListItem(
             .fillMaxWidth()
             .pendoTag("forecastWidget_assignmentItem", true)
             .clickable {
-                assignment.onClick?.invoke(context.getFragmentActivity())
+                assignment.onClick?.invoke()
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

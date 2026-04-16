@@ -29,12 +29,16 @@ import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -73,13 +77,16 @@ class LoginViewModelTest {
         coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Fail()
         Dispatchers.setMain(testDispatcher)
 
+        mockkObject(RemoteConfigUtils)
+        every { RemoteConfigUtils.getBoolean(RemoteConfigParam.NEXT_GEN_CANVAS) } returns false
+
         every { apiPrefs.user } returns mockk()
     }
 
     @After
     fun tearDown() {
+        unmockkAll()
         Dispatchers.resetMain()
-        
     }
 
     @Test
