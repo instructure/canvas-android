@@ -58,6 +58,7 @@ dependencies {
     // Compose dependencies for Color, Dp, FontWeight, FontFamily
     implementation(platform(Libs.COMPOSE_BOM))
     implementation(Libs.COMPOSE_UI)
+    implementation(Libs.COMPOSE_FOUNDATION)
 }
 
 /**

@@ -25,17 +25,25 @@
  * and generates Jetpack Compose source files for the InstUI Android library.
  *
  * Generated files (DO NOT EDIT manually):
- *   ../src/main/java/com/instructure/instui/primitives/InstUIColors.kt
- *   ../src/main/java/com/instructure/instui/primitives/InstUISizes.kt
- *   ../src/main/java/com/instructure/instui/primitives/InstUIFontWeights.kt
- *   ../src/main/java/com/instructure/instui/primitives/InstUIFontFamilies.kt
- *   ../src/main/java/com/instructure/instui/primitives/InstUIOpacities.kt
+ *   Primitives:
+ *     ../src/main/java/com/instructure/instui/primitives/InstUIColors.kt
+ *     ../src/main/java/com/instructure/instui/primitives/InstUISizes.kt
+ *     ../src/main/java/com/instructure/instui/primitives/InstUIFontWeights.kt
+ *     ../src/main/java/com/instructure/instui/primitives/InstUIFontFamilies.kt
+ *     ../src/main/java/com/instructure/instui/primitives/InstUIOpacities.kt
+ *   Semantic:
+ *     ../src/main/java/com/instructure/instui/semantic/InstUISemanticColors.kt
+ *     ../src/main/java/com/instructure/instui/semantic/InstUIElevation.kt
+ *     ../src/main/java/com/instructure/instui/semantic/InstUILayoutSizes.kt
+ *     ../src/main/java/com/instructure/instui/semantic/InstUILayoutTypography.kt
+ *     ../src/main/java/com/instructure/instui/semantic/InstUILayoutConfig.kt
  *
  * To update to a newer version of instructure-ui, bump INSTUI_VERSION below and re-run.
  */
 
 const https = require('https')
 const buildPrimitivesConfig = require('./sd.config.primitives')
+const buildSemanticConfig = require('./sd.config.semantic')
 
 const INSTUI_VERSION = 'v11.7.1'
 const TOKENS_BASE_URL = `https://raw.githubusercontent.com/instructure/instructure-ui/${INSTUI_VERSION}/packages/ui-scripts/lib/build/tokensStudio`
@@ -67,15 +75,39 @@ async function buildPrimitives() {
   await sd.buildAllPlatforms()
 }
 
+async function buildSemantics() {
+  const lightUrl = `${TOKENS_BASE_URL}/rebrand/semantic/color/rebrandLight.json`
+  const darkUrl = `${TOKENS_BASE_URL}/rebrand/semantic/color/rebrandDark.json`
+  const layoutUrl = `${TOKENS_BASE_URL}/rebrand/semantic/layout/default.json`
+
+  console.log(`Downloading semantic color tokens (light)...`)
+  const lightColors = JSON.parse(await download(lightUrl))
+
+  console.log(`Downloading semantic color tokens (dark)...`)
+  const darkColors = JSON.parse(await download(darkUrl))
+
+  console.log(`Downloading semantic layout tokens...`)
+  const layout = JSON.parse(await download(layoutUrl))
+
+  console.log('Building Jetpack Compose semantic tokens...')
+  const sd = await buildSemanticConfig(lightColors, darkColors, layout)
+  await sd.buildAllPlatforms()
+}
+
 async function main() {
   console.log(`InstUI Token Generator for Android`)
   console.log(`Using instructure-ui ${INSTUI_VERSION}`)
   console.log('')
 
   await buildPrimitives()
+  console.log('')
+
+  await buildSemantics()
 
   console.log('')
-  console.log('Done! Generated files are in ../src/main/java/com/instructure/instui/primitives/')
+  console.log('Done! Generated files are in:')
+  console.log('  ../src/main/java/com/instructure/instui/primitives/')
+  console.log('  ../src/main/java/com/instructure/instui/semantic/')
 }
 
 main().catch(err => {
