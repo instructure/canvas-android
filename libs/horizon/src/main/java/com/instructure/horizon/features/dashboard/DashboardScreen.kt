@@ -74,11 +74,13 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
+import com.instructure.horizon.features.dashboard.widget.syncinprogress.DashboardSyncInProgressWidget
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -197,6 +199,16 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             OfflineBanner(lastSyncedAtMs = uiState.lastSyncedAtMs)
                         }
                         HorizonSpace(SpaceSize.SPACE_12)
+                        if (uiState.isSyncInProgress) {
+                            DashboardSyncInProgressWidget(
+                                syncProgress = uiState.syncProgress,
+                                navController = navController,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
+                                    .padding(bottom = 16.dp),
+                            )
+                        }
                         DashboardAnnouncementBannerWidget(
                             navController,
                             shouldRefresh,

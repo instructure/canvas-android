@@ -56,6 +56,8 @@ import com.instructure.horizon.database.entity.HorizonLocalFileEntity
 import com.instructure.horizon.database.entity.HorizonPageEntity
 import com.instructure.horizon.database.entity.HorizonProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonProgramEntity
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 
 @TypeConverters(HorizonTypeConverters::class)
@@ -66,6 +68,7 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonProgramCourseRef::class,
         HorizonDashboardModuleItemEntity::class,
         HorizonSyncMetadataEntity::class,
+        HorizonEntitySyncMetadataEntity::class,
         HorizonLearnItemEntity::class,
         HorizonLearnCollectionEntity::class,
         HorizonLearnCollectionItemEntity::class,
@@ -85,13 +88,14 @@ import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
         HorizonSubmissionEntity::class,
         HorizonSubmissionAttachmentEntity::class,
     ],
-    version = 13,
+    version = 14,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
     abstract fun programDao(): HorizonProgramDao
     abstract fun dashboardModuleItemDao(): HorizonDashboardModuleItemDao
     abstract fun syncMetadataDao(): HorizonSyncMetadataDao
+    abstract fun entitySyncMetadataDao(): HorizonEntitySyncMetadataDao
     abstract fun learnItemDao(): HorizonLearnItemDao
     abstract fun learnCollectionDao(): HorizonLearnCollectionDao
     abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao

@@ -45,6 +45,8 @@ data class ModuleItemSequenceUiState(
     val shouldRefreshPreviousScreen: Boolean = false,
     val scrollToNoteId: String? = null,
     val showMyProgressButton: Boolean = true,
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )
 
 data class ModuleItemUiState(
@@ -56,6 +58,7 @@ data class ModuleItemUiState(
     val moduleItemContent: ModuleItemContent? = null,
     val markAsDoneUiState: MarkAsDoneUiState? = null,
     val isLoading: Boolean = false,
+    val isAvailableOffline: Boolean = true,
 )
 
 data class MarkAsDoneUiState(

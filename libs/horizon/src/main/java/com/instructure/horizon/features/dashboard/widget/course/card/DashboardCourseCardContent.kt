@@ -73,6 +73,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 import kotlin.math.roundToInt
@@ -131,7 +132,7 @@ private fun DashboardCourseCardCompactContent(
             }
             if (state.moduleItem != null) {
                 HorizonSpace(SpaceSize.SPACE_16)
-                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction, !state.isSynced)
             }
             if (state.pageState != DashboardWidgetPageState.Empty) {
                 HorizonSpace(SpaceSize.SPACE_16)
@@ -179,7 +180,7 @@ private fun DashboardCourseCardWideContent(
                 }
                 if (state.moduleItem != null) {
                     HorizonSpace(SpaceSize.SPACE_16)
-                    ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+                    ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction, !state.isSynced)
                 }
             }
         }
@@ -371,6 +372,7 @@ private fun ModuleItemCard(
     state: DashboardCourseCardModuleItemState,
     isLoading: Boolean,
     handleOnClickAction: (CardClickAction?) -> Unit,
+    offlineDisabled: Boolean = false,
 ) {
     Box(
         modifier = Modifier
@@ -382,7 +384,8 @@ private fun ModuleItemCard(
                 shape = HorizonCornerRadius.level2
             )
             .clip(HorizonCornerRadius.level2)
-            .clickable { handleOnClickAction(state.onClickAction) }
+            .offlineDisabled(offlineDisabled)
+            .clickable(enabled = !offlineDisabled) { handleOnClickAction(state.onClickAction) }
             .shimmerEffect(
                 isLoading,
                 backgroundColor = HorizonColors.Surface.institution().copy(0.1f),

@@ -23,6 +23,8 @@ data class LearnUiState(
     val selectedTab: LearnTab = LearnTab.MY_CONTENT,
     val updateSelectedTabIndex: (Int) -> Unit = {},
     val updateSelectedTab: (String) -> Unit = {},
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )
 
 enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {

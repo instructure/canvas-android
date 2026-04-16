@@ -41,6 +41,7 @@ import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearning
 import com.instructure.horizon.features.learn.mycontent.LearnMyContentScreen
 import com.instructure.horizon.features.learn.mycontent.LearnMyContentViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 
@@ -64,32 +65,37 @@ fun LearnScreen(
         pagerState.animateScrollToPage(pageIndex)
     }
 
-    CollapsableScaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { paddingValues ->
-            TabRow(
-                tabs = state.tabs,
-                selectedIndex = state.tabs.indexOf(state.selectedTab),
-                onTabSelected = { state.updateSelectedTabIndex(it) },
-                tabAlignment = Alignment.Start,
-                tabItemToLabel = { stringResource(it.labelRes) },
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 24.dp)
-            )
-        }
-    ) { paddingValues ->
-        HorizontalPager(pagerState, Modifier.padding(paddingValues)) { pageIndex ->
-            when(LearnTab.entries[pageIndex]) {
-                LearnTab.MY_CONTENT -> {
-                    val viewModel = hiltViewModel<LearnMyContentViewModel>()
-                    val state by viewModel.uiState.collectAsState()
-                    LearnMyContentScreen(state, navController)
-                }
-                LearnTab.BROWSE -> {
-                    val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
-                    val state by viewModel.uiState.collectAsState()
-                    LearnLearningLibraryListScreen(state, navController)
+    OfflineScreenWrapper(
+        isOffline = state.isOffline,
+        lastSyncedAtMs = state.lastSyncedAtMs,
+    ) {
+        CollapsableScaffold(
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            topBar = { paddingValues ->
+                TabRow(
+                    tabs = state.tabs,
+                    selectedIndex = state.tabs.indexOf(state.selectedTab),
+                    onTabSelected = { state.updateSelectedTabIndex(it) },
+                    tabAlignment = Alignment.Start,
+                    tabItemToLabel = { stringResource(it.labelRes) },
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(horizontal = 24.dp)
+                )
+            }
+        ) { paddingValues ->
+            HorizontalPager(pagerState, Modifier.padding(paddingValues)) { pageIndex ->
+                when(LearnTab.entries[pageIndex]) {
+                    LearnTab.MY_CONTENT -> {
+                        val viewModel = hiltViewModel<LearnMyContentViewModel>()
+                        val state by viewModel.uiState.collectAsState()
+                        LearnMyContentScreen(state, navController)
+                    }
+                    LearnTab.BROWSE -> {
+                        val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
+                        val state by viewModel.uiState.collectAsState()
+                        LearnLearningLibraryListScreen(state, navController)
+                    }
                 }
             }
         }

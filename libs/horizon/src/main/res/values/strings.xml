@@ -660,4 +660,19 @@
     <string name="learnMyContentSavedFailedToBookmarkErrorMessage">Failed to update</string>
     <string name="offlineBannerNoDate">You\'re offline.</string>
     <string name="offlineBannerWithDate">You\'re offline. Last synced %1$s.</string>
+    <string name="offline_notAvailableTitle">Not Available Offline</string>
+    <string name="offline_notAvailableDescription">This content hasn\'t been synced. Connect to the internet to view it.</string>
+    <string name="offline_settingsTitle">Offline settings</string>
+    <string name="offline_autoSyncLabel">Auto sync</string>
+    <string name="offline_syncFrequencyLabel">Sync frequency</string>
+    <string name="offline_wifiOnlyLabel">Wi-Fi only</string>
+    <string name="offline_manageOfflineContentButton">Manage offline content</string>
+    <string name="offline_manageOfflineContentTitle">Manage Offline Content</string>
+    <string name="offline_storageUsedLabel">Storage used: %1$s</string>
+    <string name="offline_removeSyncedContentTitle">Remove Synced Content?</string>
+    <string name="offline_removeSyncedContentDescription">This will remove all downloaded content from your device. You will need to re-sync to access it offline again.</string>
+    <string name="offline_removeSyncedContentConfirm">Remove content</string>
+    <string name="offline_removeSyncedContentCancel">Cancel</string>
+    <string name="offline_syncInProgressTitle">Sync in progress</string>
+    <string name="offline_syncInProgressDescription">Syncing your content for offline use…</string>
 </resources>

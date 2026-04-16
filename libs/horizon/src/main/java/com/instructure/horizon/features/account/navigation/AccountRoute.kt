@@ -24,4 +24,7 @@ sealed class AccountRoute(val route: String) {
     data object CalendarFeed : AccountRoute("calendar_feed")
     data object Advanced : AccountRoute("advanced")
     data object ReportABug : AccountRoute("report_a_bug")
+    data object OfflineSettings : AccountRoute("offline_settings")
+    data object ManageOfflineContent : AccountRoute("manage_offline_content")
+    data object RemoveSyncedContentConfirmation : AccountRoute("remove_synced_content_confirmation")
 }

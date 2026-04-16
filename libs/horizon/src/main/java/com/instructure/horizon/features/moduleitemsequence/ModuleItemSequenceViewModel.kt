@@ -17,7 +17,6 @@ package com.instructure.horizon.features.moduleitemsequence
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.models.Assignment
@@ -28,7 +27,9 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -42,6 +43,9 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import com.instructure.pandautils.utils.orDefault
@@ -58,12 +62,15 @@ class ModuleItemSequenceViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ModuleItemSequenceRepository,
     private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
+    private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle,
     private val dashboardEventHandler: DashboardEventHandler,
-    private val learnEventHandler: LearnEventHandler
-) : ViewModel() {
+    private val learnEventHandler: LearnEventHandler,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
@@ -116,6 +123,28 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
+    }
+
+    override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+    }
+
+    override fun onNetworkLost() {
+        viewModelScope.tryLaunch {
+            val moduleItemId = _uiState.value.currentItem?.moduleItemId ?: return@tryLaunch
+            val lastSyncedAt = getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, moduleItemId)
+            val isAvailableOffline = lastSyncedAt != null
+            _uiState.update { state ->
+                state.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = lastSyncedAt,
+                    items = state.items.map { item ->
+                        item.copy(isAvailableOffline = isAvailableOffline)
+                    },
+                    currentItem = state.currentItem?.copy(isAvailableOffline = isAvailableOffline),
+                )
+            }
+        } catch { }
     }
 
     private suspend fun loadData() {

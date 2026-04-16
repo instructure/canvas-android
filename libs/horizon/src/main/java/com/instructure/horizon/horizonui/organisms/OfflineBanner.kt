@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard
+package com.instructure.horizon.horizonui.organisms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -75,6 +75,6 @@ private fun OfflineBannerWithDatePreview() {
 
 @Preview
 @Composable
-private fun OfflineBannerNoDDatePreview() {
+private fun OfflineBannerNoDatePreview() {
     OfflineBanner(lastSyncedAtMs = null)
 }

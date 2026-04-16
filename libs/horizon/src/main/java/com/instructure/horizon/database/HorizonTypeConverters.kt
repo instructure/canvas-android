@@ -16,6 +16,7 @@
 package com.instructure.horizon.database
 
 import androidx.room.TypeConverter
+import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.database.entity.SyncDataType
 import java.util.Date
 
@@ -26,6 +27,12 @@ class HorizonTypeConverters {
 
     @TypeConverter
     fun toSyncDataType(value: String): SyncDataType = SyncDataType.valueOf(value)
+
+    @TypeConverter
+    fun fromEntitySyncType(value: EntitySyncType): String = value.name
+
+    @TypeConverter
+    fun toEntitySyncType(value: String): EntitySyncType = EntitySyncType.valueOf(value)
 
     @TypeConverter
     fun fromDate(value: Date?): Long? = value?.time

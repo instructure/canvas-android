@@ -29,6 +29,7 @@ import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LogoutHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -46,7 +47,8 @@ class AccountViewModel @Inject constructor(
     private val databaseProvider: DatabaseProvider,
     private val alarmScheduler: AlarmScheduler,
     private val apiPrefs: ApiPrefs,
-    private val accountEventHandler: AccountEventHandler
+    private val accountEventHandler: AccountEventHandler,
+    private val featureFlagProvider: FeatureFlagProvider,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         AccountUiState(
@@ -62,6 +64,7 @@ class AccountViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var showExperienceSwitcher = false
+    private var showOfflineSettings = false
     private var helpLinks: List<HelpLink> = emptyList()
 
     init {
@@ -126,7 +129,12 @@ class AccountViewModel @Inject constructor(
             AccountItemState(
                 title = context.getString(R.string.accountAdvancedLabel),
                 type = AccountItemType.Open(AccountRoute.Advanced),
-            )
+            ),
+            AccountItemState(
+                title = context.getString(R.string.offline_settingsTitle),
+                type = AccountItemType.Open(AccountRoute.OfflineSettings),
+                visible = showOfflineSettings,
+            ),
         )
     )
 
@@ -177,6 +185,7 @@ class AccountViewModel @Inject constructor(
 
         val experiences = repository.getExperiences(forceRefresh = forceRefresh)
         showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+        showOfflineSettings = featureFlagProvider.offlineEnabled()
 
         helpLinks = repository.getHelpLinks(forceRefresh = forceRefresh)
 

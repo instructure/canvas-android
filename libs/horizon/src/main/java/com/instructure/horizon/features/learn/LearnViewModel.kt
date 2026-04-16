@@ -18,6 +18,8 @@ package com.instructure.horizon.features.learn
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -30,6 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnViewModel @Inject constructor(
     private val repository: LearnRepository,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
 ) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
@@ -46,11 +49,15 @@ class LearnViewModel @Inject constructor(
     }
 
     override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
         loadBrowseTab()
     }
 
     override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
+        viewModelScope.tryLaunch {
+            val lastSyncedAt = getLastSyncedAtUseCase(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
+            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+        } catch { }
     }
 
     private fun loadBrowseTab() {

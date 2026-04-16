@@ -26,6 +26,7 @@ import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
 import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
@@ -133,6 +134,11 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonSubmissionDao(db: HorizonDatabase): HorizonSubmissionDao {
         return db.submissionDao()
+    }
+
+    @Provides
+    fun provideHorizonEntitySyncMetadataDao(db: HorizonDatabase): HorizonEntitySyncMetadataDao {
+        return db.entitySyncMetadataDao()
     }
 
     @Provides
