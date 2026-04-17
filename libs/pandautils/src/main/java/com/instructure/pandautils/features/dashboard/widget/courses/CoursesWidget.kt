@@ -17,11 +17,13 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -150,6 +153,10 @@ fun CoursesWidgetContent(
                 }
             }
 
+            if (uiState.courses.isEmpty() && uiState.groups.isEmpty()) {
+                CoursesWidgetEmptyState()
+            }
+
             if (uiState.groups.isNotEmpty()) {
 
                 CollapsibleSection(
@@ -175,7 +182,7 @@ fun CoursesWidgetContent(
                 }
             }
 
-            Row(
+            if (uiState.courses.isNotEmpty() || uiState.groups.isNotEmpty()) Row(
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .fillMaxWidth(),
@@ -245,6 +252,36 @@ private fun NonLazyGrid(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun CoursesWidgetEmptyState() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.ic_panda_space),
+            contentDescription = null,
+            modifier = Modifier.size(180.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = stringResource(R.string.coursesWidgetEmptyTitle),
+            fontSize = 22.sp,
+            textAlign = TextAlign.Center,
+            color = colorResource(R.color.textDarkest)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = stringResource(R.string.coursesWidgetEmptyMessage),
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            color = colorResource(R.color.textDark)
+        )
     }
 }
 
@@ -380,5 +417,19 @@ private fun CoursesWidgetLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     CoursesWidgetContent(
         uiState = CoursesWidgetUiState(isLoading = true)
+    )
+}
+
+@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
+@Composable
+private fun CoursesWidgetEmptyStatePreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CoursesWidgetContent(
+        uiState = CoursesWidgetUiState(isLoading = false)
     )
 }
