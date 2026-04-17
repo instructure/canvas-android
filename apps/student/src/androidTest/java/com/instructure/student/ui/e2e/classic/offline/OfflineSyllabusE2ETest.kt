@@ -23,7 +23,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days

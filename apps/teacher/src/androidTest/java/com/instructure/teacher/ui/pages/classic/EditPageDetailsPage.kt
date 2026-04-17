@@ -7,7 +7,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.ActivityHelper

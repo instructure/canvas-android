@@ -29,10 +29,10 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.isElementDisplayed
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.isElementDisplayed
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -86,7 +86,7 @@ class NativeDiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteract
     fun refresh() {
         scrollToTop()
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
-            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun scrollToRepliesWebview() {
@@ -348,6 +348,6 @@ class NativeDiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteract
 
     private fun scrollToTop() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(10)))
-            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 }

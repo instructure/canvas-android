@@ -21,9 +21,9 @@ import android.widget.EditText
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.clearFocus
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.clearFocus
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage

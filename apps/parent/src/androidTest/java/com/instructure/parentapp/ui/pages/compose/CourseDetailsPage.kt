@@ -31,7 +31,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.model.CourseApiModel
