@@ -16,23 +16,29 @@
 package com.instructure.horizon.features.account.manageofflinecontent
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -40,11 +46,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -65,9 +71,12 @@ import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItemState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
-private val OtherAppsColor = Color(0xFF586874)
-private val CanvasCareerColor = Color(0xFF09508C)
-private val RemainingColor = Color(0xFFE0EBF5)
+private val SyncBlue = Color(0xFF09508C)
+private val CanvasCareerBlue = Color(0xFF2B7ABC)
+private val RemainingBlue = Color(0xFFE0EBF5)
+private val TimestampColor = Color(0xFF586874)
+private val DividerColor = Color(0xFFE8EAEC)
+private val CardBorderColor = Color(0xFFD7DADE)
 
 @Composable
 fun ManageOfflineContentScreen(
@@ -79,39 +88,75 @@ fun ManageOfflineContentScreen(
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         if (uiState.isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = modifier.fillMaxSize(),
-            ) {
+            Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
                 CircularProgressIndicator(color = HorizonColors.Surface.institution())
             }
         } else {
-            Column(
-                modifier = modifier
-                    .padding(horizontal = 24.dp, vertical = 16.dp)
-                    .verticalScroll(rememberScrollState()),
-            ) {
-                StorageCard(uiState)
-                HorizonSpace(SpaceSize.SPACE_24)
-
+            Column(modifier = modifier) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                ) {
+                    StorageCard(
+                        uiState = uiState,
+                        modifier = Modifier.padding(top = 32.dp, start = 32.dp, end = 32.dp),
+                    )
+                    when (uiState.mode) {
+                        ManageOfflineContentMode.SELECTING -> SelectingList(uiState)
+                        ManageOfflineContentMode.SYNCING -> SyncingList(uiState)
+                        ManageOfflineContentMode.DELETING -> DeletingContent()
+                    }
+                }
                 when (uiState.mode) {
-                    ManageOfflineContentMode.SYNCING -> SyncingContent(uiState)
-                    ManageOfflineContentMode.DELETING -> DeletingContent()
-                    ManageOfflineContentMode.SELECTING -> SelectingContent(uiState, navController)
+                    ManageOfflineContentMode.SELECTING -> SelectingBottomBar(uiState, navController)
+                    ManageOfflineContentMode.SYNCING -> SyncingBottomBar(uiState)
+                    ManageOfflineContentMode.DELETING -> Unit
                 }
             }
         }
     }
 }
 
+// region Storage card
+
 @Composable
-private fun StorageCard(uiState: ManageOfflineContentUiState) {
+private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier = Modifier) {
     val total = uiState.storageTotalBytes.toFloat().coerceAtLeast(1f)
     val otherFraction = (uiState.storageOtherAppBytes / total).coerceIn(0f, 1f)
     val canvasFraction = (uiState.storageCanvasBytes / total).coerceIn(0f, 1f - otherFraction)
     val remainingFraction = (1f - otherFraction - canvasFraction).coerceAtLeast(0f)
 
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(HorizonColors.Surface.pageSecondary(), RoundedCornerShape(16.dp))
+            .border(1.dp, CardBorderColor, RoundedCornerShape(16.dp))
+            .padding(16.dp),
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = stringResource(R.string.offline_storageTitle),
+                style = HorizonTypography.h4,
+                color = HorizonColors.Text.title(),
+            )
+            if (uiState.storageUsedLabel.isNotEmpty() && uiState.storageTotalLabel.isNotEmpty()) {
+                Text(
+                    text = stringResource(
+                        R.string.offline_storageUsedLabel,
+                        uiState.storageUsedLabel,
+                        uiState.storageTotalLabel,
+                    ),
+                    style = HorizonTypography.p3,
+                    color = TimestampColor,
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -123,7 +168,7 @@ private fun StorageCard(uiState: ManageOfflineContentUiState) {
                     modifier = Modifier
                         .weight(otherFraction)
                         .fillMaxSize()
-                        .background(OtherAppsColor)
+                        .background(SyncBlue),
                 )
             }
             if (canvasFraction > 0f) {
@@ -131,33 +176,26 @@ private fun StorageCard(uiState: ManageOfflineContentUiState) {
                     modifier = Modifier
                         .weight(canvasFraction)
                         .fillMaxSize()
-                        .background(CanvasCareerColor)
+                        .background(CanvasCareerBlue),
                 )
             }
             Box(
                 modifier = Modifier
                     .weight(remainingFraction.coerceAtLeast(0.01f))
                     .fillMaxSize()
-                    .background(RemainingColor)
+                    .background(RemainingBlue),
             )
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            StorageLegendItem(color = OtherAppsColor, label = stringResource(R.string.offline_storageOtherApps))
-            StorageLegendItem(color = CanvasCareerColor, label = stringResource(R.string.offline_storageCanvasCareer))
-            StorageLegendItem(color = RemainingColor, label = stringResource(R.string.offline_storageRemaining))
-        }
-        if (uiState.storageUsedLabel.isNotEmpty() && uiState.storageTotalLabel.isNotEmpty()) {
-            Text(
-                text = stringResource(R.string.offline_storageUsedLabel, uiState.storageUsedLabel, uiState.storageTotalLabel),
-                style = HorizonTypography.p2,
-                color = HorizonColors.Text.body(),
-            )
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            StorageLegendDot(color = SyncBlue, label = stringResource(R.string.offline_storageOtherApps))
+            StorageLegendDot(color = CanvasCareerBlue, label = stringResource(R.string.offline_storageCanvasCareer))
+            StorageLegendDot(color = RemainingBlue, label = stringResource(R.string.offline_storageRemaining))
         }
     }
 }
 
 @Composable
-private fun StorageLegendItem(color: Color, label: String) {
+private fun StorageLegendDot(color: Color, label: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -166,90 +204,124 @@ private fun StorageLegendItem(color: Color, label: String) {
             modifier = Modifier
                 .size(8.dp)
                 .clip(CircleShape)
-                .background(color)
+                .background(color),
         )
-        Text(
-            text = label,
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.body(),
+        Text(text = label, style = HorizonTypography.p3, color = TimestampColor)
+    }
+}
+
+// endregion
+
+// region Selecting mode
+
+@Composable
+private fun SelectingList(uiState: ManageOfflineContentUiState) {
+    val allSelected = uiState.courses.isNotEmpty() &&
+        uiState.courses.all { it.offlineState == CourseOfflineState.ALL }
+
+    Column(modifier = Modifier.padding(top = 8.dp)) {
+        Button(
+            label = if (allSelected) {
+                stringResource(R.string.offline_deselectAll)
+            } else {
+                stringResource(R.string.offline_selectAll)
+            },
+            color = ButtonColor.Ghost,
+            onClick = uiState.onSelectAllClick,
         )
+        HorizonSpace(SpaceSize.SPACE_8)
+        uiState.courses.forEach { course ->
+            CourseRow(course)
+        }
     }
 }
 
 @Composable
-private fun SelectingContent(uiState: ManageOfflineContentUiState, navController: NavHostController) {
+private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, navController: NavHostController) {
     val hasSelection = uiState.courses.any { it.offlineState != CourseOfflineState.NONE }
 
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(
-            text = stringResource(R.string.offline_selectAll),
-            style = HorizonTypography.p1.copy(textDecoration = TextDecoration.Underline),
-            color = HorizonColors.Text.title(),
-            modifier = Modifier.clickable { uiState.onSelectAllClick() },
+    Column(
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = if (hasSelection) 8.dp else 0.dp, spotColor = Color(0x2E273540))
+            .background(HorizonColors.Surface.pageSecondary())
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+    ) {
+        Button(
+            label = stringResource(R.string.offline_syncButton),
+            color = ButtonColor.Black,
+            width = ButtonWidth.FILL,
+            enabled = hasSelection,
+            onClick = uiState.onSyncClick,
         )
-        uiState.courses.forEach { course ->
-            CourseItem(course)
-        }
-        HorizonSpace(SpaceSize.SPACE_16)
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(
-                label = stringResource(R.string.offline_syncButton),
-                width = ButtonWidth.FILL,
-                onClick = uiState.onSyncClick,
-                enabled = hasSelection,
-                modifier = Modifier.weight(1f),
-            )
-            Button(
-                label = stringResource(R.string.offline_removeSyncedContentTitle),
-                color = ButtonColor.DangerInverse,
-                width = ButtonWidth.FILL,
-                onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
-                modifier = Modifier.weight(1f),
-            )
-        }
+        Button(
+            label = stringResource(R.string.offline_removeSyncedContentTitle),
+            color = ButtonColor.Custom(
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
+                contentColor = HorizonColors.Text.error(),
+                outlineColor = HorizonColors.Surface.error(),
+            ),
+            width = ButtonWidth.FILL,
+            onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
+        )
     }
 }
 
+// endregion
+
+// region Syncing mode
+
 @Composable
-private fun SyncingContent(uiState: ManageOfflineContentUiState) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+private fun SyncingList(uiState: ManageOfflineContentUiState) {
+    Column(modifier = Modifier.padding(top = 16.dp, start = 24.dp, end = 24.dp)) {
         if (uiState.syncProgressLabel.isNotEmpty()) {
             Text(
                 text = uiState.syncProgressLabel,
-                style = HorizonTypography.p2,
-                color = Color(0xFF586874),
+                style = HorizonTypography.p3,
+                color = TimestampColor,
             )
+            HorizonSpace(SpaceSize.SPACE_8)
         }
         LinearProgressIndicator(
             progress = { uiState.syncProgress },
             modifier = Modifier.fillMaxWidth(),
-            color = CanvasCareerColor,
-            trackColor = RemainingColor,
+            color = SyncBlue,
+            trackColor = RemainingBlue,
         )
-        HorizonSpace(SpaceSize.SPACE_8)
-        uiState.courses.forEach { course ->
-            SyncingCourseItem(course)
-        }
         HorizonSpace(SpaceSize.SPACE_16)
+    }
+    uiState.courses.forEach { course ->
+        SyncingCourseRow(course)
+    }
+}
+
+@Composable
+private fun SyncingBottomBar(uiState: ManageOfflineContentUiState) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(HorizonColors.Surface.pageSecondary())
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+    ) {
         Button(
             label = stringResource(R.string.offline_cancelSync),
             color = ButtonColor.BlackOutline,
             width = ButtonWidth.FILL,
             onClick = uiState.onCancelSyncClick,
-            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
 
 @Composable
-private fun SyncingCourseItem(course: OfflineCourseItemUiState) {
+private fun SyncingCourseRow(course: OfflineCourseItemUiState) {
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 4.dp),
+                .height(76.dp)
+                .padding(horizontal = 24.dp),
         ) {
             Text(
                 text = course.courseName,
@@ -258,48 +330,48 @@ private fun SyncingCourseItem(course: OfflineCourseItemUiState) {
                 modifier = Modifier.weight(1f),
             )
         }
+        HorizontalDivider(color = DividerColor)
         course.files.forEach { file ->
-            SyncingFileItem(file)
+            SyncingFileRow(file)
+            HorizontalDivider(color = DividerColor)
         }
     }
 }
 
 @Composable
-private fun SyncingFileItem(file: OfflineFileItemUiState) {
+private fun SyncingFileRow(file: OfflineFileItemUiState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+            .height(76.dp)
+            .padding(horizontal = 24.dp),
     ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = file.fileName, style = HorizonTypography.p1, color = HorizonColors.Text.body())
+            Text(text = file.fileSizeLabel, style = HorizonTypography.p2, color = TimestampColor)
+        }
         when (file.syncState) {
             FileSyncState.SYNCING -> CircularProgressIndicator(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier.size(24.dp),
                 strokeWidth = 2.dp,
-                color = CanvasCareerColor,
+                color = SyncBlue,
             )
             FileSyncState.DONE -> Icon(
                 painter = painterResource(R.drawable.check),
                 contentDescription = null,
-                tint = CanvasCareerColor,
-                modifier = Modifier.size(16.dp),
+                tint = SyncBlue,
+                modifier = Modifier.size(24.dp),
             )
-            FileSyncState.PENDING -> Spacer(modifier = Modifier.size(16.dp))
+            FileSyncState.PENDING -> Spacer(modifier = Modifier.size(24.dp))
         }
-        Text(
-            text = file.fileName,
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.body(),
-            modifier = Modifier.weight(1f),
-        )
-        Text(
-            text = file.fileSizeLabel,
-            style = HorizonTypography.p2,
-            color = Color(0xFF586874),
-        )
     }
 }
+
+// endregion
+
+// region Deleting mode
 
 @Composable
 private fun DeletingContent() {
@@ -317,72 +389,133 @@ private fun DeletingContent() {
         HorizonSpace(SpaceSize.SPACE_16)
         Text(
             text = stringResource(R.string.offline_deletingContent),
-            style = HorizonTypography.h4,
+            style = HorizonTypography.h3,
             color = HorizonColors.Text.body(),
         )
     }
 }
 
+// endregion
+
+// region Course and file rows
+
 @Composable
-private fun CourseItem(course: OfflineCourseItemUiState) {
+private fun CourseRow(course: OfflineCourseItemUiState) {
     val toggleableState = when (course.offlineState) {
         CourseOfflineState.ALL -> ToggleableState.On
         CourseOfflineState.NONE -> ToggleableState.Off
         CourseOfflineState.PARTIAL -> ToggleableState.Indeterminate
     }
+    val nextOfflineState = if (course.offlineState == CourseOfflineState.ALL) {
+        CourseOfflineState.NONE
+    } else {
+        CourseOfflineState.ALL
+    }
 
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { course.onToggleExpanded() },
+            modifier = Modifier.fillMaxWidth().height(76.dp),
         ) {
             TriStateCheckboxItem(
                 state = TriStateCheckboxItemState(
-                    controlsContentState = ControlsContentState(
-                        title = course.courseName,
-                        description = course.courseSizeLabel.ifEmpty { null },
-                    ),
+                    controlsContentState = ControlsContentState(title = ""),
                     toggleableState = toggleableState,
-                    onClick = {
-                        val next = if (course.offlineState == CourseOfflineState.ALL) {
-                            CourseOfflineState.NONE
-                        } else {
-                            CourseOfflineState.ALL
-                        }
-                        course.onOfflineStateChanged(next)
-                    },
+                    onClick = { course.onOfflineStateChanged(nextOfflineState) },
                 ),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .width(68.dp)
+                    .padding(start = 24.dp),
             )
-            Icon(
-                painter = painterResource(
-                    if (course.isExpanded) R.drawable.expand_circle_up else R.drawable.expand_circle_down
-                ),
-                contentDescription = null,
-                tint = HorizonColors.Icon.default(),
-            )
-        }
-
-        AnimatedVisibility(visible = course.isExpanded) {
-            Column(modifier = Modifier.padding(start = 32.dp)) {
-                course.files.forEach { file ->
-                    CheckboxItem(
-                        state = CheckboxItemState(
-                            controlsContentState = ControlsContentState(
-                                title = file.fileName,
-                                description = file.fileSizeLabel,
-                            ),
-                            checked = file.isSelected,
-                            onCheckedChanged = file.onSelectionChanged,
-                        )
+            // Right column: course name + size + chevron, tap to expand/collapse
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable { course.onToggleExpanded() }
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
+            ) {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(
+                        text = course.courseName,
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
                     )
+                    if (course.courseSizeLabel.isNotEmpty()) {
+                        Text(
+                            text = course.courseSizeLabel,
+                            style = HorizonTypography.p2,
+                            color = TimestampColor,
+                        )
+                    }
+                }
+                Icon(
+                    painter = painterResource(
+                        if (course.isExpanded) R.drawable.expand_circle_up else R.drawable.expand_circle_down,
+                    ),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+        }
+        HorizontalDivider(color = DividerColor)
+        AnimatedVisibility(
+            visible = course.isExpanded,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Column {
+                course.files.forEach { file ->
+                    FileRow(file)
+                    HorizontalDivider(color = DividerColor)
                 }
             }
         }
     }
 }
+
+@Composable
+private fun FileRow(file: OfflineFileItemUiState) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().height(76.dp),
+    ) {
+        CheckboxItem(
+            state = CheckboxItemState(
+                controlsContentState = ControlsContentState(title = ""),
+                checked = file.isSelected,
+                onCheckedChanged = file.onSelectionChanged,
+            ),
+            modifier = Modifier
+                .width(68.dp)
+                .padding(start = 48.dp),
+        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+        ) {
+            Text(
+                text = file.fileName,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+            )
+            Text(
+                text = file.fileSizeLabel,
+                style = HorizonTypography.p2,
+                color = TimestampColor,
+            )
+        }
+    }
+}
+
+// endregion
 
 @Preview
 @Composable
@@ -404,9 +537,17 @@ private fun ManageOfflineContentScreenPreview() {
                     files = listOf(
                         OfflineFileItemUiState(1L, "Chapter 1.pdf", "12 MB", isSelected = true),
                         OfflineFileItemUiState(2L, "Chapter 2.pdf", "8 MB", isSelected = false),
-                    )
-                )
-            )
+                    ),
+                ),
+                OfflineCourseItemUiState(
+                    courseId = 2L,
+                    courseName = "Advanced Mathematics",
+                    courseSizeLabel = "",
+                    offlineState = CourseOfflineState.NONE,
+                    isExpanded = false,
+                    files = emptyList(),
+                ),
+            ),
         ),
         navController = rememberNavController(),
     )

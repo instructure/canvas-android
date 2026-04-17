@@ -677,6 +677,8 @@
     <string name="offline_storageCanvasCareer">Canvas Career</string>
     <string name="offline_storageRemaining">Remaining</string>
     <string name="offline_selectAll">Select all</string>
+    <string name="offline_deselectAll">Deselect all</string>
+    <string name="offline_storageTitle">Storage</string>
     <string name="offline_syncButton">Sync</string>
     <string name="offline_cancelSync">Cancel sync</string>
     <string name="offline_deletingContent">Deleting content</string>

@@ -109,11 +109,14 @@ class ManageOfflineContentViewModel @Inject constructor(
 
     private fun onSelectAllClick() {
         _uiState.update { state ->
+            val allSelected = state.courses.isNotEmpty() && state.courses.all { it.offlineState == CourseOfflineState.ALL }
+            val targetState = if (allSelected) CourseOfflineState.NONE else CourseOfflineState.ALL
+            val targetSelected = !allSelected
             state.copy(
                 courses = state.courses.map { course ->
                     course.copy(
-                        offlineState = CourseOfflineState.ALL,
-                        files = course.files.map { it.copy(isSelected = true) },
+                        offlineState = targetState,
+                        files = course.files.map { it.copy(isSelected = targetSelected) },
                     )
                 }
             )
