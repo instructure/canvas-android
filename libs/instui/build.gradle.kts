@@ -55,10 +55,12 @@ android {
 }
 
 dependencies {
-    // Compose dependencies for Color, Dp, FontWeight, FontFamily
     implementation(platform(Libs.COMPOSE_BOM))
     implementation(Libs.COMPOSE_UI)
     implementation(Libs.COMPOSE_FOUNDATION)
+    implementation(Libs.COMPOSE_MATERIAL_3)
+    implementation(Libs.COMPOSE_PREVIEW)
+    debugImplementation(Libs.COMPOSE_TOOLING)
 }
 
 /**
