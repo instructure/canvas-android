@@ -23,7 +23,6 @@ include ':canvas-api-2'
 include ':dataseedingapi'
 include ':espresso'
 include ':interactions'
-include ":jazzyviewpager"
 include ':login-api-2'
 include ':pandautils'
 include ':rceditor'
@@ -37,7 +36,6 @@ project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs
 project(':dataseedingapi').projectDir = new File(rootProject.projectDir, '/../automation/dataseedingapi')
 project(':espresso').projectDir = new File(rootProject.projectDir, '/../automation/espresso')
 project(':interactions').projectDir = new File(rootProject.projectDir, '/../libs/interactions')
-project(':jazzyviewpager').projectDir = new File(rootProject.projectDir, '/../libs/jazzyviewpager')
 project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../libs/login-api-2')
 project(':pandautils').projectDir = new File(rootProject.projectDir, '/../libs/pandautils')
 project(':rceditor').projectDir = new File(rootProject.projectDir, '/../libs/rceditor')

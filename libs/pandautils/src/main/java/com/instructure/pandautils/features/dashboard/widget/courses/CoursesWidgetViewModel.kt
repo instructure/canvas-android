@@ -30,11 +30,9 @@ import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
-import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
@@ -72,8 +70,7 @@ import javax.inject.Inject
 class CoursesWidgetViewModel @Inject constructor(
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
-    private val loadCourseUseCase: LoadCourseUseCase,
-    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
+    private val loadSingleCourseUseCase: LoadSingleCourseUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val courseDao: CourseDao,
@@ -261,16 +258,7 @@ class CoursesWidgetViewModel @Inject constructor(
                 val isAnyGroupFavorited = allActiveGroups.any { it.isFavorite }
                 groups = if (isAnyGroupFavorited) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
-                val announcementsMap = visibleCourses.associate { course ->
-                    course.id to try {
-                        loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(course.id, forceRefresh))
-                    } catch (e: Exception) {
-                        crashlytics.recordException(e)
-                        emptyList()
-                    }
-                }
-
-                val courseCards = mapCoursesToCardItems(visibleCourses, announcementsMap)
+                val courseCards = mapCoursesToCardItems(visibleCourses, result.announcementsMap)
                 val groupCards = mapGroupsToCardItems(groups)
 
                 _uiState.update {
@@ -448,20 +436,14 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun reloadCourse(courseId: Long) {
         viewModelScope.launch {
             try {
-                val updatedCourse = loadCourseUseCase(LoadCourseUseCaseParams(courseId, forceNetwork = true))
-                val announcements = try {
-                    loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(courseId, forceNetwork = true))
-                } catch (e: Exception) {
-                    crashlytics.recordException(e)
-                    emptyList()
-                }
+                val result = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
 
                 visibleCourses = visibleCourses.map { course ->
-                    if (course.id == courseId) updatedCourse else course
+                    if (course.id == courseId) result.course else course
                 }
 
                 val existingAnnouncementsMap = _uiState.value.courses.associate { it.id to it.announcements }
-                val announcementsMap = existingAnnouncementsMap + (courseId to announcements)
+                val announcementsMap = existingAnnouncementsMap + (courseId to result.announcements)
                 val courseCards = mapCoursesToCardItems(visibleCourses, announcementsMap)
                 _uiState.update { it.copy(courses = courseCards) }
             } catch (e: Exception) {

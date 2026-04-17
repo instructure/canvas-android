@@ -16,134 +16,239 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.DashboardCoursesQuery
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
+import com.instructure.canvasapi2.type.EnrollmentType
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.Date
 
 class LoadVisibleCoursesUseCaseTest {
 
-    private val loadAllCoursesUseCase: LoadAllCoursesUseCase = mockk()
-    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
+    private val dashboardCoursesManager: DashboardCoursesManager = mockk()
 
     private lateinit var useCase: LoadVisibleCoursesUseCase
 
     @Before
     fun setup() {
-        useCase = LoadVisibleCoursesUseCase(loadAllCoursesUseCase, loadDashboardCardsUseCase)
+        useCase = LoadVisibleCoursesUseCase(dashboardCoursesManager)
     }
 
     @Test
-    fun `Courses matched by dashboard cards are sorted by card position`() = runTest {
-        val courses = listOf(
-            Course(id = 1, name = "Course A"),
-            Course(id = 2, name = "Course B"),
-            Course(id = 3, name = "Course C")
+    fun `favorited courses become visible courses sorted by position`() = runTest {
+        val data = buildQueryData(
+            allCourse("1", "Course A", dashboardCard = dashboardCard(isFavorited = true, position = 2)),
+            allCourse("2", "Course B", dashboardCard = dashboardCard(isFavorited = true, position = 0)),
+            allCourse("3", "Course C", dashboardCard = dashboardCard(isFavorited = true, position = 1))
         )
-        val dashboardCards = listOf(
-            DashboardCard(id = 3, position = 0),
-            DashboardCard(id = 1, position = 1),
-            DashboardCard(id = 2, position = 2)
-        )
-        coEvery { loadAllCoursesUseCase(any()) } returns courses
-        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
-        assertEquals(listOf(3L, 1L, 2L), result.visibleCourses.map { it.id })
-        assertEquals("Course C", result.visibleCourses[0].name)
-        assertEquals("Course A", result.visibleCourses[1].name)
-        assertEquals("Course B", result.visibleCourses[2].name)
+        assertEquals(listOf(2L, 3L, 1L), result.visibleCourses.map { it.id })
     }
 
     @Test
-    fun `Fabricated Course is created for dashboard cards without matching course data`() = runTest {
-        val courses = listOf(Course(id = 1, name = "Course A"))
-        val dashboardCards = listOf(
-            DashboardCard(id = 1, position = 0),
-            DashboardCard(id = 99, shortName = "Unsynced", originalName = "Unsynced Course", courseCode = "UC101", position = 1)
+    fun `all courses returned when none are favorited`() = runTest {
+        val data = buildQueryData(
+            allCourse("1", "Course A", dashboardCard = null),
+            allCourse("2", "Course B", dashboardCard = null)
         )
-        coEvery { loadAllCoursesUseCase(any()) } returns courses
-        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
         assertEquals(2, result.visibleCourses.size)
-        val fabricated = result.visibleCourses[1]
-        assertEquals(99L, fabricated.id)
-        assertEquals("Unsynced", fabricated.name)
-        assertEquals("Unsynced Course", fabricated.originalName)
-        assertEquals("UC101", fabricated.courseCode)
+        assertEquals(2, result.allCourses.size)
     }
 
     @Test
-    fun `Fabricated Course uses originalName when shortName is null`() = runTest {
-        val dashboardCards = listOf(
-            DashboardCard(id = 1, shortName = null, originalName = "Original Name", position = 0)
+    fun `allCourses includes non-favorited courses`() = runTest {
+        val data = buildQueryData(
+            allCourse("1", "Visible", dashboardCard = dashboardCard(isFavorited = true, position = 0)),
+            allCourse("2", "Not favorited", dashboardCard = dashboardCard(isFavorited = false, position = 1))
         )
-        coEvery { loadAllCoursesUseCase(any()) } returns emptyList()
-        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
-
-        val result = useCase(LoadVisibleCoursesUseCase.Params())
-
-        assertEquals("Original Name", result.visibleCourses[0].name)
-    }
-
-    @Test
-    fun `Fabricated Course uses empty string when both shortName and originalName are null`() = runTest {
-        val dashboardCards = listOf(
-            DashboardCard(id = 1, shortName = null, originalName = null, position = 0)
-        )
-        coEvery { loadAllCoursesUseCase(any()) } returns emptyList()
-        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
-
-        val result = useCase(LoadVisibleCoursesUseCase.Params())
-
-        assertEquals("", result.visibleCourses[0].name)
-    }
-
-    @Test
-    fun `Empty dashboard cards returns empty visible courses`() = runTest {
-        val courses = listOf(Course(id = 1, name = "Course A"))
-        coEvery { loadAllCoursesUseCase(any()) } returns courses
-        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
-
-        val result = useCase(LoadVisibleCoursesUseCase.Params())
-
-        assertEquals(emptyList<Course>(), result.visibleCourses)
-        assertEquals(courses, result.allCourses)
-    }
-
-    @Test
-    fun `allCourses includes courses not on the dashboard`() = runTest {
-        val courses = listOf(
-            Course(id = 1, name = "Visible"),
-            Course(id = 2, name = "Not on dashboard")
-        )
-        val dashboardCards = listOf(DashboardCard(id = 1, position = 0))
-        coEvery { loadAllCoursesUseCase(any()) } returns courses
-        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
         assertEquals(1, result.visibleCourses.size)
         assertEquals(2, result.allCourses.size)
-        assertEquals(listOf(1L, 2L), result.allCourses.map { it.id })
     }
 
     @Test
-    fun `forceRefresh is propagated to underlying use cases`() = runTest {
-        coEvery { loadAllCoursesUseCase(any()) } returns emptyList()
-        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
+    fun `course fields are mapped correctly`() = runTest {
+        val data = buildQueryData(
+            allCourse(
+                id = "42",
+                name = "Test Course",
+                courseCode = "TC101",
+                imageUrl = "https://example.com/img.jpg",
+                dashboardCard = dashboardCard(isFavorited = true, position = 0, color = "#FF0000")
+            )
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val course = result.visibleCourses[0]
+        assertEquals(42L, course.id)
+        assertEquals("Test Course", course.name)
+        assertEquals("TC101", course.courseCode)
+        assertEquals("https://example.com/img.jpg", course.imageUrl)
+        assertEquals("#FF0000", course.courseColor)
+        assertTrue(course.isFavorite)
+    }
+
+    @Test
+    fun `enrollment grades are mapped correctly`() = runTest {
+        val grades = DashboardCoursesQuery.Grades(currentGrade = "A-", currentScore = 92.5)
+        val enrollmentNode = DashboardCoursesQuery.Node(
+            _id = "100",
+            type = EnrollmentType.StudentEnrollment,
+            grades = grades
+        )
+        val enrollmentsConnection = DashboardCoursesQuery.EnrollmentsConnection(nodes = listOf(enrollmentNode))
+        val data = buildQueryData(
+            allCourse(
+                id = "1",
+                name = "Course",
+                enrollmentsConnection = enrollmentsConnection,
+                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+            )
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val enrollment = result.visibleCourses[0].enrollments?.first()
+        assertEquals("A-", enrollment?.currentGrade)
+        assertEquals(92.5, enrollment?.currentScore)
+    }
+
+    @Test
+    fun `unread announcements are included in announcementsMap`() = runTest {
+        val announcementNode = DashboardCoursesQuery.Node1(
+            _id = "10",
+            title = "Important Update",
+            message = "Hello students",
+            postedAt = Date(),
+            participant = DashboardCoursesQuery.Participant(read = false)
+        )
+        val announcements = DashboardCoursesQuery.Announcements(
+                pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+                nodes = listOf(announcementNode)
+            )
+        val data = buildQueryData(
+            allCourse(
+                id = "1",
+                name = "Course",
+                announcements = announcements,
+                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+            )
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val courseAnnouncements = result.announcementsMap[1L]
+        assertEquals(1, courseAnnouncements?.size)
+        assertEquals(10L, courseAnnouncements?.first()?.id)
+        assertEquals("Important Update", courseAnnouncements?.first()?.title)
+        assertTrue(courseAnnouncements?.first()?.announcement == true)
+    }
+
+    @Test
+    fun `read announcements are filtered out`() = runTest {
+        val readAnnouncement = DashboardCoursesQuery.Node1(
+            _id = "10",
+            title = "Old Announcement",
+            message = "Already read",
+            postedAt = Date(),
+            participant = DashboardCoursesQuery.Participant(read = true)
+        )
+        val announcements = DashboardCoursesQuery.Announcements(
+                pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+                nodes = listOf(readAnnouncement)
+            )
+        val data = buildQueryData(
+            allCourse(
+                id = "1",
+                name = "Course",
+                announcements = announcements,
+                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+            )
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val courseAnnouncements = result.announcementsMap[1L]
+        assertTrue(courseAnnouncements.isNullOrEmpty())
+    }
+
+    @Test
+    fun `forceRefresh is propagated to manager`() = runTest {
+        val data = buildQueryData()
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         useCase(LoadVisibleCoursesUseCase.Params(forceRefresh = true))
 
-        coVerify { loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh = true)) }
-        coVerify { loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true)) }
+        coVerify { dashboardCoursesManager.getDashboardCourses(forceNetwork = true) }
+    }
+
+    @Test
+    fun `empty allCourses response returns empty result`() = runTest {
+        val data = DashboardCoursesQuery.Data(allCourses = emptyList())
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        assertTrue(result.visibleCourses.isEmpty())
+        assertTrue(result.allCourses.isEmpty())
+        assertTrue(result.announcementsMap.isEmpty())
+    }
+
+    private fun buildQueryData(vararg courses: DashboardCoursesQuery.AllCourse): DashboardCoursesQuery.Data {
+        return DashboardCoursesQuery.Data(allCourses = courses.toList())
+    }
+
+    private fun allCourse(
+        id: String,
+        name: String,
+        courseCode: String? = null,
+        imageUrl: String? = null,
+        dashboardCard: DashboardCoursesQuery.DashboardCard? = null,
+        enrollmentsConnection: DashboardCoursesQuery.EnrollmentsConnection? = null,
+        announcements: DashboardCoursesQuery.Announcements? = null
+    ): DashboardCoursesQuery.AllCourse {
+        return DashboardCoursesQuery.AllCourse(
+            _id = id,
+            name = name,
+            courseCode = courseCode,
+            imageUrl = imageUrl,
+            dashboardCard = dashboardCard,
+            enrollmentsConnection = enrollmentsConnection,
+            announcements = announcements
+        )
+    }
+
+    private fun dashboardCard(
+        isFavorited: Boolean = false,
+        position: Int? = null,
+        color: String? = null
+    ): DashboardCoursesQuery.DashboardCard {
+        return DashboardCoursesQuery.DashboardCard(
+            isFavorited = isFavorited,
+            position = position,
+            color = color,
+            image = null
+        )
     }
 }
