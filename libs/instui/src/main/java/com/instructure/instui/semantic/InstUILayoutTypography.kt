@@ -19,6 +19,7 @@
 
 package com.instructure.instui.semantic
 
+import androidx.compose.ui.unit.sp
 import com.instructure.instui.primitives.InstUIFontFamilies
 import com.instructure.instui.primitives.InstUIFontWeights
 import com.instructure.instui.primitives.InstUISizes
@@ -43,22 +44,22 @@ object InstUILayoutTypography {
 
     object FontSize {
         object Text2xl {
-            val text2xl = InstUISizes.size40
+            val text2xl = 40.sp
         }
         object TextBase {
-            val textBase = InstUISizes.size16
+            val textBase = 16.sp
         }
         object TextLg {
-            val textLg = InstUISizes.size20
+            val textLg = 20.sp
         }
         object TextSm {
-            val textSm = InstUISizes.size14
+            val textSm = 14.sp
         }
         object TextXl {
-            val textXl = InstUISizes.size28
+            val textXl = 28.sp
         }
         object TextXs {
-            val textXs = InstUISizes.size12
+            val textXs = 12.sp
         }
     }
 

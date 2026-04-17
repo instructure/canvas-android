@@ -116,6 +116,24 @@ function isPrimitiveValue(value) {
  * Convert a raw value to Kotlin code
  */
 function valueToKotlin(value, type) {
+  // Font sizes must be sp (not dp) for accessibility scaling
+  if (type === 'fontSizes') {
+    // Reference like {size.size16} -> extract the numeric dp value -> emit as sp
+    const sizeRef = typeof value === 'string' && value.match(/^\{size\.size(\d+(?:_\d+)?)\}$/)
+    if (sizeRef) {
+      const num = parseFloat(sizeRef[1].replace('_', '.'))
+      return `${num}.sp`
+    }
+    // Literal like "1rem" or "14px"
+    const numMatch = typeof value === 'string' && value.match(/^([\d.]+)(rem|px|em)?$/)
+    if (numMatch) {
+      let num = parseFloat(numMatch[1])
+      if (numMatch[2] === 'rem' || numMatch[2] === 'em') num = num * 16
+      num = Math.round(num * 100) / 100
+      return `${num}.sp`
+    }
+  }
+
   // Check if it's a reference
   const resolved = resolveReference(value)
   if (resolved) return resolved
@@ -811,6 +829,7 @@ ${lines.join('\n')}
 
 package ${PACKAGE_NAME}
 
+import androidx.compose.ui.unit.sp
 import com.instructure.instui.primitives.InstUIFontFamilies
 import com.instructure.instui.primitives.InstUIFontWeights
 import com.instructure.instui.primitives.InstUISizes
