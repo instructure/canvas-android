@@ -127,13 +127,13 @@ class AccountViewModel @Inject constructor(
                 type = AccountItemType.Open(AccountRoute.CalendarFeed),
             ),
             AccountItemState(
-                title = context.getString(R.string.accountAdvancedLabel),
-                type = AccountItemType.Open(AccountRoute.Advanced),
-            ),
-            AccountItemState(
                 title = context.getString(R.string.offline_settingsTitle),
                 type = AccountItemType.Open(AccountRoute.OfflineSettings),
                 visible = showOfflineSettings,
+            ),
+            AccountItemState(
+                title = context.getString(R.string.accountAdvancedLabel),
+                type = AccountItemType.Open(AccountRoute.Advanced),
             ),
         )
     )

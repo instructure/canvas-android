@@ -22,8 +22,10 @@ import androidx.room.PrimaryKey
 data class HorizonFileFolderEntity(
     @PrimaryKey
     val id: Long,
+    val courseId: Long? = null,
     val url: String,
     val displayName: String,
+    val size: Long = 0L,
     val contentType: String? = null,
     val thumbnailUrl: String? = null,
 )

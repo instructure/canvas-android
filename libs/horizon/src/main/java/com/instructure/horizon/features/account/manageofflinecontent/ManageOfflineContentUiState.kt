@@ -30,6 +30,7 @@ enum class CourseOfflineState {
 data class OfflineCourseItemUiState(
     val courseId: Long,
     val courseName: String,
+    val courseSizeLabel: String = "",
     val offlineState: CourseOfflineState = CourseOfflineState.NONE,
     val isExpanded: Boolean = false,
     val files: List<OfflineFileItemUiState> = emptyList(),
@@ -37,19 +38,34 @@ data class OfflineCourseItemUiState(
     val onOfflineStateChanged: (CourseOfflineState) -> Unit = {},
 )
 
+enum class FileSyncState {
+    PENDING,
+    SYNCING,
+    DONE,
+}
+
 data class OfflineFileItemUiState(
     val fileId: Long,
     val fileName: String,
     val fileSizeLabel: String,
     val isSelected: Boolean = false,
+    val syncState: FileSyncState = FileSyncState.PENDING,
     val onSelectionChanged: (Boolean) -> Unit = {},
 )
 
 data class ManageOfflineContentUiState(
     val mode: ManageOfflineContentMode = ManageOfflineContentMode.SELECTING,
+    val isLoading: Boolean = false,
+    val storageOtherAppBytes: Long = 0L,
+    val storageCanvasBytes: Long = 0L,
+    val storageTotalBytes: Long = 0L,
     val storageUsedLabel: String = "",
+    val storageTotalLabel: String = "",
     val courses: List<OfflineCourseItemUiState> = emptyList(),
+    val onSelectAllClick: () -> Unit = {},
     val onRemoveContentClick: () -> Unit = {},
     val onSyncClick: () -> Unit = {},
+    val onCancelSyncClick: () -> Unit = {},
     val syncProgress: Float = 0f,
+    val syncProgressLabel: String = "",
 )

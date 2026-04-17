@@ -29,4 +29,7 @@ interface HorizonFileFolderDao {
 
     @Query("SELECT * FROM HorizonFileFolderEntity WHERE id = :id")
     suspend fun findById(id: Long): HorizonFileFolderEntity?
+
+    @Query("SELECT * FROM HorizonFileFolderEntity WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<HorizonFileFolderEntity>
 }

@@ -88,7 +88,7 @@ class HorizonFileSyncRepository @Inject constructor(
         val url = file.url ?: return null
         val displayName = file.displayName ?: return null
 
-        val entity = HorizonFileFolderEntity(fileId, url, displayName)
+        val entity = HorizonFileFolderEntity(id = fileId, courseId = courseId, url = url, displayName = displayName)
         fileFolderDao.insert(entity)
         return entity
     }

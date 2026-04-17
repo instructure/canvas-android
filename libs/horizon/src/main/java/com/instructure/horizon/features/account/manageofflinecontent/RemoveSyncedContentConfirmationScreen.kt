@@ -68,7 +68,7 @@ fun RemoveSyncedContentConfirmationScreen(
             ) {
                 Button(
                     label = stringResource(R.string.offline_removeSyncedContentCancel),
-                    color = ButtonColor.Inverse,
+                    color = ButtonColor.Ghost,
                     width = ButtonWidth.FILL,
                     onClick = { navController.popBackStack() },
                     modifier = Modifier.weight(1f),

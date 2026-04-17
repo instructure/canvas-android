@@ -22,6 +22,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,37 +32,45 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
-import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 
+private val SyncIconBackgroundColor = Color(0xFFE6EDF3)
+private val SyncProgressColor = Color(0xFF09508C)
+private val SyncProgressTrackColor = Color(0xFFE0EBF5)
+private val SyncProgressLabelColor = Color(0xFF586874)
+
 @Composable
 fun DashboardSyncInProgressWidget(
     syncProgress: Float,
+    syncProgressLabel: String = "",
     navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.offline_syncInProgressTitle),
         iconRes = R.drawable.cloud_sync,
-        widgetColor = HorizonColors.Surface.institution(),
+        widgetColor = SyncIconBackgroundColor,
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
         onClick = { navController.navigate(AccountRoute.ManageOfflineContent.route) },
         modifier = modifier,
     ) {
         Column {
-            Text(
-                text = stringResource(R.string.offline_syncInProgressDescription),
-                style = HorizonTypography.p2,
-                color = HorizonColors.Text.body(),
-            )
-            HorizonSpace(SpaceSize.SPACE_8)
+            if (syncProgressLabel.isNotEmpty()) {
+                Text(
+                    text = syncProgressLabel,
+                    style = HorizonTypography.p2,
+                    color = SyncProgressLabelColor,
+                )
+                HorizonSpace(SpaceSize.SPACE_8)
+            }
             LinearProgressIndicator(
                 progress = { syncProgress },
                 modifier = Modifier.fillMaxWidth(),
-                color = HorizonColors.Surface.institution(),
+                color = SyncProgressColor,
+                trackColor = SyncProgressTrackColor,
             )
         }
     }
@@ -72,6 +81,7 @@ fun DashboardSyncInProgressWidget(
 private fun DashboardSyncInProgressWidgetPreview() {
     DashboardSyncInProgressWidget(
         syncProgress = 0.4f,
+        syncProgressLabel = "Downloading 40 MB of 100 MB",
         navController = rememberNavController(),
         modifier = Modifier.padding(24.dp),
     )

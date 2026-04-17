@@ -15,23 +15,110 @@
  */
 package com.instructure.horizon.features.account.manageofflinecontent
 
+import android.content.Context
+import android.os.StatFs
+import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ManageOfflineContentViewModel @Inject constructor() : ViewModel() {
+class ManageOfflineContentViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val getCoursesWithFilesUseCase: GetCoursesWithFilesUseCase,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         ManageOfflineContentUiState(
+            onSelectAllClick = ::onSelectAllClick,
             onRemoveContentClick = ::onRemoveContentClick,
             onSyncClick = ::onSyncClick,
+            onCancelSyncClick = ::onCancelSyncClick,
         )
     )
     val uiState = _uiState.asStateFlow()
+
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            val coursesWithFiles = try {
+                getCoursesWithFilesUseCase()
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false) }
+                return@launch
+            }
+
+            val courses = coursesWithFiles.map { courseData ->
+                val totalSizeBytes = courseData.files.filter { it.isSynced }.sumOf { it.size }
+                OfflineCourseItemUiState(
+                    courseId = courseData.courseId,
+                    courseName = courseData.courseName,
+                    courseSizeLabel = if (totalSizeBytes > 0) Formatter.formatShortFileSize(context, totalSizeBytes) else "",
+                    offlineState = when {
+                        courseData.files.isEmpty() -> CourseOfflineState.NONE
+                        courseData.files.all { it.isSynced } -> CourseOfflineState.ALL
+                        courseData.files.any { it.isSynced } -> CourseOfflineState.PARTIAL
+                        else -> CourseOfflineState.NONE
+                    },
+                    files = courseData.files.map { file ->
+                        OfflineFileItemUiState(
+                            fileId = file.fileId,
+                            fileName = file.displayName,
+                            fileSizeLabel = Formatter.formatShortFileSize(context, file.size),
+                            isSelected = file.isSynced,
+                            onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
+                        )
+                    },
+                    onToggleExpanded = { toggleCourseExpanded(courseData.courseId) },
+                    onOfflineStateChanged = { state -> updateCourseOfflineState(courseData.courseId, state) },
+                )
+            }
+
+            val canvasBytes = coursesWithFiles.sumOf { course ->
+                course.files.filter { it.isSynced }.sumOf { it.size }
+            }
+            val statFs = StatFs(context.filesDir.path)
+            val totalBytes = statFs.totalBytes
+            val availableBytes = statFs.availableBytes
+            val otherAppBytes = ((totalBytes - availableBytes) - canvasBytes).coerceAtLeast(0L)
+
+            _uiState.update { state ->
+                state.copy(
+                    isLoading = false,
+                    courses = courses,
+                    storageCanvasBytes = canvasBytes,
+                    storageOtherAppBytes = otherAppBytes,
+                    storageTotalBytes = totalBytes,
+                    storageUsedLabel = Formatter.formatShortFileSize(context, canvasBytes),
+                    storageTotalLabel = Formatter.formatShortFileSize(context, totalBytes),
+                )
+            }
+        }
+    }
+
+    private fun onSelectAllClick() {
+        _uiState.update { state ->
+            state.copy(
+                courses = state.courses.map { course ->
+                    course.copy(
+                        offlineState = CourseOfflineState.ALL,
+                        files = course.files.map { it.copy(isSelected = true) },
+                    )
+                }
+            )
+        }
+    }
 
     private fun onRemoveContentClick() {
         // Navigation to confirmation screen is handled in the composable
@@ -41,29 +128,37 @@ class ManageOfflineContentViewModel @Inject constructor() : ViewModel() {
         _uiState.update { it.copy(mode = ManageOfflineContentMode.SYNCING) }
     }
 
-    fun toggleCourseExpanded(courseId: Long) {
+    private fun onCancelSyncClick() {
+        _uiState.update { it.copy(mode = ManageOfflineContentMode.SELECTING) }
+    }
+
+    private fun toggleCourseExpanded(courseId: Long) {
         _uiState.update { state ->
             state.copy(
                 courses = state.courses.map { course ->
-                    if (course.courseId == courseId) course.copy(isExpanded = !course.isExpanded)
-                    else course
+                    if (course.courseId == courseId) course.copy(isExpanded = !course.isExpanded) else course
                 }
             )
         }
     }
 
-    fun updateCourseOfflineState(courseId: Long, offlineState: CourseOfflineState) {
+    private fun updateCourseOfflineState(courseId: Long, offlineState: CourseOfflineState) {
         _uiState.update { state ->
             state.copy(
                 courses = state.courses.map { course ->
-                    if (course.courseId == courseId) course.copy(offlineState = offlineState)
-                    else course
+                    if (course.courseId == courseId) {
+                        val selected = offlineState != CourseOfflineState.NONE
+                        course.copy(
+                            offlineState = offlineState,
+                            files = course.files.map { it.copy(isSelected = selected) },
+                        )
+                    } else course
                 }
             )
         }
     }
 
-    fun updateFileSelection(courseId: Long, fileId: Long, selected: Boolean) {
+    private fun updateFileSelection(courseId: Long, fileId: Long, selected: Boolean) {
         _uiState.update { state ->
             state.copy(
                 courses = state.courses.map { course ->
@@ -73,12 +168,14 @@ class ManageOfflineContentViewModel @Inject constructor() : ViewModel() {
                         }
                         val allSelected = updatedFiles.all { it.isSelected }
                         val noneSelected = updatedFiles.none { it.isSelected }
-                        val newOfflineState = when {
-                            allSelected -> CourseOfflineState.ALL
-                            noneSelected -> CourseOfflineState.NONE
-                            else -> CourseOfflineState.PARTIAL
-                        }
-                        course.copy(files = updatedFiles, offlineState = newOfflineState)
+                        course.copy(
+                            files = updatedFiles,
+                            offlineState = when {
+                                allSelected -> CourseOfflineState.ALL
+                                noneSelected -> CourseOfflineState.NONE
+                                else -> CourseOfflineState.PARTIAL
+                            },
+                        )
                     } else course
                 }
             )

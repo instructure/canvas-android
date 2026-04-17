@@ -202,6 +202,7 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                         if (uiState.isSyncInProgress) {
                             DashboardSyncInProgressWidget(
                                 syncProgress = uiState.syncProgress,
+                                syncProgressLabel = uiState.syncProgressLabel,
                                 navController = navController,
                                 modifier = Modifier
                                     .fillMaxWidth()

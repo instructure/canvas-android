@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -670,17 +671,34 @@ private fun NotAvailableOfflineContent(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(64.dp)
+                .background(
+                    color = Color(0xFFFCE4E5),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                ),
+        ) {
+            androidx.compose.material3.Icon(
+                painter = androidx.compose.ui.res.painterResource(R.drawable.cancel),
+                contentDescription = null,
+                tint = HorizonColors.Surface.error(),
+                modifier = Modifier.size(32.dp),
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
         Text(
             text = stringResource(R.string.offline_notAvailableTitle),
-            style = HorizonTypography.h3,
+            style = HorizonTypography.h4,
             color = HorizonColors.Text.body(),
             textAlign = TextAlign.Center,
         )
         HorizonSpace(SpaceSize.SPACE_8)
         Text(
             text = stringResource(R.string.offline_notAvailableDescription),
-            style = HorizonTypography.p1,
-            color = HorizonColors.Text.body(),
+            style = HorizonTypography.p2,
+            color = Color(0xFF586874),
             textAlign = TextAlign.Center,
         )
     }

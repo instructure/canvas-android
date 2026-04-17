@@ -16,23 +16,35 @@
 package com.instructure.horizon.features.account.manageofflinecontent
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -53,6 +65,10 @@ import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItemState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
+private val OtherAppsColor = Color(0xFF586874)
+private val CanvasCareerColor = Color(0xFF09508C)
+private val RemainingColor = Color(0xFFE0EBF5)
+
 @Composable
 fun ManageOfflineContentScreen(
     uiState: ManageOfflineContentUiState,
@@ -62,46 +78,130 @@ fun ManageOfflineContentScreen(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
-        Column(
-            modifier = modifier
-                .padding(horizontal = 24.dp, vertical = 16.dp)
-                .verticalScroll(rememberScrollState()),
-        ) {
-            if (uiState.storageUsedLabel.isNotEmpty()) {
-                Text(
-                    text = stringResource(R.string.offline_storageUsedLabel, uiState.storageUsedLabel),
-                    style = HorizonTypography.p2,
-                    color = HorizonColors.Text.body(),
-                )
-                HorizonSpace(SpaceSize.SPACE_16)
+        if (uiState.isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = modifier.fillMaxSize(),
+            ) {
+                CircularProgressIndicator(color = HorizonColors.Surface.institution())
             }
+        } else {
+            Column(
+                modifier = modifier
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+                    .verticalScroll(rememberScrollState()),
+            ) {
+                StorageCard(uiState)
+                HorizonSpace(SpaceSize.SPACE_24)
 
-            when (uiState.mode) {
-                ManageOfflineContentMode.SYNCING -> SyncingContent(uiState)
-                ManageOfflineContentMode.DELETING -> DeletingContent(uiState, navController)
-                ManageOfflineContentMode.SELECTING -> SelectingContent(uiState, navController)
+                when (uiState.mode) {
+                    ManageOfflineContentMode.SYNCING -> SyncingContent(uiState)
+                    ManageOfflineContentMode.DELETING -> DeletingContent()
+                    ManageOfflineContentMode.SELECTING -> SelectingContent(uiState, navController)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun SelectingContent(uiState: ManageOfflineContentUiState, navController: NavHostController) {
+private fun StorageCard(uiState: ManageOfflineContentUiState) {
+    val total = uiState.storageTotalBytes.toFloat().coerceAtLeast(1f)
+    val otherFraction = (uiState.storageOtherAppBytes / total).coerceIn(0f, 1f)
+    val canvasFraction = (uiState.storageCanvasBytes / total).coerceIn(0f, 1f - otherFraction)
+    val remainingFraction = (1f - otherFraction - canvasFraction).coerceAtLeast(0f)
+
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(8.dp)
+                .clip(RoundedCornerShape(4.dp)),
+        ) {
+            if (otherFraction > 0f) {
+                Box(
+                    modifier = Modifier
+                        .weight(otherFraction)
+                        .fillMaxSize()
+                        .background(OtherAppsColor)
+                )
+            }
+            if (canvasFraction > 0f) {
+                Box(
+                    modifier = Modifier
+                        .weight(canvasFraction)
+                        .fillMaxSize()
+                        .background(CanvasCareerColor)
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .weight(remainingFraction.coerceAtLeast(0.01f))
+                    .fillMaxSize()
+                    .background(RemainingColor)
+            )
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            StorageLegendItem(color = OtherAppsColor, label = stringResource(R.string.offline_storageOtherApps))
+            StorageLegendItem(color = CanvasCareerColor, label = stringResource(R.string.offline_storageCanvasCareer))
+            StorageLegendItem(color = RemainingColor, label = stringResource(R.string.offline_storageRemaining))
+        }
+        if (uiState.storageUsedLabel.isNotEmpty() && uiState.storageTotalLabel.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.offline_storageUsedLabel, uiState.storageUsedLabel, uiState.storageTotalLabel),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.body(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun StorageLegendItem(color: Color, label: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Text(
+            text = label,
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.body(),
+        )
+    }
+}
+
+@Composable
+private fun SelectingContent(uiState: ManageOfflineContentUiState, navController: NavHostController) {
+    val hasSelection = uiState.courses.any { it.offlineState != CourseOfflineState.NONE }
+
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text(
+            text = stringResource(R.string.offline_selectAll),
+            style = HorizonTypography.p1.copy(textDecoration = TextDecoration.Underline),
+            color = HorizonColors.Text.title(),
+            modifier = Modifier.clickable { uiState.onSelectAllClick() },
+        )
         uiState.courses.forEach { course ->
             CourseItem(course)
         }
         HorizonSpace(SpaceSize.SPACE_16)
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(
-                label = stringResource(R.string.offline_manageOfflineContentButton),
+                label = stringResource(R.string.offline_syncButton),
                 width = ButtonWidth.FILL,
                 onClick = uiState.onSyncClick,
+                enabled = hasSelection,
                 modifier = Modifier.weight(1f),
             )
             Button(
                 label = stringResource(R.string.offline_removeSyncedContentTitle),
-                color = ButtonColor.Danger,
+                color = ButtonColor.DangerInverse,
                 width = ButtonWidth.FILL,
                 onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
                 modifier = Modifier.weight(1f),
@@ -112,38 +212,113 @@ private fun SelectingContent(uiState: ManageOfflineContentUiState, navController
 
 @Composable
 private fun SyncingContent(uiState: ManageOfflineContentUiState) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        Text(
-            text = stringResource(R.string.offline_syncInProgressTitle),
-            style = HorizonTypography.h4,
-            color = HorizonColors.Text.body(),
-        )
-        Text(
-            text = stringResource(R.string.offline_syncInProgressDescription),
-            style = HorizonTypography.p1,
-            color = HorizonColors.Text.body(),
-        )
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        if (uiState.syncProgressLabel.isNotEmpty()) {
+            Text(
+                text = uiState.syncProgressLabel,
+                style = HorizonTypography.p2,
+                color = Color(0xFF586874),
+            )
+        }
         LinearProgressIndicator(
             progress = { uiState.syncProgress },
             modifier = Modifier.fillMaxWidth(),
-            color = HorizonColors.Surface.institution(),
+            color = CanvasCareerColor,
+            trackColor = RemainingColor,
+        )
+        HorizonSpace(SpaceSize.SPACE_8)
+        uiState.courses.forEach { course ->
+            SyncingCourseItem(course)
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+        Button(
+            label = stringResource(R.string.offline_cancelSync),
+            color = ButtonColor.BlackOutline,
+            width = ButtonWidth.FILL,
+            onClick = uiState.onCancelSyncClick,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }
 
 @Composable
-private fun DeletingContent(uiState: ManageOfflineContentUiState, navController: NavHostController) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        uiState.courses.forEach { course ->
-            CourseItem(course)
+private fun SyncingCourseItem(course: OfflineCourseItemUiState) {
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 4.dp),
+        ) {
+            Text(
+                text = course.courseName,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.weight(1f),
+            )
         }
+        course.files.forEach { file ->
+            SyncingFileItem(file)
+        }
+    }
+}
+
+@Composable
+private fun SyncingFileItem(file: OfflineFileItemUiState) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+    ) {
+        when (file.syncState) {
+            FileSyncState.SYNCING -> CircularProgressIndicator(
+                modifier = Modifier.size(16.dp),
+                strokeWidth = 2.dp,
+                color = CanvasCareerColor,
+            )
+            FileSyncState.DONE -> Icon(
+                painter = painterResource(R.drawable.check),
+                contentDescription = null,
+                tint = CanvasCareerColor,
+                modifier = Modifier.size(16.dp),
+            )
+            FileSyncState.PENDING -> Spacer(modifier = Modifier.size(16.dp))
+        }
+        Text(
+            text = file.fileName,
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.body(),
+            modifier = Modifier.weight(1f),
+        )
+        Text(
+            text = file.fileSizeLabel,
+            style = HorizonTypography.p2,
+            color = Color(0xFF586874),
+        )
+    }
+}
+
+@Composable
+private fun DeletingContent() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 48.dp),
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.size(48.dp),
+            color = HorizonColors.Surface.institution(),
+        )
         HorizonSpace(SpaceSize.SPACE_16)
-        Button(
-            label = stringResource(R.string.offline_removeSyncedContentConfirm),
-            color = ButtonColor.Danger,
-            width = ButtonWidth.FILL,
-            onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
-            modifier = Modifier.fillMaxWidth(),
+        Text(
+            text = stringResource(R.string.offline_deletingContent),
+            style = HorizonTypography.h4,
+            color = HorizonColors.Text.body(),
         )
     }
 }
@@ -165,7 +340,10 @@ private fun CourseItem(course: OfflineCourseItemUiState) {
         ) {
             TriStateCheckboxItem(
                 state = TriStateCheckboxItemState(
-                    controlsContentState = ControlsContentState(title = course.courseName),
+                    controlsContentState = ControlsContentState(
+                        title = course.courseName,
+                        description = course.courseSizeLabel.ifEmpty { null },
+                    ),
                     toggleableState = toggleableState,
                     onClick = {
                         val next = if (course.offlineState == CourseOfflineState.ALL) {
@@ -211,11 +389,16 @@ private fun CourseItem(course: OfflineCourseItemUiState) {
 private fun ManageOfflineContentScreenPreview() {
     ManageOfflineContentScreen(
         uiState = ManageOfflineContentUiState(
-            storageUsedLabel = "1.2 GB",
+            storageOtherAppBytes = 2_000_000_000L,
+            storageCanvasBytes = 500_000_000L,
+            storageTotalBytes = 16_000_000_000L,
+            storageUsedLabel = "2.5 GB",
+            storageTotalLabel = "16 GB",
             courses = listOf(
                 OfflineCourseItemUiState(
                     courseId = 1L,
                     courseName = "Introduction to Biology",
+                    courseSizeLabel = "20 MB",
                     offlineState = CourseOfflineState.PARTIAL,
                     isExpanded = true,
                     files = listOf(

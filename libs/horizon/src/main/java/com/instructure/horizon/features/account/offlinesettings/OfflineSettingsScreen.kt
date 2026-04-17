@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,7 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
@@ -60,9 +63,24 @@ fun OfflineSettingsScreen(
                 .padding(horizontal = 24.dp, vertical = 16.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            Button(
+                label = stringResource(R.string.offline_manageOfflineContentButton),
+                width = ButtonWidth.FILL,
+                onClick = uiState.onManageOfflineContentClick,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(
+                text = stringResource(R.string.offline_syncSettingsHeader),
+                style = HorizonTypography.h4,
+                color = HorizonColors.Text.title(),
+            )
             SwitchItem(
                 state = SwitchItemState(
-                    controlsContentState = ControlsContentState(title = stringResource(R.string.offline_autoSyncLabel)),
+                    controlsContentState = ControlsContentState(
+                        title = stringResource(R.string.offline_autoSyncLabel),
+                        description = stringResource(R.string.offline_autoSyncDescription),
+                    ),
                     checked = uiState.autoSyncEnabled,
                     onCheckedChanged = uiState.onAutoSyncToggled,
                 )
@@ -74,17 +92,13 @@ fun OfflineSettingsScreen(
             )
             SwitchItem(
                 state = SwitchItemState(
-                    controlsContentState = ControlsContentState(title = stringResource(R.string.offline_wifiOnlyLabel)),
+                    controlsContentState = ControlsContentState(
+                        title = stringResource(R.string.offline_wifiOnlyLabel),
+                        description = stringResource(R.string.offline_wifiOnlyDescription),
+                    ),
                     checked = uiState.wifiOnlyEnabled,
                     onCheckedChanged = uiState.onWifiOnlyToggled,
                 )
-            )
-            HorizonSpace(SpaceSize.SPACE_8)
-            Button(
-                label = stringResource(R.string.offline_manageOfflineContentButton),
-                width = ButtonWidth.FILL,
-                onClick = uiState.onManageOfflineContentClick,
-                modifier = Modifier.fillMaxWidth(),
             )
         }
     }

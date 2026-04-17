@@ -29,6 +29,7 @@ data class DashboardUiState(
     val lastSyncedAtMs: Long? = null,
     val isSyncInProgress: Boolean = false,
     val syncProgress: Float = 0f,
+    val syncProgressLabel: String = "",
 )
 
 data class DashboardUnreadState(
