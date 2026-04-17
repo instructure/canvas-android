@@ -71,7 +71,7 @@ private fun AiAssistPositiveFeedbackIcon(
         } else {
             painterResource(R.drawable.thumb_up)
         },
-        contentDescription = stringResource(R.string.a11y_igniteAIPositiveFeedback),
+        contentDescription = stringResource(R.string.a11y_studyToolsPositiveFeedback),
         tint = HorizonColors.Text.surfaceColored(),
         modifier = Modifier.clickable { onClick() },
     )
@@ -88,7 +88,7 @@ private fun AiAssistNegativeFeedbackIcon(
         } else {
             painterResource(R.drawable.thumb_down)
         },
-        contentDescription = stringResource(R.string.a11y_igniteAINegativeFeedback),
+        contentDescription = stringResource(R.string.a11y_studyToolsNegativeFeedback),
         tint = HorizonColors.Text.surfaceColored(),
         modifier = Modifier.clickable { onClick() },
     )
