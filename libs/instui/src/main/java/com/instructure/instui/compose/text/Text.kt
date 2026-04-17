@@ -31,10 +31,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.instructure.instui.component.InstUIHeading
-import com.instructure.instui.component.InstUIText as InstUITextTokens
+import com.instructure.instui.token.component.InstUIHeading
+import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 import com.instructure.instui.compose.InstUITheme
-import com.instructure.instui.semantic.InstUISemanticColors
+import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
  * InstUI text component.

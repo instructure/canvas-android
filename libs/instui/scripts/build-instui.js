@@ -177,9 +177,9 @@ async function main() {
 
   console.log('')
   console.log('Done! Generated files are in:')
-  console.log('  ../src/main/java/com/instructure/instui/primitives/')
-  console.log('  ../src/main/java/com/instructure/instui/semantic/')
-  console.log('  ../src/main/java/com/instructure/instui/component/')
+  console.log('  ../src/main/java/com/instructure/instui/token/primitives/')
+  console.log('  ../src/main/java/com/instructure/instui/token/semantic/')
+  console.log('  ../src/main/java/com/instructure/instui/token/component/')
 }
 
 main().catch(err => {

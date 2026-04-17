@@ -14,7 +14,7 @@ The generator downloads design tokens from the instructure-ui repository and use
 
 **⚠️ DO NOT EDIT these files manually!** They are regenerated from the source tokens.
 
-### Primitives (`../src/main/java/com/instructure/instui/primitives/`)
+### Primitives (`../src/main/java/com/instructure/instui/token/primitives/`)
 
 - **InstUIColors.kt** - Color primitives (grey, blue, red, etc.)
 - **InstUISizes.kt** - Size/spacing primitives in dp
@@ -22,7 +22,7 @@ The generator downloads design tokens from the instructure-ui repository and use
 - **InstUIFontFamilies.kt** - Font family definitions
 - **InstUIOpacities.kt** - Opacity values
 
-### Semantics (`../src/main/java/com/instructure/instui/semantic/`)
+### Semantics (`../src/main/java/com/instructure/instui/token/semantic/`)
 
 - **InstUISemanticColors.kt** - Theme-aware colors with Light/Dark + @Composable accessors
 - **InstUIElevation.kt** - Shadow values (Level1-4)
@@ -30,7 +30,7 @@ The generator downloads design tokens from the instructure-ui repository and use
 - **InstUILayoutTypography.kt** - Font families, weights, sizes, line heights
 - **InstUILayoutConfig.kt** - Opacity config, visibility flags
 
-### Components (`../src/main/java/com/instructure/instui/component/`)
+### Components (`../src/main/java/com/instructure/instui/token/component/`)
 
 One file per component, auto-discovered from the instructure-ui repo. Examples:
 - **InstUIText.kt** - Text styles (composed TextStyle objects), font sizes, colors
