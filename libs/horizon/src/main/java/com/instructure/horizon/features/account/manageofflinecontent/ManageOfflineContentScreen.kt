@@ -16,11 +16,12 @@
 package com.instructure.horizon.features.account.manageofflinecontent
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,21 +36,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,46 +59,55 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.navigation.AccountRoute
+import com.instructure.horizon.horizonui.expandable
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItemState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.modifiers.conditional
 
-private val SyncBlue = Color(0xFF09508C)
-private val CanvasCareerBlue = Color(0xFF2B7ABC)
-private val RemainingBlue = Color(0xFFE0EBF5)
-private val TimestampColor = Color(0xFF586874)
-private val DividerColor = Color(0xFFE8EAEC)
-private val CardBorderColor = Color(0xFFD7DADE)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageOfflineContentScreen(
     uiState: ManageOfflineContentUiState,
     navController: NavHostController,
 ) {
+    val scrollState = rememberScrollState()
     HorizonScaffold(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
-        if (uiState.isLoading) {
-            Box(contentAlignment = Alignment.Center, modifier = modifier.fillMaxSize()) {
-                CircularProgressIndicator(color = HorizonColors.Surface.institution())
-            }
-        } else {
-            Column(modifier = modifier) {
+        LoadingStateWrapper(
+            loadingState = uiState.loadingState,
+            modifier = modifier,
+            containerColor = HorizonColors.Surface.pageSecondary(),
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
                 Column(
                     modifier = Modifier
                         .weight(1f)
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(scrollState),
                 ) {
                     StorageCard(
                         uiState = uiState,
@@ -109,7 +120,7 @@ fun ManageOfflineContentScreen(
                     }
                 }
                 when (uiState.mode) {
-                    ManageOfflineContentMode.SELECTING -> SelectingBottomBar(uiState, navController)
+                    ManageOfflineContentMode.SELECTING -> SelectingBottomBar(uiState, scrollState, navController)
                     ManageOfflineContentMode.SYNCING -> SyncingBottomBar(uiState)
                     ManageOfflineContentMode.DELETING -> Unit
                 }
@@ -117,8 +128,6 @@ fun ManageOfflineContentScreen(
         }
     }
 }
-
-// region Storage card
 
 @Composable
 private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier = Modifier) {
@@ -131,8 +140,8 @@ private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxWidth()
-            .background(HorizonColors.Surface.pageSecondary(), RoundedCornerShape(16.dp))
-            .border(1.dp, CardBorderColor, RoundedCornerShape(16.dp))
+            .background(HorizonColors.Surface.pageSecondary(), HorizonCornerRadius.level2)
+            .border(1.dp, HorizonColors.LineAndBorder.lineStroke(), HorizonCornerRadius.level2)
             .padding(16.dp),
     ) {
         Row(
@@ -153,7 +162,7 @@ private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier
                         uiState.storageTotalLabel,
                     ),
                     style = HorizonTypography.p3,
-                    color = TimestampColor,
+                    color = HorizonColors.Text.timestamp(),
                 )
             }
         }
@@ -161,14 +170,14 @@ private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)
-                .clip(RoundedCornerShape(4.dp)),
+                .clip(HorizonCornerRadius.level1),
         ) {
             if (otherFraction > 0f) {
                 Box(
                     modifier = Modifier
                         .weight(otherFraction)
                         .fillMaxSize()
-                        .background(SyncBlue),
+                        .background(HorizonColors.PrimitivesBlue.blue82()),
                 )
             }
             if (canvasFraction > 0f) {
@@ -176,20 +185,20 @@ private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier
                     modifier = Modifier
                         .weight(canvasFraction)
                         .fillMaxSize()
-                        .background(CanvasCareerBlue),
+                        .background(HorizonColors.Surface.attention()),
                 )
             }
             Box(
                 modifier = Modifier
                     .weight(remainingFraction.coerceAtLeast(0.01f))
                     .fillMaxSize()
-                    .background(RemainingBlue),
+                    .background(HorizonColors.PrimitivesBlue.blue12()),
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StorageLegendDot(color = SyncBlue, label = stringResource(R.string.offline_storageOtherApps))
-            StorageLegendDot(color = CanvasCareerBlue, label = stringResource(R.string.offline_storageCanvasCareer))
-            StorageLegendDot(color = RemainingBlue, label = stringResource(R.string.offline_storageRemaining))
+            StorageLegendDot(color = HorizonColors.PrimitivesBlue.blue82(), label = stringResource(R.string.offline_storageOtherApps))
+            StorageLegendDot(color = HorizonColors.Surface.attention(), label = stringResource(R.string.offline_storageCanvasCareer))
+            StorageLegendDot(color = HorizonColors.PrimitivesBlue.blue12(), label = stringResource(R.string.offline_storageRemaining))
         }
     }
 }
@@ -206,13 +215,9 @@ private fun StorageLegendDot(color: Color, label: String) {
                 .clip(CircleShape)
                 .background(color),
         )
-        Text(text = label, style = HorizonTypography.p3, color = TimestampColor)
+        Text(text = label, style = HorizonTypography.p3, color = HorizonColors.Text.timestamp())
     }
 }
-
-// endregion
-
-// region Selecting mode
 
 @Composable
 private fun SelectingList(uiState: ManageOfflineContentUiState) {
@@ -237,40 +242,36 @@ private fun SelectingList(uiState: ManageOfflineContentUiState) {
 }
 
 @Composable
-private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, navController: NavHostController) {
+private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState: ScrollState, navController: NavHostController) {
     val hasSelection = uiState.courses.any { it.offlineState != CourseOfflineState.NONE }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = if (hasSelection) 8.dp else 0.dp, spotColor = Color(0x2E273540))
+            .conditional(scrollState.canScrollForward) {
+                horizonBorderShadow(color = HorizonColors.LineAndBorder.lineStroke(), top = 1.dp)
+            }
             .background(HorizonColors.Surface.pageSecondary())
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 16.dp)
     ) {
         Button(
             label = stringResource(R.string.offline_syncButton),
             color = ButtonColor.Black,
             width = ButtonWidth.FILL,
+            iconPosition = ButtonIconPosition.End(R.drawable.sync),
             enabled = hasSelection,
             onClick = uiState.onSyncClick,
         )
         Button(
             label = stringResource(R.string.offline_removeSyncedContentTitle),
-            color = ButtonColor.Custom(
-                backgroundColor = HorizonColors.Surface.pageSecondary(),
-                contentColor = HorizonColors.Text.error(),
-                outlineColor = HorizonColors.Surface.error(),
-            ),
+            color = ButtonColor.DangerOutline,
             width = ButtonWidth.FILL,
+            iconPosition = ButtonIconPosition.End(R.drawable.cancel),
             onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
         )
     }
 }
-
-// endregion
-
-// region Syncing mode
 
 @Composable
 private fun SyncingList(uiState: ManageOfflineContentUiState) {
@@ -279,15 +280,15 @@ private fun SyncingList(uiState: ManageOfflineContentUiState) {
             Text(
                 text = uiState.syncProgressLabel,
                 style = HorizonTypography.p3,
-                color = TimestampColor,
+                color = HorizonColors.Text.timestamp(),
             )
             HorizonSpace(SpaceSize.SPACE_8)
         }
-        LinearProgressIndicator(
-            progress = { uiState.syncProgress },
+        ProgressBarSmall(
+            progress = (uiState.syncProgress * 100).toDouble(),
+            style = ProgressBarStyle.Dark(overrideProgressColor = HorizonColors.PrimitivesBlue.blue82()),
+            showLabels = false,
             modifier = Modifier.fillMaxWidth(),
-            color = SyncBlue,
-            trackColor = RemainingBlue,
         )
         HorizonSpace(SpaceSize.SPACE_16)
     }
@@ -330,10 +331,10 @@ private fun SyncingCourseRow(course: OfflineCourseItemUiState) {
                 modifier = Modifier.weight(1f),
             )
         }
-        HorizontalDivider(color = DividerColor)
+        HorizontalDivider(color = HorizonColors.Surface.divider())
         course.files.forEach { file ->
             SyncingFileRow(file)
-            HorizontalDivider(color = DividerColor)
+            HorizontalDivider(color = HorizonColors.Surface.divider())
         }
     }
 }
@@ -350,28 +351,23 @@ private fun SyncingFileRow(file: OfflineFileItemUiState) {
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(text = file.fileName, style = HorizonTypography.p1, color = HorizonColors.Text.body())
-            Text(text = file.fileSizeLabel, style = HorizonTypography.p2, color = TimestampColor)
+            Text(text = file.fileSizeLabel, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
         }
         when (file.syncState) {
-            FileSyncState.SYNCING -> CircularProgressIndicator(
+            FileSyncState.SYNCING -> Spinner(
+                size = SpinnerSize.EXTRA_SMALL,
                 modifier = Modifier.size(24.dp),
-                strokeWidth = 2.dp,
-                color = SyncBlue,
             )
             FileSyncState.DONE -> Icon(
                 painter = painterResource(R.drawable.check),
-                contentDescription = null,
-                tint = SyncBlue,
+                contentDescription = stringResource(R.string.offline_syncStatusSynced),
+                tint = HorizonColors.PrimitivesBlue.blue82(),
                 modifier = Modifier.size(24.dp),
             )
             FileSyncState.PENDING -> Spacer(modifier = Modifier.size(24.dp))
         }
     }
 }
-
-// endregion
-
-// region Deleting mode
 
 @Composable
 private fun DeletingContent() {
@@ -382,10 +378,7 @@ private fun DeletingContent() {
             .fillMaxWidth()
             .padding(vertical = 48.dp),
     ) {
-        CircularProgressIndicator(
-            modifier = Modifier.size(48.dp),
-            color = HorizonColors.Surface.institution(),
-        )
+        Spinner()
         HorizonSpace(SpaceSize.SPACE_16)
         Text(
             text = stringResource(R.string.offline_deletingContent),
@@ -394,10 +387,6 @@ private fun DeletingContent() {
         )
     }
 }
-
-// endregion
-
-// region Course and file rows
 
 @Composable
 private fun CourseRow(course: OfflineCourseItemUiState) {
@@ -415,26 +404,26 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth().height(76.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(76.dp),
         ) {
+            HorizonSpace(SpaceSize.SPACE_24)
             TriStateCheckboxItem(
                 state = TriStateCheckboxItemState(
                     controlsContentState = ControlsContentState(title = ""),
                     toggleableState = toggleableState,
                     onClick = { course.onOfflineStateChanged(nextOfflineState) },
                 ),
-                modifier = Modifier
-                    .width(68.dp)
-                    .padding(start = 24.dp),
             )
-            // Right column: course name + size + chevron, tap to expand/collapse
+            HorizonSpace(SpaceSize.SPACE_24)
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
-                    .clickable { course.onToggleExpanded() }
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
+                    .padding(vertical = 16.dp),
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(2.dp),
@@ -449,21 +438,30 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
                         Text(
                             text = course.courseSizeLabel,
                             style = HorizonTypography.p2,
-                            color = TimestampColor,
+                            color = HorizonColors.Text.timestamp(),
                         )
                     }
                 }
-                Icon(
-                    painter = painterResource(
-                        if (course.isExpanded) R.drawable.expand_circle_up else R.drawable.expand_circle_down,
-                    ),
-                    contentDescription = null,
-                    tint = HorizonColors.Icon.default(),
-                    modifier = Modifier.size(20.dp),
+                val context = LocalContext.current
+                val iconRotation by animateFloatAsState(
+                    if (course.isExpanded) 0f else 180f,
+                    label = "CourseExpandCollapseIconAnimation",
                 )
+                IconButton(
+                    iconRes = R.drawable.keyboard_arrow_up,
+                    color = IconButtonColor.Ghost,
+                    size = IconButtonSize.SMALL,
+                    onClick = { course.onToggleExpanded() },
+                    modifier = Modifier
+                        .rotate(iconRotation)
+                        .semantics {
+                            expandable(context, course.isExpanded)
+                        },
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
             }
         }
-        HorizontalDivider(color = DividerColor)
+        HorizontalDivider(color = HorizonColors.Surface.divider())
         AnimatedVisibility(
             visible = course.isExpanded,
             enter = expandVertically(),
@@ -472,7 +470,7 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
             Column {
                 course.files.forEach { file ->
                     FileRow(file)
-                    HorizontalDivider(color = DividerColor)
+                    HorizontalDivider(color = HorizonColors.Surface.divider())
                 }
             }
         }
@@ -483,7 +481,9 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
 private fun FileRow(file: OfflineFileItemUiState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().height(76.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(76.dp),
     ) {
         CheckboxItem(
             state = CheckboxItemState(
@@ -509,13 +509,11 @@ private fun FileRow(file: OfflineFileItemUiState) {
             Text(
                 text = file.fileSizeLabel,
                 style = HorizonTypography.p2,
-                color = TimestampColor,
+                color = HorizonColors.Text.timestamp(),
             )
         }
     }
 }
-
-// endregion
 
 @Preview
 @Composable

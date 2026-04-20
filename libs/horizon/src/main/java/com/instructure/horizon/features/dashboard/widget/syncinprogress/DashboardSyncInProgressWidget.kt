@@ -18,11 +18,9 @@ package com.instructure.horizon.features.dashboard.widget.syncinprogress
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,14 +30,12 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-
-private val SyncIconBackgroundColor = Color(0xFFE6EDF3)
-private val SyncProgressColor = Color(0xFF09508C)
-private val SyncProgressTrackColor = Color(0xFFE0EBF5)
-private val SyncProgressLabelColor = Color(0xFF586874)
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 
 @Composable
 fun DashboardSyncInProgressWidget(
@@ -51,7 +47,7 @@ fun DashboardSyncInProgressWidget(
     DashboardWidgetCard(
         title = stringResource(R.string.offline_syncInProgressTitle),
         iconRes = R.drawable.cloud_sync,
-        widgetColor = SyncIconBackgroundColor,
+        widgetColor = HorizonColors.PrimitivesBlue.blue12(),
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
         onClick = { navController.navigate(AccountRoute.ManageOfflineContent.route) },
@@ -62,15 +58,15 @@ fun DashboardSyncInProgressWidget(
                 Text(
                     text = syncProgressLabel,
                     style = HorizonTypography.p2,
-                    color = SyncProgressLabelColor,
+                    color = HorizonColors.Text.timestamp(),
                 )
                 HorizonSpace(SpaceSize.SPACE_8)
             }
-            LinearProgressIndicator(
-                progress = { syncProgress },
+            ProgressBarSmall(
+                progress = (syncProgress * 100).toDouble(),
+                style = ProgressBarStyle.Dark(overrideProgressColor = HorizonColors.PrimitivesBlue.blue82()),
+                showLabels = false,
                 modifier = Modifier.fillMaxWidth(),
-                color = SyncProgressColor,
-                trackColor = SyncProgressTrackColor,
             )
         }
     }

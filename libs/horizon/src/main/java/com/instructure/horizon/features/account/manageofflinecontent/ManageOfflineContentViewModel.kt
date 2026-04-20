@@ -21,6 +21,7 @@ import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
+import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,11 +52,11 @@ class ManageOfflineContentViewModel @Inject constructor(
 
     private fun loadData() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
             val coursesWithFiles = try {
                 getCoursesWithFilesUseCase()
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false) }
+                _uiState.update { it.copy(loadingState = LoadingState(isLoading = false)) }
                 return@launch
             }
 
@@ -95,7 +96,7 @@ class ManageOfflineContentViewModel @Inject constructor(
 
             _uiState.update { state ->
                 state.copy(
-                    isLoading = false,
+                    loadingState = LoadingState(isLoading = false),
                     courses = courses,
                     storageCanvasBytes = canvasBytes,
                     storageOtherAppBytes = otherAppBytes,

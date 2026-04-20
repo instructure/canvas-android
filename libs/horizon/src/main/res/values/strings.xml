@@ -668,6 +668,8 @@
     <string name="offline_autoSyncDescription">Automatically sync content for offline use</string>
     <string name="offline_syncFrequencyLabel">Sync frequency</string>
     <string name="offline_syncFrequencyDescription">How often to sync your offline content</string>
+    <string name="offline_syncFrequencyDaily">Daily</string>
+    <string name="offline_syncFrequencyWeekly">Weekly</string>
     <string name="offline_wifiOnlyLabel">Wi-Fi only</string>
     <string name="offline_wifiOnlyDescription">Only sync when connected to Wi-Fi</string>
     <string name="offline_manageOfflineContentButton">Manage offline content</string>
@@ -689,4 +691,5 @@
     <string name="offline_removeSyncedContentCancel">Cancel</string>
     <string name="offline_syncInProgressTitle">Syncing offline content</string>
     <string name="offline_syncInProgressDescription">Syncing your content for offline use…</string>
+    <string name="offline_syncStatusSynced">Synced</string>
 </resources>

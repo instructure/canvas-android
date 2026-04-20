@@ -112,7 +112,8 @@ private fun SyncFrequencyDropdown(
     modifier: Modifier = Modifier,
 ) {
     val options = SyncFrequency.entries
-    val optionLabels = options.map { it.labelKey }
+    val optionLabels = options.map { stringResource(it.labelRes) }
+    val selectedLabel = stringResource(selected.labelRes)
     var isMenuOpen by remember { mutableStateOf(false) }
 
     SingleSelect(
@@ -120,12 +121,12 @@ private fun SyncFrequencyDropdown(
             label = stringResource(R.string.offline_syncFrequencyLabel),
             size = SingleSelectInputSize.Medium,
             options = optionLabels,
-            selectedOption = selected.labelKey,
+            selectedOption = selectedLabel,
             enabled = enabled,
             isMenuOpen = isMenuOpen,
             onMenuOpenChanged = { isMenuOpen = it },
             onOptionSelected = { label ->
-                options.find { it.labelKey == label }?.let { onSelected(it) }
+                options.getOrNull(optionLabels.indexOf(label))?.let { onSelected(it) }
             },
         ),
         modifier = modifier,

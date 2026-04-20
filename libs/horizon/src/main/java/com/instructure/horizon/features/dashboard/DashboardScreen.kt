@@ -80,7 +80,7 @@ import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyP
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
-import com.instructure.horizon.horizonui.organisms.OfflineBanner
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -189,15 +189,16 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                         )
                     }
                 ) {
+                    OfflineScreenWrapper(
+                        isOffline = uiState.isOffline,
+                        lastSyncedAtMs = uiState.lastSyncedAtMs,
+                    ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
                             .padding(contentPadding)
                             .verticalScroll(scrollState)
                     ) {
-                        if (uiState.isOffline) {
-                            OfflineBanner(lastSyncedAtMs = uiState.lastSyncedAtMs)
-                        }
                         HorizonSpace(SpaceSize.SPACE_12)
                         if (uiState.isSyncInProgress) {
                             DashboardSyncInProgressWidget(
@@ -232,6 +233,7 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             refreshStateFlow
                         )
                         HorizonSpace(SpaceSize.SPACE_24)
+                    }
                     }
                 }
             }

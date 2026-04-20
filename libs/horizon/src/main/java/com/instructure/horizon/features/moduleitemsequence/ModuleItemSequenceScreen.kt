@@ -107,7 +107,9 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.offlineDisabled
-import com.instructure.horizon.horizonui.organisms.OfflineBanner
+import androidx.compose.material3.Icon
+import androidx.compose.ui.res.painterResource
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -143,14 +145,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         statusBarAlpha = 1f,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            Column {
-                if (uiState.isOffline) {
-                    OfflineBanner(
-                        lastSyncedAtMs = uiState.lastSyncedAtMs,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-                ModuleItemSequenceBottomBar(
+            ModuleItemSequenceBottomBar(
                     showNextButton = uiState.currentPosition < uiState.items.size - 1,
                     showPreviousButton = uiState.currentPosition > 0,
                     showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
@@ -175,9 +170,12 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
                     aiAssistEnabled = uiState.aiAssistButtonEnabled,
                     hasUnreadComments = uiState.hasUnreadComments
                 )
-            }
         }
     ) { contentPadding ->
+        OfflineScreenWrapper(
+            isOffline = uiState.isOffline,
+            lastSyncedAtMs = uiState.lastSyncedAtMs,
+        ) {
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
@@ -199,6 +197,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
                     isOffline = uiState.isOffline,
                 )
             }
+        }
         }
     }
 }
@@ -676,12 +675,12 @@ private fun NotAvailableOfflineContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .size(64.dp)
                 .background(
-                    color = Color(0xFFFCE4E5),
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(4.dp)
+                    color = HorizonColors.PrimitivesRed.red12(),
+                    shape = HorizonCornerRadius.level1
                 ),
         ) {
-            androidx.compose.material3.Icon(
-                painter = androidx.compose.ui.res.painterResource(R.drawable.cancel),
+            Icon(
+                painter = painterResource(R.drawable.cancel),
                 contentDescription = null,
                 tint = HorizonColors.Surface.error(),
                 modifier = Modifier.size(32.dp),
@@ -698,7 +697,7 @@ private fun NotAvailableOfflineContent(modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.offline_notAvailableDescription),
             style = HorizonTypography.p2,
-            color = Color(0xFF586874),
+            color = HorizonColors.Text.timestamp(),
             textAlign = TextAlign.Center,
         )
     }

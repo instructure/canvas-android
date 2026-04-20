@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,12 +56,12 @@ fun OfflineBanner(lastSyncedAtMs: Long?, modifier: Modifier = Modifier) {
         Icon(
             painter = painterResource(R.drawable.ic_no_wifi),
             contentDescription = null,
-            tint = Color.White,
+            tint = HorizonColors.Icon.surfaceColored(),
         )
         Text(
             text = text,
             style = HorizonTypography.p2,
-            color = Color.White,
+            color = HorizonColors.Text.surfaceColored(),
         )
     }
 }

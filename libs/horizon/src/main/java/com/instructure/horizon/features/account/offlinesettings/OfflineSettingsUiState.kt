@@ -15,6 +15,9 @@
  */
 package com.instructure.horizon.features.account.offlinesettings
 
+import androidx.annotation.StringRes
+import com.instructure.horizon.R
+
 data class OfflineSettingsUiState(
     val autoSyncEnabled: Boolean = true,
     val syncFrequency: SyncFrequency = SyncFrequency.DAILY,
@@ -25,7 +28,7 @@ data class OfflineSettingsUiState(
     val onManageOfflineContentClick: () -> Unit = {},
 )
 
-enum class SyncFrequency(val labelKey: String) {
-    DAILY("daily"),
-    WEEKLY("weekly"),
+enum class SyncFrequency(@StringRes val labelRes: Int) {
+    DAILY(R.string.offline_syncFrequencyDaily),
+    WEEKLY(R.string.offline_syncFrequencyWeekly),
 }
