@@ -16,11 +16,13 @@
 package com.instructure.horizon.features.account.manageofflinecontent
 
 import android.content.Context
-import android.os.StatFs
 import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
+import com.instructure.horizon.domain.usecase.GetDeviceStorageUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -30,13 +32,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ManageOfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCoursesWithFilesUseCase: GetCoursesWithFilesUseCase,
+    private val getDeviceStorageUseCase: GetDeviceStorageUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -61,14 +63,9 @@ class ManageOfflineContentViewModel @Inject constructor(
     }
 
     private fun loadData() {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
-            val coursesWithFiles = try {
-                getCoursesWithFilesUseCase()
-            } catch (e: Exception) {
-                _uiState.update { it.copy(loadingState = LoadingState(isLoading = false)) }
-                return@launch
-            }
+            val coursesWithFiles = getCoursesWithFilesUseCase()
 
             val courses = coursesWithFiles.map { courseData ->
                 val totalSizeBytes = courseData.files.filter { it.isSynced }.sumOf { it.size }
@@ -99,10 +96,8 @@ class ManageOfflineContentViewModel @Inject constructor(
             val canvasBytes = coursesWithFiles.sumOf { course ->
                 course.files.filter { it.isSynced }.sumOf { it.size }
             }
-            val statFs = StatFs(context.filesDir.path)
-            val totalBytes = statFs.totalBytes
-            val availableBytes = statFs.availableBytes
-            val otherAppBytes = ((totalBytes - availableBytes) - canvasBytes).coerceAtLeast(0L)
+            val storageData = getDeviceStorageUseCase()
+            val otherAppBytes = ((storageData.totalBytes - storageData.availableBytes) - canvasBytes).coerceAtLeast(0L)
 
             _uiState.update { state ->
                 state.copy(
@@ -110,11 +105,13 @@ class ManageOfflineContentViewModel @Inject constructor(
                     courses = courses,
                     storageCanvasBytes = canvasBytes,
                     storageOtherAppBytes = otherAppBytes,
-                    storageTotalBytes = totalBytes,
+                    storageTotalBytes = storageData.totalBytes,
                     storageUsedLabel = Formatter.formatShortFileSize(context, canvasBytes + otherAppBytes),
-                    storageTotalLabel = Formatter.formatShortFileSize(context, totalBytes),
+                    storageTotalLabel = Formatter.formatShortFileSize(context, storageData.totalBytes),
                 )
             }
+        } catch {
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = false, isError = true)) }
         }
     }
 
