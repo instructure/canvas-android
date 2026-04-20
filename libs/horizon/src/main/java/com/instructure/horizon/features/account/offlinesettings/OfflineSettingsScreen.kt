@@ -58,9 +58,9 @@ fun OfflineSettingsScreen(
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(24.dp),
+            verticalArrangement = Arrangement.spacedBy(32.dp),
             modifier = modifier
-                .padding(horizontal = 24.dp, vertical = 16.dp)
+                .padding(horizontal = 24.dp, vertical = 32.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
             Button(
@@ -69,37 +69,60 @@ fun OfflineSettingsScreen(
                 onClick = uiState.onManageOfflineContentClick,
                 modifier = Modifier.fillMaxWidth(),
             )
-            HorizonSpace(SpaceSize.SPACE_8)
-            Text(
-                text = stringResource(R.string.offline_syncSettingsHeader),
-                style = HorizonTypography.h4,
-                color = HorizonColors.Text.title(),
-            )
-            SwitchItem(
-                state = SwitchItemState(
-                    controlsContentState = ControlsContentState(
-                        title = stringResource(R.string.offline_autoSyncLabel),
-                        description = stringResource(R.string.offline_autoSyncDescription),
-                    ),
-                    checked = uiState.autoSyncEnabled,
-                    onCheckedChanged = uiState.onAutoSyncToggled,
+            Column {
+                Text(
+                    text = stringResource(R.string.offline_syncSettingsHeader),
+                    style = HorizonTypography.labelLargeBold,
+                    color = HorizonColors.Text.title(),
                 )
-            )
-            SyncFrequencyDropdown(
-                selected = uiState.syncFrequency,
-                enabled = uiState.autoSyncEnabled,
-                onSelected = uiState.onSyncFrequencySelected,
-            )
-            SwitchItem(
-                state = SwitchItemState(
-                    controlsContentState = ControlsContentState(
-                        title = stringResource(R.string.offline_wifiOnlyLabel),
-                        description = stringResource(R.string.offline_wifiOnlyDescription),
+
+                HorizonSpace(SpaceSize.SPACE_8)
+
+                SwitchItem(
+                    state = SwitchItemState(
+                        controlsContentState = ControlsContentState(
+                            title = stringResource(R.string.offline_autoSyncLabel),
+                        ),
+                        checked = uiState.autoSyncEnabled,
+                        onCheckedChanged = uiState.onAutoSyncToggled,
                     ),
-                    checked = uiState.wifiOnlyEnabled,
-                    onCheckedChanged = uiState.onWifiOnlyToggled,
+                    modifier = Modifier.padding(vertical = 10.dp)
                 )
-            )
+                Text(
+                    text = stringResource(R.string.offline_autoSyncDescription),
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.body(),
+                )
+            }
+            Column {
+                SyncFrequencyDropdown(
+                    selected = uiState.syncFrequency,
+                    enabled = uiState.autoSyncEnabled,
+                    onSelected = uiState.onSyncFrequencySelected,
+                )
+                Text(
+                    text = stringResource(R.string.offline_syncFrequencyDescription),
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.body(),
+                )
+            }
+            Column {
+                SwitchItem(
+                    state = SwitchItemState(
+                        controlsContentState = ControlsContentState(
+                            title = stringResource(R.string.offline_wifiOnlyLabel),
+                        ),
+                        checked = uiState.wifiOnlyEnabled,
+                        onCheckedChanged = uiState.onWifiOnlyToggled,
+                    ),
+                    modifier = Modifier.padding(vertical = 10.dp)
+                )
+                Text(
+                    text = stringResource(R.string.offline_wifiOnlyDescription),
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.body(),
+                )
+            }
         }
     }
 }

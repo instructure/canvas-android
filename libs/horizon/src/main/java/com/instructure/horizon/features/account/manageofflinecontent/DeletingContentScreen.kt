@@ -21,11 +21,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -59,5 +60,6 @@ fun DeletingContentScreen(navController: NavHostController) {
 @Preview
 @Composable
 private fun DeletingContentScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
     DeletingContentScreen(navController = rememberNavController())
 }
