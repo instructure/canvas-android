@@ -46,7 +46,7 @@ fun DashboardSyncInProgressWidget(
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.offline_syncInProgressTitle),
-        iconRes = R.drawable.cloud_sync,
+        iconRes = R.drawable.sync,
         widgetColor = HorizonColors.PrimitivesBlue.blue12(),
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
