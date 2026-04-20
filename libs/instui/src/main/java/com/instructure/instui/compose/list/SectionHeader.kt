@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,11 @@ import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.component.InstUIToggleDetails
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.line.ArrowDown
+import com.instructure.instui.token.icon.line.DropDown
+import com.instructure.instui.token.icon.line.MiniArrowDown
+import com.instructure.instui.token.icon.line.MoveDown
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -87,16 +93,30 @@ fun SectionHeader(
 }
 
 @Preview(name = "SectionHeader — Light", showBackground = true)
-@Preview(name = "SectionHeader — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    name = "SectionHeader — Dark",
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
 private fun SectionHeaderPreview() {
     InstUITheme {
         Column(
             modifier = Modifier.background(InstUISemanticColors.Background.base())
         ) {
-            SectionHeader(title = "Overdue Assignments", onClick = {})
+            SectionHeader(title = "Overdue Assignments", onClick = {}, trailing = {
+                Icon(
+                    InstUIIcons.Line.MiniArrowDown,
+                    contentDescription = null,
+                )
+            })
             Separator()
-            SectionHeader(title = "Upcoming Assignments", onClick = {})
+            SectionHeader(title = "Upcoming Assignments", onClick = {}, trailing = {
+                Icon(
+                    InstUIIcons.Line.MiniArrowDown,
+                    contentDescription = null,
+                )
+            })
         }
     }
 }

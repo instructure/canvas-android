@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,10 @@ import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.line.Assignment
+import com.instructure.instui.token.icon.line.Lock
+import com.instructure.instui.token.icon.line.Quiz
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -152,11 +157,11 @@ private fun ListItemComplexPreview() {
                 title = "Assignment name",
                 subtitle = "Due Oct 3, 2023 9:41",
                 leading = {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .background(InstUISemanticColors.Background.muted())
+                    Icon(
+                        InstUIIcons.Line.Assignment,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = InstUISemanticColors.Icon.base(),
                     )
                 },
                 bottom = {
@@ -182,11 +187,11 @@ private fun ListItemComplexPreview() {
                 title = "Submitted assignment",
                 subtitle = "Due Oct 5, 2023 11:59",
                 leading = {
-                    Box(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .background(InstUISemanticColors.Background.muted())
+                    Icon(
+                        InstUIIcons.Line.Quiz,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp),
+                        tint = InstUISemanticColors.Icon.base(),
                     )
                 },
                 bottom = {

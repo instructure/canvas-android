@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +40,9 @@ import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.component.InstUIPill
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.line.Assignment
+import com.instructure.instui.token.icon.line.Warning
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -161,13 +165,11 @@ private fun PillWithIconPreview() {
                 text = "Missing",
                 variant = PillVariant.Error,
                 icon = {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(
-                                InstUISemanticColors.Icon.error(),
-                                RoundedCornerShape(50),
-                            )
+                    Icon(
+                        InstUIIcons.Line.Warning,
+                        contentDescription = null,
+                        modifier = Modifier.size(12.dp),
+                        tint = InstUISemanticColors.Icon.error(),
                     )
                 },
             )

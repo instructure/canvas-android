@@ -51,6 +51,7 @@ const https = require('https')
 const buildPrimitivesConfig = require('./sd.config.primitives')
 const buildSemanticConfig = require('./sd.config.semantic')
 const buildComponentsConfig = require('./sd.config.components')
+const { buildIcons } = require('./build-instui-icons')
 
 const INSTUI_VERSION = 'v11.7.1'
 const TOKENS_BASE_URL = `https://raw.githubusercontent.com/instructure/instructure-ui/${INSTUI_VERSION}/packages/ui-scripts/lib/build/tokensStudio`
@@ -174,12 +175,17 @@ async function main() {
   console.log('')
 
   await buildComponents()
+  console.log('')
+
+  console.log('Building InstUI icons...')
+  await buildIcons(download, INSTUI_VERSION)
 
   console.log('')
   console.log('Done! Generated files are in:')
   console.log('  ../src/main/java/com/instructure/instui/token/primitives/')
   console.log('  ../src/main/java/com/instructure/instui/token/semantic/')
   console.log('  ../src/main/java/com/instructure/instui/token/component/')
+  console.log('  ../src/main/java/com/instructure/instui/token/icon/')
 }
 
 main().catch(err => {

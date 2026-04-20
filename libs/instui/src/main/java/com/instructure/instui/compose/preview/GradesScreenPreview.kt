@@ -29,17 +29,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,6 +53,14 @@ import com.instructure.instui.compose.list.SectionHeader
 import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.compose.navigation.TopBar
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.line.ArrowLeft
+import com.instructure.instui.token.icon.line.ArrowOpenDown
+import com.instructure.instui.token.icon.line.ArrowOpenUp
+import com.instructure.instui.token.icon.line.Assignment
+import com.instructure.instui.token.icon.line.Lock
+import com.instructure.instui.token.icon.line.More
+import com.instructure.instui.token.icon.line.Warning
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -93,14 +100,12 @@ private fun GradesScreenPreview() {
                     containerColor = CourseColor,
                     navigationIcon = {
                         IconButton(onClick = {}) {
-                            // Placeholder for back arrow (use ic_back_arrow from pandares in real code)
-                            Text(text = "\u2190", color = Color.White)
+                            Icon(InstUIIcons.Line.ArrowLeft, contentDescription = "Back")
                         }
                     },
                     actions = {
                         IconButton(onClick = {}) {
-                            // Placeholder for action icon
-                            Text(text = "\u22EE", color = Color.White)
+                            Icon(InstUIIcons.Line.More, contentDescription = "More")
                         }
                     },
                 )
@@ -133,12 +138,11 @@ private fun GradesScreenPreview() {
                                 modifier = Modifier.weight(1f),
                             )
                             Spacer(Modifier.width(8.dp))
-                            // Placeholder for lock icon
-                            Box(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .clip(RoundedCornerShape(4.dp))
-                                    .background(InstUISemanticColors.Icon.base())
+                            Icon(
+                                InstUIIcons.Line.Lock,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = InstUISemanticColors.Icon.base(),
                             )
                         }
                     }
@@ -150,14 +154,28 @@ private fun GradesScreenPreview() {
                 SectionHeader(
                     title = "Overdue Assignments",
                     onClick = {},
-                    trailing = { ChevronPlaceholder(expanded = false) },
+                    trailing = {
+                        Icon(
+                            InstUIIcons.Line.ArrowOpenDown,
+                            contentDescription = "Expand",
+                            modifier = Modifier.size(16.dp),
+                            tint = InstUISemanticColors.Icon.base(),
+                        )
+                    },
                 )
 
                 // Expanded section
                 SectionHeader(
                     title = "Overdue Assignments",
                     onClick = {},
-                    trailing = { ChevronPlaceholder(expanded = true) },
+                    trailing = {
+                        Icon(
+                            InstUIIcons.Line.ArrowOpenUp,
+                            contentDescription = "Collapse",
+                            modifier = Modifier.size(16.dp),
+                            tint = InstUISemanticColors.Icon.base(),
+                        )
+                    },
                 )
 
                 // Assignment list items (no separators between them per Figma)
@@ -170,27 +188,16 @@ private fun GradesScreenPreview() {
 }
 
 @Composable
-private fun ChevronPlaceholder(expanded: Boolean) {
-    // Placeholder for chevron icon (use ic_chevron_down from pandares in real code)
-    Text(
-        text = "\u25BE",
-        color = InstUISemanticColors.Icon.base(),
-        modifier = Modifier.rotate(if (expanded) 180f else 0f),
-    )
-}
-
-@Composable
 private fun AssignmentListItem() {
     ListItem(
         title = "Assignment name",
         subtitle = "Due Oct 3, 2023 9:41",
         leading = {
-            // Placeholder for assignment icon
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(InstUISemanticColors.Icon.base())
+            Icon(
+                InstUIIcons.Line.Assignment,
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = InstUISemanticColors.Icon.base(),
             )
         },
         bottom = {
