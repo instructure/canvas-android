@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +65,7 @@ enum class PillVariant {
  * Usage:
  * ```
  * Pill(text = "Missing", variant = PillVariant.Error)
- * Pill(text = "Submitted", variant = PillVariant.Success)
+ * Pill(text = "Missing", variant = PillVariant.Error, icon = InstUIIcons.Line.Warning)
  * ```
  */
 @Composable
@@ -72,7 +73,7 @@ fun Pill(
     text: String,
     modifier: Modifier = Modifier,
     variant: PillVariant = PillVariant.Default,
-    icon: (@Composable () -> Unit)? = null,
+    icon: ImageVector? = null,
 ) {
     val textColor = when (variant) {
         PillVariant.Default -> InstUIPill.baseTextColor
@@ -118,7 +119,12 @@ fun Pill(
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             if (icon != null) {
-                icon()
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = textColor,
+                )
             }
             Text(
                 text = text,
@@ -164,14 +170,7 @@ private fun PillWithIconPreview() {
             Pill(
                 text = "Missing",
                 variant = PillVariant.Error,
-                icon = {
-                    Icon(
-                        InstUIIcons.Line.Warning,
-                        contentDescription = null,
-                        modifier = Modifier.size(12.dp),
-                        tint = InstUISemanticColors.Icon.error(),
-                    )
-                },
+                icon = InstUIIcons.Line.Warning,
             )
         }
     }

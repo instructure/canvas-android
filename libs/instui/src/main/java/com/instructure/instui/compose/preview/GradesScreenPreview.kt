@@ -191,7 +191,7 @@ private fun GradesScreenPreview() {
 private fun AssignmentListItem() {
     ListItem(
         title = "Assignment name",
-        subtitle = "Due Oct 3, 2023 9:41",
+        subtext1 = "Due Oct 3, 2023 9:41",
         leading = {
             Icon(
                 InstUIIcons.Line.Assignment,
@@ -200,15 +200,13 @@ private fun AssignmentListItem() {
                 tint = InstUISemanticColors.Icon.base(),
             )
         },
-        bottom = {
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Pill(text = "Missing", variant = PillVariant.Error)
-                Text(
-                    text = "-/100",
-                    style = InstUITextTokens.contentImportant,
-                    color = CourseColor,
-                )
-            }
+        pill = { Pill(text = "Missing", variant = PillVariant.Error) },
+        score = {
+            Text(
+                text = "-/100",
+                style = InstUITextTokens.contentImportant,
+                color = CourseColor,
+            )
         },
     )
 }
