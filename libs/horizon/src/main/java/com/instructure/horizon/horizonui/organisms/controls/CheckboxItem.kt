@@ -62,7 +62,7 @@ fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = 
         val error = state.controlsContentState.error != null
         TriStateCheckbox(
             state = state.toggleableState,
-            onClick = {},
+            onClick = null,
             enabled = state.enabled,
             colors = horizonCheckboxColors(error),
             modifier = Modifier
