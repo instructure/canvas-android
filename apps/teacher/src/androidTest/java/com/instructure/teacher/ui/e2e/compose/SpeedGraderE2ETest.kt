@@ -23,8 +23,8 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.LatePolicyApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.LatePolicy

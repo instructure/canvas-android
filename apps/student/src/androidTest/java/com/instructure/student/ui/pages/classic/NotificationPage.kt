@@ -20,9 +20,9 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.refresh
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.refresh
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click

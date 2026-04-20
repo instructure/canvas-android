@@ -28,7 +28,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi

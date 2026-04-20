@@ -17,8 +17,8 @@
 package com.instructure.student.ui.rendertests.renderpages
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
-import com.instructure.canvas.espresso.assertIsRefreshing
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.assertIsRefreshing
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone

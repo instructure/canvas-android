@@ -48,7 +48,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.composetest.hasTestTagThatContains
