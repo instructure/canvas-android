@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query DashboardCoursesQuery($announcementCursor: String) {
+query DashboardCoursesQuery {
     allCourses {
         _id
         name
@@ -37,7 +37,7 @@ query DashboardCoursesQuery($announcementCursor: String) {
             }
         }
         announcements: discussionsConnection(
-            after: $announcementCursor
+            first: 20
             filter: { isAnnouncement: true }
         ) {
             pageInfo {

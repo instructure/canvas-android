@@ -16,6 +16,7 @@
 
 package com.instructure.canvasapi2.managers.graphql
 
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 
@@ -29,4 +30,9 @@ interface DashboardCoursesManager {
         courseId: Long,
         forceNetwork: Boolean = true
     ): DashboardSingleCourseQuery.Data
+
+    suspend fun getCourseAnnouncements(
+        courseId: Long,
+        forceNetwork: Boolean = true
+    ): List<CourseAnnouncementsQuery.Node1?>
 }

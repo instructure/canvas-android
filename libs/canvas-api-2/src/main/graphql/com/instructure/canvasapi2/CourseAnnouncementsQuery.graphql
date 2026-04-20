@@ -14,26 +14,26 @@
 #     limitations under the License.
 #
 
-query DashboardSingleCourseQuery($courseId: ID!) {
+query CourseAnnouncementsQuery($courseId: ID!, $cursor: String) {
     course: legacyNode(_id: $courseId, type: Course) {
         ... on Course {
             _id
-            name
-            courseCode
-            imageUrl
-            dashboardCard {
-                isFavorited
-                position
-                color
-                image
-            }
-            enrollmentsConnection(first: 1) {
+            announcements: discussionsConnection(
+                first: 20
+                after: $cursor
+                filter: { isAnnouncement: true }
+            ) {
+                pageInfo {
+                    hasNextPage
+                    endCursor
+                }
                 nodes {
                     _id
-                    type
-                    grades {
-                        currentGrade
-                        currentScore
+                    title
+                    message
+                    postedAt
+                    participant {
+                        read
                     }
                 }
             }

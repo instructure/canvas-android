@@ -41,11 +41,11 @@ class LoadVisibleCoursesUseCaseTest {
     }
 
     @Test
-    fun `favorited courses become visible courses sorted by position`() = runTest {
+    fun `visible courses are those with dashboardCard sorted by position`() = runTest {
         val data = buildQueryData(
-            allCourse("1", "Course A", dashboardCard = dashboardCard(isFavorited = true, position = 2)),
-            allCourse("2", "Course B", dashboardCard = dashboardCard(isFavorited = true, position = 0)),
-            allCourse("3", "Course C", dashboardCard = dashboardCard(isFavorited = true, position = 1))
+            allCourse("1", "Course A", dashboardCard = dashboardCard(position = 2)),
+            allCourse("2", "Course B", dashboardCard = dashboardCard(position = 0)),
+            allCourse("3", "Course C", dashboardCard = dashboardCard(position = 1))
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
@@ -55,31 +55,33 @@ class LoadVisibleCoursesUseCaseTest {
     }
 
     @Test
-    fun `all courses returned when none are favorited`() = runTest {
+    fun `courses without dashboardCard are not visible`() = runTest {
         val data = buildQueryData(
-            allCourse("1", "Course A", dashboardCard = null),
-            allCourse("2", "Course B", dashboardCard = null)
-        )
-        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-
-        val result = useCase(LoadVisibleCoursesUseCase.Params())
-
-        assertEquals(2, result.visibleCourses.size)
-        assertEquals(2, result.allCourses.size)
-    }
-
-    @Test
-    fun `allCourses includes non-favorited courses`() = runTest {
-        val data = buildQueryData(
-            allCourse("1", "Visible", dashboardCard = dashboardCard(isFavorited = true, position = 0)),
-            allCourse("2", "Not favorited", dashboardCard = dashboardCard(isFavorited = false, position = 1))
+            allCourse("1", "On Dashboard", dashboardCard = dashboardCard(position = 0)),
+            allCourse("2", "Not on Dashboard", dashboardCard = null)
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
         assertEquals(1, result.visibleCourses.size)
+        assertEquals(1L, result.visibleCourses[0].id)
         assertEquals(2, result.allCourses.size)
+    }
+
+    @Test
+    fun `allCourses includes all courses regardless of dashboardCard`() = runTest {
+        val data = buildQueryData(
+            allCourse("1", "Visible", dashboardCard = dashboardCard(position = 0)),
+            allCourse("2", "Also Visible", dashboardCard = dashboardCard(position = 1)),
+            allCourse("3", "Hidden", dashboardCard = null)
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        assertEquals(2, result.visibleCourses.size)
+        assertEquals(3, result.allCourses.size)
     }
 
     @Test
@@ -120,7 +122,7 @@ class LoadVisibleCoursesUseCaseTest {
                 id = "1",
                 name = "Course",
                 enrollmentsConnection = enrollmentsConnection,
-                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+                dashboardCard = dashboardCard(position = 0)
             )
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
@@ -142,15 +144,15 @@ class LoadVisibleCoursesUseCaseTest {
             participant = DashboardCoursesQuery.Participant(read = false)
         )
         val announcements = DashboardCoursesQuery.Announcements(
-                pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-                nodes = listOf(announcementNode)
-            )
+            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+            nodes = listOf(announcementNode)
+        )
         val data = buildQueryData(
             allCourse(
                 id = "1",
                 name = "Course",
                 announcements = announcements,
-                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+                dashboardCard = dashboardCard(position = 0)
             )
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
@@ -174,15 +176,15 @@ class LoadVisibleCoursesUseCaseTest {
             participant = DashboardCoursesQuery.Participant(read = true)
         )
         val announcements = DashboardCoursesQuery.Announcements(
-                pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-                nodes = listOf(readAnnouncement)
-            )
+            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+            nodes = listOf(readAnnouncement)
+        )
         val data = buildQueryData(
             allCourse(
                 id = "1",
                 name = "Course",
                 announcements = announcements,
-                dashboardCard = dashboardCard(isFavorited = true, position = 0)
+                dashboardCard = dashboardCard(position = 0)
             )
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
@@ -191,6 +193,46 @@ class LoadVisibleCoursesUseCaseTest {
 
         val courseAnnouncements = result.announcementsMap[1L]
         assertTrue(courseAnnouncements.isNullOrEmpty())
+    }
+
+    @Test
+    fun `announcements are depaginated per course when hasNextPage is true`() = runTest {
+        val firstPageNode = DashboardCoursesQuery.Node1(
+            _id = "10",
+            title = "First Page",
+            message = "msg",
+            postedAt = Date(),
+            participant = DashboardCoursesQuery.Participant(read = false)
+        )
+        val announcements = DashboardCoursesQuery.Announcements(
+            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = true, endCursor = "cursor1"),
+            nodes = listOf(firstPageNode)
+        )
+        val data = buildQueryData(
+            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(1L, any()) } returns emptyList()
+
+        useCase(LoadVisibleCoursesUseCase.Params())
+
+        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, any()) }
+    }
+
+    @Test
+    fun `announcements are not depaginated when hasNextPage is false`() = runTest {
+        val announcements = DashboardCoursesQuery.Announcements(
+            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+            nodes = emptyList()
+        )
+        val data = buildQueryData(
+            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        useCase(LoadVisibleCoursesUseCase.Params())
+
+        coVerify(exactly = 0) { dashboardCoursesManager.getCourseAnnouncements(any(), any()) }
     }
 
     @Test

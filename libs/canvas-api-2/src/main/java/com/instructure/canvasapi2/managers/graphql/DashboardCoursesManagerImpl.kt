@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.managers.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.enqueueQuery
@@ -29,35 +30,7 @@ class DashboardCoursesManagerImpl(
     override suspend fun getDashboardCourses(
         forceNetwork: Boolean
     ): DashboardCoursesQuery.Data {
-        val query = DashboardCoursesQuery(announcementCursor = Optional.absent())
-        val initialData = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
-
-        val allCourses = initialData.allCourses?.map { course ->
-            val allNodes = course.announcements?.nodes?.toMutableList() ?: mutableListOf()
-            var hasNextPage = course.announcements?.pageInfo?.hasNextPage == true
-            var cursor = course.announcements?.pageInfo?.endCursor
-
-            while (hasNextPage) {
-                val paginatedQuery = DashboardCoursesQuery(
-                    announcementCursor = Optional.present(cursor)
-                )
-                val paginatedData = apolloClient.enqueueQuery(paginatedQuery, forceNetwork = forceNetwork).dataAssertNoErrors
-
-                val courseData = paginatedData.allCourses?.find { it._id == course._id }
-                courseData?.announcements?.nodes?.let { allNodes.addAll(it) }
-
-                hasNextPage = courseData?.announcements?.pageInfo?.hasNextPage == true
-                cursor = courseData?.announcements?.pageInfo?.endCursor
-            }
-
-            course.copy(
-                announcements = course.announcements?.copy(
-                    nodes = allNodes
-                )
-            )
-        }
-
-        return DashboardCoursesQuery.Data(allCourses)
+        return apolloClient.enqueueQuery(DashboardCoursesQuery(), forceNetwork = forceNetwork).dataAssertNoErrors
     }
 
     override suspend fun getSingleCourse(
@@ -66,5 +39,30 @@ class DashboardCoursesManagerImpl(
     ): DashboardSingleCourseQuery.Data {
         val query = DashboardSingleCourseQuery(courseId = courseId.toString())
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
+    }
+
+    override suspend fun getCourseAnnouncements(
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<CourseAnnouncementsQuery.Node1?> {
+        val allNodes = mutableListOf<CourseAnnouncementsQuery.Node1?>()
+        var hasNextPage = true
+        var cursor: String? = null
+
+        while (hasNextPage) {
+            val query = CourseAnnouncementsQuery(
+                courseId = courseId.toString(),
+                cursor = if (cursor != null) Optional.present(cursor) else Optional.absent()
+            )
+            val data = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
+            val announcements = (data.course as? CourseAnnouncementsQuery.CourseOnCourse)?.announcements
+
+            announcements?.nodes?.let { allNodes.addAll(it) }
+
+            hasNextPage = announcements?.pageInfo?.hasNextPage == true
+            cursor = announcements?.pageInfo?.endCursor
+        }
+
+        return allNodes
     }
 }

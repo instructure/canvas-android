@@ -27,7 +27,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 class LoadSingleCourseUseCaseTest {
 
@@ -55,12 +54,12 @@ class LoadSingleCourseUseCaseTest {
 
         val result = useCase(LoadSingleCourseUseCase.Params(courseId = 42))
 
-        assertEquals(42L, result.course.id)
-        assertEquals("Test Course", result.course.name)
-        assertEquals("TC101", result.course.courseCode)
-        assertEquals("https://example.com/img.jpg", result.course.imageUrl)
-        assertEquals("#FF0000", result.course.courseColor)
-        assertTrue(result.course.isFavorite)
+        assertEquals(42L, result.id)
+        assertEquals("Test Course", result.name)
+        assertEquals("TC101", result.courseCode)
+        assertEquals("https://example.com/img.jpg", result.imageUrl)
+        assertEquals("#FF0000", result.courseColor)
+        assertTrue(result.isFavorite)
     }
 
     @Test
@@ -84,56 +83,9 @@ class LoadSingleCourseUseCaseTest {
 
         val result = useCase(LoadSingleCourseUseCase.Params(courseId = 1))
 
-        val enrollment = result.course.enrollments?.first()
+        val enrollment = result.enrollments?.first()
         assertEquals("B+", enrollment?.currentGrade)
         assertEquals(88.0, enrollment?.currentScore)
-    }
-
-    @Test
-    fun `unread announcements are returned`() = runTest {
-        val announcementNode = DashboardSingleCourseQuery.Node1(
-            _id = "10",
-            title = "Important Update",
-            message = "Hello students",
-            postedAt = Date(),
-            participant = DashboardSingleCourseQuery.Participant(read = false)
-        )
-        val announcements = DashboardSingleCourseQuery.Announcements(
-            nodes = listOf(announcementNode)
-        )
-        val data = buildData(
-            onCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(isFavorited = true))
-        )
-        coEvery { dashboardCoursesManager.getSingleCourse(any(), any()) } returns data
-
-        val result = useCase(LoadSingleCourseUseCase.Params(courseId = 1))
-
-        assertEquals(1, result.announcements.size)
-        assertEquals(10L, result.announcements.first().id)
-        assertEquals("Important Update", result.announcements.first().title)
-        assertTrue(result.announcements.first().announcement)
-    }
-
-    @Test
-    fun `read announcements are filtered out`() = runTest {
-        val readAnnouncement = DashboardSingleCourseQuery.Node1(
-            _id = "10",
-            title = "Old Announcement",
-            message = "Already read",
-            postedAt = Date(),
-            participant = DashboardSingleCourseQuery.Participant(read = true)
-        )
-        val announcements = DashboardSingleCourseQuery.Announcements(
-            nodes = listOf(readAnnouncement)
-        )
-        val data = buildData(
-            onCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(isFavorited = true))
-        )
-        coEvery { dashboardCoursesManager.getSingleCourse(any(), any()) } returns data
-
-        val result = useCase(LoadSingleCourseUseCase.Params(courseId = 1))
-
-        assertTrue(result.announcements.isEmpty())
     }
 
     @Test(expected = IllegalStateException::class)
@@ -165,8 +117,7 @@ class LoadSingleCourseUseCaseTest {
         courseCode: String? = null,
         imageUrl: String? = null,
         dashboardCard: DashboardSingleCourseQuery.DashboardCard? = null,
-        enrollmentsConnection: DashboardSingleCourseQuery.EnrollmentsConnection? = null,
-        announcements: DashboardSingleCourseQuery.Announcements? = null
+        enrollmentsConnection: DashboardSingleCourseQuery.EnrollmentsConnection? = null
     ): DashboardSingleCourseQuery.OnCourse {
         return DashboardSingleCourseQuery.OnCourse(
             _id = id,
@@ -174,8 +125,7 @@ class LoadSingleCourseUseCaseTest {
             courseCode = courseCode,
             imageUrl = imageUrl,
             dashboardCard = dashboardCard,
-            enrollmentsConnection = enrollmentsConnection,
-            announcements = announcements
+            enrollmentsConnection = enrollmentsConnection
         )
     }
 

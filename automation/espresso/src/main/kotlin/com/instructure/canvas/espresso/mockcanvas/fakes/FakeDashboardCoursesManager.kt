@@ -15,6 +15,7 @@
  */
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
@@ -32,5 +33,12 @@ class FakeDashboardCoursesManager : DashboardCoursesManager {
         forceNetwork: Boolean
     ): DashboardSingleCourseQuery.Data {
         return DashboardSingleCourseQuery.Data(course = null)
+    }
+
+    override suspend fun getCourseAnnouncements(
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<CourseAnnouncementsQuery.Node1?> {
+        return emptyList()
     }
 }

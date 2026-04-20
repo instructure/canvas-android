@@ -786,10 +786,7 @@ class CoursesWidgetViewModelTest {
         )
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadSingleCourseUseCase(any()) } returns LoadSingleCourseUseCase.Result(
-            course = updatedCourse,
-            announcements = announcements
-        )
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
 
         viewModel = createViewModel()
 
@@ -865,10 +862,7 @@ class CoursesWidgetViewModelTest {
         val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadSingleCourseUseCase(any()) } returns LoadSingleCourseUseCase.Result(
-            course = updatedCourse,
-            announcements = emptyList()
-        )
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
 
         viewModel = createViewModel()
 

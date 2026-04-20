@@ -436,15 +436,14 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun reloadCourse(courseId: Long) {
         viewModelScope.launch {
             try {
-                val result = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
+                val updatedCourse = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
 
                 visibleCourses = visibleCourses.map { course ->
-                    if (course.id == courseId) result.course else course
+                    if (course.id == courseId) updatedCourse else course
                 }
 
                 val existingAnnouncementsMap = _uiState.value.courses.associate { it.id to it.announcements }
-                val announcementsMap = existingAnnouncementsMap + (courseId to result.announcements)
-                val courseCards = mapCoursesToCardItems(visibleCourses, announcementsMap)
+                val courseCards = mapCoursesToCardItems(visibleCourses, existingAnnouncementsMap)
                 _uiState.update { it.copy(courses = courseCards) }
             } catch (e: Exception) {
                 crashlytics.recordException(e)

@@ -19,7 +19,6 @@ package com.instructure.pandautils.domain.usecase.courses
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Enrollment.EnrollmentType as KotlinEnrollmentType
 import com.instructure.canvasapi2.models.Grades
@@ -29,9 +28,9 @@ import javax.inject.Inject
 
 class LoadSingleCourseUseCase @Inject constructor(
     private val dashboardCoursesManager: DashboardCoursesManager
-) : BaseUseCase<LoadSingleCourseUseCase.Params, LoadSingleCourseUseCase.Result>() {
+) : BaseUseCase<LoadSingleCourseUseCase.Params, Course>() {
 
-    override suspend fun execute(params: Params): Result {
+    override suspend fun execute(params: Params): Course {
         val data = dashboardCoursesManager.getSingleCourse(
             courseId = params.courseId,
             forceNetwork = params.forceNetwork
@@ -40,12 +39,8 @@ class LoadSingleCourseUseCase @Inject constructor(
         val courseNode = data.course?.onCourse
             ?: throw IllegalStateException("Course not found: ${params.courseId}")
 
-        val course = mapGraphQlCourse(courseNode)
+        return mapGraphQlCourse(courseNode)
             ?: throw IllegalStateException("Failed to map course: ${params.courseId}")
-
-        val announcements = mapGraphQlAnnouncements(courseNode.announcements)
-
-        return Result(course = course, announcements = announcements)
     }
 
     private fun mapGraphQlCourse(courseNode: DashboardSingleCourseQuery.OnCourse): Course? {
@@ -88,30 +83,8 @@ class LoadSingleCourseUseCase @Inject constructor(
         }
     }
 
-    private fun mapGraphQlAnnouncements(
-        announcementsConnection: DashboardSingleCourseQuery.Announcements?
-    ): List<DiscussionTopicHeader> {
-        return announcementsConnection?.nodes?.mapNotNull { node ->
-            node ?: return@mapNotNull null
-            if (node.participant?.read == true) return@mapNotNull null
-
-            DiscussionTopicHeader(
-                id = node._id.toLongOrNull() ?: return@mapNotNull null,
-                title = node.title,
-                message = node.message,
-                postedDate = node.postedAt,
-                announcement = true
-            )
-        } ?: emptyList()
-    }
-
     data class Params(
         val courseId: Long,
         val forceNetwork: Boolean = true
-    )
-
-    data class Result(
-        val course: Course,
-        val announcements: List<DiscussionTopicHeader>
     )
 }
