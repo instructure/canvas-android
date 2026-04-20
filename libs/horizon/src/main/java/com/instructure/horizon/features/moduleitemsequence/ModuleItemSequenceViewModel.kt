@@ -131,17 +131,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     override fun onNetworkLost() {
         viewModelScope.tryLaunch {
-            val moduleItemId = _uiState.value.currentItem?.moduleItemId ?: return@tryLaunch
-            val lastSyncedAt = getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, moduleItemId)
-            val isAvailableOffline = lastSyncedAt != null
+            val currentModuleItemId = _uiState.value.currentItem?.moduleItemId
+            val lastSyncedAt = if (currentModuleItemId != null) {
+                getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, currentModuleItemId)
+            } else null
+            val updatedItems = _uiState.value.items.map { item ->
+                val itemSyncedAt = getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, item.moduleItemId)
+                item.copy(isAvailableOffline = itemSyncedAt != null)
+            }
             _uiState.update { state ->
                 state.copy(
                     isOffline = true,
                     lastSyncedAtMs = lastSyncedAt,
-                    items = state.items.map { item ->
-                        item.copy(isAvailableOffline = isAvailableOffline)
-                    },
-                    currentItem = state.currentItem?.copy(isAvailableOffline = isAvailableOffline),
+                    items = updatedItems,
+                    currentItem = updatedItems.getOrNull(state.currentPosition),
                 )
             }
         } catch { }
