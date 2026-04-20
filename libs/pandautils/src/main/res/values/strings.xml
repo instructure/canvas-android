@@ -157,6 +157,8 @@
     <string name="noAnnouncementsSubtext">Nothing has been announced yet.</string>
     <string name="noCourses">No Courses</string>
     <string name="noCoursesSubtext">It looks like there aren\'t any courses associated with this account. Visit the web to create a course today.</string>
+    <string name="coursesWidgetEmptyTitle">Welcome to Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">You don\'t have any active courses yet — so things are a bit quiet here. Once you enroll in a class, your dashboard will start filling up with new activity.</string>
     <string name="noAssignments">No Assignments</string>
     <string name="noAssignmentsSubtext">It looks like assignments haven\'t been created in this space. Time to go out and explore.</string>
     <string name="noAssignmentsTeacher">It looks like no assignments have been published yet.</string>

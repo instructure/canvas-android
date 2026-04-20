@@ -35,7 +35,7 @@ import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.Espresso.onView
-import com.instructure.canvas.espresso.withResourceIdContaining
+import com.instructure.canvas.espresso.utils.withResourceIdContaining
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.espresso.assertDisplayed
 

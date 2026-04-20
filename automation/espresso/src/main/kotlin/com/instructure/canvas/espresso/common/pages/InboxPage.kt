@@ -26,9 +26,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.refresh
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvas.espresso.utils.refresh
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.OnViewWithId

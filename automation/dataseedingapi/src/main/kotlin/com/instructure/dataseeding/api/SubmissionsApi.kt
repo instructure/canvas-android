@@ -12,9 +12,7 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
-
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -23,6 +21,7 @@ import com.instructure.dataseeding.model.CreateSubmissionCommentWrapper
 import com.instructure.dataseeding.model.FileType
 import com.instructure.dataseeding.model.GradeSubmission
 import com.instructure.dataseeding.model.GradeSubmissionWrapper
+import com.instructure.dataseeding.model.RubricAssessmentEntry
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmissionWrapper
@@ -122,6 +121,24 @@ object SubmissionsApi {
                 .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)))
                 .execute()
                 .body()!!
+    }
+
+    fun gradeSubmissionWithRubric(
+        teacherToken: String,
+        courseId: Long,
+        assignmentId: Long,
+        studentId: Long,
+        rubricAssessment: Map<String, RubricAssessmentEntry>
+    ): SubmissionApiModel {
+        return submissionsService(teacherToken)
+            .gradeSubmission(courseId, assignmentId, studentId,
+                GradeSubmissionWrapper(
+                    submission = GradeSubmission(excused = false),
+                    rubricAssessment = rubricAssessment
+                )
+            )
+            .execute()
+            .body()!!
     }
 
     //

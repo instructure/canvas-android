@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.todo
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
@@ -42,8 +41,8 @@ data class TodoWidgetUiState(
     val removingItemIds: Set<String> = emptySet(),
     val snackbarMessage: String? = null,
     val confirmationSnackbarData: ConfirmationSnackbarData? = null,
-    val onTodoClick: (FragmentActivity, String) -> Unit = { _, _ -> },
-    val onAddTodoClick: (FragmentActivity) -> Unit = {},
+    val onTodoClick: (String) -> Unit = {},
+    val onAddTodoClick: () -> Unit = {},
     val onDaySelected: (LocalDate) -> Unit = {},
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},

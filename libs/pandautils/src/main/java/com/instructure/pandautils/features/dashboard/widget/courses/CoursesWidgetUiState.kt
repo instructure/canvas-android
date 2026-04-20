@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
@@ -32,14 +31,14 @@ data class CoursesWidgetUiState(
     val showGrades: Boolean = false,
     val showColorOverlay: Boolean = false,
     val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
-    val onCourseClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onGroupClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onCourseClick: (Long) -> Unit = {},
+    val onGroupClick: (Long) -> Unit = {},
     val onToggleCoursesExpanded: () -> Unit = {},
     val onToggleGroupsExpanded: () -> Unit = {},
-    val onManageOfflineContent: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onCustomizeCourse: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onAllCourses: (FragmentActivity) -> Unit = {},
-    val onAnnouncementClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onGroupMessageClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onManageOfflineContent: (Long) -> Unit = {},
+    val onCustomizeCourse: (Long) -> Unit = {},
+    val onAllCourses: () -> Unit = {},
+    val onAnnouncementClick: (Long) -> Unit = {},
+    val onGroupMessageClick: (Long) -> Unit = {},
     val onCourseMoved: (Int, Int) -> Unit = { _, _ -> },
 )

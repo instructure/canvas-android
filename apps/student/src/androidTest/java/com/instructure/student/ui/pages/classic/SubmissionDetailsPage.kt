@@ -28,21 +28,24 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isActivated
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.isSelected
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.clickCoordinates
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
-import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.clickCoordinates
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -62,6 +65,7 @@ import com.instructure.student.ui.rendertests.renderpages.SubmissionCommentsRend
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.not
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
@@ -228,7 +232,7 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         if(click) {
             //onView(commentMatcher).click()
             onView(allOf(withId(R.id.attachmentNameTextView), withText(fileName)))
-                    .perform(withCustomConstraints(click(), isDisplayingAtLeast(5)))
+                    .perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(5)))
         }
 
     }
@@ -259,6 +263,10 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         swipeDrawerTo(GeneralLocation.BOTTOM_CENTER)
     }
 
+    fun expandSlidingPanel() {
+        swipeDrawerTo(GeneralLocation.TOP_CENTER)
+    }
+
     fun addAndSendComment(comment: String) {
         submissionCommentsRenderPage.addAndSendComment(comment)
     }
@@ -282,17 +290,14 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     fun assertRubricCriterionDisplayed(rc: RubricCriterion) {
         rc.ratings.forEach { rating ->
             val matcher = allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()))
-            scrollRecyclerView(R.id.recyclerView, matcher)
             onView(matcher).assertDisplayed()
             onView(matcher).click()
 
             val descriptionMatcher = allOf(withId(R.id.ratingTitle), withText(rating.description))
-            scrollRecyclerView(R.id.recyclerView, descriptionMatcher)
             onView(descriptionMatcher).check(matches(isDisplayingAtLeast(10)))
 
             if(rating.longDescription != null) {
                 val longDescriptionMatcher = allOf(withId(R.id.ratingDescription), withText(rating.longDescription))
-                scrollRecyclerView(R.id.recyclerView, longDescriptionMatcher)
                 onView(longDescriptionMatcher).check(matches(isDisplayingAtLeast(10)))
             }
         }
@@ -302,9 +307,10 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
      * Checks that pressing the "Description" button pops up a webview with the longDescription text
      */
     fun assertRubricDescriptionDisplays(rc: RubricCriterion) {
-        val matcher = allOf(withId(R.id.descriptionButton), containsTextCaseInsensitive("description"))
-        scrollRecyclerView(R.id.recyclerView, matcher)
-        onView(matcher).assertDisplayed() // probably unnecessary
+        val matcher = allOf(
+            withId(R.id.descriptionButton),
+            withAncestor(allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description)))))
+        )
         onView(matcher).click()
 
         onWebView(withId(R.id.webView))
@@ -313,6 +319,40 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
 
         Espresso.pressBack() // return from web page
 
+    }
+
+    fun assertRubricRatingSelected(rc: RubricCriterion, rating: RubricCriterionRating) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withId(R.id.ratingTitle), withText(rating.description), withAncestor(criterionAncestor)))
+            .check(matches(isDisplayingAtLeast(10)))
+        if (rating.longDescription != null) {
+            onView(allOf(withId(R.id.ratingDescription), withText(rating.longDescription), withAncestor(criterionAncestor)))
+                .check(matches(isDisplayingAtLeast(10)))
+        }
+    }
+
+    fun assertRubricCustomScoreSelected(rc: RubricCriterion) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withId(R.id.ratingTitle), withText(R.string.rubricCustomScore), withAncestor(criterionAncestor)))
+            .check(matches(isDisplayingAtLeast(10)))
+    }
+
+    fun clickRubricRating(rc: RubricCriterion, rating: RubricCriterionRating) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()), withAncestor(criterionAncestor))).click()
+    }
+
+    fun assertRubricRatingIsAssessed(rc: RubricCriterion, rating: RubricCriterionRating) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        onView(allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()), withAncestor(criterionAncestor)))
+            .check(matches(isActivated()))
+    }
+
+    fun assertRubricRatingIsPreviewSelected(rc: RubricCriterion, rating: RubricCriterionRating) {
+        val criterionAncestor = allOf(withId(R.id.rubricCriterion), hasDescendant(allOf(withId(R.id.criterionTitle), withText(rc.description))))
+        val ratingMatcher = allOf(withParent(withId(R.id.ratingLayout)), withText(rating.points.toInt().toString()), withAncestor(criterionAncestor))
+        onView(ratingMatcher).check(matches(isSelected()))
+        onView(ratingMatcher).check(matches(not(isActivated())))
     }
 
     fun assertNoSubmissionEmptyView() {

@@ -100,7 +100,7 @@ class CustomStatusesE2ETest: StudentComposeTest() {
         assignmentListPage.clickAssignment(testAssignment)
 
         assignmentDetailsPage.assertCustomStatus("AMAZING")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
     }
 
     @After

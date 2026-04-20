@@ -52,7 +52,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -68,7 +68,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = true,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -84,7 +84,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = true,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -100,7 +100,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -117,7 +117,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = true,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -135,7 +135,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = true,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -153,7 +153,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -171,7 +171,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -192,8 +192,8 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> },
-                onAnnouncementClick = { _, _ -> }
+                onCourseClick = { },
+                onAnnouncementClick = { }
             )
         }
 
@@ -216,8 +216,8 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> },
-                onAnnouncementClick = { _, _ -> }
+                onCourseClick = { },
+                onAnnouncementClick = { }
             )
         }
 
@@ -234,7 +234,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 
@@ -251,7 +251,7 @@ class CourseCardTest {
                 courseCard = courseCard,
                 showGrade = false,
                 showColorOverlay = false,
-                onCourseClick = { _, _ -> }
+                onCourseClick = { }
             )
         }
 

@@ -2,7 +2,7 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.stringContainsTextCaseInsensitive
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView

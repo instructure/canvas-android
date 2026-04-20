@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ShimmerBox
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
@@ -70,10 +71,17 @@ import sdk.pendo.io.pendoTag
 @Composable
 fun ForecastWidget(
     refreshSignal: SharedFlow<Unit>,
+    onNavigationEvent: (DashboardNavigationEvent.Forecast) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: ForecastWidgetViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
+        }
+    }
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
