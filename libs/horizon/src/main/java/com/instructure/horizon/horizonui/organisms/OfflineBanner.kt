@@ -48,19 +48,19 @@ fun OfflineBanner(lastSyncedAtMs: Long?, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(HorizonColors.Surface.attention())
+            .background(HorizonColors.Surface.inversePrimary())
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_no_wifi),
+            painter = painterResource(R.drawable.cloud_off),
             contentDescription = null,
             tint = HorizonColors.Icon.surfaceColored(),
         )
         Text(
             text = text,
-            style = HorizonTypography.p2,
+            style = HorizonTypography.p3,
             color = HorizonColors.Text.surfaceColored(),
         )
     }
