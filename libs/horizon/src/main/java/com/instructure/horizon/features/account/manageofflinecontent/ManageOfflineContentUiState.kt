@@ -17,12 +17,6 @@ package com.instructure.horizon.features.account.manageofflinecontent
 
 import com.instructure.horizon.horizonui.platform.LoadingState
 
-enum class ManageOfflineContentMode {
-    SELECTING,
-    SYNCING,
-    DELETING,
-}
-
 enum class CourseOfflineState {
     NONE,
     PARTIAL,
@@ -56,7 +50,6 @@ data class OfflineFileItemUiState(
 )
 
 data class ManageOfflineContentUiState(
-    val mode: ManageOfflineContentMode = ManageOfflineContentMode.SELECTING,
     val loadingState: LoadingState = LoadingState(),
     val storageOtherAppBytes: Long = 0L,
     val storageCanvasBytes: Long = 0L,
@@ -65,9 +58,5 @@ data class ManageOfflineContentUiState(
     val storageTotalLabel: String = "",
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val onSelectAllClick: () -> Unit = {},
-    val onRemoveContentClick: () -> Unit = {},
     val onSyncClick: () -> Unit = {},
-    val onCancelSyncClick: () -> Unit = {},
-    val syncProgress: Float = 0f,
-    val syncProgressLabel: String = "",
 )

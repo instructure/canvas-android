@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +38,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -49,7 +47,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
@@ -73,10 +70,6 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
-import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
-import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.molecules.Spinner
-import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
@@ -113,17 +106,9 @@ fun ManageOfflineContentScreen(
                         uiState = uiState,
                         modifier = Modifier.padding(top = 32.dp, start = 32.dp, end = 32.dp),
                     )
-                    when (uiState.mode) {
-                        ManageOfflineContentMode.SELECTING -> SelectingList(uiState)
-                        ManageOfflineContentMode.SYNCING -> SyncingList(uiState)
-                        ManageOfflineContentMode.DELETING -> DeletingContent()
-                    }
+                    SelectingList(uiState)
                 }
-                when (uiState.mode) {
-                    ManageOfflineContentMode.SELECTING -> SelectingBottomBar(uiState, scrollState, navController)
-                    ManageOfflineContentMode.SYNCING -> SyncingBottomBar(uiState)
-                    ManageOfflineContentMode.DELETING -> Unit
-                }
+                SelectingBottomBar(uiState, scrollState, navController)
             }
         }
     }
@@ -269,121 +254,6 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
             width = ButtonWidth.FILL,
             iconPosition = ButtonIconPosition.End(R.drawable.cancel),
             onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
-        )
-    }
-}
-
-@Composable
-private fun SyncingList(uiState: ManageOfflineContentUiState) {
-    Column(modifier = Modifier.padding(top = 16.dp, start = 24.dp, end = 24.dp)) {
-        if (uiState.syncProgressLabel.isNotEmpty()) {
-            Text(
-                text = uiState.syncProgressLabel,
-                style = HorizonTypography.p3,
-                color = HorizonColors.Text.timestamp(),
-            )
-            HorizonSpace(SpaceSize.SPACE_8)
-        }
-        ProgressBarSmall(
-            progress = (uiState.syncProgress * 100).toDouble(),
-            style = ProgressBarStyle.Dark(overrideProgressColor = HorizonColors.PrimitivesBlue.blue82()),
-            showLabels = false,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        HorizonSpace(SpaceSize.SPACE_16)
-    }
-    uiState.courses.forEach { course ->
-        SyncingCourseRow(course)
-    }
-}
-
-@Composable
-private fun SyncingBottomBar(uiState: ManageOfflineContentUiState) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(HorizonColors.Surface.pageSecondary())
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-    ) {
-        Button(
-            label = stringResource(R.string.offline_cancelSync),
-            color = ButtonColor.BlackOutline,
-            width = ButtonWidth.FILL,
-            onClick = uiState.onCancelSyncClick,
-        )
-    }
-}
-
-@Composable
-private fun SyncingCourseRow(course: OfflineCourseItemUiState) {
-    Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(76.dp)
-                .padding(horizontal = 24.dp),
-        ) {
-            Text(
-                text = course.courseName,
-                style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
-                modifier = Modifier.weight(1f),
-            )
-        }
-        HorizontalDivider(color = HorizonColors.Surface.divider())
-        course.files.forEach { file ->
-            SyncingFileRow(file)
-            HorizontalDivider(color = HorizonColors.Surface.divider())
-        }
-    }
-}
-
-@Composable
-private fun SyncingFileRow(file: OfflineFileItemUiState) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(76.dp)
-            .padding(horizontal = 24.dp),
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = file.fileName, style = HorizonTypography.p1, color = HorizonColors.Text.body())
-            Text(text = file.fileSizeLabel, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
-        }
-        when (file.syncState) {
-            FileSyncState.SYNCING -> Spinner(
-                size = SpinnerSize.EXTRA_SMALL,
-                modifier = Modifier.size(24.dp),
-            )
-            FileSyncState.DONE -> Icon(
-                painter = painterResource(R.drawable.check),
-                contentDescription = stringResource(R.string.offline_syncStatusSynced),
-                tint = HorizonColors.PrimitivesBlue.blue82(),
-                modifier = Modifier.size(24.dp),
-            )
-            FileSyncState.PENDING -> Spacer(modifier = Modifier.size(24.dp))
-        }
-    }
-}
-
-@Composable
-private fun DeletingContent() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 48.dp),
-    ) {
-        Spinner()
-        HorizonSpace(SpaceSize.SPACE_16)
-        Text(
-            text = stringResource(R.string.offline_deletingContent),
-            style = HorizonTypography.h3,
-            color = HorizonColors.Text.body(),
         )
     }
 }

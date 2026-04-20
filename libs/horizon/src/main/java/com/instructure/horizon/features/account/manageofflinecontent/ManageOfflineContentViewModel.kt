@@ -25,7 +25,10 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,12 +42,19 @@ class ManageOfflineContentViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         ManageOfflineContentUiState(
             onSelectAllClick = ::onSelectAllClick,
-            onRemoveContentClick = ::onRemoveContentClick,
-            onSyncClick = ::onSyncClick,
-            onCancelSyncClick = ::onCancelSyncClick,
         )
     )
     val uiState = _uiState.asStateFlow()
+
+    val syncingUiState = _uiState
+        .map { state ->
+            SyncingContentUiState(
+                courses = state.courses
+                    .filter { it.offlineState != CourseOfflineState.NONE }
+                    .map { course -> course.copy(files = course.files.filter { it.isSelected }) },
+            )
+        }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SyncingContentUiState())
 
     init {
         loadData()
@@ -101,7 +111,7 @@ class ManageOfflineContentViewModel @Inject constructor(
                     storageCanvasBytes = canvasBytes,
                     storageOtherAppBytes = otherAppBytes,
                     storageTotalBytes = totalBytes,
-                    storageUsedLabel = Formatter.formatShortFileSize(context, canvasBytes),
+                    storageUsedLabel = Formatter.formatShortFileSize(context, canvasBytes + otherAppBytes),
                     storageTotalLabel = Formatter.formatShortFileSize(context, totalBytes),
                 )
             }
@@ -122,18 +132,6 @@ class ManageOfflineContentViewModel @Inject constructor(
                 }
             )
         }
-    }
-
-    private fun onRemoveContentClick() {
-        // Navigation to confirmation screen is handled in the composable
-    }
-
-    private fun onSyncClick() {
-        _uiState.update { it.copy(mode = ManageOfflineContentMode.SYNCING) }
-    }
-
-    private fun onCancelSyncClick() {
-        _uiState.update { it.copy(mode = ManageOfflineContentMode.SELECTING) }
     }
 
     private fun toggleCourseExpanded(courseId: Long) {

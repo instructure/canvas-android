@@ -18,6 +18,7 @@ package com.instructure.horizon.features.account.navigation
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -29,9 +30,11 @@ import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
 import com.instructure.horizon.features.account.advanced.AccountAdvancedViewModel
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedScreen
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedViewModel
+import com.instructure.horizon.features.account.manageofflinecontent.DeletingContentScreen
 import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentScreen
 import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentViewModel
 import com.instructure.horizon.features.account.manageofflinecontent.RemoveSyncedContentConfirmationScreen
+import com.instructure.horizon.features.account.manageofflinecontent.SyncingContentScreen
 import com.instructure.horizon.features.account.notifications.AccountNotificationsScreen
 import com.instructure.horizon.features.account.notifications.AccountNotificationsViewModel
 import com.instructure.horizon.features.account.offlinesettings.OfflineSettingsScreen
@@ -115,11 +118,33 @@ fun NavGraphBuilder.accountNavigation(
         composable(AccountRoute.ManageOfflineContent.route) {
             val viewModel = hiltViewModel<ManageOfflineContentViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            ManageOfflineContentScreen(uiState, navController)
+            ManageOfflineContentScreen(
+                uiState = uiState.copy(onSyncClick = { navController.navigate(AccountRoute.SyncingContent.route) }),
+                navController = navController,
+            )
         }
 
         composable(AccountRoute.RemoveSyncedContentConfirmation.route) {
-            RemoveSyncedContentConfirmationScreen(navController = navController)
+            RemoveSyncedContentConfirmationScreen(
+                navController = navController,
+                onConfirm = { navController.navigate(AccountRoute.DeletingContent.route) },
+            )
+        }
+
+        composable(AccountRoute.SyncingContent.route) { backStackEntry ->
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(AccountRoute.ManageOfflineContent.route)
+            }
+            val viewModel = hiltViewModel<ManageOfflineContentViewModel>(parentEntry)
+            val syncingUiState by viewModel.syncingUiState.collectAsState()
+            SyncingContentScreen(
+                uiState = syncingUiState.copy(onCancelSyncClick = { navController.popBackStack() }),
+                navController = navController,
+            )
+        }
+
+        composable(AccountRoute.DeletingContent.route) {
+            DeletingContentScreen(navController = navController)
         }
     }
 }
