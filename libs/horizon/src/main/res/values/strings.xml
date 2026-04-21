@@ -673,7 +673,7 @@
     <string name="offline_wifiOnlyLabel">Sync content over Wi-Fi only</string>
     <string name="offline_wifiOnlyDescription">If you enable this setting, content only synchronizes when your device connects to a Wi-Fi network. Otherwise, the sync is postponed until a Wi-Fi network is available.</string>
     <string name="offline_manageOfflineContentButton">Manage offline content</string>
-    <string name="offline_manageOfflineContentTitle">Manage Offline Content</string>
+    <string name="offline_manageOfflineContentTitle">Manage offline content</string>
     <string name="offline_storageUsedLabel">%1$s of %2$s used</string>
     <string name="offline_storageOtherApps">Other apps</string>
     <string name="offline_storageCanvasCareer">Canvas Career</string>

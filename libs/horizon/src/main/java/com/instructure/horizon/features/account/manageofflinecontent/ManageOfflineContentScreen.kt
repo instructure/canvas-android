@@ -312,23 +312,25 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
                         )
                     }
                 }
-                val context = LocalContext.current
-                val iconRotation by animateFloatAsState(
-                    if (course.isExpanded) 0f else 180f,
-                    label = "CourseExpandCollapseIconAnimation",
-                )
-                IconButton(
-                    iconRes = R.drawable.keyboard_arrow_up,
-                    color = IconButtonColor.Ghost,
-                    size = IconButtonSize.SMALL,
-                    onClick = { course.onToggleExpanded() },
-                    modifier = Modifier
-                        .rotate(iconRotation)
-                        .semantics {
-                            expandable(context, course.isExpanded)
-                        },
-                )
-                HorizonSpace(SpaceSize.SPACE_24)
+                if (course.files.isNotEmpty()) {
+                    val context = LocalContext.current
+                    val iconRotation by animateFloatAsState(
+                        if (course.isExpanded) 180f else 0f,
+                        label = "CourseExpandCollapseIconAnimation",
+                    )
+                    IconButton(
+                        iconRes = R.drawable.keyboard_arrow_down,
+                        color = IconButtonColor.Ghost,
+                        size = IconButtonSize.SMALL,
+                        onClick = { course.onToggleExpanded() },
+                        modifier = Modifier
+                            .rotate(iconRotation)
+                            .semantics {
+                                expandable(context, course.isExpanded)
+                            },
+                    )
+                    HorizonSpace(SpaceSize.SPACE_24)
+                }
             }
         }
         HorizontalDivider(color = HorizonColors.Surface.divider())

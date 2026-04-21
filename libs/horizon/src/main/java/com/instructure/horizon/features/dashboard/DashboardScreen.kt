@@ -74,18 +74,18 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
-import com.instructure.horizon.features.dashboard.widget.syncinprogress.DashboardSyncInProgressWidget
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
+import com.instructure.horizon.features.dashboard.widget.syncinprogress.DashboardSyncInProgressWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
-import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
@@ -93,6 +93,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.zeroScreenInsets
@@ -267,6 +268,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             },
             color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
+            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
@@ -284,7 +286,8 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
                         type = BadgeType.Inverse
                     )
                 }
-            } else null
+            } else null,
+            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
@@ -300,7 +303,8 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
                         type = BadgeType.Inverse
                     )
                 }
-            } else null
+            } else null,
+            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
     }
 }

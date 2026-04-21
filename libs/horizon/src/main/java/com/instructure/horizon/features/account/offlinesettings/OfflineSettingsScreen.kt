@@ -100,6 +100,7 @@ fun OfflineSettingsScreen(
                     enabled = uiState.autoSyncEnabled,
                     onSelected = uiState.onSyncFrequencySelected,
                 )
+                HorizonSpace(SpaceSize.SPACE_4)
                 Text(
                     text = stringResource(R.string.offline_syncFrequencyDescription),
                     style = HorizonTypography.p2,
