@@ -32,7 +32,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -46,21 +45,22 @@ import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.container.Card
 import com.instructure.instui.compose.container.Elevation
+import com.instructure.instui.compose.indicator.Icon
+import com.instructure.instui.compose.indicator.IconColor
+import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
 import com.instructure.instui.compose.list.ListItem
+import com.instructure.instui.compose.list.ListItemLeading
 import com.instructure.instui.compose.list.SectionHeader
 import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.compose.navigation.TopBar
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.line.ArrowLeft
-import com.instructure.instui.token.icon.line.ArrowOpenDown
-import com.instructure.instui.token.icon.line.ArrowOpenUp
 import com.instructure.instui.token.icon.line.Assignment
 import com.instructure.instui.token.icon.line.Lock
 import com.instructure.instui.token.icon.line.More
-import com.instructure.instui.token.icon.line.Warning
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -100,12 +100,12 @@ private fun GradesScreenPreview() {
                     containerColor = CourseColor,
                     navigationIcon = {
                         IconButton(onClick = {}) {
-                            Icon(InstUIIcons.Line.ArrowLeft, contentDescription = "Back")
+                            Icon(InstUIIcons.Line.ArrowLeft, color = IconColor.Inverse, contentDescription = "Back")
                         }
                     },
                     actions = {
                         IconButton(onClick = {}) {
-                            Icon(InstUIIcons.Line.More, contentDescription = "More")
+                            Icon(InstUIIcons.Line.More, color = IconColor.Inverse, contentDescription = "More")
                         }
                     },
                 )
@@ -138,12 +138,7 @@ private fun GradesScreenPreview() {
                                 modifier = Modifier.weight(1f),
                             )
                             Spacer(Modifier.width(8.dp))
-                            Icon(
-                                InstUIIcons.Line.Lock,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp),
-                                tint = InstUISemanticColors.Icon.base(),
-                            )
+                            Icon(InstUIIcons.Line.Lock, size = IconSize.Medium)
                         }
                     }
                 }
@@ -152,30 +147,16 @@ private fun GradesScreenPreview() {
 
                 // Collapsed section
                 SectionHeader(
-                    title = "Overdue Assignments",
+                    label = "Overdue Assignments",
+                    expanded = false,
                     onClick = {},
-                    trailing = {
-                        Icon(
-                            InstUIIcons.Line.ArrowOpenDown,
-                            contentDescription = "Expand",
-                            modifier = Modifier.size(16.dp),
-                            tint = InstUISemanticColors.Icon.base(),
-                        )
-                    },
                 )
 
                 // Expanded section
                 SectionHeader(
-                    title = "Overdue Assignments",
+                    label = "Overdue Assignments",
+                    expanded = true,
                     onClick = {},
-                    trailing = {
-                        Icon(
-                            InstUIIcons.Line.ArrowOpenUp,
-                            contentDescription = "Collapse",
-                            modifier = Modifier.size(16.dp),
-                            tint = InstUISemanticColors.Icon.base(),
-                        )
-                    },
                 )
 
                 // Assignment list items (no separators between them per Figma)
@@ -192,14 +173,7 @@ private fun AssignmentListItem() {
     ListItem(
         title = "Assignment name",
         subtext1 = "Due Oct 3, 2023 9:41",
-        leading = {
-            Icon(
-                InstUIIcons.Line.Assignment,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = InstUISemanticColors.Icon.base(),
-            )
-        },
+        leading = ListItemLeading.Icon(InstUIIcons.Line.Assignment),
         pill = { Pill(text = "Missing", variant = PillVariant.Error) },
         score = {
             Text(
