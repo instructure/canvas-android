@@ -34,6 +34,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 object SubmissionsApi {
     interface SubmissionsService {
@@ -62,7 +63,8 @@ object SubmissionsApi {
                 @Path("courseId") courseId: Long,
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long,
-                @Body gradeSubmission: GradeSubmissionWrapper
+                @Body gradeSubmission: GradeSubmissionWrapper,
+                @Query("sub_assignment_tag") subAssignmentTag: String? = null
         ): Call<SubmissionApiModel>
 
     }
@@ -115,10 +117,11 @@ object SubmissionsApi {
                         studentId: Long,
                         excused: Boolean = false,
                         postedGrade: String? = null,
-                        customGradeStatusId: String? = null): SubmissionApiModel {
+                        customGradeStatusId: String? = null,
+                        subAssignmentTag: String? = null): SubmissionApiModel {
 
         return submissionsService(teacherToken)
-                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)))
+                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)), subAssignmentTag)
                 .execute()
                 .body()!!
     }
