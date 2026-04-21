@@ -46,7 +46,7 @@ class GetDashboardCoursesUseCase @Inject constructor(
         if (invitations.isNotEmpty()) {
             invitations.forEach { enrollment ->
                 acceptCourseInviteUseCase(
-                    AcceptCourseInviteParams(
+                    AcceptCourseInviteUseCase.Params(
                         courseId = enrollment.courseId,
                         enrollmentId = enrollment.enrollmentId,
                     )
@@ -58,7 +58,7 @@ class GetDashboardCoursesUseCase @Inject constructor(
         val nextModuleItemByCourseId = enrollments
             .filter { it.enrollmentState == DashboardEnrollment.STATE_ACTIVE }
             .associate { enrollment ->
-                enrollment.courseId to getNextModuleItemUseCase(enrollment.courseId)
+                enrollment.courseId to getNextModuleItemUseCase(GetNextModuleItemUseCase.Params(enrollment.courseId))
             }
 
         val unenrolledPrograms = programs.filter { program ->

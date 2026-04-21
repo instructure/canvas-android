@@ -22,7 +22,9 @@ import javax.inject.Inject
 
 class GetNextModuleItemUseCase @Inject constructor(
     private val repository: ModuleItemRepository,
-) : BaseUseCase<Long, DashboardNextModuleItem?>() {
+) : BaseUseCase<GetNextModuleItemUseCase.Params, DashboardNextModuleItem?>() {
 
-    override suspend fun execute(params: Long) = repository.getNextModuleItemForCourse(params)
+    data class Params(val courseId: Long)
+
+    override suspend fun execute(params: Params) = repository.getNextModuleItemForCourse(params.courseId)
 }

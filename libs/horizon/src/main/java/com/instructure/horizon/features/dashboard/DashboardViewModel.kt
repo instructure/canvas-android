@@ -82,7 +82,7 @@ class DashboardViewModel @Inject constructor(
                 .collect { isOnline ->
                     if (featureFlagProvider.offlineEnabled()) {
                         val lastSyncedAt = if (!isOnline) {
-                            getLastSyncedAtUseCase(SyncDataType.DASHBOARD_ENROLLMENTS)
+                            getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.DASHBOARD_ENROLLMENTS))
                         } else {
                             null
                         }
