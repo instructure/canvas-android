@@ -29,8 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.component.InstUIToggleDetails
+import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.icon.InstUIIcons
@@ -62,6 +62,12 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
  * )
  * ```
  */
+private val SectionHeaderTextStyle = TextStyle(
+    fontFamily = InstUIToggleDetails.fontFamily,
+    fontWeight = InstUIToggleDetails.fontWeight,
+    fontSize = InstUIToggleDetails.fontSizeSmall,
+)
+
 @Composable
 fun SectionHeader(
     title: String,
@@ -73,16 +79,15 @@ fun SectionHeader(
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(
+                horizontal = InstUILayoutSizes.Spacing.Padding.container_sm,
+                vertical = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
-            style = TextStyle(
-                fontFamily = InstUIToggleDetails.fontFamily,
-                fontWeight = InstUIToggleDetails.fontWeight,
-                fontSize = InstUIToggleDetails.fontSizeSmall,
-            ),
+            style = SectionHeaderTextStyle,
             color = InstUIToggleDetails.textColor,
             modifier = Modifier.weight(1f),
         )

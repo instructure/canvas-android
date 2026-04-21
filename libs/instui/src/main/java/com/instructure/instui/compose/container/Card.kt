@@ -19,6 +19,7 @@ package com.instructure.instui.compose.container
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -97,7 +98,7 @@ fun Card(
         elevation = CardDefaults.cardElevation(defaultElevation = elevation.dp),
         border = border,
     ) {
-        Column(modifier = Modifier.padding(contentPadding)) {
+        Box(modifier = Modifier.padding(contentPadding)) {
             content()
         }
     }

@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,20 +41,59 @@ import com.instructure.instui.token.component.InstUIPill
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.Assignment
 import com.instructure.instui.token.icon.line.Warning
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
- * Pill status variant determining text and border colors.
+ * Pill colors resolved from tokens for a given variant.
  */
-enum class PillVariant {
-    Default,
-    Info,
-    Error,
-    Success,
-    Warning,
+data class PillColors(
+    val textColor: Color,
+    val borderColor: Color,
+)
+
+/**
+ * Pill status variant determining text and border colors.
+ * Each variant carries its own composable color resolver.
+ */
+enum class PillVariant(val colors: @Composable () -> PillColors) {
+    Default(colors = {
+        PillColors(
+            textColor = InstUIPill.baseTextColor,
+            borderColor = InstUIPill.baseBorderColor,
+        )
+    }),
+    Info(colors = {
+        PillColors(
+            textColor = InstUIPill.infoTextColor,
+            borderColor = InstUIPill.infoBorderColor,
+        )
+    }),
+    Error(colors = {
+        PillColors(
+            textColor = InstUIPill.errorTextColor,
+            borderColor = InstUIPill.errorBorderColor,
+        )
+    }),
+    Success(colors = {
+        PillColors(
+            textColor = InstUIPill.successTextColor,
+            borderColor = InstUIPill.successBorderColor,
+        )
+    }),
+    Warning(colors = {
+        PillColors(
+            textColor = InstUIPill.warningTextColor,
+            borderColor = InstUIPill.warningBorderColor,
+        )
+    }),
 }
+
+private val PillTextStyle = TextStyle(
+    fontFamily = InstUIPill.fontFamily,
+    fontWeight = InstUIPill.textFontWeight,
+    fontSize = InstUIPill.textFontSize,
+)
 
 /**
  * InstUI status pill / badge.
@@ -75,28 +113,8 @@ fun Pill(
     variant: PillVariant = PillVariant.Default,
     icon: ImageVector? = null,
 ) {
-    val textColor = when (variant) {
-        PillVariant.Default -> InstUIPill.baseTextColor
-        PillVariant.Info -> InstUIPill.infoTextColor
-        PillVariant.Error -> InstUIPill.errorTextColor
-        PillVariant.Success -> InstUIPill.successTextColor
-        PillVariant.Warning -> InstUIPill.warningTextColor
-    }
-
-    val borderColor = when (variant) {
-        PillVariant.Default -> InstUIPill.baseBorderColor
-        PillVariant.Info -> InstUIPill.infoBorderColor
-        PillVariant.Error -> InstUIPill.errorBorderColor
-        PillVariant.Success -> InstUIPill.successBorderColor
-        PillVariant.Warning -> InstUIPill.warningBorderColor
-    }
-
+    val colors = variant.colors()
     val shape = RoundedCornerShape(InstUIPill.borderRadius)
-    val textStyle = TextStyle(
-        fontFamily = InstUIPill.fontFamily,
-        fontWeight = InstUIPill.textFontWeight,
-        fontSize = InstUIPill.textFontSize,
-    )
 
     Box(
         modifier = modifier
@@ -104,7 +122,7 @@ fun Pill(
             .widthIn(max = InstUIPill.maxWidth)
             .border(
                 width = InstUIPill.borderWidth,
-                color = borderColor,
+                color = colors.borderColor,
                 shape = shape,
             )
             .background(
@@ -123,13 +141,13 @@ fun Pill(
                     imageVector = icon,
                     contentDescription = null,
                     modifier = Modifier.size(14.dp),
-                    tint = textColor,
+                    tint = colors.textColor,
                 )
             }
             Text(
                 text = text,
-                style = textStyle,
-                color = textColor,
+                style = PillTextStyle,
+                color = colors.textColor,
                 maxLines = 1,
             )
         }

@@ -19,11 +19,16 @@
 
 package com.instructure.instui.token.icon.solid
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.icon.InstUIIcons
 
@@ -34,6 +39,7 @@ val InstUIIcons.Solid.ArrowDoubleStart: ImageVector by lazy {
         defaultHeight = 24.dp,
         viewportWidth = 1920f,
         viewportHeight = 1920f,
+        autoMirror = true,
     )
     .addPath(
         pathData = PathParser().parsePathString(
@@ -50,4 +56,14 @@ val InstUIIcons.Solid.ArrowDoubleStart: ImageVector by lazy {
         pathFillType = PathFillType.EvenOdd,
     )
     .build()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ArrowDoubleStartPreview() {
+    Icon(
+        imageVector = InstUIIcons.Solid.ArrowDoubleStart,
+        contentDescription = "ArrowDoubleStart",
+        modifier = Modifier.size(48.dp),
+    )
 }

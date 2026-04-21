@@ -56,7 +56,7 @@ fun TopBar(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     containerColor: Color = InstUISemanticColors.Background.brand(),
-    contentColor: Color = InstUISemanticColors.Text.onColor(),
+    contentColor: Color = InstUISemanticColors.Text.inverse(),
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
 ) {

@@ -19,11 +19,16 @@
 
 package com.instructure.instui.token.icon.custom
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.icon.InstUIIcons
 
@@ -34,6 +39,7 @@ val InstUIIcons.Custom.BackgroundColor: ImageVector by lazy {
         defaultHeight = 24.dp,
         viewportWidth = 24f,
         viewportHeight = 24f,
+        autoMirror = true,
     )
     .addPath(
         pathData = PathParser().parsePathString(
@@ -43,4 +49,14 @@ val InstUIIcons.Custom.BackgroundColor: ImageVector by lazy {
         pathFillType = PathFillType.EvenOdd,
     )
     .build()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun BackgroundColorPreview() {
+    Icon(
+        imageVector = InstUIIcons.Custom.BackgroundColor,
+        contentDescription = "BackgroundColor",
+        modifier = Modifier.size(48.dp),
+    )
 }

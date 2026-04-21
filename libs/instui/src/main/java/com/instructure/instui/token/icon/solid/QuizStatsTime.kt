@@ -19,11 +19,16 @@
 
 package com.instructure.instui.token.icon.solid
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.icon.InstUIIcons
 
@@ -43,4 +48,14 @@ val InstUIIcons.Solid.QuizStatsTime: ImageVector by lazy {
         pathFillType = PathFillType.EvenOdd,
     )
     .build()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun QuizStatsTimePreview() {
+    Icon(
+        imageVector = InstUIIcons.Solid.QuizStatsTime,
+        contentDescription = "QuizStatsTime",
+        modifier = Modifier.size(48.dp),
+    )
 }

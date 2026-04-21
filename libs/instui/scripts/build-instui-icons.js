@@ -83,6 +83,22 @@ function categoryToPackage(category) {
   return category.toLowerCase()
 }
 
+/**
+ * Check if an icon name represents a directional icon that should
+ * be mirrored in RTL layouts.
+ */
+const DIRECTIONAL_PATTERNS = [
+  /^arrow/i, /^back/i, /^forward/i, /^chevron/i,
+  /^indent/i, /^outdent/i, /^redo/i, /^undo/i,
+  /^reply/i, /^share/i, /^exit/i, /^external-link/i,
+  /^mini-arrow/i, /^drop-down/i,
+]
+
+function isDirectionalIcon(filename) {
+  const base = filename.replace('.svg', '')
+  return DIRECTIONAL_PATTERNS.some(pattern => pattern.test(base))
+}
+
 // ---------------------------------------------------------------------------
 // SVG Parsing
 // ---------------------------------------------------------------------------
@@ -135,7 +151,7 @@ function parsePaths(svg) {
 /**
  * Generate a Kotlin file for a single icon.
  */
-function generateIconKotlin(category, kotlinName, svg) {
+function generateIconKotlin(category, kotlinName, svg, filename) {
   const viewBox = parseViewBox(svg)
   const paths = parsePaths(svg)
   const pkg = categoryToPackage(category)
@@ -161,11 +177,16 @@ function generateIconKotlin(category, kotlinName, svg) {
 
 package ${BASE_PACKAGE}.${pkg}
 
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ${BASE_PACKAGE}.InstUIIcons
 
@@ -175,10 +196,20 @@ val InstUIIcons.${category}.${kotlinName}: ImageVector by lazy {
         defaultWidth = 24.dp,
         defaultHeight = 24.dp,
         viewportWidth = ${viewBox.width}f,
-        viewportHeight = ${viewBox.height}f,
+        viewportHeight = ${viewBox.height}f,${isDirectionalIcon(filename) ? `\n        autoMirror = true,` : ''}
     )
 ${pathCalls}
     .build()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ${kotlinName}Preview() {
+    Icon(
+        imageVector = InstUIIcons.${category}.${kotlinName},
+        contentDescription = "${kotlinName}",
+        modifier = Modifier.size(48.dp),
+    )
 }
 `
 }
@@ -319,7 +350,7 @@ async function buildIcons(download, version) {
 
       for (const { name, svg } of results) {
         const kotlinName = svgToKotlinName(name)
-        const kotlin = generateIconKotlin(category, kotlinName, svg)
+        const kotlin = generateIconKotlin(category, kotlinName, svg, name)
         if (kotlin) {
           const filePath = kotlinFilePath(category, kotlinName)
           fs.writeFileSync(filePath, kotlin)
