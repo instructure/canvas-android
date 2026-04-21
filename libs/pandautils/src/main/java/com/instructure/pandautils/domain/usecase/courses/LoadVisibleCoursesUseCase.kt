@@ -135,13 +135,16 @@ class LoadVisibleCoursesUseCase @Inject constructor(
     ): List<DiscussionTopicHeader> {
         return nodes?.mapNotNull { node ->
             node ?: return@mapNotNull null
-            if (node.participant?.read == true) return@mapNotNull null
+            val isUnread = node.participant?.read != true
+            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
+            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
 
             DiscussionTopicHeader(
                 id = node._id.toLongOrNull() ?: return@mapNotNull null,
                 title = node.title,
                 message = node.message,
                 postedDate = node.postedAt,
+                unreadCount = node.entryCounts?.unreadCount ?: 0,
                 announcement = true
             )
         } ?: emptyList()
@@ -153,13 +156,16 @@ class LoadVisibleCoursesUseCase @Inject constructor(
         val nodes = announcementData.course?.onCourse?.announcements?.nodes
         return nodes?.mapNotNull { node ->
             node ?: return@mapNotNull null
-            if (node.participant?.read == true) return@mapNotNull null
+            val isUnread = node.participant?.read != true
+            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
+            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
 
             DiscussionTopicHeader(
                 id = node._id.toLongOrNull() ?: return@mapNotNull null,
                 title = node.title,
                 message = node.message,
                 postedDate = node.postedAt,
+                unreadCount = node.entryCounts?.unreadCount ?: 0,
                 announcement = true
             )
         } ?: emptyList()

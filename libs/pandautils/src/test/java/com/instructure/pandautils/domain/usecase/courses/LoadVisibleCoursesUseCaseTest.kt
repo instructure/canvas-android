@@ -155,7 +155,8 @@ class LoadVisibleCoursesUseCaseTest {
             title = "Important Update",
             message = "Hello students",
             postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = false)
+            participant = DashboardCoursesQuery.Participant(read = false),
+            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
         )
         val announcements = DashboardCoursesQuery.Announcements(
             pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
@@ -181,13 +182,45 @@ class LoadVisibleCoursesUseCaseTest {
     }
 
     @Test
-    fun `read announcements are filtered out`() = runTest {
+    fun `read announcement with unread entries is included`() = runTest {
+        val readAnnouncementWithEntries = DashboardCoursesQuery.Node1(
+            _id = "10",
+            title = "Announcement with replies",
+            message = "Check the replies",
+            postedAt = Date(),
+            participant = DashboardCoursesQuery.Participant(read = true),
+            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 3)
+        )
+        val announcements = DashboardCoursesQuery.Announcements(
+            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
+            nodes = listOf(readAnnouncementWithEntries)
+        )
+        val data = buildQueryData(
+            allCourse(
+                id = "1",
+                name = "Course",
+                announcements = announcements,
+                dashboardCard = dashboardCard(position = 0)
+            )
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val courseAnnouncements = result.announcementsMap[1L]
+        assertEquals(1, courseAnnouncements?.size)
+        assertEquals(3, courseAnnouncements?.first()?.unreadCount)
+    }
+
+    @Test
+    fun `fully read announcements with no unread entries are filtered out`() = runTest {
         val readAnnouncement = DashboardCoursesQuery.Node1(
             _id = "10",
             title = "Old Announcement",
             message = "Already read",
             postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = true)
+            participant = DashboardCoursesQuery.Participant(read = true),
+            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
         )
         val announcements = DashboardCoursesQuery.Announcements(
             pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
@@ -216,7 +249,8 @@ class LoadVisibleCoursesUseCaseTest {
             title = "First Page",
             message = "msg",
             postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = false)
+            participant = DashboardCoursesQuery.Participant(read = false),
+            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
         )
         val announcements = DashboardCoursesQuery.Announcements(
             pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = true, endCursor = "cursor1"),
@@ -226,11 +260,11 @@ class LoadVisibleCoursesUseCaseTest {
             allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(1L, any()) } returns CourseAnnouncementsQuery.Data(course = null)
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns CourseAnnouncementsQuery.Data(course = null)
 
         useCase(LoadVisibleCoursesUseCase.Params())
 
-        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, any()) }
+        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, "cursor1", any()) }
     }
 
     @Test

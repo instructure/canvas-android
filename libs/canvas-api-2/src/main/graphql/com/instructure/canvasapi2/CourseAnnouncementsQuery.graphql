@@ -35,6 +35,9 @@ query CourseAnnouncementsQuery($courseId: ID!, $pageSize: Int!, $cursor: String)
                     participant {
                         read
                     }
+                    entryCounts {
+                        unreadCount
+                    }
                 }
             }
         }

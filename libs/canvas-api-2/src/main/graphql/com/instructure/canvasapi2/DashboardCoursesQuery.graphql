@@ -52,6 +52,9 @@ query DashboardCoursesQuery($pageSize: Int!) {
                 participant {
                     read
                 }
+                entryCounts {
+                    unreadCount
+                }
             }
         }
     }
