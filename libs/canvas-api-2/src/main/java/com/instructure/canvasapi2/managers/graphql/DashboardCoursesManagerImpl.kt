@@ -44,25 +44,38 @@ class DashboardCoursesManagerImpl(
     override suspend fun getCourseAnnouncements(
         courseId: Long,
         forceNetwork: Boolean
-    ): List<CourseAnnouncementsQuery.Node1?> {
-        val allNodes = mutableListOf<CourseAnnouncementsQuery.Node1?>()
-        var hasNextPage = true
-        var cursor: String? = null
+    ): CourseAnnouncementsQuery.Data {
+        val query = CourseAnnouncementsQuery(
+            courseId = courseId.toString(),
+            cursor = Optional.absent()
+        )
+        val initialData = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
+
+        val course = initialData.course?.onCourse ?: return initialData
+        val allNodes = course.announcements?.nodes?.toMutableList() ?: mutableListOf()
+        var hasNextPage = course.announcements?.pageInfo?.hasNextPage == true
+        var cursor = course.announcements?.pageInfo?.endCursor
 
         while (hasNextPage) {
-            val query = CourseAnnouncementsQuery(
+            val paginatedQuery = CourseAnnouncementsQuery(
                 courseId = courseId.toString(),
-                cursor = if (cursor != null) Optional.present(cursor) else Optional.absent()
+                cursor = Optional.present(cursor)
             )
-            val data = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
-            val announcements = (data.course as? CourseAnnouncementsQuery.CourseOnCourse)?.announcements
+            val paginatedData = apolloClient.enqueueQuery(paginatedQuery, forceNetwork = forceNetwork).dataAssertNoErrors
+            val paginatedCourse = paginatedData.course?.onCourse
 
-            announcements?.nodes?.let { allNodes.addAll(it) }
-
-            hasNextPage = announcements?.pageInfo?.hasNextPage == true
-            cursor = announcements?.pageInfo?.endCursor
+            paginatedCourse?.announcements?.nodes?.let { allNodes.addAll(it) }
+            hasNextPage = paginatedCourse?.announcements?.pageInfo?.hasNextPage == true
+            cursor = paginatedCourse?.announcements?.pageInfo?.endCursor
         }
 
-        return allNodes
+        return CourseAnnouncementsQuery.Data(
+            course = CourseAnnouncementsQuery.Course(
+                __typename = "Course",
+                onCourse = course.copy(
+                    announcements = course.announcements?.copy(nodes = allNodes)
+                )
+            )
+        )
     }
 }

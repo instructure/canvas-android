@@ -16,8 +16,10 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.type.EnrollmentType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -32,35 +34,45 @@ import java.util.Date
 class LoadVisibleCoursesUseCaseTest {
 
     private val dashboardCoursesManager: DashboardCoursesManager = mockk()
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
 
     private lateinit var useCase: LoadVisibleCoursesUseCase
 
     @Before
     fun setup() {
-        useCase = LoadVisibleCoursesUseCase(dashboardCoursesManager)
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
+        useCase = LoadVisibleCoursesUseCase(dashboardCoursesManager, loadDashboardCardsUseCase)
     }
 
     @Test
-    fun `visible courses are those with dashboardCard sorted by position`() = runTest {
+    fun `visible courses match dashboard cards sorted by position`() = runTest {
         val data = buildQueryData(
-            allCourse("1", "Course A", dashboardCard = dashboardCard(position = 2)),
-            allCourse("2", "Course B", dashboardCard = dashboardCard(position = 0)),
-            allCourse("3", "Course C", dashboardCard = dashboardCard(position = 1))
+            allCourse("1", "Course A"),
+            allCourse("2", "Course B"),
+            allCourse("3", "Course C")
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(
+            DashboardCard(id = 3, position = 0),
+            DashboardCard(id = 1, position = 1),
+            DashboardCard(id = 2, position = 2)
+        )
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
-        assertEquals(listOf(2L, 3L, 1L), result.visibleCourses.map { it.id })
+        assertEquals(listOf(3L, 1L, 2L), result.visibleCourses.map { it.id })
     }
 
     @Test
-    fun `courses without dashboardCard are not visible`() = runTest {
+    fun `only dashboard card courses are visible`() = runTest {
         val data = buildQueryData(
-            allCourse("1", "On Dashboard", dashboardCard = dashboardCard(position = 0)),
-            allCourse("2", "Not on Dashboard", dashboardCard = null)
+            allCourse("1", "On Dashboard"),
+            allCourse("2", "Not on Dashboard")
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(
+            DashboardCard(id = 1, position = 0)
+        )
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
@@ -70,18 +82,18 @@ class LoadVisibleCoursesUseCaseTest {
     }
 
     @Test
-    fun `allCourses includes all courses regardless of dashboardCard`() = runTest {
+    fun `empty dashboard cards returns empty visible courses`() = runTest {
         val data = buildQueryData(
-            allCourse("1", "Visible", dashboardCard = dashboardCard(position = 0)),
-            allCourse("2", "Also Visible", dashboardCard = dashboardCard(position = 1)),
-            allCourse("3", "Hidden", dashboardCard = null)
+            allCourse("1", "Course A"),
+            allCourse("2", "Course B")
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
-        assertEquals(2, result.visibleCourses.size)
-        assertEquals(3, result.allCourses.size)
+        assertTrue(result.visibleCourses.isEmpty())
+        assertEquals(2, result.allCourses.size)
     }
 
     @Test
@@ -96,6 +108,7 @@ class LoadVisibleCoursesUseCaseTest {
             )
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 42, position = 0))
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
@@ -126,6 +139,7 @@ class LoadVisibleCoursesUseCaseTest {
             )
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         val result = useCase(LoadVisibleCoursesUseCase.Params())
 
@@ -212,7 +226,7 @@ class LoadVisibleCoursesUseCaseTest {
             allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(1L, any()) } returns emptyList()
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(1L, any()) } returns CourseAnnouncementsQuery.Data(course = null)
 
         useCase(LoadVisibleCoursesUseCase.Params())
 

@@ -29,7 +29,8 @@ import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class LoadVisibleCoursesUseCase @Inject constructor(
-    private val dashboardCoursesManager: DashboardCoursesManager
+    private val dashboardCoursesManager: DashboardCoursesManager,
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase
 ) : BaseUseCase<LoadVisibleCoursesUseCase.Params, LoadVisibleCoursesUseCase.Result>() {
 
     override suspend fun execute(params: Params): Result {
@@ -38,15 +39,12 @@ class LoadVisibleCoursesUseCase @Inject constructor(
         )
 
         val allCourses = data.allCourses?.mapNotNull { mapGraphQlCourse(it) } ?: emptyList()
+        val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(params.forceRefresh))
 
-        val visibleCourses = allCourses
-            .filter { course ->
-                data.allCourses?.find { it._id == course.id.toString() }?.dashboardCard != null
-            }
-            .sortedBy { course ->
-                data.allCourses?.find { it._id == course.id.toString() }
-                    ?.dashboardCard?.position ?: Int.MAX_VALUE
-            }
+        val coursesMap = allCourses.associateBy { it.id }
+        val visibleCourses = dashboardCards
+            .mapNotNull { card -> coursesMap[card.id] }
+            .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
 
         val announcementsMap = buildAnnouncementsMap(data, params.forceRefresh)
 
@@ -65,14 +63,13 @@ class LoadVisibleCoursesUseCase @Inject constructor(
 
         data.allCourses?.forEach { graphQlCourse ->
             val courseId = graphQlCourse._id.toLongOrNull() ?: return@forEach
-            val firstPage = mapGraphQlAnnouncements(graphQlCourse.announcements?.nodes)
             val hasNextPage = graphQlCourse.announcements?.pageInfo?.hasNextPage == true
 
             if (hasNextPage) {
-                val allNodes = dashboardCoursesManager.getCourseAnnouncements(courseId, forceRefresh)
-                announcementsMap[courseId] = mapGraphQlAnnouncements(allNodes)
+                val announcementData = dashboardCoursesManager.getCourseAnnouncements(courseId, forceRefresh)
+                announcementsMap[courseId] = mapCourseAnnouncements(announcementData)
             } else {
-                announcementsMap[courseId] = firstPage
+                announcementsMap[courseId] = mapDashboardAnnouncements(graphQlCourse.announcements?.nodes)
             }
         }
 
@@ -119,42 +116,36 @@ class LoadVisibleCoursesUseCase @Inject constructor(
         }
     }
 
-    private fun <T> mapGraphQlAnnouncements(
-        nodes: List<T?>?
+    private fun mapDashboardAnnouncements(
+        nodes: List<DashboardCoursesQuery.Node1?>?
     ): List<DiscussionTopicHeader> {
         return nodes?.mapNotNull { node ->
             node ?: return@mapNotNull null
-            val id: Long
-            val title: String?
-            val message: String?
-            val postedAt: java.util.Date?
-            val isRead: Boolean
-
-            when (node) {
-                is DashboardCoursesQuery.Node1 -> {
-                    id = node._id.toLongOrNull() ?: return@mapNotNull null
-                    title = node.title
-                    message = node.message
-                    postedAt = node.postedAt
-                    isRead = node.participant?.read == true
-                }
-                is CourseAnnouncementsQuery.Node1 -> {
-                    id = node._id.toLongOrNull() ?: return@mapNotNull null
-                    title = node.title
-                    message = node.message
-                    postedAt = node.postedAt
-                    isRead = node.participant?.read == true
-                }
-                else -> return@mapNotNull null
-            }
-
-            if (isRead) return@mapNotNull null
+            if (node.participant?.read == true) return@mapNotNull null
 
             DiscussionTopicHeader(
-                id = id,
-                title = title,
-                message = message,
-                postedDate = postedAt,
+                id = node._id.toLongOrNull() ?: return@mapNotNull null,
+                title = node.title,
+                message = node.message,
+                postedDate = node.postedAt,
+                announcement = true
+            )
+        } ?: emptyList()
+    }
+
+    private fun mapCourseAnnouncements(
+        announcementData: CourseAnnouncementsQuery.Data
+    ): List<DiscussionTopicHeader> {
+        val nodes = announcementData.course?.onCourse?.announcements?.nodes
+        return nodes?.mapNotNull { node ->
+            node ?: return@mapNotNull null
+            if (node.participant?.read == true) return@mapNotNull null
+
+            DiscussionTopicHeader(
+                id = node._id.toLongOrNull() ?: return@mapNotNull null,
+                title = node.title,
+                message = node.message,
+                postedDate = node.postedAt,
                 announcement = true
             )
         } ?: emptyList()

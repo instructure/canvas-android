@@ -34,5 +34,5 @@ interface DashboardCoursesManager {
     suspend fun getCourseAnnouncements(
         courseId: Long,
         forceNetwork: Boolean = true
-    ): List<CourseAnnouncementsQuery.Node1?>
+    ): CourseAnnouncementsQuery.Data
 }

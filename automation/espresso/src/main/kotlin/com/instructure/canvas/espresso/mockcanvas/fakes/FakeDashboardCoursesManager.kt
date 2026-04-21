@@ -38,7 +38,7 @@ class FakeDashboardCoursesManager : DashboardCoursesManager {
     override suspend fun getCourseAnnouncements(
         courseId: Long,
         forceNetwork: Boolean
-    ): List<CourseAnnouncementsQuery.Node1?> {
-        return emptyList()
+    ): CourseAnnouncementsQuery.Data {
+        return CourseAnnouncementsQuery.Data(course = null)
     }
 }
