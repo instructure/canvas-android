@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.aiassistant.common.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -28,12 +27,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.aiinformation.AiInformationScreen
-import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 
 @Composable
 fun AiAssistScaffold(
@@ -45,41 +41,31 @@ fun AiAssistScaffold(
 ) {
     var showAiInformation by rememberSaveable { mutableStateOf(false) }
 
-    EdgeToEdgeScaffold(
-        statusBarColor = HorizonColors.Surface.aiGradientStart(),
-        statusBarAlpha = 0f,
-        navigationBarColor = HorizonColors.Surface.aiGradientEnd(),
-        navigationBarAlpha = 0f,
-        containerColor = Color.Transparent,
-        modifier = modifier.background(HorizonColors.Surface.aiGradient())
-    ) { contentPadding ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(contentPadding)
-        ) {
-            AiAssistToolbar(
-                onDismissPressed = {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        AiAssistToolbar(
+            onDismissPressed = {
+                onClearChatHistory()
+                onDismiss()
+            },
+            onBackPressed = if (navController.previousBackStackEntry != null) {
+                {
                     onClearChatHistory()
-                    onDismiss()
-                },
-                onBackPressed = if (navController.previousBackStackEntry != null) {
-                    {
-                        onClearChatHistory()
-                        navController.popBackStack()
-                    }
-                } else {
-                    null
-                },
-                onInfoPressed = { showAiInformation = true },
-                modifier = Modifier
-            )
+                    navController.popBackStack()
+                }
+            } else {
+                null
+            },
+            onInfoPressed = { showAiInformation = true },
+            modifier = Modifier
+        )
 
-            content(Modifier
-                .weight(1f)
-                .padding(horizontal = 24.dp))
-        }
+        content(Modifier
+            .weight(1f)
+            .padding(horizontal = 24.dp))
     }
 
     if (showAiInformation) {
