@@ -1,6 +1,8 @@
 package com.instructure.horizon.espresso
 
+import android.content.Context
 import android.content.Intent
+import androidx.room.Room
 import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.pandautils.features.about.AboutRepository
@@ -68,6 +70,7 @@ import com.instructure.pandautils.utils.LogoutHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
@@ -98,8 +101,10 @@ object HorizonTestModule {
     }
 
     @Provides
-    fun provideAppDatabase(): AppDatabase {
-        throw NotImplementedError("This is a test module. Implementation not required.")
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        return Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
+            .allowMainThreadQueries()
+            .build()
     }
 
     @Provides
