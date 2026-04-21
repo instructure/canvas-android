@@ -149,7 +149,7 @@ class AnnotationCommentListFragment : ParentFragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        ViewStyler.setStatusBarLightDelayed(requireActivity())
+        ViewStyler.themeStatusBarDelayed(requireActivity())
     }
 
     fun configureRecyclerView() {
