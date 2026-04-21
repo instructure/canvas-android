@@ -21,6 +21,7 @@ import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
 
 class DashboardCoursesManagerImpl(
@@ -30,7 +31,8 @@ class DashboardCoursesManagerImpl(
     override suspend fun getDashboardCourses(
         forceNetwork: Boolean
     ): DashboardCoursesQuery.Data {
-        return apolloClient.enqueueQuery(DashboardCoursesQuery(), forceNetwork = forceNetwork).dataAssertNoErrors
+        val query = DashboardCoursesQuery(pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE)
+        return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
     }
 
     override suspend fun getSingleCourse(
@@ -43,30 +45,35 @@ class DashboardCoursesManagerImpl(
 
     override suspend fun getCourseAnnouncements(
         courseId: Long,
+        cursor: String?,
         forceNetwork: Boolean
     ): CourseAnnouncementsQuery.Data {
+        val pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE
+        val initialCursor = if (cursor != null) Optional.present(cursor) else Optional.absent()
         val query = CourseAnnouncementsQuery(
             courseId = courseId.toString(),
-            cursor = Optional.absent()
+            pageSize = pageSize,
+            cursor = initialCursor
         )
         val initialData = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
 
         val course = initialData.course?.onCourse ?: return initialData
         val allNodes = course.announcements?.nodes?.toMutableList() ?: mutableListOf()
         var hasNextPage = course.announcements?.pageInfo?.hasNextPage == true
-        var cursor = course.announcements?.pageInfo?.endCursor
+        var nextCursor = course.announcements?.pageInfo?.endCursor
 
         while (hasNextPage) {
             val paginatedQuery = CourseAnnouncementsQuery(
                 courseId = courseId.toString(),
-                cursor = Optional.present(cursor)
+                pageSize = pageSize,
+                cursor = Optional.present(nextCursor)
             )
             val paginatedData = apolloClient.enqueueQuery(paginatedQuery, forceNetwork = forceNetwork).dataAssertNoErrors
             val paginatedCourse = paginatedData.course?.onCourse
 
             paginatedCourse?.announcements?.nodes?.let { allNodes.addAll(it) }
             hasNextPage = paginatedCourse?.announcements?.pageInfo?.hasNextPage == true
-            cursor = paginatedCourse?.announcements?.pageInfo?.endCursor
+            nextCursor = paginatedCourse?.announcements?.pageInfo?.endCursor
         }
 
         return CourseAnnouncementsQuery.Data(

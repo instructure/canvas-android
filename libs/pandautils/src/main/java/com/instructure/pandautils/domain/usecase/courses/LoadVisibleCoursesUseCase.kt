@@ -66,11 +66,14 @@ class LoadVisibleCoursesUseCase @Inject constructor(
             val courseId = graphQlCourse._id.toLongOrNull() ?: return@forEach
             val hasNextPage = graphQlCourse.announcements?.pageInfo?.hasNextPage == true
 
+            val firstPageAnnouncements = mapDashboardAnnouncements(graphQlCourse.announcements?.nodes)
+
             if (hasNextPage) {
-                val announcementData = dashboardCoursesManager.getCourseAnnouncements(courseId, forceRefresh)
-                announcementsMap[courseId] = mapCourseAnnouncements(announcementData)
+                val endCursor = graphQlCourse.announcements?.pageInfo?.endCursor
+                val announcementData = dashboardCoursesManager.getCourseAnnouncements(courseId, endCursor, forceRefresh)
+                announcementsMap[courseId] = firstPageAnnouncements + mapCourseAnnouncements(announcementData)
             } else {
-                announcementsMap[courseId] = mapDashboardAnnouncements(graphQlCourse.announcements?.nodes)
+                announcementsMap[courseId] = firstPageAnnouncements
             }
         }
 

@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query DashboardCoursesQuery {
+query DashboardCoursesQuery($pageSize: Int!) {
     allCourses {
         _id
         name
@@ -37,7 +37,7 @@ query DashboardCoursesQuery {
             }
         }
         announcements: discussionsConnection(
-            first: 20
+            first: $pageSize
             filter: { isAnnouncement: true }
         ) {
             pageInfo {

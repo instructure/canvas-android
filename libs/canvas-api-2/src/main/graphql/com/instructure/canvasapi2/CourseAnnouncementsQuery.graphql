@@ -14,12 +14,12 @@
 #     limitations under the License.
 #
 
-query CourseAnnouncementsQuery($courseId: ID!, $cursor: String) {
+query CourseAnnouncementsQuery($courseId: ID!, $pageSize: Int!, $cursor: String) {
     course: legacyNode(_id: $courseId, type: Course) {
         ... on Course {
             _id
             announcements: discussionsConnection(
-                first: 20
+                first: $pageSize
                 after: $cursor
                 filter: { isAnnouncement: true }
             ) {
