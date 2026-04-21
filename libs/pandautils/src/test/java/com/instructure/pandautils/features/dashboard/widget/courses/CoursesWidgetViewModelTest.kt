@@ -24,12 +24,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
@@ -84,6 +86,7 @@ class CoursesWidgetViewModelTest {
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
     private val loadSingleCourseUseCase: LoadSingleCourseUseCase = mockk()
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
     private val courseDao: CourseDao = mockk()
@@ -126,6 +129,7 @@ class CoursesWidgetViewModelTest {
     private fun setupDefaultMocks() {
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
         every { sectionExpandedStateDataStore.observeGroupsExpanded() } returns flowOf(true)
         every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
@@ -781,9 +785,6 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
-        val announcements = listOf(
-            mockk<DiscussionTopicHeader>(relaxed = true)
-        )
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
         coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
@@ -854,7 +855,7 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `reloadCourse updates course with no announcements`() {
+    fun `reloadCourse preserves existing announcements`() {
         setupDefaultMocks()
         val initialCourses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
@@ -877,6 +878,34 @@ class CoursesWidgetViewModelTest {
         val state = viewModel.uiState.value
         assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
         assertEquals(0, state.courses.find { it.id == 1L }?.announcements?.size)
+    }
+
+    @Test
+    fun `reloadCourse applies nickname from dashboard card`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Original Name", isFavorite = true)
+        )
+        val updatedCourse = Course(id = 1, name = "Original Name", isFavorite = true)
+
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(
+            DashboardCard(id = 1, shortName = "My Nickname", position = 0)
+        )
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        val state = viewModel.uiState.value
+        assertEquals("My Nickname", state.courses.find { it.id == 1L }?.name)
     }
 
     @Test
@@ -1156,6 +1185,7 @@ class CoursesWidgetViewModelTest {
             loadVisibleCoursesUseCase = loadVisibleCoursesUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
             loadSingleCourseUseCase = loadSingleCourseUseCase,
+            loadDashboardCardsUseCase = loadDashboardCardsUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             courseSyncSettingsDao = courseSyncSettingsDao,
             courseDao = courseDao,

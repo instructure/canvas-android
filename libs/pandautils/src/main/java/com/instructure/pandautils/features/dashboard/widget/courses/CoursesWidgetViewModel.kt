@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
@@ -71,6 +72,7 @@ class CoursesWidgetViewModel @Inject constructor(
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
     private val loadSingleCourseUseCase: LoadSingleCourseUseCase,
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val courseDao: CourseDao,
@@ -436,7 +438,13 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun reloadCourse(courseId: Long) {
         viewModelScope.launch {
             try {
-                val updatedCourse = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
+                var updatedCourse = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
+
+                val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true))
+                val card = dashboardCards.find { it.id == courseId }
+                if (card?.shortName?.isNotBlank() == true) {
+                    updatedCourse = updatedCourse.copy(name = card.shortName!!, originalName = updatedCourse.name)
+                }
 
                 visibleCourses = visibleCourses.map { course ->
                     if (course.id == courseId) updatedCourse else course

@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Enrollment.EnrollmentType as KotlinEnrollmentType
@@ -43,7 +44,7 @@ class LoadVisibleCoursesUseCase @Inject constructor(
 
         val coursesMap = allCourses.associateBy { it.id }
         val visibleCourses = dashboardCards
-            .mapNotNull { card -> coursesMap[card.id] }
+            .mapNotNull { card -> applyNickname(coursesMap[card.id], card) }
             .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
 
         val announcementsMap = buildAnnouncementsMap(data, params.forceRefresh)
@@ -103,6 +104,16 @@ class LoadVisibleCoursesUseCase @Inject constructor(
             isFavorite = graphQlCourse.dashboardCard?.isFavorited == true,
             enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
         )
+    }
+
+    private fun applyNickname(course: Course?, card: DashboardCard): Course? {
+        course ?: return null
+        val nickname = card.shortName
+        return if (!nickname.isNullOrBlank()) {
+            course.copy(name = nickname, originalName = course.name)
+        } else {
+            course
+        }
     }
 
     private fun mapEnrollmentType(type: EnrollmentType): KotlinEnrollmentType {
