@@ -19,7 +19,10 @@ package com.instructure.horizon.features.dashboard
 import android.content.Context
 import com.instructure.canvasapi2.models.UnreadNotificationCount
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,6 +46,9 @@ class DashboardViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val localeUtils: LocaleUtils = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -156,6 +162,6 @@ class DashboardViewModelTest {
     }
 
     private fun getViewModel(): DashboardViewModel {
-        return DashboardViewModel(context, repository, apiPrefs, themePrefs, localeUtils, dashboardEventHandler)
+        return DashboardViewModel(context, repository, apiPrefs, themePrefs, localeUtils, dashboardEventHandler, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 }
