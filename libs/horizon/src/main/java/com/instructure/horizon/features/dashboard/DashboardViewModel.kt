@@ -16,8 +16,6 @@
 package com.instructure.horizon.features.dashboard
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -25,6 +23,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -34,7 +33,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,10 +45,10 @@ class DashboardViewModel @Inject constructor(
     private val themePrefs: ThemePrefs,
     private val localeUtils: LocaleUtils,
     private val dashboardEventHandler: DashboardEventHandler,
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
-) : ViewModel() {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
     val uiState = _uiState.asStateFlow()
@@ -74,21 +72,6 @@ class DashboardViewModel @Inject constructor(
                     else -> { /* No-op */ }
                 }
             }
-        }
-
-        viewModelScope.launch {
-            networkStateProvider.isOnlineLiveData.asFlow()
-                .distinctUntilChanged()
-                .collect { isOnline ->
-                    if (featureFlagProvider.offlineEnabled()) {
-                        val lastSyncedAt = if (!isOnline) {
-                            getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.DASHBOARD_ENROLLMENTS))
-                        } else {
-                            null
-                        }
-                        _uiState.update { it.copy(isOffline = !isOnline, lastSyncedAtMs = lastSyncedAt) }
-                    }
-                }
         }
     }
 
@@ -152,6 +135,28 @@ class DashboardViewModel @Inject constructor(
     private fun updateExternalShouldRefresh(value: Boolean) {
         _uiState.update {
             it.copy(externalShouldRefresh = value)
+        }
+    }
+
+    override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+    }
+
+    override fun onNetworkLost() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = getLastSyncTime(SyncDataType.DASHBOARD_ENROLLMENTS)
+                )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = null
+                )
+            }
         }
     }
 }
