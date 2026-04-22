@@ -20,6 +20,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -38,6 +39,7 @@ class CookieConsentViewModelTest {
 
     private val getCookieConsentUseCase: GetCookieConsentUseCase = mockk(relaxed = true)
     private val setCookieConsentUseCase: SetCookieConsentUseCase = mockk(relaxed = true)
+    private val analyticsConsentHandler: AnalyticsConsentHandler = mockk(relaxed = true)
     private val namespace = CookieConsentNamespace.STUDENT
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -182,6 +184,17 @@ class CookieConsentViewModelTest {
         assertFalse(state.saving)
         assertEquals(ConsentResult(consentGiven = true, needed = true), state.consentResult)
         coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) }
+        verify { analyticsConsentHandler.onConsentGranted(fromSettings = false) }
+    }
+
+    @Test
+    fun `onAllow after showFromSettings marks fromSettings true for handler`() {
+        val viewModel = createViewModel()
+        viewModel.showFromSettings()
+
+        viewModel.uiState.value.onAllow()
+
+        verify { analyticsConsentHandler.onConsentGranted(fromSettings = true) }
     }
 
     @Test
@@ -200,6 +213,7 @@ class CookieConsentViewModelTest {
         assertFalse(state.saving)
         assertEquals(ConsentResult(consentGiven = false, needed = true), state.consentResult)
         coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(false)) }
+        verify { analyticsConsentHandler.onConsentRevoked() }
     }
 
     @Test
@@ -266,7 +280,12 @@ class CookieConsentViewModelTest {
     }
 
     private fun createViewModel(): CookieConsentViewModel {
-        return CookieConsentViewModel(getCookieConsentUseCase, setCookieConsentUseCase, namespace)
+        return CookieConsentViewModel(
+            getCookieConsentUseCase,
+            setCookieConsentUseCase,
+            namespace,
+            analyticsConsentHandler
+        )
     }
 }
 

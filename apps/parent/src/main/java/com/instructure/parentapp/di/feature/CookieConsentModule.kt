@@ -15,13 +15,14 @@
  */
 package com.instructure.parentapp.di.feature
 
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import sdk.pendo.io.Pendo
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,16 +34,10 @@ class CookieConsentModule {
     }
 
     @Provides
-    fun provideAnalyticsConsentHandler(): AnalyticsConsentHandler {
-        return object : AnalyticsConsentHandler {
-            override fun onConsentGranted() {
-                // Parent app does not schedule pandata upload
-                // Pendo session will be started on next app launch via SplashViewModel
-            }
-
-            override fun onConsentRevoked() {
-                Pendo.endSession()
-            }
-        }
+    fun provideAnalyticsConsentHandler(
+        userApi: UserAPI.UsersInterface,
+        featureFlagProvider: FeatureFlagProvider
+    ): AnalyticsConsentHandler {
+        return object : AnalyticsConsentHandler(userApi, featureFlagProvider) {}
     }
 }

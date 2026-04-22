@@ -21,15 +21,17 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.student.widget.WidgetLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import sdk.pendo.io.Pendo
 import java.util.concurrent.TimeUnit
 
 @Module
@@ -42,9 +44,14 @@ class CookieConsentModule {
     }
 
     @Provides
-    fun provideAnalyticsConsentHandler(@ApplicationContext context: Context): AnalyticsConsentHandler {
-        return object : AnalyticsConsentHandler {
-            override fun onConsentGranted() {
+    fun provideAnalyticsConsentHandler(
+        @ApplicationContext context: Context,
+        userApi: UserAPI.UsersInterface,
+        featureFlagProvider: FeatureFlagProvider,
+        widgetLogger: WidgetLogger
+    ): AnalyticsConsentHandler {
+        return object : AnalyticsConsentHandler(userApi, featureFlagProvider) {
+            override fun onTrackingEnabled() {
                 val workManager = WorkManager.getInstance(context)
                 val workRequest = PeriodicWorkRequestBuilder<PageViewUploadWorker>(
                     15, TimeUnit.MINUTES
@@ -60,9 +67,12 @@ class CookieConsentModule {
                 )
             }
 
-            override fun onConsentRevoked() {
-                Pendo.endSession()
+            override fun onTrackingDisabled() {
                 WorkManager.getInstance(context).cancelUniqueWork("pageView-student")
+            }
+
+            override suspend fun beforeStartPendoSession() {
+                widgetLogger.cancelLogging()
             }
         }
     }

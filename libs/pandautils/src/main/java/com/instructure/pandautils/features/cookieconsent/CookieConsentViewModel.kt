@@ -32,6 +32,8 @@ class CookieConsentViewModel @Inject constructor(
     private val analyticsConsentHandler: AnalyticsConsentHandler
 ) : ViewModel() {
 
+    private var fromSettings: Boolean = false
+
     private val _uiState = MutableStateFlow(
         CookieConsentUiState(
             namespace = namespace,
@@ -66,6 +68,7 @@ class CookieConsentViewModel @Inject constructor(
     }
 
     fun showFromSettings() {
+        fromSettings = true
         _uiState.update { it.copy(loading = false, showDialog = true) }
     }
 
@@ -75,7 +78,7 @@ class CookieConsentViewModel @Inject constructor(
             try {
                 setCookieConsentUseCase(SetCookieConsentUseCase.Params(consent))
                 if (consent) {
-                    analyticsConsentHandler.onConsentGranted()
+                    analyticsConsentHandler.onConsentGranted(fromSettings)
                 } else {
                     analyticsConsentHandler.onConsentRevoked()
                 }
