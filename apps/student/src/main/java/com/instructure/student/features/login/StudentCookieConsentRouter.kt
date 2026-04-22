@@ -19,7 +19,9 @@ import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.horizon.HorizonActivity
 import com.instructure.loginapi.login.CANVAS_CAREER
+import com.instructure.loginapi.login.NEXT_GEN_CANVAS
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
+import com.instructure.ngc.NGCActivity
 import com.instructure.student.activity.NavigationActivity
 
 class StudentCookieConsentRouter(
@@ -28,10 +30,11 @@ class StudentCookieConsentRouter(
 
     override fun startApp() {
         val isCanvasCareer = activity.intent?.getBooleanExtra(CANVAS_CAREER, false) ?: false
-        val intent = if (isCanvasCareer) {
-            Intent(activity, HorizonActivity::class.java)
-        } else {
-            Intent(activity, NavigationActivity.startActivityClass)
+        val isNextGenCanvas = activity.intent?.getBooleanExtra(NEXT_GEN_CANVAS, false) ?: false
+        val intent = when {
+            isCanvasCareer -> Intent(activity, HorizonActivity::class.java)
+            isNextGenCanvas -> Intent(activity, NGCActivity::class.java)
+            else -> Intent(activity, NavigationActivity.startActivityClass)
         }
 
         activity.intent?.extras?.let { extras ->

@@ -16,10 +16,10 @@
 package com.instructure.loginapi.login.features.cookieconsent
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -45,12 +45,10 @@ class CookieConsentActivity : BaseCanvasActivity() {
 
         viewModel.checkAndShowIfNeeded()
 
-        setContentView(ComposeView(this).apply {
-            setContent {
-                val uiState by viewModel.uiState.collectAsState()
-                CookieConsentContent(uiState = uiState)
-            }
-        })
+        setContent {
+            val uiState by viewModel.uiState.collectAsState()
+            CookieConsentContent(uiState = uiState)
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
