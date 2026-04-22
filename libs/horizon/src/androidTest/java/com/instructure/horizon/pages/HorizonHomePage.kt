@@ -18,7 +18,6 @@ package com.instructure.horizon.pages
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 
@@ -27,8 +26,6 @@ class HorizonHomePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Home")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Learn")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("IgniteAI")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Skillspace")
             .assertIsDisplayed()
@@ -43,11 +40,6 @@ class HorizonHomePage(private val composeTestRule: ComposeTestRule) {
 
     fun clickLearnTab() {
         composeTestRule.onNodeWithText("Learn")
-            .performClick()
-    }
-
-    fun clickAiAssistantTab() {
-        composeTestRule.onNodeWithContentDescription("IgniteAI")
             .performClick()
     }
 
