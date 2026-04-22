@@ -71,7 +71,7 @@ class AssessmentViewModelTest {
         coEvery { getAssignmentDetailsUseCase(any()) } returns testAssignment
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(any(), any()) } returns
             DataResult.Success(LTITool(url = "https://lti.url"))
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns
             DataResult.Success(AuthenticatedSession(sessionUrl = "https://authenticated.url"))
     }
 

@@ -99,7 +99,7 @@ class PageDetailsViewModelTest {
         every { savedStateHandle.get<String>(ModuleItemContent.Page.PAGE_URL) } returns pageUrl
         coEvery { getPageDetailsUseCase(any()) } returns testPage
         coEvery { redwoodApi.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotesResponse
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns
             DataResult.Success(AuthenticatedSession(sessionUrl = "https://authenticated.url"))
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } answers { firstArg() }
         coEvery { addNoteRepository.addNote(any(), any(), any(), any(), any(), any()) } returns Unit
@@ -159,12 +159,12 @@ class PageDetailsViewModelTest {
         viewModel.uiState.value.ltiButtonPressed?.invoke("https://lti.url")
 
         assertEquals("https://authenticated.url", viewModel.uiState.value.urlToOpen)
-        coVerify { oAuthApi.getAuthenticatedSession("https://lti.url", any()) }
+        coVerify { oAuthApi.getAuthenticatedSession("https://lti.url", any(), any()) }
     }
 
     @Test
     fun `Test LTI authentication failure returns original URL`() = runTest {
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } throws Exception("Auth error")
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } throws Exception("Auth error")
 
         val viewModel = getViewModel()
 
