@@ -17,6 +17,8 @@
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Resources
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.PlannerItem
@@ -54,6 +56,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -67,6 +70,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 import java.util.Calendar
+import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ForecastWidgetViewModelTest {
@@ -81,6 +85,8 @@ class ForecastWidgetViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val workManager: WorkManager = mockk(relaxed = true)
+    private val workInfosFlow = MutableStateFlow<List<WorkInfo>>(emptyList())
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: ForecastWidgetViewModel
@@ -105,6 +111,8 @@ class ForecastWidgetViewModelTest {
         // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
         mockkStatic(::getSystemLocaleCalendar)
         every { getSystemLocaleCalendar() } returns Calendar.getInstance()
+
+        every { workManager.getWorkInfosByTagFlow(any()) } returns workInfosFlow
     }
 
     @After
@@ -125,7 +133,8 @@ class ForecastWidgetViewModelTest {
             assignmentWeightCalculator = assignmentWeightCalculator,
             apiPrefs = apiPrefs,
             crashlytics = crashlytics,
-            resources = resources
+            resources = resources,
+            workManager = workManager
         )
     }
 
@@ -600,5 +609,41 @@ class ForecastWidgetViewModelTest {
         val assignments = viewModel.uiState.value.dueAssignments
         assertEquals(1, assignments.size)
         assertEquals(SubmissionStateLabel.None, assignments[0].submissionStateLabel)
+    }
+
+    @Test
+    fun `completed submission work triggers data reload with forceRefresh`() = runTest {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val succeededWorkInfo = mockk<WorkInfo>(relaxed = true) {
+            every { id } returns UUID.randomUUID()
+            every { state } returns WorkInfo.State.SUCCEEDED
+        }
+        workInfosFlow.value = listOf(succeededWorkInfo)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { loadRecentGradeChangesUseCase(match { it.forceRefresh }) }
+    }
+
+    @Test
+    fun `already processed submission work does not trigger duplicate reload`() = runTest {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val workId = UUID.randomUUID()
+        val succeededWorkInfo = mockk<WorkInfo>(relaxed = true) {
+            every { id } returns workId
+            every { state } returns WorkInfo.State.SUCCEEDED
+        }
+
+        workInfosFlow.value = listOf(succeededWorkInfo)
+        advanceUntilIdle()
+
+        // Re-emit the same work item — should not trigger another reload
+        workInfosFlow.value = listOf(succeededWorkInfo)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { loadRecentGradeChangesUseCase(match { it.forceRefresh }) }
     }
 }

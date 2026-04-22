@@ -38,10 +38,10 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.clickCoordinates
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.clickCoordinates
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.RubricCriterion
@@ -232,7 +232,7 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         if(click) {
             //onView(commentMatcher).click()
             onView(allOf(withId(R.id.attachmentNameTextView), withText(fileName)))
-                    .perform(withCustomConstraints(click(), isDisplayingAtLeast(5)))
+                    .perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(5)))
         }
 
     }
