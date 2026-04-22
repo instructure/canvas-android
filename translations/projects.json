@@ -46,5 +46,11 @@
     "source_path": "libs/horizon/src/main/res/values/strings.xml",
     "resource_dir": "libs/horizon/src/main/res",
     "extension": "xml"
+  },
+  {
+    "name": "ngc",
+    "source_path": "libs/ngc/src/main/res/values/strings.xml",
+    "resource_dir": "libs/ngc/src/main/res",
+    "extension": "xml"
   }
 ]
