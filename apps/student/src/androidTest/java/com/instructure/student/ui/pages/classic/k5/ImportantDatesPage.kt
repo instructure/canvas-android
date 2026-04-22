@@ -21,7 +21,7 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.countConstraintLayoutsInRecyclerView
+import com.instructure.canvas.espresso.utils.countConstraintLayoutsInRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasChild

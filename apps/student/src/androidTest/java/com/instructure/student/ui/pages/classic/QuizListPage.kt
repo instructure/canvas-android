@@ -23,8 +23,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.RecyclerViewItemCountAssertion
@@ -93,7 +93,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
 
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
-            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun assertPointsDisplayed(points: String?) {

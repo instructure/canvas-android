@@ -60,7 +60,7 @@ fun EdgeToEdgeScaffold(
             floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
             contentColor = contentColor,
-            contentWindowInsets = statusBarWindowInsets.add(navigationBarWindowInsets).union(WindowInsets.ime),
+            contentWindowInsets = statusBarWindowInsets.union(navigationBarWindowInsets).union(WindowInsets.ime),
             content = content
         )
     }

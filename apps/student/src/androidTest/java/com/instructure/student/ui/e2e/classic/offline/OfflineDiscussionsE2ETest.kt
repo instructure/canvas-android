@@ -25,9 +25,9 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.checkToastText
+import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.api.FileUploadsApi

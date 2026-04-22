@@ -111,7 +111,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         context.getActivityOrNull()?.let {
-            ViewStyler.setStatusBarLightDelayed(it)
+            ViewStyler.themeStatusBarDelayed(it)
         }
     }
 

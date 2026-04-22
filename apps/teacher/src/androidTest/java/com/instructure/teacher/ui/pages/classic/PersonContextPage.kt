@@ -18,7 +18,7 @@
 package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertContainsText
