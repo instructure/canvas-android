@@ -184,7 +184,6 @@ class DiscussionCheckpointsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
-        dashboardPage.waitForRender()
 
         Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()

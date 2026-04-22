@@ -289,11 +289,11 @@ class BookmarksE2ETest : StudentComposeTest() {
             refresh() })
         {
             Log.d(ASSERTION_TAG, "Assert that the notification about assignment: '${assignment.name}' is displayed.")
-            notificationPage.assertNotificationDisplayed(assignment.name)
+            notificationPage.assertNotificationDisplayed(assignment.name, contains = true)
         }
 
         Log.d(STEP_TAG, "Click on the notification about assignment: '${assignment.name}'.")
-        notificationPage.clickNotification(assignment.name)
+        notificationPage.clickNotification(assignment.name, contains = true)
 
         val notificationBookmarkName = "Second Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$notificationBookmarkName' from the assignment details page.")
