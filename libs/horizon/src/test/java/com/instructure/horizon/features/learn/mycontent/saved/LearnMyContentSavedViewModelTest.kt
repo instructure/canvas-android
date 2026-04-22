@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
@@ -62,6 +63,7 @@ class LearnMyContentSavedViewModelTest {
     private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyResponse = LearningLibraryCollectionItemsResponse(
@@ -311,7 +313,7 @@ class LearnMyContentSavedViewModelTest {
 
     private fun getViewModel() = LearnMyContentSavedViewModel(
         resources, getLearnLearningLibraryItemsUseCase, getLearnLearningLibraryRecommendationsUseCase,
-        toggleLearnLearningLibraryItemBookmarkUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider
+        toggleLearnLearningLibraryItemBookmarkUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
     )
 
     private fun createTestCollectionItem(

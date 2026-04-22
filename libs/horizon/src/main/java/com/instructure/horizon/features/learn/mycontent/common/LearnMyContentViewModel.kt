@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
@@ -42,7 +43,8 @@ abstract class LearnMyContentViewModel<T>(
     protected val getNextModuleItemUseCase: GetNextModuleItemUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private data class Filters(
         val searchQuery: String = "",
@@ -150,7 +152,7 @@ abstract class LearnMyContentViewModel<T>(
 
     protected suspend fun fetchNextModuleItemRoute(courseId: Long?): Any? {
         if (courseId == null) return null
-        val nextModuleItem = getNextModuleItemUseCase(courseId) ?: return null
+        val nextModuleItem = getNextModuleItemUseCase(GetNextModuleItemUseCase.Params(courseId)) ?: return null
         return MainNavigationRoute.ModuleItemSequence(courseId, nextModuleItem.moduleItemId)
     }
 

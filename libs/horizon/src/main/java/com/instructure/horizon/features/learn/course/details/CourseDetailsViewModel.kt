@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -36,7 +37,8 @@ class CourseDetailsViewModel @Inject constructor(
     private val repository: CourseRepository,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val state = _uiState.asStateFlow()

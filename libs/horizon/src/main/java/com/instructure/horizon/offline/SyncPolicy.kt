@@ -13,18 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.domain.usecase
+package com.instructure.horizon.offline
 
-import com.instructure.horizon.data.repository.ModuleItemRepository
-import com.instructure.horizon.model.DashboardNextModuleItem
-import com.instructure.pandautils.domain.usecase.BaseUseCase
-import javax.inject.Inject
-
-class GetNextModuleItemUseCase @Inject constructor(
-    private val repository: ModuleItemRepository,
-) : BaseUseCase<GetNextModuleItemUseCase.Params, DashboardNextModuleItem?>() {
-
-    data class Params(val courseId: Long)
-
-    override suspend fun execute(params: Params) = repository.getNextModuleItemForCourse(params.courseId)
+enum class SyncPolicy {
+    ALWAYS_REPLACE,
+    SKIP_IF_PRESENT,
 }

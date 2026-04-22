@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetDashboardCoursesUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -46,7 +47,8 @@ class DashboardCourseViewModel @Inject constructor(
     private val dashboardEventHandler: DashboardEventHandler,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(DashboardCourseUiState(onRefresh = ::onRefresh))
     val uiState = _uiState.asStateFlow()

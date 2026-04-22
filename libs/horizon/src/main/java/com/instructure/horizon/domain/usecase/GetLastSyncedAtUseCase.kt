@@ -22,7 +22,9 @@ import javax.inject.Inject
 
 class GetLastSyncedAtUseCase @Inject constructor(
     private val syncMetadataDao: HorizonSyncMetadataDao,
-) : BaseUseCase<SyncDataType, Long?>() {
+) : BaseUseCase<GetLastSyncedAtUseCase.Params, Long?>() {
 
-    override suspend fun execute(params: SyncDataType): Long? = syncMetadataDao.getLastSyncedAt(params)
+    data class Params(val syncDataType: SyncDataType)
+
+    override suspend fun execute(params: Params): Long? = syncMetadataDao.getLastSyncedAt(params.syncDataType)
 }

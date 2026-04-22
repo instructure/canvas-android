@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.data.repository.ProgramRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
@@ -37,16 +39,15 @@ import com.instructure.horizon.features.learn.program.details.components.Program
 import com.instructure.horizon.features.learn.program.details.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.sum
 import com.instructure.pandautils.utils.toFormattedString
-import com.instructure.horizon.data.repository.ProgramRepository
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,7 +66,8 @@ class ProgramDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
 

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsParams
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
@@ -49,7 +50,8 @@ class LearnMyContentSavedViewModel @Inject constructor(
     getNextModuleItemUseCase: GetNextModuleItemUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : LearnMyContentViewModel<LearnLearningLibraryCollectionItemState>(getNextModuleItemUseCase, networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : LearnMyContentViewModel<LearnLearningLibraryCollectionItemState>(getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)

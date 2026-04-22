@@ -72,6 +72,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -101,7 +102,7 @@ object HorizonTestModule {
     }
 
     @Provides
-    @javax.inject.Singleton
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .allowMainThreadQueries()

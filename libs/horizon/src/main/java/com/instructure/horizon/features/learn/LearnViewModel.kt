@@ -32,10 +32,10 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnViewModel @Inject constructor(
     private val repository: LearnRepository,
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(LearnUiState(
         updateSelectedTab = ::updateSelectedTab,
@@ -55,7 +55,7 @@ class LearnViewModel @Inject constructor(
 
     override fun onNetworkLost() {
         viewModelScope.tryLaunch {
-            val lastSyncedAt = getLastSyncedAtUseCase(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
+            val lastSyncedAt = getLastSyncTime(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
             _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
         } catch { }
     }

@@ -13,18 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.domain.usecase
+package com.instructure.horizon.database.entity
 
-import com.instructure.horizon.data.repository.ModuleItemRepository
-import com.instructure.horizon.model.DashboardNextModuleItem
-import com.instructure.pandautils.domain.usecase.BaseUseCase
-import javax.inject.Inject
+import androidx.room.Entity
 
-class GetNextModuleItemUseCase @Inject constructor(
-    private val repository: ModuleItemRepository,
-) : BaseUseCase<GetNextModuleItemUseCase.Params, DashboardNextModuleItem?>() {
-
-    data class Params(val courseId: Long)
-
-    override suspend fun execute(params: Params) = repository.getNextModuleItemForCourse(params.courseId)
-}
+@Entity(
+    tableName = "horizon_dashboard_program_course_refs",
+    primaryKeys = ["programId", "courseId"]
+)
+data class HorizonDashboardProgramCourseRef(
+    val programId: String,
+    val courseId: Long,
+    val requirementId: String,
+    val progressId: String,
+    val required: Boolean,
+    val progress: Double,
+    val enrollmentStatus: String?,
+    val sortOrder: Int,
+)

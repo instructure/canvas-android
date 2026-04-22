@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.data.repository.CourseScoreRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -43,7 +44,8 @@ class CourseScoreViewModel @Inject constructor(
     private val courseScoreRepository: CourseScoreRepository,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(
         CourseScoreUiState(
