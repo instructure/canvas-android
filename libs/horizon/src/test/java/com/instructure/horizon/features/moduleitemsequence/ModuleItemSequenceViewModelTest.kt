@@ -24,11 +24,15 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -54,6 +58,10 @@ class ModuleItemSequenceViewModelTest {
     private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
+    private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val learnEventHandler: LearnEventHandler = LearnEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -147,11 +155,15 @@ class ModuleItemSequenceViewModelTest {
             context,
             repository,
             getAssignmentDetailsUseCase,
+            getEntityLastSyncedAtUseCase,
             moduleItemCardStateMapper,
             aiAssistContextProvider,
-            savedStateHandle,
             dashboardEventHandler,
-            learnEventHandler
+            learnEventHandler,
+            savedStateHandle,
+            networkStateProvider,
+            featureFlagProvider,
+            getLastSyncedAtUseCase
         )
     }
 }

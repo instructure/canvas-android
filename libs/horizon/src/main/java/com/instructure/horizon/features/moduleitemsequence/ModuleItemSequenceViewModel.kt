@@ -30,6 +30,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -65,12 +66,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val aiAssistContextProvider: AiAssistContextProvider,
-    savedStateHandle: SavedStateHandle,
     private val dashboardEventHandler: DashboardEventHandler,
     private val learnEventHandler: LearnEventHandler,
+    savedStateHandle: SavedStateHandle,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
