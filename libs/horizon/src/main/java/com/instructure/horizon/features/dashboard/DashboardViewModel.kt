@@ -16,13 +16,17 @@
 package com.instructure.horizon.features.dashboard
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,8 +44,11 @@ class DashboardViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
     private val localeUtils: LocaleUtils,
-    private val dashboardEventHandler: DashboardEventHandler
-) : ViewModel() {
+    private val dashboardEventHandler: DashboardEventHandler,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
     val uiState = _uiState.asStateFlow()
@@ -128,6 +135,28 @@ class DashboardViewModel @Inject constructor(
     private fun updateExternalShouldRefresh(value: Boolean) {
         _uiState.update {
             it.copy(externalShouldRefresh = value)
+        }
+    }
+
+    override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+    }
+
+    override fun onNetworkLost() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = getLastSyncTime(SyncDataType.DASHBOARD_ENROLLMENTS)
+                )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = null
+                )
+            }
         }
     }
 }

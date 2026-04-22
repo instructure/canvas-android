@@ -658,4 +658,6 @@
     <string name="learnMyContentDurationMin">%1$d min</string>
     <string name="learnMyContentEmptyMessage">No results found. Try adjusting your search terms.</string>
     <string name="learnMyContentSavedFailedToBookmarkErrorMessage">Failed to update</string>
+    <string name="offlineBannerNoDate">You\'re offline.</string>
+    <string name="offlineBannerWithDate">You\'re offline. Last synced %1$s.</string>
 </resources>

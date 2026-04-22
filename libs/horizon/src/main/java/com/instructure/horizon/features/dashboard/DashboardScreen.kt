@@ -193,6 +193,9 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             .padding(contentPadding)
                             .verticalScroll(scrollState)
                     ) {
+                        if (uiState.isOffline) {
+                            OfflineBanner(lastSyncedAtMs = uiState.lastSyncedAtMs)
+                        }
                         HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
                             navController,
