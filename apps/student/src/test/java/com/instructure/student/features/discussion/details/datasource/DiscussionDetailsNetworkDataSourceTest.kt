@@ -56,7 +56,7 @@ class DiscussionDetailsNetworkDataSourceTest {
     fun `Get authenticatedSession on successful call`() = runTest {
         val expectedUrl = AuthenticatedSession("testUrl")
 
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(expectedUrl)
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(expectedUrl)
 
         val result = dataSource.getAuthenticatedSession("").dataOrNull
 
@@ -65,7 +65,7 @@ class DiscussionDetailsNetworkDataSourceTest {
 
     @Test
     fun `Get authenticatedSession on failed call`() = runTest {
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail(null, null)
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail(null, null)
 
         val result = dataSource.getAuthenticatedSession("").dataOrNull
 

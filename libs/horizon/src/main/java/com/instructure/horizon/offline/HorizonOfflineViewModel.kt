@@ -19,7 +19,10 @@ package com.instructure.horizon.offline
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -27,12 +30,17 @@ import kotlinx.coroutines.flow.drop
 
 abstract class HorizonOfflineViewModel(
     private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase
 ) : ViewModel() {
 
     abstract fun onNetworkRestored()
 
     abstract fun onNetworkLost()
+
+    suspend fun getLastSyncTime(syncType: SyncDataType): Long? {
+        return getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(syncType))
+    }
 
     init {
         viewModelScope.tryLaunch {
@@ -44,6 +52,6 @@ abstract class HorizonOfflineViewModel(
                         if (isOnline) onNetworkRestored() else onNetworkLost()
                     }
                 }
-        }
+        } catch { }
     }
 }
