@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.R
 import com.instructure.horizon.data.repository.ProgramRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.learn.program.details.components.CourseCardStatus
@@ -61,6 +62,7 @@ class ProgramDetailsViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testProgramId = "program123"
@@ -656,7 +658,7 @@ class ProgramDetailsViewModelTest {
     }
 
     private fun getViewModel(): ProgramDetailsViewModel {
-        val viewModel = ProgramDetailsViewModel(context, resources, repository, dashboardEventHandler, savedStateHandle, networkStateProvider, featureFlagProvider)
+        val viewModel = ProgramDetailsViewModel(context, resources, repository, dashboardEventHandler, savedStateHandle, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
         return viewModel
     }
