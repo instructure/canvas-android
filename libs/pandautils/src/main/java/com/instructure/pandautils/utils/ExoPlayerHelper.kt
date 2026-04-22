@@ -19,9 +19,9 @@ package com.instructure.pandautils.utils
 import android.net.Uri
 import android.view.SurfaceView
 import androidx.annotation.OptIn
-import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.C.TRACK_TYPE_VIDEO
+import androidx.media3.common.MimeTypes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
@@ -84,11 +84,11 @@ class ExoAgent private constructor(val uri: Uri) {
     /** Whether the media track is audio only, or false if unknown */
     private var mIsAudioOnly = false
 
-    /** Whether we've already tried retrying with .mpd extension */
-    private var triedMpdRetry = false
+    /** Whether we've already tried retrying as DASH */
+    private var dashRetry = false
 
-    /** The current URI being used (may be modified for DASH retry) */
-    private var currentUri: Uri = uri
+    /** The current PlayerView, kept so the retry can re-attach after recreating the player */
+    private var mPlayerView: PlayerView? = null
 
     /** The current state of this agent */
     private var currentState = ExoAgentState.IDLE
@@ -98,12 +98,20 @@ class ExoAgent private constructor(val uri: Uri) {
 
     /** Creates a media source for the given URI */
     private fun createMediaSource(sourceUri: Uri) = run {
-        val mediaItem = MediaItem.fromUri(sourceUri)
-        when (Util.inferContentType(sourceUri)) {
-            C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
-            else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory()).createMediaSource(mediaItem)
+        // Direct CMAF/DASH URLs (e.g. Notorious) are single-use and can't be retried, so we
+        // detect them upfront by path suffix instead of falling back via dashRetry.
+        val useDash = dashRetry || sourceUri.path?.endsWith("/cmaf", ignoreCase = true) == true
+        if (useDash) {
+            val mediaItem = MediaItem.Builder().setUri(sourceUri).setMimeType(MimeTypes.APPLICATION_MPD).build()
+            DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+        } else {
+            val mediaItem = MediaItem.fromUri(sourceUri)
+            when (Util.inferContentType(sourceUri)) {
+                C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+                C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
+                C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
+                else -> ProgressiveMediaSource.Factory(DATA_SOURCE_FACTORY, DefaultExtractorsFactory()).createMediaSource(mediaItem)
+            }
         }
     }
 
@@ -113,6 +121,7 @@ class ExoAgent private constructor(val uri: Uri) {
      * NOTE: This function MUST be called before [prepare] is called by the same client.
      */
     fun attach(playerView: PlayerView, listener: ExoInfoListener) {
+        mPlayerView = playerView
         mInfoListener = listener
         mInfoListener?.onStateChanged(currentState)
         if (mIsAudioOnly) mInfoListener?.setAudioOnly()
@@ -125,6 +134,7 @@ class ExoAgent private constructor(val uri: Uri) {
      * NOTE: The client MUST call [attach] prior to calling this function.
      */
     fun prepare(playerView: PlayerView) {
+        mPlayerView = playerView
         if (mPlayer == null) preparePlayer()
         mPlayer?.switchSurface(playerView)
     }
@@ -173,21 +183,16 @@ class ExoAgent private constructor(val uri: Uri) {
             override fun onPlayerError(exception: PlaybackException) {
                 val cause = exception.cause
 
-                // Check if this might be a DASH video without .mpd extension
-                if (cause is UnrecognizedInputFormatException &&
-                    !triedMpdRetry &&
-                    !currentUri.toString().endsWith(".mpd")) {
-
-                    // Retry with .mpd appended
-                    triedMpdRetry = true
-                    currentUri = "${currentUri}.mpd".toUri()
-
-                    // Reset and retry with the new URI
+                // If the format wasn't recognized, retry as DASH using the same URL.
+                // Canvas media_download URLs generate a fresh JWT on each call so a second
+                // request is safe.
+                if (cause is UnrecognizedInputFormatException && !dashRetry) {
+                    dashRetry = true
                     mPlayer?.release()
                     mPlayer = null
                     preparePlayer()
+                    mPlayerView?.let { mPlayer?.switchSurface(it) }
                 } else {
-                    // Not a retryable error, or already tried retry
                     reset()
                     mInfoListener?.onError(cause)
                 }
@@ -210,7 +215,7 @@ class ExoAgent private constructor(val uri: Uri) {
         })
 
         mPlayer?.playWhenReady = true
-        mPlayer?.setMediaSource(createMediaSource(currentUri))
+        mPlayer?.setMediaSource(createMediaSource(uri))
         mPlayer?.prepare()
     }
 

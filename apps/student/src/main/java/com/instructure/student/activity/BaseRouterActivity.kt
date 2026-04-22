@@ -19,7 +19,6 @@ package com.instructure.student.activity
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -34,7 +33,10 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.pandautils.utils.shouldOpenMediaInternally
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.Const
@@ -258,20 +260,15 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         FileFolderManager.getFileFolderFromURL("files/$fileID", true, fileFolderCanvasCallback)
     }
 
-    fun openMedia(canvasContext: CanvasContext?, url: String, fileID: String?) {
+    fun openMedia(canvasContext: CanvasContext?, url: String, fileID: String?, mimeType: String? = null, mimeClass: String? = null) {
         showLoadingIndicator()
         lifecycleScope.launch {
-            if (shouldOpenInternally(url)) {
-                startActivity(
-                    VideoViewActivity.createIntent(
-                        this@BaseRouterActivity,
-                        url
-                    )
-                )
+            if (shouldOpenMediaInternally(url, mimeType, mimeClass)) {
+                val bundle = BaseViewMediaActivity.makeBundle(url, null, mimeType.orEmpty(), null, true)
+                RouteMatcher.route(this@BaseRouterActivity, Route(bundle, RouteContext.MEDIA))
             } else {
-                openMediaBundle =
-                    OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
-                LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
+                LoaderUtils.restartLoaderWithBundle(
                     LoaderManager.getInstance(this@BaseRouterActivity),
                     openMediaBundle,
                     loaderCallbacks,
@@ -291,13 +288,9 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     ) {
         showLoadingIndicator()
         lifecycleScope.launch {
-            if (shouldOpenInternally(url)) {
-                startActivity(
-                    VideoViewActivity.createIntent(
-                        this@BaseRouterActivity,
-                        url
-                    )
-                )
+            if (shouldOpenMediaInternally(url, mime)) {
+                val bundle = BaseViewMediaActivity.makeBundle(url, null, mime, filename, true)
+                RouteMatcher.route(this@BaseRouterActivity, Route(bundle, RouteContext.MEDIA))
             } else {
                 openMediaBundle = if (localFile) {
                     OpenMediaAsyncTaskLoader.createLocalBundle(
@@ -327,9 +320,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         }
     }
 
-    private suspend fun shouldOpenInternally(url: String): Boolean {
-        return (url.endsWith(".mpd") || url.endsWith(".m3u8") || url.endsWith(".mp4"))
-    }
+
 
     override fun onDestroy() {
         super.onDestroy()
