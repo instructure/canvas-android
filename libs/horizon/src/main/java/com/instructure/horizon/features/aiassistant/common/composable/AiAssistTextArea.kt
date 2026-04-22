@@ -69,7 +69,7 @@ private fun TextAreaBox(
         innerTextField()
         if (value.text.isEmpty()) {
             Text(
-                text = stringResource(R.string.igniteAIEnterAPromptLabel),
+                text = stringResource(R.string.studyToolsEnterAPromptLabel),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.timestamp(),
             )

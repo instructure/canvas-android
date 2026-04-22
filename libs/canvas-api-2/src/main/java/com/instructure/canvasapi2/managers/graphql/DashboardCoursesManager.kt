@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+
+package com.instructure.canvasapi2.managers.graphql
+
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
+import com.instructure.canvasapi2.DashboardCoursesQuery
+import com.instructure.canvasapi2.DashboardSingleCourseQuery
+
+interface DashboardCoursesManager {
+
+    suspend fun getDashboardCourses(
+        forceNetwork: Boolean = true
+    ): DashboardCoursesQuery.Data
+
+    suspend fun getSingleCourse(
+        courseId: Long,
+        forceNetwork: Boolean = true
+    ): DashboardSingleCourseQuery.Data
+
+    suspend fun getCourseAnnouncements(
+        courseId: Long,
+        cursor: String? = null,
+        forceNetwork: Boolean = true
+    ): CourseAnnouncementsQuery.Data
+}

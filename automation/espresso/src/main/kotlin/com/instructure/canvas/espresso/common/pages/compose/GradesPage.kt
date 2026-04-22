@@ -14,7 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertCountEquals
@@ -55,6 +54,7 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollToNode(hasText(name))
         composeTestRule.onNodeWithText(name)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertAssignmentIsDisplayed(name: String) {
@@ -93,6 +93,7 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun clickFilterButton() {
         composeTestRule.onNodeWithContentDescription("Filter")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertFilterNotApplied() {
@@ -106,11 +107,13 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun clickFilterOption(option: String) {
         composeTestRule.onNodeWithText(option)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickSaveButton() {
         composeTestRule.onNodeWithText("Save")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickAssignment(name: String) {
@@ -118,6 +121,7 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollToNode(hasText(name))
         composeTestRule.onNodeWithText(name)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertEmptyStateIsDisplayed() {
@@ -129,11 +133,13 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun scrollDownScreen() {
         composeTestRule.onNodeWithTag("gradesList")
             .performTouchInput { swipeUp() }
+        composeTestRule.waitForIdle()
     }
 
     fun scrollUpScreen() {
         composeTestRule.onNodeWithTag("gradesList")
             .performTouchInput { swipeDown() }
+        composeTestRule.waitForIdle()
     }
 
     fun assertCardText(text: String) {

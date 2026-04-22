@@ -36,7 +36,7 @@ fun AiAssistUserTextBlock(
 ) {
     Box(
         modifier = modifier
-            .clip(HorizonCornerRadius.level2)
+            .clip(HorizonCornerRadius.level1_5)
             .background(HorizonColors.Surface.cardPrimary())
             .padding(16.dp)
     ) {

@@ -100,7 +100,7 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
     }
 
     override fun applyTheme() {
-        ViewStyler.themeStatusBar(requireActivity())
+        ViewStyler.themeStatusBarDelayed(requireActivity())
     }
 
     override fun getFragment(): Fragment {

@@ -20,7 +20,7 @@ object PrivateData {
         val dataDir = File(baseDir, dataDirName).canonicalFile
 
         println("")
-        println("============= MERGE PRIVATE FILES: ${dataDirName.toUpperCase()} ".padEnd(PRINT_PAD_SIZE, '='))
+        println("============= MERGE PRIVATE FILES: ${dataDirName.uppercase()} ".padEnd(PRINT_PAD_SIZE, '='))
 
         /* Confirm dir exists */
         if (!dataDir.exists() || !dataDir.isDirectory) {

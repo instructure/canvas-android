@@ -158,13 +158,13 @@ jobs:
       matrix:
         include:
           - test-type: portrait
-            flank-config: flank.yml
+            flank-config: flank_portrait_interaction_release.yml
           - test-type: landscape
-            flank-config: flank_landscape.yml
+            flank-config: flank_landscape_interaction_release.yml
           - test-type: tablet
-            flank-config: flank_tablet.yml
+            flank-config: flank_tablet_interaction_release.yml
           - test-type: e2e
-            flank-config: flank_e2e.yml
+            flank-config: flank_e2e_release.yml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -186,7 +186,7 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/${{ inputs.app-name }}/${{ matrix.flank-config }} ./flank.yml
+        run: cp ./apps/${{ inputs.app-name }}/release_tests/${{ matrix.flank-config }} ./flank.yml
 
       - name: Copy APKs to expected locations
         run: |
