@@ -52,11 +52,13 @@ class SubmissionContentManagerImpl(private val apolloClient: ApolloClient) : Sub
         }
 
         return data.copy(
-            submission = data.submission?.copy(
-                submissionHistoriesConnection = data.submission.submissionHistoriesConnection?.copy(
-                    edges = allEdges
+            submission = data.submission?.let { submission ->
+                submission.copy(
+                    submissionHistoriesConnection = submission.submissionHistoriesConnection.copy(
+                        edges = allEdges
+                    )
                 )
-            )
+            }
         )
     }
 }

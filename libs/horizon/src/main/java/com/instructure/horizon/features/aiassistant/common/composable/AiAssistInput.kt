@@ -51,7 +51,7 @@ fun AiAssistInput(
             .fillMaxWidth()
             .background(
                 HorizonColors.Surface.cardPrimary(),
-                HorizonCornerRadius.level2
+                HorizonCornerRadius.level1_5
             )
     ) {
         AiAssistTextArea(

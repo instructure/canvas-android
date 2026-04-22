@@ -623,7 +623,7 @@ class SpeedGraderContentViewModelTest {
             shortName = "TU",
             sortableName = "Test User"
         ),
-        assignment: SubmissionFields.Assignment? = this.assignment,
+        assignment: SubmissionFields.Assignment = this.assignment,
         attachments: List<SubmissionFields.Attachment> = emptyList(),
         submittedAt: Date? = Date(
             LocalDateTime
