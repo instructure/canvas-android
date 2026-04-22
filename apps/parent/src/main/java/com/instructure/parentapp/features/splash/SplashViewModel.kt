@@ -83,7 +83,7 @@ class SplashViewModel @Inject constructor(
                 }
             }
 
-            if (apiPrefs.mobileConsent) {
+            if (apiPrefs.mobileConsent == true) {
                 val sendUsageMetrics = repository.getSendUsageMetrics()
                 if (sendUsageMetrics) {
                     val userWithIds = repository.getSelfWithUuid()

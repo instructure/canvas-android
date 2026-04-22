@@ -16,14 +16,12 @@
  */
 package com.instructure.pandautils.features.cookieconsent
 
-import com.instructure.canvasapi2.models.CookieConsentContent
-import com.instructure.canvasapi2.models.CookieConsentResponse
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.Ordering
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
@@ -36,10 +34,10 @@ import org.junit.Test
 
 class GetCookieConsentUseCaseTest {
 
-    private val userRepository: UserRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val useCase = GetCookieConsentUseCase(userRepository, featureFlagProvider)
+    private val useCase = GetCookieConsentUseCase(apiPrefs, featureFlagProvider)
 
     @After
     fun teardown() {
@@ -50,7 +48,7 @@ class GetCookieConsentUseCaseTest {
     fun `returns flag disabled with null consent when feature flag is off`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns false
 
-        val result = useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT))
+        val result = useCase(Unit)
 
         assertFalse(result.flagEnabled)
         assertNull(result.consent)
@@ -60,7 +58,7 @@ class GetCookieConsentUseCaseTest {
     fun `fetches environment feature flags before checking`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns false
 
-        useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT))
+        useCase(Unit)
 
         coVerify(ordering = Ordering.ORDERED) {
             featureFlagProvider.fetchEnvironmentFeatureFlags()
@@ -69,72 +67,44 @@ class GetCookieConsentUseCaseTest {
     }
 
     @Test
-    fun `does not call repository when flag is disabled`() = runTest {
+    fun `does not read apiPrefs when flag is disabled`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns false
 
-        useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT))
+        useCase(Unit)
 
-        coVerify(exactly = 0) { userRepository.getCookieConsentData(any()) }
+        coVerify(exactly = 0) { apiPrefs.mobileConsent }
     }
 
     @Test
-    fun `returns flag enabled with true consent when api returns true`() = runTest {
+    fun `returns flag enabled with true consent when apiPrefs stores true`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        coEvery { userRepository.getCookieConsentData(any()) } returns DataResult.Success(
-            CookieConsentResponse(CookieConsentContent(true))
-        )
+        every { apiPrefs.mobileConsent } returns true
 
-        val result = useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT))
+        val result = useCase(Unit)
 
         assertTrue(result.flagEnabled)
         assertEquals(true, result.consent)
     }
 
     @Test
-    fun `returns flag enabled with false consent when api returns false`() = runTest {
+    fun `returns flag enabled with false consent when apiPrefs stores false`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        coEvery { userRepository.getCookieConsentData(any()) } returns DataResult.Success(
-            CookieConsentResponse(CookieConsentContent(false))
-        )
+        every { apiPrefs.mobileConsent } returns false
 
-        val result = useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.TEACHER))
+        val result = useCase(Unit)
 
         assertTrue(result.flagEnabled)
         assertEquals(false, result.consent)
     }
 
     @Test
-    fun `returns flag enabled with null consent when api returns null data`() = runTest {
+    fun `returns flag enabled with null consent when apiPrefs has no decision stored`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        coEvery { userRepository.getCookieConsentData(any()) } returns DataResult.Success(
-            CookieConsentResponse(null)
-        )
+        every { apiPrefs.mobileConsent } returns null
 
-        val result = useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.PARENT))
+        val result = useCase(Unit)
 
         assertTrue(result.flagEnabled)
         assertNull(result.consent)
-    }
-
-    @Test
-    fun `returns flag enabled with null consent when api fails`() = runTest {
-        coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        coEvery { userRepository.getCookieConsentData(any()) } returns DataResult.Fail()
-
-        val result = useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT))
-
-        assertTrue(result.flagEnabled)
-        assertNull(result.consent)
-    }
-
-    @Test
-    fun `calls repository with correct namespace value`() = runTest {
-        coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        coEvery { userRepository.getCookieConsentData(any()) } returns DataResult.Fail()
-
-        useCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.TEACHER))
-
-        coVerify { userRepository.getCookieConsentData("MOBILE_CANVAS_TEACHER_COOKIE_CONSENT") }
     }
 }
-

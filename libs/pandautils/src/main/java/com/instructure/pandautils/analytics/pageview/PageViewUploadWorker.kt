@@ -48,7 +48,7 @@ class PageViewUploadWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         return try {
-            if (!apiPrefs.mobileConsent) return Result.success()
+            if (apiPrefs.mobileConsent != true) return Result.success()
 
             if (!ApiPrefs.getValidToken()
                     .isValid() && ApiPrefs.pandataInfo?.isValid != true

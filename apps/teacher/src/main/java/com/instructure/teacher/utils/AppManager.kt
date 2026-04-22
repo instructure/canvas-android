@@ -48,7 +48,7 @@ class AppManager : BaseAppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        if (ApiPrefs.mobileConsent) {
+        if (ApiPrefs.mobileConsent == true) {
             schedulePandataUpload()
         }
         initPendo()

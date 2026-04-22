@@ -46,7 +46,7 @@ class CookieConsentViewModel @Inject constructor(
     fun checkAndShowIfNeeded() {
         viewModelScope.launch {
             try {
-                val result = getCookieConsentUseCase(GetCookieConsentUseCase.Params(namespace))
+                val result = getCookieConsentUseCase(Unit)
                 if (result.flagEnabled && result.consent == null) {
                     _uiState.update { it.copy(loading = false, showDialog = true) }
                 } else {
@@ -73,7 +73,7 @@ class CookieConsentViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(saving = true) }
             try {
-                setCookieConsentUseCase(SetCookieConsentUseCase.Params(namespace, consent))
+                setCookieConsentUseCase(SetCookieConsentUseCase.Params(consent))
                 if (consent) {
                     analyticsConsentHandler.onConsentGranted()
                 } else {

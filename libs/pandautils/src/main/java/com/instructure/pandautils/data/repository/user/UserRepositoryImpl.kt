@@ -23,9 +23,6 @@ import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.ColorChangeResponse
-import com.instructure.canvasapi2.models.CookieConsentBody
-import com.instructure.canvasapi2.models.CookieConsentContent
-import com.instructure.canvasapi2.models.CookieConsentResponse
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
@@ -72,15 +69,5 @@ class UserRepositoryImpl(
             CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
         }
         return result
-    }
-
-    override suspend fun getCookieConsentData(namespace: String): DataResult<CookieConsentResponse> {
-        val params = RestParams(isForceReadFromNetwork = true)
-        return userApi.getCookieConsentData(namespace, params)
-    }
-
-    override suspend fun putCookieConsentData(namespace: String, consent: Boolean): DataResult<CookieConsentResponse> {
-        val params = RestParams(isForceReadFromNetwork = true)
-        return userApi.putCookieConsentData(namespace, CookieConsentBody(CookieConsentContent(consent)), params)
     }
 }

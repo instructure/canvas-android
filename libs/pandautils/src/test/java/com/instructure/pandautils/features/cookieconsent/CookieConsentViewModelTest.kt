@@ -153,7 +153,7 @@ class CookieConsentViewModelTest {
         val viewModel = createViewModel()
         viewModel.checkAndShowIfNeeded()
 
-        coVerify { getCookieConsentUseCase(GetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT)) }
+        coVerify { getCookieConsentUseCase(Unit) }
     }
 
     @Test
@@ -181,7 +181,7 @@ class CookieConsentViewModelTest {
         assertFalse(state.showDialog)
         assertFalse(state.saving)
         assertEquals(ConsentResult(consentGiven = true, needed = true), state.consentResult)
-        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT, true)) }
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) }
     }
 
     @Test
@@ -199,7 +199,7 @@ class CookieConsentViewModelTest {
         assertFalse(state.showDialog)
         assertFalse(state.saving)
         assertEquals(ConsentResult(consentGiven = false, needed = true), state.consentResult)
-        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(CookieConsentNamespace.STUDENT, false)) }
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(false)) }
     }
 
     @Test

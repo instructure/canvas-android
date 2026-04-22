@@ -15,34 +15,26 @@
  */
 package com.instructure.pandautils.features.cookieconsent
 
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
 class GetCookieConsentUseCase @Inject constructor(
-    private val userRepository: UserRepository,
+    private val apiPrefs: ApiPrefs,
     private val featureFlagProvider: FeatureFlagProvider
-) : BaseUseCase<GetCookieConsentUseCase.Params, GetCookieConsentUseCase.Result>() {
-
-    data class Params(val namespace: CookieConsentNamespace)
+) : BaseUseCase<Unit, GetCookieConsentUseCase.Result>() {
 
     data class Result(
         val flagEnabled: Boolean,
         val consent: Boolean?
     )
 
-    override suspend fun execute(params: Params): Result {
+    override suspend fun execute(params: Unit): Result {
         featureFlagProvider.fetchEnvironmentFeatureFlags()
         val flagEnabled = featureFlagProvider.checkCookieConsentFlag()
         if (!flagEnabled) return Result(flagEnabled = false, consent = null)
 
-        val result = userRepository.getCookieConsentData(params.namespace.value)
-        val consent = when (result) {
-            is DataResult.Success -> result.data.data?.mobileConsent
-            is DataResult.Fail -> null
-        }
-        return Result(flagEnabled = true, consent = consent)
+        return Result(flagEnabled = true, consent = apiPrefs.mobileConsent)
     }
 }

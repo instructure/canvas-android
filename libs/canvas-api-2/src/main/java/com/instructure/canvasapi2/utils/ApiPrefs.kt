@@ -154,7 +154,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var canSwitchToCanvasCareer by BooleanPref(defaultValue = false)
 
-    var mobileConsent by BooleanPref(defaultValue = false)
+    var mobileConsent by NBooleanPref()
 
     var webViewAuthenticationTimestamp by LongPref(0)
 

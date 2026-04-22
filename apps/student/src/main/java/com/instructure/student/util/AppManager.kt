@@ -68,7 +68,7 @@ class AppManager : BaseAppManager() {
             ).execute()
         }
 
-        if (ApiPrefs.mobileConsent) {
+        if (ApiPrefs.mobileConsent == true) {
             schedulePandataUpload()
         }
         initPendo()

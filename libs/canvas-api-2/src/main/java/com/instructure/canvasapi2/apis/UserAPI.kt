@@ -27,8 +27,6 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasFeatureFlag
 import com.instructure.canvasapi2.models.ColorChangeResponse
-import com.instructure.canvasapi2.models.CookieConsentBody
-import com.instructure.canvasapi2.models.CookieConsentResponse
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.PairingCode
@@ -190,19 +188,6 @@ object UserAPI {
 
         @POST
         suspend fun createObserverAccount(@Url url: String, @Body data: CreateObserverPostBody): DataResult<User>
-
-        @GET("users/self/custom_data")
-        suspend fun getCookieConsentData(
-            @Query("ns") namespace: String,
-            @Tag params: RestParams
-        ): DataResult<CookieConsentResponse>
-
-        @PUT("users/self/custom_data")
-        suspend fun putCookieConsentData(
-            @Query("ns") namespace: String,
-            @Body body: CookieConsentBody,
-            @Tag params: RestParams
-        ): DataResult<CookieConsentResponse>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
