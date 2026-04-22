@@ -20,6 +20,9 @@ import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.HorizonActivity
+import com.instructure.loginapi.login.CANVAS_CAREER
+import com.instructure.loginapi.login.NEXT_GEN_CANVAS
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -28,6 +31,8 @@ import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
+import com.instructure.student.activity.NavigationActivity
+import com.instructure.ngc.NGCActivity
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentAcceptableUsePolicyRouter(

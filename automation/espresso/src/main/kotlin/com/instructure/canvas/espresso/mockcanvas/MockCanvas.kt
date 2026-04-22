@@ -74,7 +74,6 @@ import com.instructure.canvasapi2.models.QuizSubmissionAnswer
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StreamItem
@@ -93,6 +92,7 @@ import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.dataseeding.model.RubricCriterion
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -103,6 +103,8 @@ import java.util.Date
 import java.util.GregorianCalendar
 import java.util.UUID
 import kotlin.random.Random
+import com.instructure.canvasapi2.models.RubricCriterion as CanvasRubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating as CanvasRubricCriterionRating
 
 class MockCanvas {
     /** Fake domain */
@@ -2061,8 +2063,20 @@ fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricC
     val assignment = assignments[assignmentId]!!
     val courseId = assignment.courseId
 
+    val canvasCriteria = criteria.map { criterion ->
+        CanvasRubricCriterion(
+            id = criterion.id,
+            description = criterion.description,
+            longDescription = criterion.longDescription,
+            points = criterion.points,
+            ratings = criterion.ratings.map { rating ->
+                CanvasRubricCriterionRating(id = rating.id, description = rating.description, longDescription = rating.longDescription, points = rating.points)
+            }.toMutableList()
+        )
+    }
+
     // Create a modified assignment with rubric info
-    val newAssignment = assignment.copy(rubric = criteria, isUseRubricForGrading = true)
+    val newAssignment = assignment.copy(rubric = canvasCriteria, isUseRubricForGrading = true)
 
     // Replace the old assignment with the modified assignment in assignments hash
     assignments[assignmentId] = newAssignment

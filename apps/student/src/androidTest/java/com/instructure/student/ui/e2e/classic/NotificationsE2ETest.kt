@@ -17,15 +17,18 @@
 package com.instructure.student.ui.e2e.classic
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ConversationsApi
+import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
@@ -35,15 +38,20 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.espresso.getCustomDateCalendar
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.lang.Thread.sleep
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
-class NotificationsE2ETest : StudentTest() {
+class NotificationsE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -141,6 +149,73 @@ class NotificationsE2ETest : StudentTest() {
                 }
             }
         }
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.NOTIFICATIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointsNotificationsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+
+        Log.d(PREPARATION_TAG, "Convert dates to match with different formats in different screens (Assignment Details)")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        val assignmentDetailsDisplayFormat = SimpleDateFormat("MMM d, yyyy h:mm a", Locale.US)
+        val replyToTopicCalendar = getCustomDateCalendar(2)
+        val replyToEntryCalendar = getCustomDateCalendar(4)
+        val replyToTopicDueTime = dateFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueTime = dateFormat.format(replyToEntryCalendar.time)
+        val assignmentDetailsReplyToTopicDueDate = assignmentDetailsDisplayFormat.format(replyToTopicCalendar.time)
+        val assignmentDetailsReplyToEntryDueDate = assignmentDetailsDisplayFormat.format(replyToEntryCalendar.time)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueTime, replyToEntryDueTime)
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Notifications' bottom menu to navigate to the Notifications list page.")
+        dashboardPage.clickNotificationsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the notification about the discussion itself: '$discussionWithCheckpointsTitle' is displayed, and also the corresponding (parent) assignment: '$assignmentName' is displayed.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            refresh() })
+        {
+            notificationPage.assertNotificationDisplayed(discussionWithCheckpointsTitle)
+            notificationPage.assertNotificationDisplayed("Assignment Created - $discussionWithCheckpointsTitle", contains = true) // Using contains logic since the assignment name alone is not the notification title, there are additional informations.
+        }
+
+        Log.d(STEP_TAG, "Click on the notification about discussion: '${discussionWithCheckpointsTitle}'.")
+        notificationPage.clickNotification(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert if the details webview page is displayed for '$discussionWithCheckpointsTitle' discussion.")
+        discussionDetailsPage.assertToolbarDiscussionTitle(discussionWithCheckpointsTitle)
+
+        Log.d(STEP_TAG, "Navigate back to Notifications list page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the notification about the corresponding (parent) assignment: '${discussionWithCheckpointsTitle}'.")
+        notificationPage.clickNotification("Assignment Created - $discussionWithCheckpointsTitle", contains = true)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
     }
 
     private fun makeQuizQuestions() = listOf(

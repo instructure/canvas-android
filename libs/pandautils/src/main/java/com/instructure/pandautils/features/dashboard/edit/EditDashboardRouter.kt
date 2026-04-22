@@ -16,8 +16,16 @@
 
 package com.instructure.pandautils.features.dashboard.edit
 
+import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 
 interface EditDashboardRouter {
     fun routeCourse(canvasContext: CanvasContext?)
+
+    fun showSnackbar(fragment: Fragment, resId: Int) {
+        val view = fragment.view ?: return
+        Snackbar.make(view, resId, Snackbar.LENGTH_LONG).show()
+        view.announceForAccessibility(fragment.requireContext().getString(resId))
+    }
 }

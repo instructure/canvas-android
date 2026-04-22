@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.parentapp.ui.pages.compose
 
 import androidx.compose.ui.graphics.Color
@@ -27,11 +26,12 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.model.CourseApiModel
@@ -61,6 +61,7 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun selectTab(tabName: String) {
         composeTestRule.onNodeWithText(tabName).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertTabSelected(tabName: String) {
@@ -80,8 +81,22 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(assignmentName).assertTextColor(Color(expectedTextColor))
     }
 
+    fun assertTabDisplayed(tabName: String) {
+        composeTestRule.onNodeWithText(tabName).assertIsDisplayed()
+    }
+
+    fun assertTabDoesNotExist(tabName: String) {
+        composeTestRule.onNodeWithText(tabName).assertDoesNotExist()
+    }
+
+    fun assertTabCount(expectedCount: Int) {
+        composeTestRule.onAllNodes(hasAnyAncestor(hasTestTag("courseDetailsTabRow")) and isSelectable())
+            .assertCountEquals(expectedCount)
+    }
+
     fun clickComposeMessageFAB() {
         composeTestRule.onNodeWithContentDescription("Send a message about this course").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", dueAtStringSecondCheckpoint: String? = null, expectedGrade: String? = null) {

@@ -26,9 +26,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.ImageViewDrawableMatcher
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.ImageViewDrawableMatcher
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleObject
@@ -183,7 +183,7 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     fun refresh() {
-        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed())).perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
+        onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed())).perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(5)))
     }
 
     fun clickOnModuleExpandCollapseIcon(moduleName: String) {

@@ -26,8 +26,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.StringConstants.HelpMenu
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
@@ -55,7 +55,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     fun assertAskYourInstructorDialogDetails(course: Course, question: String) {
         askInstructorLabel.scrollTo().click()
         waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
-        onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
+        onView(withId(R.id.message)).scrollTo().perform(actionWithCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
         onView(containsTextCaseInsensitive("Send")).assertDisplayed()
@@ -64,7 +64,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private fun assertAskYourInstructorDialogDetails(course: CourseApiModel, question: String) {
         askInstructorLabel.scrollTo().click()
         waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
-        onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
+        onView(withId(R.id.message)).scrollTo().perform(actionWithCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
         onView(containsTextCaseInsensitive("Send")).assertDisplayed()

@@ -24,8 +24,8 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
-import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -34,6 +34,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -188,7 +189,10 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the assignment '${gradedAssignment.name}' is displayed, " +
                 "while '${notSubmittedAssignment.name}', '${submittedAssignment.name}', and '${otherTypeAssignment.name}' are not displayed on the assignment list.")
-        assignmentListPage.assertHasAssignment(gradedAssignment)
+
+        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry block here because the grading status might not be updated to 'Graded' immediately as grading sometimes slow on beta.
+            assignmentListPage.assertHasAssignment(gradedAssignment)
+        }
         assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(submittedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
@@ -210,7 +214,7 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there IS a submission for it. Navigate back to Assignment List Page.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.assertStatusSubmitted()
 
         Log.d(ASSERTION_TAG, "Assert that the (Re)submit Assignment button is not enabled as submitting assignments is not supported in offline mode.")
@@ -242,8 +246,8 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page by clicking on the submission.")
         assignmentDetailsPage.goToSubmissionDetails()

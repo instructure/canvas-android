@@ -20,17 +20,40 @@ import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.BecomeUserPermission
+import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.ColorChangeResponse
 import com.instructure.canvasapi2.models.CookieConsentBody
 import com.instructure.canvasapi2.models.CookieConsentContent
 import com.instructure.canvasapi2.models.CookieConsentResponse
 import com.instructure.canvasapi2.models.DashboardPositions
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorUtils.toApiHexString
 
 class UserRepositoryImpl(
     private val userApi: UserAPI.UsersInterface
 ) : UserRepository {
+
+    override suspend fun getSelf(forceRefresh: Boolean): DataResult<User> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return userApi.getSelf(params)
+    }
+
+    override suspend fun getSelfWithUuid(forceRefresh: Boolean): DataResult<User> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return userApi.getSelfWithUUID(params)
+    }
+
+    override suspend fun getColors(forceRefresh: Boolean): DataResult<CanvasColor> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return userApi.getColors(params)
+    }
+
+    override suspend fun getBecomeUserPermission(forceRefresh: Boolean): DataResult<BecomeUserPermission> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return userApi.getBecomeUserPermission(params)
+    }
 
     override suspend fun getAccount(forceRefresh: Boolean): DataResult<Account> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
