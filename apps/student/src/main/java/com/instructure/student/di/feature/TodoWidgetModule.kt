@@ -16,10 +16,8 @@
 
 package com.instructure.student.di.feature
 
-import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
-import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
-import com.instructure.student.features.dashboard.widget.todo.StudentTodoWidgetBehavior
-import com.instructure.student.features.dashboard.widget.todo.StudentTodoWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoHomeScreenWidgetUpdater
+import com.instructure.student.features.dashboard.widget.todo.StudentTodoHomeScreenWidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,14 +28,9 @@ import dagger.hilt.android.components.ViewModelComponent
 class TodoWidgetModule {
 
     @Provides
-    fun provideTodoWidgetRouter(): TodoWidgetRouter {
-        return StudentTodoWidgetRouter()
-    }
-
-    @Provides
-    fun provideTodoWidgetBehavior(
-        studentTodoWidgetBehavior: StudentTodoWidgetBehavior
-    ): TodoWidgetBehavior {
-        return studentTodoWidgetBehavior
+    fun provideTodoHomeScreenWidgetUpdater(
+        studentTodoHomeScreenWidgetUpdater: StudentTodoHomeScreenWidgetUpdater
+    ): TodoHomeScreenWidgetUpdater {
+        return studentTodoHomeScreenWidgetUpdater
     }
 }

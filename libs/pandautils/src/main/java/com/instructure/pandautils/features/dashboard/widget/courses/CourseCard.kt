@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import android.content.res.Configuration
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -60,7 +59,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.CanvasContext
@@ -74,7 +72,6 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.Course
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import sdk.pendo.io.pendoTag
 
 internal val COURSE_CARD_HEIGHT = 76.dp
@@ -85,17 +82,15 @@ fun CourseCard(
     courseCard: CourseCardItem,
     showGrade: Boolean,
     showColorOverlay: Boolean,
-    onCourseClick: (FragmentActivity, Long) -> Unit,
+    onCourseClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
     dashboardColor: Color = Color(ThemedColor(GlobalConfig.DEFAULT_COLOR).color()),
-    onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
-    onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
-    onAnnouncementClick: ((FragmentActivity, Long) -> Unit)? = null,
+    onManageOfflineContent: ((Long) -> Unit)? = null,
+    onCustomizeCourse: ((Long) -> Unit)? = null,
+    onAnnouncementClick: ((Long) -> Unit)? = null,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
-
-    val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
     val openMenuClick = rememberWithRequireNetwork {
         showMenu = true
@@ -125,12 +120,7 @@ fun CourseCard(
                     .height(COURSE_CARD_HEIGHT)
                     .alpha(if (courseCard.isClickable) 1f else 0.5f)
                     .clickable(enabled = courseCard.isClickable) {
-                        activity?.let {
-                            onCourseClick(
-                                it,
-                                courseCard.id
-                            )
-                        }
+                        onCourseClick(courseCard.id)
                     },
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -201,12 +191,7 @@ fun CourseCard(
                                     },
                                     onClick = {
                                         showMenu = false
-                                        activity?.let {
-                                            onManageOfflineContent.invoke(
-                                                it,
-                                                courseCard.id
-                                            )
-                                        }
+                                        onManageOfflineContent?.invoke(courseCard.id)
                                     },
                                     modifier = Modifier.pendoTag(
                                         "coursesWidget_manageOfflineContent",
@@ -223,12 +208,7 @@ fun CourseCard(
                                     },
                                     onClick = {
                                         showMenu = false
-                                        activity?.let {
-                                            onCustomizeCourse.invoke(
-                                                it,
-                                                courseCard.id
-                                            )
-                                        }
+                                        onCustomizeCourse?.invoke(courseCard.id)
                                     },
                                     modifier = Modifier.pendoTag(
                                         "coursesWidget_customizeCourse",
@@ -281,12 +261,7 @@ fun CourseCard(
                             .size(48.dp)
                             .pendoTag("coursesWidget_announcementBell", true)
                             .clickable(enabled = courseCard.isClickable) {
-                                activity?.let {
-                                    onAnnouncementClick?.invoke(
-                                        it,
-                                        courseCard.id
-                                    )
-                                }
+                                onAnnouncementClick?.invoke(courseCard.id)
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -448,10 +423,10 @@ private fun CourseCardPreview() {
         ),
         showGrade = true,
         showColorOverlay = true,
-        onCourseClick = { _, _ -> },
-        onCustomizeCourse = { _, _ -> },
-        onManageOfflineContent = { _, _ -> },
-        onAnnouncementClick = { _, _ -> }
+        onCourseClick = { },
+        onCustomizeCourse = { },
+        onManageOfflineContent = { },
+        onAnnouncementClick = { }
     )
 }
 

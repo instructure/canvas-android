@@ -19,6 +19,7 @@ package com.instructure.horizon.features.aiassistant.common.composable
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,10 +38,11 @@ fun AiAssistSuggestionTextBlock(
 ) {
     Box(
         modifier = modifier
+            .fillMaxWidth()
             .border(
                 1.dp,
                 HorizonColors.LineAndBorder.lineStroke(),
-                HorizonCornerRadius.level4
+                HorizonCornerRadius.level1_5
             )
             .padding(16.dp)
             .clickable { onClick() }

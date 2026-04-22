@@ -53,10 +53,10 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.type.GradingType
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
@@ -323,12 +323,12 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.clickRubricRatingPointBox("10")
         speedGraderGradePage.assertRubricRatingDescriptionDisplayed("Full Marks")
 
-        speedGraderGradePage.enterRubricScore(rubricCriterion.id.orEmpty(), "8.5")
+        speedGraderGradePage.enterRubricScore(rubricCriterion.id, "8.5")
         speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Full Marks")
 
         val noteText = "Great work on this criterion!"
-        speedGraderGradePage.enterRubricNote(noteText)
-        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.enterRubricNote(noteText, rubricCriterion.id)
+        speedGraderGradePage.clickSendRubricNoteButton(rubricCriterion.id)
         speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
@@ -345,12 +345,12 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.clickRubricRatingPointBox("7")
         speedGraderGradePage.assertRubricRatingDescriptionDisplayed("Passable")
 
-        speedGraderGradePage.enterRubricScore(rubricCriterion.id.orEmpty(), "100")
+        speedGraderGradePage.enterRubricScore(rubricCriterion.id, "100")
         speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Passable")
 
         val noteText = "Great work on this criterion!"
-        speedGraderGradePage.enterRubricNote(noteText)
-        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.enterRubricNote(noteText, rubricCriterion.id)
+        speedGraderGradePage.clickSendRubricNoteButton(rubricCriterion.id)
         speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
@@ -386,7 +386,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
                 description = "Description of criterion",
                 longDescription = "0, 3, 7 or 10 points",
                 points = 10.0,
-                ratings = mutableListOf(
+                ratings = listOf(
                     RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
                     RubricCriterionRating(
                         id = "2",

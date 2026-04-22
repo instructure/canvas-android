@@ -16,7 +16,6 @@
 package com.instructure.horizon.horizonui.organisms.scaffolds
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.FabPosition

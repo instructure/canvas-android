@@ -27,7 +27,7 @@ import com.instructure.canvas.espresso.mockcanvas.addConversation
 import com.instructure.canvas.espresso.mockcanvas.addConversations
 import com.instructure.canvas.espresso.mockcanvas.addConversationsToCourseMap
 import com.instructure.canvas.espresso.mockcanvas.createBasicConversation
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import org.junit.Test

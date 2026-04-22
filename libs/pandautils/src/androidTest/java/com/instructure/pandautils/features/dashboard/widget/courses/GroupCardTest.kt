@@ -48,8 +48,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -63,8 +63,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -78,8 +78,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -93,8 +93,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -108,8 +108,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -124,8 +124,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -140,8 +140,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -155,8 +155,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 
@@ -170,8 +170,8 @@ class GroupCardTest {
         composeTestRule.setContent {
             GroupCard(
                 groupCard = groupCard,
-                onGroupClick = { _, _ -> },
-                onMessageClick = { _, _ -> }
+                onGroupClick = { },
+                onMessageClick = { }
             )
         }
 

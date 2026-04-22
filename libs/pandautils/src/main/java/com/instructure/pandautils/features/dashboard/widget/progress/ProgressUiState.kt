@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.dashboard.widget.progress
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import java.util.UUID
@@ -29,9 +28,9 @@ data class ProgressUiState(
     val syncProgress: SyncProgressItem? = null,
     val snackbarMessage: SnackbarMessage? = null,
     val onRefresh: () -> Unit = {},
-    val onUploadClick: (FragmentActivity, UploadProgressItem) -> Unit = { _, _ -> },
+    val onUploadClick: (UploadProgressItem) -> Unit = {},
     val onUploadDismiss: (UploadProgressItem) -> Unit = {},
-    val onSyncClick: (FragmentActivity) -> Unit = {},
+    val onSyncClick: () -> Unit = {},
     val onSyncDismiss: () -> Unit = {},
     val onClearSnackbar: () -> Unit = {}
 )

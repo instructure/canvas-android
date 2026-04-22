@@ -19,7 +19,8 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     SPEEDGRADER_V2("speedgrader_v2", "true"),
     TODO_REDESIGN("todo_redesign", "true"),
     DASHBOARD_REDESIGN("dashboard_redesign", "false"),
-    DASHBOARD_FEEDBACK_URL("dashboard_feedback_url", "")
+    DASHBOARD_FEEDBACK_URL("dashboard_feedback_url", ""),
+    NEXT_GEN_CANVAS("next_gen_canvas", "false")
 }
 
 /**

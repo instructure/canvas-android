@@ -63,7 +63,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -77,9 +76,9 @@ import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapp
 import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.todolist.OnToDoCountChanged
 import com.instructure.pandautils.utils.getActivityOrNull
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.flow.SharedFlow
 import org.threeten.bp.Clock
@@ -93,6 +92,7 @@ import sdk.pendo.io.pendoTag
 fun TodoWidget(
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    onNavigationEvent: (DashboardNavigationEvent.Todo) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: TodoWidgetViewModel = hiltViewModel()
@@ -108,6 +108,12 @@ fun TodoWidget(
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
             viewModel.refresh()
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.navigationEvents.collect { event ->
+            onNavigationEvent(event)
         }
     }
 
@@ -355,9 +361,9 @@ private fun TodoItemsContainer(
     todosLoading: Boolean,
     todosError: Boolean,
     todos: List<ToDoItemUiState>,
-    onTodoClick: (FragmentActivity, String) -> Unit,
+    onTodoClick: (String) -> Unit,
     onRefresh: () -> Unit,
-    onAddTodoClick: (FragmentActivity) -> Unit,
+    onAddTodoClick: () -> Unit,
     buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -510,7 +516,7 @@ private fun TodoItemsError(
 
 @Composable
 private fun TodoItemsEmpty(
-    onAddTodoClick: (FragmentActivity) -> Unit = {},
+    onAddTodoClick: () -> Unit = {},
     buttonColor: Color
 ) {
     Row(
@@ -562,14 +568,12 @@ private fun TodoItemsEmpty(
 
 @Composable
 private fun AddTodoButton(
-    onAddTodoClick: (FragmentActivity) -> Unit,
+    onAddTodoClick: () -> Unit,
     buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalContext.current.getFragmentActivityOrNull()
-
     Button(
-        onClick = { activity?.let { onAddTodoClick(it) } },
+        onClick = onAddTodoClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = buttonColor
         ),
@@ -600,14 +604,12 @@ private fun AddTodoButton(
 @Composable
 private fun TodoItemsList(
     todos: List<ToDoItemUiState>,
-    onTodoClick: (FragmentActivity, String) -> Unit,
+    onTodoClick: (String) -> Unit,
     checkboxColor: Color,
-    onAddTodoClick: (FragmentActivity) -> Unit,
+    onAddTodoClick: () -> Unit,
     buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalContext.current.getFragmentActivityOrNull()
-
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -619,10 +621,8 @@ private fun TodoItemsList(
                         todo.onCheckboxToggle(!todo.isChecked)
                     },
                     onClick = {
-                        activity?.let { fragmentActivity ->
-                            todo.htmlUrl?.let { htmlUrl ->
-                                onTodoClick(fragmentActivity, htmlUrl)
-                            }
+                        todo.htmlUrl?.let { htmlUrl ->
+                            onTodoClick(htmlUrl)
                         }
                     },
                     checkboxColor = checkboxColor

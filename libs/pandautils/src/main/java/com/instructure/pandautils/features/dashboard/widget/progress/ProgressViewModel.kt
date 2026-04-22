@@ -16,15 +16,18 @@
 
 package com.instructure.pandautils.features.dashboard.widget.progress
 
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
@@ -37,7 +40,6 @@ class ProgressViewModel @Inject constructor(
     private val observeSyncProgressUseCase: ObserveSyncProgressUseCase,
     private val dismissUploadUseCase: DismissUploadUseCase,
     private val dismissSyncProgressUseCase: DismissSyncProgressUseCase,
-    private val progressWidgetRouter: ProgressWidgetRouter,
     private val courseRepository: CourseRepository,
     private val dashboardFileUploadDao: DashboardFileUploadDao,
     private val apiPrefs: ApiPrefs
@@ -54,6 +56,9 @@ class ProgressViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<ProgressUiState> = _uiState.asStateFlow()
+
+    private val _navigationEvents = MutableSharedFlow<DashboardNavigationEvent.Progress>()
+    val navigationEvents: SharedFlow<DashboardNavigationEvent.Progress> = _navigationEvents.asSharedFlow()
 
     init {
         observeProgress()
@@ -82,38 +87,39 @@ class ProgressViewModel @Inject constructor(
         // Progress is observed reactively, no explicit refresh needed
     }
 
-    private fun onUploadClick(activity: FragmentActivity, item: UploadProgressItem) {
+    private fun onUploadClick(item: UploadProgressItem) {
         viewModelScope.launch {
             when (item.state) {
-                UploadState.SUCCEEDED -> handleSucceededUpload(activity, item)
-                else -> progressWidgetRouter.openProgressDialog(activity, item.workerId)
+                UploadState.SUCCEEDED -> handleSucceededUpload(item)
+                else -> _navigationEvents.emit(DashboardNavigationEvent.Progress.OpenProgressDialog(item.workerId))
             }
         }
     }
 
-    private suspend fun handleSucceededUpload(activity: FragmentActivity, item: UploadProgressItem) {
+    private suspend fun handleSucceededUpload(item: UploadProgressItem) {
         if (item.courseId != null && item.assignmentId != null && item.attemptId != null) {
             val courseResult = courseRepository.getCourse(item.courseId, false)
             val course = courseResult.dataOrNull
             if (course != null) {
                 dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString())
-                progressWidgetRouter.navigateToSubmissionDetails(
-                    activity,
-                    course,
-                    item.assignmentId,
-                    item.attemptId
+                _navigationEvents.emit(
+                    DashboardNavigationEvent.Progress.NavigateToSubmissionDetails(
+                        course,
+                        item.assignmentId,
+                        item.attemptId
+                    )
                 )
             } else {
-                progressWidgetRouter.openProgressDialog(activity, item.workerId)
+                _navigationEvents.emit(DashboardNavigationEvent.Progress.OpenProgressDialog(item.workerId))
             }
         } else if (item.folderId != null) {
             dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString())
             apiPrefs.user?.let { user ->
-                progressWidgetRouter.navigateToMyFiles(activity, user, item.folderId)
+                _navigationEvents.emit(DashboardNavigationEvent.Progress.NavigateToMyFiles(user, item.folderId))
             }
         } else {
             dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString())
-            progressWidgetRouter.openProgressDialog(activity, item.workerId)
+            _navigationEvents.emit(DashboardNavigationEvent.Progress.OpenProgressDialog(item.workerId))
         }
     }
 
@@ -123,8 +129,10 @@ class ProgressViewModel @Inject constructor(
         }
     }
 
-    private fun onSyncClick(activity: FragmentActivity) {
-        progressWidgetRouter.openSyncProgress(activity)
+    private fun onSyncClick() {
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Progress.OpenSyncProgress)
+        }
     }
 
     private fun onSyncDismiss() {

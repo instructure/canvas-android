@@ -24,7 +24,7 @@ import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.StringConstants.HelpMenu
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed

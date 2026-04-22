@@ -27,6 +27,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
+import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_BASIC
 import com.instructure.pandautils.analytics.ScreenView
@@ -58,6 +61,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
+@PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
 
@@ -69,6 +73,9 @@ class AssignmentBasicFragment : ParentFragment() {
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var assignment: Assignment by ParcelableArg()
     private var loadHtmlJob: Job? = null
+
+    @PageViewUrl
+    fun makePageViewUrl() = assignment.htmlUrl.orEmpty()
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.conferences
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.compose.SnackbarMessage
 
@@ -27,7 +26,7 @@ data class ConferencesUiState(
     val joiningConferenceId: Long? = null,
     val snackbarMessage: SnackbarMessage? = null,
     val onRefresh: () -> Unit = {},
-    val onJoinConference: (FragmentActivity, ConferenceItem) -> Unit = { _, _ -> },
+    val onJoinConference: (ConferenceItem) -> Unit = {},
     val onDismissConference: (ConferenceItem) -> Unit = {},
     val onClearSnackbar: () -> Unit = {}
 )

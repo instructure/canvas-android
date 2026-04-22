@@ -29,7 +29,7 @@ import com.instructure.canvas.espresso.mockcanvas.addEnrollment
 import com.instructure.canvas.espresso.mockcanvas.addUser
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvas.espresso.mockcanvas.updateUserEnrollments
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.loginapi.login.R
 import com.instructure.parentapp.utils.ParentComposeTest

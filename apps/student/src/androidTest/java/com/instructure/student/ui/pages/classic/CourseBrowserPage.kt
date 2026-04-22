@@ -31,8 +31,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.model.CourseApiModel
@@ -189,8 +189,8 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         // need either one or two swipe-downs to effect a refresh.  We'll go with two to cover
         // our bases.
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayed()))
-                .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
-                .perform(withCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
+                .perform(actionWithCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
+                .perform(actionWithCustomConstraints(ViewActions.swipeDown(), isDisplayingAtLeast(5)))
     }
 
     // When the toolbar is maximized, you can't  do any operations with the recyclerView

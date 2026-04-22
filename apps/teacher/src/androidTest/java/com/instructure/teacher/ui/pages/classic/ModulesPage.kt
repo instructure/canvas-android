@@ -3,7 +3,7 @@ package com.instructure.teacher.ui.pages.classic
 import androidx.annotation.StringRes
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.ViewAlphaAssertion
 import com.instructure.espresso.assertDisplayed
