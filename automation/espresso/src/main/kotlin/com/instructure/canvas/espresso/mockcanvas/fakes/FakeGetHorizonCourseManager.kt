@@ -94,27 +94,31 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
         userId: Long,
         forceNetwork: Boolean
     ): DataResult<List<DashboardEnrollment>> {
-        val enrollments = MockCanvas.data.enrollments.values.toList()
-        val courses = getCourses()
-        val dashboardEnrollments = courses.mapIndexedNotNull { index, course ->
-            val enrollmentId = enrollments.getOrNull(index)?.id ?: return@mapIndexedNotNull null
-            val state = when (index) {
-                1 -> DashboardEnrollment.STATE_COMPLETED
-                2 -> DashboardEnrollment.STATE_INVITED
-                else -> DashboardEnrollment.STATE_ACTIVE
-            }
+        val activeCourse = getCourses()[0]
+        val completedCourse = getCourses()[1]
+
+        return DataResult.Success(listOf(
             DashboardEnrollment(
-                enrollmentId = enrollmentId,
-                enrollmentState = state,
-                courseId = course.courseId,
-                courseName = course.courseName,
-                courseImageUrl = course.courseImageUrl,
-                courseSyllabus = course.courseSyllabus,
+                enrollmentId = MockCanvas.data.enrollments.values.toList()[0].id,
+                enrollmentState = MockCanvas.data.enrollments.values.toList()[0].enrollmentState.orEmpty(),
+                courseId = activeCourse.courseId,
+                courseName = activeCourse.courseName,
+                courseImageUrl = activeCourse.courseImageUrl,
+                courseSyllabus = activeCourse.courseSyllabus,
                 institutionName = null,
-                completionPercentage = course.progress,
+                completionPercentage = activeCourse.progress
+            ),
+            DashboardEnrollment(
+                enrollmentId = MockCanvas.data.enrollments.values.toList()[1].id,
+                enrollmentState = MockCanvas.data.enrollments.values.toList()[1].enrollmentState.orEmpty(),
+                courseId = completedCourse.courseId,
+                courseName = completedCourse.courseName,
+                courseImageUrl = completedCourse.courseImageUrl,
+                courseSyllabus = completedCourse.courseSyllabus,
+                institutionName = null,
+                completionPercentage = completedCourse.progress
             )
-        }
-        return DataResult.Success(dashboardEnrollments)
+        ))
     }
 
     override suspend fun getProgramCourses(

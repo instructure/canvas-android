@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
 import com.instructure.canvasapi2.models.journey.mycontent.ProgramEnrollmentItem
-import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnMyContentInProgressItemsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
@@ -59,6 +59,7 @@ class LearnMyContentInProgressViewModelTest {
     private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyResponse = LearnItemsResponse(
@@ -388,7 +389,7 @@ class LearnMyContentInProgressViewModelTest {
     }
 
     private fun getViewModel() = LearnMyContentInProgressViewModel(
-        resources, getLearnMyContentInProgressItemsUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider
+        resources, getLearnMyContentInProgressItemsUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
     )
 
     private fun createTestProgramItem(

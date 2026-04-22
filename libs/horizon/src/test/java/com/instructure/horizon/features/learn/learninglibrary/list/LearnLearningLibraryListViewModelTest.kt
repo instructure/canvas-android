@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
@@ -64,6 +65,7 @@ class LearnLearningLibraryListViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyItemsResponse = LearningLibraryCollectionItemsResponse(
@@ -802,7 +804,7 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     private fun getViewModel(): LearnLearningLibraryListViewModel {
-        return LearnLearningLibraryListViewModel(resources, repository, eventHandler, apiPrefs, networkStateProvider, featureFlagProvider)
+        return LearnLearningLibraryListViewModel(resources, repository, eventHandler, apiPrefs, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 
     private fun createTestCollection(

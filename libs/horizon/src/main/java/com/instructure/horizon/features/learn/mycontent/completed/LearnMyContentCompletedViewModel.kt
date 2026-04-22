@@ -20,6 +20,7 @@ import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsParams
 import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
@@ -39,7 +40,8 @@ class LearnMyContentCompletedViewModel @Inject constructor(
     getNextModuleItemUseCase: GetNextModuleItemUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : LearnMyContentViewModel<LearnContentCardState>(getNextModuleItemUseCase, networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : LearnMyContentViewModel<LearnContentCardState>(getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)

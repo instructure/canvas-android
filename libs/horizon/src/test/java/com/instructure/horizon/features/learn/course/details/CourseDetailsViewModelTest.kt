@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -46,6 +47,7 @@ class CourseDetailsViewModelTest {
     private val repository: CourseRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourseId = 123L
@@ -219,7 +221,7 @@ class CourseDetailsViewModelTest {
     @Test
     fun `Invalid course ID defaults to -1`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider)
+        val viewModel = CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
 
         coVerify { repository.getCourse(-1L, any()) }
     }
@@ -248,6 +250,6 @@ class CourseDetailsViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf(
             LearnRoute.LearnCourseDetailsScreen.courseIdAttr to courseId
         ))
-        return CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider)
+        return CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 }

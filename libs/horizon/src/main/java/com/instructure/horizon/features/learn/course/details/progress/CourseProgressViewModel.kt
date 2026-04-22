@@ -22,9 +22,10 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
-import com.instructure.horizon.data.repository.CourseRepository
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -49,7 +50,8 @@ class CourseProgressViewModel @Inject constructor(
     private val learnEventHandler: LearnEventHandler,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider) {
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     private val _uiState = MutableStateFlow(
         CourseProgressUiState(
             screenState = LoadingState(
