@@ -156,13 +156,15 @@ android {
         }
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force 'android.arch.lifecycle:runtime:1.0.3'
+    configurations.configureEach {
+        if (canBeResolved) {
+            resolutionStrategy {
+                force 'android.arch.lifecycle:runtime:1.0.3'
 
-            force Libs.KOTLIN_COROUTINES_CORE
+                force Libs.KOTLIN_COROUTINES_CORE
 
-            force Libs.KOTLIN_STD_LIB
+                force Libs.KOTLIN_STD_LIB
+            }
         }
     }
 
