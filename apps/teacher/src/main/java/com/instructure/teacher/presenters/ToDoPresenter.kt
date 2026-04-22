@@ -43,6 +43,7 @@ import com.instructure.canvasapi2.utils.weave.inParallel
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.ToDoView
@@ -111,19 +112,22 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
         routeCalls = tryWeave {
             viewCallback?.onRefreshStarted()
 
+            val parentAssignmentId = assignment.discussionTopicHeader?.assignmentId?.takeIf { it != 0L }
+            val effectiveAssignment = if (parentAssignmentId != null) assignment.copy(id = parentAssignmentId) else assignment
+
             val unfilteredSubmissions: List<GradeableStudentSubmission>
             // Get the course
-            val course = awaitApi<Course> { CourseManager.getCourse(courseId, it, true) }
+            val course = awaitApi { CourseManager.getCourse(courseId, it, true) }
             val (gradeableStudents, enrollments, submissions) = awaitApis<List<GradeableStudent>, List<Enrollment>, List<Submission>>(
-                    { AssignmentManager.getAllGradeableStudentsForAssignment(assignment.courseId, assignment.id, true, it) },
-                    { EnrollmentManager.getAllEnrollmentsForCourse(assignment.courseId, null, true, it) },
-                    { AssignmentManager.getAllSubmissionsForAssignment(assignment.courseId, assignment.id, true, it) }
+                    { AssignmentManager.getAllGradeableStudentsForAssignment(effectiveAssignment.courseId, effectiveAssignment.id, true, it) },
+                    { EnrollmentManager.getAllEnrollmentsForCourse(effectiveAssignment.courseId, null, true, it) },
+                    { AssignmentManager.getAllSubmissionsForAssignment(effectiveAssignment.courseId, effectiveAssignment.id, true, it) }
             )
             val enrollmentMap = enrollments.associateBy { it.user?.id }
-            val students = gradeableStudents.distinctBy { it.id }.map { enrollmentMap[it.id]?.user }.filterNotNull()
-            if (assignment.groupCategoryId > 0 && !assignment.isGradeGroupsIndividually) {
-                val groups = awaitApi<List<Group>> { CourseManager.getGroupsForCourse(assignment.courseId, it, false) }
-                        .filter { it.groupCategoryId == assignment.groupCategoryId }
+            val students = gradeableStudents.distinctBy { it.id }.mapNotNull { enrollmentMap[it.id]?.user }
+            if (effectiveAssignment.groupCategoryId > 0 && !effectiveAssignment.isGradeGroupsIndividually) {
+                val groups = awaitApi { CourseManager.getGroupsForCourse(effectiveAssignment.courseId, it, false) }
+                        .filter { it.groupCategoryId == effectiveAssignment.groupCategoryId }
                 unfilteredSubmissions = makeGroupSubmissions(students, groups, submissions)
             } else {
                 val submissionMap = submissions.associateBy { it.userId }
@@ -135,15 +139,16 @@ class ToDoPresenter : SyncPresenter<ToDo, ToDoView>(ToDo::class.java) {
             // filter the submissions to just the ones that need grading
             val filteredSubmissions = unfilteredSubmissions.filter {
                 it.submission?.let { submission ->
-                    assignment.getState(submission, true) in listOf(
+                    effectiveAssignment.getState(submission, true) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
                     ) || !submission.isGradeMatchesCurrentSubmission
+                        || submission.workflowState == Const.PENDING_REVIEW
                 } ?: false
             }
 
             viewCallback?.onRefreshFinished()
-            viewCallback?.onRouteSuccessfully(course, assignment, filteredSubmissions)
+            viewCallback?.onRouteSuccessfully(course, effectiveAssignment, filteredSubmissions)
 
         } catch {
             viewCallback?.onRefreshFinished()
