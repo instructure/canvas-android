@@ -16,11 +16,15 @@
 package com.instructure.horizon.features.learn.course.details
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,8 +34,11 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: CourseDetailsRepository
-) : ViewModel() {
+    private val repository: CourseRepository,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val state = _uiState.asStateFlow()
@@ -50,6 +57,14 @@ class CourseDetailsViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isError = true, isLoading = false)) }
         }
+    }
+
+    override fun onNetworkRestored() {
+        loadData()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level; no action needed here
     }
 
     suspend fun fetchData(forceRefresh: Boolean = false) {

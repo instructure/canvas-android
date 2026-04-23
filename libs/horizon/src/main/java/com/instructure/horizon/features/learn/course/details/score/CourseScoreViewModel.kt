@@ -17,14 +17,18 @@
 package com.instructure.horizon.features.learn.course.details.score
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.data.repository.CourseScoreRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +42,10 @@ import javax.inject.Inject
 class CourseScoreViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val courseScoreRepository: CourseScoreRepository,
-): ViewModel() {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(
         CourseScoreUiState(
@@ -75,10 +82,19 @@ class CourseScoreViewModel @Inject constructor(
         }
     }
 
+    override fun onNetworkRestored() {
+        if (uiState.value.courseId != -1L) refresh()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level; no action needed here
+    }
+
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
         val assignmentGroups = courseScoreRepository.getAssignmentGroups(courseId, forceRefresh)
         val assignmentGroupItems = assignmentGroups.map { AssignmentGroupScoreItem(it) }
         val enrollments = courseScoreRepository.getEnrollments(courseId, forceRefresh)
+        courseScoreRepository.saveScoreData(courseId, assignmentGroups, enrollments)
         val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
         assignments = assignmentGroups.flatMap { it.assignments }
         val sortedAssignments = sortAssignments()

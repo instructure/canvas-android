@@ -18,7 +18,6 @@ package com.instructure.horizon.features.learn.program.details
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
@@ -26,6 +25,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.data.repository.ProgramRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
@@ -38,8 +39,11 @@ import com.instructure.horizon.features.learn.program.details.components.Program
 import com.instructure.horizon.features.learn.program.details.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.sum
@@ -57,10 +61,13 @@ import kotlin.time.Duration
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val repository: ProgramDetailsRepository,
+    private val repository: ProgramRepository,
     private val dashboardEventHandler: DashboardEventHandler,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
 
@@ -303,6 +310,14 @@ class ProgramDetailsViewModel @Inject constructor(
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
             return (totalProgress / (courseCompletionCount * 100)) * 100
         }
+    }
+
+    override fun onNetworkRestored() {
+        loadData()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level; no action needed here
     }
 
     private fun refreshProgram() {

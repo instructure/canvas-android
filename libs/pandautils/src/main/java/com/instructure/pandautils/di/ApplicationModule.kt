@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
+import com.instructure.pandautils.features.offline.sync.OfflineHtmlParserFileSource
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
@@ -137,7 +138,8 @@ class ApplicationModule {
         fileSyncSettingsDao: FileSyncSettingsDao,
         fileFolderApi: FileFolderAPI.FilesFoldersInterface
     ): HtmlParser {
-        return HtmlParser(localFileDao, apiPrefs, fileFolderDao, context, fileSyncSettingsDao, fileFolderApi)
+        val fileSource = OfflineHtmlParserFileSource(localFileDao, fileFolderDao, fileSyncSettingsDao, fileFolderApi)
+        return HtmlParser(fileSource, apiPrefs, context)
     }
 
     @Provides

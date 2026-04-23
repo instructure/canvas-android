@@ -46,10 +46,10 @@ class DashboardViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val localeUtils: LocaleUtils = mockk(relaxed = true)
+    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
-    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val notificationCounts = listOf(

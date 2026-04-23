@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.room.Room
 import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import dagger.hilt.android.qualifiers.ApplicationContext
 import com.instructure.pandautils.features.about.AboutRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
@@ -70,8 +71,8 @@ import com.instructure.pandautils.utils.LogoutHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -101,6 +102,7 @@ object HorizonTestModule {
     }
 
     @Provides
+    @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
         return Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             .allowMainThreadQueries()

@@ -26,8 +26,8 @@ class ModuleItemNetworkDataSource @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
 ) {
 
-    suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
-        val params = RestParams(isForceReadFromNetwork = true)
+    suspend fun getNextModuleItemForCourse(courseId: Long, forceRefresh: Boolean): DashboardNextModuleItem? {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
         val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,

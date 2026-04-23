@@ -27,11 +27,14 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -60,6 +63,9 @@ class LearnLearningLibraryListViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
     private val repository: LearnLearningLibraryListRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyItemsResponse = LearningLibraryCollectionItemsResponse(
@@ -125,6 +131,7 @@ class LearnLearningLibraryListViewModelTest {
 
         coEvery { repository.getEnrolledLearningLibraries(any()) } returns testCollections
         coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns emptyItemsResponse
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
     }
 
     @After
@@ -306,11 +313,12 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `Refresh calls repository with forceNetwork true`() = runTest {
+    fun `Refresh re-fetches collections`() = runTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.collectionState.loadingState.onRefresh()
 
+        coVerify { repository.getEnrolledLearningLibraries(false) }
         coVerify { repository.getEnrolledLearningLibraries(true) }
     }
 
@@ -333,7 +341,7 @@ class LearnLearningLibraryListViewModelTest {
                 )
             )
         )
-        coEvery { repository.getEnrolledLearningLibraries(true) } returns updatedCollections
+        coEvery { repository.getEnrolledLearningLibraries(any()) } returns updatedCollections
 
         viewModel.uiState.value.collectionState.loadingState.onRefresh()
 
@@ -346,7 +354,7 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Refresh on error shows snackbar message`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getEnrolledLearningLibraries(true) } throws Exception("Network error")
+        coEvery { repository.getEnrolledLearningLibraries(any()) } throws Exception("Network error")
 
         viewModel.uiState.value.collectionState.loadingState.onRefresh()
 
@@ -358,7 +366,7 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Dismiss snackbar clears both collection and item snackbar messages`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getEnrolledLearningLibraries(true) } throws Exception("Network error")
+        coEvery { repository.getEnrolledLearningLibraries(any()) } throws Exception("Network error")
         viewModel.uiState.value.collectionState.loadingState.onRefresh()
 
         viewModel.uiState.value.collectionState.loadingState.onSnackbarDismiss()
@@ -676,7 +684,7 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `Items refresh calls repository with forceNetwork true`() = runTest {
+    fun `Items refresh re-fetches items`() = runTest {
         val viewModel = getViewModel()
         eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
             screenType = LearnLearningLibraryFilterScreenType.Browse,
@@ -686,6 +694,7 @@ class LearnLearningLibraryListViewModelTest {
 
         viewModel.uiState.value.itemState.loadingState.onRefresh()
 
+        coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), false) }
         coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) }
     }
 
@@ -695,7 +704,7 @@ class LearnLearningLibraryListViewModelTest {
         val refreshedItems = listOf(
             createTestCollectionItem(id = "item1", courseName = "Refreshed Course")
         )
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = refreshedItems,
             pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
@@ -711,7 +720,7 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Items refresh on error shows snackbar message`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) } throws Exception("Network error")
+        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
 
         viewModel.uiState.value.itemState.loadingState.onRefresh()
 
@@ -795,7 +804,7 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     private fun getViewModel(): LearnLearningLibraryListViewModel {
-        return LearnLearningLibraryListViewModel(resources, repository, eventHandler, apiPrefs)
+        return LearnLearningLibraryListViewModel(resources, repository, eventHandler, apiPrefs, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 
     private fun createTestCollection(

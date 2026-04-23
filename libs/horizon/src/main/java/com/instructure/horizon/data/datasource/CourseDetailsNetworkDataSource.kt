@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.course.details
+package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -25,24 +25,27 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class CourseDetailsRepository @Inject constructor(
+class CourseDetailsNetworkDataSource @Inject constructor(
     private val getCoursesManager: HorizonGetCoursesManager,
     private val getProgramsManager: GetProgramsManager,
     private val externalToolApi: ExternalToolAPI.ExternalToolInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
 ) {
-    suspend fun getCourse(courseId: Long, forceNetwork: Boolean): CourseWithProgress {
-        return getCoursesManager.getCourseWithProgressById(courseId, apiPrefs.user?.id ?: -1L, forceNetwork).dataOrThrow
+
+    suspend fun getCourse(courseId: Long, forceRefresh: Boolean): CourseWithProgress {
+        return getCoursesManager.getCourseWithProgressById(courseId, apiPrefs.user?.id ?: -1L, forceRefresh).dataOrThrow
     }
 
-    suspend fun getProgramsForCourse(courseId: Long, forceNetwork: Boolean): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork).filter { it.sortedRequirements.firstOrNull()?.courseId == courseId }
+    suspend fun getProgramsForCourse(courseId: Long, forceRefresh: Boolean): List<Program> {
+        return getProgramsManager.getPrograms(forceRefresh).filter {
+            it.sortedRequirements.firstOrNull()?.courseId == courseId
+        }
     }
 
-    suspend fun hasExternalTools(courseId: Long, forceNetwork: Boolean): Boolean {
+    suspend fun hasExternalTools(courseId: Long, forceRefresh: Boolean): Boolean {
         return externalToolApi.getExternalToolsForCourses(
             listOf(CanvasContext.emptyCourseContext(courseId).contextId),
-            RestParams(isForceReadFromNetwork = forceNetwork)
+            RestParams(isForceReadFromNetwork = forceRefresh)
         ).dataOrNull.orEmpty().isNotEmpty()
     }
 }

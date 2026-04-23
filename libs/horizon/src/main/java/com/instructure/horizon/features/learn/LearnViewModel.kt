@@ -15,10 +15,13 @@
  */
 package com.instructure.horizon.features.learn
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,7 +31,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnViewModel @Inject constructor(
     private val repository: LearnRepository,
-) : ViewModel() {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+
     private val _uiState = MutableStateFlow(LearnUiState(
         updateSelectedTab = ::updateSelectedTab,
         updateSelectedTabIndex = ::updateSelectedTabIndex,
@@ -37,10 +44,30 @@ class LearnViewModel @Inject constructor(
     val state = _uiState.asStateFlow()
 
     init {
+        loadBrowseTab()
+    }
+
+    override fun onNetworkRestored() {
+        loadBrowseTab()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level; no action needed here
+    }
+
+    private fun loadBrowseTab() {
         viewModelScope.tryLaunch {
-            val enrolledLearningLibraries = repository.getEnrolledLearningLibraries(false)
-            if (enrolledLearningLibraries.isNotEmpty()) {
-                _uiState.update { it.copy(tabs = it.tabs + LearnTab.BROWSE) }
+            val enrolledLearningLibraries = repository.getEnrolledLearningLibraries()
+            val hasBrowseTab = enrolledLearningLibraries.isNotEmpty()
+            _uiState.update { current ->
+                val tabs = if (hasBrowseTab && LearnTab.BROWSE !in current.tabs) {
+                    current.tabs + LearnTab.BROWSE
+                } else if (!hasBrowseTab) {
+                    current.tabs - LearnTab.BROWSE
+                } else {
+                    current.tabs
+                }
+                current.copy(tabs = tabs)
             }
         } catch { }
     }

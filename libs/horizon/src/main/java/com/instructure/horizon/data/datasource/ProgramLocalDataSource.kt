@@ -17,16 +17,16 @@ package com.instructure.horizon.data.datasource
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.database.dao.HorizonDashboardProgramDao
-import com.instructure.horizon.database.entity.HorizonDashboardProgramCourseRef
-import com.instructure.horizon.database.entity.HorizonDashboardProgramEntity
+import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.entity.HorizonProgramCourseRef
+import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import java.util.Date
 import javax.inject.Inject
 
 class ProgramLocalDataSource @Inject constructor(
-    private val programDao: HorizonDashboardProgramDao,
+    private val programDao: HorizonProgramDao,
 ) {
 
     suspend fun getPrograms(): List<Program> {
@@ -34,7 +34,7 @@ class ProgramLocalDataSource @Inject constructor(
             val refs = programDao.getRefsForProgram(programEntity.programId)
             Program(
                 id = programEntity.programId,
-                name = programEntity.programName,
+                name = programEntity.name,
                 description = programEntity.description,
                 startDate = programEntity.startDateMs?.let { Date(it) },
                 endDate = programEntity.endDateMs?.let { Date(it) },
@@ -58,21 +58,26 @@ class ProgramLocalDataSource @Inject constructor(
 
     suspend fun savePrograms(programs: List<Program>, enrolledCourseIds: Set<Long>) {
         val programEntities = programs.map { program ->
-            HorizonDashboardProgramEntity(
+            HorizonProgramEntity(
                 programId = program.id,
-                programName = program.name,
+                name = program.name,
                 description = program.description,
                 startDateMs = program.startDate?.time,
                 endDateMs = program.endDate?.time,
                 variant = program.variant.rawValue,
+                estimatedDurationMinutes = null,
+                courseCount = program.sortedRequirements.size,
                 courseCompletionCount = program.courseCompletionCount,
+                enrolledAtMs = null,
+                completionPercentage = null,
+                enrollmentStatus = null,
             )
         }
         val refs = programs.flatMap { program ->
             program.sortedRequirements
                 .filter { it.courseId in enrolledCourseIds }
                 .mapIndexed { index, req ->
-                    HorizonDashboardProgramCourseRef(
+                    HorizonProgramCourseRef(
                         programId = program.id,
                         courseId = req.courseId,
                         requirementId = req.id,

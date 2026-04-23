@@ -20,9 +20,14 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
+import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
@@ -39,7 +44,10 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CourseDetailsViewModelTest {
-    private val repository: CourseDetailsRepository = mockk(relaxed = true)
+    private val repository: CourseRepository = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourseId = 123L
@@ -66,6 +74,8 @@ class CourseDetailsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
         coEvery { repository.getCourse(any(), any()) } returns testCourse
         coEvery { repository.getProgramsForCourse(any(), any()) } returns testPrograms
         coEvery { repository.hasExternalTools(any(), any()) } returns false
@@ -211,7 +221,7 @@ class CourseDetailsViewModelTest {
     @Test
     fun `Invalid course ID defaults to -1`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = CourseDetailsViewModel(savedStateHandle, repository)
+        val viewModel = CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
 
         coVerify { repository.getCourse(-1L, any()) }
     }
@@ -240,6 +250,6 @@ class CourseDetailsViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf(
             LearnRoute.LearnCourseDetailsScreen.courseIdAttr to courseId
         ))
-        return CourseDetailsViewModel(savedStateHandle, repository)
+        return CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 }
