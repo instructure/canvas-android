@@ -18,14 +18,22 @@ package com.instructure.horizon.features.moduleitemsequence.content.page
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetPageDetailsUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.redwood.type.LearningObjectFilter
+import com.instructure.redwood.type.NoteFilterInput
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,8 +43,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PageDetailsViewModel @Inject constructor(
-    private val pageDetailsRepository: PageDetailsRepository,
+    private val getPageDetailsUseCase: GetPageDetailsUseCase,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val oAuthApi: OAuthAPI.OAuthInterface,
+    private val redwoodApi: RedwoodApiManager,
     private val addNoteRepository: AddNoteRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -63,10 +73,20 @@ class PageDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
-            val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
+            val pageDetails = getPageDetailsUseCase(GetPageDetailsUseCase.Params(courseId, pageUrl))
             val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty(), courseId)
-            val notes = try { // We don't want to fail the page load if fetching notes fails
-                pageDetailsRepository.getNotes(courseId, pageDetails.id)
+            val notes = try {
+                redwoodApi.getNotes(
+                    filter = NoteFilterInput(
+                        courseId = Optional.present(courseId.toString()),
+                        learningObject = Optional.present(LearningObjectFilter(
+                            type = "Page",
+                            id = pageDetails.id.toString()
+                        )),
+                    ),
+                    firstN = null,
+                    after = null,
+                ).mapToNotes()
             } catch (e: Exception) {
                 emptyList()
             }
@@ -79,9 +99,6 @@ class PageDetailsViewModel @Inject constructor(
                     pageUrl = pageUrl
                 )
             }
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false))
-            }
         } catch {
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
@@ -91,17 +108,28 @@ class PageDetailsViewModel @Inject constructor(
 
     fun refreshNotes() {
         viewModelScope.tryLaunch {
-            val notes = pageDetailsRepository.getNotes(uiState.value.courseId, uiState.value.pageId)
+            val notes = redwoodApi.getNotes(
+                filter = NoteFilterInput(
+                    courseId = Optional.present(uiState.value.courseId.toString()),
+                    learningObject = Optional.present(LearningObjectFilter(
+                        type = "Page",
+                        id = uiState.value.pageId.toString()
+                    )),
+                ),
+                firstN = null,
+                after = null,
+            ).mapToNotes()
             _uiState.update { it.copy(notes = notes) }
-        } catch {  }
+        } catch { }
     }
 
     private fun ltiButtonPressed(ltiUrl: String) {
         viewModelScope.launch {
             try {
-                val authenticatedSessionURL =
-                    pageDetailsRepository.authenticateUrl(ltiUrl)
-
+                val authenticatedSessionURL = oAuthApi.getAuthenticatedSession(
+                    ltiUrl,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull?.sessionUrl ?: ltiUrl
                 _uiState.update { it.copy(urlToOpen = authenticatedSessionURL) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(urlToOpen = ltiUrl) }
