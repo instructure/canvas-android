@@ -97,9 +97,9 @@ android {
     }
 }
 
-configurations {
-    all*.exclude group: 'commons-logging', module: 'commons-logging'
-    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+configurations.configureEach {
+    exclude group: 'commons-logging', module: 'commons-logging'
+    exclude group: 'org.apache.httpcomponents', module: 'httpclient'
 }
 
 dependencies {

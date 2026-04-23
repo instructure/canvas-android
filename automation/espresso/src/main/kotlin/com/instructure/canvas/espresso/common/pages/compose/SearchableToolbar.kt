@@ -18,29 +18,33 @@ package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onFirst
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 
 class SearchableToolbar(private val composeTestRule: ComposeTestRule) {
     fun clickOnSearchButton() {
-        composeTestRule.onAllNodesWithTag("searchButton").onFirst()
+        composeTestRule.onAllNodesWithTag("searchButton").onLast()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun typeToSearchBar(textToType: String) {
-        composeTestRule.onAllNodesWithTag("searchField").onFirst()
+        composeTestRule.onAllNodesWithTag("searchField").onLast()
             .performClick()
             .performTextReplacement(textToType)
+        composeTestRule.waitForIdle()
     }
 
     fun clickOnClearSearchButton() {
-        composeTestRule.onAllNodesWithTag("clearButton").onFirst()
+        composeTestRule.onAllNodesWithTag("clearButton").onLast()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun pressSearchBarButton() {
-        composeTestRule.onAllNodesWithTag("closeButton").onFirst()
+        composeTestRule.onAllNodesWithTag("closeButton").onLast()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 }

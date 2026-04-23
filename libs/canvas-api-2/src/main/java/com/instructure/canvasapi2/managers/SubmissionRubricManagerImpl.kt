@@ -44,11 +44,13 @@ class SubmissionRubricManagerImpl(private val apolloClient: ApolloClient) : Subm
         }
 
         return data.copy(
-            submission = data.submission?.copy(
-                rubricAssessmentsConnection = data.submission?.rubricAssessmentsConnection?.copy(
-                    edges = assessments
+            submission = data.submission?.let { submission ->
+                submission.copy(
+                    rubricAssessmentsConnection = submission.rubricAssessmentsConnection.copy(
+                        edges = assessments
+                    )
                 )
-            )
+            }
         )
     }
 }

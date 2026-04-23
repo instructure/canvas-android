@@ -199,6 +199,7 @@ object Libs {
     const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
     const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"
     const val COMPOSE_REORDERABLE = "sh.calvin.reorderable:reorderable:${Versions.REORDERABLE}"
+    const val COMPOSE_FOUNDATION = "androidx.compose.foundation:foundation"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"

@@ -80,6 +80,7 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickAddReminder() {
         composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
@@ -92,6 +93,7 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
                     hasAnySibling(hasText(text))
                 )
         ).performClick()
+        composeTestRule.waitForIdle()
         Thread.sleep(1000)
         onView(withText(R.string.yes)).scrollTo().click()
     }
