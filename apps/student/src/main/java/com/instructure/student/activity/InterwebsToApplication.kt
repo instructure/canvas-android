@@ -36,7 +36,10 @@ import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.horizon.HorizonActivity
+import com.instructure.ngc.NGCActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -212,7 +215,12 @@ class InterwebsToApplication : BaseCanvasActivity() {
                 return@tryWeave
             } else {
                 delay(700)
-                if (ApiPrefs.canvasCareerView.orDefault()) {
+                if (RemoteConfigUtils.getBoolean(RemoteConfigParam.NEXT_GEN_CANVAS)) {
+                    val intent = Intent(this@InterwebsToApplication, NGCActivity::class.java)
+                    intent.data = Uri.parse(url)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else if (ApiPrefs.canvasCareerView.orDefault()) {
                     val intent = Intent(this@InterwebsToApplication, HorizonActivity::class.java)
                     intent.data = Uri.parse(url)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

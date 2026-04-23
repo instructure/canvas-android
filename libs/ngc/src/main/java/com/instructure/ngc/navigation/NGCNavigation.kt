@@ -29,6 +29,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.models.Course
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.ngc.features.coursehome.CourseHomeScreen
@@ -43,7 +44,7 @@ import kotlinx.serialization.Serializable
 sealed class NGCNavigationRoute(val route: String) {
     data object Splash : NGCNavigationRoute("splash")
     data object Dashboard : NGCNavigationRoute("dashboard")
-    data object CourseHome : NGCNavigationRoute("courseHome/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
+    data object CourseHome : NGCNavigationRoute("courses/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
         fun createRoute(courseId: Long) = "courses/$courseId"
     }
 }
@@ -80,6 +81,12 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             route = NGCNavigationRoute.CourseHome.route,
             arguments = listOf(
                 navArgument(CourseHomeViewModel.ARG_COURSE_ID) { type = NavType.LongType }
+            ),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "https://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "http://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "canvas-courses://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "canvas-student://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
             )
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(CourseHomeViewModel.ARG_COURSE_ID) ?: 0L
