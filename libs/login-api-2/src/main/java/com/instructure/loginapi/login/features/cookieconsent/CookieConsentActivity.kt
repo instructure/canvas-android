@@ -24,6 +24,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.instructure.pandautils.base.BaseCanvasActivity
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.cookieconsent.CookieConsentContent
 import com.instructure.pandautils.features.cookieconsent.CookieConsentViewModel
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
@@ -46,8 +47,10 @@ class CookieConsentActivity : BaseCanvasActivity() {
         viewModel.checkAndShowIfNeeded()
 
         setContent {
-            val uiState by viewModel.uiState.collectAsState()
-            CookieConsentContent(uiState = uiState)
+            CanvasTheme {
+                val uiState by viewModel.uiState.collectAsState()
+                CookieConsentContent(uiState = uiState)
+            }
         }
 
         lifecycleScope.launch {

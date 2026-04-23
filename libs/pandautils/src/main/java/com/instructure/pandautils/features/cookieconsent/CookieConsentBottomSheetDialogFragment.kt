@@ -19,6 +19,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
@@ -44,7 +46,7 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isCancelable = false
+        isCancelable = fromSettings
     }
 
     override fun onCreateView(
@@ -78,7 +80,7 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
                 viewModel.uiState.collect { state ->
                     state.consentResult?.let {
                         state.onConsentResultHandled()
-                        dismiss()
+                        dismissAllowingStateLoss()
                     }
                 }
             }
@@ -86,15 +88,20 @@ class CookieConsentBottomSheetDialogFragment : BaseCanvasBottomSheetDialogFragme
     }
 
     private fun expandBottomSheet(view: View) {
-        view.viewTreeObserver.addOnGlobalLayoutListener {
-            val dialog = dialog as? BottomSheetDialog ?: return@addOnGlobalLayoutListener
-            val bottomSheet = dialog.findViewById<FrameLayout>(
-                com.google.android.material.R.id.design_bottom_sheet
-            ) ?: return@addOnGlobalLayoutListener
-            val behavior = BottomSheetBehavior.from(bottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            behavior.peekHeight = 0
+        val listener = object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val dialog = dialog as? BottomSheetDialog ?: return
+                val bottomSheet = dialog.findViewById<FrameLayout>(
+                    R.id.design_bottom_sheet
+                ) ?: return
+                val behavior = BottomSheetBehavior.from(bottomSheet)
+                behavior.skipCollapsed = true
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.peekHeight = 0
+            }
         }
+        view.viewTreeObserver.addOnGlobalLayoutListener(listener)
     }
 
     companion object {
