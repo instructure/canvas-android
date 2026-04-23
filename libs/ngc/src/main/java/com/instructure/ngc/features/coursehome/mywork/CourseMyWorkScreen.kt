@@ -14,13 +14,20 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.splash
+package com.instructure.ngc.features.coursehome.mywork
 
-import com.instructure.canvasapi2.models.CanvasTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.instructure.instui.compose.text.Text
 
-data class SplashUiState(
-    val loading: Boolean = true,
-    val error: Boolean = false,
-    val initialDataLoaded: Boolean = false,
-    val themeToApply: CanvasTheme? = null
-)
+@Composable
+fun CourseMyWorkScreen(modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier.fillMaxSize()) {
+        // Placeholder — content will be added in a future ticket
+        item {
+            Text("Course My Work content coming soon!")
+        }
+    }
+}

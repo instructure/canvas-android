@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.coursehome
+package com.instructure.ngc.features.coursehome
 
 data class CourseHomeUiState(
     val courseName: String = "",

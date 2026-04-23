@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.splash
+package com.instructure.ngc.features.splash
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

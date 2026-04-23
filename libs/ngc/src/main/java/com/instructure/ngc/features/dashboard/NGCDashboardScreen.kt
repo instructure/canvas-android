@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.ngc.dashboard
+package com.instructure.ngc.features.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

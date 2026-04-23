@@ -31,11 +31,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.instructure.canvasapi2.models.Course
 import com.instructure.instui.compose.InstUITheme
-import com.instructure.ngc.coursehome.CourseHomeScreen
-import com.instructure.ngc.coursehome.CourseHomeViewModel
-import com.instructure.ngc.dashboard.NGCDashboardScreen
-import com.instructure.ngc.splash.SplashScreen
-import com.instructure.ngc.splash.SplashViewModel
+import com.instructure.ngc.features.coursehome.CourseHomeScreen
+import com.instructure.ngc.features.coursehome.CourseHomeViewModel
+import com.instructure.ngc.features.dashboard.NGCDashboardScreen
+import com.instructure.ngc.features.splash.SplashScreen
+import com.instructure.ngc.features.splash.SplashViewModel
 import com.instructure.pandautils.utils.ColorKeeper
 import kotlinx.serialization.Serializable
 
@@ -44,7 +44,7 @@ sealed class NGCNavigationRoute(val route: String) {
     data object Splash : NGCNavigationRoute("splash")
     data object Dashboard : NGCNavigationRoute("dashboard")
     data object CourseHome : NGCNavigationRoute("courseHome/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
-        fun createRoute(courseId: Long) = "courseHome/$courseId"
+        fun createRoute(courseId: Long) = "courses/$courseId"
     }
 }
 

@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.splash
+package com.instructure.ngc.features.splash
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

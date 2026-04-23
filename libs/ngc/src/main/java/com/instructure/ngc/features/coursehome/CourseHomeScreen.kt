@@ -14,8 +14,9 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.coursehome
+package com.instructure.ngc.features.coursehome
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +24,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import com.instructure.ngc.features.coursehome.modules.CourseModulesScreen
+import com.instructure.ngc.features.coursehome.mywork.CourseMyWorkScreen
+import com.instructure.ngc.features.coursehome.navigation.CourseNavigationScreen
+import com.instructure.ngc.features.coursehome.overview.CourseOverviewScreen
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -48,7 +52,6 @@ import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.navigation.CollapsingTopBar
 import com.instructure.instui.compose.navigation.SegmentedControl
 import com.instructure.instui.token.semantic.InstUILayoutSizes
-import com.instructure.instui.token.semantic.InstUISemanticColors
 
 private val TAB_LABELS = listOf("Home", "Modules", "My Work", "More")
 
@@ -80,7 +83,7 @@ fun CourseHomeScreenContent(
     val view = LocalView.current
     val lightStatusBar = collapsedFraction < 0.5f
     SideEffect {
-        val window = (view.context as? android.app.Activity)?.window ?: return@SideEffect
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
         WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = lightStatusBar
     }
 
@@ -112,11 +115,11 @@ fun CourseHomeScreenContent(
                 modifier = Modifier.fillMaxWidth(),
             )
 
-            // Tab content — scrollable so the collapsing toolbar works
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                // Placeholder — future tickets will fill each tab's content
+            when (uiState.selectedTab) {
+                CourseHomeTab.HOME -> CourseOverviewScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }

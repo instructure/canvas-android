@@ -18,6 +18,8 @@ package com.instructure.ngc.coursehome
 
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Course
+import com.instructure.ngc.features.coursehome.CourseHomeTab
+import com.instructure.ngc.features.coursehome.CourseHomeViewModel
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
