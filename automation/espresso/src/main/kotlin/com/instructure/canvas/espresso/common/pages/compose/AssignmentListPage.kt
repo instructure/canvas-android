@@ -119,11 +119,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignmentName, dueAtString, dueAtStringSecondCheckpoint, expectedGrade, hasCheckPoints = true)
     }
 
-    fun assertAssignmentDisplayed(assignmentName: String) {
-        composeTestRule.onNodeWithTag("assignmentList")
-            .performScrollToNode(hasText(assignmentName))
-        composeTestRule.onNodeWithText(assignmentName)
-            .assertIsDisplayed()
+    fun assertHasAssignment(assignmentName: String, dueAtString: String, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGradeLabel = expectedGrade)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {

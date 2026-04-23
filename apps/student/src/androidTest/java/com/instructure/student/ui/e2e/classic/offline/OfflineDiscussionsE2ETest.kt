@@ -379,8 +379,8 @@ class OfflineDiscussionsE2ETest : StudentComposeTest() {
         assignmentListPage.assertHasAssignmentWithCheckpoints(discussionTitle, dueAtString = checkpointTopicDueDateForList, dueAtStringSecondCheckpoint = checkpointEntryDueDateForList, expectedGrade = "-/15")
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoint sub-items are displayed as separate assignment rows (visible because Syllabus was synced).")
-        assignmentListPage.assertAssignmentDisplayed("$discussionTitle Reply to Topic")
-        assignmentListPage.assertAssignmentDisplayed("$discussionTitle Required Replies (2)")
+        assignmentListPage.assertHasAssignment("$discussionTitle Reply to Topic", replyToTopicDueDate, "-/10")
+        assignmentListPage.assertHasAssignment("$discussionTitle Required Replies (2)", replyToEntryDueDate, "-/5")
 
         Log.d(STEP_TAG, "Click on the expand icon for the '$discussionTitle' discussion to see the checkpoints' details.")
         assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionTitle)
