@@ -75,7 +75,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `checkAndShowIfNeeded shows dialog when flag enabled and consent is null`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
 
@@ -90,7 +90,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `checkAndShowIfNeeded skips dialog when flag disabled`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = false, consent = null
         )
 
@@ -105,7 +105,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `checkAndShowIfNeeded skips dialog when consent already given`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = true
         )
 
@@ -120,7 +120,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `checkAndShowIfNeeded skips dialog when consent already declined`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = false
         )
 
@@ -135,7 +135,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `checkAndShowIfNeeded handles exception by skipping dialog`() {
-        coEvery { getCookieConsentUseCase(any()) } throws RuntimeException("Network error")
+        coEvery { getCookieConsentUseCase(Unit) } throws RuntimeException("Network error")
 
         val viewModel = createViewModel()
         viewModel.checkAndShowIfNeeded()
@@ -147,8 +147,8 @@ class CookieConsentViewModelTest {
     }
 
     @Test
-    fun `checkAndShowIfNeeded passes correct namespace to use case`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+    fun `checkAndShowIfNeeded invokes use case`() {
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = false, consent = null
         )
 
@@ -170,7 +170,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `onAllow submits consent true and sets consent result`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
 
@@ -199,7 +199,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `onDecline submits consent false and sets consent result`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
 
@@ -218,10 +218,10 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `submit consent shows error message on failure`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
-        coEvery { setCookieConsentUseCase(any()) } throws RuntimeException("Save failed")
+        coEvery { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) } throws RuntimeException("Save failed")
 
         val viewModel = createViewModel()
         viewModel.checkAndShowIfNeeded()
@@ -236,10 +236,10 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `submit consent shows default error message when exception has no message`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
-        coEvery { setCookieConsentUseCase(any()) } throws RuntimeException()
+        coEvery { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) } throws RuntimeException()
 
         val viewModel = createViewModel()
         viewModel.checkAndShowIfNeeded()
@@ -251,10 +251,10 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `onErrorDismissed clears error message`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
         )
-        coEvery { setCookieConsentUseCase(any()) } throws RuntimeException("Error")
+        coEvery { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) } throws RuntimeException("Error")
 
         val viewModel = createViewModel()
         viewModel.checkAndShowIfNeeded()
@@ -267,7 +267,7 @@ class CookieConsentViewModelTest {
 
     @Test
     fun `onConsentResultHandled clears consent result`() {
-        coEvery { getCookieConsentUseCase(any()) } returns GetCookieConsentUseCase.Result(
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = false, consent = null
         )
 
@@ -288,4 +288,3 @@ class CookieConsentViewModelTest {
         )
     }
 }
-
