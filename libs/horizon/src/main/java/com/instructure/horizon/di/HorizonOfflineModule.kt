@@ -19,12 +19,8 @@ import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.database.HorizonDatabase
 import com.instructure.horizon.database.HorizonDatabaseProvider
-import com.instructure.horizon.offline.HorizonHtmlParserFileSource
-import com.instructure.pandautils.features.offline.sync.HtmlParser
-import dagger.hilt.android.qualifiers.ApplicationContext
 import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
 import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
-import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonCourseScoreDao
@@ -37,10 +33,14 @@ import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.offline.HorizonHtmlParserFileSource
+import com.instructure.pandautils.features.offline.sync.HtmlParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
 @Module
