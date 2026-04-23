@@ -32,7 +32,6 @@ abstract class AnalyticsConsentHandler(
 ) {
 
     fun onConsentGranted(fromSettings: Boolean) {
-        onTrackingEnabled()
         if (fromSettings) {
             GlobalScope.launch { startPendoSession() }
         }
@@ -40,12 +39,7 @@ abstract class AnalyticsConsentHandler(
 
     fun onConsentRevoked() {
         Pendo.endSession()
-        onTrackingDisabled()
     }
-
-    protected open fun onTrackingEnabled() = Unit
-
-    protected open fun onTrackingDisabled() = Unit
 
     protected open suspend fun beforeStartPendoSession() = Unit
 
