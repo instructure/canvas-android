@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.layout.windowInsetsStartWidth
@@ -60,11 +59,9 @@ fun HorizonEdgeToEdgeSystemBars(
     content: @Composable (statusBarWindowInsets: WindowInsets, navigationBarWindowInsets: WindowInsets) -> Unit
 ) {
     val statusBarWindowsInsets = if (statusBarColor != null) {
-        WindowInsets.statusBars.union(
-            WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
-        )
+        WindowInsets.statusBars
     } else {
-        WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+        WindowInsets.zeroScreenInsets
     }
 
     val navigationBarWindowsInsets = if (navigationBarColor != null) {

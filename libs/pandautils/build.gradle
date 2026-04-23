@@ -107,15 +107,16 @@ tasks.withType(Test) {
     android.sourceSets.main.res.srcDirs += 'src/test/res'
 }
 
-configurations {
-    all*.exclude group: 'commons-logging', module: 'commons-logging'
-    all*.exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    androidTestImplementation.exclude module:'protobuf-lite'
-
-    all*.resolutionStrategy {
-        force Libs.KOTLIN_STD_LIB
+configurations.configureEach {
+    exclude group: 'commons-logging', module: 'commons-logging'
+    exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    if (canBeResolved) {
+        resolutionStrategy {
+            force Libs.KOTLIN_STD_LIB
+        }
     }
 }
+configurations.androidTestImplementation.exclude module:'protobuf-lite'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

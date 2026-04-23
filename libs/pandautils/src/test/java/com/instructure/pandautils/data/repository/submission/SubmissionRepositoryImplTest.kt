@@ -187,30 +187,30 @@ class SubmissionRepositoryImplTest {
     }
 
     @Test
-    fun `getRecentGradedSubmissions skips submissions without assignment`() = runTest {
+    fun `getRecentGradedSubmissions maps multiple submissions correctly`() = runTest {
         val assignment = mockk<RecentGradedSubmissionsQuery.Assignment>(relaxed = true) {
             coEvery { _id } returns "100"
             coEvery { name } returns "Test Assignment"
         }
 
-        val submissionWithAssignment = mockk<RecentGradedSubmissionsQuery.Node>(relaxed = true) {
+        val submission1 = mockk<RecentGradedSubmissionsQuery.Node>(relaxed = true) {
             coEvery { _id } returns "1"
             coEvery { gradeHidden } returns false
             coEvery { this@mockk.assignment } returns assignment
         }
 
-        val submissionWithoutAssignment = mockk<RecentGradedSubmissionsQuery.Node>(relaxed = true) {
+        val submission2 = mockk<RecentGradedSubmissionsQuery.Node>(relaxed = true) {
             coEvery { _id } returns "2"
             coEvery { gradeHidden } returns false
-            coEvery { this@mockk.assignment } returns null
+            coEvery { this@mockk.assignment } returns assignment
         }
 
         val edge1 = mockk<RecentGradedSubmissionsQuery.Edge>(relaxed = true) {
-            coEvery { node } returns submissionWithAssignment
+            coEvery { node } returns submission1
         }
 
         val edge2 = mockk<RecentGradedSubmissionsQuery.Edge>(relaxed = true) {
-            coEvery { node } returns submissionWithoutAssignment
+            coEvery { node } returns submission2
         }
 
         val submissions = mockk<RecentGradedSubmissionsQuery.Submissions>(relaxed = true) {
@@ -233,8 +233,9 @@ class SubmissionRepositoryImplTest {
 
         assertTrue(result is DataResult.Success)
         val successResult = result as DataResult.Success
-        assertEquals(1, successResult.data.size)
+        assertEquals(2, successResult.data.size)
         assertEquals(1L, successResult.data[0].submissionId)
+        assertEquals(2L, successResult.data[1].submissionId)
     }
 
     @Test

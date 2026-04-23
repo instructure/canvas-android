@@ -24,13 +24,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
-import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
@@ -83,8 +85,8 @@ class CoursesWidgetViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
-    private val loadCourseUseCase: LoadCourseUseCase = mockk()
-    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase = mockk()
+    private val loadSingleCourseUseCase: LoadSingleCourseUseCase = mockk()
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
     private val courseDao: CourseDao = mockk()
@@ -105,6 +107,7 @@ class CoursesWidgetViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any<Course>()) } returns ThemedColor(0xFF0000, 0xFF0000)
         every { ColorKeeper.getOrGenerateColor(any<Group>()) } returns ThemedColor(0x00FF00, 0x00FF00)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0xFF0000, 0xFF0000)
     }
 
     @After
@@ -115,13 +118,18 @@ class CoursesWidgetViewModelTest {
 
     private fun visibleCoursesResult(
         visibleCourses: List<Course> = emptyList(),
-        allCourses: List<Course> = visibleCourses
-    ) = LoadVisibleCoursesUseCase.Result(visibleCourses = visibleCourses, allCourses = allCourses)
+        allCourses: List<Course> = visibleCourses,
+        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
+    ) = LoadVisibleCoursesUseCase.Result(
+        visibleCourses = visibleCourses,
+        allCourses = allCourses,
+        announcementsMap = announcementsMap
+    )
 
     private fun setupDefaultMocks() {
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
         every { sectionExpandedStateDataStore.observeGroupsExpanded() } returns flowOf(true)
         every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
@@ -414,7 +422,6 @@ class CoursesWidgetViewModelTest {
         )
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(parentCourse))
         coEvery { loadGroupsUseCase(any()) } returns groups
-        coEvery { loadCourseUseCase(any()) } returns parentCourse
 
         viewModel = createViewModel()
 
@@ -619,24 +626,25 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `init loads announcements for each course`() {
+    fun `init loads announcements from graphql result`() {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val announcements1 = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+            mockk<DiscussionTopicHeader>(relaxed = true)
         )
         val announcements2 = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true),
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+            mockk<DiscussionTopicHeader>(relaxed = true),
+            mockk<DiscussionTopicHeader>(relaxed = true)
         )
+        val announcementsMap = mapOf(1L to announcements1, 2L to announcements2)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } returns announcements1
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns announcements2
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
+            courses,
+            announcementsMap = announcementsMap
+        )
 
         viewModel = createViewModel()
 
@@ -646,17 +654,14 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `init handles announcement loading failure gracefully`() {
+    fun `init shows empty announcements when none are unread`() {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
-        val exception = Exception("Failed to load announcements")
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } throws exception
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns emptyList()
 
         viewModel = createViewModel()
 
@@ -664,7 +669,6 @@ class CoursesWidgetViewModelTest {
         assertFalse(state.isError)
         assertEquals(0, state.courses[0].announcements.size)
         assertEquals(0, state.courses[1].announcements.size)
-        verify { crashlytics.recordException(exception) }
     }
 
     @Test
@@ -673,11 +677,13 @@ class CoursesWidgetViewModelTest {
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val announcement = mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+        val announcement = mockk<DiscussionTopicHeader>(relaxed = true)
         val announcements = listOf(announcement)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
+            courses,
+            announcementsMap = mapOf(1L to announcements)
+        )
 
         viewModel = createViewModel()
 
@@ -779,13 +785,9 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
-        val announcements = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
-        )
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } returns updatedCourse
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
 
         viewModel = createViewModel()
 
@@ -797,8 +799,7 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        coVerify(exactly = 1) { loadCourseUseCase(match { it.courseId == 1L && it.forceNetwork }) }
-        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(match { it.courseId == 1L && it.forceNetwork }) }
+        coVerify(exactly = 1) { loadSingleCourseUseCase(match { it.courseId == 1L }) }
 
         val state = viewModel.uiState.value
         assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
@@ -830,17 +831,15 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `reloadCourse handles announcement loading failure`() {
+    fun `reloadCourse handles failure gracefully`() {
         setupDefaultMocks()
         val initialCourses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
-        val exception = Exception("Failed to load announcements")
+        val exception = Exception("Failed to reload course")
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } returns updatedCourse
-        coEvery { loadCourseAnnouncementsUseCase(any()) } throws exception
+        coEvery { loadSingleCourseUseCase(any()) } throws exception
 
         viewModel = createViewModel()
 
@@ -853,21 +852,47 @@ class CoursesWidgetViewModelTest {
         receiverSlot.captured.onReceive(mockk(), intent)
 
         verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `reloadCourse preserves existing announcements`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
+
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
         val state = viewModel.uiState.value
         assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
         assertEquals(0, state.courses.find { it.id == 1L }?.announcements?.size)
     }
 
     @Test
-    fun `reloadCourse handles course loading failure gracefully`() {
+    fun `reloadCourse applies nickname from dashboard card`() {
         setupDefaultMocks()
         val initialCourses = listOf(
-            Course(id = 1, name = "Course 1", isFavorite = true)
+            Course(id = 1, name = "Original Name", isFavorite = true)
         )
-        val exception = Exception("Failed to load course")
+        val updatedCourse = Course(id = 1, name = "Original Name", isFavorite = true)
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } throws exception
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(
+            DashboardCard(id = 1, shortName = "My Nickname", position = 0)
+        )
 
         viewModel = createViewModel()
 
@@ -879,7 +904,8 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        verify { crashlytics.recordException(exception) }
+        val state = viewModel.uiState.value
+        assertEquals("My Nickname", state.courses.find { it.id == 1L }?.name)
     }
 
     @Test
@@ -1158,8 +1184,8 @@ class CoursesWidgetViewModelTest {
         return CoursesWidgetViewModel(
             loadVisibleCoursesUseCase = loadVisibleCoursesUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
-            loadCourseUseCase = loadCourseUseCase,
-            loadCourseAnnouncementsUseCase = loadCourseAnnouncementsUseCase,
+            loadSingleCourseUseCase = loadSingleCourseUseCase,
+            loadDashboardCardsUseCase = loadDashboardCardsUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             courseSyncSettingsDao = courseSyncSettingsDao,
             courseDao = courseDao,

@@ -63,6 +63,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         composeTestRule.onNodeWithText(assignment.name)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickAssignment(assignment: Assignment) {
@@ -91,6 +92,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         composeTestRule.onNodeWithText(quiz.title)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertDisplaysNoAssignmentsView() {
@@ -147,6 +149,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickDiscussionCheckpointExpandCollapseIcon(discussionTitle: String) {
@@ -268,32 +271,35 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertGradingPeriodLabel(gradingPeriodName: String? = null) {
         composeTestRule.onNode(
-            hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
+            hasContentDescription("Grading Period: ${gradingPeriodName ?: "All"}")
         )
         .assertIsDisplayed()
     }
 
     fun assertGradingPeriodLabelDoesNotExist(gradingPeriodName: String? = null) {
         composeTestRule.onNode(
-            hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
+            hasContentDescription("Grading Period: ${gradingPeriodName ?: "All"}")
         )
             .assertDoesNotExistWithTimeout(5)
     }
 
     private fun clickFilterMenu() {
         composeTestRule.onNodeWithContentDescription("Filter Assignments").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun filterAssignments(groupName: String, option: FilterOption) {
         clickFilterMenu()
         selectFilterOption(groupName, option)
         composeTestRule.onNodeWithText("Done").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun groupByAssignments(option: GroupByOption) {
         clickFilterMenu()
         selectGroupByOption("Grouped By", option)
         composeTestRule.onNodeWithText("Done").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertPublishedState(assignmentName: String, published: Boolean) {
@@ -326,7 +332,9 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             hasText(filterText).and(hasParent(hasParent(hasAnyDescendant(hasText(groupName))))),
             useUnmergedTree = true
         )
-        .performClick()
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
     }
 
     private fun selectGroupByOption(groupName: String, option: GroupByOption) {
@@ -340,6 +348,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             useUnmergedTree = true
         )
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     private fun String?.toDate(): Date? {
