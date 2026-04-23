@@ -19,7 +19,8 @@ package com.instructure.ngc.coursehome
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseHomeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val loadSingleCourseUseCase: LoadSingleCourseUseCase,
+    private val loadCourseUseCase: LoadCourseUseCase
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle.get<Long>(ARG_COURSE_ID) ?: 0L
@@ -50,8 +51,8 @@ class CourseHomeViewModel @Inject constructor(
     private fun loadCourse() {
         viewModelScope.launch {
             try {
-                val course = loadSingleCourseUseCase(
-                    LoadSingleCourseUseCase.Params(courseId = courseId)
+                val course = loadCourseUseCase(
+                    LoadCourseUseCaseParams(courseId, false)
                 )
                 _uiState.update {
                     it.copy(

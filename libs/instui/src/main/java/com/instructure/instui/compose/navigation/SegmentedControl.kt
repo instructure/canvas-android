@@ -23,11 +23,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIHeading
 import com.instructure.instui.token.component.InstUIText as InstUITextTokens
@@ -55,12 +58,19 @@ fun SegmentedControl(
     selectedIndex: Int,
     onTabSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    accentColor: Color = LocalCourseColor.current,
 ) {
     SecondaryTabRow(
         selectedTabIndex = selectedIndex,
         modifier = modifier,
         containerColor = InstUISemanticColors.Background.base(),
-        contentColor = InstUISemanticColors.Text.base(),
+        contentColor = accentColor,
+        indicator = {
+            TabRowDefaults.SecondaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(selectedIndex),
+                color = accentColor,
+            )
+        },
         divider = {},
     ) {
         tabs.forEachIndexed { index, title ->
@@ -72,11 +82,7 @@ fun SegmentedControl(
                     Text(
                         text = title,
                         style = if (selected) InstUIHeading.titleCardMini else InstUITextTokens.content,
-                        color = if (selected) {
-                            InstUISemanticColors.Text.inverse()
-                        } else {
-                            InstUISemanticColors.Text.base()
-                        },
+                        color = if (selected) accentColor else InstUISemanticColors.Text.base(),
                     )
                 },
             )
@@ -88,7 +94,7 @@ fun SegmentedControl(
 @Preview(name = "SegmentedControl — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SegmentedControlPreview() {
-    InstUITheme {
+    InstUITheme(courseColor = Color(0xFFBF5811)) {
         Column(
             modifier = Modifier
                 .background(InstUISemanticColors.Background.base())
