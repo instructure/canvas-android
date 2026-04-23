@@ -80,6 +80,7 @@ android {
 
 dependencies {
     implementation(project(":pandautils"))
+    implementation(project(":instui"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
