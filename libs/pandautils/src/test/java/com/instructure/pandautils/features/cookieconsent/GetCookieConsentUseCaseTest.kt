@@ -16,7 +16,7 @@
  */
 package com.instructure.pandautils.features.cookieconsent
 
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.Ordering
 import io.mockk.coEvery
@@ -24,6 +24,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -34,10 +35,10 @@ import org.junit.Test
 
 class GetCookieConsentUseCaseTest {
 
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
 
-    private val useCase = GetCookieConsentUseCase(apiPrefs, featureFlagProvider)
+    private val useCase = GetCookieConsentUseCase(featureFlagProvider, consentPrefs)
 
     @After
     fun teardown() {
@@ -67,18 +68,18 @@ class GetCookieConsentUseCaseTest {
     }
 
     @Test
-    fun `does not read apiPrefs when flag is disabled`() = runTest {
+    fun `does not read ConsentPrefs when flag is disabled`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns false
 
         useCase(Unit)
 
-        coVerify(exactly = 0) { apiPrefs.mobileConsent }
+        verify(exactly = 0) { consentPrefs.currentUserConsent }
     }
 
     @Test
-    fun `returns flag enabled with true consent when apiPrefs stores true`() = runTest {
+    fun `returns flag enabled with true consent when ConsentPrefs stores true`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        every { apiPrefs.mobileConsent } returns true
+        every { consentPrefs.currentUserConsent } returns true
 
         val result = useCase(Unit)
 
@@ -87,9 +88,9 @@ class GetCookieConsentUseCaseTest {
     }
 
     @Test
-    fun `returns flag enabled with false consent when apiPrefs stores false`() = runTest {
+    fun `returns flag enabled with false consent when ConsentPrefs stores false`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        every { apiPrefs.mobileConsent } returns false
+        every { consentPrefs.currentUserConsent } returns false
 
         val result = useCase(Unit)
 
@@ -98,9 +99,9 @@ class GetCookieConsentUseCaseTest {
     }
 
     @Test
-    fun `returns flag enabled with null consent when apiPrefs has no decision stored`() = runTest {
+    fun `returns flag enabled with null consent when ConsentPrefs has no decision stored`() = runTest {
         coEvery { featureFlagProvider.checkCookieConsentFlag() } returns true
-        every { apiPrefs.mobileConsent } returns null
+        every { consentPrefs.currentUserConsent } returns null
 
         val result = useCase(Unit)
 

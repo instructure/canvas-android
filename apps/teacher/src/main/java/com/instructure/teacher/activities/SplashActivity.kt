@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -233,7 +234,7 @@ class SplashActivity : BaseCanvasActivity() {
     }
 
     private suspend fun setupPendoTracking(user: User) {
-        if (ApiPrefs.mobileConsent != true) return
+        if (ConsentPrefs.currentUserConsent != true) return
 
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false

@@ -19,6 +19,7 @@ package com.instructure.pandautils.domain.usecase.session
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -44,7 +45,8 @@ class GetAuthenticatedSessionUseCaseTest {
         useCase = GetAuthenticatedSessionUseCase(oauthApi, apiPrefs)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
         mockkObject(ApiPrefs)
-        every { ApiPrefs.mobileConsent } returns true
+        mockkObject(ConsentPrefs)
+        every { ConsentPrefs.currentUserConsent } returns true
     }
 
     @After

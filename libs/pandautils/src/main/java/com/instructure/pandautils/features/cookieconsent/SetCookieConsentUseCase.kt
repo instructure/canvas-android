@@ -16,16 +16,19 @@
 package com.instructure.pandautils.features.cookieconsent
 
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class SetCookieConsentUseCase @Inject constructor(
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val consentPrefs: ConsentPrefs
 ) : BaseUseCase<SetCookieConsentUseCase.Params, Unit>() {
 
     data class Params(val consent: Boolean)
 
     override suspend fun execute(params: Params) {
-        apiPrefs.mobileConsent = params.consent
+        val userId = apiPrefs.user?.id ?: return
+        consentPrefs.setConsent(userId, apiPrefs.domain, params.consent)
     }
 }

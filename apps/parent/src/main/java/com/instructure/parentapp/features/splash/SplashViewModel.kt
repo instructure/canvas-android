@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
@@ -43,6 +44,7 @@ class SplashViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
+    private val consentPrefs: ConsentPrefs,
     private val colorKeeper: ColorKeeper,
     private val featureFlagProvider: FeatureFlagProvider,
     savedStateHandle: SavedStateHandle
@@ -83,7 +85,7 @@ class SplashViewModel @Inject constructor(
                 }
             }
 
-            if (apiPrefs.mobileConsent == true) {
+            if (consentPrefs.currentUserConsent == true) {
                 val sendUsageMetrics = repository.getSendUsageMetrics()
                 if (sendUsageMetrics) {
                     val userWithIds = repository.getSelfWithUuid()

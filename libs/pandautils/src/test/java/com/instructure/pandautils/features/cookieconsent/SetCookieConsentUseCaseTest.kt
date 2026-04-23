@@ -16,19 +16,34 @@
  */
 package com.instructure.pandautils.features.cookieconsent
 
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.Runs
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Before
 import org.junit.Test
 
 class SetCookieConsentUseCaseTest {
 
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
 
-    private val useCase = SetCookieConsentUseCase(apiPrefs)
+    private val useCase = SetCookieConsentUseCase(apiPrefs, consentPrefs)
+
+    @Before
+    fun setup() {
+        every { consentPrefs.setConsent(any(), any(), any()) } just Runs
+        val user = mockk<User> { every { id } returns 42L }
+        every { apiPrefs.user } returns user
+        every { apiPrefs.domain } returns "test.instructure.com"
+    }
 
     @After
     fun teardown() {
@@ -36,16 +51,25 @@ class SetCookieConsentUseCaseTest {
     }
 
     @Test
-    fun `stores true consent in apiPrefs`() = runTest {
+    fun `stores true consent in ConsentPrefs`() = runTest {
         useCase(SetCookieConsentUseCase.Params(true))
 
-        verify { apiPrefs.mobileConsent = true }
+        verify { consentPrefs.setConsent(42L, "test.instructure.com", true) }
     }
 
     @Test
-    fun `stores false consent in apiPrefs`() = runTest {
+    fun `stores false consent in ConsentPrefs`() = runTest {
         useCase(SetCookieConsentUseCase.Params(false))
 
-        verify { apiPrefs.mobileConsent = false }
+        verify { consentPrefs.setConsent(42L, "test.instructure.com", false) }
+    }
+
+    @Test
+    fun `does nothing when user is null`() = runTest {
+        every { apiPrefs.user } returns null
+
+        useCase(SetCookieConsentUseCase.Params(true))
+
+        verify(exactly = 0) { consentPrefs.setConsent(any(), any(), any()) }
     }
 }

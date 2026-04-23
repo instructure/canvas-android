@@ -23,7 +23,7 @@ import sdk.pendo.io.Pendo
 object Analytics {
 
     fun logEvent(eventName: String, bundle: Bundle? = null) {
-        if (ApiPrefs.mobileConsent != true) return
+        if (ConsentPrefs.currentUserConsent != true) return
         val map = bundle?.let { bundle ->
             bundle.keySet()
                 .filterNotNull()
@@ -36,7 +36,7 @@ object Analytics {
     }
 
     fun logEvent(eventName: String) {
-        if (ApiPrefs.mobileConsent != true) return
+        if (ConsentPrefs.currentUserConsent != true) return
         Pendo.track(eventName, emptyMap())
     }
 

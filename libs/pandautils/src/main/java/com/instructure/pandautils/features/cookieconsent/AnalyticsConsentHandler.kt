@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.cookieconsent
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.SHA256
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -44,7 +45,7 @@ abstract class AnalyticsConsentHandler(
     protected open suspend fun beforeStartPendoSession() = Unit
 
     private suspend fun startPendoSession() {
-        if (ApiPrefs.mobileConsent != true) return
+        if (ConsentPrefs.currentUserConsent != true) return
 
         val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
         val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)

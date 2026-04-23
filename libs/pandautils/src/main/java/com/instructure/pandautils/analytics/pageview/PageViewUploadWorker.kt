@@ -21,6 +21,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageViewUpload
@@ -43,12 +44,13 @@ class PageViewUploadWorker @AssistedInject constructor(
     private val appKey: PandataInfo.AppKey,
     private val pageViewDao: PageViewDao,
     private val apiPrefs: ApiPrefs,
+    private val consentPrefs: ConsentPrefs,
     private val pandataApi: PandataApi.PandataInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
         return try {
-            if (apiPrefs.mobileConsent != true) return Result.success()
+            if (consentPrefs.currentUserConsent != true) return Result.success()
 
             if (!ApiPrefs.getValidToken()
                     .isValid() && ApiPrefs.pandataInfo?.isValid != true

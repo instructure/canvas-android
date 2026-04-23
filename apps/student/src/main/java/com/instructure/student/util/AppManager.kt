@@ -24,7 +24,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -68,7 +68,7 @@ class AppManager : BaseAppManager() {
             ).execute()
         }
 
-        if (ApiPrefs.mobileConsent == true) {
+        if (ConsentPrefs.currentUserConsent == true) {
             schedulePandataUpload()
         }
         initPendo()

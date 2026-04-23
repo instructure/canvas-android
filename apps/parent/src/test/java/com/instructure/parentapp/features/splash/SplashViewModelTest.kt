@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -35,6 +36,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
@@ -81,6 +83,7 @@ class SplashViewModelTest {
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
         mockkStatic(Pendo::class)
+        mockkObject(ConsentPrefs)
         every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
         every { Pendo.endSession() } returns Unit
     }
@@ -262,7 +265,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics enabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns true
-        coEvery { apiPrefs.mobileConsent } returns true
+        every { ConsentPrefs.currentUserConsent } returns true
 
         createViewModel()
 
@@ -276,7 +279,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics disabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns false
-        coEvery { apiPrefs.mobileConsent } returns true
+        every { ConsentPrefs.currentUserConsent } returns true
 
         createViewModel()
 
@@ -292,6 +295,7 @@ class SplashViewModelTest {
             context = context,
             repository = repository,
             apiPrefs = apiPrefs,
+            consentPrefs = ConsentPrefs,
             colorKeeper = colorKeeper,
             featureFlagProvider = featureFlagProvider,
             savedStateHandle = savedStateHandle
