@@ -16,25 +16,27 @@
 package com.instructure.pandautils.features.cookieconsent
 
 import com.instructure.canvasapi2.utils.ConsentPrefs
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
 class GetCookieConsentUseCase @Inject constructor(
-    private val featureFlagProvider: FeatureFlagProvider,
+    private val userRepository: UserRepository,
     private val consentPrefs: ConsentPrefs
 ) : BaseUseCase<Unit, GetCookieConsentUseCase.Result>() {
 
     data class Result(
-        val flagEnabled: Boolean,
+        val usageMetrics: String?,
         val consent: Boolean?
     )
 
     override suspend fun execute(params: Unit): Result {
-        featureFlagProvider.fetchEnvironmentFeatureFlags()
-        val flagEnabled = featureFlagProvider.checkCookieConsentFlag()
-        if (!flagEnabled) return Result(flagEnabled = false, consent = null)
+        val settings = userRepository.getMobileSettings(forceRefresh = true)
+        if (settings !is DataResult.Success) return Result(usageMetrics = null, consent = null)
 
-        return Result(flagEnabled = true, consent = consentPrefs.currentUserConsent)
+        val usageMetrics = settings.data.usageMetrics ?: return Result(usageMetrics = null, consent = null)
+
+        return Result(usageMetrics = usageMetrics, consent = consentPrefs.currentUserConsent)
     }
 }
