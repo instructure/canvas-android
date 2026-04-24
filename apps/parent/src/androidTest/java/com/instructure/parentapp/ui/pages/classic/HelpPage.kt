@@ -46,7 +46,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a Problem")
 
-    private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
+    private val shareContributionLabel by OnViewWithStringTextIgnoreCase("Share a Contribution")
 
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
@@ -59,7 +59,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     private fun clickSubmitFeatureLabel() {
-        submitFeatureLabel.scrollTo().click()
+        shareContributionLabel.scrollTo().click()
     }
 
     private fun clickShareLoveLabel() {

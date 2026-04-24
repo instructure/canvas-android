@@ -57,7 +57,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     /**
      * The label for submitting a feature idea.
      */
-    private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
+    private val shareContributionLabel by OnViewWithStringTextIgnoreCase("Share a Contribution")
 
     /**
      * The label for sharing your love.
@@ -139,7 +139,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
      * Clicks on the 'Submit a Feature Idea' help menu.
      */
     private fun clickSubmitFeatureLabel() {
-        submitFeatureLabel.scrollTo().click()
+        shareContributionLabel.scrollTo().click()
     }
 
     /**
