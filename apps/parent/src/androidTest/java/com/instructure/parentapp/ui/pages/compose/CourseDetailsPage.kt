@@ -23,15 +23,18 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isSelectable
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.instructure.canvas.espresso.utils.refresh
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.dataseeding.model.CourseApiModel
@@ -99,8 +102,31 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.waitForIdle()
     }
 
+    fun clickDiscussionCheckpointExpandCollapseIcon(discussionTitle: String) {
+        composeTestRule.onNode(hasTestTag("expandDiscussionCheckpoints") and hasParent(hasAnyDescendant(hasText(discussionTitle))), useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertDiscussionCheckpointDetails(additionalRepliesCount: Int, dueAtReplyToTopic: String, gradeReplyToTopic: String, statusReplyToTopic: String = "Not Submitted", dueAtAdditionalReplies: String = dueAtReplyToTopic, gradeAdditionalReplies: String = gradeReplyToTopic, statusAdditionalReplies: String = "Not Submitted") {
+        composeTestRule.onNode(hasTestTag("checkpointName") and hasText("Reply to topic"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Reply to topic") and hasText(dueAtReplyToTopic), true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointGradeText") and hasText(gradeReplyToTopic), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText(statusReplyToTopic) and hasAnySibling(hasTestTag("checkpointDueDate_Reply to topic")), useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNode(hasTestTag("checkpointName") and hasText("Additional replies ($additionalRepliesCount)"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Additional replies ($additionalRepliesCount)") and hasText(dueAtAdditionalReplies), true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointGradeText") and hasText(gradeAdditionalReplies), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText(statusAdditionalReplies) and hasAnySibling(hasTestTag("checkpointDueDate_Additional replies ($additionalRepliesCount)")), useUnmergedTree = true).assertIsDisplayed()
+    }
+
     fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", dueAtStringSecondCheckpoint: String? = null, expectedGrade: String? = null) {
         assertHasAssignmentCommon(assignmentName, dueAtString, dueAtStringSecondCheckpoint, expectedGrade, hasCheckPoints = true)
+    }
+
+    fun refresh() {
+        composeTestRule.onNodeWithTag("gradesList").performTouchInput { swipeDown() }
+        composeTestRule.waitForIdle()
     }
 
     private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, secondCheckpointDueAt: String? = null, expectedGradeLabel: String? = null, assignmentStatus: String? = null, hasCheckPoints : Boolean = false) {

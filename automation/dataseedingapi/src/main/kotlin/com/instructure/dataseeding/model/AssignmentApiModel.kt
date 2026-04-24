@@ -74,7 +74,9 @@ data class AssignmentApiModel (
         val allowedExtensions: List<String>? = null,
         @SerializedName("attempt")
         val attempt: Int? = null,
-        val rubric: List<RubricCriterionResponseModel>? = null
+        val rubric: List<RubricCriterionResponseModel>? = null,
+        @SerializedName("sub_assignment_tag")
+        val subAssignmentTag: String? = null
         )
 
 // region AssignmentOverrides
