@@ -32,10 +32,8 @@ abstract class AnalyticsConsentHandler(
     private val featureFlagProvider: FeatureFlagProvider
 ) {
 
-    fun onConsentGranted(fromSettings: Boolean) {
-        if (fromSettings) {
-            GlobalScope.launch { startPendoSession() }
-        }
+    fun onConsentGranted() {
+        GlobalScope.launch { startPendoSession() }
     }
 
     fun onConsentRevoked() {

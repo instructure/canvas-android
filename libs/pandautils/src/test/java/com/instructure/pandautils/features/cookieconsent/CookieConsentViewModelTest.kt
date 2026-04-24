@@ -159,16 +159,6 @@ class CookieConsentViewModelTest {
     }
 
     @Test
-    fun `showFromSettings sets loading false and showDialog true`() {
-        val viewModel = createViewModel()
-        viewModel.showFromSettings()
-
-        val state = viewModel.uiState.value
-        assertFalse(state.loading)
-        assertTrue(state.showDialog)
-    }
-
-    @Test
     fun `onAllow submits consent true and sets consent result`() {
         coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
             flagEnabled = true, consent = null
@@ -184,17 +174,6 @@ class CookieConsentViewModelTest {
         assertFalse(state.saving)
         assertEquals(ConsentResult(consentGiven = true, needed = true), state.consentResult)
         coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) }
-        verify { analyticsConsentHandler.onConsentGranted(fromSettings = false) }
-    }
-
-    @Test
-    fun `onAllow after showFromSettings marks fromSettings true for handler`() {
-        val viewModel = createViewModel()
-        viewModel.showFromSettings()
-
-        viewModel.uiState.value.onAllow()
-
-        verify { analyticsConsentHandler.onConsentGranted(fromSettings = true) }
     }
 
     @Test

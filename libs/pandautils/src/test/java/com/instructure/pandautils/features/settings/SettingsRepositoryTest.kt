@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -33,8 +34,9 @@ class SettingsRepositoryTest {
     private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
     private val experienceApi: ExperienceAPI = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceApi)
+    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceApi, featureFlagProvider)
 
     @Test
     fun `Return hidden state when feature request fails`() = runTest {
