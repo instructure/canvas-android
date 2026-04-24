@@ -170,8 +170,8 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(withId(R.id.title) + withText(HelpMenu.Teacher.ASK_COMMUNITY_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.Teacher.ASK_COMMUNITY_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(HelpMenu.SUBMIT_FEATURE_TITLE)).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText(HelpMenu.SUBMIT_FEATURE_SUBTITLE)).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SHARE_A_CONTRIBUTION_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SHARE_A_CONTRIBUTION_SUBTITLE)).assertDisplayed()
 
         onView(withId(R.id.title) + withText(HelpMenu.Teacher.TRAINING_PORTAL_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.Teacher.TRAINING_PORTAL_SUBTITLE)).assertDisplayed()
@@ -197,7 +197,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         when (helpMenuText) {
             HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
-            HelpMenu.SUBMIT_FEATURE_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickSubmitFeatureLabel()
             HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
             HelpMenu.Teacher.CONFERENCE_GUIDES_TITLE -> clickConferenceGuidesForRemoteClassroomsLabel()
             HelpMenu.Teacher.ASK_COMMUNITY_TITLE -> clickAskTheCommunityLabel()
