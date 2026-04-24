@@ -21,10 +21,13 @@ import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.PendoTokenConfig
+import com.instructure.teacher.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,6 +36,15 @@ class CookieConsentModule {
     @Provides
     fun provideCookieConsentNamespace(): CookieConsentNamespace {
         return CookieConsentNamespace.TEACHER
+    }
+
+    @Provides
+    @Singleton
+    fun providePendoTokenConfig(): PendoTokenConfig {
+        return PendoTokenConfig(
+            fallbackToken = BuildConfig.PENDO_TOKEN,
+            apiTokenSelector = { it.pendoMobileTeacherApiKey }
+        )
     }
 
     @Provides
