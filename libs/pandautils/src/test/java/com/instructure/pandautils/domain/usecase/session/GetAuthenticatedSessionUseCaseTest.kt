@@ -44,7 +44,6 @@ class GetAuthenticatedSessionUseCaseTest {
     fun setUp() {
         useCase = GetAuthenticatedSessionUseCase(oauthApi, apiPrefs)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
-        mockkObject(ApiPrefs)
         mockkObject(ConsentPrefs)
         every { ConsentPrefs.currentUserConsent } returns true
     }

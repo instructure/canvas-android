@@ -29,7 +29,9 @@ import sdk.pendo.io.Pendo
 @OptIn(DelicateCoroutinesApi::class)
 abstract class AnalyticsConsentHandler(
     private val userApi: UserAPI.UsersInterface,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val consentPrefs: ConsentPrefs,
+    private val apiPrefs: ApiPrefs
 ) {
 
     fun onConsentGranted() {
@@ -43,10 +45,10 @@ abstract class AnalyticsConsentHandler(
     protected open suspend fun beforeStartPendoSession() = Unit
 
     private suspend fun startPendoSession() {
-        if (ConsentPrefs.currentUserConsent != true) return
+        if (consentPrefs.currentUserConsent != true) return
 
         val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
-        val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
+        val visitorData = mapOf("locale" to apiPrefs.effectiveLocale)
         val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
         beforeStartPendoSession()
         Pendo.startSession(
