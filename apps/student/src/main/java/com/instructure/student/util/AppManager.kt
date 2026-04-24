@@ -26,16 +26,13 @@ import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
-import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.typeface.TypefaceBehavior
-import com.instructure.student.BuildConfig
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
-import sdk.pendo.io.Pendo
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -71,12 +68,6 @@ class AppManager : BaseAppManager() {
         if (ConsentPrefs.currentUserConsent == true) {
             schedulePandataUpload()
         }
-        initPendo()
-    }
-
-    private fun initPendo() {
-        val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
-        Pendo.setup(this, BuildConfig.PENDO_TOKEN, options, PendoInitCallbackHandler)
     }
 
     override fun performLogoutOnAuthError() {

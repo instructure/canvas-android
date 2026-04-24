@@ -15,15 +15,18 @@
  */
 package com.instructure.pandautils.domain.usecase.splash
 
+import android.content.Context
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.UserSettings
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.PendoTokenConfig
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -43,9 +46,16 @@ class SetupPendoTrackingUseCaseTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
+    private val pendoTokenConfig = PendoTokenConfig(
+        fallbackToken = "fallback-token",
+        apiTokenSelector = { it.pendoMobileStudentApiKey }
+    )
 
     private val useCase = SetupPendoTrackingUseCase(
-        featuresRepository, userRepository, apiPrefs, featureFlagProvider, consentPrefs
+        featuresRepository, userRepository, apiPrefs, featureFlagProvider,
+        consentPrefs, analytics, pendoTokenConfig, context
     )
 
     @Before
@@ -53,6 +63,8 @@ class SetupPendoTrackingUseCaseTest {
         mockkStatic(Pendo::class)
         every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
         every { Pendo.endSession() } returns Unit
+        every { Pendo.setup(any(), any(), any(), any()) } returns Unit
+        every { analytics.isSessionActive() } returns false
         coEvery { userRepository.getSelfWithUuid(any()) } returns DataResult.Success(
             User(uuid = "test-uuid", accountUuid = "account-uuid")
         )
@@ -178,5 +190,76 @@ class SetupPendoTrackingUseCaseTest {
         useCase(Unit)
 
         verify(exactly = 0) { consentPrefs.currentUserConsent }
+    }
+
+    @Test
+    fun `uses api token from settings when available`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = "api-token")
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.setup(any(), "api-token", any(), any()) }
+    }
+
+    @Test
+    fun `falls back to hardcoded token when api token is null`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = null)
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.setup(any(), "fallback-token", any(), any()) }
+    }
+
+    @Test
+    fun `falls back to hardcoded token when api token is empty`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = "")
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.setup(any(), "fallback-token", any(), any()) }
+    }
+
+    @Test
+    fun `falls back to hardcoded token when settings call fails`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Fail()
+        coEvery { featuresRepository.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
+            mapOf(FeaturesManager.SEND_USAGE_METRICS to true)
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.setup(any(), "fallback-token", any(), any()) }
+    }
+
+    @Test
+    fun `skips pendo setup when session is already active`() = runTest {
+        every { analytics.isSessionActive() } returns true
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+        )
+
+        useCase(Unit)
+
+        verify(exactly = 0) { Pendo.setup(any(), any(), any(), any()) }
+        verify { Pendo.startSession(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `calls pendo setup when session is not active`() = runTest {
+        every { analytics.isSessionActive() } returns false
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.setup(any(), any(), any(), any()) }
+        verify { Pendo.startSession(any(), any(), any(), any()) }
     }
 }

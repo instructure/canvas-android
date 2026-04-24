@@ -24,9 +24,7 @@ import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
-import com.instructure.teacher.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
-import sdk.pendo.io.Pendo
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -51,7 +49,6 @@ class AppManager : BaseAppManager() {
         if (ConsentPrefs.currentUserConsent == true) {
             schedulePandataUpload()
         }
-        initPendo()
     }
 
     private fun schedulePandataUpload() {
@@ -60,8 +57,4 @@ class AppManager : BaseAppManager() {
         workManager.enqueueUniquePeriodicWork("pageView-teacher", ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
 
-    private fun initPendo() {
-        val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
-        Pendo.setup(this, BuildConfig.PENDO_TOKEN, options, null)
-    }
 }

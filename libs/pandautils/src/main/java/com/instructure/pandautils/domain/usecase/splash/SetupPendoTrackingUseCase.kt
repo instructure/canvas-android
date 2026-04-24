@@ -16,17 +16,20 @@
  */
 package com.instructure.pandautils.domain.usecase.splash
 
+import android.content.Context
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.UserSettings
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ConsentPrefs
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.PendoTokenConfig
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.orDefault
+import dagger.hilt.android.qualifiers.ApplicationContext
 import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
@@ -35,14 +38,16 @@ class SetupPendoTrackingUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val apiPrefs: ApiPrefs,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val consentPrefs: ConsentPrefs
+    private val consentPrefs: ConsentPrefs,
+    private val analytics: Analytics,
+    private val pendoTokenConfig: PendoTokenConfig,
+    @ApplicationContext private val context: Context
 ) : BaseUseCase<Unit, Unit>() {
 
     override suspend fun execute(params: Unit) {
-        val usageMetrics = (userRepository.getMobileSettings(forceRefresh = true) as? DataResult.Success)
-            ?.data?.usageMetrics
+        val settings = userRepository.getMobileSettings(forceRefresh = true).dataOrNull
 
-        val shouldTrack = when (usageMetrics) {
+        val shouldTrack = when (settings?.usageMetrics) {
             UserSettings.USAGE_METRICS_TRACK -> true
             UserSettings.USAGE_METRICS_NO_TRACK -> false
             UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
@@ -56,6 +61,15 @@ class SetupPendoTrackingUseCase @Inject constructor(
             val userWithIds = userRepository.getSelfWithUuid(forceRefresh = true).dataOrNull
             val visitorData = mapOf("locale" to apiPrefs.effectiveLocale)
             val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
+
+            if (!analytics.isSessionActive()) {
+                val token = settings?.let { pendoTokenConfig.apiTokenSelector(it) }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?: pendoTokenConfig.fallbackToken
+                val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
+                Pendo.setup(context, token, options, null)
+            }
+
             Pendo.startSession(
                 userWithIds?.uuid?.SHA256().orEmpty(),
                 userWithIds?.accountUuid.orEmpty(),

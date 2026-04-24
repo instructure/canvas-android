@@ -52,9 +52,12 @@ class WidgetLogger @Inject constructor(
         loggingJob = coroutineScope.launch(Dispatchers.IO) {
             if (!analytics.isSessionActive()) {
                 PendoInitCallbackHandler.addEvent(event)
-                if (shouldTrack()) {
+                val settings = (userApi.getSelfMobileSettings(RestParams(isForceReadFromNetwork = true)) as? DataResult.Success)?.data
+                if (shouldTrack(settings)) {
                     PendoInitCallbackHandler.addListener(this@WidgetLogger)
-                    setupPendo(context)
+                    val token = settings?.pendoMobileStudentApiKey?.takeIf { it.isNotEmpty() }
+                        ?: BuildConfig.PENDO_TOKEN
+                    setupPendo(context, token)
                 }
             } else {
                 analytics.logEvent(event)
@@ -62,11 +65,8 @@ class WidgetLogger @Inject constructor(
         }
     }
 
-    private suspend fun shouldTrack(): Boolean {
-        val usageMetrics = (userApi.getSelfMobileSettings(RestParams(isForceReadFromNetwork = true)) as? DataResult.Success)
-            ?.data?.usageMetrics
-
-        return when (usageMetrics) {
+    private suspend fun shouldTrack(settings: UserSettings?): Boolean {
+        return when (settings?.usageMetrics) {
             UserSettings.USAGE_METRICS_TRACK -> true
             UserSettings.USAGE_METRICS_NO_TRACK -> false
             UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
@@ -77,9 +77,9 @@ class WidgetLogger @Inject constructor(
         }
     }
 
-    private suspend fun setupPendo(context: Context) {
+    private suspend fun setupPendo(context: Context, token: String) {
         val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
-        Pendo.setup(context, BuildConfig.PENDO_TOKEN, options, PendoInitCallbackHandler)
+        Pendo.setup(context, token, options, PendoInitCallbackHandler)
         val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
         val accountData =
             mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
