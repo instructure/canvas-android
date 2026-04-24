@@ -16,16 +16,16 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "HorizonFileFolderEntity")
-data class HorizonFileFolderEntity(
-    @PrimaryKey
-    val id: Long,
-    val courseId: Long? = null,
-    val url: String,
-    val displayName: String,
-    val size: Long = 0L,
-    val contentType: String? = null,
-    val thumbnailUrl: String? = null,
+enum class EntitySyncType {
+    COURSE,
+    MODULE_ITEM,
+    FILE,
+}
+
+@Entity(tableName = "horizon_entity_sync_metadata", primaryKeys = ["entityType", "entityId"])
+data class HorizonEntitySyncMetadataEntity(
+    val entityType: EntitySyncType,
+    val entityId: Long,
+    val lastSyncedAtMs: Long,
 )

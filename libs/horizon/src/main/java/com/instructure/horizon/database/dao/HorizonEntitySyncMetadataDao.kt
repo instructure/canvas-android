@@ -19,17 +19,15 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.instructure.horizon.database.entity.HorizonFileFolderEntity
+import com.instructure.horizon.database.entity.EntitySyncType
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 
 @Dao
-interface HorizonFileFolderDao {
+interface HorizonEntitySyncMetadataDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(fileFolder: HorizonFileFolderEntity)
+    suspend fun upsert(entity: HorizonEntitySyncMetadataEntity)
 
-    @Query("SELECT * FROM HorizonFileFolderEntity WHERE id = :id")
-    suspend fun findById(id: Long): HorizonFileFolderEntity?
-
-    @Query("SELECT * FROM HorizonFileFolderEntity WHERE courseId = :courseId")
-    suspend fun findByCourseId(courseId: Long): List<HorizonFileFolderEntity>
+    @Query("SELECT lastSyncedAtMs FROM horizon_entity_sync_metadata WHERE entityType = :entityType AND entityId = :entityId")
+    suspend fun getLastSyncedAt(entityType: EntitySyncType, entityId: Long): Long?
 }

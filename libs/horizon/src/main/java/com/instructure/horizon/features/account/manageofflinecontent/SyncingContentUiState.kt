@@ -13,19 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.features.account.manageofflinecontent
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "HorizonFileFolderEntity")
-data class HorizonFileFolderEntity(
-    @PrimaryKey
-    val id: Long,
-    val courseId: Long? = null,
-    val url: String,
-    val displayName: String,
-    val size: Long = 0L,
-    val contentType: String? = null,
-    val thumbnailUrl: String? = null,
+data class SyncingContentUiState(
+    val courses: List<OfflineCourseItemUiState> = emptyList(),
+    val syncProgress: Float = 0f,
+    val syncProgressLabel: String = "",
+    val onCancelSyncClick: () -> Unit = {},
 )

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LogoutHelper
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -50,6 +51,7 @@ class AccountViewModelTest {
     private val databaseProvider: DatabaseProvider = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val accountEventHandler: AccountEventHandler = AccountEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -206,7 +208,8 @@ class AccountViewModelTest {
             databaseProvider,
             alarmScheduler,
             apiPrefs,
-            accountEventHandler
+            accountEventHandler,
+            featureFlagProvider,
         )
     }
 }

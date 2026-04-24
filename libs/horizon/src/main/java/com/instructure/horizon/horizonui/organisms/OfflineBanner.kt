@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard
+package com.instructure.horizon.horizonui.organisms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,20 +48,20 @@ fun OfflineBanner(lastSyncedAtMs: Long?, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(HorizonColors.Surface.attention())
+            .background(HorizonColors.Surface.inversePrimary())
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_no_wifi),
+            painter = painterResource(R.drawable.cloud_off),
             contentDescription = null,
-            tint = Color.White,
+            tint = HorizonColors.Icon.surfaceColored(),
         )
         Text(
             text = text,
-            style = HorizonTypography.p2,
-            color = Color.White,
+            style = HorizonTypography.p3,
+            color = HorizonColors.Text.surfaceColored(),
         )
     }
 }
@@ -75,6 +74,6 @@ private fun OfflineBannerWithDatePreview() {
 
 @Preview
 @Composable
-private fun OfflineBannerNoDDatePreview() {
+private fun OfflineBannerNoDatePreview() {
     OfflineBanner(lastSyncedAtMs = null)
 }

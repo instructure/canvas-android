@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.utils.orDefault
 
 data class TriStateCheckboxItemState(
     val controlsContentState: ControlsContentState,
@@ -62,14 +63,18 @@ fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = 
         val error = state.controlsContentState.error != null
         TriStateCheckbox(
             state = state.toggleableState,
-            onClick = {},
+            onClick = null,
             enabled = state.enabled,
             colors = horizonCheckboxColors(error),
             modifier = Modifier
-                .size(20.dp)
                 .clearAndSetSemantics {}
         )
-        HorizonSpace(SpaceSize.SPACE_8)
+        if (state.controlsContentState.title.isNotEmpty() ||
+            state.controlsContentState.description?.isNotEmpty().orDefault() ||
+            state.controlsContentState.error?.isNotEmpty().orDefault()
+        ) {
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
         ControlsContent(state = state.controlsContentState)
     }
 }
