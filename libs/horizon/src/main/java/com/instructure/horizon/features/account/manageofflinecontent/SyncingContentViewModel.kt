@@ -15,14 +15,19 @@
  */
 package com.instructure.horizon.features.account.manageofflinecontent
 
+import android.content.Context
+import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
+import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -31,6 +36,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SyncingContentViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncHelper: HorizonOfflineSyncHelper,
     courseSyncPlanDao: HorizonCourseSyncPlanDao,
@@ -43,29 +49,7 @@ class SyncingContentViewModel @Inject constructor(
         fileSyncPlanDao.findAllFlow(),
     ) { progressData, coursePlans, filePlans ->
         val courses = coursePlans.map { plan ->
-            val courseFiles = filePlans.filter { it.courseId == plan.courseId }
-            OfflineCourseItemUiState(
-                courseId = plan.courseId,
-                courseName = plan.courseName,
-                offlineState = when (plan.state) {
-                    HorizonProgressState.COMPLETED -> CourseOfflineState.ALL
-                    HorizonProgressState.ERROR -> CourseOfflineState.PARTIAL
-                    else -> CourseOfflineState.ALL
-                },
-                files = courseFiles.map { file ->
-                    OfflineFileItemUiState(
-                        fileId = file.fileId,
-                        fileName = file.fileName,
-                        fileSizeLabel = "",
-                        isSelected = true,
-                        syncState = when (file.state) {
-                            HorizonProgressState.COMPLETED -> FileSyncState.DONE
-                            HorizonProgressState.IN_PROGRESS -> FileSyncState.SYNCING
-                            else -> FileSyncState.PENDING
-                        },
-                    )
-                },
-            )
+            mapCourseToUiState(plan, filePlans.filter { it.courseId == plan.courseId })
         }
 
         SyncingContentUiState(
@@ -75,6 +59,47 @@ class SyncingContentViewModel @Inject constructor(
             onCancelSyncClick = ::onCancelSync,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, SyncingContentUiState())
+
+    private fun mapCourseToUiState(
+        plan: HorizonCourseSyncPlanEntity,
+        courseFiles: List<HorizonFileSyncPlanEntity>,
+    ): OfflineCourseItemUiState {
+        val totalCourseFileSize = courseFiles.sumOf { it.fileSize }
+        val courseSizeLabel = if (totalCourseFileSize > 0) {
+            "~${Formatter.formatShortFileSize(context, totalCourseFileSize)}"
+        } else {
+            ""
+        }
+
+        return OfflineCourseItemUiState(
+            courseId = plan.courseId,
+            courseName = plan.courseName,
+            courseSizeLabel = courseSizeLabel,
+            syncState = when (plan.state) {
+                HorizonProgressState.COMPLETED -> CourseSyncState.DONE
+                HorizonProgressState.IN_PROGRESS -> CourseSyncState.SYNCING
+                HorizonProgressState.ERROR -> CourseSyncState.ERROR
+                HorizonProgressState.PENDING -> CourseSyncState.PENDING
+            },
+            files = courseFiles.map { file ->
+                OfflineFileItemUiState(
+                    fileId = file.fileId,
+                    fileName = file.fileName,
+                    fileSizeLabel = if (file.fileSize > 0) {
+                        "~${Formatter.formatShortFileSize(context, file.fileSize)}"
+                    } else {
+                        ""
+                    },
+                    isSelected = true,
+                    syncState = when (file.state) {
+                        HorizonProgressState.COMPLETED -> FileSyncState.DONE
+                        HorizonProgressState.IN_PROGRESS -> FileSyncState.SYNCING
+                        else -> FileSyncState.PENDING
+                    },
+                )
+            },
+        )
+    }
 
     private fun onCancelSync() {
         syncHelper.cancelRunningWorkers()

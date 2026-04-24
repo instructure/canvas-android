@@ -23,11 +23,19 @@ enum class CourseOfflineState {
     ALL,
 }
 
+enum class CourseSyncState {
+    PENDING,
+    SYNCING,
+    DONE,
+    ERROR,
+}
+
 data class OfflineCourseItemUiState(
     val courseId: Long,
     val courseName: String,
     val courseSizeLabel: String = "",
     val offlineState: CourseOfflineState = CourseOfflineState.NONE,
+    val syncState: CourseSyncState = CourseSyncState.PENDING,
     val isExpanded: Boolean = false,
     val files: List<OfflineFileItemUiState> = emptyList(),
     val onToggleExpanded: () -> Unit = {},
