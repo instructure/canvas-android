@@ -17,7 +17,7 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click

@@ -146,30 +146,32 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
             ModuleItemSequenceBottomBar(
-                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                    showPreviousButton = uiState.currentPosition > 0,
-                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                    onNextClick = uiState.onNextClick,
-                    onPreviousClick = uiState.onPreviousClick,
-                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                    onNotebookClick = {
-                        navController.navigate(
-                            NotebookRoute.Notebook.route(
-                                uiState.courseId.toString(),
-                                uiState.objectTypeAndId.first,
-                                uiState.objectTypeAndId.second,
-                                true,
-                                false,
-                                true
-                            )
+                showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                showPreviousButton = uiState.currentPosition > 0,
+                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
+                        || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
+                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                onNextClick = uiState.onNextClick,
+                onPreviousClick = uiState.onPreviousClick,
+                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                onNotebookClick = {
+                    navController.navigate(
+                        NotebookRoute.Notebook.route(
+                            uiState.courseId.toString(),
+                            uiState.objectTypeAndId.first,
+                            uiState.objectTypeAndId.second,
+                            true,
+                            false,
+                            true
                         )
-                    },
-                    notebookEnabled = uiState.notebookButtonEnabled,
-                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                    hasUnreadComments = uiState.hasUnreadComments
-                )
+                    )
+                },
+                notebookEnabled = uiState.notebookButtonEnabled,
+                aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                hasUnreadComments = uiState.hasUnreadComments
+            )
         }
     ) { contentPadding ->
         OfflineScreenWrapper(
@@ -579,6 +581,7 @@ private fun ModuleItemSequenceBottomBar(
     showNextButton: Boolean,
     showPreviousButton: Boolean,
     showNotebookButton: Boolean,
+    showAiAssistButton: Boolean,
     showAssignmentToolsButton: Boolean,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
@@ -614,9 +617,9 @@ private fun ModuleItemSequenceBottomBar(
                     .align(Alignment.Center),
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
             ) {
-                IconButton(
+                if (showAiAssistButton) IconButton(
                     iconRes = R.drawable.ai,
-                    contentDescription = stringResource(R.string.a11y_openIgniteAI),
+                    contentDescription = stringResource(R.string.a11y_openStudyTools),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,

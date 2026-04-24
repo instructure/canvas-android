@@ -81,6 +81,126 @@ class CoursesWidgetTest {
     }
 
     @Test
+    fun testEmptyStateShowsTitle() {
+        composeTestRule.setContent {
+            CoursesWidgetContent(
+                uiState = CoursesWidgetUiState(isLoading = false),
+                columns = 1
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Welcome to Canvas!").assertIsDisplayed()
+    }
+
+    @Test
+    fun testEmptyStateShowsMessage() {
+        composeTestRule.setContent {
+            CoursesWidgetContent(
+                uiState = CoursesWidgetUiState(isLoading = false),
+                columns = 1
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(
+            "You don't have any active courses yet — so things are a bit quiet here. Once you enroll in a class, your dashboard will start filling up with new activity."
+        ).assertIsDisplayed()
+    }
+
+    @Test
+    fun testEmptyStateHidesAllCoursesButton() {
+        composeTestRule.setContent {
+            CoursesWidgetContent(
+                uiState = CoursesWidgetUiState(isLoading = false),
+                columns = 1
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("All Courses").assertDoesNotExist()
+    }
+
+    @Test
+    fun testAllCoursesButtonShownWithCourses() {
+        val uiState = CoursesWidgetUiState(
+            isLoading = false,
+            courses = listOf(
+                CourseCardItem(
+                    id = 1,
+                    name = "Introduction to Computer Science",
+                    courseCode = "CS 101",
+                    imageUrl = null,
+                    grade = GradeDisplay.Hidden,
+                    announcements = emptyList(),
+                    isSynced = false,
+                    isClickable = true,
+                    color = android.graphics.Color.RED
+                )
+            ),
+            isCoursesExpanded = true
+        )
+
+        composeTestRule.setContent {
+            CoursesWidgetContent(uiState = uiState, columns = 1)
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("All Courses").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAllCoursesButtonShownWithGroupsOnly() {
+        val uiState = CoursesWidgetUiState(
+            isLoading = false,
+            groups = listOf(
+                GroupCardItem(
+                    id = 1,
+                    name = "Project Team Alpha",
+                    parentCourseName = "Introduction to Computer Science",
+                    memberCount = 5
+                )
+            ),
+            isGroupsExpanded = true
+        )
+
+        composeTestRule.setContent {
+            CoursesWidgetContent(uiState = uiState, columns = 1)
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("All Courses").assertIsDisplayed()
+    }
+
+    @Test
+    fun testEmptyStateTitleNotShownWhenCoursesPresent() {
+        val uiState = CoursesWidgetUiState(
+            isLoading = false,
+            courses = listOf(
+                CourseCardItem(
+                    id = 1,
+                    name = "Introduction to Computer Science",
+                    courseCode = "CS 101",
+                    imageUrl = null,
+                    grade = GradeDisplay.Hidden,
+                    announcements = emptyList(),
+                    isSynced = false,
+                    isClickable = true,
+                    color = android.graphics.Color.RED
+                )
+            ),
+            isCoursesExpanded = true
+        )
+
+        composeTestRule.setContent {
+            CoursesWidgetContent(uiState = uiState, columns = 1)
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Welcome to Canvas!").assertDoesNotExist()
+    }
+
+    @Test
     fun testWidgetShowsSingleCourse() {
         val courses = listOf(
             CourseCardItem(

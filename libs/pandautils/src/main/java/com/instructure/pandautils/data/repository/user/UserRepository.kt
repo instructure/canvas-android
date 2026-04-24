@@ -17,11 +17,18 @@
 package com.instructure.pandautils.data.repository.user
 
 import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.BecomeUserPermission
+import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.ColorChangeResponse
 import com.instructure.canvasapi2.models.DashboardPositions
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 
 interface UserRepository {
+    suspend fun getSelf(forceRefresh: Boolean): DataResult<User>
+    suspend fun getSelfWithUuid(forceRefresh: Boolean): DataResult<User>
+    suspend fun getColors(forceRefresh: Boolean): DataResult<CanvasColor>
+    suspend fun getBecomeUserPermission(forceRefresh: Boolean): DataResult<BecomeUserPermission>
     suspend fun getAccount(forceRefresh: Boolean): DataResult<Account>
     suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse>
     suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions>

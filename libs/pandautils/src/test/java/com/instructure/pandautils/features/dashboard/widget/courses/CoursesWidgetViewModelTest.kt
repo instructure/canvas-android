@@ -20,20 +20,22 @@ import android.content.BroadcastReceiver
 import android.content.Intent
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
-import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
@@ -59,9 +61,12 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -80,10 +85,9 @@ class CoursesWidgetViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
-    private val loadCourseUseCase: LoadCourseUseCase = mockk()
-    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase = mockk()
+    private val loadSingleCourseUseCase: LoadSingleCourseUseCase = mockk()
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
-    private val coursesWidgetBehavior: CoursesWidgetBehavior = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
     private val courseDao: CourseDao = mockk()
     private val networkStateProvider: NetworkStateProvider = mockk()
@@ -103,6 +107,7 @@ class CoursesWidgetViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any<Course>()) } returns ThemedColor(0xFF0000, 0xFF0000)
         every { ColorKeeper.getOrGenerateColor(any<Group>()) } returns ThemedColor(0x00FF00, 0x00FF00)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0xFF0000, 0xFF0000)
     }
 
     @After
@@ -113,13 +118,18 @@ class CoursesWidgetViewModelTest {
 
     private fun visibleCoursesResult(
         visibleCourses: List<Course> = emptyList(),
-        allCourses: List<Course> = visibleCourses
-    ) = LoadVisibleCoursesUseCase.Result(visibleCourses = visibleCourses, allCourses = allCourses)
+        allCourses: List<Course> = visibleCourses,
+        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
+    ) = LoadVisibleCoursesUseCase.Result(
+        visibleCourses = visibleCourses,
+        allCourses = allCourses,
+        announcementsMap = announcementsMap
+    )
 
     private fun setupDefaultMocks() {
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
         every { sectionExpandedStateDataStore.observeGroupsExpanded() } returns flowOf(true)
         every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
@@ -412,7 +422,6 @@ class CoursesWidgetViewModelTest {
         )
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(parentCourse))
         coEvery { loadGroupsUseCase(any()) } returns groups
-        coEvery { loadCourseUseCase(any()) } returns parentCourse
 
         viewModel = createViewModel()
 
@@ -441,66 +450,115 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `onCourseClick delegates to behavior`() {
+    fun `onCourseClick emits navigation event`() = runTest {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(course))
 
         viewModel = createViewModel()
-        val activity: FragmentActivity = mockk()
-        viewModel.uiState.value.onCourseClick(activity, 1)
 
-        verify { coursesWidgetBehavior.onCourseClick(activity, course) }
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onCourseClick(1)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.NavigateToCourse
+        assertEquals(course, event.course)
+
+        job.cancel()
     }
 
     @Test
-    fun `onGroupClick delegates to behavior`() {
+    fun `onGroupClick emits navigation event`() = runTest {
         setupDefaultMocks()
         val group = Group(id = 1, name = "Group", isFavorite = true)
         coEvery { loadGroupsUseCase(any()) } returns listOf(group)
 
         viewModel = createViewModel()
-        val activity: FragmentActivity = mockk()
-        viewModel.uiState.value.onGroupClick(activity, 1)
 
-        verify { coursesWidgetBehavior.onGroupClick(activity, group) }
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onGroupClick(1)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.NavigateToGroup
+        assertEquals(group, event.group)
+
+        job.cancel()
     }
 
     @Test
-    fun `onManageOfflineContent delegates to behavior`() {
+    fun `onManageOfflineContent emits navigation event`() = runTest {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(course))
 
         viewModel = createViewModel()
-        val activity: FragmentActivity = mockk()
-        viewModel.uiState.value.onManageOfflineContent(activity, 1)
 
-        verify { coursesWidgetBehavior.onManageOfflineContent(activity, course) }
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onManageOfflineContent(1)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.ManageOfflineContent
+        assertEquals(course, event.course)
+
+        job.cancel()
     }
 
     @Test
-    fun `onCustomizeCourse delegates to behavior`() {
+    fun `onCustomizeCourse emits navigation event`() = runTest {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(course))
 
         viewModel = createViewModel()
-        val activity: FragmentActivity = mockk()
-        viewModel.uiState.value.onCustomizeCourse(activity, 1)
 
-        verify { coursesWidgetBehavior.onCustomizeCourse(activity, course) }
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onCustomizeCourse(1)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.CustomizeCourse
+        assertEquals(course, event.course)
+
+        job.cancel()
     }
 
     @Test
-    fun `onAllCourses delegates to behavior`() {
+    fun `onAllCourses emits navigation event`() = runTest {
         setupDefaultMocks()
 
         viewModel = createViewModel()
-        val activity: FragmentActivity = mockk()
-        viewModel.uiState.value.onAllCourses(activity)
 
-        verify { coursesWidgetBehavior.onAllCoursesClicked(activity) }
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onAllCourses()
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        assertEquals(DashboardNavigationEvent.Courses.NavigateToAllCourses, navigationEvents[0])
+
+        job.cancel()
     }
 
     @Test
@@ -568,24 +626,25 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `init loads announcements for each course`() {
+    fun `init loads announcements from graphql result`() {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val announcements1 = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+            mockk<DiscussionTopicHeader>(relaxed = true)
         )
         val announcements2 = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true),
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+            mockk<DiscussionTopicHeader>(relaxed = true),
+            mockk<DiscussionTopicHeader>(relaxed = true)
         )
+        val announcementsMap = mapOf(1L to announcements1, 2L to announcements2)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } returns announcements1
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns announcements2
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
+            courses,
+            announcementsMap = announcementsMap
+        )
 
         viewModel = createViewModel()
 
@@ -595,17 +654,14 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `init handles announcement loading failure gracefully`() {
+    fun `init shows empty announcements when none are unread`() {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
-        val exception = Exception("Failed to load announcements")
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } throws exception
-        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns emptyList()
 
         viewModel = createViewModel()
 
@@ -613,79 +669,112 @@ class CoursesWidgetViewModelTest {
         assertFalse(state.isError)
         assertEquals(0, state.courses[0].announcements.size)
         assertEquals(0, state.courses[1].announcements.size)
-        verify { crashlytics.recordException(exception) }
     }
 
     @Test
-    fun `onAnnouncementClick finds course and calls behavior with announcements`() {
+    fun `onAnnouncementClick emits navigation event with single announcement`() = runTest {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val announcements = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
-        )
-        val activity: FragmentActivity = mockk(relaxed = true)
+        val announcement = mockk<DiscussionTopicHeader>(relaxed = true)
+        val announcements = listOf(announcement)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
+            courses,
+            announcementsMap = mapOf(1L to announcements)
+        )
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.onAnnouncementClick(activity, 1L)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { coursesWidgetBehavior.onAnnouncementClick(activity, courses[0], announcements) }
+        viewModel.uiState.value.onAnnouncementClick(1L)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.NavigateToAnnouncement
+        assertEquals(courses[0], event.course)
+        assertEquals(announcement, event.announcement)
+
+        job.cancel()
     }
 
     @Test
-    fun `onAnnouncementClick does nothing when course not found`() {
+    fun `onAnnouncementClick does nothing when course not found`() = runTest {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.onAnnouncementClick(activity, 999L)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify(exactly = 0) { coursesWidgetBehavior.onAnnouncementClick(any(), any(), any()) }
+        viewModel.uiState.value.onAnnouncementClick(999L)
+        advanceUntilIdle()
+
+        assertEquals(0, navigationEvents.size)
+
+        job.cancel()
     }
 
     @Test
-    fun `onGroupMessageClick finds group and calls behavior`() {
+    fun `onGroupMessageClick emits navigation event`() = runTest {
         setupDefaultMocks()
         val groups = listOf(
             Group(id = 1, name = "Group 1", isFavorite = true)
         )
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadGroupsUseCase(any()) } returns groups
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.onGroupMessageClick(activity, 1L)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { coursesWidgetBehavior.onGroupMessageClick(activity, groups[0]) }
+        viewModel.uiState.value.onGroupMessageClick(1L)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Courses.NavigateToGroupMessage
+        assertEquals(groups[0], event.group)
+
+        job.cancel()
     }
 
     @Test
-    fun `onGroupMessageClick does nothing when group not found`() {
+    fun `onGroupMessageClick does nothing when group not found`() = runTest {
         setupDefaultMocks()
         val groups = listOf(
             Group(id = 1, name = "Group 1", isFavorite = true)
         )
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadGroupsUseCase(any()) } returns groups
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.onGroupMessageClick(activity, 999L)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Courses>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify(exactly = 0) { coursesWidgetBehavior.onGroupMessageClick(any(), any()) }
+        viewModel.uiState.value.onGroupMessageClick(999L)
+        advanceUntilIdle()
+
+        assertEquals(0, navigationEvents.size)
+
+        job.cancel()
     }
 
     @Test
@@ -696,13 +785,9 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
-        val announcements = listOf(
-            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
-        )
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } returns updatedCourse
-        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
 
         viewModel = createViewModel()
 
@@ -714,8 +799,7 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        coVerify(exactly = 1) { loadCourseUseCase(match { it.courseId == 1L && it.forceNetwork }) }
-        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(match { it.courseId == 1L && it.forceNetwork }) }
+        coVerify(exactly = 1) { loadSingleCourseUseCase(match { it.courseId == 1L }) }
 
         val state = viewModel.uiState.value
         assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
@@ -747,17 +831,15 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `reloadCourse handles announcement loading failure`() {
+    fun `reloadCourse handles failure gracefully`() {
         setupDefaultMocks()
         val initialCourses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
-        val exception = Exception("Failed to load announcements")
+        val exception = Exception("Failed to reload course")
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } returns updatedCourse
-        coEvery { loadCourseAnnouncementsUseCase(any()) } throws exception
+        coEvery { loadSingleCourseUseCase(any()) } throws exception
 
         viewModel = createViewModel()
 
@@ -770,21 +852,47 @@ class CoursesWidgetViewModelTest {
         receiverSlot.captured.onReceive(mockk(), intent)
 
         verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `reloadCourse preserves existing announcements`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
+
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
         val state = viewModel.uiState.value
         assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
         assertEquals(0, state.courses.find { it.id == 1L }?.announcements?.size)
     }
 
     @Test
-    fun `reloadCourse handles course loading failure gracefully`() {
+    fun `reloadCourse applies nickname from dashboard card`() {
         setupDefaultMocks()
         val initialCourses = listOf(
-            Course(id = 1, name = "Course 1", isFavorite = true)
+            Course(id = 1, name = "Original Name", isFavorite = true)
         )
-        val exception = Exception("Failed to load course")
+        val updatedCourse = Course(id = 1, name = "Original Name", isFavorite = true)
 
         coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(initialCourses)
-        coEvery { loadCourseUseCase(any()) } throws exception
+        coEvery { loadSingleCourseUseCase(any()) } returns updatedCourse
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(
+            DashboardCard(id = 1, shortName = "My Nickname", position = 0)
+        )
 
         viewModel = createViewModel()
 
@@ -796,7 +904,8 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        verify { crashlytics.recordException(exception) }
+        val state = viewModel.uiState.value
+        assertEquals("My Nickname", state.courses.find { it.id == 1L }?.name)
     }
 
     @Test
@@ -1075,10 +1184,9 @@ class CoursesWidgetViewModelTest {
         return CoursesWidgetViewModel(
             loadVisibleCoursesUseCase = loadVisibleCoursesUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
-            loadCourseUseCase = loadCourseUseCase,
-            loadCourseAnnouncementsUseCase = loadCourseAnnouncementsUseCase,
+            loadSingleCourseUseCase = loadSingleCourseUseCase,
+            loadDashboardCardsUseCase = loadDashboardCardsUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
-            coursesWidgetBehavior = coursesWidgetBehavior,
             courseSyncSettingsDao = courseSyncSettingsDao,
             courseDao = courseDao,
             networkStateProvider = networkStateProvider,
@@ -1087,8 +1195,8 @@ class CoursesWidgetViewModelTest {
             localBroadcastManager = localBroadcastManager,
             observeWidgetConfigUseCase = observeWidgetConfigUseCase,
             observeOfflineSyncUpdatesUseCase = observeOfflineSyncUpdatesUseCase,
-            userRepository = userRepository,
-            observeGlobalConfigUseCase = observeGlobalConfigUseCase
+            observeGlobalConfigUseCase = observeGlobalConfigUseCase,
+            userRepository = userRepository
         )
     }
 }

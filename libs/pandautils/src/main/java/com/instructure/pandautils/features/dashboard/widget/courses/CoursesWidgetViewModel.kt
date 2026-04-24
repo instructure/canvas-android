@@ -20,7 +20,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
@@ -31,13 +30,13 @@ import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
-import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
@@ -52,8 +51,11 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
@@ -69,10 +71,9 @@ import javax.inject.Inject
 class CoursesWidgetViewModel @Inject constructor(
     private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
-    private val loadCourseUseCase: LoadCourseUseCase,
-    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
+    private val loadSingleCourseUseCase: LoadSingleCourseUseCase,
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
-    private val coursesWidgetBehavior: CoursesWidgetBehavior,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val courseDao: CourseDao,
     private val networkStateProvider: NetworkStateProvider,
@@ -89,6 +90,9 @@ class CoursesWidgetViewModel @Inject constructor(
     private var groups: List<Group> = emptyList()
 
     private var allCourses: List<Course> = emptyList()
+
+    private val _navigationEvents = MutableSharedFlow<DashboardNavigationEvent.Courses>()
+    val navigationEvents: SharedFlow<DashboardNavigationEvent.Courses> = _navigationEvents.asSharedFlow()
 
     private val _uiState = MutableStateFlow(
         CoursesWidgetUiState(
@@ -135,35 +139,55 @@ class CoursesWidgetViewModel @Inject constructor(
         localBroadcastManager.unregisterReceiver(somethingChangedReceiver)
     }
 
-    private fun onCourseClick(activity: FragmentActivity, courseId: Long) {
+    private fun onCourseClick(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
-        coursesWidgetBehavior.onCourseClick(activity, course)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToCourse(course))
+        }
     }
 
-    private fun onGroupClick(activity: FragmentActivity, groupId: Long) {
+    private fun onGroupClick(groupId: Long) {
         val group = groups.find { it.id == groupId } ?: return
-        coursesWidgetBehavior.onGroupClick(activity, group)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToGroup(group))
+        }
     }
 
-    private fun onManageOfflineContent(activity: FragmentActivity, courseId: Long) {
+    private fun onManageOfflineContent(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
-        coursesWidgetBehavior.onManageOfflineContent(activity, course)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.ManageOfflineContent(course))
+        }
     }
 
-    private fun onCustomizeCourse(activity: FragmentActivity, courseId: Long) {
+    private fun onCustomizeCourse(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
-        coursesWidgetBehavior.onCustomizeCourse(activity, course)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.CustomizeCourse(course))
+        }
     }
 
-    private fun onAnnouncementClick(activity: FragmentActivity, courseId: Long) {
+    private fun onAnnouncementClick(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
         val courseCardUiState = _uiState.value.courses.find { it.id == courseId } ?: return
-        coursesWidgetBehavior.onAnnouncementClick(activity, course, courseCardUiState.announcements)
+        val announcements = courseCardUiState.announcements
+        viewModelScope.launch {
+            when (announcements.size) {
+                1 -> _navigationEvents.emit(
+                    DashboardNavigationEvent.Courses.NavigateToAnnouncement(course, announcements.first())
+                )
+                else -> _navigationEvents.emit(
+                    DashboardNavigationEvent.Courses.NavigateToAnnouncementList(course)
+                )
+            }
+        }
     }
 
-    private fun onGroupMessageClick(activity: FragmentActivity, groupId: Long) {
+    private fun onGroupMessageClick(groupId: Long) {
         val group = groups.find { it.id == groupId } ?: return
-        coursesWidgetBehavior.onGroupMessageClick(activity, group)
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToGroupMessage(group))
+        }
     }
 
     private fun onCourseMoved(fromIndex: Int, toIndex: Int) {
@@ -236,16 +260,7 @@ class CoursesWidgetViewModel @Inject constructor(
                 val isAnyGroupFavorited = allActiveGroups.any { it.isFavorite }
                 groups = if (isAnyGroupFavorited) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
-                val announcementsMap = visibleCourses.associate { course ->
-                    course.id to try {
-                        loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(course.id, forceRefresh))
-                    } catch (e: Exception) {
-                        crashlytics.recordException(e)
-                        emptyList()
-                    }
-                }
-
-                val courseCards = mapCoursesToCardItems(visibleCourses, announcementsMap)
+                val courseCards = mapCoursesToCardItems(visibleCourses, result.announcementsMap)
                 val groupCards = mapGroupsToCardItems(groups)
 
                 _uiState.update {
@@ -414,19 +429,21 @@ class CoursesWidgetViewModel @Inject constructor(
         _uiState.update { it.copy(courses = updatedCourses) }
     }
 
-    private fun onAllCourses(activity: FragmentActivity) {
-        coursesWidgetBehavior.onAllCoursesClicked(activity)
+    private fun onAllCourses() {
+        viewModelScope.launch {
+            _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToAllCourses)
+        }
     }
 
     private fun reloadCourse(courseId: Long) {
         viewModelScope.launch {
             try {
-                val updatedCourse = loadCourseUseCase(LoadCourseUseCaseParams(courseId, forceNetwork = true))
-                val announcements = try {
-                    loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(courseId, forceNetwork = true))
-                } catch (e: Exception) {
-                    crashlytics.recordException(e)
-                    emptyList()
+                var updatedCourse = loadSingleCourseUseCase(LoadSingleCourseUseCase.Params(courseId))
+
+                val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true))
+                val card = dashboardCards.find { it.id == courseId }
+                if (card?.shortName?.isNotBlank() == true) {
+                    updatedCourse = updatedCourse.copy(name = card.shortName!!, originalName = updatedCourse.name)
                 }
 
                 visibleCourses = visibleCourses.map { course ->
@@ -434,8 +451,7 @@ class CoursesWidgetViewModel @Inject constructor(
                 }
 
                 val existingAnnouncementsMap = _uiState.value.courses.associate { it.id to it.announcements }
-                val announcementsMap = existingAnnouncementsMap + (courseId to announcements)
-                val courseCards = mapCoursesToCardItems(visibleCourses, announcementsMap)
+                val courseCards = mapCoursesToCardItems(visibleCourses, existingAnnouncementsMap)
                 _uiState.update { it.copy(courses = courseCards) }
             } catch (e: Exception) {
                 crashlytics.recordException(e)

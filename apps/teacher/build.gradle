@@ -51,8 +51,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 90
-        versionName = '2.5.1'
+        versionCode = 92
+        versionName = '2.6.1'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
@@ -156,13 +156,15 @@ android {
         }
     }
 
-    configurations.all {
-        resolutionStrategy {
-            force 'android.arch.lifecycle:runtime:1.0.3'
+    configurations.configureEach {
+        if (canBeResolved) {
+            resolutionStrategy {
+                force 'android.arch.lifecycle:runtime:1.0.3'
 
-            force Libs.KOTLIN_COROUTINES_CORE
+                force Libs.KOTLIN_COROUTINES_CORE
 
-            force Libs.KOTLIN_STD_LIB
+                force Libs.KOTLIN_STD_LIB
+            }
         }
     }
 

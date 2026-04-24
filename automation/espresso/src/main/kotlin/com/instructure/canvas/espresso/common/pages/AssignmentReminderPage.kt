@@ -43,7 +43,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.withIndex
+import com.instructure.canvas.espresso.utils.withIndex
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.scrollTo
@@ -80,6 +80,7 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickAddReminder() {
         composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertReminderDisplayedWithText(text: String) {
@@ -92,6 +93,7 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
                     hasAnySibling(hasText(text))
                 )
         ).performClick()
+        composeTestRule.waitForIdle()
         Thread.sleep(1000)
         onView(withText(R.string.yes)).scrollTo().click()
     }

@@ -85,5 +85,13 @@ data class GradeSubmission(
 )
 
 data class GradeSubmissionWrapper(
-        val submission: GradeSubmission
+        val submission: GradeSubmission,
+        @SerializedName("rubric_assessment")
+        val rubricAssessment: Map<String, RubricAssessmentEntry>? = null
+)
+
+data class RubricAssessmentEntry(
+    val points: Double,
+    @SerializedName("rating_id")
+    val ratingId: String? = null
 )

@@ -25,7 +25,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
@@ -108,8 +107,7 @@ class EditDashboardFragment : BaseCanvasFragment() {
                 editDashboardRouter.routeCourse(action.canvasContext)
             }
             is EditDashboardItemAction.ShowSnackBar -> {
-                Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
-                view?.announceForAccessibility(requireContext().getString(action.res))
+                editDashboardRouter.showSnackbar(this, action.res)
             }
             else -> {}
         }

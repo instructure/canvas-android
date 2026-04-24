@@ -24,6 +24,7 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.features.progress.ProgressPreferences
 import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
 import com.instructure.pandautils.utils.Const
@@ -33,6 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@PageView(url = "modules")
 @AndroidEntryPoint
 class ModuleListFragment : ModuleListMobiusFragment() {
 

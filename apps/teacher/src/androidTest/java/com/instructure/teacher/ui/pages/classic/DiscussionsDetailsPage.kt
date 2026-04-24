@@ -64,9 +64,9 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
             .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$entryMessage']")))
     }
 
-    fun assertReplyCounter(replyCount: Int, unreadCount: Int) {
+    fun assertReplyCounter(replyCount: Int) {
         Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//div[@data-testid='replies-counter' and .='$replyCount Reply ($unreadCount)']/ancestor::button[@data-testid='expand-button']")))
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//div[@data-testid='replies-counter' and .='$replyCount Reply']/ancestor::button[@data-testid='expand-button']")))
     }
 
     fun clickOnExpandRepliesButton() {

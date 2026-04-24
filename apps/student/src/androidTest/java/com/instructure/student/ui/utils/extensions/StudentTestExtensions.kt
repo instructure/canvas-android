@@ -24,19 +24,18 @@ import android.net.Uri
 import android.os.Environment
 import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.RubricsApi
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.api.UserApi
@@ -46,6 +45,8 @@ import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.EnrollmentTypes
 import com.instructure.dataseeding.model.FileType
 import com.instructure.dataseeding.model.FileUploadType
+import com.instructure.dataseeding.model.RubricApiModel
+import com.instructure.dataseeding.model.RubricCriterion
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
@@ -207,9 +208,9 @@ fun CanvasTest.tokenLogin(domain: String, token: String, user: User) {
     }
     // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
     // up after a token login.  Add some tolerance for that.
-    waitForMatcherWithSleeps(ViewMatchers.withId(R.id.dashboardPage), 20000).check(
-        ViewAssertions.matches(
-            ViewMatchers.isDisplayed()
+    waitForMatcherWithSleeps(withId(R.id.dashboardPage), 20000).check(
+        matches(
+            isDisplayed()
         )
     )
 }
@@ -343,4 +344,22 @@ fun uploadTextFile(
         token,
         fileUploadType
     )
+}
+
+fun seedAssignmentWithRubric(
+    courseId: Long,
+    assignmentId: Long,
+    teacherToken: String,
+    title: String = "Test Rubric",
+    criteria: List<RubricCriterion>
+): RubricApiModel {
+    val created = RubricsApi.createAssignmentWithRubric(
+        courseId = courseId,
+        assignmentId = assignmentId,
+        teacherToken = teacherToken,
+        title = title,
+        criteria = criteria
+    )
+    val assignment = AssignmentsApi.getAssignment(courseId, assignmentId, teacherToken)
+    return created.copy(criteria = assignment.rubric ?: emptyList())
 }
