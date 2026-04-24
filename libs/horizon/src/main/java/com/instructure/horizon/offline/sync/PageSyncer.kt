@@ -13,39 +13,45 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.data.repository
+package com.instructure.horizon.offline.sync
 
-import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.data.datasource.PageLocalDataSource
 import com.instructure.horizon.data.datasource.PageNetworkDataSource
+import com.instructure.horizon.data.repository.HorizonFileSyncRepository
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
-import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
-class PageRepository @Inject constructor(
+class PageSyncer @Inject constructor(
     private val networkDataSource: PageNetworkDataSource,
     private val localDataSource: PageLocalDataSource,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
+) {
+    suspend fun syncPages(courseId: Long, pageUrls: List<String>): ContentSyncResult {
+        val additionalFileIds = mutableSetOf<Long>()
+        val externalFileUrls = mutableSetOf<String>()
 
-    suspend fun getPage(courseId: Long, pageUrl: String, forceRefresh: Boolean): Page {
-        return if (shouldFetchFromNetwork()) {
-            networkDataSource.getPage(courseId, pageUrl, forceRefresh).also { page ->
-                if (shouldSync()) {
-                    val parsingResult = htmlParser.createHtmlStringWithLocalFiles(page.body, courseId)
-                    localDataSource.savePage(page, courseId, parsingResult.htmlWithLocalFileLinks)
-                    fileSyncRepository.syncHtmlFiles(courseId, parsingResult)
+        for (pageUrl in pageUrls) {
+            try {
+                val page = networkDataSource.getPage(courseId, pageUrl, forceRefresh = true)
+                val parsedBody = page.body?.let {
+                    htmlParser.createHtmlStringWithLocalFiles(it, courseId)
                 }
+                if (parsedBody != null) {
+                    additionalFileIds.addAll(parsedBody.internalFileIds)
+                    externalFileUrls.addAll(parsedBody.externalFileUrls)
+                    fileSyncRepository.syncHtmlFiles(courseId, parsedBody)
+                }
+                localDataSource.savePage(page, courseId, parsedBody?.htmlWithLocalFileLinks)
+            } catch (_: Exception) {
+                // Skip individual page failures
             }
-        } else {
-            localDataSource.getPage(courseId, pageUrl)
-                ?: throw IllegalStateException("Page '$pageUrl' not available offline")
         }
+
+        return ContentSyncResult(
+            additionalFileIds = additionalFileIds,
+            externalFileUrls = externalFileUrls,
+        )
     }
 }

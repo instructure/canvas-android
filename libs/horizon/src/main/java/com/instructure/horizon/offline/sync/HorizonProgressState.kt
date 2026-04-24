@@ -13,17 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.offline.sync
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+enum class HorizonProgressState {
+    PENDING,
+    IN_PROGRESS,
+    COMPLETED,
+    ERROR;
 
-abstract class OfflineSyncRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-) {
-    fun isOnline() = networkStateProvider.isOnline()
-    suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
-    suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = isOnline() && offlineEnabled()
+    fun isFinished() = this == COMPLETED || this == ERROR
+    fun isRunning() = this == IN_PROGRESS
 }

@@ -73,7 +73,4 @@ class ProgramRepository @Inject constructor(
         return programDetailsNetworkDataSource.enrollCourse(progressId)
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

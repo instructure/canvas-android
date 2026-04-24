@@ -13,17 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.database.entity
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.instructure.horizon.offline.sync.HorizonProgressState
 
-abstract class OfflineSyncRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-) {
-    fun isOnline() = networkStateProvider.isOnline()
-    suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
-    suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = isOnline() && offlineEnabled()
-}
+@Entity(tableName = "horizon_file_sync_plan")
+data class HorizonFileSyncPlanEntity(
+    @PrimaryKey val fileId: Long,
+    val courseId: Long,
+    val fileName: String,
+    val fileSize: Long = 0,
+    val progress: Int = 0,
+    val state: HorizonProgressState = HorizonProgressState.PENDING,
+    val isAdditionalFile: Boolean = false,
+)

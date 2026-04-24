@@ -13,17 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.offline.sync
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import com.instructure.horizon.HorizonActivity
+import javax.inject.Inject
 
-abstract class OfflineSyncRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-) {
-    fun isOnline() = networkStateProvider.isOnline()
-    suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
-    suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = isOnline() && offlineEnabled()
+class HorizonSyncRouter @Inject constructor() {
+    fun routeToSyncProgress(context: Context): PendingIntent {
+        val intent = Intent(context, HorizonActivity::class.java)
+        return PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+    }
 }

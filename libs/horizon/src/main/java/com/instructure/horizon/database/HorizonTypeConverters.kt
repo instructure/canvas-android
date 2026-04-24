@@ -18,6 +18,8 @@ package com.instructure.horizon.database
 import androidx.room.TypeConverter
 import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.features.account.offlinesettings.SyncFrequency
+import com.instructure.horizon.offline.sync.HorizonProgressState
 import java.util.Date
 
 class HorizonTypeConverters {
@@ -39,4 +41,16 @@ class HorizonTypeConverters {
 
     @TypeConverter
     fun toDate(value: Long?): Date? = value?.let { Date(it) }
+
+    @TypeConverter
+    fun fromHorizonProgressState(value: HorizonProgressState): String = value.name
+
+    @TypeConverter
+    fun toHorizonProgressState(value: String): HorizonProgressState = HorizonProgressState.valueOf(value)
+
+    @TypeConverter
+    fun fromSyncFrequency(value: SyncFrequency): String = value.name
+
+    @TypeConverter
+    fun toSyncFrequency(value: String): SyncFrequency = SyncFrequency.valueOf(value)
 }

@@ -13,17 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.offline.sync
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.canvasapi2.models.ModuleObject
 
-abstract class OfflineSyncRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-) {
-    fun isOnline() = networkStateProvider.isOnline()
-    suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
-    suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = isOnline() && offlineEnabled()
-}
+data class CourseSyncResult(
+    val moduleItems: List<ModuleObject> = emptyList(),
+    val additionalFileIds: Set<Long> = emptySet(),
+    val externalFileUrls: Set<String> = emptySet(),
+)
+
+data class ContentSyncResult(
+    val additionalFileIds: Set<Long> = emptySet(),
+    val externalFileUrls: Set<String> = emptySet(),
+)

@@ -118,7 +118,4 @@ class HorizonFileSyncRepository @Inject constructor(
         }
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented — will sync all/selected course files")
-    }
 }

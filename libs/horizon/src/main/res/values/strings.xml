@@ -761,4 +761,11 @@
     <string name="offline_syncInProgressTitle">Syncing offline content</string>
     <string name="offline_syncInProgressDescription">Syncing your content for offline use…</string>
     <string name="offline_syncStatusSynced">Synced</string>
+    <string name="offline_syncCompleted">Offline content synced</string>
+    <string name="offline_syncError">Sync error</string>
+    <string name="offline_syncNotificationChannel">Offline Sync</string>
+    <string name="offline_syncNotificationTitle">Offline content syncing…</string>
+    <string name="offline_syncNotificationComplete">Offline content synced</string>
+    <string name="offline_syncNotificationFailed">Offline content sync failed</string>
+    <string name="offline_syncNotificationCoursesCount">%1$d course(s) synced</string>
 </resources>

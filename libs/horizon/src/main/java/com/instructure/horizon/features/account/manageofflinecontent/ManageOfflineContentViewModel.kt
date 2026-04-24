@@ -21,9 +21,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
+import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
 import com.instructure.horizon.domain.usecase.GetDeviceStorageUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
+import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +38,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -39,11 +46,15 @@ class ManageOfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCoursesWithFilesUseCase: GetCoursesWithFilesUseCase,
     private val getDeviceStorageUseCase: GetDeviceStorageUseCase,
+    private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
+    private val fileSyncPlanDao: HorizonFileSyncPlanDao,
+    private val syncHelper: HorizonOfflineSyncHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         ManageOfflineContentUiState(
             onSelectAllClick = ::onSelectAllClick,
+            onSyncClick = ::onSyncClick,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -112,6 +123,41 @@ class ManageOfflineContentViewModel @Inject constructor(
             }
         } catch {
             _uiState.update { it.copy(loadingState = LoadingState(isLoading = false, isError = true)) }
+        }
+    }
+
+    private fun onSyncClick() {
+        viewModelScope.launch {
+            val selectedCourses = _uiState.value.courses
+                .filter { it.offlineState != CourseOfflineState.NONE }
+
+            if (selectedCourses.isEmpty()) return@launch
+
+            courseSyncPlanDao.deleteAll()
+            fileSyncPlanDao.deleteAll()
+
+            for (course in selectedCourses) {
+                courseSyncPlanDao.upsert(
+                    HorizonCourseSyncPlanEntity(
+                        courseId = course.courseId,
+                        courseName = course.courseName,
+                        syncFiles = course.files.any { it.isSelected },
+                        state = HorizonProgressState.PENDING,
+                    )
+                )
+                for (file in course.files.filter { it.isSelected }) {
+                    fileSyncPlanDao.upsert(
+                        HorizonFileSyncPlanEntity(
+                            fileId = file.fileId,
+                            courseId = course.courseId,
+                            fileName = file.fileName,
+                            state = HorizonProgressState.PENDING,
+                        )
+                    )
+                }
+            }
+
+            syncHelper.syncCourses(selectedCourses.map { it.courseId })
         }
     }
 

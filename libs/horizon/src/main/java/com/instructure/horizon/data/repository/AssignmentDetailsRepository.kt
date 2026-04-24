@@ -52,8 +52,4 @@ class AssignmentDetailsRepository @Inject constructor(
                 ?: throw IllegalStateException("Assignment $assignmentId not available offline")
         }
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

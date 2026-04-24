@@ -13,17 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.offline
+package com.instructure.horizon.database.entity
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.instructure.horizon.features.account.offlinesettings.SyncFrequency
 
-abstract class OfflineSyncRepository(
-    private val networkStateProvider: NetworkStateProvider,
-    private val featureFlagProvider: FeatureFlagProvider,
-) {
-    fun isOnline() = networkStateProvider.isOnline()
-    suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
-    suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
-    suspend fun shouldSync() = isOnline() && offlineEnabled()
-}
+@Entity(tableName = "horizon_sync_settings")
+data class HorizonSyncSettingsEntity(
+    @PrimaryKey val id: Long = 1,
+    val autoSyncEnabled: Boolean = true,
+    val syncFrequency: SyncFrequency = SyncFrequency.DAILY,
+    val wifiOnly: Boolean = true,
+)

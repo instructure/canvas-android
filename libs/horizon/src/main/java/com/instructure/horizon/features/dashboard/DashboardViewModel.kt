@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -45,6 +46,7 @@ class DashboardViewModel @Inject constructor(
     private val themePrefs: ThemePrefs,
     private val localeUtils: LocaleUtils,
     private val dashboardEventHandler: DashboardEventHandler,
+    private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase
@@ -59,6 +61,18 @@ class DashboardViewModel @Inject constructor(
             loadLogo()
         } catch {
 
+        }
+
+        viewModelScope.launch {
+            aggregateProgressObserver.progressData.collect { data ->
+                _uiState.update {
+                    it.copy(
+                        isSyncInProgress = data.isActive,
+                        syncProgress = data.progress,
+                        syncProgressLabel = data.progressLabel,
+                    )
+                }
+            }
         }
 
         viewModelScope.launch {
