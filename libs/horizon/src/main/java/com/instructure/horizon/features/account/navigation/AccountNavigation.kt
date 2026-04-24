@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.account.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -118,11 +119,13 @@ fun NavGraphBuilder.accountNavigation(
         composable(AccountRoute.ManageOfflineContent.route) {
             val viewModel = hiltViewModel<ManageOfflineContentViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            ManageOfflineContentScreen(
-                uiState = uiState.copy(onSyncClick = {
-                    uiState.onSyncClick()
+            LaunchedEffect(Unit) {
+                viewModel.navigateToSyncing.collect {
                     navController.navigate(AccountRoute.SyncingContent.route)
-                }),
+                }
+            }
+            ManageOfflineContentScreen(
+                uiState = uiState,
                 navController = navController,
             )
         }

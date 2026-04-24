@@ -20,8 +20,11 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
+import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 class HorizonCourseSync @Inject constructor(
@@ -59,6 +62,7 @@ class HorizonCourseSync @Inject constructor(
 
             val assignmentIds = extractAssignmentIds(result.moduleItems)
             val pageUrls = extractPageUrls(result.moduleItems)
+            val fileIdsMutex = Mutex()
             val allAdditionalFileIds = result.additionalFileIds.toMutableSet()
             val allExternalUrls = result.externalFileUrls.toMutableSet()
 
@@ -67,8 +71,10 @@ class HorizonCourseSync @Inject constructor(
                     launch {
                         try {
                             val r = assignmentSyncer.syncAssignments(plan.courseId, assignmentIds)
-                            allAdditionalFileIds += r.additionalFileIds
-                            allExternalUrls += r.externalFileUrls
+                            fileIdsMutex.withLock {
+                                allAdditionalFileIds += r.additionalFileIds
+                                allExternalUrls += r.externalFileUrls
+                            }
                             courseSyncPlanDao.updateAssignmentsState(plan.courseId, HorizonProgressState.COMPLETED)
                         } catch (_: Exception) {
                             courseSyncPlanDao.updateAssignmentsState(plan.courseId, HorizonProgressState.ERROR)
@@ -82,8 +88,10 @@ class HorizonCourseSync @Inject constructor(
                     launch {
                         try {
                             val r = pageSyncer.syncPages(plan.courseId, pageUrls)
-                            allAdditionalFileIds += r.additionalFileIds
-                            allExternalUrls += r.externalFileUrls
+                            fileIdsMutex.withLock {
+                                allAdditionalFileIds += r.additionalFileIds
+                                allExternalUrls += r.externalFileUrls
+                            }
                             courseSyncPlanDao.updatePagesState(plan.courseId, HorizonProgressState.COMPLETED)
                         } catch (_: Exception) {
                             courseSyncPlanDao.updatePagesState(plan.courseId, HorizonProgressState.ERROR)

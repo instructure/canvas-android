@@ -74,7 +74,7 @@ class HorizonAggregateProgressObserver @Inject constructor(
 
         val allStates = courses.map { it.state }
         val allFinished = allStates.all { it.isFinished() }
-        val anyRunning = allStates.any { it.isRunning() } || allStates.any { it == HorizonProgressState.PENDING }
+        val anyRunning = allStates.any { it.isRunning() }
         val anyError = allStates.any { it == HorizonProgressState.ERROR }
 
         val progressState = when {
