@@ -17,7 +17,10 @@
 package com.instructure.pandautils.domain.usecase.splash
 
 import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
@@ -31,16 +34,25 @@ class SetupPendoTrackingUseCase @Inject constructor(
     private val featuresRepository: FeaturesRepository,
     private val userRepository: UserRepository,
     private val apiPrefs: ApiPrefs,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val consentPrefs: ConsentPrefs
 ) : BaseUseCase<Unit, Unit>() {
 
     override suspend fun execute(params: Unit) {
-        val sendUsageMetrics = featuresRepository.getEnvironmentFeatureFlags(forceRefresh = true)
-            .dataOrNull
-            ?.get(FeaturesManager.SEND_USAGE_METRICS)
-            .orDefault()
+        val usageMetrics = (userRepository.getMobileSettings(forceRefresh = true) as? DataResult.Success)
+            ?.data?.usageMetrics
 
-        if (sendUsageMetrics) {
+        val shouldTrack = when (usageMetrics) {
+            UserSettings.USAGE_METRICS_TRACK -> true
+            UserSettings.USAGE_METRICS_NO_TRACK -> false
+            UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
+            else -> featuresRepository.getEnvironmentFeatureFlags(forceRefresh = true)
+                .dataOrNull
+                ?.get(FeaturesManager.SEND_USAGE_METRICS)
+                .orDefault()
+        }
+
+        if (shouldTrack) {
             val userWithIds = userRepository.getSelfWithUuid(forceRefresh = true).dataOrNull
             val visitorData = mapOf("locale" to apiPrefs.effectiveLocale)
             val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())

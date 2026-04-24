@@ -22,9 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UnreadCountManager
@@ -42,7 +40,6 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -61,10 +58,10 @@ import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.AppType
+import com.instructure.pandautils.domain.usecase.splash.SetupPendoTrackingUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
-import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.filterByToDoFilters
 import com.instructure.pandautils.utils.isComplete
@@ -80,7 +77,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
-import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -96,9 +92,6 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     lateinit var pandataAppKey: PandataInfo.AppKey
 
     @Inject
-    lateinit var userApi: UserAPI.UsersInterface
-
-    @Inject
     lateinit var plannerApi: PlannerAPI.PlannerInterface
 
     @Inject
@@ -111,7 +104,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     lateinit var apiPrefs: ApiPrefs
 
     @Inject
-    lateinit var consentPrefs: ConsentPrefs
+    lateinit var setupPendoTrackingUseCase: SetupPendoTrackingUseCase
 
     @Inject
     lateinit var courseApi: CourseAPI.CoursesInterface
@@ -218,19 +211,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     private suspend fun setupPendoTracking() {
-        if (consentPrefs.currentUserConsent != true) return
-
-        val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
-        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
-        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-        if (sendUsageMetrics) {
-            val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
-            val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
-            widgetLogger.cancelLogging()
-            Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
-        } else {
-            Pendo.endSession()
-        }
+        widgetLogger.cancelLogging()
+        setupPendoTrackingUseCase(Unit)
     }
 
     private suspend fun getUnreadMessageCount() {

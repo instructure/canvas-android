@@ -27,8 +27,8 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.domain.usecase.splash.SetupPendoTrackingUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -52,7 +52,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import sdk.pendo.io.Pendo
 
 
 @ExperimentalCoroutinesApi
@@ -72,6 +71,7 @@ class SplashViewModelTest {
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
     private val featureFlagProvider = mockk<FeatureFlagProvider>(relaxed = true)
+    private val setupPendoTrackingUseCase = mockk<SetupPendoTrackingUseCase>(relaxed = true)
 
     private lateinit var viewModel: SplashViewModel
 
@@ -82,9 +82,6 @@ class SplashViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
-        mockkStatic(Pendo::class)
-        every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
-        every { Pendo.endSession() } returns Unit
     }
 
     @After
@@ -262,31 +259,14 @@ class SplashViewModelTest {
     }
 
     @Test
-    fun `Send usage metrics enabled`() = runTest {
-        coEvery { repository.getSendUsageMetrics() } returns true
-        every { consentPrefs.currentUserConsent } returns true
-
+    fun `Setup pendo tracking use case is invoked on load`() = runTest {
         createViewModel()
 
         backgroundScope.launch(testDispatcher) {
             viewModel.events.toList()
         }
 
-        verify { Pendo.startSession(any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `Send usage metrics disabled`() = runTest {
-        coEvery { repository.getSendUsageMetrics() } returns false
-        every { consentPrefs.currentUserConsent } returns true
-
-        createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
-
-        verify { Pendo.endSession() }
+        coVerify { setupPendoTrackingUseCase(Unit) }
     }
 
     private fun createViewModel() {
@@ -294,9 +274,9 @@ class SplashViewModelTest {
             context = context,
             repository = repository,
             apiPrefs = apiPrefs,
-            consentPrefs = consentPrefs,
             colorKeeper = colorKeeper,
             featureFlagProvider = featureFlagProvider,
+            setupPendoTrackingUseCase = setupPendoTrackingUseCase,
             savedStateHandle = savedStateHandle
         )
     }
