@@ -17,11 +17,9 @@ package com.instructure.pandautils.features.privacysettings
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -60,15 +58,6 @@ fun PrivacySettingsScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                    text = stringResource(R.string.privacySettingsDescription),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 16.dp),
-                    fontSize = 14.sp,
-                    color = colorResource(R.color.textDarkest)
-                )
                 LabelSwitchRow(
                     label = stringResource(R.string.privacySettingsToggleLabel),
                     checked = uiState.consentEnabled,
@@ -77,6 +66,14 @@ fun PrivacySettingsScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
                 Divider()
+                Text(
+                    text = stringResource(R.string.privacySettingsDescription),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 16.dp),
+                    fontSize = 14.sp,
+                    color = colorResource(R.color.textDarkest)
+                )
             }
         }
     }
