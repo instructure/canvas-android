@@ -29,6 +29,9 @@ interface HorizonFileSyncPlanDao {
     @Query("SELECT * FROM horizon_file_sync_plan")
     fun findAllFlow(): Flow<List<HorizonFileSyncPlanEntity>>
 
+    @Query("SELECT * FROM horizon_file_sync_plan")
+    suspend fun findAllOnce(): List<HorizonFileSyncPlanEntity>
+
     @Query("SELECT * FROM horizon_file_sync_plan WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): List<HorizonFileSyncPlanEntity>
 

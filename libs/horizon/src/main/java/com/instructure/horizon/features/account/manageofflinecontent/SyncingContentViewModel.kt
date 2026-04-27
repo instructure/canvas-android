@@ -29,6 +29,7 @@ import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -102,6 +103,8 @@ class SyncingContentViewModel @Inject constructor(
     }
 
     private fun onCancelSync() {
-        syncHelper.cancelRunningWorkers()
+        viewModelScope.launch {
+            syncHelper.cancelRunningWorkers()
+        }
     }
 }

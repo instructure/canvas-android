@@ -82,28 +82,35 @@ class ManageOfflineContentViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
             val coursesWithFiles = getCoursesWithFilesUseCase()
+            val previouslySelectedCourseIds = courseSyncPlanDao.findAll().map { it.courseId }.toSet()
+            val previouslySelectedFileIds = fileSyncPlanDao.findAllOnce().map { it.fileId }.toSet()
 
             val courses = coursesWithFiles.map { courseData ->
+                val courseWasPreviouslySynced = courseData.courseId in previouslySelectedCourseIds
                 val totalSizeBytes = courseData.files.sumOf { it.size }
+                val files = courseData.files.map { file ->
+                    val fileSelected = file.isSynced || file.fileId in previouslySelectedFileIds
+                    OfflineFileItemUiState(
+                        fileId = file.fileId,
+                        fileName = file.displayName,
+                        fileSizeLabel = Formatter.formatShortFileSize(context, file.size),
+                        isSelected = fileSelected,
+                        onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
+                    )
+                }
+                val anyFileSelected = files.any { it.isSelected }
+                val allFilesSelected = files.isNotEmpty() && files.all { it.isSelected }
                 OfflineCourseItemUiState(
                     courseId = courseData.courseId,
                     courseName = courseData.courseName,
                     courseSizeLabel = if (courseData.files.isNotEmpty()) Formatter.formatShortFileSize(context, totalSizeBytes) else "",
                     offlineState = when {
-                        courseData.files.isEmpty() -> CourseOfflineState.NONE
-                        courseData.files.all { it.isSynced } -> CourseOfflineState.ALL
-                        courseData.files.any { it.isSynced } -> CourseOfflineState.PARTIAL
+                        courseWasPreviouslySynced && !anyFileSelected -> CourseOfflineState.ALL
+                        allFilesSelected -> CourseOfflineState.ALL
+                        anyFileSelected || courseWasPreviouslySynced -> CourseOfflineState.PARTIAL
                         else -> CourseOfflineState.NONE
                     },
-                    files = courseData.files.map { file ->
-                        OfflineFileItemUiState(
-                            fileId = file.fileId,
-                            fileName = file.displayName,
-                            fileSizeLabel = Formatter.formatShortFileSize(context, file.size),
-                            isSelected = file.isSynced,
-                            onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
-                        )
-                    },
+                    files = files,
                     onToggleExpanded = { toggleCourseExpanded(courseData.courseId) },
                     onOfflineStateChanged = { state -> updateCourseOfflineState(courseData.courseId, state) },
                 )
