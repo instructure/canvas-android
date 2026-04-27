@@ -23,6 +23,10 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
 import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
+import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
+import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
+import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -94,6 +98,26 @@ object HorizonTestModule {
                 return Intent()
             }
         }
+    }
+
+    @Provides
+    fun provideAnalyticsConsentHandler(): AnalyticsConsentHandler {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideCookieConsentRouter(): CookieConsentRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideCookieConsentNamespace(): CookieConsentNamespace {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideAcceptableUsePolicyRouter(): AcceptableUsePolicyRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides

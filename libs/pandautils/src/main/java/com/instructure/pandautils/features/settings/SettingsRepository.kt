@@ -21,13 +21,19 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.FeatureFlagProvider
 
 class SettingsRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val inboxSettingsManager: InboxSettingsManager,
     private val settingsBehaviour: SettingsBehaviour,
-    private val experienceAPI: ExperienceAPI
+    private val experienceAPI: ExperienceAPI,
+    private val featureFlagProvider: FeatureFlagProvider
 ) {
+
+    suspend fun isCookieConsentEnabled(): Boolean {
+        return featureFlagProvider.checkCookieConsentFlag()
+    }
 
     suspend fun getInboxSignatureState(): InboxSignatureState {
         val environmentSettings = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull

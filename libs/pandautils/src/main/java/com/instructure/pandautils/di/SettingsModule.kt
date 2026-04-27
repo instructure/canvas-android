@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRepository
 import com.instructure.pandautils.features.settings.SettingsSharedEvents
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,9 +38,10 @@ class SettingsModule {
         featuresApi: FeaturesAPI.FeaturesInterface,
         inboxSettingsManager: InboxSettingsManager,
         settingsBehaviour: SettingsBehaviour,
-        experienceAPI: ExperienceAPI
+        experienceAPI: ExperienceAPI,
+        featureFlagProvider: FeatureFlagProvider
     ): SettingsRepository {
-        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceAPI)
+        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceAPI, featureFlagProvider)
     }
 }
 
