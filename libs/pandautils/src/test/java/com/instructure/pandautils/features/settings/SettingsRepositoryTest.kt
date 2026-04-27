@@ -17,15 +17,18 @@ package com.instructure.pandautils.features.settings
 
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.EnvironmentSettings
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SettingsRepositoryTest {
@@ -34,9 +37,9 @@ class SettingsRepositoryTest {
     private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
     private val experienceApi: ExperienceAPI = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
 
-    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceApi, featureFlagProvider)
+    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceApi, userApi)
 
     @Test
     fun `Return hidden state when feature request fails`() = runTest {
@@ -107,5 +110,30 @@ class SettingsRepositoryTest {
         val inboxSignatureState = repository.getInboxSignatureState()
 
         assertEquals(InboxSignatureState.DISABLED, inboxSignatureState)
+    }
+
+    @Test
+    fun `isAskForConsentMode returns true when usageMetrics is ask_for_consent`() = runTest {
+        coEvery { userApi.getSelfMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ASK_FOR_CONSENT)
+        )
+
+        assertTrue(repository.isAskForConsentMode())
+    }
+
+    @Test
+    fun `isAskForConsentMode returns false when usageMetrics is track_usage`() = runTest {
+        coEvery { userApi.getSelfMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+        )
+
+        assertFalse(repository.isAskForConsentMode())
+    }
+
+    @Test
+    fun `isAskForConsentMode returns false when settings request fails`() = runTest {
+        coEvery { userApi.getSelfMobileSettings(any()) } returns DataResult.Fail()
+
+        assertFalse(repository.isAskForConsentMode())
     }
 }

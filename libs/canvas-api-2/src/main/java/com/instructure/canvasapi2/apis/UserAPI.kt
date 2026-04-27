@@ -73,7 +73,7 @@ object UserAPI {
         @GET("users/self/settings")
         fun getSelfSettings(): Call<UserSettings>
 
-        @GET("users/self/settings?include[]=mobile_setting")
+        @GET("users/self/settings?include[]=mobile_settings")
         suspend fun getSelfMobileSettings(@Tag params: RestParams): DataResult<UserSettings>
 
         @GET("users/self/features")
