@@ -18,21 +18,23 @@ package com.instructure.pandautils.features.settings
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.FeatureFlagProvider
 
 class SettingsRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val inboxSettingsManager: InboxSettingsManager,
     private val settingsBehaviour: SettingsBehaviour,
     private val experienceAPI: ExperienceAPI,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val userApi: UserAPI.UsersInterface
 ) {
 
-    suspend fun isCookieConsentEnabled(): Boolean {
-        return featureFlagProvider.checkCookieConsentFlag()
+    suspend fun isAskForConsentMode(): Boolean {
+        val settings = userApi.getSelfMobileSettings(RestParams()).dataOrNull
+        return settings?.usageMetrics == UserSettings.USAGE_METRICS_ASK_FOR_CONSENT
     }
 
     suspend fun getInboxSignatureState(): InboxSignatureState {

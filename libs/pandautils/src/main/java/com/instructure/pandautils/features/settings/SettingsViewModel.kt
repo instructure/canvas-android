@@ -105,7 +105,7 @@ class SettingsViewModel @Inject constructor(
                     changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, it)
                 }
             }
-            if (!settingsRepository.isCookieConsentEnabled()) {
+            if (!settingsRepository.isAskForConsentMode()) {
                 _uiState.update { state ->
                     state.copy(items = state.items.mapValues { (_, items) ->
                         items.filter { it.item != SettingsItem.PRIVACY }
