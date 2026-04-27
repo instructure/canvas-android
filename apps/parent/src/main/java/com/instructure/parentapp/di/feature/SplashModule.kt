@@ -36,9 +36,8 @@ class SplashModule {
     fun provideSplashRepository(
         userApi: UserAPI.UsersInterface,
         themeApi: ThemeAPI.ThemeInterface,
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        featuresApi: FeaturesAPI.FeaturesInterface
+        enrollmentApi: EnrollmentAPI.EnrollmentInterface
     ): SplashRepository {
-        return SplashRepository(userApi, themeApi, enrollmentApi, featuresApi)
+        return SplashRepository(userApi, themeApi, enrollmentApi)
     }
 }
