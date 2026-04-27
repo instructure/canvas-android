@@ -65,6 +65,7 @@ data class ManageOfflineContentUiState(
     val storageUsedLabel: String = "",
     val storageTotalLabel: String = "",
     val courses: List<OfflineCourseItemUiState> = emptyList(),
+    val hasSyncedContent: Boolean = false,
     val onSelectAllClick: () -> Unit = {},
     val onSyncClick: () -> Unit = {},
 )

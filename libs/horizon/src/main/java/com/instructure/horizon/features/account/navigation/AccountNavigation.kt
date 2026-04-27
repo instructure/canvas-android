@@ -30,12 +30,11 @@ import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
 import com.instructure.horizon.features.account.advanced.AccountAdvancedViewModel
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedScreen
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedViewModel
-import com.instructure.horizon.features.account.manageofflinecontent.DeletingContentScreen
 import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentScreen
 import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentViewModel
-import com.instructure.horizon.features.account.manageofflinecontent.RemoveSyncedContentConfirmationScreen
-import com.instructure.horizon.features.account.manageofflinecontent.SyncingContentScreen
-import com.instructure.horizon.features.account.manageofflinecontent.SyncingContentViewModel
+import com.instructure.horizon.features.account.manageofflinecontent.deletecontent.DeleteContentScreen
+import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressScreen
+import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressViewModel
 import com.instructure.horizon.features.account.notifications.AccountNotificationsScreen
 import com.instructure.horizon.features.account.notifications.AccountNotificationsViewModel
 import com.instructure.horizon.features.account.offlinesettings.OfflineSettingsScreen
@@ -131,26 +130,19 @@ fun NavGraphBuilder.accountNavigation(
         }
 
         composable(AccountRoute.RemoveSyncedContentConfirmation.route) {
-            RemoveSyncedContentConfirmationScreen(
-                navController = navController,
-                onConfirm = { navController.navigate(AccountRoute.DeletingContent.route) },
-            )
+            DeleteContentScreen(navController = navController)
         }
 
         composable(AccountRoute.SyncingContent.route) {
-            val viewModel = hiltViewModel<SyncingContentViewModel>()
+            val viewModel = hiltViewModel<SyncInProgressViewModel>()
             val syncingUiState by viewModel.uiState.collectAsState()
-            SyncingContentScreen(
+            SyncInProgressScreen(
                 uiState = syncingUiState.copy(onCancelSyncClick = {
                     syncingUiState.onCancelSyncClick()
                     navController.popBackStack()
                 }),
                 navController = navController,
             )
-        }
-
-        composable(AccountRoute.DeletingContent.route) {
-            DeletingContentScreen(navController = navController)
         }
     }
 }

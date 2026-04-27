@@ -27,6 +27,7 @@ import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
 import com.instructure.horizon.domain.usecase.GetDeviceStorageUseCase
+import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
@@ -66,13 +67,13 @@ class ManageOfflineContentViewModel @Inject constructor(
 
     val syncingUiState = _uiState
         .map { state ->
-            SyncingContentUiState(
+            SyncInProgressUiState(
                 courses = state.courses
                     .filter { it.offlineState != CourseOfflineState.NONE }
                     .map { course -> course.copy(files = course.files.filter { it.isSelected }) },
             )
         }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, SyncingContentUiState())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, SyncInProgressUiState())
 
     init {
         loadData()
@@ -122,10 +123,14 @@ class ManageOfflineContentViewModel @Inject constructor(
             val storageData = getDeviceStorageUseCase()
             val otherAppBytes = ((storageData.totalBytes - storageData.availableBytes) - canvasBytes).coerceAtLeast(0L)
 
+            val hasSyncedContent = previouslySelectedCourseIds.isNotEmpty()
+                || coursesWithFiles.any { course -> course.files.any { it.isSynced } }
+
             _uiState.update { state ->
                 state.copy(
                     loadingState = LoadingState(isLoading = false),
                     courses = courses,
+                    hasSyncedContent = hasSyncedContent,
                     storageCanvasBytes = canvasBytes,
                     storageOtherAppBytes = otherAppBytes,
                     storageTotalBytes = storageData.totalBytes,

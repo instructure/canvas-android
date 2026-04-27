@@ -17,6 +17,7 @@ package com.instructure.horizon.horizonui.organisms.scaffolds
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
@@ -30,8 +31,8 @@ import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 @Composable
 fun EdgeToEdgeScaffold(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
-    bottomBar: @Composable () -> Unit = {},
+    topBar: @Composable (PaddingValues) -> Unit = {},
+    bottomBar: @Composable (PaddingValues) -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
@@ -51,8 +52,8 @@ fun EdgeToEdgeScaffold(
     ) { statusBarWindowInsets, navigationBarWindowInsets ->
         Scaffold(
             modifier = modifier.imePadding(),
-            topBar = topBar,
-            bottomBar = bottomBar,
+            topBar = { topBar(statusBarWindowInsets.asPaddingValues()) },
+            bottomBar = { bottomBar(navigationBarWindowInsets.asPaddingValues()) },
             snackbarHost = snackbarHost,
             floatingActionButton = floatingActionButton,
             floatingActionButtonPosition = floatingActionButtonPosition,

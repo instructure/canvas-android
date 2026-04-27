@@ -13,9 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.account.manageofflinecontent
+package com.instructure.horizon.features.account.manageofflinecontent.syncinprogress
 
-data class SyncingContentUiState(
+import com.instructure.horizon.features.account.manageofflinecontent.OfflineCourseItemUiState
+
+data class SyncInProgressUiState(
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val syncProgress: Float = 0f,
     val syncProgressLabel: String = "",

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.account.manageofflinecontent
+package com.instructure.horizon.features.account.manageofflinecontent.syncinprogress
 
 import android.content.Context
 import android.text.format.Formatter
@@ -23,20 +23,24 @@ import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
+import com.instructure.horizon.features.account.manageofflinecontent.CourseSyncState
+import com.instructure.horizon.features.account.manageofflinecontent.FileSyncState
+import com.instructure.horizon.features.account.manageofflinecontent.OfflineCourseItemUiState
+import com.instructure.horizon.features.account.manageofflinecontent.OfflineFileItemUiState
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SyncingContentViewModel @Inject constructor(
+class SyncInProgressViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncHelper: HorizonOfflineSyncHelper,
@@ -44,7 +48,7 @@ class SyncingContentViewModel @Inject constructor(
     fileSyncPlanDao: HorizonFileSyncPlanDao,
 ) : ViewModel() {
 
-    val uiState: StateFlow<SyncingContentUiState> = combine(
+    val uiState: StateFlow<SyncInProgressUiState> = combine(
         aggregateProgressObserver.progressData,
         courseSyncPlanDao.findAllFlow(),
         fileSyncPlanDao.findAllFlow(),
@@ -53,13 +57,13 @@ class SyncingContentViewModel @Inject constructor(
             mapCourseToUiState(plan, filePlans.filter { it.courseId == plan.courseId })
         }
 
-        SyncingContentUiState(
+        SyncInProgressUiState(
             courses = courses,
             syncProgress = progressData.progress,
             syncProgressLabel = progressData.progressLabel,
             onCancelSyncClick = ::onCancelSync,
         )
-    }.stateIn(viewModelScope, SharingStarted.Eagerly, SyncingContentUiState())
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, SyncInProgressUiState())
 
     private fun mapCourseToUiState(
         plan: HorizonCourseSyncPlanEntity,

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.account.manageofflinecontent
+package com.instructure.horizon.features.account.manageofflinecontent.syncinprogress
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,6 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.account.manageofflinecontent.CourseSyncState
+import com.instructure.horizon.features.account.manageofflinecontent.FileSyncState
+import com.instructure.horizon.features.account.manageofflinecontent.OfflineCourseItemUiState
+import com.instructure.horizon.features.account.manageofflinecontent.OfflineFileItemUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,10 +56,11 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import kotlin.collections.forEach
 
 @Composable
-fun SyncingContentScreen(
-    uiState: SyncingContentUiState,
+fun SyncInProgressScreen(
+    uiState: SyncInProgressUiState,
     navController: NavHostController,
 ) {
     HorizonScaffold(
@@ -210,9 +215,9 @@ private fun SyncingFileRow(file: OfflineFileItemUiState) {
 
 @Preview
 @Composable
-private fun SyncingContentScreenPreview() {
-    SyncingContentScreen(
-        uiState = SyncingContentUiState(
+private fun SyncInProgressScreenPreview() {
+    SyncInProgressScreen(
+        uiState = SyncInProgressUiState(
             syncProgress = 0.2f,
             syncProgressLabel = "Downloading 12.7 MB of 64 MB",
             courses = listOf(
@@ -222,8 +227,18 @@ private fun SyncingContentScreenPreview() {
                     courseSizeLabel = "~64 MB",
                     syncState = CourseSyncState.SYNCING,
                     files = listOf(
-                        OfflineFileItemUiState(1L, "file-name.pdf", "~64 MB", syncState = FileSyncState.DONE),
-                        OfflineFileItemUiState(2L, "file-name.doc", "~64 MB", syncState = FileSyncState.SYNCING),
+                        OfflineFileItemUiState(
+                            1L,
+                            "file-name.pdf",
+                            "~64 MB",
+                            syncState = FileSyncState.DONE
+                        ),
+                        OfflineFileItemUiState(
+                            2L,
+                            "file-name.doc",
+                            "~64 MB",
+                            syncState = FileSyncState.SYNCING
+                        ),
                     ),
                 ),
             ),
