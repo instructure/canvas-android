@@ -166,7 +166,7 @@ class RouteValidatorViewModelTest {
 
         Assert.assertEquals(RouteValidatorAction.LoadWebViewUrl("sessionUrl"), events.last())
         delay(800)
-        Assert.assertEquals(RouteValidatorAction.StartMainActivity(), events.last())
+        Assert.assertEquals(RouteValidatorAction.StartCookieConsent, events.last())
     }
 
     @Test
