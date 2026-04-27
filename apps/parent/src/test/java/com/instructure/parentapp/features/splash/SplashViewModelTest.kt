@@ -36,6 +36,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +67,7 @@ class SplashViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: SplashRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
     private val featureFlagProvider = mockk<FeatureFlagProvider>(relaxed = true)
@@ -80,6 +82,9 @@ class SplashViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+        mockkStatic(Pendo::class)
+        every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
+        every { Pendo.endSession() } returns Unit
     }
 
     @After
@@ -257,6 +262,24 @@ class SplashViewModelTest {
     }
 
     @Test
+    fun `Send usage metrics enabled`() = runTest {
+        coEvery { repository.getSendUsageMetrics() } returns true
+        every { consentPrefs.currentUserConsent } returns true
+
+        createViewModel()
+
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList()
+        }
+
+        verify { Pendo.startSession(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Send usage metrics disabled`() = runTest {
+        coEvery { repository.getSendUsageMetrics() } returns false
+        every { consentPrefs.currentUserConsent } returns true
+
     fun `Setup pendo tracking use case is invoked on load`() = runTest {
         createViewModel()
 
@@ -272,6 +295,7 @@ class SplashViewModelTest {
             context = context,
             repository = repository,
             apiPrefs = apiPrefs,
+            consentPrefs = consentPrefs,
             colorKeeper = colorKeeper,
             featureFlagProvider = featureFlagProvider,
             setupPendoTrackingUseCase = setupPendoTrackingUseCase,

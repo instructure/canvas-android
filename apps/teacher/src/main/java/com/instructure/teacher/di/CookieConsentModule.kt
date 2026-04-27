@@ -16,6 +16,8 @@
 package com.instructure.teacher.di
 
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.features.cookieconsent.AnalyticsConsentHandler
 import com.instructure.pandautils.features.cookieconsent.CookieConsentNamespace
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -48,8 +50,10 @@ class CookieConsentModule {
     @Provides
     fun provideAnalyticsConsentHandler(
         userApi: UserAPI.UsersInterface,
-        featureFlagProvider: FeatureFlagProvider
+        featureFlagProvider: FeatureFlagProvider,
+        consentPrefs: ConsentPrefs,
+        apiPrefs: ApiPrefs
     ): AnalyticsConsentHandler {
-        return object : AnalyticsConsentHandler(userApi, featureFlagProvider) {}
+        return object : AnalyticsConsentHandler(userApi, featureFlagProvider, consentPrefs, apiPrefs) {}
     }
 }

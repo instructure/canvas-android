@@ -16,7 +16,9 @@
 package com.instructure.teacher.features.login
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.teacher.activities.SplashActivity
 
 class TeacherCookieConsentRouter(
@@ -24,6 +26,7 @@ class TeacherCookieConsentRouter(
 ) : CookieConsentRouter {
 
     override fun startApp() {
+        PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
         val intent = SplashActivity.createIntent(activity, activity.intent?.extras)
         intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK or android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)

@@ -30,6 +30,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.parentapp.databinding.ActivityRouteValidatorBinding
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.features.login.SignInActivity
 import com.instructure.parentapp.features.main.MainActivity
@@ -60,6 +61,7 @@ class RouteValidatorActivity : BaseCanvasActivity() {
             is RouteValidatorAction.ShowToast -> Toast.makeText(this, action.message, Toast.LENGTH_LONG).show()
             is RouteValidatorAction.StartSignInActivity -> startSignInActivity(action.accountDomain)
             is RouteValidatorAction.StartLoginActivity -> startLoginActivity()
+            is RouteValidatorAction.StartCookieConsent -> startCookieConsent()
         }
     }
 
@@ -88,6 +90,13 @@ class RouteValidatorActivity : BaseCanvasActivity() {
 
     private fun startLoginActivity() {
         val intent = LoginActivity.createIntent(this)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun startCookieConsent() {
+        val intent = Intent(this, CookieConsentActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
     }
