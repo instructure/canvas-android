@@ -36,7 +36,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -67,7 +66,6 @@ class SplashViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: SplashRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
     private val featureFlagProvider = mockk<FeatureFlagProvider>(relaxed = true)
@@ -258,7 +256,6 @@ class SplashViewModelTest {
         verify(exactly = 0) { apiPrefs.canBecomeUser = any() }
     }
 
-    @Test
     fun `Setup pendo tracking use case is invoked on load`() = runTest {
         createViewModel()
 
