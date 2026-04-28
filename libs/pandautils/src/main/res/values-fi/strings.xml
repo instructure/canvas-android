@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Opiskelijalla ei ole vielä lähetystä.</string>
     <string name="locked">Lukittu</string>
     <string name="lockedSubtext">Tehtävä on lukittu %1$s asti kohdassa %2$s.</string>
+    <string name="closedSubtext">Tämä tehtävä lukittiin %1$s kohteessa %2$s</string>
     <string name="chooseFile">Valitse tiedosto</string>
     <string name="chooseFileSubtext">Liitä tiedosto lähetyksesi napauttamalla alla olevaa asetusta.</string>
     <string name="chooseFileForUploadSubtext">Valitse ladattava tiedosto napauttamalla alla olevaa asetusta</string>

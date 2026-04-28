@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Aquest estudiant encara no té cap entrega.</string>
     <string name="locked">Bloquejat</string>
     <string name="lockedSubtext">Aquesta activitat està bloquejada fins el dia %1$s a les %2$s.</string>
+    <string name="closedSubtext">Aquesta activitat s\'ha bloquejat el %1$s a les %2$s</string>
     <string name="chooseFile">Tria un fitxer</string>
     <string name="chooseFileSubtext">Toqueu una de les opcions següents per adjuntar un fitxer a l\'entrega.</string>
     <string name="chooseFileForUploadSubtext">Toqueu una de les opcions següents per seleccionar un fitxer i penjar-lo</string>

@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">이 학생은 아직 제출이 없습니다.</string>
     <string name="locked">잠김</string>
     <string name="lockedSubtext">이 과제는 %2$s에 %1$s까지 잠겨 있습니다.</string>
+    <string name="closedSubtext">과제는 %1$s %2$s에 잠겼습니다.</string>
     <string name="chooseFile">파일 선택</string>
     <string name="chooseFileSubtext">아래 옵션을 탭하여 제출에 파일을 첨부합니다.</string>
     <string name="chooseFileForUploadSubtext">아래 옵션을 탭하여 업로드할 파일을 선택</string>

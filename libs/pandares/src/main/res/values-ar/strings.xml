@@ -443,6 +443,8 @@
     <string name="errorConversationGeneric">يتعذر تنفيذ هذا الإجراء. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="conversationArchived">تمت أرشفة المحادثة</string>
     <string name="conversationUnarchived">تم إلغاء أرشفة المحادثة</string>
+    <string name="conversationMarkedAsRead">تم تمييز المحادثة كمقروءة</string>
+    <string name="conversationMarkedAsUnread">تم تمييز المحادثة كغير مقروءة</string>
     <string name="messageDeleted">تم حذف الرسالة</string>
     <string name="messageDeletedFailed">تعذر حذف الرسالة</string>
     <string name="conversationDeleted">تم حذف المحادثة</string>

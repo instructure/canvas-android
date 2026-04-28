@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">यह कार्यवाही करने में असमर्थ। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
     <string name="conversationArchived">बातचीत संग्रहीत की गई</string>
     <string name="conversationUnarchived">बातचीत असंग्रहीत की गई</string>
+    <string name="conversationMarkedAsRead">बातचीत को पढ़ा हुआ चिह्नित किया गया</string>
+    <string name="conversationMarkedAsUnread">बातचीत को नहीं पढ़ा हुआ चिह्नित किया गया</string>
     <string name="messageDeleted">संदेश मिटाया गया</string>
     <string name="messageDeletedFailed">संदेश मिटाने में विफल</string>
     <string name="conversationDeleted">बातचीत मिटाई गई</string>
