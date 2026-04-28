@@ -29,4 +29,7 @@ interface HorizonPageDao {
 
     @Query("SELECT * FROM horizon_pages WHERE courseId = :courseId AND pageUrl = :pageUrl LIMIT 1")
     suspend fun getPage(courseId: Long, pageUrl: String): HorizonPageEntity?
+
+    @Query("DELETE FROM horizon_pages WHERE courseId = :courseId")
+    suspend fun deleteByCourseId(courseId: Long)
 }

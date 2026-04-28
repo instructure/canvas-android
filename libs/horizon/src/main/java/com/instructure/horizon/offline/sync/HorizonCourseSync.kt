@@ -36,6 +36,7 @@ class HorizonCourseSync @Inject constructor(
     private val pageSyncer: PageSyncer,
     private val scoreSyncer: ScoreSyncer,
     private val fileSyncer: FileSyncer,
+    private val courseCleanupHelper: CourseCleanupHelper,
 ) {
     @Volatile
     var isStopped = false
@@ -56,6 +57,8 @@ class HorizonCourseSync @Inject constructor(
     private suspend fun syncCourse(plan: HorizonCourseSyncPlanEntity) {
         courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.IN_PROGRESS)
         try {
+            courseCleanupHelper.cleanupCourseContent(plan.courseId)
+
             val result = courseContentSyncer.sync(plan.courseId)
             courseSyncPlanDao.updateModulesState(plan.courseId, HorizonProgressState.COMPLETED)
             if (isStopped) return

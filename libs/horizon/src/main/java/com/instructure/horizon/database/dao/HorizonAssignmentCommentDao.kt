@@ -44,6 +44,12 @@ interface HorizonAssignmentCommentDao {
     @Query("DELETE FROM horizon_assignment_comments WHERE assignmentId = :assignmentId AND attempt = :attempt")
     suspend fun deleteCommentsForAttempt(assignmentId: Long, attempt: Int)
 
+    @Query("DELETE FROM horizon_assignment_comments WHERE assignmentId IN (SELECT assignmentId FROM horizon_assignment_details WHERE courseId = :courseId)")
+    suspend fun deleteByCourseId(courseId: Long)
+
+    @Query("DELETE FROM horizon_assignment_comment_attachments WHERE commentId IN (SELECT id FROM horizon_assignment_comments WHERE assignmentId IN (SELECT assignmentId FROM horizon_assignment_details WHERE courseId = :courseId))")
+    suspend fun deleteAttachmentsByCourseId(courseId: Long)
+
     @Transaction
     suspend fun replaceCommentsForAttempt(
         assignmentId: Long,
