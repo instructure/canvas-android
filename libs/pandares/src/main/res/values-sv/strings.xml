@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Det går inte att utföra den här åtgärden. Kontrollera din anslutning och försök igen.</string>
     <string name="conversationArchived">Konversationen har arkiverats</string>
     <string name="conversationUnarchived">Konversationen ej arkiverad</string>
+    <string name="conversationMarkedAsRead">Konversation markerad som läst</string>
+    <string name="conversationMarkedAsUnread">Konversation markerad som oläst</string>
     <string name="messageDeleted">Meddelandet har tagits bort</string>
     <string name="messageDeletedFailed">Det gick inte att radera meddelandet</string>
     <string name="conversationDeleted">Konversationen raderades</string>

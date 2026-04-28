@@ -404,6 +404,8 @@
     <string name="errorConversationGeneric">無法執行此操作。請檢查您的連接然後重試。</string>
     <string name="conversationArchived">交談存檔</string>
     <string name="conversationUnarchived">交談取消存檔</string>
+    <string name="conversationMarkedAsRead">已將交談標記為已讀</string>
+    <string name="conversationMarkedAsUnread">已將交談標記為未讀</string>
     <string name="messageDeleted">已刪除訊息</string>
     <string name="messageDeletedFailed">無法刪除郵件</string>
     <string name="conversationDeleted">交談已刪除</string>

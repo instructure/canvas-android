@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Elèv sa a poko fè okenn soumisyon.</string>
     <string name="locked">Bloke</string>
     <string name="lockedSubtext">Sesyon sa a bloke jiska %1$s a %2$s.</string>
+    <string name="closedSubtext">Devwa sa a te bloke sou %1$s a %2$s.</string>
     <string name="chooseFile">Chwazi yon Fichye</string>
     <string name="chooseFileSubtext">Tape opsyon ki pi ba a pou ajoute yon fichye nan soumisyon ou an. </string>
     <string name="chooseFileForUploadSubtext">Tape yon opsyon pi ba a pou ka seleksyone yon fichye pou transfere</string>

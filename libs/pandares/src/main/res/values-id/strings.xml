@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Tidak dapat melakukan tindakan ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="conversationArchived">Percakapan diarsipkan</string>
     <string name="conversationUnarchived">Percakapan dikeluarkan dari arsip</string>
+    <string name="conversationMarkedAsRead">Percakapan ditandai sudah dibaca</string>
+    <string name="conversationMarkedAsUnread">Percakapan ditandai belum dibaca</string>
     <string name="messageDeleted">Pesan dihapus</string>
     <string name="messageDeletedFailed">Gagal menghapus pesan</string>
     <string name="conversationDeleted">Percakapan dihapus</string>

@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Det er ikke muligt at udføre denne handling. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="conversationArchived">Diskussion arkiveret</string>
     <string name="conversationUnarchived">Diskussion fjernet fra arkiv</string>
+    <string name="conversationMarkedAsRead">Samtale markeret som læst</string>
+    <string name="conversationMarkedAsUnread">Samtale markeret som ulæst</string>
     <string name="messageDeleted">Besked slettet</string>
     <string name="messageDeletedFailed">Beskeden kunne ikke slettes</string>
     <string name="conversationDeleted">Samtalen blev slettet</string>

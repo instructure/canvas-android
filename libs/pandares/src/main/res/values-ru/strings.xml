@@ -428,6 +428,8 @@
     <string name="errorConversationGeneric">Невозможно выполнить это действие. Проверьте подключение и попробуйте еще раз.</string>
     <string name="conversationArchived">Дискуссия архивирована</string>
     <string name="conversationUnarchived">Дискуссия разархивирована</string>
+    <string name="conversationMarkedAsRead">Обсуждение отмечено как прочитанное</string>
+    <string name="conversationMarkedAsUnread">Обсуждение отмечено как непрочитанное</string>
     <string name="messageDeleted">Сообщение удалено</string>
     <string name="messageDeletedFailed">Не удалось удалить сообщение</string>
     <string name="conversationDeleted">Обсуждение удалено</string>

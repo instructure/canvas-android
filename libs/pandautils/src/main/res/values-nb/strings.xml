@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Denne studenten har ingen innlevering ennå.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Dette oppdraget er låst frem til %1$s på %2$s.</string>
+    <string name="closedSubtext">Oppgaven din ble låst %1$s kl. %2$s</string>
     <string name="chooseFile">Velg en fil</string>
     <string name="chooseFileSubtext">Legg ved en fil til din innlevering ved å trykke et valg under.</string>
     <string name="chooseFileForUploadSubtext">Velg en fil til opplasting ved å trykke på et av valgene nedenfor</string>

@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Tidak dapat melaksanakan tindakan ini. Sila semak sambungan anda dan cuba semula.</string>
     <string name="conversationArchived">Perbualan diarkibkan</string>
     <string name="conversationUnarchived">Perbualan dinyaharkibkan</string>
+    <string name="conversationMarkedAsRead">Perbualan ditandakan sebagai dibaca</string>
+    <string name="conversationMarkedAsUnread">Perbualan ditandakan sebagai belum dibaca</string>
     <string name="messageDeleted">Mesej dipadamkan</string>
     <string name="messageDeletedFailed">Gagal untuk memadamkan mesej</string>
     <string name="conversationDeleted">Perbualan dipadamkan</string>
