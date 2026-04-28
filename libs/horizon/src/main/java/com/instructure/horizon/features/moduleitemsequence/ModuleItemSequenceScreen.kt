@@ -44,6 +44,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -69,6 +70,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -106,16 +108,13 @@ import com.instructure.horizon.features.moduleitemsequence.content.page.PageDeta
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.offlineDisabled
-import androidx.compose.material3.Icon
-import androidx.compose.ui.res.painterResource
-import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
@@ -128,6 +127,7 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -145,39 +145,43 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         statusBarAlpha = 1f,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            ModuleItemSequenceBottomBar(
-                showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                showPreviousButton = uiState.currentPosition > 0,
-                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
-                        || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
-                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                onNextClick = uiState.onNextClick,
-                onPreviousClick = uiState.onPreviousClick,
-                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = {
-                    navController.navigate(
-                        NotebookRoute.Notebook.route(
-                            uiState.courseId.toString(),
-                            uiState.objectTypeAndId.first,
-                            uiState.objectTypeAndId.second,
-                            true,
-                            false,
-                            true
-                        )
+            Column {
+                if (uiState.isOffline) {
+                    OfflineBanner(
+                        lastSyncedAtMs = uiState.lastSyncedAtMs,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                },
-                notebookEnabled = uiState.notebookButtonEnabled,
-                aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                hasUnreadComments = uiState.hasUnreadComments
-            )
+                }
+                ModuleItemSequenceBottomBar(
+                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                    showPreviousButton = uiState.currentPosition > 0,
+                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                    showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
+                            || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
+                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                    onNextClick = uiState.onNextClick,
+                    onPreviousClick = uiState.onPreviousClick,
+                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                    onNotebookClick = {
+                        navController.navigate(
+                            NotebookRoute.Notebook.route(
+                                uiState.courseId.toString(),
+                                uiState.objectTypeAndId.first,
+                                uiState.objectTypeAndId.second,
+                                true,
+                                false,
+                                true
+                            )
+                        )
+                    },
+                    notebookEnabled = uiState.notebookButtonEnabled,
+                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                    hasUnreadComments = uiState.hasUnreadComments
+                )
+            }
         }
     ) { contentPadding ->
-        OfflineScreenWrapper(
-            isOffline = uiState.isOffline,
-            lastSyncedAtMs = uiState.lastSyncedAtMs,
-        ) {
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
@@ -199,7 +203,6 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
                     isOffline = uiState.isOffline,
                 )
             }
-        }
         }
     }
 }

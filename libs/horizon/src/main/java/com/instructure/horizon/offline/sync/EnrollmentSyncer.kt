@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.offline.sync
 
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.horizon.data.datasource.CourseEnrollmentLocalDataSource
 import com.instructure.horizon.data.datasource.CourseEnrollmentNetworkDataSource
 import com.instructure.horizon.data.datasource.LearnLearningLibraryLocalDataSource
@@ -57,7 +58,8 @@ class EnrollmentSyncer @Inject constructor(
             var cursor: String? = null
             val status = when (queryKey) {
                 LearnMyContentLocalDataSource.QUERY_KEY_IN_PROGRESS -> listOf(
-                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.IN_PROGRESS
+                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.IN_PROGRESS,
+                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.NOT_STARTED,
                 )
                 else -> listOf(
                     com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.COMPLETED
@@ -86,16 +88,22 @@ class EnrollmentSyncer @Inject constructor(
         )
         learnLibraryLocalDataSource.saveEnrolledLearningLibraries(collections)
 
-        val savedItems = learnLibraryNetworkDataSource.getLearningLibraryItems(
-            cursor = null,
-            limit = null,
-            searchQuery = null,
-            typeFilter = null,
-            bookmarkedOnly = true,
-            completedOnly = false,
-            sortBy = null,
-            forceRefresh = true,
-        )
-        learnLibraryLocalDataSource.saveSavedItems(savedItems.items)
+        val allSavedItems = mutableListOf<LearningLibraryCollectionItem>()
+        var cursor: String? = null
+        do {
+            val page = learnLibraryNetworkDataSource.getLearningLibraryItems(
+                cursor = cursor,
+                limit = 100,
+                searchQuery = null,
+                typeFilter = null,
+                bookmarkedOnly = true,
+                completedOnly = false,
+                sortBy = null,
+                forceRefresh = true,
+            )
+            allSavedItems.addAll(page.items)
+            cursor = if (page.pageInfo.hasNextPage) page.pageInfo.nextCursor else null
+        } while (cursor != null)
+        learnLibraryLocalDataSource.saveSavedItems(allSavedItems)
     }
 }

@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.offline.HorizonOfflineViewModel
@@ -47,6 +48,12 @@ class CourseDetailsViewModel @Inject constructor(
 
     init {
         loadData()
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                val lastSyncedAt = getLastSyncTime(SyncDataType.COURSE_DETAILS)
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+            } catch { }
+        }
     }
 
     private fun loadData() {
@@ -60,11 +67,15 @@ class CourseDetailsViewModel @Inject constructor(
     }
 
     override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
         loadData()
     }
 
     override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
+        viewModelScope.tryLaunch {
+            val lastSyncedAt = getLastSyncTime(SyncDataType.COURSE_DETAILS)
+            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+        } catch { }
     }
 
     suspend fun fetchData(forceRefresh: Boolean = false) {
