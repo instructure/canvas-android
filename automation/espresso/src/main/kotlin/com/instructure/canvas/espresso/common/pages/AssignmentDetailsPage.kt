@@ -269,6 +269,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).scrollTo().assertDisplayed()
     }
 
+    fun assertSubmissionOptionDisplayed(submissionType: String) {
+        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
+    }
+
     fun assertReminderViewDisplayed(position: Int = 0) {
         composeTestRule.onNodeWithTag("reminderView-$position").assertExists()
     }
