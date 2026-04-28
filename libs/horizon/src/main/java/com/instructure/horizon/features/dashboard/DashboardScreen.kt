@@ -268,6 +268,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             },
             color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
+            enabled = !uiState.isOffline,
             modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
         HorizonSpace(SpaceSize.SPACE_8)
@@ -279,6 +280,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
+            enabled = !uiState.isOffline,
             badge = if (uiState.unreadCountState.unreadNotifications > 0) {
                 {
                     Badge(
@@ -296,6 +298,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             onClick = { navController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
+            enabled = !uiState.isOffline,
             badge = if (uiState.unreadCountState.unreadConversations > 0) {
                 {
                     Badge(

@@ -13,12 +13,15 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.foundation
+package com.instructure.horizon.database.entity
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.util.Date
 
-fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
-    if (!disabled) return this
-    return this.alpha(0.38f)
-}
+@Entity(tableName = "horizon_local_images")
+data class HorizonLocalImageEntity(
+    @PrimaryKey val url: String,
+    val localPath: String,
+    val createdDate: Date,
+)

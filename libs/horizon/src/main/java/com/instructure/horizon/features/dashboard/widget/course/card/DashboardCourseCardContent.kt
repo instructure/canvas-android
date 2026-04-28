@@ -89,7 +89,8 @@ fun DashboardCourseCardContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = state.onClickAction != null) {
+                .offlineDisabled(!state.isSynced)
+                .clickable(enabled = state.onClickAction != null && state.isSynced) {
                     handleOnClickAction(state.onClickAction)
                 }
         ) {

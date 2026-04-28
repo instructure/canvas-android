@@ -28,11 +28,13 @@ import com.instructure.pandautils.utils.orDefault
 
 suspend fun LearnItem.toCardState(
     resources: Resources,
-    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?
+    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?,
+    isSynced: Boolean = true,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnContentCardState {
     return when (this) {
         is ProgramEnrollmentItem -> toCardState(resources)
-        is CourseEnrollmentItem -> toCardState(resources, fetchNextModuleItemRoute)
+        is CourseEnrollmentItem -> toCardState(resources, fetchNextModuleItemRoute, isSynced, resolvedImageUrls)
     }
 }
 
@@ -89,7 +91,9 @@ private fun ProgramEnrollmentItem.toCardState(resources: Resources): LearnConten
 
 private suspend fun CourseEnrollmentItem.toCardState(
     resources: Resources,
-    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?
+    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?,
+    isSynced: Boolean = true,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnContentCardState {
     val buttonLabel = when {
         completionPercentage == null || completionPercentage == 0.0 -> resources.getString(R.string.learnMyContentStartLearning)
@@ -101,12 +105,14 @@ private suspend fun CourseEnrollmentItem.toCardState(
         LearnContentCardButtonState(buttonLabel, buttonRoute)
     } else { null }
 
+    val resolvedImage = imageUrl?.let { resolvedImageUrls[it] ?: it }
     return LearnContentCardState(
-        imageUrl = imageUrl,
+        imageUrl = resolvedImage,
         name = name,
         progress = completionPercentage,
         route = LearnRoute.LearnCourseDetailsScreen.route(id.toLongOrNull() ?: -1L),
         buttonState = buttonState,
+        isSynced = isSynced,
         cardChips = buildList {
             add(
                 LearnContentCardChipState(

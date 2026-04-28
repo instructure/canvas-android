@@ -13,12 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.foundation
+package com.instructure.horizon.domain.usecase
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import javax.inject.Inject
 
-fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
-    if (!disabled) return this
-    return this.alpha(0.38f)
+class GetSyncedCourseIdsUseCase @Inject constructor(
+    private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
+) {
+    suspend operator fun invoke(): Set<Long> =
+        courseSyncPlanDao.findAll().map { it.courseId }.toSet()
 }

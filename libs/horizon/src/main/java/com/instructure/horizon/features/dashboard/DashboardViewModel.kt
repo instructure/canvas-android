@@ -56,6 +56,17 @@ class DashboardViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                _uiState.update {
+                    it.copy(
+                        isOffline = true,
+                        lastSyncedAtMs = getLastSyncTime(SyncDataType.DASHBOARD_ENROLLMENTS)
+                    )
+                }
+            } catch { }
+        }
+
         viewModelScope.tryLaunch {
             loadUnreadCount()
             loadLogo()

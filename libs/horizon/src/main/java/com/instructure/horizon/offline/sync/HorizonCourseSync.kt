@@ -17,7 +17,9 @@ package com.instructure.horizon.offline.sync
 
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import kotlinx.coroutines.async
@@ -37,6 +39,9 @@ class HorizonCourseSync @Inject constructor(
     private val scoreSyncer: ScoreSyncer,
     private val fileSyncer: FileSyncer,
     private val courseCleanupHelper: CourseCleanupHelper,
+    private val imageSyncer: ImageSyncer,
+    private val dashboardEnrollmentDao: HorizonDashboardEnrollmentDao,
+    private val courseDao: HorizonCourseDao,
 ) {
     @Volatile
     var isStopped = false
@@ -44,6 +49,7 @@ class HorizonCourseSync @Inject constructor(
     suspend fun syncCourses(plans: List<HorizonCourseSyncPlanEntity>) {
         try {
             enrollmentSyncer.sync()
+            syncEnrollmentImages()
         } catch (_: Exception) {
             // Global sync failure is non-fatal for individual courses
         }
@@ -136,9 +142,32 @@ class HorizonCourseSync @Inject constructor(
                 }
             }
 
+            syncCourseImages(plan.courseId)
+
             courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.COMPLETED)
         } catch (_: Exception) {
             courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.ERROR)
+        }
+    }
+
+    private suspend fun syncEnrollmentImages() {
+        try {
+            val imageUrls = dashboardEnrollmentDao.getAll()
+                .mapNotNull { it.courseImageUrl }
+                .toSet()
+            imageSyncer.syncImages(imageUrls)
+        } catch (_: Exception) {
+            // Image sync failure is non-fatal
+        }
+    }
+
+    private suspend fun syncCourseImages(courseId: Long) {
+        try {
+            val imageUrls = mutableSetOf<String>()
+            courseDao.getByCourseId(courseId)?.imageUrl?.let { imageUrls.add(it) }
+            imageSyncer.syncImages(imageUrls)
+        } catch (_: Exception) {
+            // Image sync failure is non-fatal
         }
     }
 

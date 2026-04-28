@@ -117,6 +117,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             loadData()
+            if (isOffline()) {
+                onNetworkLost()
+            }
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
@@ -147,6 +150,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     lastSyncedAtMs = lastSyncedAt,
                     items = updatedItems,
                     currentItem = updatedItems.getOrNull(state.currentPosition),
+                    aiAssistButtonEnabled = false,
+                    notebookButtonEnabled = false,
                 )
             }
         } catch { }

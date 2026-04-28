@@ -67,6 +67,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.molecules.ActionBottomSheet
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
@@ -232,7 +233,8 @@ fun AssignmentDetailsScreen(
                         uiState.ltiUrl,
                         modifier = modifier
                             .height(400.dp)
-                            .padding(horizontal = 24.dp),
+                            .padding(horizontal = 24.dp)
+                            .offlineDisabled(uiState.isOffline),
                         embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                             shouldLaunchInternalWebViewFragment = { _ -> true },
                             launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
@@ -250,7 +252,7 @@ fun AssignmentDetailsScreen(
                 }
                 HorizonSpace(SpaceSize.SPACE_40)
                 if (uiState.showSubmissionDetails) {
-                    SubmissionDetailsContent(uiState.submissionDetailsUiState, modifier = Modifier.padding(24.dp))
+                    SubmissionDetailsContent(uiState.submissionDetailsUiState, isOffline = uiState.isOffline, modifier = Modifier.padding(24.dp))
                 }
                 if (uiState.showAddSubmission) {
                     val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
@@ -282,12 +284,12 @@ fun AssignmentDetailsScreen(
 }
 
 @Composable
-private fun SubmissionDetailsContent(uiState: SubmissionDetailsUiState, modifier: Modifier = Modifier) {
+private fun SubmissionDetailsContent(uiState: SubmissionDetailsUiState, isOffline: Boolean = false, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
             ?: uiState.submissions.first())
         HorizonSpace(SpaceSize.SPACE_40)
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+        Box(modifier = Modifier.fillMaxWidth().offlineDisabled(isOffline), contentAlignment = Alignment.CenterEnd) {
             Button(
                 label = stringResource(R.string.assignmentDetails_newAttempt),
                 color = ButtonColor.Institution,

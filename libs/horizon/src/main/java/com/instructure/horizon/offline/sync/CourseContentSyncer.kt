@@ -20,6 +20,9 @@ import com.instructure.horizon.data.datasource.CourseDetailsNetworkDataSource
 import com.instructure.horizon.data.datasource.CourseProgressLocalDataSource
 import com.instructure.horizon.data.datasource.CourseProgressNetworkDataSource
 import com.instructure.horizon.data.repository.HorizonFileSyncRepository
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
+import com.instructure.horizon.database.entity.EntitySyncType
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import javax.inject.Inject
@@ -31,6 +34,7 @@ class CourseContentSyncer @Inject constructor(
     private val courseProgressLocalDataSource: CourseProgressLocalDataSource,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
+    private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao,
 ) {
     suspend fun sync(courseId: Long): CourseSyncResult {
         val additionalFileIds = mutableSetOf<Long>()
@@ -50,6 +54,12 @@ class CourseContentSyncer @Inject constructor(
 
         val modules = courseProgressNetworkDataSource.getModuleItems(courseId, forceRefresh = true)
         courseProgressLocalDataSource.saveModuleItems(courseId, modules)
+
+        val now = System.currentTimeMillis()
+        entitySyncMetadataDao.upsert(HorizonEntitySyncMetadataEntity(EntitySyncType.COURSE, courseId, now))
+        modules.flatMap { it.items }.forEach { item ->
+            entitySyncMetadataDao.upsert(HorizonEntitySyncMetadataEntity(EntitySyncType.MODULE_ITEM, item.id, now))
+        }
 
         return CourseSyncResult(
             moduleItems = modules,

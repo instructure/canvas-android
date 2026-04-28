@@ -36,6 +36,7 @@ import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
@@ -157,6 +158,11 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonFileSyncPlanDao(db: HorizonDatabase): HorizonFileSyncPlanDao {
         return db.fileSyncPlanDao()
+    }
+
+    @Provides
+    fun provideHorizonLocalImageDao(db: HorizonDatabase): HorizonLocalImageDao {
+        return db.localImageDao()
     }
 
     @Provides
