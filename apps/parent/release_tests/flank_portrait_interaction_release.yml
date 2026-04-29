@@ -1,10 +1,10 @@
 gcloud:
   project: delta-essence-114723
   # Use the next two lines to run locally
-  #  app: ../build/intermediates/apk/qa/debug/parent-qa-debug.apk
-  #  test: ../build/intermediates/apk/androidTest/qa/debug/parent-qa-debug-androidTest.apk
-  app: ../apps/parent/build/outputs/apk/qa/debug/parent-qa-debug.apk
-  test: ../apps/parent/build/outputs/apk/androidTest/qa/debug/parent-qa-debug-androidTest.apk
+  #  app: ./build/intermediates/apk/qa/debug/parent-qa-debug.apk
+  #  test: ./build/intermediates/apk/androidTest/qa/debug/parent-qa-debug-androidTest.apk
+  app: ./apps/parent/build/outputs/apk/qa/debug/parent-qa-debug.apk
+  test: ./apps/parent/build/outputs/apk/androidTest/qa/debug/parent-qa-debug-androidTest.apk
   results-bucket: android-parent
   auto-google-login: true
   use-orchestrator: true
