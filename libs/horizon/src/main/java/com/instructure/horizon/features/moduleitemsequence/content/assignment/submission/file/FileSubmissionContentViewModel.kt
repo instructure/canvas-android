@@ -28,6 +28,7 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -44,6 +45,7 @@ class FileSubmissionContentViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     private val fileCache: FileCache,
+    private val localFileDao: HorizonLocalFileDao,
     private val crashlytics: FirebaseCrashlytics,
 ) : ViewModel() {
 
@@ -162,42 +164,34 @@ class FileSubmissionContentViewModel @Inject constructor(
         try {
             return when {
                 contentType == "application/pdf" -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(url)
-                    tempFile?.let {
-                        FilePreviewUiState.Pdf(Uri.fromFile(it))
-                    } ?: FilePreviewUiState.NoPreview
+                    val resolvedFile = resolveFile(file.fileId, url) ?: return FilePreviewUiState.NoPreview
+                    FilePreviewUiState.Pdf(Uri.fromFile(resolvedFile))
                 }
 
                 contentType.startsWith("video") || contentType.startsWith("audio") -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
-                    tempFile?.let {
-                        FilePreviewUiState.Media(
-                            Uri.fromFile(it),
-                            thumbnailUrl,
-                            contentType,
-                            displayName
-                        )
-                    } ?: FilePreviewUiState.NoPreview
+                    val resolvedFile = resolveFile(file.fileId, url) ?: return FilePreviewUiState.NoPreview
+                    FilePreviewUiState.Media(
+                        Uri.fromFile(resolvedFile),
+                        thumbnailUrl,
+                        contentType,
+                        displayName
+                    )
                 }
 
                 contentType.startsWith("image") -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
-                    tempFile?.let {
-                        FilePreviewUiState.Image(
-                            displayName = displayName,
-                            uri = Uri.fromFile(it)
-                        )
-                    } ?: FilePreviewUiState.NoPreview
+                    val resolvedFile = resolveFile(file.fileId, url) ?: return FilePreviewUiState.NoPreview
+                    FilePreviewUiState.Image(
+                        displayName = displayName,
+                        uri = Uri.fromFile(resolvedFile)
+                    )
                 }
 
                 contentType.startsWith("text") -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
-                    tempFile?.let {
-                        FilePreviewUiState.Text(
-                            content = it.readText(),
-                            contentType = contentType
-                        )
-                    } ?: FilePreviewUiState.NoPreview
+                    val resolvedFile = resolveFile(file.fileId, url) ?: return FilePreviewUiState.NoPreview
+                    FilePreviewUiState.Text(
+                        content = resolvedFile.readText(),
+                        contentType = contentType
+                    )
                 }
 
                 else -> {
@@ -208,6 +202,15 @@ class FileSubmissionContentViewModel @Inject constructor(
             crashlytics.recordException(e)
             return FilePreviewUiState.NoPreview
         }
+    }
+
+    private suspend fun resolveFile(fileId: Long, url: String): File? {
+        val localFile = localFileDao.findById(fileId)
+        if (localFile != null) {
+            val file = File(localFile.path)
+            if (file.exists()) return file
+        }
+        return fileCache.awaitFileDownload(url)
     }
 
     private fun onFileOpened() {
