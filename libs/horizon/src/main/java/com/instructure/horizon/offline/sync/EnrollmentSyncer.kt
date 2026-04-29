@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.offline.sync
 
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.horizon.data.datasource.CourseEnrollmentLocalDataSource
 import com.instructure.horizon.data.datasource.CourseEnrollmentNetworkDataSource
@@ -22,6 +23,8 @@ import com.instructure.horizon.data.datasource.LearnLearningLibraryLocalDataSour
 import com.instructure.horizon.data.datasource.LearnLearningLibraryNetworkDataSource
 import com.instructure.horizon.data.datasource.LearnMyContentLocalDataSource
 import com.instructure.horizon.data.datasource.LearnMyContentNetworkDataSource
+import com.instructure.horizon.data.datasource.ProgramDetailsLocalDataSource
+import com.instructure.horizon.data.datasource.ProgramDetailsNetworkDataSource
 import com.instructure.horizon.data.datasource.ProgramLocalDataSource
 import com.instructure.horizon.data.datasource.ProgramNetworkDataSource
 import javax.inject.Inject
@@ -35,18 +38,30 @@ class EnrollmentSyncer @Inject constructor(
     private val learnMyContentLocalDataSource: LearnMyContentLocalDataSource,
     private val learnLibraryNetworkDataSource: LearnLearningLibraryNetworkDataSource,
     private val learnLibraryLocalDataSource: LearnLearningLibraryLocalDataSource,
+    private val programDetailsNetworkDataSource: ProgramDetailsNetworkDataSource,
+    private val programDetailsLocalDataSource: ProgramDetailsLocalDataSource,
 ) {
     suspend fun sync() {
         val enrollments = enrollmentNetworkDataSource.getEnrollments(forceRefresh = true)
         enrollmentLocalDataSource.saveEnrollments(enrollments)
 
-        val enrolledCourseIds = enrollments.map { it.courseId }.toSet()
-
         val programs = programNetworkDataSource.getPrograms(forceRefresh = true)
-        programLocalDataSource.savePrograms(programs, enrolledCourseIds)
+        programLocalDataSource.savePrograms(programs)
+        syncProgramCourses(programs)
 
         syncLearnContent()
         syncLearningLibrary()
+    }
+
+    private suspend fun syncProgramCourses(programs: List<Program>) {
+        val allCourseIds = programs
+            .flatMap { it.sortedRequirements }
+            .map { it.courseId }
+            .distinct()
+        if (allCourseIds.isNotEmpty()) {
+            val courses = programDetailsNetworkDataSource.getCoursesById(allCourseIds, forceRefresh = true)
+            programDetailsLocalDataSource.saveCourses(courses)
+        }
     }
 
     private suspend fun syncLearnContent() {

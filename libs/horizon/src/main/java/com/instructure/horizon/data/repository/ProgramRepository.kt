@@ -32,7 +32,6 @@ class ProgramRepository @Inject constructor(
     private val localDataSource: ProgramLocalDataSource,
     private val programDetailsNetworkDataSource: ProgramDetailsNetworkDataSource,
     private val programDetailsLocalDataSource: ProgramDetailsLocalDataSource,
-    private val enrollmentRepository: CourseEnrollmentRepository,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
@@ -42,8 +41,7 @@ class ProgramRepository @Inject constructor(
             networkDataSource.getPrograms(forceRefresh)
                 .also { programs ->
                     if (shouldSync()) {
-                        val enrolledCourseIds = enrollmentRepository.getEnrolledCourseIds().toSet()
-                        localDataSource.savePrograms(programs, enrolledCourseIds)
+                        localDataSource.savePrograms(programs)
                     }
                 }
         } else {
