@@ -41,8 +41,8 @@ android {
         applicationId "com.instructure.parentapp"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode 69
-        versionName "4.11.1"
+        versionCode 70
+        versionName "4.12.0"
 
         buildConfigField "boolean", "IS_TESTING", "false"
         testInstrumentationRunner 'com.instructure.parentapp.ui.espresso.ParentHiltTestRunner'
