@@ -3,8 +3,8 @@ gcloud:
 # Use the next two lines to run locally
 #  app: ../build/intermediates/apk/qa/debug/student-qa-debug.apk
 #  test: ../build/intermediates/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
-  app: ../apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
-  test: ../apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+  app: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
+  test: ./apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   results-bucket: android-student
   auto-google-login: true
   use-orchestrator: true
