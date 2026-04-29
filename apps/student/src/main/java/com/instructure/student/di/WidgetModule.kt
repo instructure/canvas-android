@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.student.widget.WidgetLogger
@@ -114,13 +115,15 @@ class WidgetModule {
         userApi: UserAPI.UsersInterface,
         featureFlagProvider: FeatureFlagProvider,
         featuresManager: FeaturesManager,
-        analytics: Analytics
+        analytics: Analytics,
+        consentPrefs: ConsentPrefs
     ): WidgetLogger {
         return WidgetLogger(
             userApi = userApi,
             featureFlagProvider = featureFlagProvider,
             featuresManager = featuresManager,
-            analytics = analytics
+            analytics = analytics,
+            consentPrefs = consentPrefs
         )
     }
 }

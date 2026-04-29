@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.cookieconsent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.UserSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,7 +48,7 @@ class CookieConsentViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val result = getCookieConsentUseCase(Unit)
-                if (result.flagEnabled && result.consent == null) {
+                if (result.usageMetrics == UserSettings.USAGE_METRICS_ASK_FOR_CONSENT && result.consent == null) {
                     _uiState.update { it.copy(loading = false, showDialog = true) }
                 } else {
                     _uiState.update {

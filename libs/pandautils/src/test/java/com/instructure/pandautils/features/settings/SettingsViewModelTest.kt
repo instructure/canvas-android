@@ -408,6 +408,38 @@ class SettingsViewModelTest {
         assertEquals(R.string.inboxSignatureEnabled, viewModel.uiState.value.items[R.string.inboxSettingsTitle]!!.first().subtitleRes)
     }
 
+    @Test
+    fun `Privacy item is visible when isAskForConsentMode returns true`() = runTest {
+        val items = mapOf(
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL, SettingsItem.PRIVACY)
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { themePrefs.appTheme } returns 0
+        coEvery { settingsRepository.isAskForConsentMode() } returns true
+
+        val viewModel = createViewModel()
+
+        val legalItems = viewModel.uiState.value.items[R.string.legal]
+        assertEquals(3, legalItems?.size)
+        assertEquals(true, legalItems?.any { it.item == SettingsItem.PRIVACY })
+    }
+
+    @Test
+    fun `Privacy item is hidden when isAskForConsentMode returns false`() = runTest {
+        val items = mapOf(
+            R.string.legal to listOf(SettingsItem.ABOUT, SettingsItem.LEGAL, SettingsItem.PRIVACY)
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { themePrefs.appTheme } returns 0
+        coEvery { settingsRepository.isAskForConsentMode() } returns false
+
+        val viewModel = createViewModel()
+
+        val legalItems = viewModel.uiState.value.items[R.string.legal]
+        assertEquals(2, legalItems?.size)
+        assertEquals(false, legalItems?.any { it.item == SettingsItem.PRIVACY })
+    }
+
     private fun createViewModel(): SettingsViewModel {
         return SettingsViewModel(savedStateHandle, settingsBehaviour, context, syncSettingsFacade, colorKeeper, themePrefs, apiPrefs, analytics, settingsRepository, networkStateProvider)
     }

@@ -19,8 +19,11 @@ import android.content.Context
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.canvasapi2.utils.PendoInitListener
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -38,7 +41,8 @@ class WidgetLogger @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
     private val featureFlagProvider: FeatureFlagProvider,
     private val featuresManager: FeaturesManager,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val consentPrefs: ConsentPrefs
 ): PendoInitListener {
 
     private val coroutineScope = MainScope()
@@ -48,13 +52,12 @@ class WidgetLogger @Inject constructor(
         loggingJob = coroutineScope.launch(Dispatchers.IO) {
             if (!analytics.isSessionActive()) {
                 PendoInitCallbackHandler.addEvent(event)
-                val featureFlagsResult =
-                    featuresManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
-                val sendUsageMetrics =
-                    featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-                if (sendUsageMetrics) {
+                val settings = (userApi.getSelfMobileSettings(RestParams(isForceReadFromNetwork = true)) as? DataResult.Success)?.data
+                if (shouldTrack(settings)) {
                     PendoInitCallbackHandler.addListener(this@WidgetLogger)
-                    setupPendo(context)
+                    val token = settings?.pendoMobileStudentApiKey?.takeIf { it.isNotEmpty() }
+                        ?: BuildConfig.PENDO_TOKEN
+                    setupPendo(context, token)
                 }
             } else {
                 analytics.logEvent(event)
@@ -62,9 +65,21 @@ class WidgetLogger @Inject constructor(
         }
     }
 
-    private suspend fun setupPendo(context: Context) {
+    private suspend fun shouldTrack(settings: UserSettings?): Boolean {
+        return when (settings?.usageMetrics) {
+            UserSettings.USAGE_METRICS_TRACK -> true
+            UserSettings.USAGE_METRICS_NO_TRACK -> false
+            UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
+            else -> {
+                val featureFlagsResult = featuresManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+                featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
+            }
+        }
+    }
+
+    private suspend fun setupPendo(context: Context, token: String) {
         val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
-        Pendo.setup(context, BuildConfig.PENDO_TOKEN, options, PendoInitCallbackHandler)
+        Pendo.setup(context, token, options, PendoInitCallbackHandler)
         val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
         val accountData =
             mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())

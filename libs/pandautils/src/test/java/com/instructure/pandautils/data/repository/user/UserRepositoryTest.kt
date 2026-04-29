@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.ColorChangeResponse
 import com.instructure.canvasapi2.models.DashboardPositions
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -244,5 +245,38 @@ class UserRepositoryTest {
         verify {
             CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
         }
+    }
+
+    @Test
+    fun `getMobileSettings returns success with settings data`() = runTest {
+        val settings = UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ASK_FOR_CONSENT)
+        val expected = DataResult.Success(settings)
+        coEvery { userApi.getSelfMobileSettings(any()) } returns expected
+
+        val result = repository.getMobileSettings(forceRefresh = true)
+
+        assertEquals(expected, result)
+        coVerify { userApi.getSelfMobileSettings(match { it.isForceReadFromNetwork }) }
+    }
+
+    @Test
+    fun `getMobileSettings with forceRefresh false uses cache`() = runTest {
+        val settings = UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+        val expected = DataResult.Success(settings)
+        coEvery { userApi.getSelfMobileSettings(any()) } returns expected
+
+        repository.getMobileSettings(forceRefresh = false)
+
+        coVerify { userApi.getSelfMobileSettings(match { !it.isForceReadFromNetwork }) }
+    }
+
+    @Test
+    fun `getMobileSettings returns failure`() = runTest {
+        val expected = DataResult.Fail()
+        coEvery { userApi.getSelfMobileSettings(any()) } returns expected
+
+        val result = repository.getMobileSettings(forceRefresh = true)
+
+        assertEquals(expected, result)
     }
 }
