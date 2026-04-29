@@ -58,7 +58,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
         reportProblemLabel.scrollTo().click()
     }
 
-    private fun clickSubmitFeatureLabel() {
+    private fun clickShareContributionLabel() {
         shareContributionLabel.scrollTo().click()
     }
 
@@ -119,7 +119,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         when (helpMenuText) {
             HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
-            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickShareContributionLabel()
             HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
         }
 

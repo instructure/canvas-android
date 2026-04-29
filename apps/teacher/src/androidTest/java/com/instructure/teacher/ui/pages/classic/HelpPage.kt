@@ -55,7 +55,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private val reportProblemLabel by OnViewWithText(R.string.report_problem)
 
     /**
-     * The label for submitting a feature idea.
+     * The label for sharing a contribution.
      */
     private val shareContributionLabel by OnViewWithStringTextIgnoreCase("Share a Contribution")
 
@@ -136,9 +136,9 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     /**
-     * Clicks on the 'Submit a Feature Idea' help menu.
+     * Clicks on the 'Share a Contribution' help menu.
      */
-    private fun clickSubmitFeatureLabel() {
+    private fun clickShareContributionLabel() {
         shareContributionLabel.scrollTo().click()
     }
 
@@ -197,7 +197,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         when (helpMenuText) {
             HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
-            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickShareContributionLabel()
             HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
             HelpMenu.Teacher.CONFERENCE_GUIDES_TITLE -> clickConferenceGuidesForRemoteClassroomsLabel()
             HelpMenu.Teacher.ASK_COMMUNITY_TITLE -> clickAskTheCommunityLabel()
