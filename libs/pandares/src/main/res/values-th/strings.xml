@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">ไม่สามารถดำเนินการในส่วนนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="conversationArchived">จัดเก็บแยกการพูดคุยแล้ว</string>
     <string name="conversationUnarchived">เลิกจัดเก็บแยกการพูดคุยแล้ว</string>
+    <string name="conversationMarkedAsRead">กำกับการสนทนาว่าอ่านแล้ว</string>
+    <string name="conversationMarkedAsUnread">กำกับการสนทนาว่าไม่ได้อ่าน</string>
     <string name="messageDeleted">ลบข้อความแล้ว</string>
     <string name="messageDeletedFailed">ไม่สามารถลบข้อความได้</string>
     <string name="conversationDeleted">ลบการสนทนาแล้ว</string>

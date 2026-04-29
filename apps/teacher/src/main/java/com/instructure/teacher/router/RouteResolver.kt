@@ -23,6 +23,7 @@ import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.privacysettings.PrivacySettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
@@ -234,6 +235,8 @@ object RouteResolver {
             fragment = CreateUpdateEventFragment.newInstance(route)
         } else if (InboxSignatureFragment::class.java.isAssignableFrom(cls)) {
             fragment = InboxSignatureFragment()
+        } else if (PrivacySettingsFragment::class.java.isAssignableFrom(cls)) {
+            fragment = PrivacySettingsFragment.newInstance(route)
         } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
             fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
         } else if (CustomizeDashboardFragment::class.java.isAssignableFrom(cls)) {

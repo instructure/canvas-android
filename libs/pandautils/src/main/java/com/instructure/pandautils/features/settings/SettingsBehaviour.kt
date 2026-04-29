@@ -45,4 +45,5 @@ enum class SettingsItem(val res: Int, val availableOffline: Boolean = false) {
     ACCOUNT_PREFERENCES(R.string.accountPreferences, true),
     HOMEROOM_VIEW(R.string.settingsHomeroomView, true),
     SWITCH_EXPERIENCE(R.string.settingsSwitchExperience),
+    PRIVACY(R.string.privacySettingsTitle),
 }

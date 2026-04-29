@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Ní féidir an gníomh seo a dhéanamh. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="conversationArchived">Comhrá curtha i gcartlann</string>
     <string name="conversationUnarchived">Comhrá bainte ón gcartlann</string>
+    <string name="conversationMarkedAsRead">Marcáladh an comhrá mar léite</string>
+    <string name="conversationMarkedAsUnread">Marcáladh an comhrá mar neamhléite</string>
     <string name="messageDeleted">Scriosadh an teachtaireacht</string>
     <string name="messageDeletedFailed">Theip ar scriosadh na teachtaireachta</string>
     <string name="conversationDeleted">Scriosadh an comhrá</string>

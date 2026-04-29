@@ -42,6 +42,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.RemoteConfigParam
@@ -108,6 +109,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var apiPrefs: ApiPrefs
+
+    @Inject
+    lateinit var consentPrefs: ConsentPrefs
 
     @Inject
     lateinit var courseApi: CourseAPI.CoursesInterface
@@ -214,6 +218,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     private suspend fun setupPendoTracking() {
+        if (consentPrefs.currentUserConsent != true) return
+
         val user = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrNull
         val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
         val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false

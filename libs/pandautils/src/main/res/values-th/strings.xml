@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">ผู้เรียนรายนี้ยังไม่มีผลงานจัดส่งใด ๆ</string>
     <string name="locked">ล็อคแล้ว</string>
     <string name="lockedSubtext">ภารกิจนี้ถูกล็อคจนถึง %1$s จาก %2$s</string>
+    <string name="closedSubtext">ภารกิจถูกล็อคใน %1$s ที่ %2$s</string>
     <string name="chooseFile">เลือกไฟล์</string>
     <string name="chooseFileSubtext">แนบไฟล์กับผลงานจัดส่งของคุณโดยกดเลือกตัวเลือกด้านล่าง</string>
     <string name="chooseFileForUploadSubtext">เลือกไฟล์ที่จะอัพโหลดโดยกดเลือกที่ตัวเลือกด้านล่าง</string>

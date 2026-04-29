@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ColorKeeper
@@ -43,6 +44,7 @@ class SplashViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: SplashRepository,
     private val apiPrefs: ApiPrefs,
+    private val consentPrefs: ConsentPrefs,
     private val colorKeeper: ColorKeeper,
     private val featureFlagProvider: FeatureFlagProvider,
     savedStateHandle: SavedStateHandle
@@ -83,18 +85,20 @@ class SplashViewModel @Inject constructor(
                 }
             }
 
-            val sendUsageMetrics = repository.getSendUsageMetrics()
-            if (sendUsageMetrics) {
-                val userWithIds = repository.getSelfWithUuid()
-                val visitorData = mapOf(
-                    "locale" to apiPrefs.effectiveLocale,
-                )
-                val accountData = mapOf(
-                    "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
-                )
-                Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
-            } else {
-                Pendo.endSession()
+            if (consentPrefs.currentUserConsent == true) {
+                val sendUsageMetrics = repository.getSendUsageMetrics()
+                if (sendUsageMetrics) {
+                    val userWithIds = repository.getSelfWithUuid()
+                    val visitorData = mapOf(
+                        "locale" to apiPrefs.effectiveLocale,
+                    )
+                    val accountData = mapOf(
+                        "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
+                    )
+                    Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
+                } else {
+                    Pendo.endSession()
+                }
             }
 
             val students = repository.getStudents()

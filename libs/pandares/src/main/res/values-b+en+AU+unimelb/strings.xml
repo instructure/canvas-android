@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Unable to perform this action. Please check your connection and try again.</string>
     <string name="conversationArchived">Conversation archived</string>
     <string name="conversationUnarchived">Conversation unarchived</string>
+    <string name="conversationMarkedAsRead">Conversation marked as read</string>
+    <string name="conversationMarkedAsUnread">Conversation marked as unread</string>
     <string name="messageDeleted">Message deleted</string>
     <string name="messageDeletedFailed">Failed to delete message</string>
     <string name="conversationDeleted">Conversation deleted</string>

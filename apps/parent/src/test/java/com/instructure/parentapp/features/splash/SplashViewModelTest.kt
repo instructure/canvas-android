@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -67,6 +68,7 @@ class SplashViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: SplashRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
     private val featureFlagProvider = mockk<FeatureFlagProvider>(relaxed = true)
@@ -262,6 +264,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics enabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns true
+        every { consentPrefs.currentUserConsent } returns true
 
         createViewModel()
 
@@ -275,6 +278,7 @@ class SplashViewModelTest {
     @Test
     fun `Send usage metrics disabled`() = runTest {
         coEvery { repository.getSendUsageMetrics() } returns false
+        every { consentPrefs.currentUserConsent } returns true
 
         createViewModel()
 
@@ -290,6 +294,7 @@ class SplashViewModelTest {
             context = context,
             repository = repository,
             apiPrefs = apiPrefs,
+            consentPrefs = consentPrefs,
             colorKeeper = colorKeeper,
             featureFlagProvider = featureFlagProvider,
             savedStateHandle = savedStateHandle

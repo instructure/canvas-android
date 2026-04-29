@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Kaore he tukunga mo tēnei ākonga</string>
     <string name="locked">Kua rakaina</string>
     <string name="lockedSubtext">Kua rakaina tēnei whakataunga kī %1$s mā %2$s.</string>
+    <string name="closedSubtext">I rakahia tēnei taumahi i te %1$s i te %2$s.</string>
     <string name="chooseFile">Kōwhiria he Kōnae</string>
     <string name="chooseFileSubtext">Tapiritia he kōnae ki tō tāpaetanga ma te patopato kōwhiringa i raro.</string>
     <string name="chooseFileForUploadSubtext">Tīpakohia he kōnae ki tō tukuake ma te patopato kōwhiringa i raro.</string>

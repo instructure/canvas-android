@@ -21,6 +21,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.teacher.BuildConfig
@@ -47,7 +48,9 @@ class AppManager : BaseAppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        schedulePandataUpload()
+        if (ConsentPrefs.currentUserConsent == true) {
+            schedulePandataUpload()
+        }
         initPendo()
     }
 

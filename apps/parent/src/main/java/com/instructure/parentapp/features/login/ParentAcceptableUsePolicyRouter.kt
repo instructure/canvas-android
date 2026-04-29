@@ -22,10 +22,10 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.R
-import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.features.webview.HtmlContentActivity
 import com.instructure.parentapp.util.ParentLogoutTask
 
@@ -42,8 +42,9 @@ class ParentAcceptableUsePolicyRouter(
     override fun startApp() {
         CookieManager.getInstance().flush()
 
-        val intent = Intent(activity, MainActivity::class.java)
+        val intent = Intent(activity, CookieConsentActivity::class.java)
         activity.intent?.extras?.let { intent.putExtras(it) }
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
     }
 

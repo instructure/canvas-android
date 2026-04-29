@@ -26,9 +26,11 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
 import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.login.ParentAcceptableUsePolicyRouter
+import com.instructure.parentapp.features.login.ParentCookieConsentRouter
 import com.instructure.parentapp.features.login.ParentLoginNavigation
 import com.instructure.parentapp.features.login.SignInActivity
 import dagger.Module
@@ -58,6 +60,11 @@ class LoginModule {
         alarmScheduler: AlarmScheduler
     ): LoginNavigation {
         return ParentLoginNavigation(activity, alarmScheduler)
+    }
+
+    @Provides
+    fun provideCookieConsentRouter(activity: FragmentActivity): CookieConsentRouter {
+        return ParentCookieConsentRouter(activity)
     }
 }
 

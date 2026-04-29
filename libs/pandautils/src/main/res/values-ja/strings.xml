@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">この受講者にはまだ提出物がありません。</string>
     <string name="locked">ロックされています</string>
     <string name="lockedSubtext">この課題は%1$sまで%2$sでロックされます。</string>
+    <string name="closedSubtext">この課題は%1$sに%2$sでロックされました。</string>
     <string name="chooseFile">ファイルの選択</string>
     <string name="chooseFileSubtext">下のオプションをタップして、提出物にファイルを添付してください。</string>
     <string name="chooseFileForUploadSubtext">下のオプションをタップして、アップロードするファイルを選択してください</string>

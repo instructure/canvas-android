@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Ekki er hægt að framkvæma þessa aðgerð. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="conversationArchived">Samtal safnvistað</string>
     <string name="conversationUnarchived">Samtal tekið úr safni</string>
+    <string name="conversationMarkedAsRead">Samtal merkt sem lesið</string>
+    <string name="conversationMarkedAsUnread">Samtal merkt sem ólesið</string>
     <string name="messageDeleted">Skilaboðum eytt</string>
     <string name="messageDeletedFailed">Ekki tókst að eyða skilaboðum</string>
     <string name="conversationDeleted">Samræðum eytt</string>

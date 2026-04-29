@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Deze actie kan niet worden uitgevoerd. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="conversationArchived">Gesprek gearchiveerd</string>
     <string name="conversationUnarchived">Archiveren van gesprek ongedaan gemaakt</string>
+    <string name="conversationMarkedAsRead">Gesprek gemarkeerd als gelezen</string>
+    <string name="conversationMarkedAsUnread">Gesprek gemarkeerd als ongelezen</string>
     <string name="messageDeleted">Bericht verwijderd</string>
     <string name="messageDeletedFailed">Verwijderen van bericht mislukt</string>
     <string name="conversationDeleted">Gesprek verwijderd</string>

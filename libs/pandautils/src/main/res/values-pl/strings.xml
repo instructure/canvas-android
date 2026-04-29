@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Ten uczestnik jeszcze niczego nie przesłał.</string>
     <string name="locked">Zablokowany</string>
     <string name="lockedSubtext">To zadanie zostało zablokowane do %1$s, godz. %2$s.</string>
+    <string name="closedSubtext">To zadanie zostało zablokowane w dniu %1$s o godz. %2$s.</string>
     <string name="chooseFile">Wybierz plik</string>
     <string name="chooseFileSubtext">Załącz plik do przesyłanych materiałów, stukając poniższą opcję.</string>
     <string name="chooseFileForUploadSubtext">Wybierz plik do przesłania, stukając poniższą opcję.</string>

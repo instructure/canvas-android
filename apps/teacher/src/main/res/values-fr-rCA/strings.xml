@@ -31,6 +31,7 @@
     <string name="tab_attendance">Participation</string>
     <string name="tab_pages">Pages</string>
     <string name="tab_todo">À faire</string>
+    <string name="tab_todo_new">À faire</string>
     <string name="content_description_school_logo">Logo de l\'école</string>
     <string name="search_guides">Chercher les guides de Canvas</string>
     <string name="canvas_guides">Guides de Canvas</string>
@@ -842,6 +843,7 @@
     <string name="toDoEmpty">Rien de plus à faire!\n Profitez de votre journée.</string>
     <string name="toDoNoSubmissions">Il n\'y a aucun envoi à noter pour ce travail.</string>
     <string name="errorToDoRouteFailed">Une erreur s\'est produite en essayant de voir cet élément À faire.</string>
+    <string name="errorToDoRouteFailedNew">Une erreur s’est produite lors de la tentative d’affichage de cette tâche à faire.</string>
     <string name="errorIsDesigner">L’inscription du concepteur ne peut pas voir ceci.</string>
 
     <string name="sections">Sections</string>
