@@ -729,6 +729,8 @@
     <string name="aiInformation_segment_intendedOutcomes_value">AI Generated content may contain mistakes or inaccurate information and should always be verified</string>
     <string name="offlineBannerNoDate">You\'re offline.</string>
     <string name="offlineBannerWithDate">You\'re offline. Last synced %1$s.</string>
+    <string name="offline_notSyncedTitle">Not synced</string>
+    <string name="offline_notSyncedDescription">This content hasn\'t been synced for offline use. Sync it from the dashboard when a network is available.</string>
     <string name="offline_notAvailableTitle">Not available offline</string>
     <string name="offline_notAvailableDescription">This content isn\'t available in offline mode. To change your settings, open the offline content screen from the dashboard when a network is available.</string>
     <string name="offline_settingsTitle">Offline settings</string>

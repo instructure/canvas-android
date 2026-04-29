@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardOffline
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardState
@@ -41,8 +42,21 @@ fun DashboardSkillHighlightsWidget(
     navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    if (isOffline) {
+        DashboardWidgetCardOffline(
+            title = stringResource(R.string.dashboardSkillHighlightsTitle),
+            iconRes = R.drawable.hub,
+            widgetColor = HorizonColors.PrimitivesGreen.green12(),
+            useMinWidth = false,
+            pageState = DashboardWidgetPageState.Empty,
+            modifier = modifier.padding(horizontal = 24.dp)
+        )
+        return
+    }
+
     val viewModel = hiltViewModel<DashboardSkillHighlightsViewModel>()
     val state by viewModel.uiState.collectAsState()
 

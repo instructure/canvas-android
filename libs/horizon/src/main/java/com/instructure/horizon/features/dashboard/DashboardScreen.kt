@@ -215,23 +215,27 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                         DashboardAnnouncementBannerWidget(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
+                            isOffline = uiState.isOffline,
                         )
                         DashboardCourseSection(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
+                            isOffline = uiState.isOffline,
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
                         NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
-                            navController
+                            navController,
+                            isOffline = uiState.isOffline,
                         )
                         DashboardSkillHighlightsWidget(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
+                            isOffline = uiState.isOffline,
                         )
                         HorizonSpace(SpaceSize.SPACE_24)
                     }
@@ -317,6 +321,7 @@ private fun NumericWidgetRow(
     shouldRefresh: Boolean,
     refreshStateFlow: MutableStateFlow<List<Boolean>>,
     navController: NavHostController,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
@@ -338,20 +343,23 @@ private fun NumericWidgetRow(
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardTimeSpentWidget(
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardSkillOverviewWidget(
                     navController,
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
             }
         } else {
@@ -369,7 +377,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )
@@ -380,7 +389,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )
@@ -392,7 +402,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )

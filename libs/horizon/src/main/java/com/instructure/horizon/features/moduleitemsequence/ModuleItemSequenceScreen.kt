@@ -127,7 +127,9 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.OfflineAwareContent
 import com.instructure.horizon.horizonui.organisms.OfflineBanner
+import com.instructure.horizon.horizonui.organisms.OfflineContentState
 import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -459,7 +461,7 @@ private fun ModuleItemContentScreen(
     modifier: Modifier = Modifier
 ) {
     if (!moduleItemUiState.isAvailableOffline) {
-        NotAvailableOfflineContent(modifier = modifier)
+        OfflineAwareContent(state = OfflineContentState.NotAvailableOffline, modifier = modifier) { }
     } else if (moduleItemUiState.isLoading) {
         Box(
             modifier = modifier
@@ -661,58 +663,6 @@ private fun ModuleItemSequenceBottomBar(
             )
         }
     }
-}
-
-@Composable
-private fun NotAvailableOfflineContent(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                color = HorizonColors.Surface.pageSecondary(),
-                shape = HorizonCornerRadius.level5
-            )
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .size(64.dp)
-                .background(
-                    color = HorizonColors.PrimitivesRed.red12(),
-                    shape = HorizonCornerRadius.level1
-                ),
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.cancel),
-                contentDescription = null,
-                tint = HorizonColors.Surface.error(),
-                modifier = Modifier.size(32.dp),
-            )
-        }
-        HorizonSpace(SpaceSize.SPACE_16)
-        Text(
-            text = stringResource(R.string.offline_notAvailableTitle),
-            style = HorizonTypography.h4,
-            color = HorizonColors.Text.body(),
-            textAlign = TextAlign.Center,
-        )
-        HorizonSpace(SpaceSize.SPACE_8)
-        Text(
-            text = stringResource(R.string.offline_notAvailableDescription),
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.timestamp(),
-            textAlign = TextAlign.Center,
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun NotAvailableOfflineContentPreview() {
-    NotAvailableOfflineContent()
 }
 
 private class CollapsingAppBarNestedScrollConnection(
