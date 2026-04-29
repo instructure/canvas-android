@@ -13,22 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.foundation
+package com.instructure.horizon.database.entity
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
-    if (!disabled) return this
-    return this
-        .alpha(0.38f)
-        .pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    awaitPointerEvent()
-                    // Consume all pointer events to block child interactions
-                }
-            }
-        }
-}
+@Entity(tableName = "horizon_user")
+data class HorizonUserEntity(
+    @PrimaryKey val id: Long,
+    val name: String,
+    val shortName: String?,
+)

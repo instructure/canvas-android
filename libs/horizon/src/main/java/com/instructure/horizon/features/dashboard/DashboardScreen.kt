@@ -222,7 +222,6 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             navController,
                             shouldRefresh,
                             refreshStateFlow,
-                            isOffline = uiState.isOffline,
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
                         NumericWidgetRow(

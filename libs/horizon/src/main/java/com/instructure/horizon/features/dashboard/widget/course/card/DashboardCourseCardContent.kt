@@ -74,8 +74,6 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.model.LearningObjectType
-import com.instructure.horizon.horizonui.organisms.OfflineAwareContent
-import com.instructure.horizon.horizonui.organisms.OfflineContentState
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 import kotlin.math.roundToInt
@@ -85,28 +83,22 @@ fun DashboardCourseCardContent(
     state: DashboardCourseCardState,
     handleOnClickAction: (CardClickAction?) -> Unit,
     isLoading: Boolean,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     DashboardCard(modifier) {
-        val offlineState = when {
-            isOffline && !state.isSynced -> OfflineContentState.NotSynced
-            else -> OfflineContentState.Available
-        }
-        OfflineAwareContent(state = offlineState) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = state.onClickAction != null && state.isSynced) {
-                        handleOnClickAction(state.onClickAction)
-                    }
-            ) {
-                BoxWithConstraints {
-                    if (this.isWideLayout) {
-                        DashboardCourseCardWideContent(state, isLoading, handleOnClickAction)
-                    } else {
-                        DashboardCourseCardCompactContent(state, isLoading, handleOnClickAction)
-                    }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offlineDisabled(!state.isSynced)
+                .clickable(enabled = state.onClickAction != null && state.isSynced) {
+                    handleOnClickAction(state.onClickAction)
+                }
+        ) {
+            BoxWithConstraints {
+                if (this.isWideLayout) {
+                    DashboardCourseCardWideContent(state, isLoading, handleOnClickAction)
+                } else {
+                    DashboardCourseCardCompactContent(state, isLoading, handleOnClickAction)
                 }
             }
         }

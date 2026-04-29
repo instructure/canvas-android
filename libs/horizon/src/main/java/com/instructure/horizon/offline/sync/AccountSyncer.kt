@@ -13,22 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.foundation
+package com.instructure.horizon.offline.sync
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.pointerInput
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.horizon.data.datasource.AccountLocalDataSource
+import javax.inject.Inject
 
-fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
-    if (!disabled) return this
-    return this
-        .alpha(0.38f)
-        .pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    awaitPointerEvent()
-                    // Consume all pointer events to block child interactions
-                }
-            }
-        }
+class AccountSyncer @Inject constructor(
+    private val userApi: UserAPI.UsersInterface,
+    private val localDataSource: AccountLocalDataSource,
+) {
+    suspend fun sync() {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        val user = userApi.getSelf(restParams).dataOrThrow
+        localDataSource.saveUser(user)
+    }
 }

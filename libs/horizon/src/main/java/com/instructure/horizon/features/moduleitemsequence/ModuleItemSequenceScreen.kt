@@ -219,7 +219,6 @@ private fun BoxScope.MarkAsDoneButton(
         modifier
             .align(Alignment.BottomEnd)
             .padding(end = 24.dp, bottom = 16.dp)
-            .offlineDisabled(isOffline)
             .horizonShadow(
                 elevation = HorizonElevation.level4,
                 shape = HorizonCornerRadius.level6,
@@ -248,10 +247,12 @@ private fun BoxScope.MarkAsDoneButton(
             Button(
                 label = stringResource(id = if (markAsDoneState.isDone) R.string.modulePager_done else R.string.modulePager_markAsDone),
                 color = ButtonColor.Ghost,
+                enabled = !isOffline,
                 onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
                 iconPosition = ButtonIconPosition.Start(
                     iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
-                )
+                ),
+                modifier = Modifier.offlineDisabled(isOffline),
             )
         }
     }

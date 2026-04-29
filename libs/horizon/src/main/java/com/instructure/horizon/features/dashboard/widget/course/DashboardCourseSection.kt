@@ -73,7 +73,6 @@ fun DashboardCourseSection(
     navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val viewModel = hiltViewModel<DashboardCourseViewModel>()
@@ -88,14 +87,13 @@ fun DashboardCourseSection(
         }
     }
 
-    DashboardCourseSection(state, navController, isOffline, modifier)
+    DashboardCourseSection(state, navController, modifier)
 }
 
 @Composable
 fun DashboardCourseSection(
     state: DashboardCourseUiState,
     navController: NavHostController,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     when(state.state) {
@@ -111,7 +109,7 @@ fun DashboardCourseSection(
             DashboardCourseCardError({state.onRefresh {} }, modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.SUCCESS -> {
-            DashboardCourseSectionContent(state, navController, isOffline, modifier)
+            DashboardCourseSectionContent(state, navController, modifier)
         }
     }
 }
@@ -120,7 +118,6 @@ fun DashboardCourseSection(
 private fun DashboardCourseSectionContent(
     state: DashboardCourseUiState,
     navController: NavHostController,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     // Display 4 cards at most
@@ -151,7 +148,6 @@ private fun DashboardCourseSectionContent(
                         DashboardCourseItem(
                             state.courses[index],
                             navController,
-                            isOffline = isOffline,
                             modifier.padding(bottom = 12.dp)
                                 .onGloballyPositioned { coordinates ->
                                     val cardHeight = coordinates.size.height
@@ -222,7 +218,6 @@ private fun DashboardCourseSectionContent(
 private fun DashboardCourseItem(
     cardState: DashboardCourseCardState,
     navController: NavHostController,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -232,8 +227,7 @@ private fun DashboardCourseItem(
         DashboardCourseCardContent(
             cardState,
             { handleClickAction(it, navController) },
-            false,
-            isOffline = isOffline,
+            false
         )
     }
 }

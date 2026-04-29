@@ -13,22 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.horizonui.foundation
+package com.instructure.horizon.database.dao
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.instructure.horizon.database.entity.HorizonUserEntity
 
-fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
-    if (!disabled) return this
-    return this
-        .alpha(0.38f)
-        .pointerInput(Unit) {
-            awaitPointerEventScope {
-                while (true) {
-                    awaitPointerEvent()
-                    // Consume all pointer events to block child interactions
-                }
-            }
-        }
+@Dao
+interface HorizonUserDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(entity: HorizonUserEntity)
+
+    @Query("SELECT * FROM horizon_user LIMIT 1")
+    suspend fun getUser(): HorizonUserEntity?
 }

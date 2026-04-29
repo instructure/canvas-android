@@ -65,6 +65,8 @@ import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonLocalImageEntity
+import com.instructure.horizon.database.entity.HorizonUserEntity
+import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
 
@@ -99,8 +101,9 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonCourseSyncPlanEntity::class,
         HorizonFileSyncPlanEntity::class,
         HorizonLocalImageEntity::class,
+        HorizonUserEntity::class,
     ],
-    version = 17,
+    version = 18,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -124,4 +127,5 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun courseSyncPlanDao(): HorizonCourseSyncPlanDao
     abstract fun fileSyncPlanDao(): HorizonFileSyncPlanDao
     abstract fun localImageDao(): HorizonLocalImageDao
+    abstract fun userDao(): HorizonUserDao
 }

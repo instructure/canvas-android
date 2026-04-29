@@ -33,6 +33,7 @@ class HorizonCourseSync @Inject constructor(
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
     private val fileSyncPlanDao: HorizonFileSyncPlanDao,
     private val enrollmentSyncer: EnrollmentSyncer,
+    private val accountSyncer: AccountSyncer,
     private val courseContentSyncer: CourseContentSyncer,
     private val assignmentSyncer: AssignmentSyncer,
     private val pageSyncer: PageSyncer,
@@ -48,6 +49,7 @@ class HorizonCourseSync @Inject constructor(
 
     suspend fun syncCourses(plans: List<HorizonCourseSyncPlanEntity>) {
         try {
+            accountSyncer.sync()
             enrollmentSyncer.sync()
             syncEnrollmentImages()
         } catch (_: Exception) {
