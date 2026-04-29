@@ -37,7 +37,7 @@ class CourseHomeViewModel @Inject constructor(
 
     private val courseId: Long = savedStateHandle.get<Long>(ARG_COURSE_ID) ?: 0L
 
-    private val _uiState = MutableStateFlow(CourseHomeUiState())
+    private val _uiState = MutableStateFlow(CourseHomeUiState(courseId = courseId))
     val uiState: StateFlow<CourseHomeUiState> = _uiState.asStateFlow()
 
     init {

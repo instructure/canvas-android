@@ -72,7 +72,8 @@ class GradesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val courseId = savedStateHandle.get<Long>(COURSE_ID_KEY).orDefault()
+    private val courseId = (savedStateHandle.get<Long>(COURSE_ID_KEY)
+        ?: savedStateHandle.get<Long>("courseId")).orDefault()
 
     private val _uiState = MutableStateFlow(GradesUiState())
     val uiState = _uiState.asStateFlow()

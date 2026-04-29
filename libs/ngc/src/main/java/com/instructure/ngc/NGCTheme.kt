@@ -31,9 +31,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
-import com.instructure.ngc.designsystem.DesignSystem
-import com.instructure.ngc.designsystem.LocalDesignSystem
-import com.instructure.ngc.designsystem.NGCTypography
+import com.instructure.instui.token.component.InstUIText
+import com.instructure.pandautils.designsystem.DesignSystem
+import com.instructure.pandautils.designsystem.LocalDesignSystem
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.R as PandaR
 
@@ -51,9 +51,9 @@ fun NGCTheme(courseColor: Color = LocalCourseColor.current, content: @Composable
                 getRippleAlpha(isSystemInDarkTheme())
             ),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
-            LocalTextStyle provides NGCTypography.p1,
+            LocalTextStyle provides InstUIText.content,
             LocalCourseColor provides courseColor,
-            LocalDesignSystem provides DesignSystem.NextGenCanvas,
+            LocalDesignSystem provides DesignSystem.InstUI,
             content = content
         )
     }

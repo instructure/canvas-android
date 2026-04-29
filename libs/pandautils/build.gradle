@@ -125,6 +125,7 @@ dependencies {
     api project(path: ':canvas-api-2')
     api project(path: ':recyclerview')
     api project(path: ':interactions')
+    api project(path: ':instui')
 
     implementation Libs.CAMERA_VIEW
 

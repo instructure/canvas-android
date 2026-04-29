@@ -49,9 +49,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.ngc.R
-import com.instructure.ngc.designsystem.DSIconButton
-import com.instructure.ngc.designsystem.DSIconButtonColor
-import com.instructure.ngc.designsystem.currentTypography
+import com.instructure.instui.compose.indicator.IconButton
+import com.instructure.instui.compose.indicator.IconButtonColor
+import com.instructure.instui.token.component.InstUIHeading
 import com.instructure.ngc.navigation.NGCComposeNavigationHandler
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
@@ -163,22 +163,22 @@ private fun NGCDashboardTopBar(navigationHandler: DashboardNavigationHandler, mo
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
-        Text(text = stringResource(R.string.ngc_dashboardTitle), style = currentTypography.h2)
+        Text(text = stringResource(R.string.ngc_dashboardTitle), style = InstUIHeading.titleSection)
         Spacer(modifier = Modifier.weight(1f))
-        DSIconButton(
+        IconButton(
             iconRes = R.drawable.cloud_download,
             contentDescription = stringResource(R.string.a11y_dashboardManageOfflineContentDescription),
             onClick = manageOfflineContentClick,
-            color = DSIconButtonColor.Inverse,
+            color = IconButtonColor.Inverse,
             elevation = 4.dp,
             modifier = Modifier.padding(end = 8.dp)
         )
-        DSIconButton(
+        IconButton(
             iconRes = R.drawable.edit,
             contentDescription = stringResource(R.string.a11y_dashboardCustomizeDashboardContentDescription),
             onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
             elevation = 4.dp,
-            color = DSIconButtonColor.Inverse,
+            color = IconButtonColor.Inverse,
         )
     }
 }

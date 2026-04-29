@@ -20,6 +20,7 @@ import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -89,6 +90,7 @@ fun CourseHomeScreenContent(
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             CollapsingTopBar(
                 title = uiState.courseName,
@@ -118,7 +120,7 @@ fun CourseHomeScreenContent(
             when (uiState.selectedTab) {
                 CourseHomeTab.HOME -> CourseOverviewScreen(modifier = Modifier.fillMaxSize())
                 CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
-                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(courseId = uiState.courseId, modifier = Modifier.fillMaxSize())
                 CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
             }
         }

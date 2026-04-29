@@ -16,18 +16,32 @@
 
 package com.instructure.ngc.features.coursehome.mywork
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.instructure.instui.compose.text.Text
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.designsystem.DesignSystem
+import com.instructure.pandautils.designsystem.LocalDesignSystem
+import com.instructure.pandautils.features.grades.GradesScreen
+import com.instructure.pandautils.features.grades.GradesViewModel
+import com.instructure.pandautils.utils.ColorKeeper
 
 @Composable
-fun CourseMyWorkScreen(modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        // Placeholder — content will be added in a future ticket
-        item {
-            Text("Course My Work content coming soon!")
-        }
+fun CourseMyWorkScreen(courseId: Long, modifier: Modifier = Modifier) {
+    val gradesViewModel: GradesViewModel = hiltViewModel()
+    val uiState by gradesViewModel.uiState.collectAsState()
+    val courseColor = ColorKeeper.getOrGenerateColor(Course(id = courseId)).light
+
+    CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+        GradesScreen(
+            uiState = uiState,
+            actionHandler = gradesViewModel::handleAction,
+            canvasContextColor = courseColor,
+            appBarUiState = null,
+            applyInsets = true,
+        )
     }
 }

@@ -38,6 +38,7 @@ import com.instructure.instui.token.component.InstUIToggleDetails
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.line.ArrowOpenDown
 import com.instructure.instui.token.icon.line.MiniArrowDown
+import com.instructure.instui.token.primitives.InstUIColors
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -71,6 +72,7 @@ fun SectionHeader(
 ) {
     Row(
         modifier = modifier
+            .background(InstUISemanticColors.Background.base())
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(
