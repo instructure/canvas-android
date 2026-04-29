@@ -55,9 +55,9 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private val reportProblemLabel by OnViewWithText(R.string.report_problem)
 
     /**
-     * The label for submitting a feature idea.
+     * The label for sharing a contribution.
      */
-    private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
+    private val shareContributionLabel by OnViewWithStringTextIgnoreCase("Share a Contribution")
 
     /**
      * The label for sharing your love.
@@ -136,10 +136,10 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     /**
-     * Clicks on the 'Submit a Feature Idea' help menu.
+     * Clicks on the 'Share a Contribution' help menu.
      */
-    private fun clickSubmitFeatureLabel() {
-        submitFeatureLabel.scrollTo().click()
+    private fun clickShareContributionLabel() {
+        shareContributionLabel.scrollTo().click()
     }
 
     /**
@@ -170,8 +170,8 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(withId(R.id.title) + withText(HelpMenu.Teacher.ASK_COMMUNITY_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.Teacher.ASK_COMMUNITY_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(HelpMenu.SUBMIT_FEATURE_TITLE)).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText(HelpMenu.SUBMIT_FEATURE_SUBTITLE)).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SHARE_A_CONTRIBUTION_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SHARE_A_CONTRIBUTION_SUBTITLE)).assertDisplayed()
 
         onView(withId(R.id.title) + withText(HelpMenu.Teacher.TRAINING_PORTAL_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.Teacher.TRAINING_PORTAL_SUBTITLE)).assertDisplayed()
@@ -197,7 +197,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         when (helpMenuText) {
             HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
-            HelpMenu.SUBMIT_FEATURE_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickShareContributionLabel()
             HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
             HelpMenu.Teacher.CONFERENCE_GUIDES_TITLE -> clickConferenceGuidesForRemoteClassroomsLabel()
             HelpMenu.Teacher.ASK_COMMUNITY_TITLE -> clickAskTheCommunityLabel()
