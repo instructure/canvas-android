@@ -86,6 +86,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -103,7 +104,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -122,8 +126,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.instui.compose.text.Text as InstUIText
+import com.instructure.instui.token.component.InstUIText as InstUITextTokens
+import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
@@ -159,7 +168,8 @@ fun GradesScreen(
     actionHandler: (GradesAction) -> Unit,
     canvasContextColor: Int,
     appBarUiState: AppBarUiState? = null,
-    applyInsets: Boolean = true
+    applyInsets: Boolean = true,
+    onFilterUpdated: (AssignmentListSelectedFilters) -> Unit = {},
 ) {
     val isInstUI = LocalDesignSystem.current == DesignSystem.InstUI
     val themeWrapper: @Composable (@Composable () -> Unit) -> Unit = if (isInstUI) {
@@ -249,11 +259,20 @@ fun GradesScreen(
             }
         ) { padding ->
             if (uiState.gradePreferencesUiState.show) {
-                GradePreferencesDialog(
-                    uiState = uiState,
-                    actionHandler = actionHandler,
-                    canvasContextColor = canvasContextColor
-                )
+                if (uiState.filter != null) {
+                    GradesFilterDialog(
+                        filter = uiState.filter,
+                        canvasContextColor = canvasContextColor,
+                        onFilterUpdated = onFilterUpdated,
+                        onDismiss = { actionHandler(GradesAction.HideGradePreferences) },
+                    )
+                } else {
+                    GradePreferencesDialog(
+                        uiState = uiState,
+                        actionHandler = actionHandler,
+                        canvasContextColor = canvasContextColor
+                    )
+                }
             }
 
             uiState.whatIfScoreDialogData?.let { dialogData ->
@@ -322,6 +341,35 @@ fun GradesScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun GradesFilterDialog(
+    filter: GradesFilterUiState,
+    canvasContextColor: Int,
+    onFilterUpdated: (AssignmentListSelectedFilters) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val options = filter.filterOptions ?: return
+    FullScreenDialog(onDismissRequest = onDismiss) {
+        val view = LocalView.current
+        SideEffect {
+            val window = (view.parent as? DialogWindowProvider)?.window ?: return@SideEffect
+            window.statusBarColor = canvasContextColor
+            WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = false
+        }
+        AssignmentListFilterScreen(
+            courseName = filter.courseName,
+            contextColor = Color(canvasContextColor),
+            assignmentFilterOptions = options.assignmentFilters,
+            assignmentStatusFilterOptions = options.assignmentStatusFilters,
+            assignmentGroupByOptions = options.groupByOptions,
+            gradingPeriodOptions = options.gradingPeriodOptions,
+            selectedOptions = filter.selectedFilters,
+            onFilterChange = onFilterUpdated,
+            onBackPressed = onDismiss,
+        )
     }
 }
 
@@ -414,7 +462,7 @@ private fun GradesScreenContent(
 
                 if (uiState.isWhatIfGradingEnabled) {
 
-                    DSSeparator(modifier = Modifier.padding(start = 32.dp, end = 32.dp, bottom = 16.dp))
+                    DSSeparator(modifier = Modifier.padding(horizontal = 16.dp))
 
                     GradesToggleRow(
                         label = stringResource(id = R.string.showWhatIfScore),
@@ -435,21 +483,21 @@ private fun GradesScreenContent(
                         modifier = Modifier
                             .fillMaxWidth()
                             .defaultMinSize(minHeight = 48.dp)
-                            .padding(all = 16.dp),
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
+                        InstUIText(
                             text = stringResource(id = R.string.gradePreferencesHeaderGradingPeriod),
-                            fontSize = 14.sp,
-                            color = colorResource(id = R.color.textDark),
+                            style = InstUITextTokens.content,
+                            color = InstUISemanticColors.Text.base(),
                             modifier = Modifier.testTag("gradingPeriodLabel")
                         )
-                        Text(
+                        InstUIText(
                             text = uiState.gradePreferencesUiState.selectedGradingPeriod?.title
                                 ?: stringResource(id = R.string.allGradingPeriods),
-                            fontSize = 16.sp,
-                            color = colorResource(id = R.color.textDarkest),
+                            style = InstUITextTokens.content,
+                            color = InstUISemanticColors.Text.muted(),
                             modifier = Modifier.testTag("gradingPeriodName")
                         )
                     }

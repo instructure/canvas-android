@@ -41,6 +41,8 @@ import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiStat
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.features.grades.strategy.AcademicGradesStrategy
+import com.instructure.pandautils.features.grades.strategy.NGCGradesStrategy
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.orDefault
@@ -1354,11 +1356,16 @@ class GradesViewModelTest {
     }
 
     private fun createViewModel() {
+        val strategies = mapOf(
+            Experience.Academic to AcademicGradesStrategy(),
+            Experience.NGC to NGCGradesStrategy(),
+        )
         viewModel = GradesViewModel(
             context,
             gradesRepository,
             gradeFormatter, gradeCalculator,
             gradesViewModelBehavior,
+            strategies,
             savedStateHandle
         )
     }

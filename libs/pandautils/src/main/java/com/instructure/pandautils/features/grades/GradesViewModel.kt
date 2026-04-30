@@ -36,7 +36,10 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.features.grades.strategy.GradesExperienceStrategy
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.filterHiddenAssignments
@@ -69,11 +72,18 @@ class GradesViewModel @Inject constructor(
     private val gradeFormatter: GradeFormatter,
     private val gradeCalculator: GradeCalculator,
     private val gradesViewModelBehavior: GradesViewModelBehavior,
+    private val experienceStrategies: Map<Experience, @JvmSuppressWildcards GradesExperienceStrategy>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val courseId = (savedStateHandle.get<Long>(COURSE_ID_KEY)
         ?: savedStateHandle.get<Long>("courseId")).orDefault()
+
+    private val experience: Experience = runCatching {
+        savedStateHandle.get<String>(EXPERIENCE_KEY)?.let { Experience.valueOf(it) }
+    }.getOrNull() ?: Experience.Academic
+
+    private val strategy: GradesExperienceStrategy = experienceStrategies.getValue(experience)
 
     private val _uiState = MutableStateFlow(GradesUiState())
     val uiState = _uiState.asStateFlow()
@@ -152,9 +162,16 @@ class GradesViewModel @Inject constructor(
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
             domainAssignmentGroups = assignmentGroups
 
+            val initialFilter = if (initialize) {
+                strategy.initialFilterState(course, gradingPeriods, currentGradingPeriod)
+            } else {
+                _uiState.value.filter
+            }
+            val groupsAfterStrategyFilter = applyStrategyFilters(assignmentGroups, initialFilter)
+
             allItems = when (sortBy) {
-                SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
-                SortBy.DUE_DATE -> groupByDueDate(assignmentGroups)
+                SortBy.GROUP -> groupByAssignmentGroup(groupsAfterStrategyFilter)
+                SortBy.DUE_DATE -> groupByDueDate(groupsAfterStrategyFilter)
             }.filter {
                 it.assignments.isNotEmpty()
             }
@@ -187,6 +204,7 @@ class GradesViewModel @Inject constructor(
                         selectedGradingPeriod = selectedGradingPeriod,
                         sortBy = sortBy
                     ),
+                    filter = initialFilter ?: it.filter,
                     gradeText = gradeText,
                     isGradeLocked = courseGrade?.isLocked.orDefault(),
                     isWhatIfGradingEnabled = isWhatIfGradingEnabled,
@@ -204,6 +222,64 @@ class GradesViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun applyStrategyFilters(
+        assignmentGroups: List<AssignmentGroup>,
+        filter: GradesFilterUiState?,
+    ): List<AssignmentGroup> {
+        val effectiveState = _uiState.value.copy(filter = filter)
+        return assignmentGroups.map { group ->
+            val filtered = strategy.applyFilters(group.assignments, effectiveState)
+            group.copy(assignments = filtered)
+        }
+    }
+
+    fun onFilterScreenOpenChanged(open: Boolean) {
+        _uiState.update { strategy.onFilterScreenOpenChanged(it, open) }
+    }
+
+    fun onFilterUpdated(selected: AssignmentListSelectedFilters) {
+        val previousFilter = _uiState.value.filter
+        val previousPrefs = _uiState.value.gradePreferencesUiState
+        val newSortBy = selected.selectedGroupByOption.toSortBy() ?: previousPrefs.sortBy
+
+        _uiState.update {
+            val updated = strategy.onFilterUpdated(it, selected)
+            updated.copy(
+                gradePreferencesUiState = updated.gradePreferencesUiState.copy(
+                    sortBy = newSortBy,
+                    selectedGradingPeriod = selected.selectedGradingPeriodFilter,
+                ),
+            )
+        }
+
+        val gradingPeriodChanged = previousFilter?.selectedFilters?.selectedGradingPeriodFilter !=
+            selected.selectedGradingPeriodFilter
+        if (gradingPeriodChanged) {
+            loadGrades(forceRefresh = false)
+        } else {
+            recomputeAfterFilterChange()
+        }
+    }
+
+    private fun AssignmentGroupByOption.toSortBy(): SortBy? = when (this) {
+        AssignmentGroupByOption.DueDate -> SortBy.DUE_DATE
+        AssignmentGroupByOption.AssignmentGroup -> SortBy.GROUP
+        AssignmentGroupByOption.AssignmentType -> null
+    }
+
+    private fun recomputeAfterFilterChange() {
+        val groups = domainAssignmentGroups
+        if (groups.isEmpty()) return
+        val sortBy = _uiState.value.gradePreferencesUiState.sortBy
+        val groupsAfterFilter = applyStrategyFilters(groups, _uiState.value.filter)
+        allItems = when (sortBy) {
+            SortBy.GROUP -> groupByAssignmentGroup(groupsAfterFilter)
+            SortBy.DUE_DATE -> groupByDueDate(groupsAfterFilter)
+        }.filter { it.assignments.isNotEmpty() }
+        val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
+        _uiState.update { it.copy(items = filteredItems) }
     }
 
     private fun groupByAssignmentGroup(assignmentGroups: List<AssignmentGroup>) = assignmentGroups.map { group ->

@@ -42,6 +42,7 @@ fun CourseMyWorkScreen(courseId: Long, modifier: Modifier = Modifier) {
             canvasContextColor = courseColor,
             appBarUiState = null,
             applyInsets = true,
+            onFilterUpdated = gradesViewModel::onFilterUpdated,
         )
     }
 }
