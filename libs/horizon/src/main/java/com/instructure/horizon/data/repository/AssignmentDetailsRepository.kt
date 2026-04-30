@@ -19,6 +19,10 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.horizon.data.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.horizon.data.datasource.AssignmentDetailsNetworkDataSource
 import com.instructure.horizon.data.datasource.SubmissionLocalDataSource
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
+import com.instructure.horizon.database.entity.EntitySyncType
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
@@ -30,6 +34,8 @@ class AssignmentDetailsRepository @Inject constructor(
     private val networkDataSource: AssignmentDetailsNetworkDataSource,
     private val localDataSource: AssignmentDetailsLocalDataSource,
     private val submissionLocalDataSource: SubmissionLocalDataSource,
+    private val courseModuleDao: HorizonCourseModuleDao,
+    private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
     networkStateProvider: NetworkStateProvider,
@@ -45,11 +51,19 @@ class AssignmentDetailsRepository @Inject constructor(
                     fileSyncRepository.syncHtmlFiles(courseId, parsingResult)
                     val submissionHistory = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
                     submissionLocalDataSource.saveSubmissions(assignment.id, submissionHistory)
+                    updateModuleItemSyncTimestamp(assignmentId)
                 }
             }
         } else {
             localDataSource.getAssignment(assignmentId)
                 ?: throw IllegalStateException("Assignment $assignmentId not available offline")
         }
+    }
+
+    private suspend fun updateModuleItemSyncTimestamp(contentId: Long) {
+        val moduleItemId = courseModuleDao.getItemIdByContentId(contentId) ?: return
+        entitySyncMetadataDao.upsert(
+            HorizonEntitySyncMetadataEntity(EntitySyncType.MODULE_ITEM, moduleItemId, System.currentTimeMillis())
+        )
     }
 }
