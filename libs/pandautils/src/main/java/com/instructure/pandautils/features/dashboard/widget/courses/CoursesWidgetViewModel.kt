@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
@@ -73,6 +74,7 @@ class CoursesWidgetViewModel @Inject constructor(
     private val loadGroupsUseCase: LoadGroupsUseCase,
     private val loadSingleCourseUseCase: LoadSingleCourseUseCase,
     private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase,
+    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val courseDao: CourseDao,
@@ -114,8 +116,11 @@ class CoursesWidgetViewModel @Inject constructor(
         override fun onReceive(context: Context, intent: Intent?) {
             val courseId = intent?.getLongExtra(Const.COURSE_ID, -1L)
             if (courseId != null && courseId != -1L) {
-                // Reload specific course
-                reloadCourse(courseId)
+                if (intent.extras?.getBoolean(Const.RELOAD_ANNOUNCEMENTS) == true) {
+                    reloadCourseAnnouncements(courseId)
+                } else {
+                    reloadCourse(courseId)
+                }
             } else if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
                 // Full refresh for favorites changes
                 refresh()
@@ -452,6 +457,22 @@ class CoursesWidgetViewModel @Inject constructor(
 
                 val existingAnnouncementsMap = _uiState.value.courses.associate { it.id to it.announcements }
                 val courseCards = mapCoursesToCardItems(visibleCourses, existingAnnouncementsMap)
+                _uiState.update { it.copy(courses = courseCards) }
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+            }
+        }
+    }
+
+    private fun reloadCourseAnnouncements(courseId: Long) {
+        viewModelScope.launch {
+            try {
+                val announcements = loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(courseId))
+                val updatedAnnouncementsMap = _uiState.value.courses
+                    .associate { it.id to it.announcements }
+                    .toMutableMap()
+                updatedAnnouncementsMap[courseId] = announcements
+                val courseCards = mapCoursesToCardItems(visibleCourses, updatedAnnouncementsMap)
                 _uiState.update { it.copy(courses = courseCards) }
             } catch (e: Exception) {
                 crashlytics.recordException(e)
