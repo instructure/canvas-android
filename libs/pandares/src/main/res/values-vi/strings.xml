@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Không thể thực hiện thao tác này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="conversationArchived">Đã lưu trữ cuộc trò chuyện</string>
     <string name="conversationUnarchived">Đã bỏ lưu trữ cuộc trò chuyện</string>
+    <string name="conversationMarkedAsRead">Cuộc trò chuyện được đánh dấu là đã đọc</string>
+    <string name="conversationMarkedAsUnread">Cuộc trò chuyện được đánh dấu là chưa đọc</string>
     <string name="messageDeleted">Đã xóa tin nhắn</string>
     <string name="messageDeletedFailed">Không xóa được tin nhắn</string>
     <string name="conversationDeleted">Đã xóa cuộc trò chuyện</string>

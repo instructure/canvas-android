@@ -511,4 +511,16 @@
     <string name="gradePointsAccessibility">Grade: %s points</string>
     <string name="gradePercentTextFieldAccessibility">Grade: %d percent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Grade: %s points, %s</string>
+
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Help us build a better app</string>
+    <string name="cookieConsentDescription">We collect anonymous application data to help our team identify technical issues and optimize app features.</string>
+    <string name="cookieConsentNoProfiles">No Personal Profiles: We do not track your identity or show advertisements.</string>
+    <string name="cookieConsentNoSelling">No Data Selling: Your information is never sold to third parties.</string>
+    <string name="cookieConsentFullControl">Full Control: You can adjust these settings at any time.</string>
+    <string name="cookieConsentAllow">Allow</string>
+    <string name="cookieConsentDecline">Decline</string>
+    <string name="privacySettingsTitle">Privacy Settings</string>
+    <string name="privacySettingsToggleLabel">Anonymous Application Analytics</string>
+    <string name="privacySettingsDescription">Share anonymous data about app performance and feature use. This helps us fix bugs and improve the overall application experience. We do not collect personal identifiers.</string>
 </resources>

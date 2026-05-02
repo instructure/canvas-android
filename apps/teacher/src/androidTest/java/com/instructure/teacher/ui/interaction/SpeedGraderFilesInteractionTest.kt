@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDashboardCoursesManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
@@ -42,6 +43,7 @@ import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
@@ -120,6 +122,10 @@ class SpeedGraderFilesInteractionTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
+
+    @BindValue
+    @JvmField
+    val dashboardCoursesManager: DashboardCoursesManager = FakeDashboardCoursesManager()
 
     // Just good enough to mock the *representation* of a file, not to mock the file itself.
     val attachment = Attachment(

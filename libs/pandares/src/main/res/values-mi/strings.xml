@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Kaore e taea te whakamahi i tēnei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō</string>
     <string name="conversationArchived">Kōrero kua pūrangatia</string>
     <string name="conversationUnarchived">Kōrero kua tangohia mai i te pūranga</string>
+    <string name="conversationMarkedAsRead">Kua tohua te kōrero hei mea kua pānuihia</string>
+    <string name="conversationMarkedAsUnread">Kua tohua te kōrerorero hei kōrero kāore anō kia pānuihia</string>
     <string name="messageDeleted">Kua mukua te karere</string>
     <string name="messageDeletedFailed">I rahua te muku i te karere</string>
     <string name="conversationDeleted">Kua mukua te korerorero</string>

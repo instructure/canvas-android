@@ -17,6 +17,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRepository
@@ -37,9 +38,10 @@ class SettingsModule {
         featuresApi: FeaturesAPI.FeaturesInterface,
         inboxSettingsManager: InboxSettingsManager,
         settingsBehaviour: SettingsBehaviour,
-        experienceAPI: ExperienceAPI
+        experienceAPI: ExperienceAPI,
+        userApi: UserAPI.UsersInterface
     ): SettingsRepository {
-        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceAPI)
+        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceAPI, userApi)
     }
 }
 

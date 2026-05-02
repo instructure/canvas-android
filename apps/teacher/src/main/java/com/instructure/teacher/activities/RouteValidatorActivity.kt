@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -124,7 +125,7 @@ class RouteValidatorActivity : BaseCanvasActivity() {
                         LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, extras)
                     } else {
                         logQREvent(ApiPrefs.domain, true)
-                        LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, null)
+                        Intent(this@RouteValidatorActivity, CookieConsentActivity::class.java)
                     }
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -266,6 +266,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
+        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).scrollTo().assertDisplayed()
+    }
+
+    fun assertSubmissionOptionDisplayed(submissionType: String) {
         onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
     }
 

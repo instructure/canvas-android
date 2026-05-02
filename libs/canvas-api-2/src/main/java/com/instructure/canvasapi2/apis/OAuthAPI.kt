@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.dataResult
 import retrofit2.Call
@@ -51,10 +52,10 @@ object OAuthAPI {
                 @Field("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
-        fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Query("mobile_consent") mobileConsent: Boolean = ApiPrefs.mobileConsent): Call<AuthenticatedSession>
+        fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Query("mobile_consent") mobileConsent: Boolean = ConsentPrefs.currentUserConsent == true): Call<AuthenticatedSession>
 
         @GET("/login/session_token")
-        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams, @Query("mobile_consent") mobileConsent: Boolean = ApiPrefs.mobileConsent): DataResult<AuthenticatedSession>
+        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams, @Query("mobile_consent") mobileConsent: Boolean = ConsentPrefs.currentUserConsent == true): DataResult<AuthenticatedSession>
 
         @GET("/api/v1/login/session_token")
         fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>

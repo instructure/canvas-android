@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.MasqueradeHelper
@@ -100,6 +101,9 @@ abstract class LogoutTask(
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> {
                         removeOfflineData(ApiPrefs.user?.id)
+                        val userId = ApiPrefs.user?.id
+                        val domain = ApiPrefs.domain
+                        if (userId != null) ConsentPrefs.removeConsent(userId, domain)
                         removeUser()
                     }
 

@@ -121,6 +121,10 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignmentName, dueAtString, dueAtStringSecondCheckpoint, expectedGrade, hasCheckPoints = true)
     }
 
+    fun assertHasAssignment(assignmentName: String, dueAtString: String, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGradeLabel = expectedGrade)
+    }
+
     fun assertAssignmentNotDisplayed(assignmentName: String) {
         onView(withText(assignmentName) + withId(R.id.title) + hasSibling(withId(R.id.description))).check(
             doesNotExist()
