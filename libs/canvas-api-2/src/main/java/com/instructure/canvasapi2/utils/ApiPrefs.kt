@@ -42,11 +42,11 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     const val ACCOUNT_LOCALE: String = "account"
 
     @Deprecated("Deprecated in favor of accessToken")
-    var token by StringPref()
+    var token by SecureStringPref()
 
-    var accessToken by StringPref()
+    var accessToken by SecureStringPref()
 
-    var refreshToken by StringPref()
+    var refreshToken by SecureStringPref()
 
     fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
 
@@ -56,7 +56,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var clientId by StringPref("", "client_id")
 
-    var clientSecret by StringPref("", "client_secret")
+    var clientSecret by SecureStringPref("", "client_secret")
 
     var canvasRegion by NStringPref(null, "canvas_region")
 

@@ -226,6 +226,32 @@ class NStringPref(defaultValue: String? = null, keyName: String? = null) : Pref<
 }
 
 /**
+ * [Pref] delegate for sensitive [String] properties. Values are encrypted with a Keystore-backed
+ * AES-256-GCM key via [SecureCredentialCodec] and stored in the same [SharedPreferences] file as
+ * other prefs, prefixed with an envelope marker so legacy plaintext values can be detected and
+ * migrated lazily on first read. Falls back to plaintext storage if the Keystore is unavailable
+ * (e.g., a broken device), preserving today's behavior rather than failing the read/write.
+ */
+class SecureStringPref(defaultValue: String = "", keyName: String? = null) : Pref<String>(defaultValue, keyName) {
+    override fun onClear() {}
+
+    override fun SharedPreferences.getValue(key: String, default: String): String {
+        val stored = getString(key, null) ?: return default
+        if (stored.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)) {
+            return SecureCredentialCodec.decrypt(stored) ?: default
+        }
+        val migrated = SecureCredentialCodec.encrypt(stored)
+        if (migrated != null) edit().putString(key, migrated).apply()
+        return stored
+    }
+
+    override fun Editor.setValue(key: String, value: String): Editor {
+        val envelope = SecureCredentialCodec.encrypt(value) ?: value
+        return putString(key, envelope)
+    }
+}
+
+/**
  * [Pref] delegate for [String] properties. May only be used in [PrefManager] implementations.
  *
  * @param defaultValue The optional value returned for the property when no value has been set
