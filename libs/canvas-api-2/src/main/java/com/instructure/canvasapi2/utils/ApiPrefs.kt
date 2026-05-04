@@ -126,7 +126,7 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     /* Notorious Prefs */
     var notoriousDomain by StringPref()
 
-    var notoriousToken by StringPref()
+    var notoriousToken by SecureStringPref()
 
     val fullNotoriousDomain: String
         get() = when {

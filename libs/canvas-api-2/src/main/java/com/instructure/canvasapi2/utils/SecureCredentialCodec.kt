@@ -71,12 +71,14 @@ object SecureCredentialCodec {
         }
     }
 
-    private fun getOrCreateKey(): SecretKey? = try {
-        val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
-        (keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey ?: createKey()
-    } catch (e: Exception) {
-        Logger.e("SecureCredentialCodec key access failed: ${e.message}")
-        null
+    private fun getOrCreateKey(): SecretKey? = synchronized(this) {
+        try {
+            val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
+            (keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey ?: createKey()
+        } catch (e: Exception) {
+            Logger.e("SecureCredentialCodec key access failed: ${e.message}")
+            null
+        }
     }
 
     private fun createKey(): SecretKey {
