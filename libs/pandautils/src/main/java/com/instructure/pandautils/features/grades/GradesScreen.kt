@@ -131,8 +131,8 @@ import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.grades.components.NGCGradesFilterScreen
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
@@ -359,7 +359,7 @@ private fun GradesFilterDialog(
             window.statusBarColor = canvasContextColor
             WindowInsetsControllerCompat(window, view).isAppearanceLightStatusBars = false
         }
-        AssignmentListFilterScreen(
+        NGCGradesFilterScreen(
             courseName = filter.courseName,
             contextColor = Color(canvasContextColor),
             assignmentFilterOptions = options.assignmentFilters,
