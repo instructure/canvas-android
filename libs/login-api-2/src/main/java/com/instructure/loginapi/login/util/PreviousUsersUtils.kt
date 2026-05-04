@@ -20,6 +20,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.User
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.SecureCredentialCodec
 import com.instructure.loginapi.login.model.SignedInUser
@@ -40,7 +41,12 @@ object PreviousUsersUtils {
         for ((key, value) in sharedPreferences.all) {
             val raw = value?.toString() ?: continue
             val isEncrypted = raw.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)
-            val json = if (isEncrypted) SecureCredentialCodec.decrypt(raw) ?: continue else raw
+            val json = if (isEncrypted) {
+                SecureCredentialCodec.decrypt(raw) ?: run {
+                    reportDecryptFailure("get(): could not decrypt previous-user entry")
+                    continue
+                }
+            } else raw
 
             val signedInUser = try {
                 Gson().fromJson(json, SignedInUser::class.java)
@@ -116,7 +122,10 @@ object PreviousUsersUtils {
         val prefs = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
         val raw = prefs.getString(getGlobalUserId(domain, userId), null) ?: return null
         val userJson = if (raw.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)) {
-            SecureCredentialCodec.decrypt(raw) ?: return null
+            SecureCredentialCodec.decrypt(raw) ?: run {
+                reportDecryptFailure("getSignedInUser(): could not decrypt previous-user entry")
+                return null
+            }
         } else raw
         return try {
             Gson().fromJson(userJson, SignedInUser::class.java)
@@ -139,5 +148,12 @@ object PreviousUsersUtils {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+    }
+
+    private fun reportDecryptFailure(message: String) {
+        try {
+            FirebaseCrashlytics.getInstance().recordException(SecurityException(message))
+        } catch (_: Throwable) {
+        }
     }
 }

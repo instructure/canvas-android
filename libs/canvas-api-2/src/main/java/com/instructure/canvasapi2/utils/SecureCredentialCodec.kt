@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.utils
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import java.security.KeyStore
 import java.util.Base64
 import javax.crypto.Cipher
@@ -38,8 +39,6 @@ object SecureCredentialCodec {
     private val base64Encoder = Base64.getEncoder().withoutPadding()
     private val base64Decoder = Base64.getDecoder()
 
-    fun isAvailable(): Boolean = getOrCreateKey() != null
-
     fun encrypt(plaintext: String): String? {
         val key = getOrCreateKey() ?: return null
         return try {
@@ -49,7 +48,7 @@ object SecureCredentialCodec {
             val ciphertext = cipher.doFinal(plaintext.toByteArray(Charsets.UTF_8))
             ENCRYPTED_PREFIX + base64Encoder.encodeToString(iv + ciphertext)
         } catch (e: Exception) {
-            Logger.e("SecureCredentialCodec encrypt failed: ${e.message}")
+            reportNonFatal(SecurityException("SecureCredentialCodec encrypt failed", e))
             null
         }
     }
@@ -66,7 +65,7 @@ object SecureCredentialCodec {
             cipher.init(Cipher.DECRYPT_MODE, key, GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv))
             String(cipher.doFinal(ciphertext), Charsets.UTF_8)
         } catch (e: Exception) {
-            Logger.e("SecureCredentialCodec decrypt failed: ${e.message}")
+            reportNonFatal(SecurityException("SecureCredentialCodec decrypt failed", e))
             null
         }
     }
@@ -76,8 +75,15 @@ object SecureCredentialCodec {
             val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
             (keyStore.getEntry(KEY_ALIAS, null) as? KeyStore.SecretKeyEntry)?.secretKey ?: createKey()
         } catch (e: Exception) {
-            Logger.e("SecureCredentialCodec key access failed: ${e.message}")
+            reportNonFatal(SecurityException("SecureCredentialCodec key access failed", e))
             null
+        }
+    }
+
+    private fun reportNonFatal(throwable: Throwable) {
+        try {
+            FirebaseCrashlytics.getInstance().recordException(throwable)
+        } catch (_: Throwable) {
         }
     }
 

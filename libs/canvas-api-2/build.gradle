@@ -175,6 +175,7 @@ dependencies {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
     }
     implementation Libs.FIREBASE_CONFIG
+    implementation Libs.FIREBASE_CRASHLYTICS
 
     implementation Libs.HILT
     ksp Libs.HILT_COMPILER
