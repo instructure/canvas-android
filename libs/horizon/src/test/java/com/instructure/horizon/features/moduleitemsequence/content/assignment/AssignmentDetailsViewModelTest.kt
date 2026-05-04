@@ -27,6 +27,7 @@ import com.instructure.horizon.domain.usecase.GetSubmissionHistoryUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import io.mockk.coEvery
@@ -57,6 +58,7 @@ class AssignmentDetailsViewModelTest {
     private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val courseId = 1L
@@ -79,6 +81,7 @@ class AssignmentDetailsViewModelTest {
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returns "Formatted content"
         coEvery { aiAssistContextProvider.aiAssistContext } returns mockk(relaxed = true)
         coEvery { aiAssistContextProvider.aiAssistContext = any() } returns Unit
+        coEvery { networkStateProvider.isOnline() } returns true
     }
 
     @After
@@ -251,6 +254,7 @@ class AssignmentDetailsViewModelTest {
             oAuthApi,
             apiPrefs,
             aiAssistContextProvider,
+            networkStateProvider,
             savedStateHandle
         )
     }

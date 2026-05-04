@@ -34,8 +34,13 @@ import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
+import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.di.HorizonOfflineModule
 import com.instructure.horizon.offline.HorizonHtmlParserFileSource
@@ -109,6 +114,21 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonSubmissionDao(db: HorizonDatabase): HorizonSubmissionDao = db.submissionDao()
+
+    @Provides
+    fun provideHorizonSyncSettingsDao(db: HorizonDatabase): HorizonSyncSettingsDao = db.syncSettingsDao()
+
+    @Provides
+    fun provideHorizonCourseSyncPlanDao(db: HorizonDatabase): HorizonCourseSyncPlanDao = db.courseSyncPlanDao()
+
+    @Provides
+    fun provideHorizonFileSyncPlanDao(db: HorizonDatabase): HorizonFileSyncPlanDao = db.fileSyncPlanDao()
+
+    @Provides
+    fun provideHorizonLocalImageDao(db: HorizonDatabase): HorizonLocalImageDao = db.localImageDao()
+
+    @Provides
+    fun provideHorizonUserDao(db: HorizonDatabase): HorizonUserDao = db.userDao()
 
     @Provides
     @HorizonHtmlParserQualifier
