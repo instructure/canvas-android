@@ -26,7 +26,7 @@ object Versions {
     /* Others */
     const val APOLLO = "4.3.3"
     const val NUTRIENT = "11.1.1"
-    const val PHOTO_VIEW = "2.3.0"
+    const val PHOTO_VIEW_COMMIT = "296b7839ea"
     const val MOBIUS = "1.2.1"
     const val HILT = "2.57.2"
     const val HILT_ANDROIDX = "1.3.0"
@@ -141,7 +141,7 @@ object Libs {
     const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
     const val MEDIA3_DASH = "androidx.media3:media3-exoplayer-dash:${Versions.MEDIA3}"
     const val MEDIA3_SMOOTH_STREAMING = "androidx.media3:media3-exoplayer-smoothstreaming:${Versions.MEDIA3}"
-    const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
+    const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW_COMMIT}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
     const val GLIDE = "com.github.bumptech.glide:glide:${Versions.GLIDE_VERSION}"
