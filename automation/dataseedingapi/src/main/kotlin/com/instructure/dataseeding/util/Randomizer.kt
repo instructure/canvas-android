@@ -125,10 +125,10 @@ object Randomizer {
                     published = published
             )
 
-    fun randomNewQuiz(withInstructions: Boolean, lockAt: String, unlockAt: String, dueAt: String, pointsPossible: Double, isQuizAssignment: Boolean, isQuizLtiAssignment: Boolean, newQuizzesQuizType: String, quizLti: Int, submissionType: String, published: Boolean) =
+    fun randomNewQuiz(lockAt: String, unlockAt: String, dueAt: String, pointsPossible: Double, isQuizAssignment: Boolean, isQuizLtiAssignment: Boolean, newQuizzesQuizType: String, quizLti: Int, submissionType: String, published: Boolean, instructions: String? = null) =
             CreateNewQuiz(
                 title = faker.lorem().sentence(),
-                instructions = if (withInstructions) faker.lorem().paragraph() else null,
+                instructions = instructions,
                 lockAt = if (lockAt.isNotBlank()) lockAt else null,
                 unlockAt = if (unlockAt.isNotBlank()) unlockAt else null,
                 dueAt = if (dueAt.isNotBlank()) dueAt else null,

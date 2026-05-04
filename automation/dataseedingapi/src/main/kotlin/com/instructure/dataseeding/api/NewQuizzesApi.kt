@@ -28,7 +28,6 @@ import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
@@ -47,11 +46,6 @@ object NewQuizzesApi {
             @Body quizItem: CreateQuizItem
         ): Call<NewQuizItemApiModel>
 
-        @GET("/api/quiz/v1/courses/{courseId}/quizzes/{assignmentId}/items")
-        fun getQuizItems(
-            @Path("courseId") courseId: Long,
-            @Path("assignmentId") assignmentId: Long
-        ): Call<List<NewQuizItemApiModel>>
     }
 
     private fun newQuizzesService(token: String): NewQuizzesService {
@@ -61,7 +55,8 @@ object NewQuizzesApi {
     fun createNewQuiz(
         courseId: Long,
         token: String,
-        withInstructions: Boolean = true,
+        title: String? = null,
+        instructions: String? = null,
         lockAt: String = "",
         unlockAt: String = "",
         dueAt: String = "",
@@ -73,21 +68,20 @@ object NewQuizzesApi {
         submissionType: String = "external_tool",
         published: Boolean = true,
     ): NewQuizApiModel {
-        val newQuiz = CreateNewQuiz(
-            Randomizer.randomNewQuiz(
-                withInstructions,
-                lockAt,
-                unlockAt,
-                dueAt,
-                pointsPossible,
-                isQuizAssignment,
-                isQuizLtiAssignment,
-                newQuizzesQuizType,
-                quizLti,
-                submissionType,
-                published
-            )
+        val quizData = Randomizer.randomNewQuiz(
+            lockAt,
+            unlockAt,
+            dueAt,
+            pointsPossible,
+            isQuizAssignment,
+            isQuizLtiAssignment,
+            newQuizzesQuizType,
+            quizLti,
+            submissionType,
+            published,
+            instructions
         )
+        val newQuiz = CreateNewQuiz(if (title != null) quizData.copy(title = title) else quizData)
 
         return newQuizzesService(token)
             .createNewQuiz(courseId, newQuiz)
@@ -106,12 +100,13 @@ object NewQuizzesApi {
         questionTitle: String = "vmi",
         questionText: String = "True or False?",
         pointsPossible: Double = 1.0,
-        correctAnswer: Boolean = true
+        correctAnswer: Boolean = true,
+        position: Int = 1
     ): NewQuizItemApiModel {
         val quizItem = CreateQuizItem(
             item = QuizItemData(
                 entryType = "Item",
-                position = 1,
+                position = position,
                 pointsPossible = pointsPossible,
                 entry = QuizItemEntry(
                     title = questionTitle,

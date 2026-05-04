@@ -359,6 +359,14 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         onView(allOf(withId(R.id.title), withText(R.string.submissionDetailsNoSubmissionYet), withAncestor(withId(R.id.submissionDetailsEmptyContent)))).assertDisplayed()
     }
 
+    fun assertNewQuizSubmissionDisplayed() {
+        onView(withId(R.id.ltiSubmissionTitle) + withText("Quiz Submission")).assertDisplayed()
+    }
+
+    fun clickOpenTheQuizButton() {
+        onView(withId(R.id.viewLtiButton)).click()
+    }
+
     fun selectAttempt(attemptName: String) {
         onView(withId(R.id.submissionVersionsSpinner)).click()
         waitForView(withId(R.id.attemptTitle) + withText(attemptName)).click()

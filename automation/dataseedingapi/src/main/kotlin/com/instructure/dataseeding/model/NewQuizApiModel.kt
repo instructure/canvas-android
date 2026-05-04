@@ -19,10 +19,6 @@ package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
 
-data class NewQuizListApiModel(
-    val newQuizList: List<NewQuizApiModel>
-)
-
 data class NewQuizApiModel(
     val id: Long,
     val title: String,

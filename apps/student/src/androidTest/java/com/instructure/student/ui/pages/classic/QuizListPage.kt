@@ -41,6 +41,7 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -90,7 +91,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
     }
 
     fun assertQuizNotDisplayed(quiz: QuizApiModel) {
-        onView(withText(quiz.title)).check(doesNotExist())
+        onView(withText(quiz.title)).waitForCheck(doesNotExist())
     }
 
     fun assertNewQuizDisplayed(newQuiz: NewQuizApiModel) {
@@ -102,7 +103,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
     }
 
     fun assertNewQuizNotDisplayed(newQuiz: NewQuizApiModel) {
-        onView(withText(newQuiz.title)).check(doesNotExist())
+        onView(withText(newQuiz.title)).waitForCheck(doesNotExist())
     }
 
     fun refresh() {

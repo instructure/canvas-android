@@ -70,6 +70,7 @@ import com.instructure.teacher.ui.pages.classic.HelpPage
 import com.instructure.teacher.ui.pages.classic.LeftSideNavigationDrawerPage
 import com.instructure.teacher.ui.pages.classic.ModulesPage
 import com.instructure.teacher.ui.pages.classic.NavDrawerPage
+import com.instructure.teacher.ui.pages.classic.NewQuizWebViewPage
 import com.instructure.teacher.ui.pages.classic.NotATeacherPage
 import com.instructure.teacher.ui.pages.classic.PageListPage
 import com.instructure.teacher.ui.pages.classic.PeopleListPage
@@ -142,6 +143,7 @@ abstract class TeacherTest : CanvasTest() {
     val notATeacherPage = NotATeacherPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val peopleListPage = PeopleListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
+    val newQuizWebViewPage = NewQuizWebViewPage()
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizPreviewPage = QuizPreviewPage()

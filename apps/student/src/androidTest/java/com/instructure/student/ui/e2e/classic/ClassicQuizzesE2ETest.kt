@@ -43,7 +43,7 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Test
 
 @HiltAndroidTest
-class QuizzesE2ETest: StudentComposeTest() {
+class ClassicQuizzesE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

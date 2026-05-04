@@ -105,10 +105,6 @@ open class CanvasWebViewPage : BasePage(R.id.contentWebView) {
         waitForView(allOf(withId(R.id.contentWebView), isDisplayed()))
     }
 
-    fun waitForAnotherWebView() {
-        waitForView(allOf(withId(R.id.webView), isDisplayed()))
-    }
-
     fun clickEditPencilIcon() {
         onView(withId(R.id.menu_edit)).click()
     }
