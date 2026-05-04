@@ -49,6 +49,7 @@ object OAuthAPI {
                 @Field("client_secret") clientSecret: String,
                 @Field("code") oAuthRequest: String,
                 @Field(value = "redirect_uri", encoded = true) redirectURI: String,
+                @Field("code_verifier") codeVerifier: String? = null,
                 @Field("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
@@ -78,8 +79,8 @@ object OAuthAPI {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).deleteToken()).enqueue(callback)
     }
 
-    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
-        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob")).enqueue(callback)
+    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>, codeVerifier: String? = null) {
+        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob", codeVerifier)).enqueue(callback)
     }
 
     fun refreshAccessToken(adapter: RestBuilder, params: RestParams): DataResult<OAuthTokenResponse> {

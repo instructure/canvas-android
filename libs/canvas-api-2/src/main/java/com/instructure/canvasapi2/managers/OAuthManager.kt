@@ -36,10 +36,10 @@ object OAuthManager {
         OAuthAPI.deleteToken(adapter, params, callback)
     }
 
-    fun getToken(clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
+    fun getToken(clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>, codeVerifier: String? = null) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
-        OAuthAPI.getToken(adapter, params, clientID, clientSecret, oAuthRequest, callback)
+        OAuthAPI.getToken(adapter, params, clientID, clientSecret, oAuthRequest, callback, codeVerifier)
     }
 
     fun refreshToken(): DataResult<OAuthTokenResponse> {
