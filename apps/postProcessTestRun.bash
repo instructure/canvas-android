@@ -37,7 +37,7 @@ emitSuccessfulTestData () {
 
         #echo -e "\nSuccess payload: $successReport\n"
         # Post the data as newline-delimited JSON
-        curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/x-ndjson" --data-binary @- <<< "$successReport"
+        curl "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/x-ndjson" --data-binary @- <<< "$successReport"
         successReport="" # Reset the successReport after emitting it
         successCount=0
 }
@@ -59,7 +59,7 @@ do
       # Wrap it in the "data" object for Observe
       payload="{\"data\": $eventPayload}"
       echo -e "\nsummary payload: $payload"
-      curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
+      curl "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
     fi
 
     # For <testcase> lines, store the test info. We will construct the payload at </testcase>
@@ -157,6 +157,6 @@ do
      payload="{\"data\": $eventPayload}"
 
      echo -e "\ncost payload: $payload"
-     curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
+     curl "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
     fi
 done < "$costFile"
