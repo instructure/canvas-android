@@ -24,7 +24,11 @@ costFile="$resultsDir/CostReport.txt"
 suiteName=""
 
 # Common JSON parameters for all event types
-commonData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \"$appName\", \"branch\" : \"$BITRISE_GIT_BRANCH\""
+commonData=$(jq -n \
+  --arg workflow "$BITRISE_TRIGGERED_WORKFLOW_ID" \
+  --arg app "$appName" \
+  --arg branch "$BITRISE_GIT_BRANCH" \
+  '{"workflow": $workflow, "app": $app, "branch": $branch}')
 
 # A running collection of info for all passed tests. We'll use Newline Delimited JSON (NDJSON).
 successReport=""
@@ -49,15 +53,18 @@ do
     # Sample line: <testsuite name=\"NexusLowRes-29-en_US-portrait\" tests=\"275\" failures=\"3\" errors=\"0\" skipped=\"0\" time=\"3577.053\" timestamp=\"2020-01-08T15:32:23\" hostname=\"localhost\">
     if [[ $line =~ "testsuite name" ]]
     then
-      suiteName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
+      suiteName=`echo $line | cut -d " " -f 2 | cut -d = -f 2 | tr -d '"'`
       numTests=`echo $line | cut -d " " -f 3 | cut -d = -f 2 | tr -d '"'`
       numFailures=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
       runTime=`echo $line | cut -d " " -f 7 | cut -d = -f 2 | tr -d '"'`
 
-      # This is the event data
-      eventPayload="{\"deviceConfig\" : $suiteName, \"numTests\" : $numTests, \"numFailures\" : $numFailures, \"runTime\" : $runTime, $commonData}"
-      # Wrap it in the "data" object for Observe
-      payload="{\"data\": $eventPayload}"
+      payload=$(jq -n \
+        --argjson common "$commonData" \
+        --arg deviceConfig "$suiteName" \
+        --argjson numTests "$numTests" \
+        --argjson numFailures "$numFailures" \
+        --argjson runTime "$runTime" \
+        '{"data": ($common + {"deviceConfig": $deviceConfig, "numTests": $numTests, "numFailures": $numFailures, "runTime": $runTime})}')
       echo -e "\nsummary payload: $payload"
       curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
     fi
@@ -69,8 +76,8 @@ do
       # Remove the '<' and '>' from around the line
       line=`echo  $line | tr -d "<>"`
       # Extract various fields from the line
-      currentTestName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
-      currentClassName=`echo $line | cut -d " " -f 3 | cut -d = -f 2`
+      currentTestName=`echo $line | cut -d " " -f 2 | cut -d = -f 2 | tr -d '"'`
+      currentClassName=`echo $line | cut -d " " -f 3 | cut -d = -f 2 | tr -d '"'`
       currentRunTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
       failureEncountered=false
     fi
@@ -88,9 +95,14 @@ do
         if [[ $failureEncountered = false ]]
         then
             # Construct the event payload for the passed test
-            eventPayload="{\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $currentTestName, \"testClass\" : $currentClassName, \"deviceConfig\" : $suiteName, \"runTime\" : $currentRunTime, $commonData}"
-            # Wrap it in the "data" object for Observe
-            payload="{\"data\": $eventPayload}"
+            payload=$(jq -n \
+              --argjson common "$commonData" \
+              --arg buildUrl "$BITRISE_BUILD_URL" \
+              --arg testName "$currentTestName" \
+              --arg testClass "$currentClassName" \
+              --arg deviceConfig "$suiteName" \
+              --argjson runTime "$currentRunTime" \
+              '{"data": ($common + {"buildUrl": $buildUrl, "status": "passed", "testName": $testName, "testClass": $testClass, "deviceConfig": $deviceConfig, "runTime": $runTime})}')
 
             # Append the full JSON object with a newline for NDJSON format
             successReport="${successReport}${payload}"$'\n'
@@ -151,10 +163,11 @@ do
      totalMinutes=$((hours * 60 + minutes))
      #echo "totalMinutes: $totalMinutes"
 
-     # This is the event data
-     eventPayload="{\"minutes\" : $totalMinutes, \"cost\" : $cost, $commonData}"
-     # Wrap it in the "data" object for Observe
-     payload="{\"data\": $eventPayload}"
+     payload=$(jq -n \
+       --argjson common "$commonData" \
+       --argjson minutes "$totalMinutes" \
+       --argjson cost "$cost" \
+       '{"data": ($common + {"minutes": $minutes, "cost": $cost})}')
 
      echo -e "\ncost payload: $payload"
      curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
