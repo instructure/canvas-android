@@ -486,7 +486,10 @@ class CanvasWebView @JvmOverloads constructor(
                         //try to find fallback url
                         val fallbackUrl = appIntent.getStringExtra("browser_fallback_url")
                         if (fallbackUrl != null) {
-                            view.loadUrl(fallbackUrl, extraHeaders)
+                            val fallbackScheme = Uri.parse(fallbackUrl).scheme?.lowercase()
+                            if (fallbackScheme == "http" || fallbackScheme == "https") {
+                                view.loadUrl(fallbackUrl, extraHeaders)
+                            }
                             return true
                         }
                     } catch (e: URISyntaxException) {
