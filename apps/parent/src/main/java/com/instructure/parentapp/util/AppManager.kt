@@ -33,9 +33,6 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var alarmScheduler: AlarmScheduler
 
-    @Inject
-    lateinit var flutterAppMigration: FlutterAppMigration
-
     override fun performLogoutOnAuthError() {
         ParentLogoutTask(LogoutTask.Type.LOGOUT, null, getScheduler()).execute()
     }
@@ -44,10 +41,6 @@ class AppManager : BaseAppManager() {
 
     override fun getScheduler(): AlarmScheduler {
         return alarmScheduler
-    }
-
-    override fun performFlutterAppMigration() {
-        flutterAppMigration.migrateIfNecessary()
     }
 
 }

@@ -44,8 +44,6 @@ abstract class BaseAppManager : AppManager() {
     override fun onCreate() {
         super.onCreate()
 
-        performFlutterAppMigration()
-
         AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
         MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT, alarmScheduler = getScheduler()).execute() }
 
@@ -75,6 +73,4 @@ abstract class BaseAppManager : AppManager() {
     override fun performLogoutOnAuthError() = Unit
 
     abstract fun getScheduler(): AlarmScheduler?
-
-    abstract fun performFlutterAppMigration()
 }
