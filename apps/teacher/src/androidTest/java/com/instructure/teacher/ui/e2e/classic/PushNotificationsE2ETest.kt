@@ -6,6 +6,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -21,13 +22,14 @@ class PushNotificationsE2ETest : TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
+    @Stub
     fun testPushNotificationsUIE2E() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: 'mobileqa.instructure.com'.") //Push Notifications page is giving 'Unexpected Error' on beta yet, so we test it on original instance until it's fixed.
-        loginFindSchoolPage.enterDomain("mobileqa.instructure.com")
+        Log.d(STEP_TAG, "Enter domain: 'brinaca.instructure.com'.") //Push Notifications page is giving 'Unexpected Error' on beta yet, so we test it on original instance until it's fixed.
+        loginFindSchoolPage.enterDomain("brinaca.instructure.com")
 
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()

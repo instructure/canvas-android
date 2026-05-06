@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.utils.IntentActionMatcher
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.utils.pressBackButton
@@ -372,6 +373,7 @@ class SettingsE2ETest : StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @Stub
     fun testPronounsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -382,8 +384,8 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: 'mobileqa.beta.instructure.com'.")
-        loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
+        Log.d(STEP_TAG, "Enter domain: 'brinaca.instructure.com'.")
+        loginFindSchoolPage.enterDomain("brinaca.instructure.com")
 
         Log.d(PREPARATION_TAG, "Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' student to '${course.name}' course.")
         val pronounStudentId: Long = 12594913

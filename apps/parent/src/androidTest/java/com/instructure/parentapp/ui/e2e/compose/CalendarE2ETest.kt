@@ -354,7 +354,7 @@ class CalendarE2ETest : ParentComposeTest() {
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
 
-        val retrofitClient = CanvasNetworkAdapter.createAdminRetrofitClient("mobileqa.beta.instructure.com")
+        val retrofitClient = CanvasNetworkAdapter.createAdminRetrofitClient("brinaca.instructure.com")
         val coursesService = retrofitClient.create(CoursesApi.CoursesService::class.java)
         val enrollmentsService = retrofitClient.create(EnrollmentsApi.EnrollmentsService::class.java)
         val course = CoursesApi.createCourse(coursesService = coursesService)
