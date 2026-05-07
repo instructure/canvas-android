@@ -41,8 +41,6 @@ object RestRetryInterceptor : Interceptor {
         if (response.failed) {
             val code = response.code
             val contentType = response.body?.contentType()
-            val body = response.body?.string()
-            println("RestRetryInterceptor: all retries exhausted. status=$code, content-type=$contentType, body=$body")
             response.close()
             throw RuntimeException("status code: $code, content-type: $contentType")
         }
