@@ -71,10 +71,12 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
 
         // There appears to be a bug when the user is installing/updating the android webview stuff.
         // http://code.google.com/p/android/issues/detail?id=175124
-        try {
-            WebView.setWebContentsDebuggingEnabled(true)
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+        if (BuildConfig.DEBUG) {
+            try {
+                WebView.setWebContentsDebuggingEnabled(true)
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+            }
         }
     }
 
