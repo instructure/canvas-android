@@ -384,8 +384,8 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: 'brinaca.instructure.com'.")
-        loginFindSchoolPage.enterDomain("brinaca.instructure.com")
+        Log.d(STEP_TAG, "Enter domain: 'brinaca.beta.instructure.com'.")
+        loginFindSchoolPage.enterDomain("brinaca.beta.instructure.com")
 
         Log.d(PREPARATION_TAG, "Enroll '${BuildConfig.PRONOUN_STUDENT_TEST_USER}' student to '${course.name}' course.")
         val pronounStudentId: Long = 12594913

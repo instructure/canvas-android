@@ -420,7 +420,7 @@ class LoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: 'brinaca.instructure.com', and click on the 'Next' button on the toolbar.")
+        Log.d(STEP_TAG, "Enter domain: 'brinaca.beta.instructure.com', and click on the 'Next' button on the toolbar.")
         enterDomain()
         loginFindSchoolPage.clickToolbarNextMenuItem()
 

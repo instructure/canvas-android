@@ -60,7 +60,7 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
             ), withDescription = true, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601
         )
 
-        val url = "https://brinaca.instructure.com/courses/${course.id}/assignments/${assignment.id}"
+        val url = "https://brinaca.beta.instructure.com/courses/${course.id}/assignments/${assignment.id}"
         val syllabusBody = "this is the syllabus body <a id=\"assignmentLink\" href=\"$url\">Assignment</a>"
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course to set Syllabus with some syllabus body and a link to the '${assignment.name}' assignment.")

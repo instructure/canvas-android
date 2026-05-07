@@ -44,8 +44,8 @@ class PushNotificationsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: 'brinaca.instructure.com'.") //Push Notifications page is giving 'Unexpected Error' on beta yet, so we test it on original instance until it's fixed.
-        loginFindSchoolPage.enterDomain("brinaca.instructure.com")
+        Log.d(STEP_TAG, "Enter domain: 'brinaca.beta.instructure.com'.") //Push Notifications page is giving 'Unexpected Error' on beta yet, so we test it on original instance until it's fixed.
+        loginFindSchoolPage.enterDomain("brinaca.beta.instructure.com")
 
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()

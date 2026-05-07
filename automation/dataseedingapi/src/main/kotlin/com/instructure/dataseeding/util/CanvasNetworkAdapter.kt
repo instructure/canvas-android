@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 
 object CanvasNetworkAdapter {
 
-    val canvasDomain = "brinaca.instructure.com"
+    val canvasDomain = "brinaca.beta.instructure.com"
     val baseUrl = "https://$canvasDomain/api/v1/"
     val redirectUri = "urn:ietf:wg:oauth:2.0:oob"
     val adminToken = DATA_SEEDING_ADMIN_TOKEN
@@ -84,7 +84,7 @@ object CanvasNetworkAdapter {
 
     fun getApolloClient(token: String): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl("https://brinaca.instructure.com/api/graphql/")
+            .serverUrl("https://brinaca.beta.instructure.com/api/graphql/")
             .okHttpClient(okHttpClientForApollo(token))
             .addCustomScalarAdapter(com.instructure.dataseedingapi.type.DateTime.type, DateTimeAdapter())
             .build()
