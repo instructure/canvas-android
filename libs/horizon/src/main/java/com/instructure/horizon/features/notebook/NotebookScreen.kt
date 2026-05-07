@@ -208,6 +208,7 @@ fun NotebookScreen(
                                         note,
                                         courseName,
                                         state.deleteLoadingNote,
+                                        deleteEnabled = state.isOnline,
                                         onDeleteClick = {
                                             state.updateShowDeleteConfirmation(note)
                                         }) {
@@ -352,6 +353,7 @@ private fun NoteContent(
     note: Note,
     courseName: String?,
     deleteLoading: Note?,
+    deleteEnabled: Boolean,
     onDeleteClick: () -> Unit,
     onClick: () -> Unit,
 ) {
@@ -443,6 +445,7 @@ private fun NoteContent(
                     contentDescription = stringResource(R.string.a11y_notebookDeleteNoteButtonContentDescription),
                     color = IconButtonColor.InverseDanger,
                     size = IconButtonSize.SMALL,
+                    enabled = deleteEnabled,
                     onClick = { onDeleteClick() },
                     loading = note == deleteLoading,
                     modifier = Modifier.align(Alignment.Bottom)

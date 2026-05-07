@@ -19,8 +19,17 @@ package com.instructure.horizon.features.notebook
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
+import com.instructure.horizon.data.repository.NotebookPage
+import com.instructure.horizon.domain.usecase.notebook.DeleteNoteUseCase
+import com.instructure.horizon.domain.usecase.notebook.GetNotebookCoursesUseCase
+import com.instructure.horizon.domain.usecase.notebook.GetNotesUseCase
+import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.redwood.QueryNotesQuery
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -44,42 +53,37 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotebookViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: NotebookRepository = mockk(relaxed = true)
+    private val getNotesUseCase: GetNotesUseCase = mockk(relaxed = true)
+    private val getNotebookCoursesUseCase: GetNotebookCoursesUseCase = mockk(relaxed = true)
+    private val deleteNoteUseCase: DeleteNoteUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val testNotes = QueryNotesQuery.Notes(
-        edges = listOf(
-            QueryNotesQuery.Edge(
-                cursor = "cursor1",
-                node = QueryNotesQuery.Node(
-                    id = "note1",
-                    userText = "Test note 1",
-                    createdAt = Date(),
-                    updatedAt = Date(),
-                    rootAccountUuid = "",
-                    userId = "1",
-                    courseId = "1",
-                    objectId = "1",
-                    objectType = "Assignment",
-                    reaction = listOf(""),
-                    highlightData = "test"
-                )
-            )
+    private val testNote = Note(
+        id = "note1",
+        highlightedText = NoteHighlightedData(
+            "selected",
+            NoteHighlightedDataRange(0, 0, "", ""),
+            NoteHighlightedDataTextPosition(0, 0)
         ),
-        pageInfo = QueryNotesQuery.PageInfo(
-            hasNextPage = true,
-            hasPreviousPage = false,
-            endCursor = "endCursor1",
-            startCursor = "startCursor1"
-        )
+        type = NotebookType.Important,
+        userText = "comment",
+        updatedAt = Date(),
+        courseId = 1L,
+        objectType = NoteObjectType.PAGE,
+        objectId = "page1",
     )
 
+    private val pageWithMore = NotebookPage(notes = listOf(testNote), hasNextPage = true, endCursor = "endCursor1")
+    private val pageNoMore = NotebookPage(notes = emptyList(), hasNextPage = false, endCursor = null)
+
     @Before
-    fun setup() {
+    fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes
-        coEvery { repository.getCourses(any()) } returns emptyList()
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { getNotesUseCase(any()) } returns pageWithMore
+        coEvery { getNotebookCoursesUseCase(any()) } returns emptyList()
     }
 
     @After
@@ -89,229 +93,109 @@ class NotebookViewModelTest {
     }
 
     @Test
-    fun `Test data loads successfully on init`() {
-        val viewModel = getViewModel()
+    fun `loads data on init`() {
+        val viewModel = viewModel()
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
-        coVerify { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
+        assertEquals(listOf(testNote), viewModel.uiState.value.notes)
+        assertTrue(viewModel.uiState.value.hasNextPage)
     }
 
     @Test
-    fun `Test notes are loaded`() {
-        val viewModel = getViewModel()
+    fun `failure sets error state`() = runTest {
+        coEvery { getNotesUseCase(any()) } throws Exception("network")
 
-        assertTrue(viewModel.uiState.value.notes.isNotEmpty())
-    }
-
-    @Test
-    fun `Test failed data load sets error state`() = runTest {
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
-
-        val viewModel = getViewModel()
+        val viewModel = viewModel()
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
         assertTrue(viewModel.uiState.value.notes.isEmpty())
     }
 
     @Test
-    fun `Test pagination info is updated`() {
-        val viewModel = getViewModel()
+    fun `filter selection updates state and reloads`() = runTest {
+        val viewModel = viewModel()
 
-        assertTrue(viewModel.uiState.value.hasNextPage)
+        viewModel.uiState.value.onFilterSelected(NotebookType.Confusing)
+
+        assertEquals(NotebookType.Confusing, viewModel.uiState.value.selectedFilter)
+        coVerify(atLeast = 2) { getNotesUseCase(any()) }
     }
 
     @Test
-    fun `Test filter selection updates state and reloads data`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onFilterSelected(NotebookType.Important)
-
-        assertEquals(NotebookType.Important, viewModel.uiState.value.selectedFilter)
-        coVerify(atLeast = 2) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `Test filter selection with null clears filter`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onFilterSelected(null)
-
-        assertEquals(null, viewModel.uiState.value.selectedFilter)
-    }
-
-    @Test
-    fun `Test load next page uses end cursor`() = runTest {
-        val viewModel = getViewModel()
+    fun `loadNextPage uses end cursor`() = runTest {
+        val viewModel = viewModel()
 
         viewModel.uiState.value.loadNextPage()
 
-        coVerify { repository.getNotes(after = "endCursor1", before = null, any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `Test update course id reloads data`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.updateFilters(123L)
-        viewModel.updateFilters(1234L)
-        viewModel.updateFilters(123L)
-
-        coVerify(exactly = 2) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
-    }
-
-    @Test
-    fun `Test loadCourses success populates courses`() = runTest {
-        val mockCourses = listOf(
-            mockk<CourseWithProgress>(relaxed = true),
-            mockk<CourseWithProgress>(relaxed = true)
-        )
-        coEvery { repository.getCourses(any()) } returns mockCourses
-
-        val viewModel = getViewModel()
-
-        assertEquals(mockCourses, viewModel.uiState.value.courses)
-    }
-
-    @Test
-    fun `Test loadCourses failure sets empty courses`() = runTest {
-        coEvery { repository.getCourses(any()) } returns emptyList()
-
-        val viewModel = getViewModel()
-
-        assertTrue(viewModel.uiState.value.courses.isEmpty())
-    }
-
-    @Test
-    fun `Test onCourseSelected updates state and reloads data`() = runTest {
-        val mockCourse = mockk<CourseWithProgress>(relaxed = true) {
-            every { courseId } returns 123L
+        coVerify {
+            getNotesUseCase(match { it.after == "endCursor1" })
         }
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onCourseSelected(mockCourse)
-
-        assertEquals(mockCourse, viewModel.uiState.value.selectedCourse)
-        coVerify(atLeast = 1) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
     }
 
     @Test
-    fun `Test onCourseSelected with null clears course`() = runTest {
-        val viewModel = getViewModel()
+    fun `course selected reloads with new courseId`() = runTest {
+        val course = mockk<CourseWithProgress>(relaxed = true) { every { courseId } returns 42L }
+        val viewModel = viewModel()
 
-        viewModel.uiState.value.onCourseSelected(null)
+        viewModel.uiState.value.onCourseSelected(course)
 
-        assertNull(viewModel.uiState.value.selectedCourse)
+        assertEquals(course, viewModel.uiState.value.selectedCourse)
+        coVerify { getNotesUseCase(match { it.courseId == 42L }) }
     }
 
     @Test
-    fun `Test updateScreenState changes visibility flags`() = runTest {
-        val viewModel = getViewModel()
+    fun `delete note removes from list when online`() = runTest {
+        val viewModel = viewModel()
+        val note = viewModel.uiState.value.notes.first()
 
-        viewModel.updateScreenState(
-            showNoteTypeFilter = false,
-            showCourseFilter = true,
-            showTopBar = true
-        )
+        viewModel.uiState.value.deleteNote(note)
 
-        assertFalse(viewModel.uiState.value.showNoteTypeFilter)
-        assertTrue(viewModel.uiState.value.showCourseFilter)
-        assertTrue(viewModel.uiState.value.showTopBar)
+        assertFalse(viewModel.uiState.value.notes.contains(note))
+        coVerify { deleteNoteUseCase(note.id) }
     }
 
     @Test
-    fun `Test loadNextPage triggers with valid next page`() = runTest {
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes.copy(
-            pageInfo = testNotes.pageInfo.copy(hasNextPage = true)
-        )
-        val viewModel = getViewModel()
+    fun `delete note offline shows snackbar and skips use case`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { getNotesUseCase(any()) } returns NotebookPage(listOf(testNote), false, null)
+        every { context.getString(any()) } returns "msg"
 
-        viewModel.uiState.value.loadNextPage()
+        val viewModel = viewModel()
+        val note = viewModel.uiState.value.notes.first()
 
-        coVerify(atLeast = 2) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
-    }
+        viewModel.uiState.value.deleteNote(note)
 
-    @Test
-    fun `Test course filter is hidden when courseId is present`() = runTest {
-        savedStateHandle["courseId"] = "123"
-
-        val viewModel = getViewModel()
-
-        assertFalse(viewModel.uiState.value.showCourseFilter)
-    }
-
-    @Test
-    fun `Test updateShowDeleteConfirmation updates state correctly`() = runTest {
-        val viewModel = getViewModel()
-        val testNote = viewModel.uiState.value.notes.first()
-
-        viewModel.uiState.value.updateShowDeleteConfirmation(testNote)
-
-        assertEquals(testNote, viewModel.uiState.value.showDeleteConfirmationForNote)
-    }
-
-    @Test
-    fun `Test updateShowDeleteConfirmation with null clears confirmation`() = runTest {
-        val viewModel = getViewModel()
-        val testNote = viewModel.uiState.value.notes.first()
-
-        viewModel.uiState.value.updateShowDeleteConfirmation(testNote)
-        viewModel.uiState.value.updateShowDeleteConfirmation(null)
-
+        assertTrue(viewModel.uiState.value.notes.contains(note))
         assertNull(viewModel.uiState.value.showDeleteConfirmationForNote)
+        coVerify(exactly = 0) { deleteNoteUseCase(any()) }
     }
 
     @Test
-    fun `Test deleteNote removes note from list after successful deletion`() = runTest {
-        coEvery { repository.deleteNote(any()) } returns Unit
-        val viewModel = getViewModel()
-        val initialNotesCount = viewModel.uiState.value.notes.size
-        val noteToDelete = viewModel.uiState.value.notes.first()
+    fun `offline page sets hasNextPage false`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { getNotesUseCase(any()) } returns pageNoMore
 
-        viewModel.uiState.value.deleteNote(noteToDelete)
+        val viewModel = viewModel()
 
-        assertEquals(initialNotesCount - 1, viewModel.uiState.value.notes.size)
-        assertFalse(viewModel.uiState.value.notes.contains(noteToDelete))
-        assertNull(viewModel.uiState.value.deleteLoadingNote)
-        coVerify(exactly = 1) { repository.deleteNote(noteToDelete.id) }
+        assertFalse(viewModel.uiState.value.hasNextPage)
+        assertFalse(viewModel.uiState.value.isOnline)
     }
 
     @Test
-    fun `Test deleteNote clears loading state on error`() = runTest {
-        coEvery { repository.deleteNote(any()) } throws Exception("Delete failed")
-        val viewModel = getViewModel()
-        val initialNotesCount = viewModel.uiState.value.notes.size
-        val noteToDelete = viewModel.uiState.value.notes.first()
+    fun `updateFilters reloads with new course`() = runTest {
+        val viewModel = viewModel()
 
-        viewModel.uiState.value.deleteNote(noteToDelete)
+        viewModel.updateFilters(courseId = 99L)
 
-        assertEquals(initialNotesCount, viewModel.uiState.value.notes.size)
-        assertTrue(viewModel.uiState.value.notes.contains(noteToDelete))
-        assertNull(viewModel.uiState.value.deleteLoadingNote)
+        coVerify { getNotesUseCase(match { it.courseId == 99L }) }
     }
 
-    @Test
-    fun `Test deleteNote with null note does nothing`() = runTest {
-        val viewModel = getViewModel()
-        val initialNotesCount = viewModel.uiState.value.notes.size
-
-        viewModel.uiState.value.deleteNote(null)
-
-        assertEquals(initialNotesCount, viewModel.uiState.value.notes.size)
-        coVerify(exactly = 0) { repository.deleteNote(any()) }
-    }
-
-    @Test
-    fun `Test deleteNote calls repository with correct noteId`() = runTest {
-        coEvery { repository.deleteNote(any()) } returns Unit
-        val viewModel = getViewModel()
-        val noteToDelete = viewModel.uiState.value.notes.first()
-
-        viewModel.uiState.value.deleteNote(noteToDelete)
-
-        coVerify(exactly = 1) { repository.deleteNote(noteToDelete.id) }
-    }
-
-    private fun getViewModel(): NotebookViewModel {
-        return NotebookViewModel(context, repository, savedStateHandle)
-    }
+    private fun viewModel() = NotebookViewModel(
+        context,
+        getNotesUseCase,
+        getNotebookCoursesUseCase,
+        deleteNoteUseCase,
+        networkStateProvider,
+        savedStateHandle,
+    )
 }

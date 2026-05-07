@@ -28,19 +28,21 @@ data class HorizonCourseSyncPlanEntity(
     val syncPages: Boolean = true,
     val syncScores: Boolean = true,
     val syncFiles: Boolean = true,
+    val syncNotes: Boolean = true,
     val state: HorizonProgressState = HorizonProgressState.PENDING,
     val modulesState: HorizonProgressState = HorizonProgressState.PENDING,
     val assignmentsState: HorizonProgressState = HorizonProgressState.PENDING,
     val pagesState: HorizonProgressState = HorizonProgressState.PENDING,
     val scoresState: HorizonProgressState = HorizonProgressState.PENDING,
     val filesState: HorizonProgressState = HorizonProgressState.PENDING,
+    val notesState: HorizonProgressState = HorizonProgressState.PENDING,
 ) {
     companion object {
         const val CATEGORY_SIZE = 100_000L // 100KB weight per category for progress calculation
     }
 
     val totalCategoryCount: Int
-        get() = listOf(syncModules, syncAssignments, syncPages, syncScores, syncFiles).count { it }
+        get() = listOf(syncModules, syncAssignments, syncPages, syncScores, syncFiles, syncNotes).count { it }
 
     val completedCategoryCount: Int
         get() {
@@ -50,6 +52,7 @@ data class HorizonCourseSyncPlanEntity(
             if (syncPages && pagesState == HorizonProgressState.COMPLETED) count++
             if (syncScores && scoresState == HorizonProgressState.COMPLETED) count++
             if (syncFiles && filesState == HorizonProgressState.COMPLETED) count++
+            if (syncNotes && notesState == HorizonProgressState.COMPLETED) count++
             return count
         }
 

@@ -43,5 +43,6 @@ data class AddEditNoteUiState(
     val onDeleteNote: ((() -> Unit) -> Unit)? = null,
     val snackbarMessage: String? = null,
     val onSnackbarDismiss: () -> Unit,
-    val hasContentChange: Boolean = false
+    val hasContentChange: Boolean = false,
+    val isOnline: Boolean = true,
 )

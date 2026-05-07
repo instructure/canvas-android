@@ -27,9 +27,12 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.notebook.EditNoteUseCase
+import com.instructure.horizon.domain.usecase.notebook.RemoveNoteUseCase
 import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
@@ -38,7 +41,9 @@ import javax.inject.Inject
 @HiltViewModel
 class EditNoteViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: EditNoteRepository,
+    private val editNoteUseCase: EditNoteUseCase,
+    private val removeNoteUseCase: RemoveNoteUseCase,
+    private val networkStateProvider: NetworkStateProvider,
     savedStateHandle: SavedStateHandle
 ): AddEditViewModel() {
     private val noteId: String = savedStateHandle.toRoute<NotebookRoute.EditNotebook>().noteId
@@ -86,19 +91,26 @@ class EditNoteViewModel @Inject constructor(
                 lastModifiedDate = lastModifiedDate,
                 onSaveNote = ::editNote,
                 onDeleteNote = ::deleteNote,
+                isOnline = networkStateProvider.isOnline(),
             )
         }
     }
 
     private fun editNote(onFinished: () -> Unit) {
+        if (!networkStateProvider.isOnline()) {
+            _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
-            repository.updateNote(
-                noteId = noteId,
-                userText = uiState.value.userComment.text,
-                highlightedData = uiState.value.highlightedData,
-                type = uiState.value.type
+            editNoteUseCase(
+                EditNoteUseCase.Params(
+                    noteId = noteId,
+                    userText = uiState.value.userComment.text,
+                    highlightedData = uiState.value.highlightedData,
+                    type = uiState.value.type,
+                )
             )
 
             _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.noteHasBeenSavedMessage)) }
@@ -110,10 +122,14 @@ class EditNoteViewModel @Inject constructor(
     }
 
     private fun deleteNote(onFinished: () -> Unit) {
+        if (!networkStateProvider.isOnline()) {
+            _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
-            repository.deleteNote(noteId)
+            removeNoteUseCase(noteId)
 
             _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.noteHasBeenDeletedMessage)) }
             onFinished()

@@ -87,6 +87,7 @@ fun PageDetailsContentScreen(
                 ComposeNotesHighlightingCanvasWebView(
                     content = "<div id=\"parent-container\"><div>$it</div></div>",
                     notes = uiState.notes,
+                    canMarkNotes = uiState.isOnline,
                     scrollToNoteId = scrollToNoteId,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }

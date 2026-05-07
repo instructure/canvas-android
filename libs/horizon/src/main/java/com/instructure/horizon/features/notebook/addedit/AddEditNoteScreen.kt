@@ -176,7 +176,7 @@ private fun AddEditNoteAppBar(
                 onClick = { state.onSaveNote(navigateBack) },
                 color = ButtonColor.Black,
                 height = ButtonHeight.SMALL,
-                enabled = state.hasContentChange && !state.isLoading
+                enabled = state.hasContentChange && !state.isLoading && state.isOnline
             )
         },
         modifier = Modifier
@@ -252,6 +252,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
                     height = ButtonHeight.SMALL,
                     color = ButtonColor.DangerInverse,
                     iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                    enabled = state.isOnline,
                     onClick = { state.updateDeleteConfirmationDialog(true) }
                 )
             }

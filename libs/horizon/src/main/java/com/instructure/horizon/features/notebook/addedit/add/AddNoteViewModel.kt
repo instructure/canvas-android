@@ -26,10 +26,12 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.notebook.AddNoteUseCase
 import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
 import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
@@ -39,7 +41,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: AddNoteRepository,
+    private val addNoteUseCase: AddNoteUseCase,
+    private val networkStateProvider: NetworkStateProvider,
     savedStateHandle: SavedStateHandle
 ): AddEditViewModel() {
     private val courseId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().courseId
@@ -76,21 +79,28 @@ class AddNoteViewModel @Inject constructor(
                 onSaveNote = ::addNote,
                 onDeleteNote = null,
                 type = if (noteType == null) null else NotebookType.valueOf(noteType),
+                isOnline = networkStateProvider.isOnline(),
             )
         }
     }
 
     private fun addNote(onFinished: () -> Unit) {
+        if (!networkStateProvider.isOnline()) {
+            _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
-            repository.addNote(
-                courseId = courseId,
-                objectId = objectId,
-                objectType = objectType,
-                highlightedData = uiState.value.highlightedData,
-                userComment = uiState.value.userComment.text,
-                type = uiState.value.type
+            addNoteUseCase(
+                AddNoteUseCase.Params(
+                    courseId = courseId,
+                    objectId = objectId,
+                    objectType = objectType,
+                    highlightedData = uiState.value.highlightedData,
+                    userComment = uiState.value.userComment.text,
+                    type = uiState.value.type,
+                )
             )
 
             _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.noteHasBeenSavedMessage)) }
