@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.notebook
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
@@ -24,11 +25,14 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
 import com.instructure.horizon.data.repository.NotebookPage
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.notebook.DeleteNoteUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotebookCoursesUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotesUseCase
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -57,6 +61,8 @@ class NotebookViewModelTest {
     private val getNotebookCoursesUseCase: GetNotebookCoursesUseCase = mockk(relaxed = true)
     private val deleteNoteUseCase: DeleteNoteUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -82,8 +88,11 @@ class NotebookViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         every { networkStateProvider.isOnline() } returns true
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
         coEvery { getNotesUseCase(any()) } returns pageWithMore
         coEvery { getNotebookCoursesUseCase(any()) } returns emptyList()
+        coEvery { getLastSyncedAtUseCase(any()) } returns null
     }
 
     @After
@@ -99,6 +108,7 @@ class NotebookViewModelTest {
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
         assertEquals(listOf(testNote), viewModel.uiState.value.notes)
         assertTrue(viewModel.uiState.value.hasNextPage)
+        assertFalse(viewModel.uiState.value.isOffline)
     }
 
     @Test
@@ -157,6 +167,7 @@ class NotebookViewModelTest {
     @Test
     fun `delete note offline shows snackbar and skips use case`() = runTest {
         every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
         coEvery { getNotesUseCase(any()) } returns NotebookPage(listOf(testNote), false, null)
         every { context.getString(any()) } returns "msg"
 
@@ -171,14 +182,16 @@ class NotebookViewModelTest {
     }
 
     @Test
-    fun `offline page sets hasNextPage false`() = runTest {
+    fun `offline init shows banner with last synced at`() = runTest {
         every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        coEvery { getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.NOTES)) } returns 12345L
         coEvery { getNotesUseCase(any()) } returns pageNoMore
 
         val viewModel = viewModel()
 
-        assertFalse(viewModel.uiState.value.hasNextPage)
-        assertFalse(viewModel.uiState.value.isOnline)
+        assertTrue(viewModel.uiState.value.isOffline)
+        assertEquals(12345L, viewModel.uiState.value.lastSyncedAtMs)
     }
 
     @Test
@@ -196,6 +209,8 @@ class NotebookViewModelTest {
         getNotebookCoursesUseCase,
         deleteNoteUseCase,
         networkStateProvider,
+        featureFlagProvider,
+        getLastSyncedAtUseCase,
         savedStateHandle,
     )
 }

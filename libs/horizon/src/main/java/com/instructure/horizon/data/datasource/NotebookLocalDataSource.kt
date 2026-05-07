@@ -24,8 +24,11 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectTyp
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteReaction
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonNoteEntity
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.pandautils.utils.toJson
@@ -43,9 +46,16 @@ data class LocalNotesPage(
 class NotebookLocalDataSource @Inject constructor(
     private val noteDao: HorizonNoteDao,
     private val dashboardEnrollmentDao: HorizonDashboardEnrollmentDao,
+    private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
     suspend fun replaceNotesForCourse(courseId: Long, notes: List<HorizonNoteEntity>) {
         noteDao.replaceForCourse(courseId, notes)
+        syncMetadataDao.upsert(
+            HorizonSyncMetadataEntity(
+                dataType = SyncDataType.NOTES,
+                lastSyncedAtMs = System.currentTimeMillis(),
+            )
+        )
     }
 
     suspend fun upsertNotes(notes: List<HorizonNoteEntity>) {

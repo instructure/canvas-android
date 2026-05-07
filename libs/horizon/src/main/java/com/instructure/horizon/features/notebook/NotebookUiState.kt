@@ -41,5 +41,6 @@ data class NotebookUiState(
     val updateShowDeleteConfirmation: (Note?) -> Unit = {},
     val deleteNote: (Note?) -> Unit = {},
     val deleteLoadingNote: Note? = null,
-    val isOnline: Boolean = true,
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )

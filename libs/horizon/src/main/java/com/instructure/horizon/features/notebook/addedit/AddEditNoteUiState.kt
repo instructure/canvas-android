@@ -44,5 +44,6 @@ data class AddEditNoteUiState(
     val snackbarMessage: String? = null,
     val onSnackbarDismiss: () -> Unit,
     val hasContentChange: Boolean = false,
-    val isOnline: Boolean = true,
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )

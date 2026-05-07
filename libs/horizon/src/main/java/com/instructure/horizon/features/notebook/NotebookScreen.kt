@@ -79,6 +79,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -181,14 +182,14 @@ fun NotebookScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         state = scrollState,
                         modifier = Modifier
-                            .fillMaxHeight()
+                            .weight(1f)
                             .background(HorizonColors.Surface.pageSecondary()),
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
                             top = 2.dp,
                             bottom = 16.dp
-                        ) + bottomPadding
+                        ) + (if (state.isOffline) PaddingValues(0.dp) else bottomPadding)
                     ) {
                         if (state.notes.isEmpty()) {
                             item {
@@ -208,7 +209,7 @@ fun NotebookScreen(
                                         note,
                                         courseName,
                                         state.deleteLoadingNote,
-                                        deleteEnabled = state.isOnline,
+                                        deleteEnabled = !state.isOffline,
                                         onDeleteClick = {
                                             state.updateShowDeleteConfirmation(note)
                                         }) {
@@ -262,6 +263,15 @@ fun NotebookScreen(
                                 }
                             }
                         }
+                    }
+
+                    if (state.isOffline) {
+                        OfflineBanner(
+                            lastSyncedAtMs = state.lastSyncedAtMs,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottomPadding),
+                        )
                     }
                 }
             }

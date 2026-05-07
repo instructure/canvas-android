@@ -23,6 +23,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -42,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
@@ -73,6 +77,7 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
@@ -103,20 +108,44 @@ fun AddEditNoteScreen(
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = { AddEditNoteAppBar(state, navigateBack = { navController.popBackStack() }) },
     ) { padding ->
-        if (state.isLoading) {
-            AddEditNoteLoading(padding)
-        } else {
-            NoteDeleteConfirmationDialog(
-                showDialog = state.showDeleteConfirmationDialog,
-                onDeleteSelected = {
-                    state.onDeleteNote?.invoke {
-                        navController.popBackStack()
-                    }
-                },
-                dismissDialog = { state.updateDeleteConfirmationDialog(false) }
-            )
-            AddEditNoteScreenExitConfirmationDialog(state, navController)
-            AddEditNoteContent(state, padding)
+        val layoutDirection = LocalLayoutDirection.current
+        val topPadding = PaddingValues(
+            start = padding.calculateStartPadding(layoutDirection),
+            top = padding.calculateTopPadding(),
+            end = padding.calculateEndPadding(layoutDirection),
+        )
+        val bottomPadding = PaddingValues(
+            start = padding.calculateStartPadding(layoutDirection),
+            end = padding.calculateEndPadding(layoutDirection),
+            bottom = padding.calculateBottomPadding(),
+        )
+        val contentPadding = if (state.isOffline) topPadding else padding
+        Column(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.weight(1f)) {
+                if (state.isLoading) {
+                    AddEditNoteLoading(contentPadding)
+                } else {
+                    NoteDeleteConfirmationDialog(
+                        showDialog = state.showDeleteConfirmationDialog,
+                        onDeleteSelected = {
+                            state.onDeleteNote?.invoke {
+                                navController.popBackStack()
+                            }
+                        },
+                        dismissDialog = { state.updateDeleteConfirmationDialog(false) }
+                    )
+                    AddEditNoteScreenExitConfirmationDialog(state, navController)
+                    AddEditNoteContent(state, contentPadding)
+                }
+            }
+            if (state.isOffline) {
+                OfflineBanner(
+                    lastSyncedAtMs = state.lastSyncedAtMs,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottomPadding),
+                )
+            }
         }
     }
 }
@@ -176,7 +205,7 @@ private fun AddEditNoteAppBar(
                 onClick = { state.onSaveNote(navigateBack) },
                 color = ButtonColor.Black,
                 height = ButtonHeight.SMALL,
-                enabled = state.hasContentChange && !state.isLoading && state.isOnline
+                enabled = state.hasContentChange && !state.isLoading && !state.isOffline
             )
         },
         modifier = Modifier
@@ -252,7 +281,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
                     height = ButtonHeight.SMALL,
                     color = ButtonColor.DangerInverse,
                     iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-                    enabled = state.isOnline,
+                    enabled = !state.isOffline,
                     onClick = { state.updateDeleteConfirmationDialog(true) }
                 )
             }
