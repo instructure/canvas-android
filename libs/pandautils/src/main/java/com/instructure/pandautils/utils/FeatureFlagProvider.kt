@@ -53,7 +53,7 @@ class FeatureFlagProvider(
     }
 
     suspend fun offlineEnabled(): Boolean {
-        return true//checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) && !apiPrefs.canvasForElementary
+        return checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) && !apiPrefs.canvasForElementary
     }
 
     private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {

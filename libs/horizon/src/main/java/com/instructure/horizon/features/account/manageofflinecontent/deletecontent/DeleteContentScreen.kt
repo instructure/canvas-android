@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -52,10 +53,11 @@ fun DeleteContentScreen(
     val isDeleting by viewModel.isDeleting.collectAsState()
     val isComplete by viewModel.isComplete.collectAsState()
 
-    if (isComplete) {
-        navController.popBackStack(AccountRoute.ManageOfflineContent.route, inclusive = true)
-        navController.navigate(AccountRoute.ManageOfflineContent.route)
-        return
+    LaunchedEffect(isComplete){
+        if (isComplete) {
+            navController.popBackStack(AccountRoute.ManageOfflineContent.route, inclusive = true)
+            navController.navigate(AccountRoute.ManageOfflineContent.route)
+        }
     }
 
     if (isDeleting) {

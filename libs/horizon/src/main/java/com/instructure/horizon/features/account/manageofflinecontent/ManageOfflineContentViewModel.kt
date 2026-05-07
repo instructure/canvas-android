@@ -21,16 +21,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
-import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
-import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
-import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
 import com.instructure.horizon.domain.usecase.GetDeviceStorageUseCase
+import com.instructure.horizon.domain.usecase.GetSelectedSyncFileIdsUseCase
+import com.instructure.horizon.domain.usecase.GetSyncedCourseIdsUseCase
+import com.instructure.horizon.domain.usecase.SaveOfflineSyncPlanUseCase
 import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
-import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,8 +47,9 @@ class ManageOfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCoursesWithFilesUseCase: GetCoursesWithFilesUseCase,
     private val getDeviceStorageUseCase: GetDeviceStorageUseCase,
-    private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
-    private val fileSyncPlanDao: HorizonFileSyncPlanDao,
+    private val getSyncedCourseIdsUseCase: GetSyncedCourseIdsUseCase,
+    private val getSelectedSyncFileIdsUseCase: GetSelectedSyncFileIdsUseCase,
+    private val saveOfflineSyncPlanUseCase: SaveOfflineSyncPlanUseCase,
     private val syncHelper: HorizonOfflineSyncHelper,
 ) : ViewModel() {
 
@@ -83,8 +82,8 @@ class ManageOfflineContentViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
             val coursesWithFiles = getCoursesWithFilesUseCase()
-            val previouslySelectedCourseIds = courseSyncPlanDao.findAll().map { it.courseId }.toSet()
-            val previouslySelectedFileIds = fileSyncPlanDao.findAllOnce().map { it.fileId }.toSet()
+            val previouslySelectedCourseIds = getSyncedCourseIdsUseCase()
+            val previouslySelectedFileIds = getSelectedSyncFileIdsUseCase()
 
             val courses = coursesWithFiles.map { courseData ->
                 val courseWasPreviouslySynced = courseData.courseId in previouslySelectedCourseIds
@@ -150,29 +149,23 @@ class ManageOfflineContentViewModel @Inject constructor(
 
             if (selectedCourses.isEmpty()) return@launch
 
-            courseSyncPlanDao.deleteAll()
-            fileSyncPlanDao.deleteAll()
-
-            for (course in selectedCourses) {
-                courseSyncPlanDao.upsert(
-                    HorizonCourseSyncPlanEntity(
-                        courseId = course.courseId,
-                        courseName = course.courseName,
-                        syncFiles = course.files.any { it.isSelected },
-                        state = HorizonProgressState.PENDING,
-                    )
-                )
-                for (file in course.files.filter { it.isSelected }) {
-                    fileSyncPlanDao.upsert(
-                        HorizonFileSyncPlanEntity(
-                            fileId = file.fileId,
+            saveOfflineSyncPlanUseCase(
+                SaveOfflineSyncPlanUseCase.Params(
+                    courses = selectedCourses.map { course ->
+                        SaveOfflineSyncPlanUseCase.Params.Course(
                             courseId = course.courseId,
-                            fileName = file.fileName,
-                            state = HorizonProgressState.PENDING,
+                            courseName = course.courseName,
+                            syncFiles = course.files.any { it.isSelected },
+                            files = course.files.filter { it.isSelected }.map { file ->
+                                SaveOfflineSyncPlanUseCase.Params.File(
+                                    fileId = file.fileId,
+                                    fileName = file.fileName,
+                                )
+                            },
                         )
-                    )
-                }
-            }
+                    },
+                )
+            )
 
             syncHelper.syncCourses(selectedCourses.map { it.courseId })
             _navigateToSyncing.emit(Unit)
