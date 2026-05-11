@@ -34,6 +34,19 @@ class EditFileFolderPresenter(val currentFileOrFolder: FileFolder, val usageRigh
     var isFile: Boolean = false
         get() = currentFileOrFolder.folderId != 0L
 
+    var accessStatus: FileAccessStatus = when {
+        currentFileOrFolder.isLocked -> UnpublishStatus()
+        currentFileOrFolder.isHidden -> RestrictedStatus()
+        currentFileOrFolder.unlockDate != null || currentFileOrFolder.lockDate != null -> RestrictedScheduleStatus()
+        else -> PublishStatus()
+    }
+    var usageType: FileUsageRightsJustification? = currentFileOrFolder.usageRights?.useJustification
+    var licenseType: License? = licenseList.find { it.id == currentFileOrFolder.usageRights?.license }
+    var lockDate: Date? = currentFileOrFolder.lockDate
+    var unlockDate: Date? = currentFileOrFolder.unlockDate
+    var editedName: String = currentFileOrFolder.name ?: currentFileOrFolder.displayName ?: ""
+    var editedCopyright: String = currentFileOrFolder.usageRights?.legalCopyright.orEmpty()
+
     private var deleteFileFolderJob: Job? = null
     private var updateFileFolderJob: Job? = null
     private var updateUsageRightsJob: Job? = null

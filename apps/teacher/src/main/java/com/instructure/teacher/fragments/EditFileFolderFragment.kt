@@ -33,7 +33,6 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.textfield.TextInputLayout
-import com.instructure.canvasapi2.models.FileAccessStatus
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.FileUsageRightsJustification
 import com.instructure.canvasapi2.models.License
@@ -88,24 +87,16 @@ class EditFileFolderFragment : BasePresenterFragment<
     private var licenseList: ArrayList<License> by ParcelableArrayListArg()
     private var courseId: Long by LongArg()
 
-    private var mAccessStatus: FileAccessStatus = UnpublishStatus()
-    private var mUsageType: FileUsageRightsJustification? = null
-    private var mLicenseType: License? = null
-
     private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
-    private var lockDate: Date? = null
-    private var unlockDate: Date? = null
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 
-    private lateinit var updateFileFolder: FileFolder
-
     private val dateClickListener: (View, Boolean) -> Unit = { view, isLockDate ->
-        DatePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) lockDate else unlockDate) { year, month, dayOfMonth ->
-            val updatedDate = setupDateCalendar(year, month, dayOfMonth, if (isLockDate) lockDate else unlockDate)
+        DatePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) presenter.lockDate else presenter.unlockDate) { year, month, dayOfMonth ->
+            val updatedDate = setupDateCalendar(year, month, dayOfMonth, if (isLockDate) presenter.lockDate else presenter.unlockDate)
             val dateString: String = mDateFormat.formatOrDoubleDash(updatedDate)
             (view as EditText).setText(dateString)
-            if (isLockDate) lockDate = updatedDate else unlockDate = updatedDate
+            if (isLockDate) presenter.lockDate = updatedDate else presenter.unlockDate = updatedDate
 
             // Clear any date/time errors
             binding.unlockDateTextInput.error = null
@@ -114,11 +105,11 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     private val timeClickListener: (View, Boolean) -> Unit = { view, isLockDate ->
-        TimePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) lockDate else unlockDate) { hour, min ->
-            val updatedDate = setupTimeCalendar(hour, min, if (isLockDate) lockDate else unlockDate)
+        TimePickerDialogFragment.getInstance(requireActivity().supportFragmentManager, if (isLockDate) presenter.lockDate else presenter.unlockDate) { hour, min ->
+            val updatedDate = setupTimeCalendar(hour, min, if (isLockDate) presenter.lockDate else presenter.unlockDate)
             val timeString = mTimeFormat.formatOrDoubleDash(updatedDate)
             (view as EditText).setText(timeString)
-            if (isLockDate) lockDate = updatedDate else unlockDate = updatedDate
+            if (isLockDate) presenter.lockDate = updatedDate else presenter.unlockDate = updatedDate
 
             // Clear any date/time errors
             binding.unlockDateTextInput.error = null
@@ -134,6 +125,16 @@ class EditFileFolderFragment : BasePresenterFragment<
             if (s?.isBlank() == false) {
                 binding.titleLabel.error = null
             }
+            presenter.editedName = s?.toString().orEmpty()
+        }
+    }
+
+    private val copyrightTextWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            presenter.editedCopyright = s?.toString().orEmpty()
         }
     }
 
@@ -142,7 +143,6 @@ class EditFileFolderFragment : BasePresenterFragment<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        updateFileFolder = currentFileOrFolder.parcelCopy()
     }
 
     override fun onReadySetGo(presenter: EditFileFolderPresenter) {
@@ -211,7 +211,7 @@ class EditFileFolderFragment : BasePresenterFragment<
             setupLicenses(presenter.licenseList)
         }
 
-        titleEditText.setText(presenter.currentFileOrFolder.name ?: presenter.currentFileOrFolder.displayName)
+        titleEditText.setText(presenter.editedName)
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         // Setup click listeners for lock/unlock dates/times
@@ -221,6 +221,7 @@ class EditFileFolderFragment : BasePresenterFragment<
         unlockTimeEditText.setOnClickListener { timeClickListener(it, false) }
 
         titleEditText.addTextChangedListener(titleTextWatcher)
+        copyrightEditText.addTextChangedListener(copyrightTextWatcher)
 
         // Apply theming
         ViewStyler.themeEditText(requireActivity(), titleEditText, ThemePrefs.brandColor)
@@ -270,17 +271,16 @@ class EditFileFolderFragment : BasePresenterFragment<
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 view ?: return
-                mAccessStatus = when ((view as TextView).text.toString()) {
+                presenter.accessStatus = when ((view as TextView).text.toString()) {
                     getString(R.string.publish) -> PublishStatus()
                     getString(R.string.unpublish) -> UnpublishStatus()
                     getString(R.string.restrictedAccess) -> {
-                        if (lockDate != null || unlockDate != null)
-                            RestrictedScheduleStatus()
-                        RestrictedStatus()
+                        if (presenter.lockDate != null || presenter.unlockDate != null) RestrictedScheduleStatus()
+                        else RestrictedStatus()
                     }
                     else -> UnpublishStatus()
                 }
-                when (mAccessStatus) {
+                when (presenter.accessStatus) {
                     is RestrictedStatus -> {
                         restrictedAccessLabel.setVisible()
                         restrictedAccessSpinner.setVisible()
@@ -305,18 +305,11 @@ class EditFileFolderFragment : BasePresenterFragment<
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
 
-        val initialPosition =
-                when {
-                    presenter.currentFileOrFolder.isLocked -> spinnerAdapter.getPosition(getString(R.string.unpublish))
-                    presenter.currentFileOrFolder.isHidden ||
-                            presenter.currentFileOrFolder.unlockDate != null ||
-                            presenter.currentFileOrFolder.lockDate != null -> {
-                        lockDate = presenter.currentFileOrFolder.lockDate
-                        unlockDate = presenter.currentFileOrFolder.unlockDate
-                        spinnerAdapter.getPosition(getString(R.string.restrictedAccess))
-                    }
-                    else -> spinnerAdapter.getPosition(getString(R.string.publish))
-                }
+        val initialPosition = when (presenter.accessStatus) {
+            is UnpublishStatus -> spinnerAdapter.getPosition(getString(R.string.unpublish))
+            is RestrictedStatus, is RestrictedScheduleStatus -> spinnerAdapter.getPosition(getString(R.string.restrictedAccess))
+            else -> spinnerAdapter.getPosition(getString(R.string.publish))
+        }
         accessSpinner.setSelection(initialPosition)
     }
 
@@ -328,7 +321,7 @@ class EditFileFolderFragment : BasePresenterFragment<
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 view ?: return
-                mAccessStatus = when ((view as TextView).text.toString()) {
+                presenter.accessStatus = when ((view as TextView).text.toString()) {
                     getString(R.string.studentsWithLink) -> {
                         restrictedAccessLock.setGone()
                         restrictedAccessUnlock.setGone()
@@ -350,23 +343,21 @@ class EditFileFolderFragment : BasePresenterFragment<
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
 
-        val initialPosition = when {
-            presenter.currentFileOrFolder.isHidden -> {
-                if (presenter.isFile)
-                    spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
-                else
-                    spinnerAdapter.getPosition(getString(R.string.hidden))
-            }
-            presenter.currentFileOrFolder.lockDate != null || presenter.currentFileOrFolder.unlockDate != null -> {
-                if (presenter.currentFileOrFolder.lockDate != null) {
-                    lockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.lockDate))
-                    lockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.lockDate))
-                }
-                if (presenter.currentFileOrFolder.unlockDate != null) {
-                    unlockDateEditText.setText(mDateFormat.format(presenter.currentFileOrFolder.unlockDate))
-                    unlockTimeEditText.setText(mTimeFormat.format(presenter.currentFileOrFolder.unlockDate))
-                }
-                spinnerAdapter.getPosition(getString(R.string.scheduleAvailability))
+        presenter.lockDate?.let {
+            lockDateEditText.setText(mDateFormat.format(it))
+            lockTimeEditText.setText(mTimeFormat.format(it))
+        }
+        presenter.unlockDate?.let {
+            unlockDateEditText.setText(mDateFormat.format(it))
+            unlockTimeEditText.setText(mTimeFormat.format(it))
+        }
+
+        val initialPosition = when (presenter.accessStatus) {
+            is RestrictedScheduleStatus -> spinnerAdapter.getPosition(getString(R.string.scheduleAvailability))
+            is RestrictedStatus -> if (presenter.isFile) {
+                spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
+            } else {
+                spinnerAdapter.getPosition(getString(R.string.hidden))
             }
             else -> spinnerAdapter.getPosition(getString(R.string.studentsWithLink))
         }
@@ -385,7 +376,7 @@ class EditFileFolderFragment : BasePresenterFragment<
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 view ?: return
-                mUsageType = when ((view as TextView).text.toString()) {
+                presenter.usageType = when ((view as TextView).text.toString()) {
                     getString(R.string.holdCopyright) -> FileUsageRightsJustification.OWN_COPYRIGHT
                     getString(R.string.havePermission) -> FileUsageRightsJustification.USED_BY_PERMISSION
                     getString(R.string.publicDomain) -> FileUsageRightsJustification.PUBLIC_DOMAIN
@@ -394,25 +385,21 @@ class EditFileFolderFragment : BasePresenterFragment<
                     else -> FileUsageRightsJustification.OWN_COPYRIGHT
                 }
 
-                licenseLabel.setVisible(mUsageType == FileUsageRightsJustification.CREATIVE_COMMONS)
-                licenseSpinner.setVisible(mUsageType == FileUsageRightsJustification.CREATIVE_COMMONS)
+                licenseLabel.setVisible(presenter.usageType == FileUsageRightsJustification.CREATIVE_COMMONS)
+                licenseSpinner.setVisible(presenter.usageType == FileUsageRightsJustification.CREATIVE_COMMONS)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
 
-        // Setup initial value
-        val initialPosition =
-                when (presenter.currentFileOrFolder.usageRights?.useJustification?.name?.lowercase(
-                    Locale.getDefault()
-                )) {
-                    "own_copyright" -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
-                    "used_by_permission" -> spinnerAdapter.getPosition(getString(R.string.havePermission))
-                    "public_domain" -> spinnerAdapter.getPosition(getString(R.string.publicDomain))
-                    "fair_use" -> spinnerAdapter.getPosition(getString(R.string.fairUse))
-                    "creative_commons" -> spinnerAdapter.getPosition(getString(R.string.creativeCommons))
-                    else -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
-                }
+        val initialPosition = when (presenter.usageType?.name?.lowercase(Locale.getDefault())) {
+            "own_copyright" -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
+            "used_by_permission" -> spinnerAdapter.getPosition(getString(R.string.havePermission))
+            "public_domain" -> spinnerAdapter.getPosition(getString(R.string.publicDomain))
+            "fair_use" -> spinnerAdapter.getPosition(getString(R.string.fairUse))
+            "creative_commons" -> spinnerAdapter.getPosition(getString(R.string.creativeCommons))
+            else -> spinnerAdapter.getPosition(getString(R.string.holdCopyright))
+        }
         usageRightsSpinner.setSelection(initialPosition)
     }
 
@@ -426,43 +413,39 @@ class EditFileFolderFragment : BasePresenterFragment<
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 view ?: return
-                mLicenseType = licenses.find { it.name == ((view as TextView).text.toString()) }
+                presenter.licenseType = licenses.find { it.name == ((view as TextView).text.toString()) }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) = Unit
         }
 
-        // Setup initial values
-        copyrightEditText.setText(presenter.currentFileOrFolder.usageRights?.legalCopyright ?: "")
+        copyrightEditText.setText(presenter.editedCopyright)
 
-        // Use license field in the file to match the license ID in licenses, filter by
-        // license name, get position in adapter, set that as the initial position. If that isn't found,
-        // set the default to the first license in the list
-        val initialPosition = spinnerAdapter.getPosition(presenter.licenseList
-                .find { it.id == presenter.currentFileOrFolder.usageRights?.license }?.name ?: presenter.licenseList.filter { it.name.contains("CC") }[0].name)
+        val initialPosition = spinnerAdapter.getPosition(presenter.licenseType?.name
+            ?: presenter.licenseList.filter { it.name.contains("CC") }.firstOrNull()?.name)
         licenseSpinner.setSelection(initialPosition)
     }
 
     private fun saveFileFolder() = with(binding) {
-        if (binding.titleEditText.text?.isBlank() == true) {
-            binding.titleLabel.error = getString(R.string.errorEmptyTitle)
+        if (titleEditText.text?.isBlank() == true) {
+            titleLabel.error = getString(R.string.errorEmptyTitle)
             return
         }
 
-        // Check unlock/lock dates
-        if (unlockDate != null && lockDate != null)
-            if (unlockDate!!.after(lockDate)) {
-                unlockDateTextInput.isErrorEnabled = true
-                unlockDateTextInput.error = getString(R.string.availableFromAfterTo)
-                return
-            }
+        val lockDate = presenter.lockDate
+        val unlockDate = presenter.unlockDate
+        if (unlockDate != null && lockDate != null && unlockDate.after(lockDate)) {
+            unlockDateTextInput.isErrorEnabled = true
+            unlockDateTextInput.error = getString(R.string.availableFromAfterTo)
+            return
+        }
 
-        updateFileFolder = updateFileFolder.copy(name = titleEditText.text.toString())
+        val updatedFileFolder = presenter.currentFileOrFolder.parcelCopy().copy(name = titleEditText.text.toString())
 
-        mAccessStatus.lockAt = lockDate.toApiString()
-        mAccessStatus.unlockAt = unlockDate.toApiString()
+        presenter.accessStatus.lockAt = lockDate.toApiString()
+        presenter.accessStatus.unlockAt = unlockDate.toApiString()
 
-        presenter.updateFileFolder(updateFileFolder, mAccessStatus, mUsageType, mLicenseType, copyrightEditText.text.toString())
+        presenter.updateFileFolder(updatedFileFolder, presenter.accessStatus, presenter.usageType, presenter.licenseType, copyrightEditText.text.toString())
     }
 
     /**
