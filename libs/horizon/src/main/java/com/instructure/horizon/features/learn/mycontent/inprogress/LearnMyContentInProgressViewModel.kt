@@ -20,10 +20,12 @@ import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
+import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnMyContentInProgressItemsParams
 import com.instructure.horizon.domain.usecase.GetLearnMyContentInProgressItemsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
@@ -37,6 +39,7 @@ import javax.inject.Inject
 class LearnMyContentInProgressViewModel @Inject constructor(
     private val resources: Resources,
     private val getLearnMyContentInProgressItemsUseCase: GetLearnMyContentInProgressItemsUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
     getNextModuleItemUseCase: GetNextModuleItemUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
@@ -62,8 +65,12 @@ class LearnMyContentInProgressViewModel @Inject constructor(
                 forceRefresh = forceRefresh,
             )
         )
-        return response.items.map {
-            it.toCardState(resources) { courseId -> fetchNextModuleItemRoute(courseId) }
+        val offlineContext = offlineCardStateHelper.buildContext(
+            response.items.filterIsInstance<CourseEnrollmentItem>().mapNotNull { it.imageUrl }
+        )
+        return response.items.map { item ->
+            val courseId = (item as? CourseEnrollmentItem)?.id?.toLongOrNull()
+            item.toCardState(resources, { fetchNextModuleItemRoute(it) }, offlineContext.isSynced(courseId), offlineContext.resolvedImageUrls)
         } to response.pageInfo
     }
 }

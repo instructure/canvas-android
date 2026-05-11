@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardOffline
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
@@ -40,6 +41,7 @@ fun DashboardSkillOverviewWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     pageState: DashboardWidgetPageState,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
@@ -54,7 +56,7 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, pageState, navController, modifier)
+    DashboardSkillOverviewSection(state, pageState, navController, isOffline, modifier)
 }
 
 @Composable
@@ -62,8 +64,20 @@ fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
     pageState: DashboardWidgetPageState,
     navController: NavHostController,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    if (isOffline) {
+        DashboardWidgetCardOffline(
+            title = stringResource(R.string.dashboardSkillOverviewTitle),
+            iconRes = R.drawable.hub,
+            widgetColor = HorizonColors.PrimitivesGreen.green12(),
+            useMinWidth = false,
+            pageState = pageState,
+            modifier = modifier
+        )
+        return
+    }
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(

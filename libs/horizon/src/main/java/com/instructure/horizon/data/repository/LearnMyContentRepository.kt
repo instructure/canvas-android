@@ -73,7 +73,4 @@ class LearnMyContentRepository @Inject constructor(
         localDataSource.saveLearnItems(allItems, queryKey)
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

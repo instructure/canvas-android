@@ -31,6 +31,7 @@ import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardOffline
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,8 +42,21 @@ fun DashboardAnnouncementBannerWidget(
     navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    if (isOffline) {
+        DashboardWidgetCardOffline(
+            title = stringResource(R.string.notificationsAnnouncementCategoryLabel),
+            iconRes = R.drawable.campaign,
+            widgetColor = HorizonColors.PrimitivesSky.sky12,
+            useMinWidth = false,
+            pageState = DashboardWidgetPageState.Empty,
+            modifier = modifier.padding(horizontal = 24.dp).padding(bottom = 16.dp)
+        )
+        return
+    }
+
     val viewModel = hiltViewModel<DashboardAnnouncementBannerViewModel>()
     val state by viewModel.uiState.collectAsState()
 
@@ -82,7 +96,7 @@ fun DashboardAnnouncementBannerSection(
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
-                modifier.padding(horizontal = 24.dp)
+                modifier.padding(horizontal = 24.dp).padding(bottom = 16.dp)
             )
         }
         DashboardItemState.SUCCESS -> {

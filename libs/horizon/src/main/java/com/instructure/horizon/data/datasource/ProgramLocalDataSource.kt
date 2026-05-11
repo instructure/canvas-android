@@ -18,8 +18,11 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.entity.HorizonProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonProgramEntity
+import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
+import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import java.util.Date
@@ -27,6 +30,7 @@ import javax.inject.Inject
 
 class ProgramLocalDataSource @Inject constructor(
     private val programDao: HorizonProgramDao,
+    private val syncMetadataDao: HorizonSyncMetadataDao,
 ) {
 
     suspend fun getPrograms(): List<Program> {
@@ -56,7 +60,7 @@ class ProgramLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun savePrograms(programs: List<Program>, enrolledCourseIds: Set<Long>) {
+    suspend fun savePrograms(programs: List<Program>) {
         val programEntities = programs.map { program ->
             HorizonProgramEntity(
                 programId = program.id,
@@ -75,7 +79,6 @@ class ProgramLocalDataSource @Inject constructor(
         }
         val refs = programs.flatMap { program ->
             program.sortedRequirements
-                .filter { it.courseId in enrolledCourseIds }
                 .mapIndexed { index, req ->
                     HorizonProgramCourseRef(
                         programId = program.id,
@@ -90,5 +93,11 @@ class ProgramLocalDataSource @Inject constructor(
                 }
         }
         programDao.replaceAll(programEntities, refs)
+        syncMetadataDao.upsert(
+            HorizonSyncMetadataEntity(
+                dataType = SyncDataType.DASHBOARD_PROGRAMS,
+                lastSyncedAtMs = System.currentTimeMillis(),
+            )
+        )
     }
 }

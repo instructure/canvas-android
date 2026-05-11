@@ -50,6 +50,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 
 @Composable
 fun LearnMyContentCard(
@@ -61,7 +62,8 @@ fun LearnMyContentCard(
         modifier = modifier
             .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4)
             .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
-            .clickable { navController.navigate(cardState.route) }
+            .offlineDisabled(!cardState.isSynced)
+            .clickable(enabled = cardState.isSynced) { navController.navigate(cardState.route) }
     ) {
         Column(Modifier.fillMaxWidth()) {
             if (cardState.imageUrl != null) {

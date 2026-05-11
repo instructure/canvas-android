@@ -22,24 +22,40 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.User
+import com.instructure.horizon.data.datasource.AccountLocalDataSource
+import com.instructure.horizon.offline.OfflineSyncRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
     private val experienceApi: ExperienceAPI,
-    private val helpLinksApi: HelpLinksAPI.HelpLinksAPI
-) {
+    private val helpLinksApi: HelpLinksAPI.HelpLinksAPI,
+    private val localDataSource: AccountLocalDataSource,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
+
     suspend fun getUserDetails(forceRefresh: Boolean): User {
-        val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
-        return userApi.getSelf(restParams).dataOrThrow
+        return if (shouldFetchFromNetwork()) {
+            val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
+            val user = userApi.getSelf(restParams).dataOrThrow
+            if (shouldSync()) localDataSource.saveUser(user)
+            user
+        } else {
+            localDataSource.getUser() ?: User()
+        }
     }
 
     suspend fun getExperiences(forceRefresh: Boolean): List<String> {
+        if (!shouldFetchFromNetwork()) return emptyList()
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
         return experienceApi.getExperienceSummary(restParams).dataOrNull?.availableApps ?: emptyList()
     }
 
     suspend fun getHelpLinks(forceRefresh: Boolean): List<HelpLink> {
+        if (!shouldFetchFromNetwork()) return emptyList()
         // This not an official, documented endpoint, we just use the same endpoint to the web implementation
         return helpLinksApi.getCanvasHelpLinks(
             RestParams(apiVersion = "", isForceReadFromNetwork = forceRefresh)

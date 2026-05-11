@@ -253,6 +253,7 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
             color = ButtonColor.DangerOutline,
             width = ButtonWidth.FILL,
             iconPosition = ButtonIconPosition.End(R.drawable.cancel),
+            enabled = uiState.hasSyncedContent,
             onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
         )
     }

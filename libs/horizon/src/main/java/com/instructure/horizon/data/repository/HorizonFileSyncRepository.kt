@@ -41,6 +41,25 @@ class HorizonFileSyncRepository @Inject constructor(
         downloadInternalFile(fileId, courseId)
     }
 
+    suspend fun downloadFileByUrl(fileId: Long, courseId: Long, url: String, displayName: String) {
+        if (localFileDao.findById(fileId) != null) return
+        val dir = File(context.filesDir, apiPrefs.user?.id.toString()).also { it.mkdirs() }
+        val destFile = File(dir, "${fileId}_$displayName")
+
+        if (destFile.exists()) return
+
+        downloadToFile(url, destFile, shouldIgnoreToken = false) {
+            localFileDao.insert(
+                HorizonLocalFileEntity(
+                    fileId,
+                    courseId,
+                    Date(),
+                    destFile.absolutePath
+                )
+            )
+        }
+    }
+
     suspend fun syncHtmlFiles(courseId: Long, parsingResult: HtmlParsingResult) = withContext(Dispatchers.IO) {
         val alreadyDownloadedIds = localFileDao.findByCourseId(courseId).map { it.id }.toSet()
         val internalFileIdsToSync = parsingResult.internalFileIds.filterNot { alreadyDownloadedIds.contains(it) }
@@ -118,7 +137,4 @@ class HorizonFileSyncRepository @Inject constructor(
         }
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented — will sync all/selected course files")
-    }
 }

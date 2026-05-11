@@ -17,19 +17,17 @@ package com.instructure.horizon.horizonui.foundation
 
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 
 fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
     if (!disabled) return this
     return this
         .alpha(0.38f)
-        .pointerInput(disabled) {
+        .pointerInput(Unit) {
             awaitPointerEventScope {
                 while (true) {
-                    awaitPointerEvent(PointerEventPass.Initial)
-                        .changes
-                        .forEach { it.consume() }
+                    awaitPointerEvent()
+                    // Consume all pointer events to block child interactions
                 }
             }
         }

@@ -46,13 +46,16 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(
 
 fun LearningLibraryCollectionItem.toUiState(
     resources: Resources,
-    recommendations: List<LearningLibraryRecommendation>
+    recommendations: List<LearningLibraryRecommendation>,
+    isSynced: Boolean = true,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnLearningLibraryCollectionItemState {
     val canEnroll = (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM) && !this.isEnrolledInCanvas.orDefault(true)
+    val imageUrl = this.canvasCourse?.courseImageUrl
 
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
-        imageUrl = this.canvasCourse?.courseImageUrl,
+        imageUrl = imageUrl?.let { resolvedImageUrls[it] ?: it },
         name = this.canvasCourse?.courseName.orEmpty(),
         description = null,
         isBookmarked = this.isBookmarked,
@@ -66,7 +69,8 @@ fun LearningLibraryCollectionItem.toUiState(
             this.toEstimatedDurationUiChipState(resources),
             this.toUnitsUiChipState(resources),
             this.toProgressUiChipState(resources),
-        )
+        ),
+        isSynced = isSynced,
     )
 }
 

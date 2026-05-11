@@ -75,8 +75,4 @@ class FileContentRepository @Inject constructor(
     private fun extractFileId(url: String): Long? {
         return Regex("files/(\\d+)").find(url)?.groupValues?.get(1)?.toLongOrNull()
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

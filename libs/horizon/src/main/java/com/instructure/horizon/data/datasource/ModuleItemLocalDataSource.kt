@@ -15,6 +15,8 @@
  */
 package com.instructure.horizon.data.datasource
 
+import com.instructure.canvasapi2.utils.toDate
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.model.DashboardNextModuleItem
@@ -24,18 +26,33 @@ import javax.inject.Inject
 
 class ModuleItemLocalDataSource @Inject constructor(
     private val moduleItemDao: HorizonDashboardModuleItemDao,
+    private val courseModuleDao: HorizonCourseModuleDao,
 ) {
 
     suspend fun getNextModuleItemForCourse(courseId: Long): DashboardNextModuleItem? {
-        val entity = moduleItemDao.getFirstForCourse(courseId) ?: return null
+        val courseModuleItem = courseModuleDao.getNextModuleItemForCourse(courseId)
+        if (courseModuleItem != null) {
+            return DashboardNextModuleItem(
+                moduleItemId = courseModuleItem.itemId,
+                courseId = courseModuleItem.courseId,
+                title = courseModuleItem.title.orEmpty(),
+                type = if (courseModuleItem.quizLti) LearningObjectType.ASSESSMENT
+                       else LearningObjectType.fromApiString(courseModuleItem.type.orEmpty()),
+                dueDate = courseModuleItem.dueAt?.toDate(),
+                estimatedDuration = courseModuleItem.estimatedDuration,
+                isQuizLti = courseModuleItem.quizLti,
+            )
+        }
+
+        val dashboardItem = moduleItemDao.getFirstForCourse(courseId) ?: return null
         return DashboardNextModuleItem(
-            moduleItemId = entity.moduleItemId,
-            courseId = entity.courseId,
-            title = entity.moduleItemTitle,
-            type = LearningObjectType.valueOf(entity.moduleItemType),
-            dueDate = entity.dueDateMs?.let { Date(it) },
-            estimatedDuration = entity.estimatedDuration,
-            isQuizLti = entity.isQuizLti,
+            moduleItemId = dashboardItem.moduleItemId,
+            courseId = dashboardItem.courseId,
+            title = dashboardItem.moduleItemTitle,
+            type = LearningObjectType.valueOf(dashboardItem.moduleItemType),
+            dueDate = dashboardItem.dueDateMs?.let { Date(it) },
+            estimatedDuration = dashboardItem.estimatedDuration,
+            isQuizLti = dashboardItem.isQuizLti,
         )
     }
 

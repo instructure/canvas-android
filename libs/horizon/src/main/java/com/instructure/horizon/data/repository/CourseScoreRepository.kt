@@ -52,8 +52,4 @@ class CourseScoreRepository @Inject constructor(
             localDataSource.saveScoreData(courseId, assignmentGroups, enrollments)
         }
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

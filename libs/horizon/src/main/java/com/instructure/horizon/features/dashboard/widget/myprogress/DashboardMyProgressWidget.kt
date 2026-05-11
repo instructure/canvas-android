@@ -26,6 +26,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardOffline
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
@@ -38,6 +39,7 @@ fun DashboardMyProgressWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     pageState: DashboardWidgetPageState,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
@@ -52,15 +54,27 @@ fun DashboardMyProgressWidget(
         }
     }
 
-    DashboardMyProgressSection(state, pageState, modifier)
+    DashboardMyProgressSection(state, pageState, isOffline, modifier)
 }
 
 @Composable
 fun DashboardMyProgressSection(
     state: DashboardMyProgressUiState,
     pageState: DashboardWidgetPageState,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    if (isOffline) {
+        DashboardWidgetCardOffline(
+            title = stringResource(R.string.dashboardMyProgressTitle),
+            iconRes = R.drawable.trending_up,
+            widgetColor = HorizonColors.PrimitivesSky.sky12,
+            useMinWidth = false,
+            pageState = pageState,
+            modifier = modifier
+        )
+        return
+    }
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardMyProgressCardContent(

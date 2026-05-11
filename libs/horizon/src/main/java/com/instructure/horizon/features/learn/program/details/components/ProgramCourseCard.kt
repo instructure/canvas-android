@@ -53,6 +53,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ButtonColor
@@ -108,7 +109,8 @@ data class CourseCardChipState(
 fun ProgramCourseCard(
     state: ProgramCourseCardState,
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOffline: Boolean = false,
 ) {
     Column(
         modifier
@@ -177,7 +179,8 @@ fun ProgramCourseCard(
                     height = ButtonHeight.SMALL,
                     contentAlignment = Alignment.BottomEnd,
                     loading = state.enrollLoading,
-                    onClick = { state.onEnrollClicked?.invoke() },
+                    onClick = { if (!isOffline) state.onEnrollClicked?.invoke() },
+                    modifier = Modifier.offlineDisabled(isOffline),
                 )
             }
         }

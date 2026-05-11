@@ -44,6 +44,12 @@ interface HorizonSubmissionDao {
     @Query("DELETE FROM horizon_submission_attachments WHERE assignmentId = :assignmentId")
     suspend fun deleteAttachmentsForAssignment(assignmentId: Long)
 
+    @Query("DELETE FROM horizon_submissions WHERE assignmentId IN (SELECT assignmentId FROM horizon_assignment_details WHERE courseId = :courseId)")
+    suspend fun deleteByCourseId(courseId: Long)
+
+    @Query("DELETE FROM horizon_submission_attachments WHERE assignmentId IN (SELECT assignmentId FROM horizon_assignment_details WHERE courseId = :courseId)")
+    suspend fun deleteAttachmentsByCourseId(courseId: Long)
+
     @Transaction
     suspend fun replaceForAssignment(
         assignmentId: Long,

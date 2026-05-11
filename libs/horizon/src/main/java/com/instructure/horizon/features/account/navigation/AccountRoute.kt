@@ -28,5 +28,4 @@ sealed class AccountRoute(val route: String) {
     data object ManageOfflineContent : AccountRoute("manage_offline_content")
     data object RemoveSyncedContentConfirmation : AccountRoute("remove_synced_content_confirmation")
     data object SyncingContent : AccountRoute("syncing_content")
-    data object DeletingContent : AccountRoute("deleting_content")
 }
