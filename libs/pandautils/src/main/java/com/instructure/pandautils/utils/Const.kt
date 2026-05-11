@@ -143,6 +143,7 @@ object Const {
     const val FILENAME = "fileName"
     const val COURSE_ID = "courseId"
     const val COURSE_THING_CHANGED = "courseTHINGChangedBroadcast"
+    const val RELOAD_ANNOUNCEMENTS = "reloadAnnouncements"
     const val BOOKMARK = "bookmark"
     const val ITEM = "item"
     const val OPEN_OUTSIDE = "isOpenOutside"

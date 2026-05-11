@@ -25,6 +25,7 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -80,6 +81,9 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     @Inject
     lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
 
+    @Inject
+    lateinit var localBroadcastManager: LocalBroadcastManager
+
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
@@ -107,6 +111,13 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     override fun onStop() {
         super.onStop()
         discussionSharedEvents.sendEvent(lifecycleScope, DiscussionSharedAction.RefreshListScreen)
+        if (discussionTopicHeader?.announcement == true) {
+            val intent = Intent(Const.COURSE_THING_CHANGED).apply {
+                putExtra(Const.COURSE_ID, canvasContext.id)
+                putExtra(Const.RELOAD_ANNOUNCEMENTS, true)
+            }
+            localBroadcastManager.sendBroadcast(intent)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
