@@ -16,11 +16,8 @@
 package com.instructure.horizon.offline.sync
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.horizon.data.datasource.CourseEnrollmentLocalDataSource
 import com.instructure.horizon.data.datasource.CourseEnrollmentNetworkDataSource
-import com.instructure.horizon.data.datasource.LearnLearningLibraryLocalDataSource
-import com.instructure.horizon.data.datasource.LearnLearningLibraryNetworkDataSource
 import com.instructure.horizon.data.datasource.LearnMyContentLocalDataSource
 import com.instructure.horizon.data.datasource.LearnMyContentNetworkDataSource
 import com.instructure.horizon.data.datasource.ProgramDetailsLocalDataSource
@@ -36,8 +33,6 @@ class EnrollmentSyncer @Inject constructor(
     private val programLocalDataSource: ProgramLocalDataSource,
     private val learnMyContentNetworkDataSource: LearnMyContentNetworkDataSource,
     private val learnMyContentLocalDataSource: LearnMyContentLocalDataSource,
-    private val learnLibraryNetworkDataSource: LearnLearningLibraryNetworkDataSource,
-    private val learnLibraryLocalDataSource: LearnLearningLibraryLocalDataSource,
     private val programDetailsNetworkDataSource: ProgramDetailsNetworkDataSource,
     private val programDetailsLocalDataSource: ProgramDetailsLocalDataSource,
 ) {
@@ -50,7 +45,6 @@ class EnrollmentSyncer @Inject constructor(
         syncProgramCourses(programs)
 
         syncLearnContent()
-        syncLearningLibrary()
     }
 
     private suspend fun syncProgramCourses(programs: List<Program>) {
@@ -94,31 +88,5 @@ class EnrollmentSyncer @Inject constructor(
             } while (cursor != null)
             learnMyContentLocalDataSource.saveLearnItems(allItems, queryKey)
         }
-    }
-
-    private suspend fun syncLearningLibrary() {
-        val collections = learnLibraryNetworkDataSource.getEnrolledLearningLibraries(
-            limit = 100,
-            forceRefresh = true,
-        )
-        learnLibraryLocalDataSource.saveEnrolledLearningLibraries(collections)
-
-        val allSavedItems = mutableListOf<LearningLibraryCollectionItem>()
-        var cursor: String? = null
-        do {
-            val page = learnLibraryNetworkDataSource.getLearningLibraryItems(
-                cursor = cursor,
-                limit = 100,
-                searchQuery = null,
-                typeFilter = null,
-                bookmarkedOnly = true,
-                completedOnly = false,
-                sortBy = null,
-                forceRefresh = true,
-            )
-            allSavedItems.addAll(page.items)
-            cursor = if (page.pageInfo.hasNextPage) page.pageInfo.nextCursor else null
-        } while (cursor != null)
-        learnLibraryLocalDataSource.saveSavedItems(allSavedItems)
     }
 }

@@ -17,26 +17,17 @@ package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.horizon.offline.sync.HorizonProgressState
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_IN_PROGRESS,
-    LEARN_MY_CONTENT_COMPLETED,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    LEARN_LIBRARY_ITEMS,
-    LEARN_LIBRARY_RECOMMENDATIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-    ASSIGNMENT_COMMENTS,
-    NOTES,
+@Entity(tableName = "horizon_global_sync_plan")
+data class HorizonGlobalSyncPlanEntity(
+    @PrimaryKey val id: Long = 1,
+    val syncLearningLibrary: Boolean = true,
+    val learningLibraryState: HorizonProgressState = HorizonProgressState.PENDING,
+) {
+    companion object {
+        /** Fixed weight contributed to aggregate sync progress when learning library sync is enabled. */
+        const val LEARNING_LIBRARY_CATEGORY_SIZE: Long = 100_000L
+    }
 }
 
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
-)

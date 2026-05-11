@@ -19,8 +19,10 @@ import android.text.format.Formatter
 import android.content.Context
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonGlobalSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
+import com.instructure.horizon.database.entity.HorizonGlobalSyncPlanEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,6 +46,7 @@ data class HorizonSyncProgressData(
 class HorizonAggregateProgressObserver @Inject constructor(
     courseSyncPlanDao: HorizonCourseSyncPlanDao,
     fileSyncPlanDao: HorizonFileSyncPlanDao,
+    globalSyncPlanDao: HorizonGlobalSyncPlanDao,
     @ApplicationContext private val context: Context,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -51,15 +54,20 @@ class HorizonAggregateProgressObserver @Inject constructor(
     val progressData: StateFlow<HorizonSyncProgressData> = combine(
         courseSyncPlanDao.findAllFlow(),
         fileSyncPlanDao.findAllFlow(),
-    ) { courses, files ->
-        calculateProgress(courses, files)
+        globalSyncPlanDao.observePlan(),
+    ) { courses, files, globalPlan ->
+        calculateProgress(courses, files, globalPlan)
     }.stateIn(scope, SharingStarted.Eagerly, HorizonSyncProgressData())
 
     private fun calculateProgress(
         courses: List<HorizonCourseSyncPlanEntity>,
         files: List<HorizonFileSyncPlanEntity>,
+        globalPlan: HorizonGlobalSyncPlanEntity?,
     ): HorizonSyncProgressData {
-        if (courses.isEmpty()) return HorizonSyncProgressData()
+        val librarySyncEnabled = globalPlan?.syncLearningLibrary == true
+        val libraryState = globalPlan?.learningLibraryState ?: HorizonProgressState.PENDING
+
+        if (courses.isEmpty() && !librarySyncEnabled) return HorizonSyncProgressData()
 
         val courseTotalSize = courses.sumOf { it.totalSize }
         val courseDownloadedSize = courses.sumOf { it.downloadedSize }
@@ -67,13 +75,16 @@ class HorizonAggregateProgressObserver @Inject constructor(
         val fileTotalSize = files.sumOf { it.fileSize }
         val fileDownloadedSize = files.sumOf { (it.fileSize * it.progress) / 100 }
 
-        val totalSize = courseTotalSize + fileTotalSize
-        val downloadedSize = courseDownloadedSize + fileDownloadedSize
+        val libraryWeight = if (librarySyncEnabled) HorizonGlobalSyncPlanEntity.LEARNING_LIBRARY_CATEGORY_SIZE else 0L
+        val libraryDownloaded = if (librarySyncEnabled && libraryState == HorizonProgressState.COMPLETED) libraryWeight else 0L
+
+        val totalSize = courseTotalSize + fileTotalSize + libraryWeight
+        val downloadedSize = courseDownloadedSize + fileDownloadedSize + libraryDownloaded
 
         val progress = if (totalSize > 0) downloadedSize.toFloat() / totalSize else 0f
 
-        val allStates = courses.map { it.state }
-        val allFinished = allStates.all { it.isFinished() }
+        val allStates = courses.map { it.state } + if (librarySyncEnabled) listOf(libraryState) else emptyList()
+        val allFinished = allStates.isNotEmpty() && allStates.all { it.isFinished() }
         val anyRunning = allStates.any { it.isRunning() }
         val anyError = allStates.any { it == HorizonProgressState.ERROR }
 

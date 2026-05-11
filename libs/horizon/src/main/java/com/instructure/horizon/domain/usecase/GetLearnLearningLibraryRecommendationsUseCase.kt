@@ -15,8 +15,8 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
@@ -25,10 +25,10 @@ data class GetLearnLearningLibraryRecommendationsParams(
 )
 
 class GetLearnLearningLibraryRecommendationsUseCase @Inject constructor(
-    private val getLearningLibraryManager: GetLearningLibraryManager,
+    private val repository: LearnLearningLibraryRepository,
 ) : BaseUseCase<GetLearnLearningLibraryRecommendationsParams, List<LearningLibraryRecommendation>>() {
 
     override suspend fun execute(params: GetLearnLearningLibraryRecommendationsParams): List<LearningLibraryRecommendation> {
-        return getLearningLibraryManager.getLearningLibraryRecommendations(forceNetwork = params.forceRefresh)
+        return repository.getLearningLibraryRecommendations(forceRefresh = params.forceRefresh)
     }
 }

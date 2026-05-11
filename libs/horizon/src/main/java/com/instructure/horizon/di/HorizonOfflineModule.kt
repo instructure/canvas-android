@@ -32,8 +32,11 @@ import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
+import com.instructure.horizon.database.dao.HorizonGlobalSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonLearnBrowseItemDao
 import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
+import com.instructure.horizon.database.dao.HorizonLearnRecommendationDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
@@ -95,6 +98,21 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonLearnSavedItemDao(db: HorizonDatabase): HorizonLearnSavedItemDao {
         return db.learnSavedItemDao()
+    }
+
+    @Provides
+    fun provideHorizonLearnBrowseItemDao(db: HorizonDatabase): HorizonLearnBrowseItemDao {
+        return db.learnBrowseItemDao()
+    }
+
+    @Provides
+    fun provideHorizonLearnRecommendationDao(db: HorizonDatabase): HorizonLearnRecommendationDao {
+        return db.learnRecommendationDao()
+    }
+
+    @Provides
+    fun provideHorizonGlobalSyncPlanDao(db: HorizonDatabase): HorizonGlobalSyncPlanDao {
+        return db.globalSyncPlanDao()
     }
 
     @Provides

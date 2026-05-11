@@ -186,7 +186,7 @@ private fun LearnLearningLibraryItemButtonContentRow(
                 width = ButtonWidth.FILL,
                 height = ButtonHeight.NORMAL,
                 color = ButtonColor.BlackOutline,
-                onClick = { onEnrollClick() },
+                onClick = { if (state.isSynced) onEnrollClick() },
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 6.dp)
@@ -202,7 +202,7 @@ private fun LearnLearningLibraryItemButtonContentRow(
                 stringResource(R.string.a11y_learnLearningLibraryItemBookmarkContentDescription),
             color = IconButtonColor.WhiteGreyOutline,
             size = IconButtonSize.NORMAL,
-            onClick = { onBookmarkClick() }
+            onClick = { if (state.isSynced) onBookmarkClick() }
         )
     }
 }

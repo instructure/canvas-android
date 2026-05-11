@@ -28,6 +28,7 @@ import androidx.work.WorkerParameters
 import com.instructure.horizon.R
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonGlobalSyncPlanDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -43,6 +44,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
     private val featureFlagProvider: FeatureFlagProvider,
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
     private val fileSyncPlanDao: HorizonFileSyncPlanDao,
+    private val globalSyncPlanDao: HorizonGlobalSyncPlanDao,
     private val horizonCourseSync: HorizonCourseSync,
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncRouter: HorizonSyncRouter,
@@ -61,7 +63,8 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             courseSyncPlanDao.findAll()
         }
 
-        if (plans.isEmpty()) return Result.success()
+        val syncLearningLibrary = globalSyncPlanDao.getPlanOnce()?.syncLearningLibrary != false
+        if (plans.isEmpty() && !syncLearningLibrary) return Result.success()
 
         setForeground(createForegroundInfo(0))
         observeProgress()

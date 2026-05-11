@@ -18,16 +18,26 @@ package com.instructure.horizon.features.learn.learninglibrary.enroll
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.EnrollLearnLearningLibraryItemParams
+import com.instructure.horizon.domain.usecase.EnrollLearnLearningLibraryItemUseCase
+import com.instructure.horizon.domain.usecase.GetCourseWithProgressParams
+import com.instructure.horizon.domain.usecase.GetCourseWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,9 +48,15 @@ import javax.inject.Inject
 class LearnLearningLibraryEnrollViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryEnrollRepository,
-    private val eventHandler: LearnEventHandler
-) : ViewModel() {
+    private val getLearnLearningLibraryItemUseCase: GetLearnLearningLibraryItemUseCase,
+    private val getCourseWithProgressUseCase: GetCourseWithProgressUseCase,
+    private val enrollLearnLearningLibraryItemUseCase: EnrollLearnLearningLibraryItemUseCase,
+    private val eventHandler: LearnEventHandler,
+    private val apiPrefs: ApiPrefs,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     private var learningLibraryItemId: String? = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr)
     private var learningLibraryItem: LearningLibraryCollectionItem? = null
 
@@ -59,29 +75,54 @@ class LearnLearningLibraryEnrollViewModel @Inject constructor(
         learningLibraryItemId?.let { loadData(it) }
     }
 
+    override fun onNetworkRestored() {
+        learningLibraryItemId?.let { loadData(it) }
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner is handled at the screen level
+    }
+
     fun loadData(learningLibraryItemId: String) {
         this.learningLibraryItemId = learningLibraryItemId
         viewModelScope.tryLaunch {
             _state.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
 
-            val collectionItem = repository.loadLearningLibraryItem(learningLibraryItemId)
+            val collectionItem = getLearnLearningLibraryItemUseCase(
+                GetLearnLearningLibraryItemParams(itemId = learningLibraryItemId, forceRefresh = false)
+            )
             learningLibraryItem = collectionItem
-            val courseDetails = repository.loadCourseDetails(collectionItem.canvasCourse!!.courseId.toLong())
+            val syllabus = if (!isOffline()) {
+                collectionItem.canvasCourse?.courseId?.toLongOrNull()?.let { courseId ->
+                    runCatching {
+                        getCourseWithProgressUseCase(
+                            GetCourseWithProgressParams(courseId = courseId, userId = apiPrefs.user?.id ?: -1L)
+                        ).courseSyllabus
+                    }.getOrNull()
+                }
+            } else null
 
             _state.update { it.copy(
                 loadingState = it.loadingState.copy(isLoading = false),
-                syllabus = courseDetails.courseSyllabus,
+                syllabus = syllabus,
             ) }
         } catch {
-            // Silent error
             _state.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
     }
 
     private fun onEnroll() {
+        if (isOffline()) {
+            _state.update { it.copy(
+                loadingState = it.loadingState.copy(
+                    snackbarMessage = resources.getString(R.string.learnLearningLibraryEnrollDialogFailedToEnrollMessage)
+                )
+            ) }
+            return
+        }
         viewModelScope.tryLaunch {
             _state.update { it.copy(isEnrollLoading = true) }
-            repository.enrollLearningLibraryItem(learningLibraryItem!!.id)
+            enrollLearnLearningLibraryItemUseCase(EnrollLearnLearningLibraryItemParams(itemId = learningLibraryItem!!.id))
             _state.update { it.copy(isEnrollLoading = false, navigateToCourseId = learningLibraryItem!!.canvasCourse!!.courseId.toLong()) }
             eventHandler.postEvent(LearnEvent.RefreshLearningLibraryList)
         } catch {

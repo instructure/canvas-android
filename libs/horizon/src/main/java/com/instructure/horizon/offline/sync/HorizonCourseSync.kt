@@ -21,6 +21,7 @@ import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonGlobalSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -44,6 +45,8 @@ class HorizonCourseSync @Inject constructor(
     private val imageSyncer: ImageSyncer,
     private val dashboardEnrollmentDao: HorizonDashboardEnrollmentDao,
     private val courseDao: HorizonCourseDao,
+    private val learningLibrarySyncer: LearningLibrarySyncer,
+    private val globalSyncPlanDao: HorizonGlobalSyncPlanDao,
 ) {
     @Volatile
     var isStopped = false
@@ -53,6 +56,13 @@ class HorizonCourseSync @Inject constructor(
             accountSyncer.sync()
             enrollmentSyncer.sync()
             syncEnrollmentImages()
+            if (shouldSyncLearningLibrary()) {
+                try {
+                    learningLibrarySyncer.sync()
+                } catch (_: Exception) {
+                    // Learning library sync failure is non-fatal
+                }
+            }
         } catch (_: Exception) {
             // Global sync failure is non-fatal for individual courses
         }
@@ -61,6 +71,11 @@ class HorizonCourseSync @Inject constructor(
             if (isStopped) break
             syncCourse(plan)
         }
+    }
+
+    private suspend fun shouldSyncLearningLibrary(): Boolean {
+        if (isStopped) return false
+        return globalSyncPlanDao.getPlanOnce()?.syncLearningLibrary != false
     }
 
     private suspend fun syncCourse(plan: HorizonCourseSyncPlanEntity) {

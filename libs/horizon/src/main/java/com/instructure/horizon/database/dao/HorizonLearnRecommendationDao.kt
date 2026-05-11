@@ -20,32 +20,26 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnRecommendationEntity
 
 @Dao
-interface HorizonLearnSavedItemDao {
+interface HorizonLearnRecommendationDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(entities: List<HorizonLearnSavedItemEntity>)
+    suspend fun insertAll(items: List<HorizonLearnRecommendationEntity>)
 
-    @Query("SELECT * FROM horizon_learn_saved_items")
-    suspend fun getAll(): List<HorizonLearnSavedItemEntity>
+    @Query("SELECT * FROM horizon_learn_recommendations ORDER BY displayOrder ASC")
+    suspend fun getAll(): List<HorizonLearnRecommendationEntity>
 
-    @Query("SELECT * FROM horizon_learn_saved_items WHERE id = :id")
-    suspend fun findById(id: String): HorizonLearnSavedItemEntity?
-
-    @Query("DELETE FROM horizon_learn_saved_items")
+    @Query("DELETE FROM horizon_learn_recommendations")
     suspend fun deleteAll()
 
-    @Query("DELETE FROM horizon_learn_saved_items WHERE id = :id")
-    suspend fun deleteById(id: String)
-
-    @Query("UPDATE horizon_learn_saved_items SET isBookmarked = :isBookmarked WHERE id = :id")
+    @Query("UPDATE horizon_learn_recommendations SET isBookmarked = :isBookmarked WHERE itemId = :id")
     suspend fun updateBookmark(id: String, isBookmarked: Boolean)
 
     @Transaction
-    suspend fun replaceAll(entities: List<HorizonLearnSavedItemEntity>) {
+    suspend fun replaceAll(items: List<HorizonLearnRecommendationEntity>) {
         deleteAll()
-        insertAll(entities)
+        insertAll(items)
     }
 }

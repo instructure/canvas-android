@@ -22,6 +22,9 @@ import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
 import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonGlobalSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonLearnBrowseItemDao
+import com.instructure.horizon.database.dao.HorizonLearnRecommendationDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
@@ -65,6 +68,9 @@ import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
+import com.instructure.horizon.database.entity.HorizonGlobalSyncPlanEntity
+import com.instructure.horizon.database.entity.HorizonLearnBrowseItemEntity
+import com.instructure.horizon.database.entity.HorizonLearnRecommendationEntity
 import com.instructure.horizon.database.entity.HorizonLocalImageEntity
 import com.instructure.horizon.database.entity.HorizonNoteEntity
 import com.instructure.horizon.database.entity.HorizonUserEntity
@@ -85,6 +91,8 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonLearnCollectionEntity::class,
         HorizonLearnCollectionItemEntity::class,
         HorizonLearnSavedItemEntity::class,
+        HorizonLearnBrowseItemEntity::class,
+        HorizonLearnRecommendationEntity::class,
         HorizonCourseEntity::class,
         HorizonCourseModuleEntity::class,
         HorizonCourseModuleItemEntity::class,
@@ -100,13 +108,14 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonSubmissionEntity::class,
         HorizonSubmissionAttachmentEntity::class,
         HorizonSyncSettingsEntity::class,
+        HorizonGlobalSyncPlanEntity::class,
         HorizonCourseSyncPlanEntity::class,
         HorizonFileSyncPlanEntity::class,
         HorizonLocalImageEntity::class,
         HorizonUserEntity::class,
         HorizonNoteEntity::class,
     ],
-    version = 19,
+    version = 21,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -117,6 +126,9 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun learnItemDao(): HorizonLearnItemDao
     abstract fun learnCollectionDao(): HorizonLearnCollectionDao
     abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao
+    abstract fun learnBrowseItemDao(): HorizonLearnBrowseItemDao
+    abstract fun learnRecommendationDao(): HorizonLearnRecommendationDao
+    abstract fun globalSyncPlanDao(): HorizonGlobalSyncPlanDao
     abstract fun courseDao(): HorizonCourseDao
     abstract fun courseModuleDao(): HorizonCourseModuleDao
     abstract fun courseScoreDao(): HorizonCourseScoreDao

@@ -15,21 +15,21 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class GetLearnLearningLibrariesParams(
-    val itemLimitPerCollection: Int,
-    val forceRefresh: Boolean = false,
+data class GetCourseWithProgressParams(
+    val courseId: Long,
+    val userId: Long,
 )
 
-class GetLearnLearningLibrariesUseCase @Inject constructor(
+class GetCourseWithProgressUseCase @Inject constructor(
     private val repository: LearnLearningLibraryRepository,
-) : BaseUseCase<GetLearnLearningLibrariesParams, List<EnrolledLearningLibraryCollection>>() {
+) : BaseUseCase<GetCourseWithProgressParams, CourseWithProgress>() {
 
-    override suspend fun execute(params: GetLearnLearningLibrariesParams): List<EnrolledLearningLibraryCollection> {
-        return repository.getEnrolledLearningLibraries(params.itemLimitPerCollection, params.forceRefresh)
+    override suspend fun execute(params: GetCourseWithProgressParams): CourseWithProgress {
+        return repository.getCourseWithProgress(params.courseId, params.userId)
     }
 }

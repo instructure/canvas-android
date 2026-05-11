@@ -19,7 +19,6 @@ package com.instructure.horizon.features.learn.learninglibrary.details
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
@@ -28,23 +27,41 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryCollectionParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryCollectionUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkParams
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnLearningLibraryDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryDetailsRepository
-): ViewModel() {
+    private val getLearnLearningLibraryCollectionUseCase: GetLearnLearningLibraryCollectionUseCase,
+    private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase,
+    private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     private val collectionId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) ?: ""
 
     private var allItems: List<LearningLibraryCollectionItem> = emptyList()
@@ -70,17 +87,20 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         loadData()
     }
 
+    override fun onNetworkRestored() {
+        refreshData()
+    }
+
+    override fun onNetworkLost() {
+        // Offline banner handled at the screen level
+    }
+
     private fun loadData() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             val collection = fetchData()
             fetchRecommendedItems()
-            _uiState.update {
-                it.copy(
-                    collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
-                )
-            }
+            applyItems(collection)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
         } catch {
             _uiState.update {
@@ -94,12 +114,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             val collection = fetchData(true)
             fetchRecommendedItems(true)
-            _uiState.update {
-                it.copy(
-                    collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
-                )
-            }
+            applyItems(collection)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
         } catch {
             _uiState.update {
@@ -114,17 +129,39 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData(forceRefresh: Boolean = false): EnrolledLearningLibraryCollection {
-        val result = repository.getLearningLibraryItems(collectionId, forceRefresh)
+        val result = getLearnLearningLibraryCollectionUseCase(
+            GetLearnLearningLibraryCollectionParams(collectionId = collectionId, forceRefresh = forceRefresh)
+        )
         allItems = result.items
-
+        _uiState.update { it.copy(collectionName = result.name) }
         return result
     }
 
-    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false){
-        recommendedItems = repository.getLearningLibraryRecommendedItems(forceNetwork)
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false) {
+        recommendedItems = getLearnLearningLibraryRecommendationsUseCase(
+            GetLearnLearningLibraryRecommendationsParams(forceRefresh = forceNetwork)
+        )
+    }
+
+    private suspend fun applyItems(collection: EnrolledLearningLibraryCollection) {
+        val filtered = collection.items.applyFilters()
+        val offlineContext = offlineCardStateHelper.buildContext(
+            filtered.map { it.canvasCourse?.courseImageUrl }
+        )
+        _uiState.update {
+            it.copy(
+                items = filtered.map { it.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls) },
+            )
+        }
     }
 
     private fun toggleItemBookmarked(itemId: String) {
+        if (isOffline()) {
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))
+            }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
@@ -138,7 +175,9 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleLearnLearningLibraryItemBookmarkUseCase(
+                ToggleLearnLearningLibraryItemBookmarkParams(itemId = itemId)
+            )
 
             allItems = allItems.map { collectionItemState ->
                 if (collectionItemState.id == itemId) {
@@ -148,8 +187,12 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
                 }
             }
 
+            val filtered = allItems.applyFilters()
+            val offlineContext = offlineCardStateHelper.buildContext(
+                filtered.map { it.canvasCourse?.courseImageUrl }
+            )
             _uiState.update {
-                it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) })
+                it.copy(items = filtered.map { it.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls) })
             }
         } catch {
             _uiState.update {
@@ -209,16 +252,28 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
     private fun updateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        viewModelScope.launch {
+            val filtered = allItems.applyFilters()
+            val offlineContext = offlineCardStateHelper.buildContext(filtered.map { it.canvasCourse?.courseImageUrl })
+            _uiState.update { it.copy(items = filtered.map { it.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls) }) }
+        }
     }
 
     private fun updateSelectedStatusFilter(value: LearnLearningLibraryStatusFilter) {
         _uiState.update { it.copy(selectedStatusFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        viewModelScope.launch {
+            val filtered = allItems.applyFilters()
+            val offlineContext = offlineCardStateHelper.buildContext(filtered.map { it.canvasCourse?.courseImageUrl })
+            _uiState.update { it.copy(items = filtered.map { it.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls) }) }
+        }
     }
 
     private fun updateSelectedTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(selectedTypeFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        viewModelScope.launch {
+            val filtered = allItems.applyFilters()
+            val offlineContext = offlineCardStateHelper.buildContext(filtered.map { it.canvasCourse?.courseImageUrl })
+            _uiState.update { it.copy(items = filtered.map { it.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls) }) }
+        }
     }
 }

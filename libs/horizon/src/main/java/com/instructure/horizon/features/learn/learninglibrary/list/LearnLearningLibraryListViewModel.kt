@@ -28,6 +28,15 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibrariesParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibrariesUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkParams
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
@@ -54,7 +63,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnLearningLibraryListViewModel @Inject constructor(
     private val resources: Resources,
-    private val repository: LearnLearningLibraryListRepository,
+    private val getLearnLearningLibrariesUseCase: GetLearnLearningLibrariesUseCase,
+    private val getLearnLearningLibraryItemsUseCase: GetLearnLearningLibraryItemsUseCase,
+    private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase,
+    private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
     private val eventHandler: LearnEventHandler,
     private val apiPrefs: ApiPrefs,
     networkStateProvider: NetworkStateProvider,
@@ -139,7 +152,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     override fun onNetworkRestored() {
-        refreshCollections()
+        if (uiState.value.isEmptyFilter()) refreshCollections() else refreshItems()
     }
 
     override fun onNetworkLost() {
@@ -147,10 +160,15 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private suspend fun fetchRecommendedItems(forceRefresh: Boolean = false): List<LearningLibraryRecommendation> {
-        val recommendations = repository.getLearningLibraryRecommendedItems(forceRefresh)
+        val recommendations = getLearnLearningLibraryRecommendationsUseCase(
+            GetLearnLearningLibraryRecommendationsParams(forceRefresh = forceRefresh)
+        )
+        val offlineContext = offlineCardStateHelper.buildContext(
+            recommendations.map { it.item.canvasCourse?.courseImageUrl }
+        )
         _uiState.update {
             it.copy(collectionState = it.collectionState.copy(
-                recommendedItems = recommendations.map { it.toUiState(resources) }
+                recommendedItems = recommendations.map { it.toUiState(resources, offlineContext.isOffline, offlineContext.resolvedImageUrls) }
             ))
         }
         return recommendations
@@ -161,7 +179,10 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = true))) }
             val result = fetchCollections(forceRefresh = false)
             val recommendedItems = fetchRecommendedItems(forceRefresh = false)
-            allCollections = result.toUiState(resources, recommendedItems)
+            val offlineContext = offlineCardStateHelper.buildContext(
+                result.flatMap { collection -> collection.items.map { it.canvasCourse?.courseImageUrl } }
+            )
+            allCollections = result.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = false))) }
         } catch {
@@ -189,7 +210,10 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = true))) }
             val result = fetchCollections(forceRefresh = true)
             val recommendedItems = fetchRecommendedItems(forceRefresh = true)
-            allCollections = result.toUiState(resources, recommendedItems)
+            val offlineContext = offlineCardStateHelper.buildContext(
+                result.flatMap { collection -> collection.items.map { it.canvasCourse?.courseImageUrl } }
+            )
+            allCollections = result.toUiState(resources, recommendedItems, offlineContext.isOffline, offlineContext.resolvedImageUrls)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = false, isError = false))) }
         } catch {
@@ -200,7 +224,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private suspend fun fetchCollections(forceRefresh: Boolean = false): List<EnrolledLearningLibraryCollection> {
-        return repository.getEnrolledLearningLibraries(forceRefresh)
+        return getLearnLearningLibrariesUseCase(
+            GetLearnLearningLibrariesParams(itemLimitPerCollection = itemLimitPerCollection, forceRefresh = forceRefresh)
+        )
     }
 
     private suspend fun fetchItems(
@@ -210,15 +236,22 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         sortBy: CollectionItemSortOption? = currentSortOption.toCollectionItemSortOption(),
         forceRefresh: Boolean = false,
     ) {
-        val response = repository.getLearningLibraryItems(
-            afterCursor = cursor,
-            limit = itemPageSize,
-            searchQuery = searchQuery,
-            typeFilter = filterType,
-            sortBy = sortBy,
-            forceRefresh = forceRefresh,
+        val response = getLearnLearningLibraryItemsUseCase(
+            GetLearnLearningLibraryItemsParams(
+                cursor = cursor,
+                limit = itemPageSize,
+                searchQuery = searchQuery,
+                typeFilter = filterType,
+                bookmarkedOnly = false,
+                completedOnly = false,
+                sortBy = sortBy,
+                forceRefresh = forceRefresh,
+            )
         )
         val recommendedItemsList = fetchRecommendedItems()
+        val offlineContext = offlineCardStateHelper.buildContext(
+            response.items.map { it.canvasCourse?.courseImageUrl }
+        )
 
         if (response.pageInfo.hasNextPage && response.pageInfo.nextCursor != null) {
             itemNextCursor = response.pageInfo.nextCursor
@@ -232,9 +265,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             it.copy(
                 itemState = it.itemState.copy(
                     items = if (cursor == null)
-                        response.items.map { item -> item.toUiState(resources, recommendedItemsList) }
+                        response.items.map { item -> item.toUiState(resources, recommendedItemsList, offlineContext.isOffline, offlineContext.resolvedImageUrls) }
                     else
-                        it.itemState.items + response.items.map { item -> item.toUiState(resources, recommendedItemsList) }
+                        it.itemState.items + response.items.map { item -> item.toUiState(resources, recommendedItemsList, offlineContext.isOffline, offlineContext.resolvedImageUrls) }
                 ),
             )
         }
@@ -252,7 +285,21 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         }
     }
 
+    private fun toggleBookmark(itemId: String): suspend () -> Boolean = {
+        toggleLearnLearningLibraryItemBookmarkUseCase(ToggleLearnLearningLibraryItemBookmarkParams(itemId))
+    }
+
     private fun onCollectionBookmarkItem(itemId: String) {
+        if (isOffline()) {
+            _uiState.update {
+                it.copy(collectionState = it.collectionState.copy(
+                    loadingState = it.collectionState.loadingState.copy(
+                        snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)
+                    )
+                ))
+            }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(
                 collections = it.collectionState.collections.map { collectionState ->
@@ -269,7 +316,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 }
             ))}
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleBookmark(itemId).invoke()
 
             _uiState.update { it.copy(collectionState = it.collectionState.copy(
                 collections = it.collectionState.collections.map { collectionState ->
@@ -304,6 +351,16 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private fun onBookmarkItem(itemId: String) {
+        if (isOffline()) {
+            _uiState.update {
+                it.copy(itemState = it.itemState.copy(
+                    loadingState = it.itemState.loadingState.copy(
+                        snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)
+                    )
+                ))
+            }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
@@ -330,7 +387,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleBookmark(itemId).invoke()
 
             _uiState.update {
                 it.copy(
@@ -413,5 +470,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun computeActiveFilterCount(): Int {
         return if (currentTypeFilter != LearnLearningLibraryTypeFilter.All) 1 else 0
+    }
+
+    companion object {
+        private const val itemLimitPerCollection = 4
     }
 }

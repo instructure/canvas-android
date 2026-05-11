@@ -28,9 +28,23 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
+fun LearningLibraryCollectionItem.canEnroll(): Boolean {
+    return (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM)
+        && !this.isEnrolledInCanvas.orDefault(true)
+}
+
+/**
+ * A learning library item is available offline as long as it does not require canvas enrollment.
+ * COURSE / PROGRAM items where the user has not yet enrolled are disabled offline because the
+ * enroll action cannot be performed without a network connection.
+ */
+fun LearningLibraryCollectionItem.isAvailableOffline(): Boolean = !canEnroll()
+
 fun List<EnrolledLearningLibraryCollection>.toUiState(
     resources: Resources,
-    recommendations: List<LearningLibraryRecommendation>
+    recommendations: List<LearningLibraryRecommendation>,
+    isOffline: Boolean = false,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): List<LearnLearningLibraryCollectionState> {
     return this.map {
         LearnLearningLibraryCollectionState(
@@ -38,7 +52,7 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(
             name = it.name,
             itemCount = it.totalItemCount,
             items = it.items.map { item ->
-                item.toUiState(resources, recommendations)
+                item.toUiState(resources, recommendations, isOffline, resolvedImageUrls)
             }
         )
     }
@@ -47,11 +61,11 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(
 fun LearningLibraryCollectionItem.toUiState(
     resources: Resources,
     recommendations: List<LearningLibraryRecommendation>,
-    isSynced: Boolean = true,
+    isOffline: Boolean = false,
     resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnLearningLibraryCollectionItemState {
-    val canEnroll = (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM) && !this.isEnrolledInCanvas.orDefault(true)
     val imageUrl = this.canvasCourse?.courseImageUrl
+    val isSynced = !isOffline || this.isAvailableOffline()
 
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
@@ -59,7 +73,7 @@ fun LearningLibraryCollectionItem.toUiState(
         name = this.canvasCourse?.courseName.orEmpty(),
         description = null,
         isBookmarked = this.isBookmarked,
-        canEnroll = canEnroll,
+        canEnroll = canEnroll(),
         bookmarkLoading = false,
         type = this.itemType,
         route = this.getRoute(),
@@ -76,16 +90,19 @@ fun LearningLibraryCollectionItem.toUiState(
 
 fun LearningLibraryRecommendation.toUiState(
     resources: Resources,
+    isOffline: Boolean = false,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnLearningLibraryCollectionItemState {
-    val canEnroll = (this.item.itemType == CollectionItemType.COURSE || this.item.itemType == CollectionItemType.PROGRAM) && !this.item.isEnrolledInCanvas.orDefault(true)
+    val imageUrl = this.item.canvasCourse?.courseImageUrl
+    val isSynced = !isOffline || this.item.isAvailableOffline()
 
     return LearnLearningLibraryCollectionItemState(
         id = this.item.id,
-        imageUrl = this.item.canvasCourse?.courseImageUrl,
+        imageUrl = imageUrl?.let { resolvedImageUrls[it] ?: it },
         name = this.item.canvasCourse?.courseName.orEmpty(),
         description = this.item.itemDescription(resources, listOf(this)),
         isBookmarked = this.item.isBookmarked,
-        canEnroll = canEnroll,
+        canEnroll = this.item.canEnroll(),
         bookmarkLoading = false,
         type = this.item.itemType,
         route = this.item.getRoute(),
@@ -95,7 +112,8 @@ fun LearningLibraryRecommendation.toUiState(
             this.item.toEstimatedDurationUiChipState(resources),
             this.item.toUnitsUiChipState(resources),
             this.item.toProgressUiChipState(resources),
-        )
+        ),
+        isSynced = isSynced,
     )
 }
 

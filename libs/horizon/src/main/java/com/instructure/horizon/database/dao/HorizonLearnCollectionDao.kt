@@ -35,6 +35,9 @@ interface HorizonLearnCollectionDao {
     @Query("SELECT * FROM horizon_learn_collections")
     suspend fun getAllCollections(): List<HorizonLearnCollectionEntity>
 
+    @Query("SELECT * FROM horizon_learn_collections WHERE id = :id")
+    suspend fun getCollectionById(id: String): HorizonLearnCollectionEntity?
+
     @Query("SELECT * FROM horizon_learn_collection_items WHERE collectionId = :collectionId")
     suspend fun getItemsByCollectionId(collectionId: String): List<HorizonLearnCollectionItemEntity>
 
@@ -43,6 +46,22 @@ interface HorizonLearnCollectionDao {
 
     @Query("DELETE FROM horizon_learn_collection_items")
     suspend fun deleteAllItems()
+
+    @Query("DELETE FROM horizon_learn_collection_items WHERE collectionId = :collectionId")
+    suspend fun deleteItemsByCollectionId(collectionId: String)
+
+    @Query("UPDATE horizon_learn_collection_items SET isBookmarked = :isBookmarked WHERE id = :id")
+    suspend fun updateItemBookmark(id: String, isBookmarked: Boolean)
+
+    @Transaction
+    suspend fun replaceCollection(
+        collection: HorizonLearnCollectionEntity,
+        items: List<HorizonLearnCollectionItemEntity>,
+    ) {
+        deleteItemsByCollectionId(collection.id)
+        insertCollections(listOf(collection))
+        insertItems(items)
+    }
 
     @Transaction
     suspend fun replaceAll(
