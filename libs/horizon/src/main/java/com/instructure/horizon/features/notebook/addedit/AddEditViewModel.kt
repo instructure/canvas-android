@@ -17,23 +17,48 @@
 package com.instructure.horizon.features.notebook.addedit
 
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class AddEditViewModel: ViewModel() {
+abstract class AddEditViewModel(
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     protected val _uiState = MutableStateFlow(
         AddEditNoteUiState(
             onTypeChanged = ::onTypeChanged,
             onUserCommentChanged = ::onUserCommentChanged,
             onSnackbarDismiss = ::onSnackbarDismissed,
             updateDeleteConfirmationDialog = ::updateShowDeleteConfirmationDialog,
-            updateExitConfirmationDialog = ::updateShowExitConfirmationDialog
+            updateExitConfirmationDialog = ::updateShowExitConfirmationDialog,
+            isOffline = isOffline(),
         )
     )
     val uiState = _uiState.asStateFlow()
+
+    init {
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                _uiState.update {
+                    it.copy(
+                        isOffline = true,
+                        lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                    )
+                }
+            } catch { }
+        }
+    }
 
     private fun onTypeChanged(newType: NotebookType?) {
         _uiState.update { it.copy(type = newType,) }
@@ -58,4 +83,21 @@ abstract class AddEditViewModel: ViewModel() {
     }
 
     protected abstract fun hasContentChange(): Boolean
+
+    override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+    }
+
+    override fun onNetworkLost() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                )
+            }
+        } catch {
+            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
+        }
+    }
 }

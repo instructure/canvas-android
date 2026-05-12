@@ -18,23 +18,14 @@ package com.instructure.horizon.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_IN_PROGRESS,
-    LEARN_MY_CONTENT_COMPLETED,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-    ASSIGNMENT_COMMENTS,
-    NOTES,
-}
-
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
+@Entity(tableName = "horizon_notes")
+data class HorizonNoteEntity(
+    @PrimaryKey val id: String,
+    val courseId: Long,
+    val objectId: String,
+    val objectType: String,
+    val userText: String,
+    val reaction: String,
+    val highlightedDataJson: String,
+    val updatedAt: Long,
 )

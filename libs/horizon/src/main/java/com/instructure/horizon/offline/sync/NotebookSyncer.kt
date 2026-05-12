@@ -13,28 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.offline.sync
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.instructure.horizon.data.datasource.NotebookLocalDataSource
+import com.instructure.horizon.data.datasource.NotebookNetworkDataSource
+import javax.inject.Inject
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_IN_PROGRESS,
-    LEARN_MY_CONTENT_COMPLETED,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-    ASSIGNMENT_COMMENTS,
-    NOTES,
+class NotebookSyncer @Inject constructor(
+    private val networkDataSource: NotebookNetworkDataSource,
+    private val localDataSource: NotebookLocalDataSource,
+) {
+    suspend fun syncNotes(courseId: Long) {
+        val edges = networkDataSource.getAllNotesForCourse(courseId)
+        val entities = edges.map { NotebookLocalDataSource.toEntity(it) }
+        localDataSource.replaceNotesForCourse(courseId, entities)
+    }
 }
-
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
-)

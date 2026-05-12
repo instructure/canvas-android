@@ -37,6 +37,7 @@ import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
+import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
@@ -129,6 +130,9 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonUserDao(db: HorizonDatabase): HorizonUserDao = db.userDao()
+
+    @Provides
+    fun provideHorizonNoteDao(db: HorizonDatabase): HorizonNoteDao = db.noteDao()
 
     @Provides
     @HorizonHtmlParserQualifier

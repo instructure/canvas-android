@@ -39,6 +39,7 @@ class HorizonCourseSync @Inject constructor(
     private val pageSyncer: PageSyncer,
     private val scoreSyncer: ScoreSyncer,
     private val fileSyncer: FileSyncer,
+    private val notebookSyncer: NotebookSyncer,
     private val courseCleanupHelper: CourseCleanupHelper,
     private val imageSyncer: ImageSyncer,
     private val dashboardEnrollmentDao: HorizonDashboardEnrollmentDao,
@@ -119,6 +120,17 @@ class HorizonCourseSync @Inject constructor(
                             courseSyncPlanDao.updateScoresState(plan.courseId, HorizonProgressState.COMPLETED)
                         } catch (_: Exception) {
                             courseSyncPlanDao.updateScoresState(plan.courseId, HorizonProgressState.ERROR)
+                        }
+                    }
+                }
+
+                if (plan.syncNotes) {
+                    launch {
+                        try {
+                            notebookSyncer.syncNotes(plan.courseId)
+                            courseSyncPlanDao.updateNotesState(plan.courseId, HorizonProgressState.COMPLETED)
+                        } catch (_: Exception) {
+                            courseSyncPlanDao.updateNotesState(plan.courseId, HorizonProgressState.ERROR)
                         }
                     }
                 }

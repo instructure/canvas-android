@@ -17,12 +17,14 @@
 package com.instructure.horizon.features.notebook.addedit.edit
 
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.horizon.data.datasource.NotebookLocalDataSource
+import com.instructure.horizon.data.datasource.NotebookNetworkDataSource
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import javax.inject.Inject
 
 class EditNoteRepository @Inject constructor(
-    private val redwoodApiManager: RedwoodApiManager
+    private val networkDataSource: NotebookNetworkDataSource,
+    private val localDataSource: NotebookLocalDataSource,
 ) {
     suspend fun updateNote(
         noteId: String,
@@ -30,7 +32,7 @@ class EditNoteRepository @Inject constructor(
         highlightedData: NoteHighlightedData,
         type: NotebookType?
     ) {
-        redwoodApiManager.updateNote(
+        networkDataSource.updateNote(
             id = noteId,
             userText = userText,
             highlightData = highlightedData,
@@ -39,6 +41,7 @@ class EditNoteRepository @Inject constructor(
     }
 
     suspend fun deleteNote(noteId: String) {
-        redwoodApiManager.deleteNote(noteId)
+        networkDataSource.deleteNote(noteId)
+        localDataSource.deleteNote(noteId)
     }
 }

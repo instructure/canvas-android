@@ -59,6 +59,9 @@ interface HorizonCourseSyncPlanDao {
     @Query("UPDATE horizon_course_sync_plan SET filesState = :state WHERE courseId = :courseId")
     suspend fun updateFilesState(courseId: Long, state: HorizonProgressState)
 
+    @Query("UPDATE horizon_course_sync_plan SET notesState = :state WHERE courseId = :courseId")
+    suspend fun updateNotesState(courseId: Long, state: HorizonProgressState)
+
     @Query("DELETE FROM horizon_course_sync_plan")
     suspend fun deleteAll()
 }

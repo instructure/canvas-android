@@ -26,6 +26,7 @@ import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.entity.EntitySyncType
@@ -49,6 +50,7 @@ class CourseCleanupHelper @Inject constructor(
     private val courseScoreDao: HorizonCourseScoreDao,
     private val dashboardModuleItemDao: HorizonDashboardModuleItemDao,
     private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao,
+    private val noteDao: HorizonNoteDao,
 ) {
     suspend fun cleanupCourseContent(courseId: Long) {
         assignmentCommentDao.deleteAttachmentsByCourseId(courseId)
@@ -64,6 +66,7 @@ class CourseCleanupHelper @Inject constructor(
         courseScoreDao.deleteGroupsForCourse(courseId)
         courseScoreDao.deleteGradeForCourse(courseId)
         dashboardModuleItemDao.deleteForCourse(courseId)
+        noteDao.deleteByCourseId(courseId)
 
         courseDao.deleteByCourseId(courseId)
 

@@ -13,28 +13,17 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.database.entity
+package com.instructure.horizon.domain.usecase.notebook
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.instructure.horizon.features.notebook.addedit.edit.EditNoteRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import javax.inject.Inject
 
-enum class SyncDataType {
-    DASHBOARD_ENROLLMENTS,
-    DASHBOARD_PROGRAMS,
-    DASHBOARD_MODULE_ITEMS,
-    LEARN_MY_CONTENT_IN_PROGRESS,
-    LEARN_MY_CONTENT_COMPLETED,
-    LEARN_SAVED_ITEMS,
-    LEARN_LIBRARY_COLLECTIONS,
-    COURSE_DETAILS,
-    COURSE_MODULES,
-    COURSE_SCORES,
-    ASSIGNMENT_COMMENTS,
-    NOTES,
+class RemoveNoteUseCase @Inject constructor(
+    private val repository: EditNoteRepository,
+) : BaseUseCase<String, Unit>() {
+
+    override suspend fun execute(params: String) {
+        repository.deleteNote(params)
+    }
 }
-
-@Entity(tableName = "horizon_sync_metadata")
-data class HorizonSyncMetadataEntity(
-    @PrimaryKey val dataType: SyncDataType,
-    val lastSyncedAtMs: Long,
-)
