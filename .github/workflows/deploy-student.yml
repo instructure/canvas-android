@@ -9,26 +9,29 @@ concurrency:
   group: deploy-student
   cancel-in-progress: false
 
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+
 jobs:
   build-and-deploy:
     name: build-and-deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4

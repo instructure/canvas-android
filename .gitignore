@@ -4,7 +4,12 @@
 # Private data
 android-private-data/
 **/PrivateConst.kt
-private-data/
+scripts/setup-private-env.local.sh
+firebase-debug.log
+**/firebase-debug.log
+# Stray decoded payloads at repo root used as base64 encoding scratch space.
+/google-services-*.json
+/robo_user.json
 
 # Release keys
 android-keys/

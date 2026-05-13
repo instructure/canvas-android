@@ -9,26 +9,24 @@ concurrency:
   group: deploy-parent
   cancel-in-progress: false
 
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ secrets.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+
 jobs:
   build-and-deploy:
     name: build-and-deploy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4

@@ -6,7 +6,22 @@ The open source code provided by the Android Team at Instructure.
 
 ## Building
 
-Run `./open_source.sh` once. You may now use Gradle to build the apps.
+### Building
+
+GitHub Secrets is the source of truth for all private build values. To build
+locally:
+
+1. `cp scripts/setup-private-env.sh scripts/setup-private-env.local.sh`
+2. Get a filled-in copy from a teammate (1Password / Slack DM) and paste the
+   values into your `.local.sh` (gitignored).
+3. `source scripts/setup-private-env.local.sh` before invoking gradle.
+4. `./gradle/gradlew -p apps :student:assembleDevDebug`
+
+There is no fallback — every variable in `setup-private-env.sh` must be set,
+otherwise the build fails with a pointer to the offending env var.
+
+See [docs/private-data-migration-plan.md](docs/private-data-migration-plan.md)
+for the design rationale.
 
 ### Student, Teacher and native Parent
 

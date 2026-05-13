@@ -21,10 +21,6 @@ on:
         required: true
         type: string
     secrets:
-      GH_APP_ID:
-        required: true
-      GH_APP_PRIVATE_KEY:
-        required: true
       ANDROID_RELEASE_KEYSTORE_B64:
         required: true
       GCLOUD_KEY:
@@ -41,28 +37,113 @@ on:
         required: true
       SLACK_URL:
         required: true
+      # Private-data env vars (see docs/private-data-migration-plan.md)
+      PSPDF_MAVEN_USER:
+        required: false
+      PSPDF_MAVEN_PASS:
+        required: false
+      PSPDFKIT_LICENSE_KEY_STUDENT:
+        required: false
+      PSPDFKIT_LICENSE_KEY_TEACHER:
+        required: false
+      CRASHLYTICS_API_KEY:
+        required: false
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN:
+        required: false
+      PARENT_LOGIN_CLIENT_ID:
+        required: false
+      PARENT_LOGIN_CLIENT_SECRET:
+        required: false
+      PENDO_ACCESS_TOKEN_PARENT:
+        required: false
+      PENDO_ACCESS_TOKEN_STUDENT:
+        required: false
+      PENDO_ACCESS_TOKEN_TEACHER:
+        required: false
+      ROBO_TEST_API_KEY:
+        required: false
+      ROBO_TEST_USER_ID:
+        required: false
+      ROBO_TEST_USERNAME:
+        required: false
+      ROBO_TEST_USER_TOKEN:
+        required: false
+      ROBO_TEST_DOMAIN:
+        required: false
+      PRONOUN_TEST_STUDENT:
+        required: false
+      PRONOUN_TEST_STUDENT_PASSWORD:
+        required: false
+      PRONOUN_TEST_TEACHER:
+        required: false
+      PRONOUN_TEST_TEACHER_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD:
+        required: false
+      GOOGLE_SERVICES_PARENT_B64:
+        required: false
+      GOOGLE_SERVICES_STUDENT_B64:
+        required: false
+      GOOGLE_SERVICES_TEACHER_B64:
+        required: false
+      ANALYTICS_XML_STUDENT_B64:
+        required: false
+      PRIVATE_STRINGS_XML_STUDENT_B64:
+        required: false
+      ROBO_USER_JSON_TEACHER_B64:
+        required: false
+      PRIVATE_CONST_KT_B64:
+        required: false
+
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+  PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ secrets.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+  PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+  ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+  ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+  ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+  ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+  ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+  PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+  PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+  PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+  PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+  GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+  ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+  PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
 
 jobs:
   build-qa-debug:
     name: build-qa-debug
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 45
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -100,24 +181,13 @@ jobs:
 
   unit-tests:
     name: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 30
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -150,7 +220,7 @@ jobs:
 
   flank-tests:
     name: flank-${{ matrix.test-type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     needs: build-qa-debug
     strategy:
@@ -202,12 +272,9 @@ jobs:
           fi
 
       - name: Run Flank tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results
         if: always()
@@ -230,7 +297,7 @@ jobs:
 
   e2e-offline:
     name: e2e-offline
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     needs: build-qa-debug
     if: ${{ inputs.include-e2e-offline }}
@@ -271,12 +338,9 @@ jobs:
           fi
 
       - name: Run Flank E2E offline tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results
         if: always()
@@ -299,7 +363,7 @@ jobs:
 
   build-release-candidate:
     name: build-release-candidate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     needs: [unit-tests, flank-tests, e2e-offline]
     if: |
@@ -308,21 +372,10 @@ jobs:
       needs.flank-tests.result == 'success' &&
       (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -379,7 +432,7 @@ jobs:
 
   slack-notification:
     name: slack-notification
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 5
     needs: [build-release-candidate]
     if: always()

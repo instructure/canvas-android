@@ -16,7 +16,7 @@ on:
 jobs:
   student-notes:
     name: student-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'student'
     steps:
@@ -27,7 +27,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
+          repositories: canvas-android
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -73,7 +73,7 @@ jobs:
 
   teacher-notes:
     name: teacher-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'teacher'
     steps:
@@ -84,7 +84,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
+          repositories: canvas-android
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -130,7 +130,7 @@ jobs:
 
   parent-notes:
     name: parent-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'parent'
     steps:
@@ -141,7 +141,7 @@ jobs:
           app-id: ${{ secrets.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
+          repositories: canvas-android
 
       - name: Checkout repository
         uses: actions/checkout@v4
