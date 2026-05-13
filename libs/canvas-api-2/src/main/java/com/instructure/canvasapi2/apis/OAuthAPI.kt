@@ -79,11 +79,11 @@ object OAuthAPI {
     }
 
     fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
-        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob")).enqueue(callback)
+        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "https://sso.canvaslms.com/canvas/login")).enqueue(callback)
     }
 
     fun refreshAccessToken(adapter: RestBuilder, params: RestParams): DataResult<OAuthTokenResponse> {
-        return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "urn:ietf:wg:oauth:2.0:oob", ApiPrefs.refreshToken).dataResult()
+        return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "https://sso.canvaslms.com/canvas/login", ApiPrefs.refreshToken).dataResult()
     }
 
     fun getAuthenticatedSession(targetUrl: String, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {
