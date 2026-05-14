@@ -1,0 +1,30 @@
+name: E2E Tests (On-Demand)
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'App to run e2e tests against'
+        required: true
+        type: choice
+        options:
+          - parent
+          - student
+          - teacher
+
+run-name: E2E ${{ inputs.app }} @ ${{ github.ref_name }}
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: ${{ inputs.app == 'parent' && 'Parent' || inputs.app == 'student' && 'Student' || 'Teacher' }}
+      app-type-lower: ${{ inputs.app }}
+    secrets: inherit
+
+  e2e-tests:
+    needs: build
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: ${{ inputs.app }}
+    secrets: inherit
