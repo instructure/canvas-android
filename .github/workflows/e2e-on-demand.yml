@@ -15,15 +15,14 @@ on:
 run-name: E2E ${{ inputs.app }} @ ${{ github.ref_name }}
 
 jobs:
-  build:
-    uses: ./.github/workflows/build-app.yml
+  test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
     with:
-      app-type: ${{ inputs.app == 'parent' && 'Parent' || inputs.app == 'student' && 'Student' || 'Teacher' }}
       app-type-lower: ${{ inputs.app }}
     secrets: inherit
 
   e2e-tests:
-    needs: build
+    needs: test-apks
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: ${{ inputs.app }}

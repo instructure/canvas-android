@@ -7,6 +7,11 @@ on:
         description: 'App type in lowercase (parent, student, or teacher)'
         required: true
         type: string
+      flank-config:
+        description: 'Flank config file under apps/<app>/ (e.g. flank_e2e.yml, flank_e2e_offline.yml)'
+        required: false
+        type: string
+        default: 'flank_e2e.yml'
     secrets:
       GCLOUD_KEY:
         required: true
@@ -40,25 +45,33 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/${{ inputs.app-type-lower }}/flank_e2e.yml ./flank.yml
+        env:
+          APP: ${{ inputs.app-type-lower }}
+          FLANK_CONFIG: ${{ inputs.flank-config }}
+        run: |
+          case "$FLANK_CONFIG" in
+            flank_e2e.yml|flank_e2e_offline.yml) ;;
+            *) echo "Unsupported flank-config: $FLANK_CONFIG"; exit 1 ;;
+          esac
+          case "$APP" in
+            parent|student|teacher) ;;
+            *) echo "Unsupported app: $APP"; exit 1 ;;
+          esac
+          cp "./apps/$APP/$FLANK_CONFIG" ./flank.yml
 
       - name: Copy APKs to expected locations
+        env:
+          APP: ${{ inputs.app-type-lower }}
         run: |
-          APP="${{ inputs.app-type-lower }}"
           if [ -d "${APP}-qa-debug.apk" ]; then
-             mkdir -p apps/${APP}/build/outputs/apk/qa/debug
-             mv ${APP}-qa-debug.apk/${APP}-qa-debug.apk apps/${APP}/build/outputs/apk/qa/debug/
-             rm -rf ${APP}-qa-debug.apk
+             mkdir -p "apps/${APP}/build/outputs/apk/qa/debug"
+             mv "${APP}-qa-debug.apk/${APP}-qa-debug.apk" "apps/${APP}/build/outputs/apk/qa/debug/"
+             rm -rf "${APP}-qa-debug.apk"
           fi
           if [ -d "${APP}-qa-debug-androidTest.apk" ]; then
-             mkdir -p apps/${APP}/build/outputs/apk/androidTest/qa/debug
-             mv ${APP}-qa-debug-androidTest.apk/${APP}-qa-debug-androidTest.apk apps/${APP}/build/outputs/apk/androidTest/qa/debug/
-             rm -rf ${APP}-qa-debug-androidTest.apk
-          fi
-          if [ -d "${APP}-dev-debugMinify.apk" ]; then
-             mkdir -p apps/${APP}/build/outputs/apk/dev/debugMinify
-             mv ${APP}-dev-debugMinify.apk/${APP}-dev-debugMinify.apk apps/${APP}/build/outputs/apk/dev/debugMinify/
-             rm -rf ${APP}-dev-debugMinify.apk
+             mkdir -p "apps/${APP}/build/outputs/apk/androidTest/qa/debug"
+             mv "${APP}-qa-debug-androidTest.apk/${APP}-qa-debug-androidTest.apk" "apps/${APP}/build/outputs/apk/androidTest/qa/debug/"
+             rm -rf "${APP}-qa-debug-androidTest.apk"
           fi
 
       - name: Run Flank E2E tests
@@ -67,13 +80,14 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash ${{ inputs.app-type-lower }} results/`ls results`
         env:
+          APP: ${{ inputs.app-type-lower }}
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: ./apps/postProcessTestRun.bash "$APP" "results/$(ls results)"
 
       - name: Cleanup sensitive files
         if: always()

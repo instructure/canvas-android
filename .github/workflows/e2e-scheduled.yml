@@ -1,0 +1,47 @@
+name: E2E Tests (Scheduled)
+
+on:
+  schedule:
+    # Sun, Mon-Fri at 17:00 UTC (= 19:00 Budapest CEST)
+    - cron: '0 17 * * 0-5'
+  workflow_dispatch:
+
+jobs:
+  parent-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
+
+  parent-e2e-tests:
+    needs: parent-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
+
+  student-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  student-e2e-tests:
+    needs: student-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  teacher-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit
+
+  teacher-e2e-tests:
+    needs: teacher-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit

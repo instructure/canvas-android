@@ -1,0 +1,24 @@
+name: Offline E2E Tests (On-Demand)
+
+# Student-only: only apps/student/ ships a flank_e2e_offline.yml today.
+# Add an `app` input + per-app dispatch when parent/teacher gain an offline suite.
+
+on:
+  workflow_dispatch:
+
+run-name: Offline E2E student @ ${{ github.ref_name }}
+
+jobs:
+  test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  offline-e2e-tests:
+    needs: test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: student
+      flank-config: flank_e2e_offline.yml
+    secrets: inherit

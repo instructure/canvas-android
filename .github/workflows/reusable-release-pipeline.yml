@@ -50,8 +50,6 @@ on:
         required: false
       LOGIN_ANONYMOUS_SCHOOL_DOMAIN:
         required: false
-      PARENT_LOGIN_CLIENT_ID:
-        required: false
       PARENT_LOGIN_CLIENT_SECRET:
         required: false
       PENDO_ACCESS_TOKEN_PARENT:
@@ -108,7 +106,7 @@ env:
   PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
   CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
   LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
-  PARENT_LOGIN_CLIENT_ID: ${{ secrets.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
   PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
   PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
   PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
@@ -135,49 +133,11 @@ env:
   PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
 
 jobs:
-  build-qa-debug:
-    name: build-qa-debug
-    runs-on: ubuntu-latest-16core
-    timeout-minutes: 45
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: wrapper
-          java-version: '17'
-
-      - name: Build QA debug and test APKs
-        run: |
-          ./gradle/gradlew -p apps \
-            :${{ inputs.app-name }}:assembleQaDebug \
-            :${{ inputs.app-name }}:assembleQaDebugAndroidTest \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
-        env:
-          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
-
-      - name: Upload QA debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.app-name }}-qa-debug.apk
-          path: apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/${{ inputs.app-name }}-qa-debug.apk
-          retention-days: 1
-
-      - name: Upload QA test APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.app-name }}-qa-debug-androidTest.apk
-          path: apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/${{ inputs.app-name }}-qa-debug-androidTest.apk
-          retention-days: 1
+  build-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: ${{ inputs.app-name }}
+    secrets: inherit
 
   unit-tests:
     name: unit-tests
@@ -222,7 +182,7 @@ jobs:
     name: flank-${{ matrix.test-type }}
     runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    needs: build-qa-debug
+    needs: build-test-apks
     strategy:
       fail-fast: false
       matrix:
@@ -299,7 +259,7 @@ jobs:
     name: e2e-offline
     runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    needs: build-qa-debug
+    needs: build-test-apks
     if: ${{ inputs.include-e2e-offline }}
     steps:
       - name: Checkout repository
