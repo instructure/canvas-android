@@ -51,15 +51,31 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":student-app: *Student Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":student-app: *Student Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":student-app: *Student Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
 
   teacher-notes:
     name: teacher-release-notes
@@ -98,15 +114,31 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":teacher-app: *Teacher Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":teacher-app: *Teacher Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":teacher-app: *Teacher Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
 
   parent-notes:
     name: parent-release-notes
@@ -145,12 +177,28 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":parent-app: *Parent Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":parent-app: *Parent Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":parent-app: *Parent Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
