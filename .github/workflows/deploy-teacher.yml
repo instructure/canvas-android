@@ -4,26 +4,46 @@ on:
   push:
     tags:
       - 'teacher-*'
+  workflow_dispatch:
 
 concurrency:
   group: deploy-teacher
   cancel-in-progress: false
 
+# MergePrivateData.kt evaluates every app at Gradle config time, so we declare
+# all three apps' private-data env vars — same block as reusable-release-pipeline.yml.
 env:
   PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
   PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
   PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
   CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
   LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
   PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+  ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+  ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+  ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
   ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
   ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
   PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
   PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
   PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
   PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
   GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
   ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+  PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
 
 jobs:
   build-and-deploy:
@@ -34,11 +54,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: wrapper
           java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'apps/**/gradle-wrapper.properties', 'apps/gradle.properties', 'apps/buildSrc/src/**/*.kt') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Decode release keystore
         env:
@@ -75,16 +104,37 @@ jobs:
           UPDATE_PRIORITY=$(grep 'updatePriority' apps/teacher/build.gradle | head -1 | awk '{print $NF}')
           echo "value=${UPDATE_PRIORITY}" >> "$GITHUB_OUTPUT"
 
-      - name: Upload to Google Play
-        uses: r0adkll/upload-google-play@v1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY }}
-          packageName: com.instructure.teacher
-          releaseFiles: apps/teacher/build/outputs/bundle/prodRelease/teacher-prod-release.aab
-          track: internal
-          inAppUpdatePriority: ${{ steps.priority.outputs.value }}
-          status: completed
+          ruby-version: '3.2'
+
+      - name: Install fastlane
+        run: gem install fastlane --no-document
+
+      - name: Write Play Store service account JSON
+        env:
+          GPLAY_KEY: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -z "${GPLAY_KEY}" ]; then
+            echo "Error: GPLAY_SERVICE_ACCOUNT_KEY secret is not set"
+            exit 1
+          fi
+          printf '%s' "${GPLAY_KEY}" > play-service-account.json
+          chmod 600 play-service-account.json
+
+      - name: Upload to Google Play (internal track)
+        run: |
+          fastlane supply \
+            --package_name com.instructure.teacher \
+            --aab apps/teacher/build/outputs/bundle/prodRelease/teacher-prod-release.aab \
+            --track internal \
+            --release_status completed \
+            --in_app_update_priority ${{ steps.priority.outputs.value }} \
+            --json_key play-service-account.json \
+            --skip_upload_metadata --skip_upload_images --skip_upload_screenshots \
+            --skip_upload_changelogs
 
       - name: Cleanup sensitive files
         if: always()
-        run: rm -f release.jks
+        run: rm -f release.jks play-service-account.json

@@ -149,11 +149,20 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: wrapper
           java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'apps/**/gradle-wrapper.properties', 'apps/gradle.properties', 'apps/buildSrc/src/**/*.kt') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Run unit tests
         run: |
@@ -337,11 +346,20 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: wrapper
           java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'apps/**/gradle-wrapper.properties', 'apps/gradle.properties', 'apps/buildSrc/src/**/*.kt') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Decode release keystore
         env:
