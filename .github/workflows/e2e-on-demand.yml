@@ -27,3 +27,15 @@ jobs:
     with:
       app-type-lower: ${{ inputs.app }}
     secrets: inherit
+
+  slack-notification:
+    if: ${{ !cancelled() && needs.e2e-tests.result != 'cancelled' }}
+    needs: e2e-tests
+    uses: ./.github/workflows/slack-notify-e2e.yml
+    with:
+      app-display-name: Android Canvas - ${{ inputs.app == 'parent' && 'Parent' || inputs.app == 'student' && 'Student' || 'Teacher' }}
+      channel: github_android_test_${{ inputs.app }}
+      e2e-result: ${{ needs.e2e-tests.result }}
+      matrix-url: ${{ needs.e2e-tests.outputs.matrix-url }}
+      workflow-name: ${{ github.workflow }}
+    secrets: inherit

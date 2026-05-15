@@ -12,6 +12,10 @@ on:
         required: false
         type: string
         default: 'flank_e2e.yml'
+    outputs:
+      matrix-url:
+        description: 'Firebase Test Matrix URL for the run (empty if Flank produced no matrix link)'
+        value: ${{ jobs.e2e-tests.outputs.matrix-url }}
     secrets:
       GCLOUD_KEY:
         required: true
@@ -24,6 +28,8 @@ jobs:
   e2e-tests:
     name: ${{ inputs.app-type-lower }}-e2e-tests
     runs-on: ubuntu-latest-16core
+    outputs:
+      matrix-url: ${{ steps.capture-matrix-url.outputs.url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -76,8 +82,33 @@ jobs:
 
       - name: Run Flank E2E tests
         run: |
+          set -o pipefail
           curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
-          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
+          set +e
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank.log
+          flank_exit=${PIPESTATUS[0]}
+          set -e
+          # Flank v23.07.0 has been observed to exit 0 even when test cases within
+          # a matrix fail. Grep the log for the failure marker as a backstop.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank.log; then
+            echo "::error::Flank reported matrix failures (see OUTCOME table above)"
+            exit 1
+          fi
+          if [ "$flank_exit" -ne 0 ]; then
+            echo "::error::Flank exited with code $flank_exit"
+            exit "$flank_exit"
+          fi
+
+      - name: Capture Firebase Test Matrix URL
+        id: capture-matrix-url
+        if: always()
+        run: |
+          if [ -f flank.log ]; then
+            url=$(grep -oE 'https://console\.firebase\.google\.com/project/[^/]+/testlab/histories/[^/]+/matrices/[a-zA-Z0-9_-]+' flank.log | head -1 || true)
+            echo "url=${url}" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Report test results to Splunk
         env:
