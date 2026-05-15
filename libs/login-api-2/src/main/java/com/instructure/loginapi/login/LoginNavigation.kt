@@ -50,6 +50,7 @@ abstract class LoginNavigation(
 
     private fun showCookieConsent(experience: Experience) {
         val intent = Intent(activity, CookieConsentActivity::class.java)
+        activity.intent?.extras?.let { intent.putExtras(it) }
         when (experience) {
             is Experience.Academic -> intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
             is Experience.Career -> intent.putExtra(CANVAS_CAREER, true)
@@ -64,6 +65,7 @@ abstract class LoginNavigation(
 
     private fun showPolicy(experience: Experience) {
         val intent = Intent(activity, AcceptableUsePolicyActivity::class.java)
+        activity.intent?.extras?.let { intent.putExtras(it) }
         when (experience) {
             is Experience.Academic -> intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
             is Experience.Career -> intent.putExtra(CANVAS_CAREER, true)
