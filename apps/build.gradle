@@ -22,7 +22,12 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://www.jitpack.io" }
+        maven {
+            url "https://www.jitpack.io"
+            content {
+                includeGroup "com.github.chrisbanes"
+            }
+        }
         maven { url "https://plugins.gradle.org/m2/" }
     }
 
@@ -45,7 +50,12 @@ allprojects {
             url = uri("https://software.mobile.pendo.io/artifactory/androidx-release")
         }
         mavenCentral()
-        maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://jitpack.io'
+            content {
+                includeGroup 'com.github.chrisbanes'
+            }
+        }
         maven {
             credentials {
                 username pspdfMavenUser
