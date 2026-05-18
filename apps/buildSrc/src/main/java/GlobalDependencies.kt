@@ -174,7 +174,7 @@ object Libs {
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.9.+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.9.3.8651"
 
     /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
