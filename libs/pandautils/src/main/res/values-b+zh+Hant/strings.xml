@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">此學生尚未提交任何項目。</string>
     <string name="locked">已鎖定</string>
     <string name="lockedSubtext">此作業已被鎖定，直至 %1$s 的 %2$s。</string>
+    <string name="closedSubtext">此作業於 %1$s 在 %2$s 遭到鎖定。</string>
     <string name="chooseFile">選擇檔案</string>
     <string name="chooseFileSubtext">點選下列的一個選項，以加入附件檔案至提交項目。</string>
     <string name="chooseFileForUploadSubtext">點選下面一個選項，以選取檔案進行上傳</string>

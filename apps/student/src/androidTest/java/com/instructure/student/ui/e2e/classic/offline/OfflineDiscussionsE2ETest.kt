@@ -309,6 +309,226 @@ class OfflineDiscussionsE2ETest : StudentComposeTest() {
         nativeDiscussionDetailsPage.assertTitleText(discussionWithCheckpointsTitle)
     }
 
+    @OfflineE2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testOfflineDiscussionCheckpointsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "Syllabus body")
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        val discussionTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+        val replyToTopicDueDate = "2029-11-12T22:59:00Z"
+        val replyToEntryDueDate = "2029-11-19T22:59:00Z"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(
+            courseId = course.id,
+            token = teacher.token,
+            discussionTitle = discussionTitle,
+            assignmentName = assignmentName,
+            replyToTopicDueDate = replyToTopicDueDate,
+            replyToEntryDueDate = replyToEntryDueDate
+        )
+
+        val checkpointTopicDueDateForList = "Due " + convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM"
+        val checkpointEntryDueDateForList = "Due " + convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM"
+        val checkpointTopicDueDateForDetails = convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM"
+        val checkpointEntryDueDateForDetails = convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM"
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+        dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
+
+        Log.d(STEP_TAG, "Expand '${course.name}' course.")
+        manageOfflineContentPage.expandCollapseItem(course.name)
+
+        Log.d(STEP_TAG, "Select 'Assignments', 'Discussions', 'Grades' and 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+        manageOfflineContentPage.changeItemSelectionState("Assignments")
+        manageOfflineContentPage.changeItemSelectionState("Discussions")
+        manageOfflineContentPage.changeItemSelectionState("Grades")
+        manageOfflineContentPage.changeItemSelectionState("Syllabus")
+        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+        device.waitForIdle()
+
+        Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
+        turnOffConnectionViaADB()
+        OfflineTestUtils.waitForNetworkToGoOffline(device)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
+        dashboardPage.waitForRender()
+        refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        OfflineTestUtils.assertOfflineIndicator()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}' and navigate to Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionTitle' discussion is present with 2 checkpoint due dates in the Assignment List.")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionTitle, dueAtString = checkpointTopicDueDateForList, dueAtStringSecondCheckpoint = checkpointEntryDueDateForList, expectedGrade = "-/15")
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint sub-items are displayed as separate assignment rows (visible because Syllabus was synced).")
+        assignmentListPage.assertHasAssignment("$discussionTitle Reply to Topic", replyToTopicDueDate, "-/10")
+        assignmentListPage.assertHasAssignment("$discussionTitle Required Replies (2)", replyToEntryDueDate, "-/5")
+
+        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionTitle' discussion to see the checkpoints' details.")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
+        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = checkpointTopicDueDateForList, dueAtAdditionalReplies = checkpointEntryDueDateForList, gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
+
+        Log.d(STEP_TAG, "Collapse the checkpoint details of the '$discussionTitle' discussion before navigating away.")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionTitle)
+
+        Log.d(STEP_TAG, "Click on '$discussionTitle Reply to Topic' checkpoint assignment to navigate to its Assignment Details Page.")
+        assignmentListPage.clickAssignment("$discussionTitle Reply to Topic")
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the correct title for the 'Reply to Topic' checkpoint.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertAssignmentTitle("$discussionTitle Reply to Topic")
+
+        Log.d(ASSERTION_TAG, "Assert that the due date is '$checkpointTopicDueDateForDetails', the submission status is 'Not Submitted' and the submission type is 'Discussion Topic' for the 'Reply to Topic' checkpoint.")
+        assignmentDetailsPage.assertDisplaysDate(checkpointTopicDueDateForDetails)
+        assignmentDetailsPage.assertStatusNotSubmitted()
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Discussion Topic")
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment List Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '$discussionTitle Required Replies (2)' checkpoint assignment to navigate to its Assignment Details Page.")
+        assignmentListPage.clickAssignment("$discussionTitle Required Replies (2)")
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the correct title for the 'Required Replies (2)' checkpoint.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertAssignmentTitle("$discussionTitle Required Replies (2)")
+
+        Log.d(ASSERTION_TAG, "Assert that the due date is '$checkpointEntryDueDateForDetails', the submission status is 'Not Submitted' and the submission type is 'Discussion Topic' for the 'Required Replies (2)' checkpoint.")
+        assignmentDetailsPage.assertDisplaysDate(checkpointEntryDueDateForDetails)
+        assignmentDetailsPage.assertStatusNotSubmitted()
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Discussion Topic")
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment List Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on '$discussionTitle' assignment to navigate to the Assignment Details Page.")
+        assignmentListPage.clickAssignment(discussionTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertAssignmentTitle(discussionTitle)
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint grades view is displayed correctly on the Assignment Details Page.")
+        assignmentDetailsPage.assertCheckpointGradesView("Reply to topic", "-/10")
+        assignmentDetailsPage.assertCheckpointGradesView("Additional replies (2)", "-/5")
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint due dates are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", checkpointTopicDueDateForDetails)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", checkpointEntryDueDateForDetails)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission type is 'Discussion Topic' for the '$discussionTitle' assignment")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Discussion Topic")
+
+        Log.d(STEP_TAG, "Click on the 'View Discussion' button to navigate to the Discussion Details page from the Assignment Details page.")
+        assignmentDetailsPage.clickSubmit()
+
+        Log.d(ASSERTION_TAG, "Assert that the Discussion Details page is displayed with the correct title.")
+        nativeDiscussionDetailsPage.assertTitleText(discussionTitle)
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that we are back on the Assignment Details page.")
+        assignmentDetailsPage.assertAssignmentTitle(discussionTitle)
+
+        Log.d(STEP_TAG, "Navigate back to the Course Browser Page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate to Discussions Page.")
+        courseBrowserPage.selectDiscussions()
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionTitle' discussion is displayed in the Discussion List.")
+        discussionListPage.assertTopicDisplayed(discussionTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint due dates are displayed for the '$discussionTitle' discussion in the Discussion List.")
+        discussionListPage.assertCheckpointDueDates(discussionTitle, checkpointTopicDueDateForList)
+        discussionListPage.assertCheckpointDueDates(discussionTitle, checkpointEntryDueDateForList)
+
+        Log.d(ASSERTION_TAG, "Assert that the total points (15 pts), 0 replies and 0 unread replies are displayed for the '$discussionTitle' discussion in the Discussion List.")
+        discussionListPage.assertPointsDisplayed(discussionTitle, 15)
+        discussionListPage.assertReplyCount(discussionTitle, 0)
+        discussionListPage.assertUnreadReplyCount(discussionTitle, 0)
+
+        Log.d(STEP_TAG, "Click on '$discussionTitle' discussion to navigate to the Discussion Details page.")
+        discussionListPage.selectTopic(discussionTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Discussion Details page is displayed with the correct title, 15 pts and no replies.")
+        nativeDiscussionDetailsPage.assertTitleText(discussionTitle)
+        nativeDiscussionDetailsPage.assertPointsPossibleDisplayed("15 pts")
+        nativeDiscussionDetailsPage.assertNoRepliesDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to the Course Browser Page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate to Grades Page.")
+        courseBrowserPage.selectGrades()
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionTitle' main discussion and both checkpoint sub-assignments are displayed on the Grades Page.")
+        gradesPage.assertAssignmentIsDisplayed(discussionTitle)
+        gradesPage.assertAssignmentIsDisplayed("$discussionTitle Reply to Topic")
+        gradesPage.assertAssignmentIsDisplayed("$discussionTitle Required Replies (2)")
+
+        Log.d(ASSERTION_TAG, "Assert that the grades (-/15, -/10, -/5) are displayed correctly for the discussion and its checkpoints on the Grades Page.")
+        gradesPage.assertAssignmentGradeText(discussionTitle, "-/15")
+        gradesPage.assertAssignmentGradeText("$discussionTitle Reply to Topic", "-/10")
+        gradesPage.assertAssignmentGradeText("$discussionTitle Required Replies (2)", "-/5")
+
+        Log.d(ASSERTION_TAG, "Assert that the submission status is 'Not Submitted' for all three discussion assignments.")
+        gradesPage.assertAssignmentStatus(discussionTitle, "Not Submitted")
+        gradesPage.assertAssignmentStatus("$discussionTitle Reply to Topic", "Not Submitted")
+        gradesPage.assertAssignmentStatus("$discussionTitle Required Replies (2)", "Not Submitted")
+
+        Log.d(STEP_TAG, "Navigate back to the Course Browser Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Navigate to Syllabus Page and the 'Summary' tab within it.")
+        courseBrowserPage.selectSyllabus()
+        syllabusPage.selectSummaryTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the discussion checkpoints are displayed as separate items in the Syllabus Summary.")
+        syllabusPage.assertItemDisplayed("$discussionTitle Reply to Topic")
+        syllabusPage.assertItemDisplayed("$discussionTitle Required Replies (2)")
+
+        Log.d(STEP_TAG, "Select '$discussionTitle Reply to Topic' syllabus summary event.")
+        syllabusPage.selectSummaryEvent("$discussionTitle Reply to Topic")
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint grades view is displayed correctly on the Assignment Details Page.")
+        assignmentDetailsPage.assertCheckpointGradesView("Reply to topic", "-/10")
+        assignmentDetailsPage.assertCheckpointGradesView("Additional replies (2)", "-/5")
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoint due dates are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", checkpointTopicDueDateForDetails)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", checkpointEntryDueDateForDetails)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission type is 'Discussion Topic' for the '$discussionTitle' assignment")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Discussion Topic")
+    }
+
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")

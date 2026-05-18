@@ -72,6 +72,7 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
@@ -166,6 +167,12 @@ class ApiModule {
     @Singleton
     fun provideApiPrefs(): ApiPrefs {
         return ApiPrefs
+    }
+
+    @Provides
+    @Singleton
+    fun provideConsentPrefs(): ConsentPrefs {
+        return ConsentPrefs
     }
 
     @Provides

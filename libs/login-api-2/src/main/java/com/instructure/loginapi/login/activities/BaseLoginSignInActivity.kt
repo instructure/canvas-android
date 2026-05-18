@@ -43,6 +43,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.TokenRefreshState
@@ -291,10 +292,13 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
         override fun onReceivedHttpError(view: WebView, request: WebResourceRequest?, errorResponse: WebResourceResponse) {
             if (errorResponse.statusCode == 400 && authenticationURL != null && request != null && request.url != null && authenticationURL == request.url.toString()) {
-                //If the institution does not support skipping the authentication screen this will catch that error and force the
-                //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
-                buildAuthenticationUrl(protocol, accountDomain, clientId, true)
-                loadAuthenticationUrl(protocol, accountDomain.domain)
+                // Previously, when an institution did not support skipping the authentication screen (e.g. canvas.sfu.ca),
+                // we caught the 400 error here and rebuilt the authentication url using the OOB authorization screen flow as a fallback.
+                // OOB authentication is no longer supported, so there is no viable fallback in this case; instead we log a non-fatal
+                // to Crashlytics so we can track institutions that hit this path.
+                FirebaseCrashlytics.getInstance().recordException(
+                    IllegalStateException("Authentication failed with 400 for OOB fallback no longer supported.")
+                )
             }
             super.onReceivedHttpError(view, request, errorResponse)
         }
@@ -329,7 +333,6 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                         protocolEditText.text.toString(),
                         accountDomain,
                         clientId,
-                        false
                     )
                     loadUrl(webView, authenticationURL, headers)
                 }
@@ -397,7 +400,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
                     //Set the protocol
                     protocol = domainVerificationResult.protocol
-                    buildAuthenticationUrl(apiProtocol, accountDomain, clientId, false)
+                    buildAuthenticationUrl(apiProtocol, accountDomain, clientId)
                     loadAuthenticationUrl(apiProtocol, domain)
                 } else {
                     //Error message
@@ -457,7 +460,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         }
     }
 
-    protected fun buildAuthenticationUrl(protocol: String?, accountDomain: AccountDomain?, clientId: String?, forceAuthRedirect: Boolean) {
+    protected fun buildAuthenticationUrl(protocol: String?, accountDomain: AccountDomain?, clientId: String?) {
         //Get device name for the login request.
         var deviceName = Build.MODEL
         if (deviceName == null || deviceName == "") {
@@ -480,12 +483,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("mobile", "1")
             .appendQueryParameter("purpose", deviceName)
-        if (forceAuthRedirect || canvasLogin == MOBILE_VERIFY_FLOW || domain != null && domain.contains(".test.")) {
-            //Skip mobile verify
-            builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
-        } else {
-            builder.appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
-        }
+            .appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
         val authenticationProvider = accountDomain.authenticationProvider

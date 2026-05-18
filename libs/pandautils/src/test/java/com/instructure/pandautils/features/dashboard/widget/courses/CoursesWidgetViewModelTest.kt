@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
@@ -87,6 +88,7 @@ class CoursesWidgetViewModelTest {
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
     private val loadSingleCourseUseCase: LoadSingleCourseUseCase = mockk()
     private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
+    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
     private val courseDao: CourseDao = mockk()
@@ -143,6 +145,7 @@ class CoursesWidgetViewModelTest {
         every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
         every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
         every { localBroadcastManager.unregisterReceiver(any()) } returns Unit
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
         coEvery { courseSyncSettingsDao.findAll() } returns emptyList()
         coEvery { courseDao.findByIds(any()) } returns emptyList()
         every { observeOfflineSyncUpdatesUseCase(Unit) } returns flowOf()
@@ -909,6 +912,59 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
+    fun `RELOAD_ANNOUNCEMENTS broadcast reloads announcements for the specified course`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val initialAnnouncements = listOf(DiscussionTopicHeader(id = 10, announcement = true))
+        val refreshedAnnouncements = listOf(DiscussionTopicHeader(id = 11, announcement = true))
+
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses, announcementsMap = mapOf(1L to initialAnnouncements))
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L)) } returns refreshedAnnouncements
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val bundle: android.os.Bundle = mockk(relaxed = true)
+        every { bundle.getBoolean(Const.RELOAD_ANNOUNCEMENTS) } returns true
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+        every { intent.extras } returns bundle
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        val state = viewModel.uiState.value
+        val announcements = state.courses.find { it.id == 1L }?.announcements
+        assertEquals(1, announcements?.size)
+        assertEquals(11L, announcements?.first()?.id)
+    }
+
+    @Test
+    fun `RELOAD_ANNOUNCEMENTS broadcast does not call reloadCourse`() {
+        setupDefaultMocks()
+        val courses = listOf(Course(id = 1, name = "Course 1", isFavorite = true))
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val bundle: android.os.Bundle = mockk(relaxed = true)
+        every { bundle.getBoolean(Const.RELOAD_ANNOUNCEMENTS) } returns true
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+        every { intent.extras } returns bundle
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        coVerify(exactly = 0) { loadSingleCourseUseCase(any()) }
+    }
+
+    @Test
     fun `onCourseMoved does nothing when fromIndex equals toIndex`() {
         setupDefaultMocks()
         val courses = listOf(
@@ -1186,6 +1242,7 @@ class CoursesWidgetViewModelTest {
             loadGroupsUseCase = loadGroupsUseCase,
             loadSingleCourseUseCase = loadSingleCourseUseCase,
             loadDashboardCardsUseCase = loadDashboardCardsUseCase,
+            loadCourseAnnouncementsUseCase = loadCourseAnnouncementsUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             courseSyncSettingsDao = courseSyncSettingsDao,
             courseDao = courseDao,

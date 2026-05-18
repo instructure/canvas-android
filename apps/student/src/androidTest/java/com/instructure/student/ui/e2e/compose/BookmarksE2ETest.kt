@@ -26,6 +26,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
@@ -35,6 +36,7 @@ import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -282,11 +284,16 @@ class BookmarksE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to 'Notifications' page.")
         dashboardPage.clickNotificationsTab()
 
-        Log.d(ASSERTION_TAG, "Assert that the notification about assignment: '${assignment.name}' is displayed.")
-        notificationPage.assertNotificationDisplayed(assignment.name)
+        Log.d(ASSERTION_TAG, "Assert that the notification about the discussion itself: '${assignment.name}' is displayed.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            refresh() })
+        {
+            Log.d(ASSERTION_TAG, "Assert that the notification about assignment: '${assignment.name}' is displayed.")
+            notificationPage.assertNotificationDisplayed(assignment.name, contains = true)
+        }
 
         Log.d(STEP_TAG, "Click on the notification about assignment: '${assignment.name}'.")
-        notificationPage.clickNotification(assignment.name)
+        notificationPage.clickNotification(assignment.name, contains = true)
 
         val notificationBookmarkName = "Second Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$notificationBookmarkName' from the assignment details page.")

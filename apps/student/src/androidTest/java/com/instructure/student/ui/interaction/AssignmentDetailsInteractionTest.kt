@@ -668,10 +668,10 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
 
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Website URL")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("File Upload")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Media Recording")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Text Entry")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Website URL")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("File Upload")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Media Recording")
 
         //Try 1 submission to check if it's possible to submit even when there are multiple submission types available.
         assignmentDetailsPage.selectSubmissionType(SubmissionType.ONLINE_URL)

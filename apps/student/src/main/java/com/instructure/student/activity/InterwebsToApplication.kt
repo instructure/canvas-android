@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.horizon.HorizonActivity
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -164,7 +165,7 @@ class InterwebsToApplication : BaseCanvasActivity() {
                     } else {
                         // Log the analytics - only for real logins, not masquerading
                         logQREvent(ApiPrefs.domain, true)
-                        Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                        Intent(this@InterwebsToApplication, CookieConsentActivity::class.java)
                     }
 
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

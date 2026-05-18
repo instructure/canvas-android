@@ -28,6 +28,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.privacysettings.PrivacySettingsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
@@ -80,6 +81,7 @@ class Navigation(apiPrefs: ApiPrefs) {
     val qrPairing = "$baseUrl/qr-pairing"
     val settings = "$baseUrl/settings"
     val inboxSignatureSettings = "$baseUrl/inboxSignatureSettings"
+    val privacySettings = "$baseUrl/privacySettings"
 
     private fun splashRoute(qrCodeMasqueradeId: Long) = "$baseUrl/splash/$qrCodeMasqueradeId"
     fun assignmentDetailsRoute(courseId: Long, assignmentId: Long) = "$baseUrl/courses/${courseId}/assignments/${assignmentId}"
@@ -280,6 +282,7 @@ class Navigation(apiPrefs: ApiPrefs) {
                 }
             }
             fragment<InboxSignatureFragment>(inboxSignatureSettings)
+            fragment<PrivacySettingsFragment>(privacySettings)
         }
     }
 

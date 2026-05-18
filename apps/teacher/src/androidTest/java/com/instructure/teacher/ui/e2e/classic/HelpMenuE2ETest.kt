@@ -77,7 +77,7 @@ class HelpMenuE2ETest: TeacherTest() {
 
         try {
             helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.instructure.com/en/all-guides")
-            helpPage.assertHelpMenuURL(HelpMenu.SUBMIT_FEATURE_TITLE, "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL(HelpMenu.SHARE_A_CONTRIBUTION_TITLE, "https://community.instructure.com/en/categories/product-connection")
             helpPage.assertHelpMenuURL(HelpMenu.Teacher.ASK_COMMUNITY_TITLE, "https://community.instructure.com")
             helpPage.assertHelpMenuURL(HelpMenu.Teacher.CONFERENCE_GUIDES_TITLE, "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
             helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "market://details?id=com.instructure.teacher")

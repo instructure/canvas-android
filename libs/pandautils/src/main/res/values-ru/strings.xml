@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">У этого студента пока что нет отправки.</string>
     <string name="locked">Заблокировано</string>
     <string name="lockedSubtext">Это задание заблокировано до %1$s в %2$s.</string>
+    <string name="closedSubtext">Это задание было заблокировано %1$s в %2$s.</string>
     <string name="chooseFile">Выбрать файл</string>
     <string name="chooseFileSubtext">Прикрепите файл к своей отправке, щелкнув по расположенной ниже кнопке.</string>
     <string name="chooseFileForUploadSubtext">Выберите файл для отправки ниже</string>

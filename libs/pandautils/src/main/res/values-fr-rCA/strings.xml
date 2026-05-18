@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Cet étudiant n\'a rien envoyé pour le moment.</string>
     <string name="locked">Verrouillé</string>
     <string name="lockedSubtext">Ce travail est verrouillée jusqu’au %1$s à %2$s.</string>
+    <string name="closedSubtext">Ce travail a été verrouillé le %1$s à %2$s.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joindre un fichier à votre envoi en tapotant sur l\'une des options ci-dessous.</string>
     <string name="chooseFileForUploadSubtext">Sélectionnez un fichier à téléverser en appuyant sur une option ci-dessous</string>
@@ -449,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">À %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s à %2$s</string>
     <string name="schedule_todo_due_text">À faire : %s</string>
+    <string name="schedule_todo_due_text_new">À faire : %s</string>
     <string name="schedule_due_text">Échéance : %s</string>
     <string name="show_missing_items_title">Afficher les %d éléments manquants</string>
     <string name="hide_missing_items_title">Masquer les %d éléments manquants</string>
     <string name="schedule_error_message">Impossible d\'obtenir votre horaire</string>
     <string name="schedule_todo_title">À faire</string>
+    <string name="schedule_todo_title_new">À faire</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>
@@ -478,6 +481,7 @@
     <string name="a11y_planner_note">Remarque du planificateur</string>
     <string name="a11y_quiz">Questionnaire</string>
     <string name="a11y_todo">À faire</string>
+    <string name="a11y_todo_new">À faire</string>
     <string name="a11y_page">Page</string>
     <string name="a11y_assessment_request">Demande d\'évaluation</string>
     <string name="a11y_marked_as_done">Marquer comme terminé</string>

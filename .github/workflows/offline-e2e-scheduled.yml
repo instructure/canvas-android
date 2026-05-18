@@ -1,0 +1,34 @@
+name: Offline E2E Tests (Scheduled)
+
+on:
+  schedule:
+    # Sun, Mon-Fri at 20:00 UTC (= 22:00 Budapest CEST)
+    - cron: '0 20 * * 0-5'
+  workflow_dispatch:
+
+jobs:
+  test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  offline-e2e-tests:
+    needs: test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: student
+      flank-config: flank_e2e_offline.yml
+    secrets: inherit
+
+  student-slack-notification:
+    if: ${{ !cancelled() && needs.offline-e2e-tests.result != 'cancelled' }}
+    needs: offline-e2e-tests
+    uses: ./.github/workflows/slack-notify-e2e.yml
+    with:
+      app-display-name: 'Android Canvas - Student (Offline E2E)'
+      channel: github_android_test_student
+      e2e-result: ${{ needs.offline-e2e-tests.result }}
+      matrix-url: ${{ needs.offline-e2e-tests.outputs.matrix-url }}
+      workflow-name: ${{ github.workflow }}
+    secrets: inherit

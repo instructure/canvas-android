@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Este aluno ainda não tem uma submissão.</string>
     <string name="locked">Bloqueado</string>
     <string name="lockedSubtext">Esta tarefa está bloqueada até %1$s às %2$s.</string>
+    <string name="closedSubtext">Esta tarefa foi bloqueada %1$s em %2$s.</string>
     <string name="chooseFile">Escolher um ficheiro</string>
     <string name="chooseFileSubtext">Anexe um ficheiro ao seu envio ao tocar em uma opção abaixo.</string>
     <string name="chooseFileForUploadSubtext">Selecione um ficheiro para carregar ao tocar em uma opção abaixo.</string>

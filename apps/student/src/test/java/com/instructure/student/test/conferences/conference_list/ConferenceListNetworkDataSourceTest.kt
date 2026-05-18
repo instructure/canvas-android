@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.ConferenceList
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.student.mobius.conferences.conference_list.datasource.ConferenceListNetworkDataSource
@@ -49,7 +50,8 @@ class ConferenceListNetworkDataSourceTest {
     @Before
     fun setup() {
         mockkObject(ApiPrefs)
-        every { ApiPrefs.mobileConsent } returns true
+        mockkObject(ConsentPrefs)
+        every { ConsentPrefs.currentUserConsent } returns true
         networkDataSource = ConferenceListNetworkDataSource(conferencesApi, oAuthApi)
     }
 

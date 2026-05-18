@@ -41,10 +41,20 @@ object AssignmentsApi {
 
         @GET("courses/{courseId}/assignments/{assignmentId}")
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<AssignmentApiModel>
+
+        @GET("courses/{courseId}/assignments?include[]=sub_assignments")
+        fun listAssignments(@Path("courseId") courseId: Long): Call<List<AssignmentApiModel>>
     }
 
     private fun assignmentsService(token: String): AssignmentsService
             = CanvasNetworkAdapter.retrofitWithToken(token).create(AssignmentsService::class.java)
+
+    fun listAssignments(courseId: Long, teacherToken: String): List<AssignmentApiModel> {
+        return assignmentsService(teacherToken)
+            .listAssignments(courseId)
+            .execute()
+            .body()!!
+    }
 
     fun getAssignment(courseId: Long, assignmentId: Long, teacherToken: String): AssignmentApiModel {
         return assignmentsService(teacherToken)

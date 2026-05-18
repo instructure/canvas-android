@@ -36,8 +36,8 @@ object StringConstants {
         const val REPORT_PROBLEM_TITLE = "Report a Problem"
         const val REPORT_PROBLEM_SUBTITLE = "If Canvas misbehaves, tell us about it."
 
-        const val SUBMIT_FEATURE_TITLE = "Submit a Feature Idea"
-        const val SUBMIT_FEATURE_SUBTITLE = "Have an idea to improve Canvas?"
+        const val SHARE_A_CONTRIBUTION_TITLE = "Share a Contribution"
+        const val SHARE_A_CONTRIBUTION_SUBTITLE = "Have a suggestion for Instructure's product roadmap?"
 
         const val SHARE_LOVE_TITLE = "Share Your Love for the App"
         const val SHARE_LOVE_SUBTITLE = "Tell us about your favorite parts of the app"

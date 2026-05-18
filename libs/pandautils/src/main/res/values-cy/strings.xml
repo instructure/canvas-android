@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Does gan y myfyriwr hwn ddim cyflwyniad eto.</string>
     <string name="locked">Wedi Cloi</string>
     <string name="lockedSubtext">Mae’r aseiniad hwn wedi’i gloi tan %1$s am %2$s.</string>
+    <string name="closedSubtext">Cafodd yr aseiniad ei gloi ar %1$s am %2$s.</string>
     <string name="chooseFile">Dewiswch Ffeil</string>
     <string name="chooseFileSubtext">Atodwch ffeil i’ch trafodaeth trwy dapio opsiwn isod.</string>
     <string name="chooseFileForUploadSubtext">Dewiswch ffeil i’w llwytho i lawr trwy dapio opsiwn isod</string>

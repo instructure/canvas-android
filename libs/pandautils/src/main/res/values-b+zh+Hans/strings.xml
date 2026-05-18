@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">此学生尚无任何提交项。</string>
     <string name="locked">已锁定</string>
     <string name="lockedSubtext">此作业已锁定至%1$s%2$s。</string>
+    <string name="closedSubtext">此作业已锁定，锁定时间：%1$s%2$s。</string>
     <string name="chooseFile">选择文件</string>
     <string name="chooseFileSubtext">点击下方的选项可以在您的提交项中附加文件。</string>
     <string name="chooseFileForUploadSubtext">点按下方的选项选择要上传的文件</string>

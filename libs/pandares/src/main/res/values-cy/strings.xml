@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Does dim modd gwneud hyn. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
     <string name="conversationArchived">Sgwrs wedi’i harchifo</string>
     <string name="conversationUnarchived">Sgwrs heb ei harchifo</string>
+    <string name="conversationMarkedAsRead">Sgwrs wedi marcio ei bod wedi’i darllen</string>
+    <string name="conversationMarkedAsUnread">Sgwrs wedi marcio ei bod heb ei darllen</string>
     <string name="messageDeleted">Neges wedi’i dileu</string>
     <string name="messageDeletedFailed">Wedi methu dileu’r neges</string>
     <string name="conversationDeleted">Sgwrs wedi’i dileu</string>

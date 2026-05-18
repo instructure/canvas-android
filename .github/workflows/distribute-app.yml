@@ -1,0 +1,248 @@
+name: Distribute App
+
+on:
+  workflow_call:
+    inputs:
+      app-type:
+        description: 'App type (Parent, Student, or Teacher)'
+        required: true
+        type: string
+      app-type-lower:
+        description: 'App type in lowercase (parent, student, or teacher)'
+        required: true
+        type: string
+    secrets:
+      ANDROID_RELEASE_KEYSTORE_B64:
+        required: true
+      FIREBASE_SERVICE_ACCOUNT_KEY:
+        required: true
+      FIREBASE_ANDROID_PARENT_APP_ID:
+        required: false
+      FIREBASE_ANDROID_STUDENT_APP_ID:
+        required: false
+      FIREBASE_ANDROID_TEACHER_APP_ID:
+        required: false
+      # Private-data env vars consumed by MergePrivateData.kt at build time.
+      PSPDF_MAVEN_USER:
+        required: false
+      PSPDF_MAVEN_PASS:
+        required: false
+      PSPDFKIT_LICENSE_KEY_STUDENT:
+        required: false
+      PSPDFKIT_LICENSE_KEY_TEACHER:
+        required: false
+      CRASHLYTICS_API_KEY:
+        required: false
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN:
+        required: false
+      PARENT_LOGIN_CLIENT_SECRET:
+        required: false
+      PENDO_ACCESS_TOKEN_PARENT:
+        required: false
+      PENDO_ACCESS_TOKEN_STUDENT:
+        required: false
+      PENDO_ACCESS_TOKEN_TEACHER:
+        required: false
+      ROBO_TEST_API_KEY:
+        required: false
+      ROBO_TEST_USER_ID:
+        required: false
+      ROBO_TEST_USERNAME:
+        required: false
+      ROBO_TEST_USER_TOKEN:
+        required: false
+      ROBO_TEST_DOMAIN:
+        required: false
+      PRONOUN_TEST_STUDENT:
+        required: false
+      PRONOUN_TEST_STUDENT_PASSWORD:
+        required: false
+      PRONOUN_TEST_TEACHER:
+        required: false
+      PRONOUN_TEST_TEACHER_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD:
+        required: false
+      GOOGLE_SERVICES_PARENT_B64:
+        required: false
+      GOOGLE_SERVICES_STUDENT_B64:
+        required: false
+      GOOGLE_SERVICES_TEACHER_B64:
+        required: false
+      ANALYTICS_XML_STUDENT_B64:
+        required: false
+      PRIVATE_STRINGS_XML_STUDENT_B64:
+        required: false
+      ROBO_USER_JSON_TEACHER_B64:
+        required: false
+      PRIVATE_CONST_KT_B64:
+        required: false
+
+jobs:
+  distribute:
+    name: ${{ inputs.app-type-lower }}-distribute
+    runs-on: ubuntu-latest-16core
+    timeout-minutes: 45
+    env:
+      FIREBASE_APP_ID: ${{ inputs.app-type == 'Parent' && secrets.FIREBASE_ANDROID_PARENT_APP_ID || inputs.app-type == 'Student' && secrets.FIREBASE_ANDROID_STUDENT_APP_ID || secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}
+      PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+      PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+      PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+      PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+      CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+      PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+      PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+      PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+      PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+      PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+      ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+      ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+      ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+      ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+      ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+      PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+      PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+      PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+      PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+      PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+      PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+      GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+      GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+      GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+      ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+      PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+      ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+      PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Decode Release Keystore
+        run: |
+          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}" | base64 --decode > release.jks
+          chmod 600 release.jks
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: Firebase service account key is not configured"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Build Release Notes
+        id: get_release_notes
+        run: |
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
+          echo "${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Setup Firebase App Id
+        run: |
+          if [ -z "${FIREBASE_APP_ID}" ]; then
+            echo "Error: Firebase App ID is not configured"
+            exit 1
+          fi
+          echo "${FIREBASE_APP_ID}" > firebase_app_id.txt
+
+      - name: Build dev debug-minify APK
+        run: |
+          ./gradle/gradlew -p apps \
+            :${{ inputs.app-type-lower }}:assembleDevDebugMinify \
+            --build-cache \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process \
+            -Pandroid.injected.signing.store.file=$(pwd)/release.jks
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Distribute app to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
+        run: |
+          firebase --version
+          FIREBASE_APP_ID="$(cat firebase_app_id.txt)"
+
+          if ! firebase appdistribution:distribute "apps/${{ inputs.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ inputs.app-type-lower }}-dev-debugMinify.apk" \
+            --app "$FIREBASE_APP_ID" \
+            --release-notes "${{ steps.get_release_notes.outputs.RELEASE_NOTES }}" \
+            --groups "Testers" > result.txt 2>&1; then
+            echo "Firebase distribution failed:"
+            cat result.txt
+            exit 1
+          fi
+          cat result.txt
+
+      - name: Prepare Comment Body
+        id: prepare_comment
+        run: |
+          INSTALL_URL=$(grep -o 'https://appdistribution\.firebase[^[:space:]]*' result.txt | head -1)
+
+          if [ -z "$INSTALL_URL" ]; then
+            echo "Error: Could not extract install URL from Firebase output"
+            cat result.txt
+            exit 1
+          fi
+
+          INSTALL_URL_ESCAPED=$(printf '%s' "$INSTALL_URL" | sed 's/:/%3A/g; s/\//%2F/g; s/?/%3F/g; s/=/%3D/g; s/&/%26/g')
+          {
+            echo "body<<EOF"
+            echo "<!-- qr-code-${{ inputs.app-type }} -->"
+            echo "<p>${{ inputs.app-type }} Install Page</p><img src=\"https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}\" width=\"200\">"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Find Previous Comment
+        id: find_comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MARKER: '<!-- qr-code-${{ inputs.app-type }} -->'
+        run: |
+          comment_id=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --paginate \
+            --jq ".[] | select(.user.login == \"github-actions[bot]\") | select(.body | contains(env.MARKER)) | .id" \
+            | head -n1)
+          echo "comment-id=${comment_id}" >> "$GITHUB_OUTPUT"
+
+      - name: Create or Update Comment
+        uses: peter-evans/create-or-update-comment@v4
+        with:
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ steps.prepare_comment.outputs.body }}
+          edit-mode: replace
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: |
+          rm -f release.jks
+          rm -f service-account-key.json
+          rm -f firebase_app_id.txt
+          rm -f result.txt

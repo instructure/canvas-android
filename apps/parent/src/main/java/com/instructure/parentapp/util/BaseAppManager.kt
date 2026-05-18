@@ -65,10 +65,12 @@ abstract class BaseAppManager : AppManager() {
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
 
-        try {
-            WebView.setWebContentsDebuggingEnabled(true)
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+        if (BuildConfig.DEBUG) {
+            try {
+                WebView.setWebContentsDebuggingEnabled(true)
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+            }
         }
     }
 

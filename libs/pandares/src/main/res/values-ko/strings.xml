@@ -404,6 +404,8 @@
     <string name="errorConversationGeneric">이 작업을 수행할 수 없습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="conversationArchived">대화가 보관됨</string>
     <string name="conversationUnarchived">대화가 보관 해제됨</string>
+    <string name="conversationMarkedAsRead">대화가 읽음으로 표시됨</string>
+    <string name="conversationMarkedAsUnread">대화가 읽지 않음으로 표시됨</string>
     <string name="messageDeleted">메시지 삭제됨</string>
     <string name="messageDeletedFailed">메시지를 삭제하지 못함</string>
     <string name="conversationDeleted">대화 삭제됨</string>

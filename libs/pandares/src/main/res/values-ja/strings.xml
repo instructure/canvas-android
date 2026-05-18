@@ -404,6 +404,8 @@
     <string name="errorConversationGeneric">この操作を実行できません。接続を確認して、もう一度お試しください。</string>
     <string name="conversationArchived">会話がアーカイブされました</string>
     <string name="conversationUnarchived">会話がアーカイブ解除されました</string>
+    <string name="conversationMarkedAsRead">転換は赤でマークされる</string>
+    <string name="conversationMarkedAsUnread">転換は未読としてマークされる</string>
     <string name="messageDeleted">メッセージが削除されました</string>
     <string name="messageDeletedFailed">メッセージを削除できませんでした</string>
     <string name="conversationDeleted">会話が削除されました</string>

@@ -24,4 +24,8 @@ class ParentSettingsRouter(private val navigation: Navigation, private val activ
     override fun navigateToInboxSignature() {
         navigation.navigate(activity, navigation.inboxSignatureSettings)
     }
+
+    override fun navigateToPrivacySettings() {
+        navigation.navigate(activity, navigation.privacySettings)
+    }
 }

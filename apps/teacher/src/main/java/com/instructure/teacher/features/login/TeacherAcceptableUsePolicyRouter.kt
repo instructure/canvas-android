@@ -20,12 +20,12 @@ import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
+import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.activities.SplashActivity
 import com.instructure.teacher.tasks.TeacherLogoutTask
 
 class TeacherAcceptableUsePolicyRouter(
@@ -41,8 +41,8 @@ class TeacherAcceptableUsePolicyRouter(
     override fun startApp() {
         PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
 
-        val intent = SplashActivity.createIntent(activity, activity.intent?.extras)
-
+        val intent = Intent(activity, CookieConsentActivity::class.java)
+        activity.intent?.extras?.let { intent.putExtras(it) }
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.startActivity(intent)
     }

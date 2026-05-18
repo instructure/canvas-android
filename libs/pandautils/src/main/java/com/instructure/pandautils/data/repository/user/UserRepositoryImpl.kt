@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.ColorChangeResponse
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorUtils.toApiHexString
 
@@ -69,5 +70,10 @@ class UserRepositoryImpl(
             CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
         }
         return result
+    }
+
+    override suspend fun getMobileSettings(forceRefresh: Boolean): DataResult<UserSettings> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return userApi.getSelfMobileSettings(params)
     }
 }

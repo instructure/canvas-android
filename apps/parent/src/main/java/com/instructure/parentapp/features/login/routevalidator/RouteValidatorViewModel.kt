@@ -108,7 +108,7 @@ class RouteValidatorViewModel @Inject constructor(
                     } else {
                         // Log the analytics - only for real logins, not masquerading
                         logQREvent(apiPrefs.domain, true)
-                        postActionWithDelay(RouteValidatorAction.StartMainActivity())
+                        postActionWithDelay(RouteValidatorAction.StartCookieConsent)
                     }
                     return@tryLaunch
                 } catch (e: Throwable) {

@@ -4,9 +4,42 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+  PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+  PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+  ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+  ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+  ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+  ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+  ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+  PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+  PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+  PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+  PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+  GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+  ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+  PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
+
 jobs:
   test-pr:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
 
     steps:
       - name: Checkout PR branch
@@ -20,9 +53,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup open source build
-        run: ./open_source.sh
 
       - name: Run unit tests and generate coverage for PR
         run: |
@@ -51,7 +81,7 @@ jobs:
           retention-days: 1
 
   test-master:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
 
     steps:
       - name: Checkout master branch
@@ -67,9 +97,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-
-      - name: Setup open source build
-        run: ./open_source.sh
 
       - name: Run unit tests and generate coverage for master
         run: |
@@ -98,7 +125,7 @@ jobs:
           retention-days: 1
 
   coverage-report:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     needs: [test-pr, test-master]
     if: always()
 

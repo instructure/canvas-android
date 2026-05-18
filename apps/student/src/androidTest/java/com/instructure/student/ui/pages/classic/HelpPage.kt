@@ -49,7 +49,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private val askInstructorLabel by OnViewWithText(R.string.askInstructor)
     private val searchGuidesLabel by OnViewWithText(R.string.searchGuides)
     private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a Problem")
-    private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
+    private val shareContributionLabel by OnViewWithStringTextIgnoreCase("Share a Contribution")
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
     fun assertAskYourInstructorDialogDetails(course: Course, question: String) {
@@ -109,8 +109,8 @@ class HelpPage : BasePage(R.id.helpDialog) {
         shareLoveLabel.scrollTo().click()
     }
 
-    fun clickSubmitFeatureLabel() {
-        submitFeatureLabel.scrollTo().click()
+    fun clickShareContributionLabel() {
+        shareContributionLabel.scrollTo().click()
     }
 
     fun assertHelpMenuDisplayed() {
@@ -132,8 +132,8 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(withId(R.id.title) + withText(HelpMenu.REPORT_PROBLEM_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.REPORT_PROBLEM_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText(HelpMenu.SUBMIT_FEATURE_TITLE)).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText(HelpMenu.SUBMIT_FEATURE_SUBTITLE)).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SHARE_A_CONTRIBUTION_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SHARE_A_CONTRIBUTION_SUBTITLE)).assertDisplayed()
 
         onView(withId(R.id.title) + withText(HelpMenu.SHARE_LOVE_TITLE)).assertDisplayed()
         onView(withId(R.id.subtitle) + withText(HelpMenu.SHARE_LOVE_SUBTITLE)).assertDisplayed()
@@ -157,7 +157,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
         when (helpMenuText) {
             HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
-            HelpMenu.SUBMIT_FEATURE_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_A_CONTRIBUTION_TITLE -> clickShareContributionLabel()
             HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
         }
 

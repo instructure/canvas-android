@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.ColorChangeResponse
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.utils.DataResult
 
 interface UserRepository {
@@ -32,4 +33,5 @@ interface UserRepository {
     suspend fun getAccount(forceRefresh: Boolean): DataResult<Account>
     suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse>
     suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions>
+    suspend fun getMobileSettings(forceRefresh: Boolean): DataResult<UserSettings>
 }

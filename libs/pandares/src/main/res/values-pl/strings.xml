@@ -428,6 +428,8 @@
     <string name="errorConversationGeneric">Nie można wykonać czynności. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="conversationArchived">Zarchiwizowana rozmowa</string>
     <string name="conversationUnarchived">Niezarchiwizowana rozmowa</string>
+    <string name="conversationMarkedAsRead">Rozmowa oznaczona jako przeczytana.</string>
+    <string name="conversationMarkedAsUnread">Rozmowa oznaczona jako nieprzeczytana.</string>
     <string name="messageDeleted">Usunięto wiadomość</string>
     <string name="messageDeletedFailed">Nie udało się usunąć wiadomości</string>
     <string name="conversationDeleted">Usunięto rozmowę</string>
