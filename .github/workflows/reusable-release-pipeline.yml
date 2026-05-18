@@ -43,6 +43,8 @@ on:
         required: true
       FIREBASE_ANDROID_TEACHER_APP_ID:
         required: true
+      FIREBASE_SERVICE_ACCOUNT_KEY:
+        required: true
       # Private-data env vars (see docs/private-data-migration-plan.md)
       PSPDF_MAVEN_USER:
         required: false
@@ -346,8 +348,6 @@ jobs:
       needs.unit-tests.result == 'success' &&
       needs.flank-tests.result == 'success' &&
       (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
-    outputs:
-      install-url: ${{ steps.distribute.outputs.install-url }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -414,13 +414,13 @@ jobs:
 
       - name: Setup Firebase service account
         env:
-          GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
-          if [ -z "${GCLOUD_KEY}" ]; then
-            echo "Error: GCLOUD_KEY secret is not set"
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: FIREBASE_SERVICE_ACCOUNT_KEY secret is not set"
             exit 1
           fi
-          echo "${GCLOUD_KEY}" > service-account-key.json
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
           chmod 600 service-account-key.json
 
       - name: Install Firebase CLI
@@ -460,40 +460,26 @@ jobs:
             "apps/${APP_NAME}/build/outputs/apk/prod/release/${APP_NAME}-prod-release.apk" \
             --app "${FIREBASE_APP_ID}" \
             --release-notes "RC build from ${BRANCH}" \
-            --groups "Testers" \
-            --json > result.json 2>&1; then
+            --groups "Testers" > result.txt 2>&1; then
             echo "Firebase distribution failed:"
-            cat result.json
+            cat result.txt
             exit 1
           fi
-          install_url=$(jq -r '.result.testingUri // .result.firebaseConsoleUri // empty' result.json)
+          cat result.txt
+          install_url=$(grep -o 'https://appdistribution\.firebase[^[:space:]]*' result.txt | head -1)
           if [ -z "$install_url" ]; then
             echo "Error: Could not extract install URL from Firebase output"
-            cat result.json
+            cat result.txt
             exit 1
           fi
           echo "install-url=$install_url" >> "$GITHUB_OUTPUT"
 
-      - name: Cleanup sensitive files
-        if: always()
-        run: rm -f release.jks service-account-key.json result.json
-
-  slack-notification:
-    name: slack-notification
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs: [build-release-candidate]
-    if: needs.build-release-candidate.result == 'success'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
-
+      # Slack notification runs in the same job to avoid cross-job output redaction:
+      # the install URL contains FIREBASE_ANDROID_*_APP_ID, which is registered as a secret,
+      # so GHA strips it when set as a job-level output.
       - name: Compose Slack payload
         env:
-          INSTALL_URL: ${{ needs.build-release-candidate.outputs.install-url }}
+          INSTALL_URL: ${{ steps.distribute.outputs.install-url }}
           APP_DISPLAY_NAME: ${{ inputs.app-display-name }}
           SLACK_EMOJI: ${{ inputs.slack-emoji }}
           BRANCH: ${{ github.ref_name }}
@@ -553,3 +539,7 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
           payload-file-path: ./slack-payload.json
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f release.jks service-account-key.json result.txt slack-payload.json
