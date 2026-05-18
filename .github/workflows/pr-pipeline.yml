@@ -10,7 +10,7 @@ on:
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event.action != 'labeled' }}
 
 # Private-data env vars consumed by MergePrivateData.kt at build time.
 # Every entry is required; missing values fail the build.
