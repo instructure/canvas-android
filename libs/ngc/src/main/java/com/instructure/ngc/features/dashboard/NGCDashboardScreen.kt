@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.ngc.dashboard
+package com.instructure.ngc.features.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -46,7 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.ngc.R
 import com.instructure.ngc.designsystem.DSIconButton

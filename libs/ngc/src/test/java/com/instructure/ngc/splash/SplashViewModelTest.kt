@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.ngc.features.splash.SplashViewModel
 import com.instructure.pandautils.domain.usecase.splash.LoadSplashDataUseCase
 import com.instructure.pandautils.domain.usecase.splash.SetupPendoTrackingUseCase
 import com.instructure.pandautils.domain.usecase.splash.SplashData

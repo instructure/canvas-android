@@ -14,13 +14,19 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.splash
+package com.instructure.ngc.features.coursehome
 
-import com.instructure.canvasapi2.models.CanvasTheme
-
-data class SplashUiState(
-    val loading: Boolean = true,
-    val error: Boolean = false,
-    val initialDataLoaded: Boolean = false,
-    val themeToApply: CanvasTheme? = null
+data class CourseHomeUiState(
+    val courseName: String = "",
+    val courseImageUrl: String? = null,
+    val selectedTab: CourseHomeTab = CourseHomeTab.HOME,
+    val isLoading: Boolean = true,
+    val isError: Boolean = false,
 )
+
+enum class CourseHomeTab {
+    HOME,
+    MODULES,
+    MY_WORK,
+    MORE;
+}

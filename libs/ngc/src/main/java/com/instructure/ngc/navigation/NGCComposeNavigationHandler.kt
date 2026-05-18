@@ -36,7 +36,7 @@ class NGCComposeNavigationHandler(
     override fun handleCoursesNavigation(event: DashboardNavigationEvent.Courses) {
         when (event) {
             is DashboardNavigationEvent.Courses.NavigateToCourse -> {
-                Log.d(TAG, "NavigateToCourse: courseId=${event.course.id}, courseName=${event.course.name}")
+                navController.navigate(NGCNavigationRoute.CourseHome.createRoute(event.course.id))
             }
             is DashboardNavigationEvent.Courses.NavigateToGroup -> {
                 Log.d(TAG, "NavigateToGroup: groupId=${event.group.id}, groupName=${event.group.name}")
