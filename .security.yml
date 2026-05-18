@@ -1,0 +1,22 @@
+schema_version: 1
+tier: T1
+
+owners:
+  team: "@instructure-internal/mobile"
+  champion: "adam.domonkos@instructure.com"
+  slack: "#mobile"
+
+data_classification:
+    - internal
+
+exposure: public-app
+
+languages:
+    - kotlin
+
+integration:
+  jira_project: MBL
+
+notes: |
+  - This is a user facing, native Android application
+  - Original, opens-source repository: https://github.com/instructure/canvas-android, which should be kept as is
