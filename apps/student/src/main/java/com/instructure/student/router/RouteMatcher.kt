@@ -61,6 +61,7 @@ import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.shouldOpenMediaInternally
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
@@ -790,8 +791,16 @@ object RouteMatcher : BaseRouteMatcher() {
         return openMediaCallbacks!!
     }
 
-    fun openMedia(activity: FragmentActivity?, url: String?) {
-        if (activity != null) {
+    fun shouldOpenInternally(url: String?, mimeType: String? = null, mimeClass: String? = null): Boolean {
+        return shouldOpenMediaInternally(url, mimeType, mimeClass)
+    }
+
+    fun openMedia(activity: FragmentActivity?, url: String?, mimeType: String? = null, mimeClass: String? = null) {
+        if (activity == null) return
+        if (!url.isNullOrBlank() && shouldOpenInternally(url, mimeType, mimeClass)) {
+            val bundle = BaseViewMediaActivity.makeBundle(url, null, mimeType.orEmpty(), null, true)
+            route(activity, Route(bundle, RouteContext.MEDIA))
+        } else {
             openMediaCallbacks = null
             openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url)
             LoaderUtils.restartLoaderWithBundle(
