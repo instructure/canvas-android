@@ -57,7 +57,7 @@ object InstUITextInput {
     val arrowsBackgroundDisabledColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Secondary.disabled()
     val arrowsBorderColor @Composable get() = InstUISemanticColors.Stroke.Interactive.Action.Secondary.base()
     val fontFamily = InstUILayoutTypography.FontFamily.Base.base
-    val fontWeight = InstUILayoutTypography.FontWeight.Body.base
+    val fontWeight = InstUILayoutTypography.FontWeight.Interactive.interactive
     val fontSizeSm = 14.sp
     val fontSizeMd = 16.sp
     val fontSizeLg = 20.sp

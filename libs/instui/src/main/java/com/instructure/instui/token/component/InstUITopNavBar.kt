@@ -20,6 +20,7 @@
 package com.instructure.instui.token.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.instui.token.semantic.InstUILayoutSizes
@@ -39,7 +40,7 @@ object InstUITopNavBar {
         val smallViewportDropdownMenuActiveOptionFontWeight = InstUILayoutTypography.FontWeight.Body.strong
         val smallViewportDropdownMenuActiveOptionIndicatorSpacing = InstUILayoutSizes.Spacing.SpaceXs.spaceXs
         val smallViewportDropdownMenuActiveOptionIndicatorWidth = InstUILayoutSizes.BorderWidth.Lg.lg
-        val activeIndicatorWidth = InstUILayoutSizes.BorderWidth.Md.md
+        // val smallViewportDropdownMenuActiveOptionIndicatorColor: "currentColor" (CSS-specific, not directly usable in Compose)
     }
 
     object TopNavBarBrand {
@@ -52,20 +53,20 @@ object InstUITopNavBar {
         val fontSize = 16.sp
         val fontFamily = InstUILayoutTypography.FontFamily.Base.base
         val fontWeight = InstUILayoutTypography.FontWeight.Body.base
-        val color @Composable get() = InstUISemanticColors.Text.inverse()
-        val colorInverse @Composable get() = InstUISemanticColors.Text.base()
         val itemInlinePadding = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
         val itemSpacing = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
         val iconTextGap = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
         val activeItemFontWeight = InstUILayoutTypography.FontWeight.Body.strong
         val activeItemIndicatorSpacing = InstUILayoutSizes.Spacing.SpaceXs.spaceXs
-        val activeIndicatorColor @Composable get() = InstUISemanticColors.Text.inverse()
+        val activeIndicatorColor = Color(0xFFFFFFFF)
         val activeIndicatorColorInverse @Composable get() = InstUISemanticColors.Text.base()
-        val smallViewportFontSize = 16.sp
+        val activeIndicatorWidth = InstUILayoutSizes.BorderWidth.Md.md
+        // val color: "inherit" (CSS-specific, not directly usable in Compose)
+        // val colorInverse: "inherit" (CSS-specific, not directly usable in Compose)
     }
 
     object TopNavBarLayout {
-        val desktopBackground @Composable get() = InstUISemanticColors.Background.container()
+        val desktopBackground @Composable get() = InstUISemanticColors.Background.dark()
         val desktopBackgroundInverse @Composable get() = InstUISemanticColors.Background.container()
         // val desktopBottomBorder: "none" (CSS-specific, not directly usable in Compose)
         val desktopFontFamily = InstUILayoutTypography.FontFamily.Base.base
@@ -98,11 +99,15 @@ object InstUITopNavBar {
         val smallViewportTrayPosition = "fixed"
         val smallViewportTrayZIndex = "9998"
         val smallViewportZIndex = "10000"
+        val desktopBottomBorderInverse @Composable get() = InstUISemanticColors.Stroke.inverse()
+        val smallViewportFontSize = 14.sp
+        val smallViewportTrayFixTopPosition = "undefined"
+        // val desktopBrandContainerInlineMargin: "0 1.5rem" (CSS-specific, not directly usable in Compose)
+        // val desktopActionItemsContainerInlineMargin: "0.25rem 0" (CSS-specific, not directly usable in Compose)
     }
 
     object TopNavBarMenuItems {
         val desktopItemSpacing = InstUILayoutSizes.Spacing.SpaceLg.spaceLg
-        val desktopMaxWidth = "100%"
         val desktopSubmenuActiveOptionFontWeight = InstUILayoutTypography.FontWeight.Body.strong
         // val desktopSubmenuActiveOptionIndicatorColor: "currentColor" (CSS-specific, not directly usable in Compose)
         val desktopSubmenuActiveOptionIndicatorSpacing = InstUILayoutSizes.Spacing.SpaceXs.spaceXs

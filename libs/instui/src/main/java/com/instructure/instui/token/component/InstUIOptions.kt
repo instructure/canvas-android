@@ -46,7 +46,7 @@ object InstUIOptions {
         /** code only token */
         val beforeLabelContentVOffset = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
         val color @Composable get() = InstUISemanticColors.Text.base()
-        val descriptionColor @Composable get() = InstUISemanticColors.Text.muted()
+        val descriptionColor @Composable get() = InstUISemanticColors.Text.base()
         val descriptionFontSize = 14.sp
         val descriptionFontWeight = InstUILayoutTypography.FontWeight.Body.base
         val descriptionLineHeight = InstUILayoutTypography.LineHeight.Paragraph.base

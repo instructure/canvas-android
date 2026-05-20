@@ -45,7 +45,7 @@ import com.instructure.instui.compose.indicator.Icon
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIHeading
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.ArrowOpenLeft
+import com.instructure.instui.token.icon.chevronLeft
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -127,7 +127,7 @@ fun CollapsingTopBar(
             if (onNavigateBack != null) {
                 IconButton(onClick = onNavigateBack) {
                     Icon(
-                        imageVector = InstUIIcons.Line.ArrowOpenLeft,
+                        imageVector = InstUIIcons.chevronLeft,
                         tint = contentColor,
                     )
                 }

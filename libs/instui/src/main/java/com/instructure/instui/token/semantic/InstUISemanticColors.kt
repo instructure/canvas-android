@@ -75,6 +75,221 @@ object InstUISemanticColors {
             val aurora = InstUIColors.Aurora.aurora100
         }
 
+        object Chart {
+            object Alert {
+                val critical = InstUIColors.Red.red140
+                val danger = InstUIColors.Red.red100
+                val warningMedium = InstUIColors.Orange.orange70
+                val warningLow = InstUIColors.Honey.honey70
+                val success = InstUIColors.Green.green70
+                val info = InstUIColors.Blue.blue100
+                val neutral = InstUIColors.Grey.grey70
+            }
+
+            object Categorical {
+                val color10 = InstUIColors.Blue.blue100
+                val color11 = InstUIColors.Violet.violet70
+                val color00 = InstUIColors.Sky.sky70
+                val color01 = InstUIColors.Violet.violet100
+                val color02 = InstUIColors.Orange.orange70
+                val color03 = InstUIColors.Aurora.aurora100
+                val color04 = InstUIColors.Plum.plum70
+                val color05 = InstUIColors.Sky.sky120
+                val color06 = InstUIColors.Sea.sea70
+                val color07 = InstUIColors.Plum.plum100
+                val color08 = InstUIColors.Honey.honey70
+                val color09 = InstUIColors.Red.red70
+            }
+
+            object CategoricalGroup2 {
+                val color00 = InstUIColors.Violet.violet100
+                val color01 = InstUIColors.Sea.sea70
+            }
+
+            object CategoricalGroup3 {
+                val color00 = InstUIColors.Violet.violet70
+                val color01 = InstUIColors.Sky.sky120
+                val color02 = InstUIColors.Orange.orange70
+            }
+
+            object CategoricalGroup4 {
+                val color00 = InstUIColors.Sky.sky120
+                val color01 = InstUIColors.Honey.honey70
+                val color02 = InstUIColors.Violet.violet100
+                val color03 = InstUIColors.Red.red70
+            }
+
+            object CategoricalGroup5 {
+                val color00 = InstUIColors.Aurora.aurora100
+                val color01 = InstUIColors.Orange.orange70
+                val color02 = InstUIColors.Violet.violet100
+                val color03 = InstUIColors.Sea.sea70
+                val color04 = InstUIColors.Plum.plum100
+            }
+
+            object Diverging {
+                object RedSea {
+                    val red5 = InstUIColors.Red.red180
+                    val red4 = InstUIColors.Red.red160
+                    val red3 = InstUIColors.Red.red140
+                    val red2 = InstUIColors.Red.red120
+                    val red1 = InstUIColors.Red.red80
+                    val grey0 = InstUIColors.Grey.grey70
+                    val sea1 = InstUIColors.Sea.sea80
+                    val sea2 = InstUIColors.Sea.sea120
+                    val sea3 = InstUIColors.Sea.sea140
+                    val sea4 = InstUIColors.Sea.sea160
+                    val sea5 = InstUIColors.Sea.sea180
+                }
+
+                object VioletSea {
+                    val purple5 = InstUIColors.Violet.violet180
+                    val purple4 = InstUIColors.Violet.violet160
+                    val purple3 = InstUIColors.Violet.violet140
+                    val purple2 = InstUIColors.Violet.violet120
+                    val purple1 = InstUIColors.Violet.violet80
+                    val grey0 = InstUIColors.Grey.grey70
+                    val sea1 = InstUIColors.Sea.sea80
+                    val sea2 = InstUIColors.Sea.sea120
+                    val sea3 = InstUIColors.Sea.sea140
+                    val sea4 = InstUIColors.Sea.sea160
+                    val sky5 = InstUIColors.Sea.sea180
+                }
+            }
+
+            object Sequential {
+                object Aurora {
+                    val color0 = InstUIColors.Aurora.aurora70
+                    val color1 = InstUIColors.Aurora.aurora80
+                    val color2 = InstUIColors.Aurora.aurora100
+                    val color3 = InstUIColors.Aurora.aurora120
+                    val color4 = InstUIColors.Aurora.aurora130
+                    val color5 = InstUIColors.Aurora.aurora140
+                    val color6 = InstUIColors.Aurora.aurora150
+                    val color7 = InstUIColors.Aurora.aurora160
+                    val color8 = InstUIColors.Aurora.aurora170
+                    val color9 = InstUIColors.Aurora.aurora180
+                }
+
+                object Blue {
+                    val color0 = InstUIColors.Blue.blue70
+                    val color1 = InstUIColors.Blue.blue80
+                    val color2 = InstUIColors.Blue.blue100
+                    val color3 = InstUIColors.Blue.blue120
+                    val color4 = InstUIColors.Blue.blue130
+                    val color5 = InstUIColors.Blue.blue140
+                    val color6 = InstUIColors.Blue.blue150
+                    val color7 = InstUIColors.Blue.blue160
+                    val color8 = InstUIColors.Blue.blue170
+                    val color9 = InstUIColors.Blue.blue180
+                }
+
+                object Green {
+                    val color0 = InstUIColors.Green.green70
+                    val color1 = InstUIColors.Green.green80
+                    val color2 = InstUIColors.Green.green100
+                    val color3 = InstUIColors.Green.green120
+                    val color4 = InstUIColors.Green.green130
+                    val color5 = InstUIColors.Green.green140
+                    val color6 = InstUIColors.Green.green150
+                    val color7 = InstUIColors.Green.green160
+                    val color8 = InstUIColors.Green.green170
+                    val color9 = InstUIColors.Green.green180
+                }
+
+                object Honey {
+                    val color0 = InstUIColors.Honey.honey70
+                    val color1 = InstUIColors.Honey.honey80
+                    val color2 = InstUIColors.Honey.honey100
+                    val color3 = InstUIColors.Honey.honey120
+                    val color4 = InstUIColors.Honey.honey130
+                    val color5 = InstUIColors.Honey.honey140
+                    val color6 = InstUIColors.Honey.honey150
+                    val color7 = InstUIColors.Honey.honey160
+                    val color8 = InstUIColors.Honey.honey170
+                    val color9 = InstUIColors.Honey.honey180
+                }
+
+                object Orange {
+                    val color0 = InstUIColors.Orange.orange70
+                    val color1 = InstUIColors.Orange.orange80
+                    val color2 = InstUIColors.Orange.orange100
+                    val color3 = InstUIColors.Orange.orange120
+                    val color4 = InstUIColors.Orange.orange130
+                    val color5 = InstUIColors.Orange.orange140
+                    val color6 = InstUIColors.Orange.orange150
+                    val color7 = InstUIColors.Orange.orange160
+                    val color8 = InstUIColors.Orange.orange170
+                    val color9 = InstUIColors.Orange.orange180
+                }
+
+                object Plum {
+                    val color0 = InstUIColors.Plum.plum70
+                    val color1 = InstUIColors.Plum.plum80
+                    val color2 = InstUIColors.Plum.plum100
+                    val color3 = InstUIColors.Plum.plum120
+                    val color4 = InstUIColors.Plum.plum130
+                    val color5 = InstUIColors.Plum.plum140
+                    val color6 = InstUIColors.Plum.plum150
+                    val color7 = InstUIColors.Plum.plum160
+                    val color8 = InstUIColors.Plum.plum170
+                    val color9 = InstUIColors.Plum.plum180
+                }
+
+                object Red {
+                    val color0 = InstUIColors.Red.red70
+                    val color1 = InstUIColors.Red.red80
+                    val color2 = InstUIColors.Red.red100
+                    val color3 = InstUIColors.Red.red120
+                    val color4 = InstUIColors.Red.red130
+                    val color5 = InstUIColors.Red.red140
+                    val color6 = InstUIColors.Red.red150
+                    val color7 = InstUIColors.Red.red160
+                    val color8 = InstUIColors.Red.red170
+                    val color9 = InstUIColors.Red.red180
+                }
+
+                object Sea {
+                    val color0 = InstUIColors.Sea.sea70
+                    val color1 = InstUIColors.Sea.sea80
+                    val color2 = InstUIColors.Sea.sea100
+                    val color3 = InstUIColors.Sea.sea120
+                    val color4 = InstUIColors.Sea.sea130
+                    val color5 = InstUIColors.Sea.sea140
+                    val color6 = InstUIColors.Sea.sea150
+                    val color7 = InstUIColors.Sea.sea160
+                    val color8 = InstUIColors.Sea.sea170
+                    val color9 = InstUIColors.Sea.sea180
+                }
+
+                object Sky {
+                    val color0 = InstUIColors.Sky.sky70
+                    val color1 = InstUIColors.Sky.sky80
+                    val color2 = InstUIColors.Sky.sky100
+                    val color3 = InstUIColors.Sky.sky120
+                    val color4 = InstUIColors.Sky.sky130
+                    val color5 = InstUIColors.Sky.sky140
+                    val color6 = InstUIColors.Sky.sky150
+                    val color7 = InstUIColors.Sky.sky160
+                    val color8 = InstUIColors.Sky.sky170
+                    val color9 = InstUIColors.Sky.sky180
+                }
+
+                object Violet {
+                    val color0 = InstUIColors.Violet.violet70
+                    val color1 = InstUIColors.Violet.violet80
+                    val color2 = InstUIColors.Violet.violet100
+                    val color3 = InstUIColors.Violet.violet120
+                    val color4 = InstUIColors.Violet.violet130
+                    val color5 = InstUIColors.Violet.violet140
+                    val color6 = InstUIColors.Violet.violet150
+                    val color7 = InstUIColors.Violet.violet160
+                    val color8 = InstUIColors.Violet.violet170
+                    val color9 = InstUIColors.Violet.violet180
+                }
+            }
+        }
+
         object Divider {
             val base = InstUIColors.Grey.grey40
             val onColor = InstUIColors.white
@@ -141,7 +356,7 @@ object InstUISemanticColors {
                 object Primary {
                     val base = InstUIColors.Navy.navy170
                     val hover = InstUIColors.Navy.navy150
-                    val active = InstUIColors.Navy.navy180
+                    val active = InstUIColors.Navy.navy190
                     val disabled = InstUIColors.Grey.grey30
                 }
 
@@ -403,7 +618,7 @@ object InstUISemanticColors {
                 object Primary {
                     val base = InstUIColors.Navy.navy170
                     val hover = InstUIColors.Navy.navy150
-                    val active = InstUIColors.Navy.navy180
+                    val active = InstUIColors.Navy.navy190
                     val disabled = InstUIColors.Grey.grey30
                 }
 
@@ -596,14 +811,14 @@ object InstUISemanticColors {
     // Dark theme values
     object Dark {
     object Background {
-        val base = InstUIColors.Grey.grey180
+        val base = InstUIColors.Grey.grey200
         val muted = InstUIColors.Grey.grey170
         val mutedHover = InstUIColors.Grey.grey180
-        val page = InstUIColors.Grey.grey180
-        val container = InstUIColors.Grey.grey170
+        val page = InstUIColors.Grey.grey200
+        val container = InstUIColors.Grey.grey180
         val onColor = InstUIColors.white
         val inverse = InstUIColors.Grey.grey10
-        val dark = InstUIColors.Grey.grey170
+        val dark = InstUIColors.Grey.grey180
         val success = InstUIColors.Green.green100
         val error = InstUIColors.Red.red100
         val warning = InstUIColors.Orange.orange100
@@ -631,13 +846,228 @@ object InstUISemanticColors {
             val aurora = InstUIColors.Aurora.aurora100
         }
 
+        object Chart {
+            object Alert {
+                val critical = InstUIColors.Red.red100
+                val danger = InstUIColors.Red.red80
+                val warningMedium = InstUIColors.Orange.orange50
+                val warningLow = InstUIColors.Honey.honey50
+                val success = InstUIColors.Green.green60
+                val info = InstUIColors.Blue.blue70
+                val neutral = InstUIColors.Grey.grey60
+            }
+
+            object Categorical {
+                val color10 = InstUIColors.Blue.blue80
+                val color11 = InstUIColors.Violet.violet50
+                val color00 = InstUIColors.Sky.sky50
+                val color01 = InstUIColors.Violet.violet80
+                val color02 = InstUIColors.Orange.orange50
+                val color03 = InstUIColors.Aurora.aurora80
+                val color04 = InstUIColors.Plum.plum50
+                val color05 = InstUIColors.Sky.sky80
+                val color06 = InstUIColors.Sea.sea50
+                val color07 = InstUIColors.Plum.plum80
+                val color08 = InstUIColors.Honey.honey50
+                val color09 = InstUIColors.Red.red50
+            }
+
+            object CategoricalGroup2 {
+                val color00 = InstUIColors.Violet.violet80
+                val color01 = InstUIColors.Sea.sea50
+            }
+
+            object CategoricalGroup3 {
+                val color00 = InstUIColors.Violet.violet50
+                val color01 = InstUIColors.Sky.sky80
+                val color02 = InstUIColors.Orange.orange50
+            }
+
+            object CategoricalGroup4 {
+                val color00 = InstUIColors.Sky.sky80
+                val color01 = InstUIColors.Honey.honey50
+                val color02 = InstUIColors.Violet.violet80
+                val color03 = InstUIColors.Red.red50
+            }
+
+            object CategoricalGroup5 {
+                val color00 = InstUIColors.Aurora.aurora80
+                val color01 = InstUIColors.Orange.orange50
+                val color02 = InstUIColors.Violet.violet80
+                val color03 = InstUIColors.Sea.sea50
+                val color04 = InstUIColors.Plum.plum80
+            }
+
+            object Diverging {
+                object RedSea {
+                    val red5 = InstUIColors.Red.red80
+                    val red4 = InstUIColors.Red.red70
+                    val red3 = InstUIColors.Red.red50
+                    val red2 = InstUIColors.Red.red40
+                    val red1 = InstUIColors.Red.red30
+                    val grey0 = InstUIColors.Grey.grey20
+                    val sea1 = InstUIColors.Sea.sea30
+                    val sea2 = InstUIColors.Sea.sea40
+                    val sea3 = InstUIColors.Sea.sea50
+                    val sea4 = InstUIColors.Sea.sea70
+                    val sea5 = InstUIColors.Sea.sea80
+                }
+
+                object VioletSea {
+                    val purple5 = InstUIColors.Violet.violet80
+                    val purple4 = InstUIColors.Violet.violet70
+                    val purple3 = InstUIColors.Violet.violet50
+                    val purple2 = InstUIColors.Violet.violet40
+                    val purple1 = InstUIColors.Violet.violet30
+                    val grey0 = InstUIColors.Grey.grey20
+                    val sea1 = InstUIColors.Sea.sea30
+                    val sea2 = InstUIColors.Sea.sea40
+                    val sea3 = InstUIColors.Sea.sea50
+                    val sea4 = InstUIColors.Sea.sea70
+                    val sky5 = InstUIColors.Sea.sea80
+                }
+            }
+
+            object Sequential {
+                object Aurora {
+                    val color0 = InstUIColors.Aurora.aurora10
+                    val color1 = InstUIColors.Aurora.aurora20
+                    val color2 = InstUIColors.Aurora.aurora30
+                    val color3 = InstUIColors.Aurora.aurora40
+                    val color4 = InstUIColors.Aurora.aurora50
+                    val color5 = InstUIColors.Aurora.aurora50
+                    val color6 = InstUIColors.Aurora.aurora70
+                    val color7 = InstUIColors.Aurora.aurora80
+                    val color8 = InstUIColors.Aurora.aurora90
+                    val color9 = InstUIColors.Aurora.aurora100
+                }
+
+                object Blue {
+                    val color0 = InstUIColors.Blue.blue10
+                    val color1 = InstUIColors.Blue.blue20
+                    val color2 = InstUIColors.Blue.blue30
+                    val color3 = InstUIColors.Blue.blue40
+                    val color4 = InstUIColors.Blue.blue50
+                    val color5 = InstUIColors.Blue.blue60
+                    val color6 = InstUIColors.Blue.blue70
+                    val color7 = InstUIColors.Blue.blue80
+                    val color8 = InstUIColors.Blue.blue90
+                    val color9 = InstUIColors.Blue.blue100
+                }
+
+                object Green {
+                    val color0 = InstUIColors.Green.green10
+                    val color1 = InstUIColors.Green.green20
+                    val color2 = InstUIColors.Green.green30
+                    val color3 = InstUIColors.Green.green40
+                    val color4 = InstUIColors.Green.green50
+                    val color5 = InstUIColors.Green.green60
+                    val color6 = InstUIColors.Green.green70
+                    val color7 = InstUIColors.Green.green80
+                    val color8 = InstUIColors.Green.green90
+                    val color9 = InstUIColors.Green.green100
+                }
+
+                object Honey {
+                    val color0 = InstUIColors.Honey.honey10
+                    val color1 = InstUIColors.Honey.honey20
+                    val color2 = InstUIColors.Honey.honey30
+                    val color3 = InstUIColors.Honey.honey40
+                    val color4 = InstUIColors.Honey.honey50
+                    val color5 = InstUIColors.Honey.honey60
+                    val color6 = InstUIColors.Honey.honey70
+                    val color7 = InstUIColors.Honey.honey80
+                    val color8 = InstUIColors.Honey.honey90
+                    val color9 = InstUIColors.Honey.honey100
+                }
+
+                object Orange {
+                    val color0 = InstUIColors.Orange.orange10
+                    val color1 = InstUIColors.Orange.orange20
+                    val color2 = InstUIColors.Orange.orange30
+                    val color3 = InstUIColors.Orange.orange40
+                    val color4 = InstUIColors.Orange.orange50
+                    val color5 = InstUIColors.Orange.orange60
+                    val color6 = InstUIColors.Orange.orange70
+                    val color7 = InstUIColors.Orange.orange80
+                    val color8 = InstUIColors.Orange.orange90
+                    val color9 = InstUIColors.Orange.orange100
+                }
+
+                object Plum {
+                    val color0 = InstUIColors.Plum.plum10
+                    val color1 = InstUIColors.Plum.plum20
+                    val color2 = InstUIColors.Plum.plum30
+                    val color3 = InstUIColors.Plum.plum40
+                    val color4 = InstUIColors.Plum.plum50
+                    val color5 = InstUIColors.Plum.plum60
+                    val color6 = InstUIColors.Plum.plum70
+                    val color7 = InstUIColors.Plum.plum80
+                    val color8 = InstUIColors.Plum.plum90
+                    val color9 = InstUIColors.Plum.plum100
+                }
+
+                object Red {
+                    val color0 = InstUIColors.Red.red10
+                    val color1 = InstUIColors.Red.red20
+                    val color2 = InstUIColors.Red.red30
+                    val color3 = InstUIColors.Red.red40
+                    val color4 = InstUIColors.Red.red50
+                    val color5 = InstUIColors.Red.red60
+                    val color6 = InstUIColors.Red.red70
+                    val color7 = InstUIColors.Red.red80
+                    val color8 = InstUIColors.Red.red90
+                    val color9 = InstUIColors.Red.red100
+                }
+
+                object Sea {
+                    val color0 = InstUIColors.Sea.sea10
+                    val color1 = InstUIColors.Sea.sea20
+                    val color2 = InstUIColors.Sea.sea30
+                    val color3 = InstUIColors.Sea.sea40
+                    val color4 = InstUIColors.Sea.sea50
+                    val color5 = InstUIColors.Sea.sea60
+                    val color6 = InstUIColors.Sea.sea70
+                    val color7 = InstUIColors.Sea.sea80
+                    val color8 = InstUIColors.Sea.sea90
+                    val color9 = InstUIColors.Sea.sea100
+                }
+
+                object Sky {
+                    val color0 = InstUIColors.Sky.sky10
+                    val color1 = InstUIColors.Sky.sky20
+                    val color2 = InstUIColors.Sky.sky30
+                    val color3 = InstUIColors.Sky.sky40
+                    val color4 = InstUIColors.Sky.sky50
+                    val color5 = InstUIColors.Sky.sky60
+                    val color6 = InstUIColors.Sky.sky70
+                    val color7 = InstUIColors.Sky.sky80
+                    val color8 = InstUIColors.Sky.sky90
+                    val color9 = InstUIColors.Sky.sky100
+                }
+
+                object Violet {
+                    val color0 = InstUIColors.Violet.violet10
+                    val color1 = InstUIColors.Violet.violet20
+                    val color2 = InstUIColors.Violet.violet30
+                    val color3 = InstUIColors.Violet.violet40
+                    val color4 = InstUIColors.Violet.violet50
+                    val color5 = InstUIColors.Violet.violet60
+                    val color6 = InstUIColors.Violet.violet70
+                    val color7 = InstUIColors.Violet.violet80
+                    val color8 = InstUIColors.Violet.violet90
+                    val color9 = InstUIColors.Violet.violet100
+                }
+            }
+        }
+
         object Divider {
             val base = InstUIColors.Grey.grey140
             val onColor = InstUIColors.Grey.grey180
         }
 
         object ElevatedSurface {
-            val base = InstUIColors.Grey.grey170
+            val base = InstUIColors.Grey.grey190
             val inverse = InstUIColors.Grey.grey10
         }
 
@@ -734,7 +1164,7 @@ object InstUISemanticColors {
             }
 
             object Input {
-                val base = InstUIColors.Grey.grey180
+                val base = InstUIColors.Grey.grey190
                 val hover = InstUIColors.Grey.grey170
                 val readonly = InstUIColors.Grey.grey100
                 val disabled = InstUIColors.Grey.grey150
@@ -749,8 +1179,8 @@ object InstUISemanticColors {
     }
 
     object Text {
-        val base = InstUIColors.white
-        val muted = InstUIColors.Grey.grey60
+        val base = InstUIColors.Grey.grey10
+        val muted = InstUIColors.Grey.grey50
         val success = InstUIColors.Green.green50
         val error = InstUIColors.Red.red50
         val warning = InstUIColors.Orange.orange50
@@ -885,7 +1315,7 @@ object InstUISemanticColors {
 
     object Stroke {
         val base = InstUIColors.Grey.grey100
-        val muted = InstUIColors.Grey.grey140
+        val muted = InstUIColors.Grey.grey160
         val strong = InstUIColors.Grey.grey60
         val success = InstUIColors.Green.green100
         val error = InstUIColors.Red.red100
@@ -1215,6 +1645,376 @@ object InstUISemanticColors {
             fun sea() = if (isSystemInDarkTheme()) Dark.Background.Accent.sea else Light.Background.Accent.sea
             @Composable
             fun aurora() = if (isSystemInDarkTheme()) Dark.Background.Accent.aurora else Light.Background.Accent.aurora
+        }
+
+        object Chart {
+            object Alert {
+                @Composable
+                fun critical() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.critical else Light.Background.Chart.Alert.critical
+                @Composable
+                fun danger() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.danger else Light.Background.Chart.Alert.danger
+                @Composable
+                fun warningMedium() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.warningMedium else Light.Background.Chart.Alert.warningMedium
+                @Composable
+                fun warningLow() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.warningLow else Light.Background.Chart.Alert.warningLow
+                @Composable
+                fun success() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.success else Light.Background.Chart.Alert.success
+                @Composable
+                fun info() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.info else Light.Background.Chart.Alert.info
+                @Composable
+                fun neutral() = if (isSystemInDarkTheme()) Dark.Background.Chart.Alert.neutral else Light.Background.Chart.Alert.neutral
+            }
+
+            object Categorical {
+                @Composable
+                fun color10() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color10 else Light.Background.Chart.Categorical.color10
+                @Composable
+                fun color11() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color11 else Light.Background.Chart.Categorical.color11
+                @Composable
+                fun color00() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color00 else Light.Background.Chart.Categorical.color00
+                @Composable
+                fun color01() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color01 else Light.Background.Chart.Categorical.color01
+                @Composable
+                fun color02() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color02 else Light.Background.Chart.Categorical.color02
+                @Composable
+                fun color03() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color03 else Light.Background.Chart.Categorical.color03
+                @Composable
+                fun color04() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color04 else Light.Background.Chart.Categorical.color04
+                @Composable
+                fun color05() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color05 else Light.Background.Chart.Categorical.color05
+                @Composable
+                fun color06() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color06 else Light.Background.Chart.Categorical.color06
+                @Composable
+                fun color07() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color07 else Light.Background.Chart.Categorical.color07
+                @Composable
+                fun color08() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color08 else Light.Background.Chart.Categorical.color08
+                @Composable
+                fun color09() = if (isSystemInDarkTheme()) Dark.Background.Chart.Categorical.color09 else Light.Background.Chart.Categorical.color09
+            }
+
+            object CategoricalGroup2 {
+                @Composable
+                fun color00() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup2.color00 else Light.Background.Chart.CategoricalGroup2.color00
+                @Composable
+                fun color01() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup2.color01 else Light.Background.Chart.CategoricalGroup2.color01
+            }
+
+            object CategoricalGroup3 {
+                @Composable
+                fun color00() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup3.color00 else Light.Background.Chart.CategoricalGroup3.color00
+                @Composable
+                fun color01() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup3.color01 else Light.Background.Chart.CategoricalGroup3.color01
+                @Composable
+                fun color02() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup3.color02 else Light.Background.Chart.CategoricalGroup3.color02
+            }
+
+            object CategoricalGroup4 {
+                @Composable
+                fun color00() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup4.color00 else Light.Background.Chart.CategoricalGroup4.color00
+                @Composable
+                fun color01() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup4.color01 else Light.Background.Chart.CategoricalGroup4.color01
+                @Composable
+                fun color02() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup4.color02 else Light.Background.Chart.CategoricalGroup4.color02
+                @Composable
+                fun color03() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup4.color03 else Light.Background.Chart.CategoricalGroup4.color03
+            }
+
+            object CategoricalGroup5 {
+                @Composable
+                fun color00() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup5.color00 else Light.Background.Chart.CategoricalGroup5.color00
+                @Composable
+                fun color01() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup5.color01 else Light.Background.Chart.CategoricalGroup5.color01
+                @Composable
+                fun color02() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup5.color02 else Light.Background.Chart.CategoricalGroup5.color02
+                @Composable
+                fun color03() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup5.color03 else Light.Background.Chart.CategoricalGroup5.color03
+                @Composable
+                fun color04() = if (isSystemInDarkTheme()) Dark.Background.Chart.CategoricalGroup5.color04 else Light.Background.Chart.CategoricalGroup5.color04
+            }
+
+            object Diverging {
+                object RedSea {
+                    @Composable
+                    fun red5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.red5 else Light.Background.Chart.Diverging.RedSea.red5
+                    @Composable
+                    fun red4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.red4 else Light.Background.Chart.Diverging.RedSea.red4
+                    @Composable
+                    fun red3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.red3 else Light.Background.Chart.Diverging.RedSea.red3
+                    @Composable
+                    fun red2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.red2 else Light.Background.Chart.Diverging.RedSea.red2
+                    @Composable
+                    fun red1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.red1 else Light.Background.Chart.Diverging.RedSea.red1
+                    @Composable
+                    fun grey0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.grey0 else Light.Background.Chart.Diverging.RedSea.grey0
+                    @Composable
+                    fun sea1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.sea1 else Light.Background.Chart.Diverging.RedSea.sea1
+                    @Composable
+                    fun sea2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.sea2 else Light.Background.Chart.Diverging.RedSea.sea2
+                    @Composable
+                    fun sea3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.sea3 else Light.Background.Chart.Diverging.RedSea.sea3
+                    @Composable
+                    fun sea4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.sea4 else Light.Background.Chart.Diverging.RedSea.sea4
+                    @Composable
+                    fun sea5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.RedSea.sea5 else Light.Background.Chart.Diverging.RedSea.sea5
+                }
+
+                object VioletSea {
+                    @Composable
+                    fun purple5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.purple5 else Light.Background.Chart.Diverging.VioletSea.purple5
+                    @Composable
+                    fun purple4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.purple4 else Light.Background.Chart.Diverging.VioletSea.purple4
+                    @Composable
+                    fun purple3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.purple3 else Light.Background.Chart.Diverging.VioletSea.purple3
+                    @Composable
+                    fun purple2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.purple2 else Light.Background.Chart.Diverging.VioletSea.purple2
+                    @Composable
+                    fun purple1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.purple1 else Light.Background.Chart.Diverging.VioletSea.purple1
+                    @Composable
+                    fun grey0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.grey0 else Light.Background.Chart.Diverging.VioletSea.grey0
+                    @Composable
+                    fun sea1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.sea1 else Light.Background.Chart.Diverging.VioletSea.sea1
+                    @Composable
+                    fun sea2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.sea2 else Light.Background.Chart.Diverging.VioletSea.sea2
+                    @Composable
+                    fun sea3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.sea3 else Light.Background.Chart.Diverging.VioletSea.sea3
+                    @Composable
+                    fun sea4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.sea4 else Light.Background.Chart.Diverging.VioletSea.sea4
+                    @Composable
+                    fun sky5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Diverging.VioletSea.sky5 else Light.Background.Chart.Diverging.VioletSea.sky5
+                }
+            }
+
+            object Sequential {
+                object Aurora {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color0 else Light.Background.Chart.Sequential.Aurora.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color1 else Light.Background.Chart.Sequential.Aurora.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color2 else Light.Background.Chart.Sequential.Aurora.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color3 else Light.Background.Chart.Sequential.Aurora.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color4 else Light.Background.Chart.Sequential.Aurora.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color5 else Light.Background.Chart.Sequential.Aurora.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color6 else Light.Background.Chart.Sequential.Aurora.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color7 else Light.Background.Chart.Sequential.Aurora.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color8 else Light.Background.Chart.Sequential.Aurora.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Aurora.color9 else Light.Background.Chart.Sequential.Aurora.color9
+                }
+
+                object Blue {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color0 else Light.Background.Chart.Sequential.Blue.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color1 else Light.Background.Chart.Sequential.Blue.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color2 else Light.Background.Chart.Sequential.Blue.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color3 else Light.Background.Chart.Sequential.Blue.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color4 else Light.Background.Chart.Sequential.Blue.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color5 else Light.Background.Chart.Sequential.Blue.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color6 else Light.Background.Chart.Sequential.Blue.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color7 else Light.Background.Chart.Sequential.Blue.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color8 else Light.Background.Chart.Sequential.Blue.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Blue.color9 else Light.Background.Chart.Sequential.Blue.color9
+                }
+
+                object Green {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color0 else Light.Background.Chart.Sequential.Green.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color1 else Light.Background.Chart.Sequential.Green.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color2 else Light.Background.Chart.Sequential.Green.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color3 else Light.Background.Chart.Sequential.Green.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color4 else Light.Background.Chart.Sequential.Green.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color5 else Light.Background.Chart.Sequential.Green.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color6 else Light.Background.Chart.Sequential.Green.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color7 else Light.Background.Chart.Sequential.Green.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color8 else Light.Background.Chart.Sequential.Green.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Green.color9 else Light.Background.Chart.Sequential.Green.color9
+                }
+
+                object Honey {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color0 else Light.Background.Chart.Sequential.Honey.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color1 else Light.Background.Chart.Sequential.Honey.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color2 else Light.Background.Chart.Sequential.Honey.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color3 else Light.Background.Chart.Sequential.Honey.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color4 else Light.Background.Chart.Sequential.Honey.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color5 else Light.Background.Chart.Sequential.Honey.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color6 else Light.Background.Chart.Sequential.Honey.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color7 else Light.Background.Chart.Sequential.Honey.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color8 else Light.Background.Chart.Sequential.Honey.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Honey.color9 else Light.Background.Chart.Sequential.Honey.color9
+                }
+
+                object Orange {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color0 else Light.Background.Chart.Sequential.Orange.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color1 else Light.Background.Chart.Sequential.Orange.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color2 else Light.Background.Chart.Sequential.Orange.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color3 else Light.Background.Chart.Sequential.Orange.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color4 else Light.Background.Chart.Sequential.Orange.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color5 else Light.Background.Chart.Sequential.Orange.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color6 else Light.Background.Chart.Sequential.Orange.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color7 else Light.Background.Chart.Sequential.Orange.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color8 else Light.Background.Chart.Sequential.Orange.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Orange.color9 else Light.Background.Chart.Sequential.Orange.color9
+                }
+
+                object Plum {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color0 else Light.Background.Chart.Sequential.Plum.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color1 else Light.Background.Chart.Sequential.Plum.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color2 else Light.Background.Chart.Sequential.Plum.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color3 else Light.Background.Chart.Sequential.Plum.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color4 else Light.Background.Chart.Sequential.Plum.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color5 else Light.Background.Chart.Sequential.Plum.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color6 else Light.Background.Chart.Sequential.Plum.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color7 else Light.Background.Chart.Sequential.Plum.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color8 else Light.Background.Chart.Sequential.Plum.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Plum.color9 else Light.Background.Chart.Sequential.Plum.color9
+                }
+
+                object Red {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color0 else Light.Background.Chart.Sequential.Red.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color1 else Light.Background.Chart.Sequential.Red.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color2 else Light.Background.Chart.Sequential.Red.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color3 else Light.Background.Chart.Sequential.Red.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color4 else Light.Background.Chart.Sequential.Red.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color5 else Light.Background.Chart.Sequential.Red.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color6 else Light.Background.Chart.Sequential.Red.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color7 else Light.Background.Chart.Sequential.Red.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color8 else Light.Background.Chart.Sequential.Red.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Red.color9 else Light.Background.Chart.Sequential.Red.color9
+                }
+
+                object Sea {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color0 else Light.Background.Chart.Sequential.Sea.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color1 else Light.Background.Chart.Sequential.Sea.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color2 else Light.Background.Chart.Sequential.Sea.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color3 else Light.Background.Chart.Sequential.Sea.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color4 else Light.Background.Chart.Sequential.Sea.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color5 else Light.Background.Chart.Sequential.Sea.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color6 else Light.Background.Chart.Sequential.Sea.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color7 else Light.Background.Chart.Sequential.Sea.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color8 else Light.Background.Chart.Sequential.Sea.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sea.color9 else Light.Background.Chart.Sequential.Sea.color9
+                }
+
+                object Sky {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color0 else Light.Background.Chart.Sequential.Sky.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color1 else Light.Background.Chart.Sequential.Sky.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color2 else Light.Background.Chart.Sequential.Sky.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color3 else Light.Background.Chart.Sequential.Sky.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color4 else Light.Background.Chart.Sequential.Sky.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color5 else Light.Background.Chart.Sequential.Sky.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color6 else Light.Background.Chart.Sequential.Sky.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color7 else Light.Background.Chart.Sequential.Sky.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color8 else Light.Background.Chart.Sequential.Sky.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Sky.color9 else Light.Background.Chart.Sequential.Sky.color9
+                }
+
+                object Violet {
+                    @Composable
+                    fun color0() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color0 else Light.Background.Chart.Sequential.Violet.color0
+                    @Composable
+                    fun color1() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color1 else Light.Background.Chart.Sequential.Violet.color1
+                    @Composable
+                    fun color2() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color2 else Light.Background.Chart.Sequential.Violet.color2
+                    @Composable
+                    fun color3() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color3 else Light.Background.Chart.Sequential.Violet.color3
+                    @Composable
+                    fun color4() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color4 else Light.Background.Chart.Sequential.Violet.color4
+                    @Composable
+                    fun color5() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color5 else Light.Background.Chart.Sequential.Violet.color5
+                    @Composable
+                    fun color6() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color6 else Light.Background.Chart.Sequential.Violet.color6
+                    @Composable
+                    fun color7() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color7 else Light.Background.Chart.Sequential.Violet.color7
+                    @Composable
+                    fun color8() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color8 else Light.Background.Chart.Sequential.Violet.color8
+                    @Composable
+                    fun color9() = if (isSystemInDarkTheme()) Dark.Background.Chart.Sequential.Violet.color9 else Light.Background.Chart.Sequential.Violet.color9
+                }
+            }
         }
 
         object Divider {

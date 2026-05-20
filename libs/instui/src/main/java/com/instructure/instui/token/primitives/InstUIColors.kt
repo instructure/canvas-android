@@ -59,7 +59,9 @@ object InstUIColors {
         val aurora150 = Color(0xFF014B34)
         val aurora160 = Color(0xFF01442F)
         val aurora170 = Color(0xFF033B29)
-        val aurora180 = Color(0xFF051F15)
+        val aurora180 = Color(0xFF0D271D)
+        val aurora190 = Color(0xFF051F15)
+        val aurora200 = Color(0xFF00190F)
     }
 
     object Blue {
@@ -80,7 +82,9 @@ object InstUIColors {
         val blue150 = Color(0xFF14446D)
         val blue160 = Color(0xFF123E62)
         val blue170 = Color(0xFF103656)
-        val blue180 = Color(0xFF0A1C2D)
+        val blue180 = Color(0xFF112335)
+        val blue190 = Color(0xFF0A1C2D)
+        val blue200 = Color(0xFF00142A)
     }
 
     object Green {
@@ -101,7 +105,9 @@ object InstUIColors {
         val green150 = Color(0xFF004D1F)
         val green160 = Color(0xFF01451B)
         val green170 = Color(0xFF033C18)
-        val green180 = Color(0xFF051F09)
+        val green180 = Color(0xFF0D2812)
+        val green190 = Color(0xFF051F09)
+        val green200 = Color(0xFF011A05)
     }
 
     object Grey {
@@ -123,6 +129,8 @@ object InstUIColors {
         val grey160 = Color(0xFF2D3D49)
         val grey170 = Color(0xFF273540)
         val grey180 = Color(0xFF1C222B)
+        val grey190 = Color(0xFF171B21)
+        val grey200 = Color(0xFF10141A)
     }
 
     object Honey {
@@ -143,7 +151,9 @@ object InstUIColors {
         val honey150 = Color(0xFF563D00)
         val honey160 = Color(0xFF4D3600)
         val honey170 = Color(0xFF432F01)
-        val honey180 = Color(0xFF221905)
+        val honey180 = Color(0xFF2A200C)
+        val honey190 = Color(0xFF221905)
+        val honey200 = Color(0xFF1C1200)
     }
 
     object Navy {
@@ -164,7 +174,9 @@ object InstUIColors {
         val navy150 = Color(0xFF234465)
         val navy160 = Color(0xFF213D5B)
         val navy170 = Color(0xFF1D354F)
-        val navy180 = Color(0xFF061C30)
+        val navy180 = Color(0xFF0D2338)
+        val navy190 = Color(0xFF061C30)
+        val navy200 = Color(0xFF00152A)
     }
 
     object Orange {
@@ -185,7 +197,9 @@ object InstUIColors {
         val orange150 = Color(0xFF742700)
         val orange160 = Color(0xFF682400)
         val orange170 = Color(0xFF5A2002)
-        val orange180 = Color(0xFF2B1405)
+        val orange180 = Color(0xFF321B0B)
+        val orange190 = Color(0xFF2B1405)
+        val orange200 = Color(0xFF230D00)
     }
 
     object Plum {
@@ -206,7 +220,9 @@ object InstUIColors {
         val plum150 = Color(0xFF702254)
         val plum160 = Color(0xFF651E4C)
         val plum170 = Color(0xFF591B42)
-        val plum180 = Color(0xFF2F0E23)
+        val plum180 = Color(0xFF351428)
+        val plum190 = Color(0xFF2F0E23)
+        val plum200 = Color(0xFF26051A)
     }
 
     object Red {
@@ -227,7 +243,9 @@ object InstUIColors {
         val red150 = Color(0xFF810F12)
         val red160 = Color(0xFF750D0F)
         val red170 = Color(0xFF670C0C)
-        val red180 = Color(0xFF311007)
+        val red180 = Color(0xFF38160D)
+        val red190 = Color(0xFF311007)
+        val red200 = Color(0xFF270903)
     }
 
     object Sea {
@@ -248,7 +266,9 @@ object InstUIColors {
         val sea150 = Color(0xFF014A53)
         val sea160 = Color(0xFF00424A)
         val sea170 = Color(0xFF023941)
-        val sea180 = Color(0xFF051E22)
+        val sea180 = Color(0xFF0D262A)
+        val sea190 = Color(0xFF051E22)
+        val sea200 = Color(0xFF00181B)
     }
 
     object Sky {
@@ -269,7 +289,9 @@ object InstUIColors {
         val sky150 = Color(0xFF094762)
         val sky160 = Color(0xFF084059)
         val sky170 = Color(0xFF08384E)
-        val sky180 = Color(0xFF071D29)
+        val sky180 = Color(0xFF0E2431)
+        val sky190 = Color(0xFF071D29)
+        val sky200 = Color(0xFF001623)
     }
 
     object Stone {
@@ -290,7 +312,9 @@ object InstUIColors {
         val stone150 = Color(0xFF414141)
         val stone160 = Color(0xFF3A3A3A)
         val stone170 = Color(0xFF333333)
-        val stone180 = Color(0xFF1A1A1A)
+        val stone180 = Color(0xFF222222)
+        val stone190 = Color(0xFF1A1A1A)
+        val stone200 = Color(0xFF141414)
     }
 
     object Violet {
@@ -311,6 +335,8 @@ object InstUIColors {
         val violet150 = Color(0xFF5B2E6F)
         val violet160 = Color(0xFF522965)
         val violet170 = Color(0xFF482458)
-        val violet180 = Color(0xFF26132E)
+        val violet180 = Color(0xFF2C1834)
+        val violet190 = Color(0xFF26132E)
+        val violet200 = Color(0xFF1D0A25)
     }
 }

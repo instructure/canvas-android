@@ -30,5 +30,4 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
  */
 object InstUIMask {
     val backgroundColor @Composable get() = InstUISemanticColors.Background.Overlay.base()
-    val darkBackgroundColor @Composable get() = InstUISemanticColors.Background.Overlay.dark()
 }

@@ -21,8 +21,11 @@
  *
  * Usage: npm run build
  *
- * Downloads design tokens from the instructure-ui repository (pinned to INSTUI_VERSION)
- * and generates Jetpack Compose source files for the InstUI Android library.
+ * Reads design tokens from the @instructure/instructure-design-tokens npm package
+ * (pinned in package.json) and generates Jetpack Compose source files for the
+ * InstUI Android library. Icons come from the `lucide` npm package (pinned in
+ * package.json) plus instructure-ui Custom icons fetched from GitHub (pinned to
+ * CUSTOM_ICONS_VERSION).
  *
  * Generated files (DO NOT EDIT manually):
  *   Primitives:
@@ -42,20 +45,99 @@
  *     ../src/main/java/com/instructure/instui/component/InstUIHeading.kt
  *     ../src/main/java/com/instructure/instui/component/InstUIBaseButton.kt
  *     ../src/main/java/com/instructure/instui/component/InstUIPill.kt
- *     ... (65 files total, auto-discovered from instructure-ui)
+ *     ... (auto-discovered from the design-tokens package)
  *
- * To update to a newer version of instructure-ui, bump INSTUI_VERSION below and re-run.
+ * To update tokens, bump the commit SHA on @instructure/instructure-design-tokens
+ * in package.json and re-run. To update icons, bump INSTUI_ICONS_VERSION below.
  */
 
+const fs = require('fs')
+const path = require('path')
 const https = require('https')
+const { execSync } = require('child_process')
 const buildPrimitivesConfig = require('./sd.config.primitives')
 const buildSemanticConfig = require('./sd.config.semantic')
 const buildComponentsConfig = require('./sd.config.components')
 const { buildIcons } = require('./build-instui-icons')
 
-const INSTUI_VERSION = 'v11.7.1'
-const TOKENS_BASE_URL = `https://raw.githubusercontent.com/instructure/instructure-ui/${INSTUI_VERSION}/packages/ui-scripts/lib/build/tokensStudio`
-const COMPONENT_PATH = 'packages/ui-scripts/lib/build/tokensStudio/rebrand/component'
+const CUSTOM_ICONS_VERSION = 'v11.7.1'
+
+const TOKENS_PACKAGE_DIR = path.join(
+  __dirname,
+  'node_modules',
+  '@instructure',
+  'instructure-design-tokens',
+  'tokensStudio',
+)
+
+function readTokenJson(...relativePath) {
+  const fullPath = path.join(TOKENS_PACKAGE_DIR, ...relativePath)
+  return JSON.parse(fs.readFileSync(fullPath, 'utf8'))
+}
+
+// The design-tokens package wraps semantic layer JSONs (rebrand/semantic/**) in a
+// top-level "semantic" namespace. Style Dictionary configs (carried over from the
+// previous instructure-ui setup) expect the bare structure, so unwrap when present.
+function readSemanticJson(...relativePath) {
+  const json = readTokenJson(...relativePath)
+  return json.semantic ?? json
+}
+
+// Component JSONs in the design-tokens package reference semantic tokens with a
+// "{semantic.*}" prefix (e.g. "{semantic.color.background.base}"). The SD reference
+// resolver expects bare references ("{color.background.base}") to match the unwrapped
+// semantic tree, so strip the prefix recursively on load.
+function stripSemanticPrefix(node) {
+  if (Array.isArray(node)) {
+    return node.map(stripSemanticPrefix)
+  }
+  if (node && typeof node === 'object') {
+    const result = {}
+    for (const [key, value] of Object.entries(node)) {
+      result[key] = stripSemanticPrefix(value)
+    }
+    return result
+  }
+  if (typeof node === 'string') {
+    return node.replace(/\{semantic\.([^}]+)\}/g, '{$1}')
+  }
+  return node
+}
+
+// Known typos in upstream component JSON keys that need merging into their
+// correctly-spelled siblings. Without this, both keys ship as disjoint objects
+// in the generated tokens (e.g. InstUISideNavBarNew.InsitutionLogo and
+// .InstitutionLogo each carry half the fields).
+const KEY_RENAMES = {
+  insitutionLogo: 'institutionLogo',
+}
+
+function applyKeyRenames(node) {
+  if (!node || typeof node !== 'object' || Array.isArray(node)) return node
+  const result = {}
+  for (const [key, value] of Object.entries(node)) {
+    const renamed = Object.prototype.hasOwnProperty.call(KEY_RENAMES, key) ? KEY_RENAMES[key] : key
+    const mapped = applyKeyRenames(value)
+    if (renamed in result && mapped && typeof mapped === 'object' && !Array.isArray(mapped)) {
+      result[renamed] = { ...result[renamed], ...mapped }
+    } else {
+      result[renamed] = mapped
+    }
+  }
+  return result
+}
+
+function readComponentJson(...relativePath) {
+  return applyKeyRenames(stripSemanticPrefix(readTokenJson(...relativePath)))
+}
+
+function installDependencies() {
+  // Always run npm install — it's a fast no-op when nothing has changed, and
+  // correctly picks up commit-SHA bumps on git-URL dependencies (mtime checks
+  // are unreliable across branch switches and SHA-only edits).
+  console.log('Installing npm dependencies...')
+  execSync('npm install', { cwd: __dirname, stdio: 'inherit' })
+}
 
 function download(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -75,44 +157,28 @@ function download(url, options = {}) {
   })
 }
 
-/**
- * List all JSON files in the component token directory via GitHub API.
- */
-async function listComponentFiles() {
-  const apiUrl = `https://api.github.com/repos/instructure/instructure-ui/contents/${COMPONENT_PATH}?ref=${INSTUI_VERSION}`
-  const headers = { 'User-Agent': 'instui-token-generator' }
-  if (process.env.GITHUB_TOKEN) {
-    headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`
-  }
-  const response = await download(apiUrl, { headers })
-  const files = JSON.parse(response)
-  return files
-    .filter(f => f.name.endsWith('.json'))
-    .map(f => f.name)
+function listComponentFiles() {
+  const componentDir = path.join(TOKENS_PACKAGE_DIR, 'rebrand', 'component')
+  return fs.readdirSync(componentDir).filter(f => f.endsWith('.json'))
 }
 
 async function buildPrimitives() {
-  const url = `${TOKENS_BASE_URL}/primitives/default.json`
-  console.log(`Downloading primitive tokens from ${url}...`)
-  const primitives = JSON.parse(await download(url))
+  console.log('Loading primitive tokens...')
+  const primitives = readTokenJson('primitives', 'default.json')
   console.log('Building Jetpack Compose primitives...')
   const sd = await buildPrimitivesConfig(primitives)
   await sd.buildAllPlatforms()
 }
 
 async function buildSemantics() {
-  const lightUrl = `${TOKENS_BASE_URL}/rebrand/semantic/color/rebrandLight.json`
-  const darkUrl = `${TOKENS_BASE_URL}/rebrand/semantic/color/rebrandDark.json`
-  const layoutUrl = `${TOKENS_BASE_URL}/rebrand/semantic/layout/default.json`
+  console.log('Loading semantic color tokens (light)...')
+  const lightColors = readSemanticJson('rebrand', 'semantic', 'color', 'rebrandLight.json')
 
-  console.log(`Downloading semantic color tokens (light)...`)
-  const lightColors = JSON.parse(await download(lightUrl))
+  console.log('Loading semantic color tokens (dark)...')
+  const darkColors = readSemanticJson('rebrand', 'semantic', 'color', 'rebrandDark.json')
 
-  console.log(`Downloading semantic color tokens (dark)...`)
-  const darkColors = JSON.parse(await download(darkUrl))
-
-  console.log(`Downloading semantic layout tokens...`)
-  const layout = JSON.parse(await download(layoutUrl))
+  console.log('Loading semantic layout tokens...')
+  const layout = readSemanticJson('rebrand', 'semantic', 'layout', 'default.json')
 
   console.log('Building Jetpack Compose semantic tokens...')
   const sd = await buildSemanticConfig(lightColors, darkColors, layout)
@@ -120,42 +186,21 @@ async function buildSemantics() {
 }
 
 async function buildComponents() {
-  // Download primitives, layout, and semantic light colors for reference chain resolution
-  const primitivesUrl = `${TOKENS_BASE_URL}/primitives/default.json`
-  const layoutUrl = `${TOKENS_BASE_URL}/rebrand/semantic/layout/default.json`
-  const lightColorsUrl = `${TOKENS_BASE_URL}/rebrand/semantic/color/rebrandLight.json`
+  console.log('Loading primitives for reference resolution...')
+  const primitives = readTokenJson('primitives', 'default.json')
 
-  console.log('Downloading primitives for reference resolution...')
-  const primitives = JSON.parse(await download(primitivesUrl))
+  console.log('Loading layout tokens for reference resolution...')
+  const layout = readSemanticJson('rebrand', 'semantic', 'layout', 'default.json')
 
-  console.log('Downloading layout tokens for reference resolution...')
-  const layout = JSON.parse(await download(layoutUrl))
+  console.log('Loading semantic light colors for reference resolution...')
+  const semanticLightColors = readSemanticJson('rebrand', 'semantic', 'color', 'rebrandLight.json')
 
-  console.log('Downloading semantic light colors for reference resolution...')
-  const semanticLightColors = JSON.parse(await download(lightColorsUrl))
-
-  console.log('Listing component token files...')
-  const componentFiles = await listComponentFiles()
+  const componentFiles = listComponentFiles()
   console.log(`Found ${componentFiles.length} component token files`)
 
-  // Download all component JSONs in batches
-  const componentBaseUrl = `${TOKENS_BASE_URL}/rebrand/component`
   const components = {}
-  const BATCH_SIZE = 10
-
-  for (let i = 0; i < componentFiles.length; i += BATCH_SIZE) {
-    const batch = componentFiles.slice(i, i + BATCH_SIZE)
-    const results = await Promise.all(
-      batch.map(async (filename) => {
-        const url = `${componentBaseUrl}/${filename}`
-        console.log(`  Downloading ${filename}...`)
-        const json = JSON.parse(await download(url))
-        return { filename, json }
-      })
-    )
-    results.forEach(({ filename, json }) => {
-      components[filename] = json
-    })
+  for (const filename of componentFiles) {
+    components[filename] = readComponentJson('rebrand', 'component', filename)
   }
 
   console.log('Building Jetpack Compose component tokens...')
@@ -164,8 +209,10 @@ async function buildComponents() {
 }
 
 async function main() {
-  console.log(`InstUI Token Generator for Android`)
-  console.log(`Using instructure-ui ${INSTUI_VERSION}`)
+  console.log('InstUI Token Generator for Android')
+  console.log('')
+
+  installDependencies()
   console.log('')
 
   await buildPrimitives()
@@ -177,8 +224,8 @@ async function main() {
   await buildComponents()
   console.log('')
 
-  console.log('Building InstUI icons...')
-  await buildIcons(download, INSTUI_VERSION)
+  console.log('Building InstUI icons (Lucide + instructure-ui Custom)...')
+  await buildIcons(download, CUSTOM_ICONS_VERSION)
 
   console.log('')
   console.log('Done! Generated files are in:')

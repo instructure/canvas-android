@@ -20,18 +20,14 @@
 package com.instructure.instui.token.icon
 
 /**
- * InstUI Icons.
+ * InstUI icons.
  *
- * Generated from instructure-ui SVG icons.
- * Access icons as extension properties: InstUIIcons.Line.ArrowLeft
+ * Generated from Lucide (lucide npm package, see ../LICENSE-lucide) and
+ * instructure-ui Custom icons. Access icons as extension properties:
  *
- * Categories:
- * - [Line]: Outline/stroke icons (386 icons)
- * - [Solid]: Filled icons (386 icons)
- * - [Custom]: Special-purpose icons (85 icons)
+ *     Icon(imageVector = InstUIIcons.arrowLeft, ...)
+ *
+ * Custom icons that share a name with a Lucide icon are suffixed with
+ * "Custom" (e.g. InstUIIcons.searchCustom).
  */
-object InstUIIcons {
-    object Line
-    object Solid
-    object Custom
-}
+object InstUIIcons

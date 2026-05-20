@@ -22,6 +22,7 @@ package com.instructure.instui.token.component
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.instui.token.primitives.InstUIColors
 import com.instructure.instui.token.semantic.InstUILayoutTypography
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -32,7 +33,7 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
  * These tokens reference the semantic layer for theme-aware values.
  */
 object InstUIByline {
-    val background @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
+    val background = InstUIColors.transparent
     val color @Composable get() = InstUISemanticColors.Text.base()
     val descriptionFontSize = 16.sp
     val descriptionFontWeight = InstUILayoutTypography.FontWeight.Body.base

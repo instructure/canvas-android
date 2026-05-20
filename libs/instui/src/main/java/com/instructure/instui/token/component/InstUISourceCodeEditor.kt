@@ -20,6 +20,7 @@
 package com.instructure.instui.token.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.instui.token.semantic.InstUILayoutSizes
@@ -43,7 +44,7 @@ object InstUISourceCodeEditor {
     val gutterBackground @Composable get() = InstUISemanticColors.Background.muted()
     val horizontalPadding = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
     val verticalPadding = 6.dp
-    val focusedSelectionBackgroundColor = "rgba(90,75,227,0.2)"
+    // val focusedSelectionBackgroundColor: "rgba(90,75,227,0.2)" (CSS-specific, not directly usable in Compose)
     val placeholderBackgroundColor @Composable get() = InstUISemanticColors.Text.Accent.stone()
     val tagKeywordColor @Composable get() = InstUISemanticColors.Text.Accent.violet()
     val tagLiteralColor @Composable get() = InstUISemanticColors.Text.Accent.green()
@@ -59,5 +60,5 @@ object InstUISourceCodeEditor {
     val tagTypeNameColor @Composable get() = InstUISemanticColors.Text.Accent.aurora()
     val tagInvalidColor @Composable get() = InstUISemanticColors.Text.error()
     val tagAtomColor @Composable get() = InstUISemanticColors.Text.Accent.blue()
-    val activeLineColor = "#99999912"
+    val activeLineColor = Color(0x12999999)
 }

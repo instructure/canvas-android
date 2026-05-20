@@ -64,30 +64,22 @@ dependencies {
 }
 
 /**
- * Gradle task to generate InstUI tokens from instructure-ui.
+ * Gradle task to generate InstUI tokens.
  *
  * Usage: ./gradlew :libs:instui:generateInstUITokens
  *
  * This task:
- * 1. Installs npm dependencies if needed
- * 2. Downloads tokens from instructure-ui repository
+ * 1. Reads tokens from the @instructure/instructure-design-tokens npm package
+ *    (pinned in scripts/package.json)
+ * 2. Downloads icons from the instructure-ui repository
  * 3. Generates Kotlin files using Style Dictionary
+ *
+ * The build script handles npm install internally so dependency updates in
+ * scripts/package.json are picked up automatically.
  */
 tasks.register<Exec>("generateInstUITokens") {
     group = "build"
-    description = "Downloads InstUI tokens and generates Kotlin primitives for Compose"
+    description = "Generates InstUI design tokens and icons for Compose"
     workingDir = file("scripts")
-
-    doFirst {
-        // Ensure npm dependencies are installed
-        if (!file("scripts/node_modules").exists()) {
-            println("Installing npm dependencies...")
-            exec {
-                workingDir = file("scripts")
-                commandLine("npm", "install")
-            }
-        }
-    }
-
     commandLine("npm", "run", "build")
 }

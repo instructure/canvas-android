@@ -58,7 +58,7 @@ object InstUISideNavBar {
     object SideNavBarItem {
         val iconWrapperHeight = 36.dp
         val borderRadius = InstUILayoutSizes.BorderRadius.Lg.lg
-        val backgroundColor = "transparent"
+        // val backgroundColor: "transparent" (CSS-specific, not directly usable in Compose)
         val contentPadding = 6.dp
         val fontColor @Composable get() = InstUISemanticColors.Text.base()
         val fontFamily = InstUILayoutTypography.FontFamily.Base.base

@@ -20,6 +20,7 @@
 package com.instructure.instui.token.component
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.instructure.instui.BorderStyle
 import com.instructure.instui.token.semantic.InstUILayoutTypography
 import com.instructure.instui.token.semantic.InstUISemanticColors
@@ -42,7 +43,7 @@ object InstUIView {
     val borderColorAlert @Composable get() = InstUISemanticColors.Stroke.info()
     val borderColorWarning @Composable get() = InstUISemanticColors.Stroke.warning()
     val borderColorDanger @Composable get() = InstUISemanticColors.Stroke.error()
-    val borderColorTransparent = "#00000000"
+    val borderColorTransparent = Color(0x00000000)
     val debugOutlineColor @Composable get() = InstUISemanticColors.Stroke.error()
     val backgroundPrimary @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
     val backgroundSecondary @Composable get() = InstUISemanticColors.Background.muted()
