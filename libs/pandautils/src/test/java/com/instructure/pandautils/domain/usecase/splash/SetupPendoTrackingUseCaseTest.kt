@@ -19,7 +19,6 @@ import android.content.Context
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.UserSettings
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -27,6 +26,7 @@ import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.PendoTokenConfig
+import com.instructure.pandautils.utils.PendoTokenHolder
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -46,7 +46,6 @@ class SetupPendoTrackingUseCaseTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
-    private val analytics: Analytics = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val pendoTokenConfig = PendoTokenConfig(
         fallbackToken = "fallback-token",
@@ -55,7 +54,7 @@ class SetupPendoTrackingUseCaseTest {
 
     private val useCase = SetupPendoTrackingUseCase(
         featuresRepository, userRepository, apiPrefs, featureFlagProvider,
-        consentPrefs, analytics, pendoTokenConfig, context
+        consentPrefs, pendoTokenConfig, context
     )
 
     @Before
@@ -64,14 +63,15 @@ class SetupPendoTrackingUseCaseTest {
         every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
         every { Pendo.endSession() } returns Unit
         every { Pendo.setup(any(), any(), any(), any()) } returns Unit
-        every { analytics.isSessionActive() } returns false
         coEvery { userRepository.getSelfWithUuid(any()) } returns DataResult.Success(
             User(uuid = "test-uuid", accountUuid = "account-uuid")
         )
+        PendoTokenHolder.initializedToken = null
     }
 
     @After
     fun teardown() {
+        PendoTokenHolder.initializedToken = null
         unmockkAll()
     }
 
@@ -238,10 +238,10 @@ class SetupPendoTrackingUseCaseTest {
     }
 
     @Test
-    fun `skips pendo setup when session is already active`() = runTest {
-        every { analytics.isSessionActive() } returns true
+    fun `skips pendo setup when token is already initialized with the same value`() = runTest {
+        PendoTokenHolder.initializedToken = "api-token"
         coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
-            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = "api-token")
         )
 
         useCase(Unit)
@@ -251,15 +251,31 @@ class SetupPendoTrackingUseCaseTest {
     }
 
     @Test
-    fun `calls pendo setup when session is not active`() = runTest {
-        every { analytics.isSessionActive() } returns false
+    fun `calls pendo setup when token has not been initialized yet`() = runTest {
+        PendoTokenHolder.initializedToken = null
         coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
-            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = "api-token")
         )
 
         useCase(Unit)
 
-        verify { Pendo.setup(any(), any(), any(), any()) }
+        verify { Pendo.setup(any(), "api-token", any(), any()) }
         verify { Pendo.startSession(any(), any(), any(), any()) }
+        assert(PendoTokenHolder.initializedToken == "api-token")
+    }
+
+    @Test
+    fun `ends session and skips start when resolved token differs from initialized token`() = runTest {
+        PendoTokenHolder.initializedToken = "old-token"
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK, pendoMobileStudentApiKey = "new-token")
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.endSession() }
+        verify(exactly = 0) { Pendo.setup(any(), any(), any(), any()) }
+        verify(exactly = 0) { Pendo.startSession(any(), any(), any(), any()) }
+        assert(PendoTokenHolder.initializedToken == "old-token")
     }
 }

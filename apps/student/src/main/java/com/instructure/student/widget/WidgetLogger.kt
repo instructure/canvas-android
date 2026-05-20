@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.canvasapi2.utils.PendoInitListener
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.PendoTokenHolder
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.student.BuildConfig
 import kotlinx.coroutines.Dispatchers
@@ -54,10 +55,23 @@ class WidgetLogger @Inject constructor(
                 PendoInitCallbackHandler.addEvent(event)
                 val settings = (userApi.getSelfMobileSettings(RestParams(isForceReadFromNetwork = true)) as? DataResult.Success)?.data
                 if (shouldTrack(settings)) {
-                    PendoInitCallbackHandler.addListener(this@WidgetLogger)
-                    val token = settings?.pendoMobileStudentApiKey?.takeIf { it.isNotEmpty() }
+                    val resolvedToken = settings?.pendoMobileStudentApiKey?.takeIf { it.isNotEmpty() }
                         ?: BuildConfig.PENDO_TOKEN
-                    setupPendo(context, token)
+                    when (PendoTokenHolder.initializedToken) {
+                        null -> {
+                            PendoInitCallbackHandler.addListener(this@WidgetLogger)
+                            setupPendo(context, resolvedToken)
+                            PendoTokenHolder.initializedToken = resolvedToken
+                        }
+                        resolvedToken -> {
+                            startPendoSession()
+                            analytics.logEvent(event)
+                            Pendo.endSession()
+                        }
+                        else -> {
+                            Pendo.endSession()
+                        }
+                    }
                 }
             } else {
                 analytics.logEvent(event)
@@ -80,6 +94,10 @@ class WidgetLogger @Inject constructor(
     private suspend fun setupPendo(context: Context, token: String) {
         val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
         Pendo.setup(context, token, options, PendoInitCallbackHandler)
+        startPendoSession()
+    }
+
+    private suspend fun startPendoSession() {
         val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
         val accountData =
             mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
