@@ -15,31 +15,26 @@
  */
 package com.instructure.horizon.data.repository
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
-import com.instructure.horizon.data.datasource.LearnLearningLibraryLocalDataSource
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import com.instructure.horizon.data.datasource.LearnLearningLibraryNetworkDataSource
-import com.instructure.horizon.offline.OfflineSyncRepository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class LearnLearningLibraryRepository @Inject constructor(
     private val networkDataSource: LearnLearningLibraryNetworkDataSource,
-    private val localDataSource: LearnLearningLibraryLocalDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
+) {
 
     suspend fun getEnrolledLearningLibraries(limit: Int, forceRefresh: Boolean = false): List<EnrolledLearningLibraryCollection> {
-        return if (shouldFetchFromNetwork()) {
-            networkDataSource.getEnrolledLearningLibraries(limit, forceRefresh)
-                .also { if (shouldSync()) localDataSource.saveEnrolledLearningLibraries(it) }
-        } else {
-            localDataSource.getEnrolledLearningLibraries()
-        }
+        return networkDataSource.getEnrolledLearningLibraries(limit, forceRefresh)
+    }
+
+    suspend fun getEnrolledLearningLibraryCollection(id: String, forceRefresh: Boolean = false): EnrolledLearningLibraryCollection {
+        return networkDataSource.getEnrolledLearningLibraryCollection(id, forceRefresh)
     }
 
     suspend fun getLearningLibraryItems(
@@ -52,16 +47,28 @@ class LearnLearningLibraryRepository @Inject constructor(
         sortBy: CollectionItemSortOption?,
         forceRefresh: Boolean = false,
     ): LearningLibraryCollectionItemsResponse {
-        return if (shouldFetchFromNetwork()) {
-            networkDataSource.getLearningLibraryItems(cursor, limit, searchQuery, typeFilter, bookmarkedOnly, completedOnly, sortBy, forceRefresh)
-                .also { response ->
-                    if (shouldSync() && cursor == null && bookmarkedOnly) {
-                        localDataSource.saveSavedItems(response.items)
-                    }
-                }
-        } else {
-            localDataSource.getSavedItems()
-        }
+        return networkDataSource.getLearningLibraryItems(
+            cursor, limit, searchQuery, typeFilter, bookmarkedOnly, completedOnly, sortBy, forceRefresh,
+        )
     }
 
+    suspend fun getLearningLibraryItem(id: String, forceRefresh: Boolean = false): LearningLibraryCollectionItem {
+        return networkDataSource.getLearningLibraryItem(id, forceRefresh)
+    }
+
+    suspend fun getLearningLibraryRecommendations(forceRefresh: Boolean = false): List<LearningLibraryRecommendation> {
+        return networkDataSource.getLearningLibraryRecommendations(forceRefresh)
+    }
+
+    suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
+        return networkDataSource.toggleLearningLibraryItemIsBookmarked(itemId)
+    }
+
+    suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem {
+        return networkDataSource.enrollLearningLibraryItem(itemId)
+    }
+
+    suspend fun getCourseWithProgress(courseId: Long, userId: Long): CourseWithProgress {
+        return networkDataSource.getCourseWithProgress(courseId, userId)
+    }
 }

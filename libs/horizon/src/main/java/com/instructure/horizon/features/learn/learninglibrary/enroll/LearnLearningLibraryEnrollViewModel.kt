@@ -21,9 +21,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.EnrollLearnLearningLibraryItemParams
+import com.instructure.horizon.domain.usecase.EnrollLearnLearningLibraryItemUseCase
+import com.instructure.horizon.domain.usecase.GetCourseWithProgressParams
+import com.instructure.horizon.domain.usecase.GetCourseWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
@@ -38,8 +45,11 @@ import javax.inject.Inject
 class LearnLearningLibraryEnrollViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryEnrollRepository,
-    private val eventHandler: LearnEventHandler
+    private val getLearnLearningLibraryItemUseCase: GetLearnLearningLibraryItemUseCase,
+    private val getCourseWithProgressUseCase: GetCourseWithProgressUseCase,
+    private val enrollLearnLearningLibraryItemUseCase: EnrollLearnLearningLibraryItemUseCase,
+    private val eventHandler: LearnEventHandler,
+    private val apiPrefs: ApiPrefs,
 ) : ViewModel() {
     private var learningLibraryItemId: String? = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr)
     private var learningLibraryItem: LearningLibraryCollectionItem? = null
@@ -64,16 +74,23 @@ class LearnLearningLibraryEnrollViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _state.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
 
-            val collectionItem = repository.loadLearningLibraryItem(learningLibraryItemId)
+            val collectionItem = getLearnLearningLibraryItemUseCase(
+                GetLearnLearningLibraryItemParams(itemId = learningLibraryItemId, forceRefresh = false)
+            )
             learningLibraryItem = collectionItem
-            val courseDetails = repository.loadCourseDetails(collectionItem.canvasCourse!!.courseId.toLong())
+            val syllabus = collectionItem.canvasCourse?.courseId?.toLongOrNull()?.let { courseId ->
+                runCatching {
+                    getCourseWithProgressUseCase(
+                        GetCourseWithProgressParams(courseId = courseId, userId = apiPrefs.user?.id ?: -1L)
+                    ).courseSyllabus
+                }.getOrNull()
+            }
 
             _state.update { it.copy(
                 loadingState = it.loadingState.copy(isLoading = false),
-                syllabus = courseDetails.courseSyllabus,
+                syllabus = syllabus,
             ) }
         } catch {
-            // Silent error
             _state.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
     }
@@ -81,7 +98,7 @@ class LearnLearningLibraryEnrollViewModel @Inject constructor(
     private fun onEnroll() {
         viewModelScope.tryLaunch {
             _state.update { it.copy(isEnrollLoading = true) }
-            repository.enrollLearningLibraryItem(learningLibraryItem!!.id)
+            enrollLearnLearningLibraryItemUseCase(EnrollLearnLearningLibraryItemParams(itemId = learningLibraryItem!!.id))
             _state.update { it.copy(isEnrollLoading = false, navigateToCourseId = learningLibraryItem!!.canvasCourse!!.courseId.toLong()) }
             eventHandler.postEvent(LearnEvent.RefreshLearningLibraryList)
         } catch {

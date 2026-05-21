@@ -31,9 +31,7 @@ import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
-import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
-import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
@@ -53,10 +51,7 @@ import com.instructure.horizon.database.entity.HorizonCourseModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonDashboardEnrollmentEntity
 import com.instructure.horizon.database.entity.HorizonDashboardModuleItemEntity
 import com.instructure.horizon.database.entity.HorizonFileFolderEntity
-import com.instructure.horizon.database.entity.HorizonLearnCollectionEntity
-import com.instructure.horizon.database.entity.HorizonLearnCollectionItemEntity
 import com.instructure.horizon.database.entity.HorizonLearnItemEntity
-import com.instructure.horizon.database.entity.HorizonLearnSavedItemEntity
 import com.instructure.horizon.database.entity.HorizonLocalFileEntity
 import com.instructure.horizon.database.entity.HorizonPageEntity
 import com.instructure.horizon.database.entity.HorizonProgramCourseRef
@@ -82,9 +77,6 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonSyncMetadataEntity::class,
         HorizonEntitySyncMetadataEntity::class,
         HorizonLearnItemEntity::class,
-        HorizonLearnCollectionEntity::class,
-        HorizonLearnCollectionItemEntity::class,
-        HorizonLearnSavedItemEntity::class,
         HorizonCourseEntity::class,
         HorizonCourseModuleEntity::class,
         HorizonCourseModuleItemEntity::class,
@@ -115,8 +107,6 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun syncMetadataDao(): HorizonSyncMetadataDao
     abstract fun entitySyncMetadataDao(): HorizonEntitySyncMetadataDao
     abstract fun learnItemDao(): HorizonLearnItemDao
-    abstract fun learnCollectionDao(): HorizonLearnCollectionDao
-    abstract fun learnSavedItemDao(): HorizonLearnSavedItemDao
     abstract fun courseDao(): HorizonCourseDao
     abstract fun courseModuleDao(): HorizonCourseModuleDao
     abstract fun courseScoreDao(): HorizonCourseScoreDao

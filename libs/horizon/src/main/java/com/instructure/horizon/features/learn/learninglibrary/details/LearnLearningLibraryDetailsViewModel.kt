@@ -28,6 +28,12 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryCollectionParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryCollectionUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkParams
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
@@ -43,8 +49,10 @@ import javax.inject.Inject
 class LearnLearningLibraryDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryDetailsRepository
-): ViewModel() {
+    private val getLearnLearningLibraryCollectionUseCase: GetLearnLearningLibraryCollectionUseCase,
+    private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase,
+    private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase,
+) : ViewModel() {
     private val collectionId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) ?: ""
 
     private var allItems: List<LearningLibraryCollectionItem> = emptyList()
@@ -75,12 +83,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             val collection = fetchData()
             fetchRecommendedItems()
-            _uiState.update {
-                it.copy(
-                    collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
-                )
-            }
+            applyItems(collection)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
         } catch {
             _uiState.update {
@@ -94,12 +97,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             val collection = fetchData(true)
             fetchRecommendedItems(true)
-            _uiState.update {
-                it.copy(
-                    collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
-                )
-            }
+            applyItems(collection)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
         } catch {
             _uiState.update {
@@ -114,14 +112,25 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData(forceRefresh: Boolean = false): EnrolledLearningLibraryCollection {
-        val result = repository.getLearningLibraryItems(collectionId, forceRefresh)
+        val result = getLearnLearningLibraryCollectionUseCase(
+            GetLearnLearningLibraryCollectionParams(collectionId = collectionId, forceRefresh = forceRefresh)
+        )
         allItems = result.items
-
+        _uiState.update { it.copy(collectionName = result.name) }
         return result
     }
 
-    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false){
-        recommendedItems = repository.getLearningLibraryRecommendedItems(forceNetwork)
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false) {
+        recommendedItems = getLearnLearningLibraryRecommendationsUseCase(
+            GetLearnLearningLibraryRecommendationsParams(forceRefresh = forceNetwork)
+        )
+    }
+
+    private fun applyItems(collection: EnrolledLearningLibraryCollection) {
+        val filtered = collection.items.applyFilters()
+        _uiState.update {
+            it.copy(items = filtered.map { item -> item.toUiState(resources, recommendedItems) })
+        }
     }
 
     private fun toggleItemBookmarked(itemId: String) {
@@ -138,7 +147,9 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleLearnLearningLibraryItemBookmarkUseCase(
+                ToggleLearnLearningLibraryItemBookmarkParams(itemId = itemId)
+            )
 
             allItems = allItems.map { collectionItemState ->
                 if (collectionItemState.id == itemId) {
@@ -148,8 +159,9 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
                 }
             }
 
+            val filtered = allItems.applyFilters()
             _uiState.update {
-                it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) })
+                it.copy(items = filtered.map { item -> item.toUiState(resources, recommendedItems) })
             }
         } catch {
             _uiState.update {
@@ -209,16 +221,19 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
     private fun updateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        val filtered = allItems.applyFilters()
+        _uiState.update { it.copy(items = filtered.map { item -> item.toUiState(resources, recommendedItems) }) }
     }
 
     private fun updateSelectedStatusFilter(value: LearnLearningLibraryStatusFilter) {
         _uiState.update { it.copy(selectedStatusFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        val filtered = allItems.applyFilters()
+        _uiState.update { it.copy(items = filtered.map { item -> item.toUiState(resources, recommendedItems) }) }
     }
 
     private fun updateSelectedTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(selectedTypeFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
+        val filtered = allItems.applyFilters()
+        _uiState.update { it.copy(items = filtered.map { item -> item.toUiState(resources, recommendedItems) }) }
     }
 }

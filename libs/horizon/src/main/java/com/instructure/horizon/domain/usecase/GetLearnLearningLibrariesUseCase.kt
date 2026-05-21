@@ -20,11 +20,16 @@ import com.instructure.horizon.data.repository.LearnLearningLibraryRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
+data class GetLearnLearningLibrariesParams(
+    val itemLimitPerCollection: Int,
+    val forceRefresh: Boolean = false,
+)
+
 class GetLearnLearningLibrariesUseCase @Inject constructor(
     private val repository: LearnLearningLibraryRepository,
-) : BaseUseCase<Int, List<EnrolledLearningLibraryCollection>>() {
+) : BaseUseCase<GetLearnLearningLibrariesParams, List<EnrolledLearningLibraryCollection>>() {
 
-    override suspend fun execute(params: Int): List<EnrolledLearningLibraryCollection> {
-        return repository.getEnrolledLearningLibraries(params)
+    override suspend fun execute(params: GetLearnLearningLibrariesParams): List<EnrolledLearningLibraryCollection> {
+        return repository.getEnrolledLearningLibraries(params.itemLimitPerCollection, params.forceRefresh)
     }
 }

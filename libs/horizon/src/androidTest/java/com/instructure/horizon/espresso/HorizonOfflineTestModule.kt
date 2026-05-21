@@ -27,9 +27,7 @@ import com.instructure.horizon.database.dao.HorizonCourseScoreDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonDashboardModuleItemDao
 import com.instructure.horizon.database.dao.HorizonFileFolderDao
-import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
-import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
@@ -79,12 +77,6 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonLearnItemDao(db: HorizonDatabase): HorizonLearnItemDao = db.learnItemDao()
-
-    @Provides
-    fun provideHorizonLearnCollectionDao(db: HorizonDatabase): HorizonLearnCollectionDao = db.learnCollectionDao()
-
-    @Provides
-    fun provideHorizonLearnSavedItemDao(db: HorizonDatabase): HorizonLearnSavedItemDao = db.learnSavedItemDao()
 
     @Provides
     fun provideHorizonCourseDao(db: HorizonDatabase): HorizonCourseDao = db.courseDao()

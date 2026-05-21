@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.learninglibrary.list
 
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -27,7 +28,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibrariesParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibrariesUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
+import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkParams
+import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
@@ -36,9 +44,6 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,13 +59,13 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnLearningLibraryListViewModel @Inject constructor(
     private val resources: Resources,
-    private val repository: LearnLearningLibraryListRepository,
+    private val getLearnLearningLibrariesUseCase: GetLearnLearningLibrariesUseCase,
+    private val getLearnLearningLibraryItemsUseCase: GetLearnLearningLibraryItemsUseCase,
+    private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase,
+    private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase,
     private val eventHandler: LearnEventHandler,
     private val apiPrefs: ApiPrefs,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+) : ViewModel() {
 
     private var currentTypeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All
     private var currentSortOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent
@@ -138,19 +143,13 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         }
     }
 
-    override fun onNetworkRestored() {
-        refreshCollections()
-    }
-
-    override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
-    }
-
     private suspend fun fetchRecommendedItems(forceRefresh: Boolean = false): List<LearningLibraryRecommendation> {
-        val recommendations = repository.getLearningLibraryRecommendedItems(forceRefresh)
+        val recommendations = getLearnLearningLibraryRecommendationsUseCase(
+            GetLearnLearningLibraryRecommendationsParams(forceRefresh = forceRefresh)
+        )
         _uiState.update {
             it.copy(collectionState = it.collectionState.copy(
-                recommendedItems = recommendations.map { it.toUiState(resources) }
+                recommendedItems = recommendations.map { recommendation -> recommendation.toUiState(resources) }
             ))
         }
         return recommendations
@@ -200,7 +199,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private suspend fun fetchCollections(forceRefresh: Boolean = false): List<EnrolledLearningLibraryCollection> {
-        return repository.getEnrolledLearningLibraries(forceRefresh)
+        return getLearnLearningLibrariesUseCase(
+            GetLearnLearningLibrariesParams(itemLimitPerCollection = itemLimitPerCollection, forceRefresh = forceRefresh)
+        )
     }
 
     private suspend fun fetchItems(
@@ -210,13 +211,17 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         sortBy: CollectionItemSortOption? = currentSortOption.toCollectionItemSortOption(),
         forceRefresh: Boolean = false,
     ) {
-        val response = repository.getLearningLibraryItems(
-            afterCursor = cursor,
-            limit = itemPageSize,
-            searchQuery = searchQuery,
-            typeFilter = filterType,
-            sortBy = sortBy,
-            forceRefresh = forceRefresh,
+        val response = getLearnLearningLibraryItemsUseCase(
+            GetLearnLearningLibraryItemsParams(
+                cursor = cursor,
+                limit = itemPageSize,
+                searchQuery = searchQuery,
+                typeFilter = filterType,
+                bookmarkedOnly = false,
+                completedOnly = false,
+                sortBy = sortBy,
+                forceRefresh = forceRefresh,
+            )
         )
         val recommendedItemsList = fetchRecommendedItems()
 
@@ -252,6 +257,10 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         }
     }
 
+    private fun toggleBookmark(itemId: String): suspend () -> Boolean = {
+        toggleLearnLearningLibraryItemBookmarkUseCase(ToggleLearnLearningLibraryItemBookmarkParams(itemId))
+    }
+
     private fun onCollectionBookmarkItem(itemId: String) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(
@@ -269,7 +278,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 }
             ))}
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleBookmark(itemId).invoke()
 
             _uiState.update { it.copy(collectionState = it.collectionState.copy(
                 collections = it.collectionState.collections.map { collectionState ->
@@ -330,7 +339,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            val newIsBookmarked = toggleBookmark(itemId).invoke()
 
             _uiState.update {
                 it.copy(
@@ -413,5 +422,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun computeActiveFilterCount(): Int {
         return if (currentTypeFilter != LearnLearningLibraryTypeFilter.All) 1 else 0
+    }
+
+    companion object {
+        private const val itemLimitPerCollection = 4
     }
 }
