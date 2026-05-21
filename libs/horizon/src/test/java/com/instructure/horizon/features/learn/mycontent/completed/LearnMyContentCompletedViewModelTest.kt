@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.journey.mycontent.ProgramEnrollmentItem
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -53,6 +54,7 @@ class LearnMyContentCompletedViewModelTest {
 
     private val resources: Resources = mockk(relaxed = true)
     private val getLearnMyContentCompletedItemsUseCase: GetLearnMyContentCompletedItemsUseCase = mockk(relaxed = true)
+    private val offlineCardStateHelper: OfflineCardStateHelper = mockk(relaxed = true)
     private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
@@ -208,7 +210,7 @@ class LearnMyContentCompletedViewModelTest {
     }
 
     private fun getViewModel() = LearnMyContentCompletedViewModel(
-        resources, getLearnMyContentCompletedItemsUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
+        resources, getLearnMyContentCompletedItemsUseCase, offlineCardStateHelper, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
     )
 
     private fun createTestProgramItem(

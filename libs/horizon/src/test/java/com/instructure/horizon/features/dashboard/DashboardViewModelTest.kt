@@ -20,14 +20,18 @@ import android.content.Context
 import com.instructure.canvasapi2.models.UnreadNotificationCount
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
+import com.instructure.horizon.offline.sync.HorizonSyncProgressData
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import kotlinx.coroutines.flow.MutableStateFlow
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +51,7 @@ class DashboardViewModelTest {
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val localeUtils: LocaleUtils = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
+    private val aggregateProgressObserver: HorizonAggregateProgressObserver = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
@@ -73,6 +78,7 @@ class DashboardViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        every { aggregateProgressObserver.progressData } returns MutableStateFlow(HorizonSyncProgressData())
         coEvery { repository.getUnreadCounts(any()) } returns notificationCounts
         coEvery { themePrefs.mobileLogoUrl } returns ""
     }
@@ -162,6 +168,6 @@ class DashboardViewModelTest {
     }
 
     private fun getViewModel(): DashboardViewModel {
-        return DashboardViewModel(context, repository, apiPrefs, themePrefs, localeUtils, dashboardEventHandler, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
+        return DashboardViewModel(context, repository, apiPrefs, themePrefs, localeUtils, dashboardEventHandler, aggregateProgressObserver, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
     }
 }

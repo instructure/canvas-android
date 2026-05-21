@@ -45,6 +45,12 @@ class LearnViewModel @Inject constructor(
     val state = _uiState.asStateFlow()
 
     init {
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                val lastSyncedAt = getLastSyncTime(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+            } catch { }
+        }
         loadBrowseTab()
     }
 

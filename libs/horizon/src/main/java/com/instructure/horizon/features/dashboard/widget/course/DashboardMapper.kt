@@ -35,10 +35,13 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 internal suspend fun List<DashboardEnrollment>.mapToDashboardCourseCardState(
     context: Context,
     programs: List<Program>,
-    nextModuleForCourse: suspend (Long) -> DashboardCourseCardModuleItemState?
+    nextModuleForCourse: suspend (Long) -> DashboardCourseCardModuleItemState?,
+    syncedCourseIds: Set<Long> = emptySet(),
+    isOffline: Boolean = false,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): List<DashboardCourseCardState> {
-    val completed = this.filter { it.isCompleted() }.mapCompleted(context, programs)
-    val active = this.filter { it.isActive() }.mapActive(programs, nextModuleForCourse)
+    val completed = this.filter { it.isCompleted() }.mapCompleted(context, programs, syncedCourseIds, isOffline, resolvedImageUrls)
+    val active = this.filter { it.isActive() }.mapActive(programs, nextModuleForCourse, syncedCourseIds, isOffline, resolvedImageUrls)
     return (active + completed).adjustAndSortCourseCardValues()
 }
 
@@ -67,8 +70,15 @@ private fun DashboardEnrollment.isActive(): Boolean {
     return enrollmentState == DashboardEnrollment.STATE_ACTIVE && completionPercentage != 100.0
 }
 
-private fun List<DashboardEnrollment>.mapCompleted(context: Context, programs: List<Program>): List<DashboardCourseCardState> {
+private fun List<DashboardEnrollment>.mapCompleted(
+    context: Context,
+    programs: List<Program>,
+    syncedCourseIds: Set<Long>,
+    isOffline: Boolean,
+    resolvedImageUrls: Map<String, String>,
+): List<DashboardCourseCardState> {
     return map { enrollment ->
+        val imageUrl = enrollment.courseImageUrl
         DashboardCourseCardState(
             parentPrograms = programs
                 .filter { it.sortedRequirements.any { req -> req.courseId == enrollment.courseId } }
@@ -80,7 +90,7 @@ private fun List<DashboardEnrollment>.mapCompleted(context: Context, programs: L
                     )
                 },
             imageState = DashboardCourseCardImageState(
-                imageUrl = enrollment.courseImageUrl,
+                imageUrl = imageUrl?.let { resolvedImageUrls[it] ?: it },
                 showPlaceholder = true
             ),
             title = enrollment.courseName,
@@ -90,16 +100,21 @@ private fun List<DashboardEnrollment>.mapCompleted(context: Context, programs: L
             ),
             progress = enrollment.completionPercentage,
             moduleItem = null,
-            onClickAction = CardClickAction.NavigateToCourse(enrollment.courseId)
+            onClickAction = CardClickAction.NavigateToCourse(enrollment.courseId),
+            isSynced = !isOffline || enrollment.courseId in syncedCourseIds,
         )
     }
 }
 
 private suspend fun List<DashboardEnrollment>.mapActive(
     programs: List<Program>,
-    nextModuleForCourse: suspend (Long) -> DashboardCourseCardModuleItemState?
+    nextModuleForCourse: suspend (Long) -> DashboardCourseCardModuleItemState?,
+    syncedCourseIds: Set<Long>,
+    isOffline: Boolean,
+    resolvedImageUrls: Map<String, String>,
 ): List<DashboardCourseCardState> {
     return map { enrollment ->
+        val imageUrl = enrollment.courseImageUrl
         DashboardCourseCardState(
             parentPrograms = programs
                 .filter { it.sortedRequirements.any { req -> req.courseId == enrollment.courseId } }
@@ -111,7 +126,7 @@ private suspend fun List<DashboardEnrollment>.mapActive(
                     )
                 },
             imageState = DashboardCourseCardImageState(
-                imageUrl = enrollment.courseImageUrl,
+                imageUrl = imageUrl?.let { resolvedImageUrls[it] ?: it },
                 showPlaceholder = true
             ),
             title = enrollment.courseName,
@@ -119,6 +134,7 @@ private suspend fun List<DashboardEnrollment>.mapActive(
             progress = enrollment.completionPercentage,
             moduleItem = nextModuleForCourse(enrollment.courseId),
             onClickAction = CardClickAction.NavigateToCourse(enrollment.courseId),
+            isSynced = !isOffline || enrollment.courseId in syncedCourseIds,
         )
     }
 }

@@ -30,4 +30,7 @@ interface HorizonEntitySyncMetadataDao {
 
     @Query("SELECT lastSyncedAtMs FROM horizon_entity_sync_metadata WHERE entityType = :entityType AND entityId = :entityId")
     suspend fun getLastSyncedAt(entityType: EntitySyncType, entityId: Long): Long?
+
+    @Query("DELETE FROM horizon_entity_sync_metadata WHERE entityType = :entityType AND entityId = :entityId")
+    suspend fun delete(entityType: EntitySyncType, entityId: Long)
 }

@@ -81,7 +81,4 @@ class CourseRepository @Inject constructor(
         }
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

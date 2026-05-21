@@ -18,6 +18,10 @@ package com.instructure.horizon.data.repository
 import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.data.datasource.PageLocalDataSource
 import com.instructure.horizon.data.datasource.PageNetworkDataSource
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
+import com.instructure.horizon.database.entity.EntitySyncType
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.horizon.offline.OfflineSyncRepository
 import com.instructure.pandautils.features.offline.sync.HtmlParser
@@ -28,6 +32,8 @@ import javax.inject.Inject
 class PageRepository @Inject constructor(
     private val networkDataSource: PageNetworkDataSource,
     private val localDataSource: PageLocalDataSource,
+    private val courseModuleDao: HorizonCourseModuleDao,
+    private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
     networkStateProvider: NetworkStateProvider,
@@ -41,6 +47,7 @@ class PageRepository @Inject constructor(
                     val parsingResult = htmlParser.createHtmlStringWithLocalFiles(page.body, courseId)
                     localDataSource.savePage(page, courseId, parsingResult.htmlWithLocalFileLinks)
                     fileSyncRepository.syncHtmlFiles(courseId, parsingResult)
+                    updateModuleItemSyncTimestamp(courseId, pageUrl)
                 }
             }
         } else {
@@ -49,7 +56,10 @@ class PageRepository @Inject constructor(
         }
     }
 
-    override suspend fun sync() {
-        TODO("Not yet implemented")
+    private suspend fun updateModuleItemSyncTimestamp(courseId: Long, pageUrl: String) {
+        val moduleItemId = courseModuleDao.getItemIdByPageUrl(courseId, pageUrl) ?: return
+        entitySyncMetadataDao.upsert(
+            HorizonEntitySyncMetadataEntity(EntitySyncType.MODULE_ITEM, moduleItemId, System.currentTimeMillis())
+        )
     }
 }

@@ -28,6 +28,7 @@ import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
@@ -60,6 +61,7 @@ class LearnMyContentSavedViewModelTest {
     private val getLearnLearningLibraryItemsUseCase: GetLearnLearningLibraryItemsUseCase = mockk(relaxed = true)
     private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase = mockk(relaxed = true)
     private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase = mockk(relaxed = true)
+    private val offlineCardStateHelper: OfflineCardStateHelper = mockk(relaxed = true)
     private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
@@ -313,7 +315,7 @@ class LearnMyContentSavedViewModelTest {
 
     private fun getViewModel() = LearnMyContentSavedViewModel(
         resources, getLearnLearningLibraryItemsUseCase, getLearnLearningLibraryRecommendationsUseCase,
-        toggleLearnLearningLibraryItemBookmarkUseCase, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
+        toggleLearnLearningLibraryItemBookmarkUseCase, offlineCardStateHelper, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
     )
 
     private fun createTestCollectionItem(

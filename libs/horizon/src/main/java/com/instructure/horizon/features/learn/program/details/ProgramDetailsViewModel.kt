@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.data.repository.ProgramRepository
+import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
@@ -83,6 +84,12 @@ class ProgramDetailsViewModel @Inject constructor(
 
     init {
         loadData()
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                val lastSyncedAt = getLastSyncTime(SyncDataType.DASHBOARD_PROGRAMS)
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+            } catch { }
+        }
     }
 
     private fun loadData() {
@@ -313,11 +320,15 @@ class ProgramDetailsViewModel @Inject constructor(
     }
 
     override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
         loadData()
     }
 
     override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
+        viewModelScope.tryLaunch {
+            val lastSyncedAt = getLastSyncTime(SyncDataType.DASHBOARD_PROGRAMS)
+            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+        } catch { }
     }
 
     private fun refreshProgram() {

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsParams
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsParams
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
@@ -47,6 +48,7 @@ class LearnMyContentSavedViewModel @Inject constructor(
     private val getLearnLearningLibraryItemsUseCase: GetLearnLearningLibraryItemsUseCase,
     private val getLearnLearningLibraryRecommendationsUseCase: GetLearnLearningLibraryRecommendationsUseCase,
     private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
     getNextModuleItemUseCase: GetNextModuleItemUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
@@ -76,7 +78,13 @@ class LearnMyContentSavedViewModel @Inject constructor(
                 forceRefresh = forceRefresh,
             )
         )
-        return response.items.map { it.toUiState(resources, recommendations) } to response.pageInfo
+        val offlineContext = offlineCardStateHelper.buildContext(
+            response.items.mapNotNull { it.canvasCourse?.courseImageUrl }
+        )
+        return response.items.map { item ->
+            val courseId = item.canvasCourse?.courseId?.toLongOrNull()
+            item.toUiState(resources, recommendations, offlineContext.isSynced(courseId), offlineContext.resolvedImageUrls)
+        } to response.pageInfo
     }
 
     fun onBookmarkItem(itemId: String) {

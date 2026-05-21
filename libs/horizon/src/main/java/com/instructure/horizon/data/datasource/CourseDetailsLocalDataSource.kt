@@ -19,9 +19,12 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.horizon.database.dao.HorizonCourseDao
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.database.entity.HorizonCourseEntity
+import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonProgramCourseRef
 import com.instructure.horizon.database.entity.HorizonProgramEntity
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
@@ -35,6 +38,7 @@ class CourseDetailsLocalDataSource @Inject constructor(
     private val courseDao: HorizonCourseDao,
     private val programDao: HorizonProgramDao,
     private val syncMetadataDao: HorizonSyncMetadataDao,
+    private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao,
 ) {
 
     suspend fun getCourse(courseId: Long): CourseWithProgress {
@@ -78,11 +82,15 @@ class CourseDetailsLocalDataSource @Inject constructor(
         }
         programDao.insertAll(programEntities)
         programDao.insertAllRefs(refs)
+        val now = System.currentTimeMillis()
         syncMetadataDao.upsert(
             HorizonSyncMetadataEntity(
                 dataType = SyncDataType.COURSE_DETAILS,
-                lastSyncedAtMs = System.currentTimeMillis(),
+                lastSyncedAtMs = now,
             )
+        )
+        entitySyncMetadataDao.upsert(
+            HorizonEntitySyncMetadataEntity(EntitySyncType.COURSE, course.courseId, now)
         )
     }
 

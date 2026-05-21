@@ -32,14 +32,19 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
+import android.os.Environment
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
@@ -52,6 +57,8 @@ class FileDetailsViewModel @Inject constructor(
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     private val fileCache: FileCache,
     private val crashlytics: FirebaseCrashlytics,
+    private val networkStateProvider: NetworkStateProvider,
+    private val localFileDao: HorizonLocalFileDao,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -115,6 +122,44 @@ class FileDetailsViewModel @Inject constructor(
     }
 
     private fun onDownloadClicked() {
+        if (!networkStateProvider.isOnline()) {
+            onDownloadOffline()
+        } else {
+            onDownloadOnline()
+        }
+    }
+
+    private fun onDownloadOffline() {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(downloadState = FileDownloadProgressState.STARTING) }
+            val localFile = localFileDao.findById(_uiState.value.fileId)
+            if (localFile != null) {
+                val srcFile = File(localFile.path)
+                if (srcFile.exists()) {
+                    withContext(Dispatchers.IO) {
+                        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        val destFile = File(downloadsDir, displayName_)
+                        srcFile.copyTo(destFile, overwrite = true)
+                    }
+                    _uiState.update {
+                        it.copy(
+                            downloadProgress = 1f,
+                            downloadState = FileDownloadProgressState.COMPLETED,
+                            filePathToOpen = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), displayName_).absolutePath,
+                        )
+                    }
+                } else {
+                    _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+                }
+            } else {
+                _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+            }
+        } catch {
+            _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+        }
+    }
+
+    private fun onDownloadOnline() {
         _uiState.update { it.copy(downloadState = FileDownloadProgressState.STARTING) }
         val workRequest = FileDownloadWorker.createOneTimeWorkRequest(displayName_, fileUrl_)
         workManager.enqueue(workRequest)

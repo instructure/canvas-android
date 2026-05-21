@@ -37,6 +37,7 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,6 +59,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val oAuthApi: OAuthAPI.OAuthInterface,
     private val apiPrefs: ApiPrefs,
     private val aiAssistContextProvider: AiAssistContextProvider,
+    private val networkStateProvider: NetworkStateProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -119,6 +121,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     AiAssistContextSource.Assignment(assignment.id.toString())
             )
 
+            val isOffline = !networkStateProvider.isOnline()
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
@@ -129,10 +132,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                         currentSubmissionAttempt = initialAttempt
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
-                    showAddSubmission = lastActualSubmission == null,
+                    showAddSubmission = lastActualSubmission == null && !isOffline,
                     onSubmissionSuccess = ::updateAssignment,
                     attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
-                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments)
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments),
+                    isOffline = isOffline,
                 )
             }
         } catch {

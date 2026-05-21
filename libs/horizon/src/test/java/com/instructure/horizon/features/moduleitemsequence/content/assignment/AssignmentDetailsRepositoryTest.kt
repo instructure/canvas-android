@@ -23,6 +23,8 @@ import com.instructure.horizon.data.datasource.AssignmentDetailsNetworkDataSourc
 import com.instructure.horizon.data.datasource.SubmissionLocalDataSource
 import com.instructure.horizon.data.repository.AssignmentDetailsRepository
 import com.instructure.horizon.data.repository.HorizonFileSyncRepository
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.features.offline.sync.HtmlParsingResult
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -40,6 +42,8 @@ class AssignmentDetailsRepositoryTest {
     private val networkDataSource: AssignmentDetailsNetworkDataSource = mockk(relaxed = true)
     private val localDataSource: AssignmentDetailsLocalDataSource = mockk(relaxed = true)
     private val submissionLocalDataSource: SubmissionLocalDataSource = mockk(relaxed = true)
+    private val courseModuleDao: HorizonCourseModuleDao = mockk(relaxed = true)
+    private val entitySyncMetadataDao: HorizonEntitySyncMetadataDao = mockk(relaxed = true)
     private val htmlParser: HtmlParser = mockk(relaxed = true)
     private val fileSyncRepository: HorizonFileSyncRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
@@ -128,6 +132,8 @@ class AssignmentDetailsRepositoryTest {
         networkDataSource,
         localDataSource,
         submissionLocalDataSource,
+        courseModuleDao,
+        entitySyncMetadataDao,
         htmlParser,
         fileSyncRepository,
         networkStateProvider,

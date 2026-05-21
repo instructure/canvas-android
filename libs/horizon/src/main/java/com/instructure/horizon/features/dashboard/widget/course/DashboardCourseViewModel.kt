@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetDashboardCoursesUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -45,6 +46,7 @@ class DashboardCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getDashboardCoursesUseCase: GetDashboardCoursesUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase
@@ -71,7 +73,17 @@ class DashboardCourseViewModel @Inject constructor(
     }
 
     override fun onNetworkLost() {
-        // Offline banner is handled by DashboardViewModel; no action needed here
+        viewModelScope.tryLaunch {
+            val offlineContext = offlineCardStateHelper.buildContext()
+            _uiState.update { state ->
+                state.copy(
+                    courses = state.courses.map { card ->
+                        val courseId = (card.onClickAction as? CardClickAction.NavigateToCourse)?.courseId
+                        card.copy(isSynced = offlineContext.isSynced(courseId))
+                    }
+                )
+            }
+        } catch { }
     }
 
     private fun loadData() {
@@ -98,6 +110,9 @@ class DashboardCourseViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val data = getDashboardCoursesUseCase()
+        val offlineContext = offlineCardStateHelper.buildContext(
+            data.enrollments.mapNotNull { it.courseImageUrl }
+        )
 
         val courseCardStates = data.enrollments.mapToDashboardCourseCardState(
             context,
@@ -105,6 +120,9 @@ class DashboardCourseViewModel @Inject constructor(
             nextModuleForCourse = { courseId ->
                 data.nextModuleItemByCourseId[courseId]?.let { mapToModuleItemState(it) }
             },
+            syncedCourseIds = offlineContext.syncedCourseIds,
+            isOffline = offlineContext.isOffline,
+            resolvedImageUrls = offlineContext.resolvedImageUrls,
         )
 
         val programCardStates = data.unenrolledPrograms.mapToDashboardCourseCardState(context)

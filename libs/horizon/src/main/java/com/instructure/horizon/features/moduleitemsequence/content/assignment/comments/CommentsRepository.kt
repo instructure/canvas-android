@@ -89,8 +89,4 @@ class CommentsRepository @Inject constructor(
             RestParams()
         )
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

@@ -32,4 +32,7 @@ interface HorizonFileFolderDao {
 
     @Query("SELECT * FROM HorizonFileFolderEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): List<HorizonFileFolderEntity>
+
+    @Query("DELETE FROM HorizonFileFolderEntity WHERE courseId = :courseId")
+    suspend fun deleteByCourseId(courseId: Long)
 }

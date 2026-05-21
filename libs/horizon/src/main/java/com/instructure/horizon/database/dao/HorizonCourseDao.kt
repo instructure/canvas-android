@@ -71,4 +71,7 @@ interface HorizonCourseDao {
 
     @Query("SELECT * FROM horizon_courses WHERE courseId IN (:courseIds)")
     suspend fun getByCourseIds(courseIds: List<Long>): List<HorizonCourseEntity>
+
+    @Query("DELETE FROM horizon_courses WHERE courseId = :courseId")
+    suspend fun deleteByCourseId(courseId: Long)
 }

@@ -41,7 +41,6 @@ class ProgramRepositoryTest {
     private val localDataSource: ProgramLocalDataSource = mockk(relaxed = true)
     private val programDetailsNetworkDataSource: ProgramDetailsNetworkDataSource = mockk(relaxed = true)
     private val programDetailsLocalDataSource: ProgramDetailsLocalDataSource = mockk(relaxed = true)
-    private val enrollmentRepository: CourseEnrollmentRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
@@ -184,7 +183,6 @@ class ProgramRepositoryTest {
             localDataSource,
             programDetailsNetworkDataSource,
             programDetailsLocalDataSource,
-            enrollmentRepository,
             networkStateProvider,
             featureFlagProvider
         )

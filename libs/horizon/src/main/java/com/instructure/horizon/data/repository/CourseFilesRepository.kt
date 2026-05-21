@@ -48,5 +48,4 @@ class CourseFilesRepository @Inject constructor(
         return localDataSource.getSyncedFileIds(courseId)
     }
 
-    override suspend fun sync() = Unit
 }

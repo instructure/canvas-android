@@ -55,6 +55,7 @@ import com.instructure.horizon.horizonui.molecules.LoadingImage
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 
 data class LearnLearningLibraryCollectionItemState(
     val id: String,
@@ -66,7 +67,8 @@ data class LearnLearningLibraryCollectionItemState(
     val canEnroll: Boolean,
     val type: CollectionItemType,
     val route: LearningLibraryRoute?,
-    val chips: List<LearnLearningLibraryCollectionItemChipState>
+    val chips: List<LearnLearningLibraryCollectionItemChipState>,
+    val isSynced: Boolean = true,
 )
 
 data class LearnLearningLibraryCollectionItemChipState(
@@ -86,7 +88,8 @@ fun LearnLearningLibraryItem(
     Box(modifier = modifier
         .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
-        .clickable(onClick = {
+        .offlineDisabled(!state.isSynced)
+        .clickable(enabled = state.isSynced, onClick = {
             if (state.canEnroll) {
                 onEnrollClick()
             } else {
@@ -169,6 +172,7 @@ private fun LearnLearningLibraryItemButtonContentRow(
     state: LearnLearningLibraryCollectionItemState,
     onEnrollClick: () -> Unit,
     onBookmarkClick: () -> Unit,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Row(

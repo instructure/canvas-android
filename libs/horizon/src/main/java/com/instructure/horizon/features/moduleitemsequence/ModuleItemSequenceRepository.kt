@@ -172,8 +172,4 @@ class ModuleItemSequenceRepository @Inject constructor(
             estimatedDuration = estimatedDuration,
         )
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

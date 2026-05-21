@@ -50,7 +50,7 @@ fun DashboardSyncInProgressWidget(
         widgetColor = HorizonColors.PrimitivesBlue.blue12(),
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
-        onClick = { navController.navigate(AccountRoute.ManageOfflineContent.route) },
+        onClick = { navController.navigate(AccountRoute.SyncingContent.route) },
         modifier = modifier,
     ) {
         Column {

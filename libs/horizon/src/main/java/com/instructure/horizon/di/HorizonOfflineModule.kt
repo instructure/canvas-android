@@ -36,9 +36,14 @@ import com.instructure.horizon.database.dao.HorizonLearnCollectionDao
 import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLearnSavedItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.horizon.database.dao.HorizonLocalImageDao
+import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
+import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -139,6 +144,31 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonEntitySyncMetadataDao(db: HorizonDatabase): HorizonEntitySyncMetadataDao {
         return db.entitySyncMetadataDao()
+    }
+
+    @Provides
+    fun provideHorizonSyncSettingsDao(db: HorizonDatabase): HorizonSyncSettingsDao {
+        return db.syncSettingsDao()
+    }
+
+    @Provides
+    fun provideHorizonCourseSyncPlanDao(db: HorizonDatabase): HorizonCourseSyncPlanDao {
+        return db.courseSyncPlanDao()
+    }
+
+    @Provides
+    fun provideHorizonFileSyncPlanDao(db: HorizonDatabase): HorizonFileSyncPlanDao {
+        return db.fileSyncPlanDao()
+    }
+
+    @Provides
+    fun provideHorizonLocalImageDao(db: HorizonDatabase): HorizonLocalImageDao {
+        return db.localImageDao()
+    }
+
+    @Provides
+    fun provideHorizonUserDao(db: HorizonDatabase): HorizonUserDao {
+        return db.userDao()
     }
 
     @Provides

@@ -37,6 +37,7 @@ data class AssignmentDetailsUiState(
     val onCommentsBottomSheetDismissed: () -> Unit = {},
     val viewingAttemptText: String? = null,
     val onAssignmentUpdatedForAddSubmission: () -> Unit = {},
+    val isOffline: Boolean = false,
 )
 
 data class SubmissionDetailsUiState(

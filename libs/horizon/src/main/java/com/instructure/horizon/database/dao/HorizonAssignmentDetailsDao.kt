@@ -29,4 +29,7 @@ interface HorizonAssignmentDetailsDao {
 
     @Query("SELECT * FROM horizon_assignment_details WHERE assignmentId = :assignmentId LIMIT 1")
     suspend fun getAssignment(assignmentId: Long): HorizonAssignmentDetailsEntity?
+
+    @Query("DELETE FROM horizon_assignment_details WHERE courseId = :courseId")
+    suspend fun deleteByCourseId(courseId: Long)
 }

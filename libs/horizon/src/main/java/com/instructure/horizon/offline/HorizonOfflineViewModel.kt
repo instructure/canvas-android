@@ -42,6 +42,8 @@ abstract class HorizonOfflineViewModel(
         return getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(syncType))
     }
 
+    fun isOffline() = !networkStateProvider.isOnline()
+
     init {
         viewModelScope.tryLaunch {
             networkStateProvider.isOnlineLiveData.asFlow()

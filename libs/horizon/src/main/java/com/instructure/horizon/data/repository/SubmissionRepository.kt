@@ -41,8 +41,4 @@ class SubmissionRepository @Inject constructor(
             localDataSource.getSubmissions(assignmentId)
         }
     }
-
-    override suspend fun sync() {
-        TODO("Not yet implemented")
-    }
 }

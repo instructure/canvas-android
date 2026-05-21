@@ -72,8 +72,8 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
-import com.instructure.horizon.model.LearningObjectType
 import com.instructure.horizon.horizonui.foundation.offlineDisabled
+import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 import kotlin.math.roundToInt
@@ -89,7 +89,8 @@ fun DashboardCourseCardContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = state.onClickAction != null) {
+                .offlineDisabled(!state.isSynced)
+                .clickable(enabled = state.onClickAction != null && state.isSynced) {
                     handleOnClickAction(state.onClickAction)
                 }
         ) {

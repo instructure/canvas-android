@@ -19,6 +19,8 @@ package com.instructure.horizon.horizonui.organisms.scaffolds
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -42,6 +44,7 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingButton
+import com.instructure.horizon.util.zeroScreenInsets
 
 @Composable
 fun HorizonDialogScaffold(
@@ -61,20 +64,22 @@ fun HorizonDialogScaffold(
         statusBarColor = statusBarColor,
         navigationBarColor = navigationBarColor,
         containerColor = containerColor,
-        topBar = {
+        topBar = { paddingValues ->
             HorizonDialogScaffoldTopBar(
                 title,
-                onDismiss
+                onDismiss,
+                Modifier.padding(paddingValues)
             )
         },
-        bottomBar = {
+        bottomBar = { paddingValues ->
             HorizonDialogScaffoldBottomBar(
                 confirmLabel,
                 dismissLabel,
                 isConfirmButtonLoading,
                 confirmColor,
                 onConfirm,
-                onDismiss
+                onDismiss,
+                Modifier.padding(paddingValues)
             )
         }
     ) { contentPadding ->
@@ -86,9 +91,11 @@ fun HorizonDialogScaffold(
 @Composable
 private fun HorizonDialogScaffoldTopBar(
     title: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     TopAppBar(
+        windowInsets = WindowInsets.zeroScreenInsets,
         title = {
             Text(
                 text = title,
@@ -110,7 +117,7 @@ private fun HorizonDialogScaffoldTopBar(
             titleContentColor = HorizonColors.Text.title(),
             navigationIconContentColor = HorizonColors.Icon.default()
         ),
-        modifier = Modifier
+        modifier = modifier
             .horizonBorder(
                 HorizonColors.LineAndBorder.lineStroke(),
                 bottom = 1.dp
@@ -126,12 +133,14 @@ private fun HorizonDialogScaffoldBottomBar(
     isConfirmButtonLoading: Boolean,
     confirmColor: ButtonColor,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     BottomAppBar(
+        windowInsets = WindowInsets.zeroScreenInsets,
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
         containerColor = HorizonColors.Surface.pageSecondary(),
-        modifier = Modifier
+        modifier = modifier
             .horizonBorder(
                 HorizonColors.LineAndBorder.lineStroke(),
                 top = 1.dp
