@@ -39,6 +39,8 @@ class RCETextEditor @JvmOverloads constructor(
         setEditorBackgroundColor(context.getColor(R.color.rce_backgroundColor))
         setEditorFontColor(context.getColor(R.color.rce_defaultTextColor))
         CookieManager.getInstance().setAcceptCookie(true)
+        // TODO(MBL-20032 M3): replace the unconditional accept with allowlist-gating so cookies
+        //  only forward to Canvas/Instructure/configured LTI hosts. Tracked as a follow-up ticket.
         CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
     }
 
@@ -79,7 +81,7 @@ class RCETextEditor @JvmOverloads constructor(
     val accessibilityContentDescription: String
         get() = contentDescription?.toString().orEmpty()
 
-    override fun getHtml(): String? = RCEUtils.sanitizeHTML(super.getHtml())
+    override fun getHtml(): String? = RCEUtils.sanitizeForServer(super.getHtml())
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {

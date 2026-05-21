@@ -76,7 +76,10 @@ class StudioWebViewFragment : InternalWebviewFragment() {
 
                 // Check for a successful Studio submission
                 if (url.contains("success/external_tool_dialog")) {
-                    webView.loadUrl("javascript:HtmlViewer.showHTML" + "('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');")
+                    webView.evaluateJavascript(
+                        "HtmlViewer.showHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');",
+                        null
+                    )
                 }
             }
 

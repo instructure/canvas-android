@@ -441,6 +441,8 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         } else if (canvasLogin == MASQUERADE_FLOW) {
             // canvas_sa_delegated=1    identifies that we want to masquerade
             val cookieManager = CookieManager.getInstance()
+            // TODO(MBL-20032 M3): replace the unconditional accept with allowlist-gating so cookies
+            //  only forward to Canvas/Instructure/configured LTI hosts. Tracked as a follow-up ticket.
             cookieManager.setAcceptThirdPartyCookies(webView, true)
             if (domain!!.contains(".instructure.com")) {
                 val cookie = "canvas_sa_delegated=1;domain=.instructure.com;path=/;"

@@ -118,6 +118,7 @@ import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.json.JSONObject
 import java.net.URLDecoder
 import java.util.Date
 import java.util.regex.Pattern
@@ -308,7 +309,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
                 binding.discussionRepliesWebViewWrapper.post {
                     // Posting lets this escape Weave's lifecycle, so use a null-safe call on the webview here
-                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:markAsRead" + "('" + entryId.toString() + "')")
+                    if (view != null) binding.discussionRepliesWebViewWrapper.webView.evaluateJavascript(
+                        "markAsRead(${JSONObject.quote(entryId.toString())})",
+                        null
+                    )
                 }
             }
 
@@ -340,8 +344,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
         val deletedText = DiscussionUtils.formatDeletedInfoText(requireContext(), discussionEntry)
         binding.discussionRepliesWebViewWrapper.post {
-            binding.discussionRepliesWebViewWrapper.webView.loadUrl(
-                    "javascript:markAsDeleted" + "('" + discussionEntry.id.toString() + "','" + deletedText + "')")
+            binding.discussionRepliesWebViewWrapper.webView.evaluateJavascript(
+                "markAsDeleted(${JSONObject.quote(discussionEntry.id.toString())}," +
+                    "${JSONObject.quote(deletedText)})",
+                null
+            )
         }
     }
 
@@ -417,8 +424,18 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.textDark))
         activity?.runOnUiThread {
-            binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
-            binding.discussionRepliesWebViewWrapper.webView.loadUrl("javascript:updateLikedCount('${discussionEntry.id}','$likingSum','$likingColor','$likingSumAllyText')")
+            val quotedId = JSONObject.quote(discussionEntry.id.toString())
+            binding.discussionRepliesWebViewWrapper.webView.evaluateJavascript(
+                "$methodName($quotedId)",
+                null
+            )
+            binding.discussionRepliesWebViewWrapper.webView.evaluateJavascript(
+                "updateLikedCount($quotedId," +
+                    "${JSONObject.quote(likingSum)}," +
+                    "${JSONObject.quote(likingColor)}," +
+                    "${JSONObject.quote(likingSumAllyText)})",
+                null
+            )
         }
     }
 

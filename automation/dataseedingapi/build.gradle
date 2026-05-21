@@ -46,7 +46,7 @@ dependencies {
     /* Serialization */
     implementation Libs.GSON
 
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation Libs.JSOUP
     implementation 'com.github.javafaker:javafaker:0.17.2'
     implementation Libs.APOLLO_RUNTIME
 
