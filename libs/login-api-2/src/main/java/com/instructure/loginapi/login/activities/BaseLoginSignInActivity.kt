@@ -98,6 +98,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -591,9 +592,11 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     private fun populateWithSnickerDoodle(snickerDoodle: SnickerDoodle) {
         webView.settings.domStorageEnabled = true
         webView.webChromeClient = WebChromeClient()
+        val username = JSONObject.quote(snickerDoodle.username)
+        val password = JSONObject.quote(snickerDoodle.password)
         val js = "javascript: { " +
-                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = '" + snickerDoodle.username + "'; " +
-                "document.getElementsByName('pseudonym_session[password]')[0].value = '" + snickerDoodle.password + "'; " +
+                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = $username; " +
+                "document.getElementsByName('pseudonym_session[password]')[0].value = $password; " +
                 "document.getElementsByClassName('Button')[0].click(); " +
                 "};"
         webView.evaluateJavascript(js) { }
