@@ -271,8 +271,6 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             },
             color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
-            enabled = !uiState.isOffline,
-            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(

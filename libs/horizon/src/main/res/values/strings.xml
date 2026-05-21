@@ -474,6 +474,7 @@
     <string name="notesErrorContentTitle">Failed to load Notebook</string>
     <string name="notesErrorContentBody">Please try again.</string>
     <string name="notebookFailedToLoadErrorMessage">Failed to load notes</string>
+    <string name="notebookOfflineActionUnavailable">This action is unavailable while offline.</string>
     <string name="dashboardCourseCardModuleItemNoDueDateLabel">No due date</string>
     <string name="dashboardCourseCardProgramPrefix">Part of:</string>
     <string name="dashboardCourseCardEnrolledCoursesMessage">You’re enrolled in %1$d courses.</string>

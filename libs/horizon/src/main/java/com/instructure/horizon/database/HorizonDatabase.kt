@@ -23,6 +23,7 @@ import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
+import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
@@ -65,6 +66,7 @@ import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonLocalImageEntity
+import com.instructure.horizon.database.entity.HorizonNoteEntity
 import com.instructure.horizon.database.entity.HorizonUserEntity
 import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
@@ -102,8 +104,9 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonFileSyncPlanEntity::class,
         HorizonLocalImageEntity::class,
         HorizonUserEntity::class,
+        HorizonNoteEntity::class,
     ],
-    version = 18,
+    version = 19,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -128,4 +131,5 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun fileSyncPlanDao(): HorizonFileSyncPlanDao
     abstract fun localImageDao(): HorizonLocalImageDao
     abstract fun userDao(): HorizonUserDao
+    abstract fun noteDao(): HorizonNoteDao
 }

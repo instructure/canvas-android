@@ -17,12 +17,12 @@
 package com.instructure.horizon.features.notebook.addedit.add
 
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.horizon.data.datasource.NotebookNetworkDataSource
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import javax.inject.Inject
 
 class AddNoteRepository @Inject constructor(
-    private val redwoodApiManager: RedwoodApiManager
+    private val networkDataSource: NotebookNetworkDataSource
 ) {
     suspend fun addNote(
         courseId: String,
@@ -32,7 +32,7 @@ class AddNoteRepository @Inject constructor(
         userComment: String,
         type: NotebookType?
     ) {
-        redwoodApiManager.createNote(
+        networkDataSource.createNote(
             courseId = courseId,
             objectId = objectId,
             objectType = objectType,

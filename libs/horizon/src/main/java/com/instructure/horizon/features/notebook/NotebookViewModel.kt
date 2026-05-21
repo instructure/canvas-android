@@ -18,19 +18,24 @@ package com.instructure.horizon.features.notebook
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.notebook.DeleteNoteUseCase
+import com.instructure.horizon.domain.usecase.notebook.GetNotebookCoursesUseCase
+import com.instructure.horizon.domain.usecase.notebook.GetNotesUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.redwood.QueryNotesQuery
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,10 +48,15 @@ import javax.inject.Inject
 @HiltViewModel
 class NotebookViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: NotebookRepository,
+    private val getNotesUseCase: GetNotesUseCase,
+    private val getNotebookCoursesUseCase: GetNotebookCoursesUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    private var pageInfo: QueryNotesQuery.PageInfo? = null
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private var endCursor: String? = null
     private var loadJob: Job? = null
 
     private var courseId: Long? =
@@ -74,12 +84,23 @@ class NotebookViewModel @Inject constructor(
             showCourseFilter = courseId == null,
             navigateToEdit = navigateToEdit,
             updateShowDeleteConfirmation = ::updateShowDeleteConfirmation,
-            deleteNote = ::deleteNote
+            deleteNote = ::deleteNote,
+            isOffline = isOffline(),
         )
     )
     val uiState = _uiState.asStateFlow()
 
     init {
+        if (isOffline()) {
+            viewModelScope.tryLaunch {
+                _uiState.update {
+                    it.copy(
+                        isOffline = true,
+                        lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                    )
+                }
+            } catch { }
+        }
         loadData()
     }
 
@@ -103,7 +124,7 @@ class NotebookViewModel @Inject constructor(
     }
 
     fun refresh() {
-        pageInfo = null
+        endCursor = null
         loadJob?.cancel()
         loadJob = viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
@@ -128,27 +149,25 @@ class NotebookViewModel @Inject constructor(
     }
 
     private suspend fun fetchCourses(forceNetwork: Boolean = false) {
-        val courses = repository.getCourses(forceNetwork)
+        val courses = getNotebookCoursesUseCase(forceNetwork)
         _uiState.update { it.copy(courses = courses) }
     }
 
     private suspend fun fetchNotes(forceNetwork: Boolean = false): List<Note> {
-        val notesResponse = repository.getNotes(
-            after = pageInfo?.endCursor,
-            before = null,
-            filterType = uiState.value.selectedFilter,
-            courseId = courseId,
-            objectTypeAndId = objectTypeAndId,
-            orderDirection = OrderDirection.descending,
-            forceNetwork = forceNetwork
+        val page = getNotesUseCase(
+            GetNotesUseCase.Params(
+                after = endCursor,
+                before = null,
+                filterType = uiState.value.selectedFilter,
+                courseId = courseId,
+                objectTypeAndId = objectTypeAndId,
+                orderDirection = OrderDirection.descending,
+                forceNetwork = forceNetwork,
+            )
         )
-        pageInfo = notesResponse.pageInfo
-
-        _uiState.update {
-            it.copy(hasNextPage = notesResponse.pageInfo.hasNextPage)
-        }
-
-        return notesResponse.mapToNotes()
+        endCursor = page.endCursor
+        _uiState.update { it.copy(hasNextPage = page.hasNextPage) }
+        return page.notes
     }
 
     private fun getNextPage() {
@@ -163,20 +182,20 @@ class NotebookViewModel @Inject constructor(
     }
 
     private fun onFilterSelected(newFilter: NotebookType?) {
-        pageInfo = null
+        endCursor = null
         _uiState.update { it.copy(selectedFilter = newFilter) }
         loadData()
     }
 
     private fun onCourseSelected(course: CourseWithProgress?) {
-        pageInfo = null
+        endCursor = null
         _uiState.update { it.copy(selectedCourse = course) }
         courseId = course?.courseId
         loadData()
     }
 
     fun updateFilters(courseId: Long? = null, objectTypeAndId: Pair<String, String>? = null) {
-        pageInfo = null
+        endCursor = null
         this.courseId = courseId
         this.objectTypeAndId = objectTypeAndId
         loadData()
@@ -206,14 +225,43 @@ class NotebookViewModel @Inject constructor(
     }
 
     private fun deleteNote(note: Note?) {
-        if (note != null) {
-            viewModelScope.tryLaunch {
-                _uiState.update { it.copy(deleteLoadingNote = note) }
-                repository.deleteNote(note.id)
-                _uiState.update { it.copy(deleteLoadingNote = null, notes = it.notes.filterNot { it == note }) }
-            } catch {
-                _uiState.update { it.copy(deleteLoadingNote = null) }
+        if (note == null) return
+        if (isOffline()) {
+            _uiState.update {
+                it.copy(
+                    showDeleteConfirmationForNote = null,
+                    loadingState = it.loadingState.copy(
+                        snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)
+                    )
+                )
             }
+            return
+        }
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(deleteLoadingNote = note) }
+            deleteNoteUseCase(note.id)
+            _uiState.update { it.copy(deleteLoadingNote = null, notes = it.notes.filterNot { it == note }) }
+        } catch {
+            _uiState.update { it.copy(deleteLoadingNote = null) }
+        }
+    }
+
+    override fun onNetworkRestored() {
+        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+        endCursor = null
+        loadData()
+    }
+
+    override fun onNetworkLost() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                )
+            }
+        } catch {
+            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
         }
     }
 }
