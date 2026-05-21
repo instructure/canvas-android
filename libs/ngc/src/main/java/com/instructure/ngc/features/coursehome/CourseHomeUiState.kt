@@ -22,6 +22,7 @@ data class CourseHomeUiState(
     val selectedTab: CourseHomeTab = CourseHomeTab.HOME,
     val isLoading: Boolean = true,
     val isError: Boolean = false,
+    val availableTabs: List<CourseHomeTab> = CourseHomeTab.entries,
 )
 
 enum class CourseHomeTab {

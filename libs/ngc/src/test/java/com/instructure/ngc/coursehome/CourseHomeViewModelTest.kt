@@ -17,12 +17,16 @@
 package com.instructure.ngc.coursehome
 
 import androidx.lifecycle.SavedStateHandle
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Page
 import com.instructure.ngc.features.coursehome.CourseHomeTab
 import com.instructure.ngc.features.coursehome.CourseHomeViewModel
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.domain.usecase.pages.LoadCourseFrontPageUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -41,11 +45,14 @@ import org.junit.Test
 class CourseHomeViewModelTest {
 
     private val loadCourseUseCase: LoadCourseUseCase = mockk(relaxed = true)
+    private val loadCourseFrontPageUseCase: LoadCourseFrontPageUseCase = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        coEvery { loadCourseFrontPageUseCase(any()) } returns null
     }
 
     @After
@@ -96,8 +103,9 @@ class CourseHomeViewModelTest {
     }
 
     @Test
-    fun `Failed course load sets error state`() = runTest {
-        coEvery { loadCourseUseCase(any()) } throws RuntimeException("Network error")
+    fun `Failed course load sets error state and records exception`() = runTest {
+        val error = RuntimeException("Network error")
+        coEvery { loadCourseUseCase(any()) } throws error
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -105,20 +113,52 @@ class CourseHomeViewModelTest {
         val state = viewModel.uiState.value
         assertFalse(state.isLoading)
         assertTrue(state.isError)
+        verify { crashlytics.recordException(error) }
     }
 
     @Test
-    fun `Default selected tab is HOME`() = runTest {
-        coEvery { loadCourseUseCase(any()) } returns Course(id = 1L, name = "Test")
+    fun `Failed front page load hides HOME tab without erroring the screen`() = runTest {
+        val error = RuntimeException("Front page network error")
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } throws error
 
         val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertFalse(state.isError)
+        assertFalse(state.availableTabs.contains(CourseHomeTab.HOME))
+        verify { crashlytics.recordException(error) }
+    }
+
+    @Test
+    fun `Default selected tab is HOME when home page exists`() = runTest {
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "<p>Welcome</p>")
+
+        val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(CourseHomeTab.HOME, viewModel.uiState.value.selectedTab)
     }
 
     @Test
     fun `onTabSelected updates selected tab`() = runTest {
-        coEvery { loadCourseUseCase(any()) } returns Course(id = 1L, name = "Test")
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "<p>Welcome</p>")
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -136,8 +176,74 @@ class CourseHomeViewModelTest {
         assertEquals(CourseHomeTab.HOME, viewModel.uiState.value.selectedTab)
     }
 
+    @Test
+    fun `HOME tab is available when front page has content`() = runTest {
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "<p>Welcome</p>")
+
+        val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.availableTabs.contains(CourseHomeTab.HOME))
+    }
+
+    @Test
+    fun `HOME tab is hidden when home page is not a wiki page`() = runTest {
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_MODULES,
+        )
+
+        val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.availableTabs.contains(CourseHomeTab.HOME))
+        assertEquals(CourseHomeTab.MODULES, state.selectedTab)
+    }
+
+    @Test
+    fun `HOME tab is hidden when wiki home page has blank body`() = runTest {
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "")
+
+        val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.availableTabs.contains(CourseHomeTab.HOME))
+    }
+
+    @Test
+    fun `HOME tab is hidden when front page request returns null`() = runTest {
+        coEvery { loadCourseUseCase(any()) } returns Course(
+            id = 1L,
+            name = "Test",
+            homePage = Course.HomePage.HOME_WIKI,
+        )
+        coEvery { loadCourseFrontPageUseCase(any()) } returns null
+
+        val viewModel = getViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.availableTabs.contains(CourseHomeTab.HOME))
+    }
+
     private fun getViewModel(courseId: Long = 1L): CourseHomeViewModel {
         val savedStateHandle = SavedStateHandle(mapOf(CourseHomeViewModel.ARG_COURSE_ID to courseId))
-        return CourseHomeViewModel(savedStateHandle, loadCourseUseCase)
+        return CourseHomeViewModel(
+            savedStateHandle,
+            loadCourseUseCase,
+            loadCourseFrontPageUseCase,
+            crashlytics,
+        )
     }
 }

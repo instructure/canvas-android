@@ -19,8 +19,12 @@ package com.instructure.ngc.features.coursehome
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.domain.usecase.pages.LoadCourseFrontPageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -32,7 +36,9 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseHomeViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val loadCourseUseCase: LoadCourseUseCase
+    private val loadCourseUseCase: LoadCourseUseCase,
+    private val loadCourseFrontPageUseCase: LoadCourseFrontPageUseCase,
+    private val crashlytics: FirebaseCrashlytics,
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle.get<Long>(ARG_COURSE_ID) ?: 0L
@@ -54,16 +60,46 @@ class CourseHomeViewModel @Inject constructor(
                 val course = loadCourseUseCase(
                     LoadCourseUseCaseParams(courseId, false)
                 )
-                _uiState.update {
-                    it.copy(
+                val hasHomePageContent = isHomeTabAPage(course) && hasFrontPageContent()
+                val availableTabs = buildAvailableTabs(hasHomePageContent)
+                _uiState.update { state ->
+                    val nextSelectedTab = state.selectedTab
+                        .takeIf { it in availableTabs }
+                        ?: availableTabs.first()
+                    state.copy(
                         courseName = course.name,
                         courseImageUrl = course.imageUrl,
+                        availableTabs = availableTabs,
+                        selectedTab = nextSelectedTab,
                         isLoading = false,
                     )
                 }
             } catch (e: Exception) {
+                crashlytics.recordException(e)
                 _uiState.update { it.copy(isLoading = false, isError = true) }
             }
+        }
+    }
+
+    private suspend fun hasFrontPageContent(): Boolean {
+        val page = loadFrontPageSafely() ?: return false
+        return !page.body.isNullOrBlank()
+    }
+
+    private suspend fun loadFrontPageSafely() = try {
+        loadCourseFrontPageUseCase(LoadCourseFrontPageUseCase.Params(courseId, false))
+    } catch (e: Exception) {
+        crashlytics.recordException(e)
+        null
+    }
+
+    private fun isHomeTabAPage(course: Course): Boolean = course.homePageID == Tab.FRONT_PAGE_ID
+
+    private fun buildAvailableTabs(hasHomePage: Boolean): List<CourseHomeTab> {
+        return if (hasHomePage) {
+            CourseHomeTab.entries
+        } else {
+            CourseHomeTab.entries.filterNot { it == CourseHomeTab.HOME }
         }
     }
 

@@ -37,15 +37,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.instui.compose.InstUITheme
-import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.navigation.CollapsingTopBar
 import com.instructure.instui.compose.navigation.SegmentedControl
 import com.instructure.ngc.R
 import com.instructure.ngc.designsystem.Image
+import com.instructure.ngc.features.coursehome.home.CourseHomeTabScreen
 import com.instructure.ngc.features.coursehome.modules.CourseModulesScreen
 import com.instructure.ngc.features.coursehome.mywork.CourseMyWorkScreen
 import com.instructure.ngc.features.coursehome.navigation.CourseNavigationScreen
-import com.instructure.ngc.features.coursehome.overview.CourseOverviewScreen
+import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ViewStyler
 
 @Composable
@@ -69,6 +70,15 @@ fun CourseHomeScreenContent(
     onNavigateBack: () -> Unit,
     onTabSelected: (CourseHomeTab) -> Unit,
 ) {
+    if (uiState.isLoading) {
+        val context = LocalContext.current
+        SideEffect {
+            (context as? Activity)?.let { ViewStyler.setStatusBarLight(it) }
+        }
+        Loading(modifier = Modifier.fillMaxSize())
+        return
+    }
+
     val courseColor = LocalCourseColor.current
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val collapsedFraction = scrollBehavior.state.collapsedFraction
@@ -106,27 +116,34 @@ fun CourseHomeScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            val tabLabels = listOf(
-                stringResource(R.string.ngc_courseHomeTabHome),
-                stringResource(R.string.ngc_courseHomeTabModules),
-                stringResource(R.string.ngc_courseHomeTabMyWork),
-                stringResource(R.string.ngc_courseHomeTabMore),
-            )
+            val tabLabels = uiState.availableTabs.map { stringResource(it.labelRes()) }
+            val selectedIndex = uiState.availableTabs.indexOf(uiState.selectedTab).coerceAtLeast(0)
+
             SegmentedControl(
                 tabs = tabLabels,
-                selectedIndex = uiState.selectedTab.ordinal,
-                onTabSelected = { index -> onTabSelected(CourseHomeTab.entries[index]) },
+                selectedIndex = selectedIndex,
+                onTabSelected = { index -> onTabSelected(uiState.availableTabs[index]) },
                 modifier = Modifier.fillMaxWidth(),
             )
 
             when (uiState.selectedTab) {
-                CourseHomeTab.HOME -> CourseOverviewScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.HOME -> CourseHomeTabScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    scrollBehavior = scrollBehavior,
+                )
                 CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
                 CourseHomeTab.MY_WORK -> CourseMyWorkScreen(modifier = Modifier.fillMaxSize())
                 CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
             }
         }
     }
+}
+
+private fun CourseHomeTab.labelRes(): Int = when (this) {
+    CourseHomeTab.HOME -> R.string.ngc_courseHomeTabHome
+    CourseHomeTab.MODULES -> R.string.ngc_courseHomeTabModules
+    CourseHomeTab.MY_WORK -> R.string.ngc_courseHomeTabMyWork
+    CourseHomeTab.MORE -> R.string.ngc_courseHomeTabMore
 }
 
 @Preview

@@ -14,20 +14,10 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.features.coursehome.overview
+package com.instructure.pandautils.data.repository.page
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.instructure.instui.compose.text.Text
+import com.instructure.canvasapi2.models.Page
 
-@Composable
-fun CourseOverviewScreen(modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        // Placeholder — content will be added in a future ticket
-        item {
-            Text("Course Overview content coming soon!")
-        }
-    }
+interface PageDataSource {
+    suspend fun getFrontPage(courseId: Long, forceRefresh: Boolean): Page?
 }

@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
@@ -58,6 +59,10 @@ import com.instructure.pandautils.data.repository.group.GroupLocalDataSource
 import com.instructure.pandautils.data.repository.group.GroupNetworkDataSource
 import com.instructure.pandautils.data.repository.group.GroupRepository
 import com.instructure.pandautils.data.repository.group.GroupRepositoryImpl
+import com.instructure.pandautils.data.repository.page.PageLocalDataSource
+import com.instructure.pandautils.data.repository.page.PageNetworkDataSource
+import com.instructure.pandautils.data.repository.page.PageRepository
+import com.instructure.pandautils.data.repository.page.PageRepositoryImpl
 import com.instructure.pandautils.data.repository.planner.PlannerRepository
 import com.instructure.pandautils.data.repository.planner.PlannerRepositoryImpl
 import com.instructure.pandautils.data.repository.submission.SubmissionRepository
@@ -67,6 +72,7 @@ import com.instructure.pandautils.data.repository.user.UserRepositoryImpl
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.PageFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
@@ -207,6 +213,36 @@ class RepositoryModule {
         assignmentApi: AssignmentAPI.AssignmentInterface
     ): AssignmentRepository {
         return AssignmentRepositoryImpl(userApi, assignmentApi)
+    }
+
+    @Provides
+    fun providePageNetworkDataSource(
+        pageApi: PageAPI.PagesInterface
+    ): PageNetworkDataSource {
+        return PageNetworkDataSource(pageApi)
+    }
+
+    @Provides
+    fun providePageLocalDataSource(
+        pageFacade: PageFacade
+    ): PageLocalDataSource {
+        return PageLocalDataSource(pageFacade)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun providePageRepository(
+        localDataSource: PageLocalDataSource,
+        networkDataSource: PageNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
+    ): PageRepository {
+        return PageRepositoryImpl(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider
+        )
     }
 
     @Provides
