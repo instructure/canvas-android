@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.features.grades.NGC_COURSE_ID_KEY
 import com.instructure.pandautils.domain.usecase.pages.LoadCourseFrontPageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +44,7 @@ class CourseHomeViewModel @Inject constructor(
 
     private val courseId: Long = savedStateHandle.get<Long>(ARG_COURSE_ID) ?: 0L
 
-    private val _uiState = MutableStateFlow(CourseHomeUiState())
+    private val _uiState = MutableStateFlow(CourseHomeUiState(courseId = courseId))
     val uiState: StateFlow<CourseHomeUiState> = _uiState.asStateFlow()
 
     init {
@@ -104,6 +105,6 @@ class CourseHomeViewModel @Inject constructor(
     }
 
     companion object {
-        const val ARG_COURSE_ID = "courseId"
+        const val ARG_COURSE_ID = NGC_COURSE_ID_KEY
     }
 }

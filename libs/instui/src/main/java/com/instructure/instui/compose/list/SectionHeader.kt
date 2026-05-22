@@ -37,6 +37,7 @@ import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIToggleDetails
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.chevronDown
+import com.instructure.instui.token.primitives.InstUIColors
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -70,6 +71,7 @@ fun SectionHeader(
 ) {
     Row(
         modifier = modifier
+            .background(InstUISemanticColors.Background.base())
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(

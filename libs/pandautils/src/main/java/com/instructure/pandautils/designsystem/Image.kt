@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.designsystem
+package com.instructure.pandautils.designsystem
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

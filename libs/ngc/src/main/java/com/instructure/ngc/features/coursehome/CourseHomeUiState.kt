@@ -17,6 +17,7 @@
 package com.instructure.ngc.features.coursehome
 
 data class CourseHomeUiState(
+    val courseId: Long = 0L,
     val courseName: String = "",
     val courseImageUrl: String? = null,
     val selectedTab: CourseHomeTab = CourseHomeTab.HOME,

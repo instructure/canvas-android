@@ -14,22 +14,26 @@
  *     limitations under the License.
  */
 
-package com.instructure.ngc.designsystem
+package com.instructure.pandautils.designsystem
 
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.staticCompositionLocalOf
 
 /**
- * Represents the design system to use for rendering UI components.
- * This abstraction allows switching between NGC and Legacy Canvas design systems.
+ * Represents which design system to use for rendering UI components.
+ * Screens that support both design systems check [LocalDesignSystem] and
+ * delegate to the appropriate component implementation.
  */
 @Stable
 enum class DesignSystem {
-    NextGenCanvas,
-    LegacyCanvas  // Placeholder for future Legacy Canvas support
+    /** New InstUI design system used by the Next Generation Canvas experience. */
+    InstUI,
+    /** Current Canvas design system (CanvasTheme-based components). */
+    Legacy
 }
 
 /**
  * CompositionLocal for providing the current design system throughout the composition tree.
+ * Defaults to [DesignSystem.Legacy] so existing screens remain unchanged.
  */
-val LocalDesignSystem = staticCompositionLocalOf { DesignSystem.NextGenCanvas }
+val LocalDesignSystem = staticCompositionLocalOf { DesignSystem.Legacy }

@@ -37,6 +37,8 @@ import com.instructure.ngc.features.coursehome.CourseHomeViewModel
 import com.instructure.ngc.features.dashboard.NGCDashboardScreen
 import com.instructure.ngc.features.splash.SplashScreen
 import com.instructure.ngc.features.splash.SplashViewModel
+import com.instructure.pandautils.features.grades.EXPERIENCE_KEY
+import com.instructure.pandautils.features.grades.Experience
 import com.instructure.pandautils.utils.ColorKeeper
 import kotlinx.serialization.Serializable
 
@@ -80,7 +82,11 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
         composable(
             route = NGCNavigationRoute.CourseHome.route,
             arguments = listOf(
-                navArgument(CourseHomeViewModel.ARG_COURSE_ID) { type = NavType.LongType }
+                navArgument(CourseHomeViewModel.ARG_COURSE_ID) { type = NavType.LongType },
+                navArgument(EXPERIENCE_KEY) {
+                    type = NavType.StringType
+                    defaultValue = Experience.NGC.name
+                },
             ),
             deepLinks = listOf(
                 navDeepLink { uriPattern = "https://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },

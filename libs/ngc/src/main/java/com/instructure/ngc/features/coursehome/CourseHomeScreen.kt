@@ -40,11 +40,11 @@ import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.navigation.CollapsingTopBar
 import com.instructure.instui.compose.navigation.SegmentedControl
 import com.instructure.ngc.R
-import com.instructure.ngc.designsystem.Image
 import com.instructure.ngc.features.coursehome.home.CourseHomeTabScreen
 import com.instructure.ngc.features.coursehome.modules.CourseModulesScreen
 import com.instructure.ngc.features.coursehome.mywork.CourseMyWorkScreen
 import com.instructure.ngc.features.coursehome.navigation.CourseNavigationScreen
+import com.instructure.pandautils.designsystem.Image
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ViewStyler
@@ -132,7 +132,7 @@ fun CourseHomeScreenContent(
                     scrollBehavior = scrollBehavior,
                 )
                 CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
-                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(courseId = uiState.courseId, modifier = Modifier.fillMaxSize())
                 CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
             }
         }
