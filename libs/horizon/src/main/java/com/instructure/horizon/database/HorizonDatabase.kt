@@ -18,12 +18,14 @@ package com.instructure.horizon.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.instructure.horizon.database.dao.HorizonAnnouncementDao
 import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
 import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
+import com.instructure.horizon.database.dao.HorizonNotificationStreamItemDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
@@ -37,6 +39,8 @@ import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
 import com.instructure.horizon.database.dao.HorizonSyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
+import com.instructure.horizon.database.entity.HorizonAnnouncementCommentEntity
+import com.instructure.horizon.database.entity.HorizonAnnouncementEntity
 import com.instructure.horizon.database.entity.HorizonAssignmentCommentAttachmentEntity
 import com.instructure.horizon.database.entity.HorizonAssignmentCommentEntity
 import com.instructure.horizon.database.entity.HorizonAssignmentDetailsEntity
@@ -62,6 +66,7 @@ import com.instructure.horizon.database.entity.HorizonEntitySyncMetadataEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonLocalImageEntity
 import com.instructure.horizon.database.entity.HorizonNoteEntity
+import com.instructure.horizon.database.entity.HorizonNotificationStreamItemEntity
 import com.instructure.horizon.database.entity.HorizonUserEntity
 import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
@@ -97,8 +102,11 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonLocalImageEntity::class,
         HorizonUserEntity::class,
         HorizonNoteEntity::class,
+        HorizonNotificationStreamItemEntity::class,
+        HorizonAnnouncementEntity::class,
+        HorizonAnnouncementCommentEntity::class,
     ],
-    version = 19,
+    version = 21,
 )
 abstract class HorizonDatabase : RoomDatabase() {
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
@@ -122,4 +130,6 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun localImageDao(): HorizonLocalImageDao
     abstract fun userDao(): HorizonUserDao
     abstract fun noteDao(): HorizonNoteDao
+    abstract fun notificationStreamItemDao(): HorizonNotificationStreamItemDao
+    abstract fun announcementDao(): HorizonAnnouncementDao
 }

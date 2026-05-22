@@ -48,6 +48,7 @@ class HomeBottomNavigationViewModel @Inject constructor(
 
     init {
         viewModelScope.tryLaunch {
+            featureFlagProvider.fetchEnvironmentFeatureFlags()
             networkStateProvider.isOnlineLiveData.asFlow()
                 .distinctUntilChanged()
                 .collect { isOnline ->

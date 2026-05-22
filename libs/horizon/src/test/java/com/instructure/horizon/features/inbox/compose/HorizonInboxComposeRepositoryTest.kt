@@ -16,37 +16,36 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
-import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.repository.InboxRepository
+import com.instructure.horizon.domain.usecase.inbox.CreateConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Before
 import org.junit.Test
 
 class HorizonInboxComposeRepositoryTest {
-    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val recipientApi: RecipientAPI.RecipientInterface = mockk(relaxed = true)
-    private val inboxApi: InboxApi.InboxInterface = mockk(relaxed = true)
+    private val getInboxCoursesUseCase: GetInboxCoursesUseCase = mockk(relaxed = true)
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase = mockk(relaxed = true)
+    private val createConversationUseCase: CreateConversationUseCase = mockk(relaxed = true)
+    private val inboxRepository: InboxRepository = mockk(relaxed = true)
 
-    private lateinit var repository: HorizonInboxComposeRepository
+    private val repository = HorizonInboxComposeRepository(
+        getInboxCoursesUseCase,
+        getInboxRecipientsUseCase,
+        createConversationUseCase,
+        inboxRepository,
+    )
 
     private val testCourses = listOf(
         Course(id = 1L, name = "Course 1"),
-        Course(id = 2L, name = "Course 2")
+        Course(id = 2L, name = "Course 2"),
     )
 
     private val testRecipients = listOf(
@@ -54,168 +53,59 @@ class HorizonInboxComposeRepositoryTest {
         Recipient(stringId = "2", name = "Student 2"),
     )
 
-    @Before
-    fun setup() {
-        repository = HorizonInboxComposeRepository(courseApi, recipientApi, inboxApi)
-        mockkObject(CanvasRestAdapter)
-        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
-    }
-
     @Test
-    fun `getAllInboxCourses returns course list`() = runTest {
-        coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(testCourses)
+    fun `getAllInboxCourses delegates to use case`() = runTest {
+        coEvery { getInboxCoursesUseCase(any()) } returns testCourses
 
         val result = repository.getAllInboxCourses(forceNetwork = true)
 
-        assertEquals(2, result.size)
-        assertEquals("Course 1", result.first().name)
-        coVerify { courseApi.getFirstPageCoursesInbox(any()) }
+        assertEquals(testCourses, result)
+        coVerify { getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(true)) }
     }
 
     @Test
-    fun `getAllInboxCourses with forceNetwork false`() = runTest {
-        coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(testCourses)
-
-        repository.getAllInboxCourses(forceNetwork = false)
-
-        coVerify { courseApi.getFirstPageCoursesInbox(match { !it.isForceReadFromNetwork }) }
-    }
-
-    @Test
-    fun `getAllInboxCourses with forceNetwork true`() = runTest {
-        coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(testCourses)
-
-        repository.getAllInboxCourses(forceNetwork = true)
-
-        coVerify { courseApi.getFirstPageCoursesInbox(match { it.isForceReadFromNetwork }) }
-    }
-
-    @Test
-    fun `getRecipients returns filtered list`() = runTest {
-        coEvery { recipientApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(testRecipients)
+    fun `getRecipients delegates to use case`() = runTest {
+        coEvery { getInboxRecipientsUseCase(any()) } returns testRecipients
 
         val result = repository.getRecipients(courseId = 1L, searchQuery = "student")
 
-        assertEquals(2, result.size)
-        assertTrue(result.all { it.recipientType == Recipient.Type.Person })
-        coVerify { recipientApi.getFirstPageRecipientList("student", "1", any()) }
-    }
-
-    @Test
-    fun `getRecipients filters out non-person recipients`() = runTest {
-        coEvery { recipientApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(testRecipients)
-
-        val result = repository.getRecipients(courseId = 1L, searchQuery = null)
-
-        assertEquals(2, result.size)
-        assertTrue(result.none { it.recipientType == Recipient.Type.Group })
-    }
-
-    @Test
-    fun `getRecipients with null search query`() = runTest {
-        coEvery { recipientApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(testRecipients)
-
-        repository.getRecipients(courseId = 1L, searchQuery = null)
-
-        coVerify { recipientApi.getFirstPageRecipientList(null, "1", any()) }
-    }
-
-    @Test
-    fun `createConversation calls API with correct parameters`() = runTest {
-        coEvery { inboxApi.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns mockk(relaxed = true)
-
-        repository.createConversation(
-            recipientIds = listOf("1", "2"),
-            body = "Test message",
-            subject = "Test subject",
-            contextCode = "course_1",
-            attachmentIds = longArrayOf(100L, 200L),
-            isBulkMessage = false
-        )
-
+        assertEquals(testRecipients, result)
         coVerify {
-            inboxApi.createConversation(
-                recipients = listOf("1", "2"),
-                message = "Test message",
-                subject = "Test subject",
-                contextCode = "course_1",
-                isBulk = 0,
-                attachmentIds = longArrayOf(100L, 200L),
-                params = any()
+            getInboxRecipientsUseCase(
+                GetInboxRecipientsUseCase.Params(courseId = 1L, searchQuery = "student", forceNetwork = false)
             )
         }
     }
 
     @Test
-    fun `createConversation with bulk message flag`() = runTest {
-        coEvery { inboxApi.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns mockk(relaxed = true)
-
+    fun `createConversation delegates to use case`() = runTest {
         repository.createConversation(
             recipientIds = listOf("1", "2"),
-            body = "Bulk message",
-            subject = "Bulk subject",
-            contextCode = "course_1",
-            attachmentIds = longArrayOf(),
-            isBulkMessage = true
-        )
-
-        coVerify {
-            inboxApi.createConversation(
-                recipients = any(),
-                message = any(),
-                subject = any(),
-                contextCode = any(),
-                isBulk = 1,
-                attachmentIds = any(),
-                params = any()
-            )
-        }
-    }
-
-    @Test
-    fun `invalidateConversationListCachedResponse clears cache`() {
-        repository.invalidateConversationListCachedResponse()
-
-        verify { CanvasRestAdapter.clearCacheUrls("conversations") }
-    }
-
-    @Test
-    fun `createConversation with empty attachments`() = runTest {
-        coEvery { inboxApi.createConversation(any(), any(), any(), any(), any(), any(), any()) } returns mockk(relaxed = true)
-
-        repository.createConversation(
-            recipientIds = listOf("1"),
-            body = "Message",
+            body = "Body",
             subject = "Subject",
             contextCode = "course_1",
-            attachmentIds = longArrayOf(),
-            isBulkMessage = false
+            attachmentIds = longArrayOf(100L),
+            isBulkMessage = true,
         )
 
         coVerify {
-            inboxApi.createConversation(
-                recipients = any(),
-                message = any(),
-                subject = any(),
-                contextCode = any(),
-                isBulk = any(),
-                attachmentIds = longArrayOf(),
-                params = any()
+            createConversationUseCase(
+                match {
+                    it.recipientIds == listOf("1", "2") &&
+                        it.subject == "Subject" &&
+                        it.body == "Body" &&
+                        it.contextCode == "course_1" &&
+                        it.attachmentIds.contentEquals(longArrayOf(100L)) &&
+                        it.isBulkMessage
+                }
             )
         }
     }
 
     @Test
-    fun `getRecipients with forceNetwork parameter`() = runTest {
-        coEvery { recipientApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(testRecipients)
+    fun `invalidateConversationListCachedResponse delegates`() {
+        repository.invalidateConversationListCachedResponse()
 
-        repository.getRecipients(courseId = 1L, searchQuery = "test", forceNetwork = true)
-
-        coVerify { recipientApi.getFirstPageRecipientList(any(), any(), match { it.isForceReadFromNetwork }) }
+        verify { inboxRepository.invalidateConversationListCachedResponse() }
     }
 }

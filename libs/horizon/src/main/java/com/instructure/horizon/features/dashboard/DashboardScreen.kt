@@ -216,7 +216,6 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             navController,
                             shouldRefresh,
                             refreshStateFlow,
-                            isOffline = uiState.isOffline,
                         )
                         DashboardCourseSection(
                             navController,
@@ -281,7 +280,6 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
-            enabled = !uiState.isOffline,
             badge = if (uiState.unreadCountState.unreadNotifications > 0) {
                 {
                     Badge(
@@ -290,7 +288,6 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
                     )
                 }
             } else null,
-            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(

@@ -16,64 +16,52 @@
  */
 package com.instructure.horizon.features.inbox.list
 
-import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.horizon.data.repository.InboxRepository
+import com.instructure.horizon.domain.usecase.inbox.GetConversationsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
 import javax.inject.Inject
 
 class HorizonInboxListRepository @Inject constructor(
-    private val apiPrefs: ApiPrefs,
-    private val inboxApi: InboxApi.InboxInterface,
-    private val recipientsApi: RecipientAPI.RecipientInterface,
+    private val getConversationsUseCase: GetConversationsUseCase,
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase,
+    private val getInboxCoursesUseCase: GetInboxCoursesUseCase,
+    private val inboxRepository: InboxRepository,
     private val announcementsApi: AnnouncementAPI.AnnouncementInterface,
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface,
-    private val courseApi: CourseAPI.CoursesInterface,
+    private val accountNotificationApi: com.instructure.canvasapi2.apis.AccountNotificationAPI.AccountNotificationInterface,
 ) {
     suspend fun getConversations(scope: InboxApi.Scope = InboxApi.Scope.INBOX, forceNetwork: Boolean): List<Conversation> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-        return inboxApi.getConversations(InboxApi.conversationScopeToString(scope), params).depaginate {
-            inboxApi.getNextPage(it, params)
-        }.dataOrThrow
+        return getConversationsUseCase(GetConversationsUseCase.Params(scope, forceNetwork))
     }
 
     suspend fun getRecipients(searchQuery: String?, forceNetwork: Boolean): List<Recipient> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        return recipientsApi.getFirstPageRecipientList(searchQuery, apiPrefs.user!!.contextId, params)
-            .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
-            .dataOrThrow
-            .filter { it.recipientType == Recipient.Type.Person }
+        return getInboxRecipientsUseCase(GetInboxRecipientsUseCase.Params(searchQuery = searchQuery, forceNetwork = forceNetwork))
     }
 
     suspend fun getCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {
+        val courses = getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(forceNetwork))
+        if (courses.isEmpty()) return emptyList()
+
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        val courses = getAllInboxCourses(forceNetwork)
-        return if (courses.isEmpty()) {
-            return emptyList()
-        } else {
-            announcementsApi.getFirstPageAnnouncements(
-                courseCode = courses.map { it.contextId }.toTypedArray(),
-                params = params
-            )
+        return announcementsApi.getFirstPageAnnouncements(
+            courseCode = courses.map { it.contextId }.toTypedArray(),
+            params = params,
+        )
             .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }
             .dataOrThrow
             .map { announcement ->
-                Pair(
-                    courses.first { course -> course.contextId == announcement.contextCode },
-                    announcement
-                )
+                val course = courses.first { it.contextId == announcement.contextCode }
+                course to announcement
             }
-        }
     }
 
     suspend fun getAccountAnnouncements(forceNetwork: Boolean): List<AccountNotification> {
@@ -83,14 +71,7 @@ class HorizonInboxListRepository @Inject constructor(
             .dataOrThrow
     }
 
-    private suspend fun getAllInboxCourses(forceNetwork: Boolean): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-        return courseApi.getFirstPageCoursesInbox(params).depaginate {
-            courseApi.next(it, params)
-        }.dataOrThrow
-    }
-
     fun invalidateConversationListCachedResponse() {
-        CanvasRestAdapter.clearCacheUrls("conversations")
+        inboxRepository.invalidateConversationListCachedResponse()
     }
 }

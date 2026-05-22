@@ -127,6 +127,12 @@ object HorizonOfflineTestModule {
     fun provideHorizonNoteDao(db: HorizonDatabase): HorizonNoteDao = db.noteDao()
 
     @Provides
+    fun provideHorizonNotificationStreamItemDao(db: HorizonDatabase) = db.notificationStreamItemDao()
+
+    @Provides
+    fun provideHorizonAnnouncementDao(db: HorizonDatabase) = db.announcementDao()
+
+    @Provides
     @HorizonHtmlParserQualifier
     fun provideHorizonHtmlParser(
         fileSource: HorizonHtmlParserFileSource,

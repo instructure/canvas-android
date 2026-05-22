@@ -16,34 +16,28 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
-import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.RecipientAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.horizon.data.repository.InboxRepository
+import com.instructure.horizon.domain.usecase.inbox.CreateConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
 import javax.inject.Inject
 
 class HorizonInboxComposeRepository @Inject constructor(
-    private var courseApi: CourseAPI.CoursesInterface,
-    private var recipientApi: RecipientAPI.RecipientInterface,
-    private var inboxApi: InboxApi.InboxInterface
+    private val getInboxCoursesUseCase: GetInboxCoursesUseCase,
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase,
+    private val createConversationUseCase: CreateConversationUseCase,
+    private val inboxRepository: InboxRepository,
 ) {
     suspend fun getAllInboxCourses(forceNetwork: Boolean): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-        return courseApi.getFirstPageCoursesInbox(params).depaginate {
-            courseApi.next(it, params)
-        }.dataOrThrow
+        return getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(forceNetwork))
     }
 
     suspend fun getRecipients(courseId: Long, searchQuery: String?, forceNetwork: Boolean = false): List<Recipient> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        return recipientApi.getFirstPageRecipientList(searchQuery, courseId.toString(), params)
-            .depaginate { recipientApi.getNextPageRecipientList(it, params) }
-            .dataOrThrow
-            .filter { it.recipientType == Recipient.Type.Person }
+        return getInboxRecipientsUseCase(
+            GetInboxRecipientsUseCase.Params(courseId = courseId, searchQuery = searchQuery, forceNetwork = forceNetwork)
+        )
     }
 
     suspend fun createConversation(
@@ -54,18 +48,19 @@ class HorizonInboxComposeRepository @Inject constructor(
         attachmentIds: LongArray,
         isBulkMessage: Boolean,
     ) {
-        inboxApi.createConversation(
-            recipients = recipientIds,
-            message = body,
-            subject = subject,
-            contextCode = contextCode,
-            isBulk = if (isBulkMessage) 1 else 0,
-            attachmentIds = attachmentIds,
-            params = RestParams()
+        createConversationUseCase(
+            CreateConversationUseCase.Params(
+                recipientIds = recipientIds,
+                subject = subject,
+                body = body,
+                contextCode = contextCode,
+                attachmentIds = attachmentIds,
+                isBulkMessage = isBulkMessage,
+            )
         )
     }
 
     fun invalidateConversationListCachedResponse() {
-        CanvasRestAdapter.clearCacheUrls("conversations")
+        inboxRepository.invalidateConversationListCachedResponse()
     }
 }

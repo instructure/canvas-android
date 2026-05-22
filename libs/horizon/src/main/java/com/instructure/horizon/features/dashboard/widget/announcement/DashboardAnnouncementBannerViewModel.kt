@@ -17,11 +17,11 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -29,6 +29,9 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,8 +44,11 @@ import javax.inject.Inject
 class DashboardAnnouncementBannerViewModel @Inject constructor(
     private val repository: DashboardAnnouncementBannerRepository,
     private val dashboardEventHandler: DashboardEventHandler,
-    @ApplicationContext private val context: Context
-) : ViewModel() {
+    @ApplicationContext private val context: Context,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
 
     private val _uiState = MutableStateFlow(
         DashboardAnnouncementBannerUiState(
@@ -68,6 +74,14 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun onNetworkRestored() {
+        refresh()
+    }
+
+    override fun onNetworkLost() {
+        refresh()
     }
 
     private suspend fun loadAnnouncementData(forceNetwork: Boolean = false) {

@@ -17,11 +17,14 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.StreamItem
+import androidx.lifecycle.MutableLiveData
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.model.NotificationStreamItem
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -41,39 +44,56 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: NotificationRepository = mockk(relaxed = true)
+    private val getNotificationStreamUseCase: GetNotificationStreamUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val course = Course(1L, "Course 1")
-    val streamItems = listOf(
-        StreamItem(
+    private val courseId = 1L
+    private val courseName = "Course 1"
+    val items = listOf(
+        NotificationStreamItem(
             id = 1,
             type = "Message",
+            notificationCategory = "",
             title = "Scored item",
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
             score = 5.0,
-            course_id = course.id,
+            grade = null,
+            updatedAt = null,
             htmlUrl = "deeplinkUrl1",
-            assignment = Assignment(
-                id = 1L,
-                name = "Assignment 1",
-                htmlUrl = "assignmentUrl1"
-            )
+            assignmentHtmlUrl = "assignmentUrl1",
         ),
-        StreamItem(
+        NotificationStreamItem(
             id = 2,
             type = "Message",
             notificationCategory = "Grading Policies",
             title = "Grading period item",
-            course_id = course.id,
-            htmlUrl = "deeplinkUrl2"
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
+            score = -1.0,
+            grade = null,
+            updatedAt = null,
+            htmlUrl = "deeplinkUrl2",
+            assignmentHtmlUrl = null,
         ),
-        StreamItem(
+        NotificationStreamItem(
             id = 3,
             type = "Message",
-            notificationCategory = "Due date",
+            notificationCategory = "Due Date",
             title = "Due Date",
-            course_id = course.id,
-            htmlUrl = "deeplinkUrl3"
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
+            score = -1.0,
+            grade = null,
+            updatedAt = null,
+            htmlUrl = "deeplinkUrl3",
+            assignmentHtmlUrl = null,
         ),
     )
 
@@ -85,8 +105,10 @@ class NotificationViewModelTest {
         every { context.getString(R.string.notificationsScoreCategoryLabel) } returns "Score"
         every { context.getString(R.string.notificationsScoreChangedCategoryLabel) } returns "Score changed"
         every { context.getString(R.string.notificationsScoredItemTitle, "Scored item") } returns "Scored item's score is now available"
-        coEvery { repository.getCourse(course.id) } returns course
-        coEvery { repository.getNotifications(any()) } returns streamItems
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { getNotificationStreamUseCase(any()) } returns items
     }
 
     @After
@@ -146,7 +168,7 @@ class NotificationViewModelTest {
                     StatusChipColor.Sky
                 ),
                 title = "Announcement 1",
-                courseLabel = course.name,
+                courseLabel = courseName,
                 date = null,
                 isRead = false,
                 deepLink = "deeplinkUrl4"
@@ -155,6 +177,12 @@ class NotificationViewModelTest {
     }
 
     private fun getViewModel(): NotificationViewModel {
-        return NotificationViewModel(context, repository)
+        return NotificationViewModel(
+            context,
+            getNotificationStreamUseCase,
+            networkStateProvider,
+            featureFlagProvider,
+            getLastSyncedAtUseCase,
+        )
     }
 }

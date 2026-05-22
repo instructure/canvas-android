@@ -34,6 +34,8 @@ class HorizonCourseSync @Inject constructor(
     private val fileSyncPlanDao: HorizonFileSyncPlanDao,
     private val enrollmentSyncer: EnrollmentSyncer,
     private val accountSyncer: AccountSyncer,
+    private val notificationStreamSyncer: NotificationStreamSyncer,
+    private val announcementSyncer: AnnouncementSyncer,
     private val courseContentSyncer: CourseContentSyncer,
     private val assignmentSyncer: AssignmentSyncer,
     private val pageSyncer: PageSyncer,
@@ -55,6 +57,18 @@ class HorizonCourseSync @Inject constructor(
             syncEnrollmentImages()
         } catch (_: Exception) {
             // Global sync failure is non-fatal for individual courses
+        }
+
+        try {
+            notificationStreamSyncer.sync()
+        } catch (_: Exception) {
+            // Notification stream sync failure is non-fatal
+        }
+
+        try {
+            announcementSyncer.sync()
+        } catch (_: Exception) {
+            // Announcement sync failure is non-fatal
         }
 
         for (plan in plans) {

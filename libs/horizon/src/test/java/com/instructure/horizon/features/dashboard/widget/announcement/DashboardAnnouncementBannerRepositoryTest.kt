@@ -16,158 +16,73 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement
 
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
+import com.instructure.horizon.model.HorizonAnnouncement
+import com.instructure.horizon.model.HorizonAnnouncementKind
 import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
 import java.util.Date
 
 class DashboardAnnouncementBannerRepositoryTest {
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface = mockk(relaxed = true)
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface = mockk(relaxed = true)
-    private val getCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val userId = 1L
-
-    @Before
-    fun setup() {
-        coEvery { apiPrefs.user?.id } returns userId
-    }
+    private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase = mockk(relaxed = true)
 
     @Test
-    fun `Test successful unread course announcements retrieval`() = runTest {
-        val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 50.0)
-        )
-        val announcements = listOf(
-            createDiscussionTopicHeader("1", "Course Announcement 1", "course_1", false)
+    fun `Maps course announcements to banner items`() = runTest {
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            announcement(id = 1, kind = HorizonAnnouncementKind.COURSE, courseId = 100L, title = "Course A1", courseName = "Course 1"),
         )
 
-        setupCourseMocks(courses, announcements)
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
-
-        val result = getRepository().getUnreadAnnouncements(false)
+        val result = getRepository().getUnreadAnnouncements(forceRefresh = false)
 
         assertEquals(1, result.size)
-        assertEquals("Course Announcement 1", result[0].title)
+        assertEquals("Course A1", result[0].title)
         assertEquals("Course 1", result[0].source)
         assertEquals(AnnouncementType.COURSE, result[0].type)
     }
 
     @Test
-    fun `Test filters out read announcements`() = runTest {
-        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 10.0))
-        val announcements = listOf(
-            createDiscussionTopicHeader("1", "Unread Announcement", "course_1", false),
-            createDiscussionTopicHeader("2", "Read Announcement", "course_1", true)
+    fun `Maps account announcements to banner items`() = runTest {
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            announcement(id = 2, kind = HorizonAnnouncementKind.ACCOUNT, courseId = null, title = "Global", courseName = null),
         )
 
-        setupCourseMocks(courses, announcements)
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
-
-        val result = getRepository().getUnreadAnnouncements(false)
+        val result = getRepository().getUnreadAnnouncements(forceRefresh = false)
 
         assertEquals(1, result.size)
-        assertEquals("Unread Announcement", result[0].title)
-    }
-
-    @Test
-    fun `Test successful global announcements retrieval`() = runTest {
-        val globalAnnouncements = listOf(
-            AccountNotification(id = 1L, subject = "Global Announcement 1", closed = false),
-            AccountNotification(id = 2L, subject = "Global Announcement 2", closed = false)
-        )
-
-        setupCourseMocks(emptyList(), emptyList())
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(globalAnnouncements)
-        coEvery { accountNotificationApi.getNextPageNotifications(any(), any()) } returns DataResult.Fail()
-
-        val result = getRepository().getUnreadAnnouncements(false)
-
-        assertEquals(2, result.size)
-        assertEquals("Global Announcement 1", result[0].title)
+        assertEquals("Global", result[0].title)
         assertEquals(null, result[0].source)
         assertEquals(AnnouncementType.GLOBAL, result[0].type)
     }
 
     @Test
-    fun `Test empty announcements list`() = runTest {
-        setupCourseMocks(emptyList(), emptyList())
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { accountNotificationApi.getNextPageNotifications(any(), any()) } returns DataResult.Fail()
-
-        val result = getRepository().getUnreadAnnouncements(false)
-
-        assertEquals(0, result.size)
+    fun `Returns empty when use case returns empty`() = runTest {
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns emptyList()
+        assertEquals(0, getRepository().getUnreadAnnouncements(false).size)
     }
 
-    @Test
-    fun `Test forceRefresh parameter is passed correctly`() = runTest {
-        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 10.0))
-        setupCourseMocks(courses, emptyList())
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { accountNotificationApi.getNextPageNotifications(any(), any()) } returns DataResult.Fail()
-
-        getRepository().getUnreadAnnouncements(true)
-
-        coVerify { getCoursesManager.getCoursesWithProgress(any(), true) }
-        coVerify { accountNotificationApi.getAccountNotifications(match { it.isForceReadFromNetwork }, any(), any()) }
-    }
-
-    @Test
-    fun `Test empty courses list returns empty announcements`() = runTest {
-        coEvery { getCoursesManager.getCoursesWithProgress(any()) } returns DataResult.Success(emptyList())
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { accountNotificationApi.getNextPageNotifications(any(), any()) } returns DataResult.Fail()
-
-        val result = getRepository().getUnreadAnnouncements(false)
-
-        assertEquals(0, result.size)
-    }
-
-    private fun createDiscussionTopicHeader(
-        id: String,
+    private fun announcement(
+        id: Long,
+        kind: HorizonAnnouncementKind,
+        courseId: Long?,
         title: String,
-        contextCode: String,
-        isRead: Boolean,
-        postedDate: Date = Date()
-    ): DiscussionTopicHeader {
-        return DiscussionTopicHeader(
-            id = id.toLong(),
-            title = title,
-            contextCode = contextCode,
-            readState = if (isRead) "read" else "unread",
-            postedDate = postedDate,
-            htmlUrl = "test/url/$id"
-        )
-    }
-
-    private fun setupCourseMocks(
-        courses: List<CourseWithProgress>,
-        announcements: List<DiscussionTopicHeader>
-    ) {
-        coEvery { getCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(courses)
-        coEvery { announcementApi.getFirstPageAnnouncements(any(), params = any()) } returns DataResult.Success(announcements)
-        coEvery { announcementApi.getNextPageAnnouncementsList(any(), any()) } returns DataResult.Success(announcements)
-    }
+        courseName: String?,
+    ) = HorizonAnnouncement(
+        id = id,
+        kind = kind,
+        courseId = courseId,
+        courseName = courseName,
+        title = title,
+        message = "",
+        authorDisplayName = null,
+        postedAt = Date(),
+        isUnread = true,
+        isClosed = false,
+    )
 
     private fun getRepository(): DashboardAnnouncementBannerRepository {
-        return DashboardAnnouncementBannerRepository(
-            announcementApi,
-            accountNotificationApi,
-            getCoursesManager,
-            apiPrefs
-        )
+        return DashboardAnnouncementBannerRepository(getUnreadAnnouncementsUseCase)
     }
 }

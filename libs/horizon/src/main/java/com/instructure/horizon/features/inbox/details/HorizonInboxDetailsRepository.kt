@@ -16,74 +16,17 @@
  */
 package com.instructure.horizon.features.inbox.details
 
-import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.DiscussionAPI
-import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.DiscussionTopic
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.utils.DataResult
-import retrofit2.Call
+import com.instructure.horizon.domain.usecase.inbox.AddMessageToConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetConversationUseCase
 import javax.inject.Inject
 
 class HorizonInboxDetailsRepository @Inject constructor(
-    private val inboxApi: InboxApi.InboxInterface,
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface,
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface,
-    private val discussionApi: DiscussionAPI.DiscussionInterface
+    private val getConversationUseCase: GetConversationUseCase,
+    private val addMessageToConversationUseCase: AddMessageToConversationUseCase,
 ) {
     suspend fun getConversation(id: Long, markAsRead: Boolean = true, forceRefresh: Boolean): Conversation {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return inboxApi.getConversation(id, markAsRead, params).dataOrThrow
-    }
-
-    suspend fun getAccountAnnouncement(id: Long, forceRefresh: Boolean): AccountNotification {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return accountNotificationApi.getAccountNotifications(params, true, true).dataOrThrow.first { it.id == id }
-    }
-
-    suspend fun deleteAccountAnnouncement(id: Long): DataResult<AccountNotification> {
-        val params = RestParams()
-        return accountNotificationApi.deleteAccountNotification(id, params)
-    }
-
-    suspend fun getAnnouncement(id: Long, courseId: Long, forceRefresh: Boolean): DiscussionTopicHeader {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return announcementApi.getCourseAnnouncement(courseId, id, params).dataOrThrow
-    }
-
-    suspend fun getAnnouncementTopic(id: Long, courseId: Long, forceRefresh: Boolean): DiscussionTopic {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, id, 1, params).dataOrThrow
-    }
-
-    suspend fun markAnnouncementAsRead(
-        courseId: Long,
-        announcementId: Long,
-        entries: Set<Long>,
-    ): DataResult<Unit> {
-        val params = RestParams()
-        val result = discussionApi.markDiscussionTopicRead(CanvasContext.Type.COURSE.apiString, courseId, announcementId, params)
-        if (result is DataResult.Fail) return result
-
-        val successfullyMarkedAsReadIds: MutableSet<Long> = mutableSetOf()
-        entries.forEach { entryId ->
-            val entryResult =
-                discussionApi.markDiscussionTopicEntryRead(CanvasContext.Type.COURSE.apiString, courseId, announcementId, entryId, params)
-            if (entryResult is DataResult.Success) {
-                successfullyMarkedAsReadIds.add(entryId)
-            }
-        }
-        return if (successfullyMarkedAsReadIds == entries) {
-            DataResult.Success(Unit)
-        } else {
-            DataResult.Fail()
-        }
+        return getConversationUseCase(GetConversationUseCase.Params(id, markAsRead, forceRefresh))
     }
 
     suspend fun addMessageToConversation(
@@ -94,19 +37,15 @@ class HorizonInboxDetailsRepository @Inject constructor(
         includedMessageIds: List<Long>,
         attachmentIds: List<Long>,
     ): Conversation {
-        val params = RestParams()
-        return inboxApi.addMessage(
-            conversationId = conversationId,
-            recipientIds = recipientIds,
-            body = body,
-            includedMessageIds = includedMessageIds.toLongArray(),
-            attachmentIds = attachmentIds.toLongArray(),
-            contextCode = contextCode,
-            params = params
-        ).dataOrThrow
-    }
-
-    fun invalidateConversationDetailsCachedResponse(conversationId: Long) {
-        CanvasRestAdapter.clearCacheUrls("conversations/$conversationId")
+        return addMessageToConversationUseCase(
+            AddMessageToConversationUseCase.Params(
+                contextCode = contextCode,
+                conversationId = conversationId,
+                recipientIds = recipientIds,
+                body = body,
+                includedMessageIds = includedMessageIds,
+                attachmentIds = attachmentIds,
+            )
+        )
     }
 }

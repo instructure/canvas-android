@@ -22,6 +22,7 @@ import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.horizon.offline.HorizonHtmlParserFileSource
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import dagger.hilt.android.qualifiers.ApplicationContext
+import com.instructure.horizon.database.dao.HorizonAnnouncementDao
 import com.instructure.horizon.database.dao.HorizonAssignmentCommentDao
 import com.instructure.horizon.database.dao.HorizonAssignmentDetailsDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
@@ -36,6 +37,7 @@ import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
+import com.instructure.horizon.database.dao.HorizonNotificationStreamItemDao
 import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
@@ -163,6 +165,16 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonNoteDao(db: HorizonDatabase): HorizonNoteDao {
         return db.noteDao()
+    }
+
+    @Provides
+    fun provideHorizonNotificationStreamItemDao(db: HorizonDatabase): HorizonNotificationStreamItemDao {
+        return db.notificationStreamItemDao()
+    }
+
+    @Provides
+    fun provideHorizonAnnouncementDao(db: HorizonDatabase): HorizonAnnouncementDao {
+        return db.announcementDao()
     }
 
     @Provides

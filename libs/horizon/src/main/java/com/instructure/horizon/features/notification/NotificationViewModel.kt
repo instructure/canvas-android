@@ -17,14 +17,18 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.model.NotificationStreamItem
+import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +39,11 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: NotificationRepository
-): ViewModel() {
+    private val getNotificationStreamUseCase: GetNotificationStreamUseCase,
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
     private val _uiState = MutableStateFlow(
         NotificationUiState(
             LoadingState(
@@ -48,6 +55,14 @@ class NotificationViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
+        initData()
+    }
+
+    override fun onNetworkRestored() {
+        initData()
+    }
+
+    override fun onNetworkLost() {
         initData()
     }
 
@@ -70,25 +85,12 @@ class NotificationViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceRefresh: Boolean = false) {
-        val userNotifications = repository.getNotifications(forceRefresh).map {
-            NotificationItem(
-                category = getNotificationItemCategoryLabel(it),
-                title = getNotificationItemTitle(it),
-                courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
-                date = it.updatedDate,
-                isRead = it.isReadState,
-                deepLink = if (it.assignment?.htmlUrl != null) {
-                    it.assignment?.htmlUrl!!
-                } else {
-                    it.htmlUrl
-                }
-            )
-        }
+        val items = getNotificationStreamUseCase(GetNotificationStreamUseCase.Params(forceRefresh))
+            .map { it.toUiItem() }
+            .sortedByDescending { it.date }
 
         _uiState.update {
-            it.copy(
-                notificationItems = (userNotifications).sortedByDescending { item -> item.date }
-            )
+            it.copy(notificationItems = items)
         }
     }
 
@@ -110,47 +112,45 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    private fun getNotificationItemCategoryLabel(streamItem: StreamItem): NotificationItemCategory {
-        if (streamItem.isNotificationItemScored()) {
-            return NotificationItemCategory(
-                context.getString(R.string.notificationsScoreChangedCategoryLabel),
-                StatusChipColor.Violet
-            )
-        }
-        if (streamItem.isGradingPeriodNotification()) {
-            return NotificationItemCategory(
-                context.getString(R.string.notificationsScoreCategoryLabel),
-                StatusChipColor.Violet
-            )
-        }
-        if (streamItem.isDueDateNotification()) {
-            return NotificationItemCategory(
-                context.getString(R.string.notificationsDueDateCategoryLabel),
-                StatusChipColor.Honey
-            )
-        }
-        if (streamItem.isCourseNotification()) {
-            return NotificationItemCategory(
-                context.getString(R.string.notificationsAnnouncementCategoryLabel),
-                StatusChipColor.Sky
-            )
-        }
-
-        return NotificationItemCategory(
-            streamItem.notificationCategory,
-            StatusChipColor.Honey
+    private fun NotificationStreamItem.toUiItem(): NotificationItem {
+        return NotificationItem(
+            category = categoryLabel(),
+            title = displayTitle(),
+            courseLabel = if (isCourseNotification) courseName else null,
+            date = updatedAt,
+            isRead = isRead,
+            deepLink = deepLink,
         )
     }
 
-    private fun getNotificationItemTitle(streamItem: StreamItem): String {
-        if (streamItem.isNotificationItemScored()) {
-            return context.getString(R.string.notificationsScoredItemTitle, streamItem.title)
+    private fun NotificationStreamItem.categoryLabel(): NotificationItemCategory {
+        return when {
+            isScored -> NotificationItemCategory(
+                context.getString(R.string.notificationsScoreChangedCategoryLabel),
+                StatusChipColor.Violet,
+            )
+            isGradingPolicy -> NotificationItemCategory(
+                context.getString(R.string.notificationsScoreCategoryLabel),
+                StatusChipColor.Violet,
+            )
+            isDueDate -> NotificationItemCategory(
+                context.getString(R.string.notificationsDueDateCategoryLabel),
+                StatusChipColor.Honey,
+            )
+            isCourseNotification -> NotificationItemCategory(
+                context.getString(R.string.notificationsAnnouncementCategoryLabel),
+                StatusChipColor.Sky,
+            )
+            else -> NotificationItemCategory(notificationCategory, StatusChipColor.Honey)
         }
-        return streamItem.title.orEmpty()
     }
 
-    private suspend fun getCourseName(courseId: Long): String {
-        return repository.getCourse(courseId).name
+    private fun NotificationStreamItem.displayTitle(): String {
+        return if (isScored) {
+            context.getString(R.string.notificationsScoredItemTitle, title)
+        } else {
+            title
+        }
     }
 
     private fun dismissSnackbar() {

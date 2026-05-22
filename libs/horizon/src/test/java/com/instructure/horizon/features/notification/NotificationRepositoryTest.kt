@@ -16,15 +16,13 @@
  */
 package com.instructure.horizon.features.notification
 
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.StreamAPI
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.NotificationStreamLocalDataSource
+import com.instructure.horizon.data.datasource.NotificationStreamNetworkDataSource
+import com.instructure.horizon.data.repository.NotificationStreamRepository
+import com.instructure.horizon.model.NotificationStreamItem
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -36,112 +34,87 @@ import org.junit.Before
 import org.junit.Test
 
 class NotificationRepositoryTest {
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val streamApi: StreamAPI.StreamInterface = mockk(relaxed = true)
-    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface = mockk(relaxed = true)
-    private val getCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
+    private val networkDataSource: NotificationStreamNetworkDataSource = mockk(relaxed = true)
+    private val localDataSource: NotificationStreamLocalDataSource = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
-    private val userId = 1L
     @Before
     fun setup() {
-        every { apiPrefs.user?.id } returns userId
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { localDataSource.courseNameFor(any()) } returns "Course 1"
     }
 
     @Test
-    fun `Test successful Stream API notification items filtering`() = runTest {
-        val validCourse = CourseWithProgress(
-            courseId = 1L,
-            courseName = "Course 1",
-            courseImageUrl = null,
-            courseSyllabus = "",
-            progress = 5.0
-        )
-        val notValidCourse = CourseWithProgress(
-            courseId = 2L,
-            courseName = "Course 2",
-            courseImageUrl = null,
-            courseSyllabus = "",
-            progress = 0.0
-        )
-        val conversationStreamItem = StreamItem(
-            type = "Conversation",
-            course_id = validCourse.courseId,
-        )
-        val messageStreamItem = StreamItem(
-            type = "Message",
-            course_id = validCourse.courseId,
-        )
-        val discussionStreamItem = StreamItem(
-            type = "DiscussionTopic",
-            course_id = validCourse.courseId,
-        )
-        val announcementStreamItem = StreamItem(
-            type = "Announcement",
-            course_id = validCourse.courseId,
-        )
-        val notValidAnnouncementStreamItem = StreamItem(
-            type = "Announcement",
-            course_id = notValidCourse.courseId,
-        )
-        val dueDateStreamItem = StreamItem(
-            type = "Message",
-            notificationCategory = "Due Date",
-            course_id = validCourse.courseId,
-        )
-        val scoredGradeStreamItem = StreamItem(
-            type = "Message",
-            grade = "A",
-            course_id = validCourse.courseId,
-        )
-        val scoredScoreStreamItem = StreamItem(
-            type = "Message",
-            score = 95.0,
-            course_id = validCourse.courseId,
-        )
-        val gradingPeriodStreamItem = StreamItem(
-            type = "Message",
-            notificationCategory = "Grading Policies",
-            course_id = validCourse.courseId,
-        )
-        val streamItems = listOf(conversationStreamItem, messageStreamItem, discussionStreamItem, announcementStreamItem, notValidAnnouncementStreamItem, dueDateStreamItem, scoredGradeStreamItem, scoredScoreStreamItem, gradingPeriodStreamItem)
+    fun `Filters stream items by enrolled course and category when online`() = runTest {
+        val validCourseId = 1L
+        val notValidCourseId = 2L
 
-        coEvery { streamApi.getUserStream(any()) } returns DataResult.Success(streamItems)
-        coEvery { getCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(listOf(validCourse))
+        val items = listOf(
+            StreamItem(id = 1, type = "Conversation", course_id = validCourseId),
+            StreamItem(id = 2, type = "Message", course_id = validCourseId),
+            StreamItem(id = 3, type = "DiscussionTopic", course_id = validCourseId),
+            StreamItem(id = 4, type = "Announcement", course_id = validCourseId),
+            StreamItem(id = 5, type = "Announcement", course_id = notValidCourseId),
+            StreamItem(id = 6, type = "Message", notificationCategory = "Due Date", course_id = validCourseId),
+            StreamItem(id = 7, type = "Message", grade = "A", course_id = validCourseId),
+            StreamItem(id = 8, type = "Message", score = 95.0, course_id = validCourseId),
+            StreamItem(id = 9, type = "Message", notificationCategory = "Grading Policies", course_id = validCourseId),
+        )
+
+        coEvery { networkDataSource.getCoursesInProgressIds(any()) } returns listOf(validCourseId)
+        coEvery { networkDataSource.getStream(any()) } returns items
 
         val result = getRepository().getNotifications(forceRefresh = true)
 
         assertEquals(4, result.size)
-        assertFalse(result.contains(announcementStreamItem))
-        assertTrue(result.contains(dueDateStreamItem))
-        assertTrue(result.contains(scoredGradeStreamItem))
-        assertTrue(result.contains(scoredScoreStreamItem))
-        assertTrue(result.contains(gradingPeriodStreamItem))
+        assertFalse(result.any { it.id == 4L })
+        assertTrue(result.any { it.id == 6L })
+        assertTrue(result.any { it.id == 7L })
+        assertTrue(result.any { it.id == 8L })
+        assertTrue(result.any { it.id == 9L })
     }
 
     @Test(expected = IllegalStateException::class)
-    fun `Test failed Stream API call`() = runTest {
-        coEvery { getCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { streamApi.getUserStream(any()) } returns DataResult.Fail()
+    fun `Throws when network stream call fails`() = runTest {
+        coEvery { networkDataSource.getCoursesInProgressIds(any()) } returns emptyList()
+        coEvery { networkDataSource.getStream(any()) } throws IllegalStateException("boom")
         getRepository().getNotifications(true)
     }
 
     @Test
-    fun `Test successful getCourse by id`() = runTest {
-        val id = 1L
-        val course = Course(id = id, name = "Course 1")
-        coEvery { courseApi.getCourse(id, any()) } returns DataResult.Success(course)
-        val result = getRepository().getCourse(id)
-        assertEquals(course, result)
+    fun `Reads from local data source when offline`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        val cached = listOf(
+            NotificationStreamItem(
+                id = 10,
+                type = "Message",
+                notificationCategory = "Due Date",
+                title = "Cached",
+                courseId = 1L,
+                courseName = "Course 1",
+                isRead = true,
+                score = -1.0,
+                grade = null,
+                updatedAt = null,
+                htmlUrl = "url",
+                assignmentHtmlUrl = null,
+            )
+        )
+        coEvery { localDataSource.getStream() } returns cached
+
+        val result = getRepository().getNotifications(forceRefresh = false)
+
+        assertEquals(cached, result)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed getCourse by id`() = runTest {
-        coEvery { courseApi.getCourse(any(), any()) } returns DataResult.Fail()
-        getRepository().getCourse(1L)
-    }
-
-    private fun getRepository(): NotificationRepository {
-        return NotificationRepository(apiPrefs, streamApi, courseApi, getCoursesManager)
+    private fun getRepository(): NotificationStreamRepository {
+        return NotificationStreamRepository(
+            networkDataSource = networkDataSource,
+            localDataSource = localDataSource,
+            networkStateProvider = networkStateProvider,
+            featureFlagProvider = featureFlagProvider,
+        )
     }
 }

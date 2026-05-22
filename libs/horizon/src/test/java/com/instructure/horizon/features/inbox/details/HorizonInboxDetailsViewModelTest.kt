@@ -24,13 +24,7 @@ import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.DiscussionParticipant
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Message
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.horizon.features.dashboard.DashboardEventHandler
-import com.instructure.horizon.features.inbox.HorizonInboxItemType
-import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -52,7 +46,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HorizonInboxDetailsViewModelTest {
@@ -61,8 +54,6 @@ class HorizonInboxDetailsViewModelTest {
     private val workManager: WorkManager = mockk(relaxed = true)
     private val fileDownloadProgressDao: FileDownloadProgressDao = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
-    private val inboxEventHandler: InboxEventHandler = InboxEventHandler()
-    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testConversation = Conversation(
@@ -74,20 +65,10 @@ class HorizonInboxDetailsViewModelTest {
                 authorId = 1L,
                 body = "Test message",
                 createdAt = "2025-01-01T00:00:00Z",
-                attachments = arrayListOf()
+                attachments = arrayListOf(),
             )
         ),
-        participants = mutableListOf(
-            BasicUser(id = 1L, name = "Test User")
-        )
-    )
-
-    private val testAnnouncement = DiscussionTopicHeader(
-        id = 1L,
-        title = "Test Announcement",
-        message = "Test message",
-        postedDate = Date(),
-        author = DiscussionParticipant(id = 1L, displayName = "Test Author")
+        participants = mutableListOf(BasicUser(id = 1L, name = "Test User")),
     )
 
     @Before
@@ -97,15 +78,8 @@ class HorizonInboxDetailsViewModelTest {
         every { URLUtil.isNetworkUrl(any()) } returns true
         every { savedStateHandle.get<Long>(any()) } returns 1L
         every { savedStateHandle.get<String>("courseId") } returns "1"
-        every { savedStateHandle.get<String>("type") } returns HorizonInboxItemType.Inbox.navigationValue
         coEvery { repository.getConversation(any(), any(), any()) } returns testConversation
-        coEvery { repository.getAnnouncement(any(), any(), any()) } returns testAnnouncement
-        coEvery { repository.getAnnouncementTopic(any(), any(), any()) } returns mockk(relaxed = true) {
-            every { views } returns mutableListOf()
-        }
-        coEvery { repository.markAnnouncementAsRead(any(), any(), any()) } returns DataResult.Success(Unit)
         coEvery { repository.addMessageToConversation(any(), any(), any(), any(), any(), any()) } returns testConversation
-        coEvery { repository.invalidateConversationDetailsCachedResponse(any()) } returns Unit
         coEvery { fileDownloadProgressDao.findByWorkerIdFlow(any()) } returns flowOf(null)
     }
 
@@ -153,7 +127,6 @@ class HorizonInboxDetailsViewModelTest {
         viewModel.uiState.value.replyState?.onSendReply?.invoke()
 
         coVerify { repository.addMessageToConversation(any(), any(), any(), "Reply text", any(), any()) }
-        coVerify { repository.invalidateConversationDetailsCachedResponse(1L) }
     }
 
     @Test
@@ -272,9 +245,9 @@ class HorizonInboxDetailsViewModelTest {
                             id = 1L,
                             displayName = "test.pdf",
                             url = "http://example.com/test.pdf",
-                            contentType = "application/pdf"
+                            contentType = "application/pdf",
                         )
-                    )
+                    ),
                 )
             )
         )
@@ -287,18 +260,6 @@ class HorizonInboxDetailsViewModelTest {
         assertEquals("test.pdf", item.attachments.first().name)
     }
 
-    @Test
-    fun `Test course announcement loads correctly`() = runTest {
-        every { savedStateHandle.get<String>("type") } returns HorizonInboxItemType.CourseNotification.navigationValue
-
-        val viewModel = getViewModel()
-
-        assertEquals("Test Announcement", viewModel.uiState.value.title)
-        assertNotNull(viewModel.uiState.value.titleIcon)
-        coVerify { repository.getAnnouncement(1L, 1L, false) }
-        coVerify { repository.getAnnouncementTopic(1L, 1L, false) }
-    }
-
     private fun getViewModel(): HorizonInboxDetailsViewModel {
         return HorizonInboxDetailsViewModel(
             context,
@@ -306,8 +267,6 @@ class HorizonInboxDetailsViewModelTest {
             workManager,
             fileDownloadProgressDao,
             savedStateHandle,
-            inboxEventHandler,
-            dashboardEventHandler
         )
     }
 }

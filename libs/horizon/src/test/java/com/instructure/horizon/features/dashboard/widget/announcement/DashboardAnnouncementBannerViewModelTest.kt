@@ -17,9 +17,13 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -46,6 +50,9 @@ class DashboardAnnouncementBannerViewModelTest {
     private val repository: DashboardAnnouncementBannerRepository = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val eventHandler = DashboardEventHandler()
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -53,6 +60,9 @@ class DashboardAnnouncementBannerViewModelTest {
         mockkObject(ThemePrefs)
         every { ThemePrefs.brandColor } returns 1
         every { context.getString(R.string.notificationsAnnouncementCategoryLabel) } returns "Announcement"
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -258,6 +268,13 @@ class DashboardAnnouncementBannerViewModelTest {
     }
 
     private fun getViewModel(): DashboardAnnouncementBannerViewModel {
-        return DashboardAnnouncementBannerViewModel(repository, eventHandler, context)
+        return DashboardAnnouncementBannerViewModel(
+            repository,
+            eventHandler,
+            context,
+            networkStateProvider,
+            featureFlagProvider,
+            getLastSyncedAtUseCase,
+        )
     }
 }
