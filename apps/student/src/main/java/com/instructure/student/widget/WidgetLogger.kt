@@ -83,6 +83,7 @@ class WidgetLogger @Inject constructor(
         return when (settings?.usageMetrics) {
             UserSettings.USAGE_METRICS_TRACK -> true
             UserSettings.USAGE_METRICS_NO_TRACK -> false
+            UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS -> false
             UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
             else -> {
                 val featureFlagsResult = featuresManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull

@@ -135,6 +135,21 @@ class CookieConsentViewModelTest {
     }
 
     @Test
+    fun `checkAndShowIfNeeded skips dialog when usage metrics is only_guide_events`() {
+        coEvery { getCookieConsentUseCase(Unit) } returns GetCookieConsentUseCase.Result(
+            usageMetrics = UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS, consent = null
+        )
+
+        val viewModel = createViewModel()
+        viewModel.checkAndShowIfNeeded()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.loading)
+        assertFalse(state.showDialog)
+        assertEquals(ConsentResult(consentGiven = false, needed = false), state.consentResult)
+    }
+
+    @Test
     fun `checkAndShowIfNeeded handles exception by skipping dialog`() {
         coEvery { getCookieConsentUseCase(Unit) } throws RuntimeException("Network error")
 

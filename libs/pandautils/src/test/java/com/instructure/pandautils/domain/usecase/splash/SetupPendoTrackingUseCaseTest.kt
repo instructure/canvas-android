@@ -98,6 +98,17 @@ class SetupPendoTrackingUseCaseTest {
     }
 
     @Test
+    fun `only_guide_events ends pendo session`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS)
+        )
+
+        useCase(Unit)
+
+        verify { Pendo.endSession() }
+    }
+
+    @Test
     fun `ask_for_consent with consent granted starts session`() = runTest {
         coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
             UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ASK_FOR_CONSENT)

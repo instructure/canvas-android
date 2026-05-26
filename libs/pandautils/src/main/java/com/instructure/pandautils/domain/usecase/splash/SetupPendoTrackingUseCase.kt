@@ -49,6 +49,7 @@ class SetupPendoTrackingUseCase @Inject constructor(
         val shouldTrack = when (settings?.usageMetrics) {
             UserSettings.USAGE_METRICS_TRACK -> true
             UserSettings.USAGE_METRICS_NO_TRACK -> false
+            UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS -> false
             UserSettings.USAGE_METRICS_ASK_FOR_CONSENT -> consentPrefs.currentUserConsent == true
             else -> featuresRepository.getEnvironmentFeatureFlags(forceRefresh = true)
                 .dataOrNull
