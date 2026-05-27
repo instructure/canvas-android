@@ -85,6 +85,8 @@ import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.LoginPrefs
+import com.instructure.loginapi.login.util.PKCEUtils
+import com.instructure.loginapi.login.util.PkcePair
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
@@ -136,6 +138,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) ?: AccountDomain() }
     private val progressBarHandler = Handler()
+    private var pkce: PkcePair? = null
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -252,7 +255,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                     val responseUrl = SUCCESS_URL_COLLECTION.first { url.contains(it) }
                     domain = accountDomain.domain!!
                     val oAuthRequest = url.substring(url.indexOf(responseUrl) + responseUrl.length)
-                    getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
+                    getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback, pkce?.verifier)
                     true
                 }
                 ERROR_URL_COLLECTION.any { url.contains(it) } -> {
@@ -282,7 +285,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 specialCase = true
                 domain = accountDomain.domain!!
                 val oAuthRequest = url.substringAfter("hash=")
-                getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
+                getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback, pkce?.verifier)
             }
         }
 
@@ -476,6 +479,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         if (domain != null && domain.endsWith("/")) {
             domain = domain.substring(0, domain.length - 1)
         }
+        val pkcePair = PKCEUtils.generate().also { pkce = it }
         val builder = Uri.Builder()
             .scheme(protocol)
             .authority(domain)
@@ -486,6 +490,8 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("mobile", "1")
             .appendQueryParameter("purpose", deviceName)
+            .appendQueryParameter("code_challenge", pkcePair.challenge)
+            .appendQueryParameter("code_challenge_method", pkcePair.method)
             .appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
