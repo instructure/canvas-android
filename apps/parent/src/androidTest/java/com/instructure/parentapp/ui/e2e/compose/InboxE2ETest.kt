@@ -59,6 +59,7 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxSelectedButtonActionsE2E() {
 
