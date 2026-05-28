@@ -22,8 +22,8 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.data.repository.CourseRepository
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
@@ -44,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseProgressViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: CourseRepository,
+    private val getModulesWithItemsUseCase: GetModulesWithItemsUseCase,
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val learnEventHandler: LearnEventHandler,
@@ -97,7 +97,7 @@ class CourseProgressViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val modules = repository.getModuleItems(courseId, forceRefresh)
+        val modules = getModulesWithItemsUseCase(GetModulesWithItemsUseCase.Params(courseId, forceRefresh))
 
         val moduleItemStates = modules.associateWith { module ->
             moduleHeaderStateMapper.mapModuleObjectToHeaderState(

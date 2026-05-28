@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.inbox.AddMessageToConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetConversationUseCase
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -48,7 +50,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HorizonInboxDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: HorizonInboxDetailsRepository,
+    private val getConversationUseCase: GetConversationUseCase,
+    private val addMessageToConversationUseCase: AddMessageToConversationUseCase,
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     savedStateHandle: SavedStateHandle,
@@ -102,7 +105,9 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             loadErrorState()
             return
         }
-        val conversation = repository.getConversation(id, forceRefresh = forceRefresh)
+        val conversation = getConversationUseCase(
+            GetConversationUseCase.Params(id = id, markAsRead = true, forceNetwork = forceRefresh)
+        )
         recipientIds = conversation.participants.map { it.id.toString() }
         messageIds = conversation.messages.map { it.id }
         _uiState.update {
@@ -243,13 +248,15 @@ class HorizonInboxDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(replyState = it.replyState?.copy(isLoading = true)) }
 
-            val conversation = repository.addMessageToConversation(
-                contextCode = Course(id = courseId.toLong()).contextId,
-                conversationId = id,
-                recipientIds = recipientIds,
-                body = replyState.replyTextValue.text,
-                includedMessageIds = messageIds,
-                attachmentIds = replyState.attachments.map { it.id },
+            val conversation = addMessageToConversationUseCase(
+                AddMessageToConversationUseCase.Params(
+                    contextCode = Course(id = courseId.toLong()).contextId,
+                    conversationId = id,
+                    recipientIds = recipientIds,
+                    body = replyState.replyTextValue.text,
+                    includedMessageIds = messageIds,
+                    attachmentIds = replyState.attachments.map { it.id },
+                )
             )
 
             _uiState.update {

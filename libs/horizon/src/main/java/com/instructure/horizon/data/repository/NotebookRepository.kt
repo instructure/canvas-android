@@ -16,6 +16,7 @@
 package com.instructure.horizon.data.repository
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.horizon.data.datasource.NotebookLocalDataSource
 import com.instructure.horizon.data.datasource.NotebookNetworkDataSource
 import com.instructure.horizon.features.notebook.common.model.Note
@@ -101,5 +102,37 @@ class NotebookRepository @Inject constructor(
             networkDataSource.deleteNote(noteId)
         }
         localDataSource.deleteNote(noteId)
+    }
+
+    suspend fun addNote(
+        courseId: String,
+        objectId: String,
+        objectType: String,
+        highlightedData: NoteHighlightedData,
+        userComment: String,
+        type: NotebookType?,
+    ) {
+        networkDataSource.createNote(
+            courseId = courseId,
+            objectId = objectId,
+            objectType = objectType,
+            userText = userComment,
+            highlightData = highlightedData,
+            notebookType = type?.name,
+        )
+    }
+
+    suspend fun updateNote(
+        noteId: String,
+        userText: String,
+        highlightedData: NoteHighlightedData,
+        type: NotebookType?,
+    ) {
+        networkDataSource.updateNote(
+            id = noteId,
+            userText = userText,
+            highlightData = highlightedData,
+            notebookType = type?.name,
+        )
     }
 }

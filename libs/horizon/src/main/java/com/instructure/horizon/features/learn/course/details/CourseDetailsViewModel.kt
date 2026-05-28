@@ -19,9 +19,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.data.repository.CourseRepository
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramsForCourseUseCase
+import com.instructure.horizon.domain.usecase.HasExternalToolsUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -35,7 +37,9 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: CourseRepository,
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+    private val getProgramsForCourseUseCase: GetProgramsForCourseUseCase,
+    private val hasExternalToolsUseCase: HasExternalToolsUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase
@@ -79,9 +83,9 @@ class CourseDetailsViewModel @Inject constructor(
     }
 
     suspend fun fetchData(forceRefresh: Boolean = false) {
-        val course = repository.getCourse(courseId, forceRefresh)
-        val programs = repository.getProgramsForCourse(courseId, forceRefresh)
-        val hasTools = repository.hasExternalTools(courseId, forceRefresh)
+        val course = getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(courseId, forceRefresh))
+        val programs = getProgramsForCourseUseCase(GetProgramsForCourseUseCase.Params(courseId, forceRefresh))
+        val hasTools = hasExternalToolsUseCase(HasExternalToolsUseCase.Params(courseId, forceRefresh))
         val availableTabs = if (hasTools)
             CourseDetailsTab.entries
         else

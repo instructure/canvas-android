@@ -23,7 +23,9 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.ModuleItemNetworkDataSource
 import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.data.repository.ModuleItemSequenceRepository
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -161,7 +163,7 @@ class ModuleItemSequenceRepositoryTest {
 
     private fun getRepository(): ModuleItemSequenceRepository {
         return ModuleItemSequenceRepository(
-            moduleApi,
+            ModuleItemNetworkDataSource(moduleApi),
             courseRepository,
             courseModuleDao,
             getUnreadCommentsCountUseCase,

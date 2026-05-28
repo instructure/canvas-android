@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetCourseExternalToolsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseToolsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: CourseToolsRepository,
+    private val getCourseExternalToolsUseCase: GetCourseExternalToolsUseCase,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         CourseToolsUiState()
@@ -62,7 +63,7 @@ class CourseToolsViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val tools = repository.getExternalTools(courseId, forceRefresh)
+        val tools = getCourseExternalToolsUseCase(GetCourseExternalToolsUseCase.Params(courseId, forceRefresh))
         if (tools.isNotEmpty()) {
             val toolItems = tools.map { tool ->
                 LtiToolItem(

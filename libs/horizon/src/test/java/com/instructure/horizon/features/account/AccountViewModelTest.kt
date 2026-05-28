@@ -20,6 +20,9 @@ import android.content.Context
 import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.domain.usecase.GetAccountExperiencesUseCase
+import com.instructure.horizon.domain.usecase.GetAccountHelpLinksUseCase
+import com.instructure.horizon.domain.usecase.GetAccountUserDetailsUseCase
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -46,7 +49,9 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AccountViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: AccountRepository = mockk(relaxed = true)
+    private val getAccountUserDetailsUseCase: GetAccountUserDetailsUseCase = mockk(relaxed = true)
+    private val getAccountExperiencesUseCase: GetAccountExperiencesUseCase = mockk(relaxed = true)
+    private val getAccountHelpLinksUseCase: GetAccountHelpLinksUseCase = mockk(relaxed = true)
     private val logoutHelper: LogoutHelper = mockk(relaxed = true)
     private val databaseProvider: DatabaseProvider = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
@@ -64,8 +69,9 @@ class AccountViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        coEvery { repository.getUserDetails(any()) } returns testUser
-        coEvery { repository.getExperiences(any()) } returns listOf()
+        coEvery { getAccountUserDetailsUseCase(any()) } returns testUser
+        coEvery { getAccountExperiencesUseCase(any()) } returns listOf()
+        coEvery { getAccountHelpLinksUseCase(any()) } returns listOf()
         every { context.getString(any()) } returns "Test String"
         every { context.getString(any(), any()) } returns "Test String"
     }
@@ -81,7 +87,7 @@ class AccountViewModelTest {
         val viewModel = getViewModel()
 
         assertFalse(viewModel.uiState.value.screenState.isLoading)
-        coVerify { repository.getUserDetails(false) }
+        coVerify { getAccountUserDetailsUseCase(false) }
     }
 
     @Test
@@ -94,7 +100,7 @@ class AccountViewModelTest {
     @Test
     fun `Test user name falls back to name if shortName is null`() = runTest {
         val userWithoutShortName = testUser.copy(shortName = null)
-        coEvery { repository.getUserDetails(any()) } returns userWithoutShortName
+        coEvery { getAccountUserDetailsUseCase(any()) } returns userWithoutShortName
 
         val viewModel = getViewModel()
 
@@ -103,7 +109,7 @@ class AccountViewModelTest {
 
     @Test
     fun `Test failed data load sets error state`() = runTest {
-        coEvery { repository.getUserDetails(any()) } throws Exception("Network error")
+        coEvery { getAccountUserDetailsUseCase(any()) } throws Exception("Network error")
 
         val viewModel = getViewModel()
 
@@ -113,7 +119,7 @@ class AccountViewModelTest {
 
     @Test
     fun `Test experience switcher is shown when academic experience is available`() = runTest {
-        coEvery { repository.getExperiences(any()) } returns listOf(ExperienceSummary.ACADEMIC_EXPERIENCE)
+        coEvery { getAccountExperiencesUseCase(any()) } returns listOf(ExperienceSummary.ACADEMIC_EXPERIENCE)
 
         val viewModel = getViewModel()
 
@@ -125,7 +131,7 @@ class AccountViewModelTest {
 
     @Test
     fun `Test experience switcher is hidden when academic experience is not available`() = runTest {
-        coEvery { repository.getExperiences(any()) } returns listOf()
+        coEvery { getAccountExperiencesUseCase(any()) } returns listOf()
 
         val viewModel = getViewModel()
 
@@ -197,13 +203,15 @@ class AccountViewModelTest {
     fun `Test experiences are fetched`() = runTest {
         val viewModel = getViewModel()
 
-        coVerify { repository.getExperiences(false) }
+        coVerify { getAccountExperiencesUseCase(false) }
     }
 
     private fun getViewModel(): AccountViewModel {
         return AccountViewModel(
             context,
-            repository,
+            getAccountUserDetailsUseCase,
+            getAccountExperiencesUseCase,
+            getAccountHelpLinksUseCase,
             logoutHelper,
             databaseProvider,
             alarmScheduler,

@@ -25,9 +25,11 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.data.repository.ProgramRepository
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.EnrollProgramCourseUseCase
+import com.instructure.horizon.domain.usecase.GetCoursesByIdUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramDetailsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
@@ -62,7 +64,9 @@ import kotlin.time.Duration
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val repository: ProgramRepository,
+    private val getProgramDetailsUseCase: GetProgramDetailsUseCase,
+    private val getCoursesByIdUseCase: GetCoursesByIdUseCase,
+    private val enrollProgramCourseUseCase: EnrollProgramCourseUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     savedStateHandle: SavedStateHandle,
     networkStateProvider: NetworkStateProvider,
@@ -103,8 +107,10 @@ class ProgramDetailsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData(forceRefresh: Boolean = false) {
-        val program = repository.getProgramDetails(programId, forceRefresh)
-        val courses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceRefresh)
+        val program = getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(programId, forceRefresh))
+        val courses = getCoursesByIdUseCase(
+            GetCoursesByIdUseCase.Params(program.sortedRequirements.map { it.courseId }, forceRefresh)
+        )
         updateUiState(program, courses)
     }
 
@@ -363,7 +369,7 @@ class ProgramDetailsViewModel @Inject constructor(
     private fun enrollCourse(courseId: Long, progressId: String) {
         updateCourseEnrollLoadingState(courseId, true)
         viewModelScope.launch {
-            val enrollResult = repository.enrollCourse(progressId)
+            val enrollResult = enrollProgramCourseUseCase(progressId)
             if (enrollResult.isFail) {
                 updateCourseEnrollLoadingState(courseId, false)
                 _uiState.update {

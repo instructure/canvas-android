@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetEmbeddedSkillspaceUrlUseCase
+import com.instructure.horizon.domain.usecase.GetSkillspaceAuthenticatedSessionUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +31,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SkillspaceViewModel @Inject constructor(
-    private val repository: SkillspaceRepository,
+    private val getSkillspaceAuthenticatedSessionUseCase: GetSkillspaceAuthenticatedSessionUseCase,
+    private val getEmbeddedSkillspaceUrlUseCase: GetEmbeddedSkillspaceUrlUseCase,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(SkillspaceUiState(
         loadingState = LoadingState(onRefresh = ::refreshData)
@@ -61,10 +64,10 @@ class SkillspaceViewModel @Inject constructor(
     }
 
     private suspend fun fetchUrl() {
-        repository.getAuthenticatedSession()?.sessionUrl?.let { url ->
+        getSkillspaceAuthenticatedSessionUseCase(Unit)?.sessionUrl?.let { url ->
             _uiState.update { it.copy(webviewUrl = url) }
         }
-        repository.getEmbeddedSkillspaceUrl().let { url ->
+        getEmbeddedSkillspaceUrlUseCase(Unit).let { url ->
             _uiState.update { it.copy(webviewUrl = url) }
         }
 

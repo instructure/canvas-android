@@ -31,6 +31,13 @@ import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
+import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
+import com.instructure.horizon.domain.usecase.HasUnreadCommentsUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsNotDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsReadUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -61,7 +68,13 @@ import javax.inject.Inject
 @HiltViewModel
 class ModuleItemSequenceViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ModuleItemSequenceRepository,
+    private val getModuleItemSequenceUseCase: GetModuleItemSequenceUseCase,
+    private val getModulesWithItemsUseCase: GetModulesWithItemsUseCase,
+    private val getModuleItemUseCase: GetModuleItemUseCase,
+    private val markModuleItemAsDoneUseCase: MarkModuleItemAsDoneUseCase,
+    private val markModuleItemAsNotDoneUseCase: MarkModuleItemAsNotDoneUseCase,
+    private val markModuleItemAsReadUseCase: MarkModuleItemAsReadUseCase,
+    private val hasUnreadCommentsUseCase: HasUnreadCommentsUseCase,
     private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
     private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
@@ -165,18 +178,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
             val assetId = moduleItemAssetId
                 ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
-            val moduleItemSequence = repository.getModuleItemSequence(courseId, assetType, assetId)
+            val moduleItemSequence = getModuleItemSequenceUseCase(
+                GetModuleItemSequenceUseCase.Params(courseId, assetType, assetId)
+            )
             moduleItemSequence.items?.firstOrNull()?.current?.id ?: -1L
         }
 
-        modules = repository.getModulesWithItems(courseId, forceNetwork = true)
+        modules = getModulesWithItemsUseCase(GetModulesWithItemsUseCase.Params(courseId, forceRefresh = true))
         moduleItems = modules.flatMap { it.items }
 
         currentModuleItem = moduleItems.find { it.id == moduleItemId }
 
         val assignment = getAssignment(currentModuleItem, forceNetwork = true)
         val attempts = getAttemptCount(assignment)
-        val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+        val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
@@ -343,12 +358,17 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
 
         viewModelScope.tryLaunch {
-            val moduleItem =
-                repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val moduleItem = getModuleItemUseCase(
+                GetModuleItemUseCase.Params(
+                    courseId = courseId,
+                    moduleId = moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(),
+                    moduleItemId = moduleItemId,
+                )
+            )
 
             val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+            val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
@@ -421,12 +441,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun reloadData() {
         viewModelScope.tryLaunch {
-            modules = repository.getModulesWithItems(courseId, forceNetwork = true)
+            modules = getModulesWithItemsUseCase(GetModulesWithItemsUseCase.Params(courseId, forceRefresh = true))
             moduleItems = modules.flatMap { it.items }
 
             val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+            val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
             val items = modules
                 .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
@@ -516,7 +536,11 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun changeDoneState(item: ModuleItem, markDone: Boolean) {
         viewModelScope.launch {
             updateMarkAsDoneStateForItem(item, loading = true)
-            val result = if (markDone) repository.markAsDone(courseId, item) else repository.markAsNotDone(courseId, item)
+            val result = if (markDone) {
+                markModuleItemAsDoneUseCase(MarkModuleItemAsDoneUseCase.Params(courseId, item))
+            } else {
+                markModuleItemAsNotDoneUseCase(MarkModuleItemAsNotDoneUseCase.Params(courseId, item))
+            }
             if (result.isSuccess) {
                 updateMarkAsDoneStateForItem(item, loading = false, done = markDone)
                 courseProgressChanged()
@@ -559,7 +583,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val completionRequirement = item.completionRequirement
         if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
             viewModelScope.launch {
-                repository.markAsRead(courseId, item.moduleId, item.id)
+                markModuleItemAsReadUseCase(MarkModuleItemAsReadUseCase.Params(courseId, item.moduleId, item.id))
                 courseProgressChanged()
             }
         }

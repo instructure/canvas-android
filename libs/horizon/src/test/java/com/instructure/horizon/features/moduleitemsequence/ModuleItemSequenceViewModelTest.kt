@@ -26,6 +26,13 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
+import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
+import com.instructure.horizon.domain.usecase.HasUnreadCommentsUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsNotDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsReadUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
@@ -54,7 +61,13 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ModuleItemSequenceViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: ModuleItemSequenceRepository = mockk(relaxed = true)
+    private val getModuleItemSequenceUseCase: GetModuleItemSequenceUseCase = mockk(relaxed = true)
+    private val getModulesWithItemsUseCase: GetModulesWithItemsUseCase = mockk(relaxed = true)
+    private val getModuleItemUseCase: GetModuleItemUseCase = mockk(relaxed = true)
+    private val markModuleItemAsDoneUseCase: MarkModuleItemAsDoneUseCase = mockk(relaxed = true)
+    private val markModuleItemAsNotDoneUseCase: MarkModuleItemAsNotDoneUseCase = mockk(relaxed = true)
+    private val markModuleItemAsReadUseCase: MarkModuleItemAsReadUseCase = mockk(relaxed = true)
+    private val hasUnreadCommentsUseCase: HasUnreadCommentsUseCase = mockk(relaxed = true)
     private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
@@ -93,11 +106,11 @@ class ModuleItemSequenceViewModelTest {
             moduleItemAssetType = null,
             moduleItemAssetId = null
         )
-        coEvery { repository.getModuleItemSequence(any(), any(), any()) } returns ModuleItemSequence()
-        coEvery { repository.getModulesWithItems(any(), any()) } returns listOf(testModule)
-        coEvery { repository.getModuleItem(any(), any(), any()) } returns testModuleItem
+        coEvery { getModuleItemSequenceUseCase(any()) } returns ModuleItemSequence()
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(testModule)
+        coEvery { getModuleItemUseCase(any()) } returns testModuleItem
         coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(id = 1L)
-        coEvery { repository.hasUnreadComments(any(), any()) } returns false
+        coEvery { hasUnreadCommentsUseCase(any()) } returns false
         coEvery { moduleItemCardStateMapper.mapModuleItemToCardState(any(), any()) } returns mockk(relaxed = true)
     }
 
@@ -112,7 +125,7 @@ class ModuleItemSequenceViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
-        coVerify { repository.getModulesWithItems(courseId, any()) }
+        coVerify { getModulesWithItemsUseCase(match { it.courseId == courseId }) }
     }
 
     @Test
@@ -120,12 +133,12 @@ class ModuleItemSequenceViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertNotNull(viewModel.uiState.value)
-        coVerify { repository.getModulesWithItems(courseId, true) }
+        coVerify { getModulesWithItemsUseCase(match { it.courseId == courseId && it.forceRefresh }) }
     }
 
     @Test
     fun `Test failed data load sets error state`() = runTest {
-        coEvery { repository.getModulesWithItems(any(), any()) } throws Exception("Network error")
+        coEvery { getModulesWithItemsUseCase(any()) } throws Exception("Network error")
 
         val viewModel = getViewModel(savedStateHandle)
 
@@ -147,13 +160,19 @@ class ModuleItemSequenceViewModelTest {
 
         val viewModel = getViewModel(savedStateHandle)
 
-        coVerify { repository.hasUnreadComments(123L, any()) }
+        coVerify { hasUnreadCommentsUseCase(match { it.assignmentId == 123L }) }
     }
 
     private fun getViewModel(savedStateHandle: SavedStateHandle): ModuleItemSequenceViewModel {
         return ModuleItemSequenceViewModel(
             context,
-            repository,
+            getModuleItemSequenceUseCase,
+            getModulesWithItemsUseCase,
+            getModuleItemUseCase,
+            markModuleItemAsDoneUseCase,
+            markModuleItemAsNotDoneUseCase,
+            markModuleItemAsReadUseCase,
+            hasUnreadCommentsUseCase,
             getAssignmentDetailsUseCase,
             getEntityLastSyncedAtUseCase,
             moduleItemCardStateMapper,

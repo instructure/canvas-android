@@ -16,13 +16,13 @@
 package com.instructure.horizon.domain.usecase.notebook
 
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository
+import com.instructure.horizon.data.repository.NotebookRepository
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class AddNoteUseCase @Inject constructor(
-    private val repository: AddNoteRepository,
+    private val repository: NotebookRepository,
 ) : BaseUseCase<AddNoteUseCase.Params, Unit>() {
 
     data class Params(

@@ -25,6 +25,9 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetAccountExperiencesUseCase
+import com.instructure.horizon.domain.usecase.GetAccountHelpLinksUseCase
+import com.instructure.horizon.domain.usecase.GetAccountUserDetailsUseCase
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -42,7 +45,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: AccountRepository,
+    private val getAccountUserDetailsUseCase: GetAccountUserDetailsUseCase,
+    private val getAccountExperiencesUseCase: GetAccountExperiencesUseCase,
+    private val getAccountHelpLinksUseCase: GetAccountHelpLinksUseCase,
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
     private val alarmScheduler: AlarmScheduler,
@@ -181,13 +186,13 @@ class AccountViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceRefresh: Boolean = false) {
-        val user = repository.getUserDetails(forceRefresh = forceRefresh)
+        val user = getAccountUserDetailsUseCase(forceRefresh)
 
-        val experiences = repository.getExperiences(forceRefresh = forceRefresh)
+        val experiences = getAccountExperiencesUseCase(forceRefresh)
         showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
         showOfflineSettings = featureFlagProvider.offlineEnabled()
 
-        helpLinks = repository.getHelpLinks(forceRefresh = forceRefresh)
+        helpLinks = getAccountHelpLinksUseCase(forceRefresh)
 
         _uiState.update {
             it.copy(

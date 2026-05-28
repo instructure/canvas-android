@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
+import com.instructure.horizon.domain.usecase.inbox.AddMessageToConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetConversationUseCase
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -50,7 +52,8 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HorizonInboxDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: HorizonInboxDetailsRepository = mockk(relaxed = true)
+    private val getConversationUseCase: GetConversationUseCase = mockk(relaxed = true)
+    private val addMessageToConversationUseCase: AddMessageToConversationUseCase = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
     private val fileDownloadProgressDao: FileDownloadProgressDao = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
@@ -78,8 +81,8 @@ class HorizonInboxDetailsViewModelTest {
         every { URLUtil.isNetworkUrl(any()) } returns true
         every { savedStateHandle.get<Long>(any()) } returns 1L
         every { savedStateHandle.get<String>("courseId") } returns "1"
-        coEvery { repository.getConversation(any(), any(), any()) } returns testConversation
-        coEvery { repository.addMessageToConversation(any(), any(), any(), any(), any(), any()) } returns testConversation
+        coEvery { getConversationUseCase(any()) } returns testConversation
+        coEvery { addMessageToConversationUseCase(any()) } returns testConversation
         coEvery { fileDownloadProgressDao.findByWorkerIdFlow(any()) } returns flowOf(null)
     }
 
@@ -97,7 +100,7 @@ class HorizonInboxDetailsViewModelTest {
         assertEquals("Test Conversation", viewModel.uiState.value.title)
         assertEquals(1, viewModel.uiState.value.items.size)
         assertNotNull(viewModel.uiState.value.replyState)
-        coVerify { repository.getConversation(1L, true, any()) }
+        coVerify { getConversationUseCase(match { it.id == 1L && it.markAsRead }) }
     }
 
     @Test
@@ -126,7 +129,7 @@ class HorizonInboxDetailsViewModelTest {
 
         viewModel.uiState.value.replyState?.onSendReply?.invoke()
 
-        coVerify { repository.addMessageToConversation(any(), any(), any(), "Reply text", any(), any()) }
+        coVerify { addMessageToConversationUseCase(match { it.body == "Reply text" }) }
     }
 
     @Test
@@ -142,7 +145,7 @@ class HorizonInboxDetailsViewModelTest {
 
     @Test
     fun `Test send reply handles error`() = runTest {
-        coEvery { repository.addMessageToConversation(any(), any(), any(), any(), any(), any()) } throws Exception("Error")
+        coEvery { addMessageToConversationUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
         viewModel.uiState.value.replyState?.onReplyTextValueChange?.invoke(TextFieldValue("Reply text"))
@@ -159,13 +162,13 @@ class HorizonInboxDetailsViewModelTest {
 
         viewModel.uiState.value.loadingState.onRefresh()
 
-        coVerify(exactly = 2) { repository.getConversation(1L, any(), any()) }
+        coVerify(exactly = 2) { getConversationUseCase(match { it.id == 1L }) }
     }
 
     @Test
     fun `Test refresh handles error`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getConversation(any(), any(), any()) } throws Exception("Error")
+        coEvery { getConversationUseCase(any()) } throws Exception("Error")
 
         viewModel.uiState.value.loadingState.onRefresh()
 
@@ -175,7 +178,7 @@ class HorizonInboxDetailsViewModelTest {
 
     @Test
     fun `Test snackbar dismiss clears message`() = runTest {
-        coEvery { repository.getConversation(any(), any(), any()) } throws Exception("Error")
+        coEvery { getConversationUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
         assertNotNull(viewModel.uiState.value.loadingState.snackbarMessage)
@@ -223,7 +226,7 @@ class HorizonInboxDetailsViewModelTest {
 
     @Test
     fun `Test load error sets error state`() = runTest {
-        coEvery { repository.getConversation(any(), any(), any()) } throws Exception("Error")
+        coEvery { getConversationUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
 
@@ -251,7 +254,7 @@ class HorizonInboxDetailsViewModelTest {
                 )
             )
         )
-        coEvery { repository.getConversation(any(), any(), any()) } returns conversationWithAttachment
+        coEvery { getConversationUseCase(any()) } returns conversationWithAttachment
 
         val viewModel = getViewModel()
 
@@ -263,7 +266,8 @@ class HorizonInboxDetailsViewModelTest {
     private fun getViewModel(): HorizonInboxDetailsViewModel {
         return HorizonInboxDetailsViewModel(
             context,
-            repository,
+            getConversationUseCase,
+            addMessageToConversationUseCase,
             workManager,
             fileDownloadProgressDao,
             savedStateHandle,

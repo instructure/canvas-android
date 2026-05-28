@@ -22,7 +22,11 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
+import com.instructure.horizon.features.announcement.navigation.AnnouncementRoute
 import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.model.HorizonAnnouncement
+import com.instructure.horizon.model.HorizonAnnouncementKind
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
@@ -42,7 +46,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardAnnouncementBannerViewModel @Inject constructor(
-    private val repository: DashboardAnnouncementBannerRepository,
+    private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     @ApplicationContext private val context: Context,
     networkStateProvider: NetworkStateProvider,
@@ -86,7 +90,8 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
 
     private suspend fun loadAnnouncementData(forceNetwork: Boolean = false) {
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-        val announcements = repository.getUnreadAnnouncements(forceNetwork)
+        val announcements = getUnreadAnnouncementsUseCase(GetUnreadAnnouncementsUseCase.Params(forceNetwork))
+            .map { it.toBannerItem() }
 
         _uiState.update {
             it.copy(
@@ -98,6 +103,19 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun HorizonAnnouncement.toBannerItem(): AnnouncementBannerItem {
+        return AnnouncementBannerItem(
+            title = title,
+            source = courseName,
+            date = postedAt,
+            type = when (kind) {
+                HorizonAnnouncementKind.COURSE -> AnnouncementType.COURSE
+                HorizonAnnouncementKind.ACCOUNT -> AnnouncementType.GLOBAL
+            },
+            route = AnnouncementRoute.Details.route(kind, id, courseId),
+        )
     }
 
     private fun refresh(onComplete: () -> Unit = {}) {

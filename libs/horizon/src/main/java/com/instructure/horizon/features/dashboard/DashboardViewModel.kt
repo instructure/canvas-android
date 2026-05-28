@@ -22,7 +22,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetCanvasThemeUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -41,7 +44,9 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val dashboardRepository: DashboardRepository,
+    private val getSelfUserUseCase: GetSelfUserUseCase,
+    private val getCanvasThemeUseCase: GetCanvasThemeUseCase,
+    private val getUnreadCountsUseCase: GetUnreadCountsUseCase,
     private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
     private val localeUtils: LocaleUtils,
@@ -101,10 +106,10 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadLogo() {
-        val user = dashboardRepository.getSelf()
+        val user = getSelfUserUseCase(Unit)
         user?.let { saveUserInfo(it) }
 
-        val theme = dashboardRepository.getTheme()
+        val theme = getCanvasThemeUseCase(Unit)
         _uiState.update { it.copy(theme = theme) }
         // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
         poll(
@@ -116,7 +121,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadUnreadCount() {
-        val unreadCounts = dashboardRepository.getUnreadCounts(true)
+        val unreadCounts = getUnreadCountsUseCase(true)
         val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.unreadCount ?: 0
         val unreadNotifications = unreadCounts.filter { it.type == "Message" }.sumOf { it.unreadCount }
         _uiState.update {

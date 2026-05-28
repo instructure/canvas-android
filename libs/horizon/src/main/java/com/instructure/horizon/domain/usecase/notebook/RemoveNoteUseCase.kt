@@ -15,12 +15,12 @@
  */
 package com.instructure.horizon.domain.usecase.notebook
 
-import com.instructure.horizon.features.notebook.addedit.edit.EditNoteRepository
+import com.instructure.horizon.data.repository.NotebookRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class RemoveNoteUseCase @Inject constructor(
-    private val repository: EditNoteRepository,
+    private val repository: NotebookRepository,
 ) : BaseUseCase<String, Unit>() {
 
     override suspend fun execute(params: String) {

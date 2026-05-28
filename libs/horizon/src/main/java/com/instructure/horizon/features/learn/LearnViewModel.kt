@@ -19,6 +19,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetEnrolledLearningLibrariesUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.offline.HorizonOfflineViewModel
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -31,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
-    private val repository: LearnRepository,
+    private val getEnrolledLearningLibrariesUseCase: GetEnrolledLearningLibrariesUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase
@@ -68,7 +69,7 @@ class LearnViewModel @Inject constructor(
 
     private fun loadBrowseTab() {
         viewModelScope.tryLaunch {
-            val enrolledLearningLibraries = repository.getEnrolledLearningLibraries()
+            val enrolledLearningLibraries = getEnrolledLearningLibrariesUseCase(GetEnrolledLearningLibrariesUseCase.Params())
             val hasBrowseTab = enrolledLearningLibraries.isNotEmpty()
             _uiState.update { current ->
                 val tabs = if (hasBrowseTab && LearnTab.BROWSE !in current.tabs) {

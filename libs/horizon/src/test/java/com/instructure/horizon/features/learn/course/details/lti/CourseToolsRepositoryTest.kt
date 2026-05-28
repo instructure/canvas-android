@@ -19,6 +19,8 @@ package com.instructure.horizon.features.learn.course.details.lti
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.CourseToolsNetworkDataSource
+import com.instructure.horizon.data.repository.CourseToolsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -95,6 +97,6 @@ class CourseToolsRepositoryTest {
     }
 
     private fun getRepository(): CourseToolsRepository {
-        return CourseToolsRepository(externalToolApi)
+        return CourseToolsRepository(CourseToolsNetworkDataSource(externalToolApi))
     }
 }

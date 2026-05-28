@@ -20,8 +20,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramsForCourseUseCase
+import com.instructure.horizon.domain.usecase.HasExternalToolsUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -44,7 +46,9 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CourseDetailsViewModelTest {
-    private val repository: CourseRepository = mockk(relaxed = true)
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase = mockk(relaxed = true)
+    private val getProgramsForCourseUseCase: GetProgramsForCourseUseCase = mockk(relaxed = true)
+    private val hasExternalToolsUseCase: HasExternalToolsUseCase = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
@@ -76,9 +80,9 @@ class CourseDetailsViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { networkStateProvider.isOnline() } returns true
         coEvery { featureFlagProvider.offlineEnabled() } returns false
-        coEvery { repository.getCourse(any(), any()) } returns testCourse
-        coEvery { repository.getProgramsForCourse(any(), any()) } returns testPrograms
-        coEvery { repository.hasExternalTools(any(), any()) } returns false
+        coEvery { getCourseDetailsUseCase(any()) } returns testCourse
+        coEvery { getProgramsForCourseUseCase(any()) } returns testPrograms
+        coEvery { hasExternalToolsUseCase(any()) } returns false
     }
 
     @After
@@ -97,7 +101,7 @@ class CourseDetailsViewModelTest {
         assertEquals(75.0, state.courseProgress)
         assertEquals(testCourseId, state.courseId)
         assertEquals("This is the course syllabus", state.courseSyllabus)
-        coVerify { repository.getCourse(testCourseId, false) }
+        coVerify { getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(testCourseId, false)) }
     }
 
     @Test
@@ -107,12 +111,12 @@ class CourseDetailsViewModelTest {
         val state = viewModel.state.value
         assertEquals(1, state.parentPrograms.size)
         assertEquals("Test Program", state.parentPrograms[0].name)
-        coVerify { repository.getProgramsForCourse(testCourseId, false) }
+        coVerify { getProgramsForCourseUseCase(GetProgramsForCourseUseCase.Params(testCourseId, false)) }
     }
 
     @Test
     fun `Initial state includes all tabs when course has external tools`() {
-        coEvery { repository.hasExternalTools(any(), any()) } returns true
+        coEvery { hasExternalToolsUseCase(any()) } returns true
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -126,7 +130,7 @@ class CourseDetailsViewModelTest {
 
     @Test
     fun `Initial state excludes Tools tab when course has no external tools`() {
-        coEvery { repository.hasExternalTools(any(), any()) } returns false
+        coEvery { hasExternalToolsUseCase(any()) } returns false
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -139,8 +143,8 @@ class CourseDetailsViewModelTest {
     }
 
     @Test
-    fun `Loading state shows error when repository fails`() {
-        coEvery { repository.getCourse(any(), any()) } throws Exception("Network error")
+    fun `Loading state shows error when use case fails`() {
+        coEvery { getCourseDetailsUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -149,14 +153,14 @@ class CourseDetailsViewModelTest {
     }
 
     @Test
-    fun `fetchData with forceRefresh true calls repository with force network`() = runTest {
+    fun `fetchData with forceRefresh true calls use cases with force network`() = runTest {
         val viewModel = getViewModel(testCourseId)
 
         viewModel.fetchData(forceRefresh = true)
 
-        coVerify { repository.getCourse(testCourseId, true) }
-        coVerify { repository.getProgramsForCourse(testCourseId, true) }
-        coVerify { repository.hasExternalTools(testCourseId, true) }
+        coVerify { getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(testCourseId, true)) }
+        coVerify { getProgramsForCourseUseCase(GetProgramsForCourseUseCase.Params(testCourseId, true)) }
+        coVerify { hasExternalToolsUseCase(HasExternalToolsUseCase.Params(testCourseId, true)) }
     }
 
     @Test
@@ -165,13 +169,13 @@ class CourseDetailsViewModelTest {
 
         val state = viewModel.state.value
         assertEquals(testCourseId, state.courseId)
-        coVerify { repository.getCourse(testCourseId, any()) }
+        coVerify { getCourseDetailsUseCase(match { it.courseId == testCourseId }) }
     }
 
     @Test
     fun `Course with null syllabus uses empty string`() {
         val courseWithNullSyllabus = testCourse.copy(courseSyllabus = null)
-        coEvery { repository.getCourse(any(), any()) } returns courseWithNullSyllabus
+        coEvery { getCourseDetailsUseCase(any()) } returns courseWithNullSyllabus
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -180,7 +184,7 @@ class CourseDetailsViewModelTest {
 
     @Test
     fun `Empty parent programs list handled correctly`() {
-        coEvery { repository.getProgramsForCourse(any(), any()) } returns emptyList()
+        coEvery { getProgramsForCourseUseCase(any()) } returns emptyList()
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -211,7 +215,7 @@ class CourseDetailsViewModelTest {
                 sortedRequirements = listOf(ProgramRequirement(id = "req2", progressId = "prog2", courseId = testCourseId, required = true))
             )
         )
-        coEvery { repository.getProgramsForCourse(any(), any()) } returns multiplePrograms
+        coEvery { getProgramsForCourseUseCase(any()) } returns multiplePrograms
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -221,15 +225,15 @@ class CourseDetailsViewModelTest {
     @Test
     fun `Invalid course ID defaults to -1`() {
         val savedStateHandle = SavedStateHandle()
-        val viewModel = CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
+        val viewModel = createViewModel(savedStateHandle)
 
-        coVerify { repository.getCourse(-1L, any()) }
+        coVerify { getCourseDetailsUseCase(match { it.courseId == -1L }) }
     }
 
     @Test
     fun `Course with 0 progress handled correctly`() {
         val courseWithZeroProgress = testCourse.copy(progress = 0.0)
-        coEvery { repository.getCourse(any(), any()) } returns courseWithZeroProgress
+        coEvery { getCourseDetailsUseCase(any()) } returns courseWithZeroProgress
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
@@ -239,17 +243,28 @@ class CourseDetailsViewModelTest {
     @Test
     fun `Course with 100 progress handled correctly`() {
         val courseWithFullProgress = testCourse.copy(progress = 100.0)
-        coEvery { repository.getCourse(any(), any()) } returns courseWithFullProgress
+        coEvery { getCourseDetailsUseCase(any()) } returns courseWithFullProgress
         val viewModel = getViewModel(testCourseId)
 
         val state = viewModel.state.value
         assertEquals(100.0, state.courseProgress)
     }
 
+    private fun createViewModel(savedStateHandle: SavedStateHandle): CourseDetailsViewModel {
+        return CourseDetailsViewModel(
+            savedStateHandle,
+            getCourseDetailsUseCase,
+            getProgramsForCourseUseCase,
+            hasExternalToolsUseCase,
+            networkStateProvider,
+            featureFlagProvider,
+            getLastSyncedAtUseCase,
+        )
+    }
+
     private fun getViewModel(courseId: Long): CourseDetailsViewModel {
-        val savedStateHandle = SavedStateHandle(mapOf(
-            LearnRoute.LearnCourseDetailsScreen.courseIdAttr to courseId
-        ))
-        return CourseDetailsViewModel(savedStateHandle, repository, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase)
+        return createViewModel(
+            SavedStateHandle(mapOf(LearnRoute.LearnCourseDetailsScreen.courseIdAttr to courseId))
+        )
     }
 }

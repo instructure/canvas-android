@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.data.repository.CourseScoreRepository
+import com.instructure.horizon.domain.usecase.GetCourseScoreDataUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.offline.HorizonOfflineViewModel
@@ -41,7 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseScoreViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val courseScoreRepository: CourseScoreRepository,
+    private val getCourseScoreDataUseCase: GetCourseScoreDataUseCase,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase
@@ -91,12 +91,10 @@ class CourseScoreViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val assignmentGroups = courseScoreRepository.getAssignmentGroups(courseId, forceRefresh)
-        val assignmentGroupItems = assignmentGroups.map { AssignmentGroupScoreItem(it) }
-        val enrollments = courseScoreRepository.getEnrollments(courseId, forceRefresh)
-        courseScoreRepository.saveScoreData(courseId, assignmentGroups, enrollments)
-        val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
-        assignments = assignmentGroups.flatMap { it.assignments }
+        val data = getCourseScoreDataUseCase(GetCourseScoreDataUseCase.Params(courseId, forceRefresh))
+        val assignmentGroupItems = data.assignmentGroups.map { AssignmentGroupScoreItem(it) }
+        val grades = data.enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
+        assignments = data.assignmentGroups.flatMap { it.assignments }
         val sortedAssignments = sortAssignments()
         _uiState.update {
             it.copy(

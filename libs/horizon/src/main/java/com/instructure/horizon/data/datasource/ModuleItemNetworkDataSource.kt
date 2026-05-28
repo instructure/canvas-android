@@ -18,8 +18,12 @@ package com.instructure.horizon.data.datasource
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.horizon.model.LearningObjectType
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class ModuleItemNetworkDataSource @Inject constructor(
@@ -44,6 +48,56 @@ class ModuleItemNetworkDataSource @Inject constructor(
             dueDate = item.moduleDetails?.dueDate,
             estimatedDuration = item.estimatedDuration,
             isQuizLti = item.quizLti,
+        )
+    }
+
+    suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
+        return moduleApi.getModuleItemSequence(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            assetType,
+            assetId,
+            RestParams(isForceReadFromNetwork = true),
+        ).dataOrThrow
+    }
+
+    suspend fun getModuleItem(courseId: Long, moduleId: Long, moduleItemId: Long): ModuleItem {
+        return moduleApi.getModuleItem(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            moduleItemId,
+            RestParams(isForceReadFromNetwork = true),
+        ).dataOrThrow
+    }
+
+    suspend fun markAsDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsDone(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleItem.moduleId,
+            moduleItem.id,
+            RestParams(),
+        )
+    }
+
+    suspend fun markAsNotDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsNotDone(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleItem.moduleId,
+            moduleItem.id,
+            RestParams(),
+        )
+    }
+
+    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long) {
+        moduleApi.markModuleItemRead(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            itemId,
+            RestParams(isForceReadFromNetwork = true),
         )
     }
 }

@@ -17,7 +17,11 @@
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.horizon.domain.usecase.GetCoursesWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetLearningStatusDataUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.model.MyProgressWidgetData
+import com.instructure.horizon.model.MyProgressWidgetDataEntry
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -37,14 +41,15 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardMyProgressViewModelTest {
 
-    private val repository: DashboardMyProgressRepository = mockk(relaxed = true)
+    private val getCoursesWithProgressUseCase: GetCoursesWithProgressUseCase = mockk(relaxed = true)
+    private val getLearningStatusDataUseCase: GetLearningStatusDataUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: DashboardMyProgressViewModel
 
     @Before
     fun setup() {
-        coEvery { repository.getCourses(any()) } returns listOf(
+        coEvery { getCoursesWithProgressUseCase(any()) } returns listOf(
             CourseWithProgress(
                 courseId = 1L,
                 courseName = "Course 1",
@@ -69,6 +74,8 @@ class DashboardMyProgressViewModelTest {
         unmockkAll()
     }
 
+    private fun createViewModel() = DashboardMyProgressViewModel(getCoursesWithProgressUseCase, getLearningStatusDataUseCase)
+
     @Test
     fun `init loads learning status data successfully`() = runTest {
         val myProgressData = MyProgressWidgetData(
@@ -90,9 +97,9 @@ class DashboardMyProgressViewModelTest {
             )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
@@ -101,9 +108,9 @@ class DashboardMyProgressViewModelTest {
 
     @Test
     fun `init handles error gracefully`() = runTest {
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } throws Exception("Network error")
+        coEvery { getLearningStatusDataUseCase(any()) } throws Exception("Network error")
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.ERROR, state.state)
@@ -143,9 +150,9 @@ class DashboardMyProgressViewModelTest {
             )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(12, state.cardState.moduleCountCompleted)
@@ -158,9 +165,9 @@ class DashboardMyProgressViewModelTest {
             data = emptyList()
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(0, state.cardState.moduleCountCompleted)
@@ -168,16 +175,16 @@ class DashboardMyProgressViewModelTest {
 
     @Test
     fun `init handles null data`() = runTest {
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns null
+        coEvery { getLearningStatusDataUseCase(any()) } returns null
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(0, state.cardState.moduleCountCompleted)
     }
 
     @Test
-    fun `refresh calls repository with forceNetwork true`() = runTest {
+    fun `refresh calls use case with forceNetwork true`() = runTest {
         val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
             data = listOf(
@@ -197,16 +204,16 @@ class DashboardMyProgressViewModelTest {
             )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         var refreshCompleted = false
         viewModel.uiState.value.onRefresh {
             refreshCompleted = true
         }
 
-        coVerify { repository.getLearningStatusData(courseId = null, forceNetwork = true) }
+        coVerify { getLearningStatusDataUseCase(match { it.forceNetwork }) }
         assertEquals(true, refreshCompleted)
     }
 
@@ -231,10 +238,10 @@ class DashboardMyProgressViewModelTest {
             )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = true) } throws Exception("Network error")
+        coEvery { getLearningStatusDataUseCase(match { !it.forceNetwork }) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(match { it.forceNetwork }) } throws Exception("Network error")
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         var refreshCompleted = false
         viewModel.uiState.value.onRefresh {
@@ -267,9 +274,9 @@ class DashboardMyProgressViewModelTest {
             )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
 
-        viewModel = DashboardMyProgressViewModel(repository)
+        viewModel = createViewModel()
 
         viewModel.uiState.value.onRefresh {}
 
@@ -310,8 +317,8 @@ class DashboardMyProgressViewModelTest {
                 )
             )
         )
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
-        viewModel = DashboardMyProgressViewModel(repository)
+        coEvery { getLearningStatusDataUseCase(any()) } returns myProgressData
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)

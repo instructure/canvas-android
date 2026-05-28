@@ -22,6 +22,7 @@ import com.instructure.horizon.data.repository.InboxRepository
 import com.instructure.horizon.domain.usecase.inbox.CreateConversationUseCase
 import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
 import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
+import com.instructure.horizon.domain.usecase.inbox.InvalidateConversationListCacheUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -30,18 +31,17 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
+/**
+ * The old HorizonInboxComposeRepository was a thin pass-through over inbox use cases.
+ * It is gone; the view model depends on the use cases directly. These tests now
+ * exercise those use cases against InboxRepository.
+ */
 class HorizonInboxComposeRepositoryTest {
-    private val getInboxCoursesUseCase: GetInboxCoursesUseCase = mockk(relaxed = true)
-    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase = mockk(relaxed = true)
-    private val createConversationUseCase: CreateConversationUseCase = mockk(relaxed = true)
     private val inboxRepository: InboxRepository = mockk(relaxed = true)
-
-    private val repository = HorizonInboxComposeRepository(
-        getInboxCoursesUseCase,
-        getInboxRecipientsUseCase,
-        createConversationUseCase,
-        inboxRepository,
-    )
+    private val getInboxCoursesUseCase = GetInboxCoursesUseCase(inboxRepository)
+    private val getInboxRecipientsUseCase = GetInboxRecipientsUseCase(inboxRepository)
+    private val createConversationUseCase = CreateConversationUseCase(inboxRepository)
+    private val invalidateConversationListCacheUseCase = InvalidateConversationListCacheUseCase(inboxRepository)
 
     private val testCourses = listOf(
         Course(id = 1L, name = "Course 1"),
@@ -54,57 +54,56 @@ class HorizonInboxComposeRepositoryTest {
     )
 
     @Test
-    fun `getAllInboxCourses delegates to use case`() = runTest {
-        coEvery { getInboxCoursesUseCase(any()) } returns testCourses
+    fun `getAllInboxCourses delegates to InboxRepository`() = runTest {
+        coEvery { inboxRepository.getInboxCourses(any()) } returns testCourses
 
-        val result = repository.getAllInboxCourses(forceNetwork = true)
+        val result = getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(forceNetwork = true))
 
         assertEquals(testCourses, result)
-        coVerify { getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(true)) }
+        coVerify { inboxRepository.getInboxCourses(true) }
     }
 
     @Test
-    fun `getRecipients delegates to use case`() = runTest {
-        coEvery { getInboxRecipientsUseCase(any()) } returns testRecipients
+    fun `getRecipients delegates to InboxRepository`() = runTest {
+        coEvery { inboxRepository.getRecipientsForCourse(any(), any(), any()) } returns testRecipients
 
-        val result = repository.getRecipients(courseId = 1L, searchQuery = "student")
+        val result = getInboxRecipientsUseCase(
+            GetInboxRecipientsUseCase.Params(courseId = 1L, searchQuery = "student", forceNetwork = false)
+        )
 
         assertEquals(testRecipients, result)
-        coVerify {
-            getInboxRecipientsUseCase(
-                GetInboxRecipientsUseCase.Params(courseId = 1L, searchQuery = "student", forceNetwork = false)
-            )
-        }
+        coVerify { inboxRepository.getRecipientsForCourse(1L, "student", false) }
     }
 
     @Test
-    fun `createConversation delegates to use case`() = runTest {
-        repository.createConversation(
-            recipientIds = listOf("1", "2"),
-            body = "Body",
-            subject = "Subject",
-            contextCode = "course_1",
-            attachmentIds = longArrayOf(100L),
-            isBulkMessage = true,
+    fun `createConversation delegates to InboxRepository and invalidates cache`() = runTest {
+        createConversationUseCase(
+            CreateConversationUseCase.Params(
+                recipientIds = listOf("1", "2"),
+                body = "Body",
+                subject = "Subject",
+                contextCode = "course_1",
+                attachmentIds = longArrayOf(100L),
+                isBulkMessage = true,
+            )
         )
 
         coVerify {
-            createConversationUseCase(
-                match {
-                    it.recipientIds == listOf("1", "2") &&
-                        it.subject == "Subject" &&
-                        it.body == "Body" &&
-                        it.contextCode == "course_1" &&
-                        it.attachmentIds.contentEquals(longArrayOf(100L)) &&
-                        it.isBulkMessage
-                }
+            inboxRepository.createConversation(
+                recipientIds = listOf("1", "2"),
+                subject = "Subject",
+                body = "Body",
+                contextCode = "course_1",
+                attachmentIds = longArrayOf(100L),
+                isBulkMessage = true,
             )
         }
+        verify { inboxRepository.invalidateConversationListCachedResponse() }
     }
 
     @Test
-    fun `invalidateConversationListCachedResponse delegates`() {
-        repository.invalidateConversationListCachedResponse()
+    fun `invalidateConversationListCache delegates to InboxRepository`() {
+        invalidateConversationListCacheUseCase()
 
         verify { inboxRepository.invalidateConversationListCachedResponse() }
     }

@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsMan
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.data.datasource.AssignmentCommentsLocalDataSource
+import com.instructure.horizon.data.datasource.CommentsNetworkDataSource
+import com.instructure.horizon.data.repository.CommentsRepository
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -72,7 +74,12 @@ class CommentsRepositoryTest {
 
     @Before
     fun setup() {
-        repository = CommentsRepository(getCommentsManager, submissionApi, localDataSource, networkStateProvider, featureFlagProvider)
+        repository = CommentsRepository(
+            CommentsNetworkDataSource(getCommentsManager, submissionApi),
+            localDataSource,
+            networkStateProvider,
+            featureFlagProvider,
+        )
     }
 
     @After

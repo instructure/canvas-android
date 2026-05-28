@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.dashboard.widget.skilloverview
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Skill
+import com.instructure.horizon.domain.usecase.GetSkillsUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -38,7 +39,7 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardSkillOverviewViewModelTest {
-    private val repository: DashboardSkillOverviewRepository = mockk(relaxed = true)
+    private val getSkillsUseCase: GetSkillsUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -59,7 +60,7 @@ class DashboardSkillOverviewViewModelTest {
             Skill("2", "Completed Skill 2", "beginner", Date(), Date()),
             Skill("3", "Completed Skill 3", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(true, false) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -67,7 +68,7 @@ class DashboardSkillOverviewViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
         assertEquals(3, state.cardState.completedSkillCount)
-        coVerify { repository.getSkills(true, false) }
+        coVerify { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) }
     }
 
     @Test
@@ -79,7 +80,7 @@ class DashboardSkillOverviewViewModelTest {
             Skill("4", "Skill 4", "beginner", Date(), Date()),
             Skill("5", "Skill 5", "advanced", Date(), Date())
         )
-        coEvery { repository.getSkills(true, false) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -90,7 +91,7 @@ class DashboardSkillOverviewViewModelTest {
 
     @Test
     fun `Test zero completed skills`() = runTest {
-        coEvery { repository.getSkills(true, false) } returns emptyList()
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns emptyList()
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -101,8 +102,8 @@ class DashboardSkillOverviewViewModelTest {
     }
 
     @Test
-    fun `Test error state when repository throws exception`() = runTest {
-        coEvery { repository.getSkills(true, false) } throws Exception("Network error")
+    fun `Test error state when use case throws exception`() = runTest {
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } throws Exception("Network error")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -112,13 +113,13 @@ class DashboardSkillOverviewViewModelTest {
     }
 
     @Test
-    fun `Test refresh calls repository with forceNetwork true`() = runTest {
+    fun `Test refresh calls use case with forceNetwork true`() = runTest {
         val skills = listOf(
             Skill("1", "Skill 1", "advanced", Date(), Date()),
             Skill("2", "Skill 2", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(true, false) } returns skills
-        coEvery { repository.getSkills(true, true) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = true)) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -128,7 +129,7 @@ class DashboardSkillOverviewViewModelTest {
         advanceUntilIdle()
 
         assertTrue(completed)
-        coVerify { repository.getSkills(true, true) }
+        coVerify { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = true)) }
     }
 
     @Test
@@ -137,7 +138,7 @@ class DashboardSkillOverviewViewModelTest {
             Skill("1", "Skill 1", "expert", Date(), Date()),
             Skill("2", "Skill 2", "advanced", Date(), Date())
         )
-        coEvery { repository.getSkills(true, any()) } returns skills
+        coEvery { getSkillsUseCase(match { it.completedOnly == true }) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -156,8 +157,8 @@ class DashboardSkillOverviewViewModelTest {
         val skills = listOf(
             Skill("1", "Skill 1", "expert", Date(), Date())
         )
-        coEvery { repository.getSkills(true, false) } returns skills
-        coEvery { repository.getSkills(true, true) } throws Exception("Refresh failed")
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = true)) } throws Exception("Refresh failed")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -176,7 +177,7 @@ class DashboardSkillOverviewViewModelTest {
         val skills = (1..100).map {
             Skill(it.toString(), "Skill $it", "advanced", Date(), Date())
         }
-        coEvery { repository.getSkills(true, false) } returns skills
+        coEvery { getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = false)) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -186,6 +187,6 @@ class DashboardSkillOverviewViewModelTest {
     }
 
     private fun getViewModel(): DashboardSkillOverviewViewModel {
-        return DashboardSkillOverviewViewModel(repository)
+        return DashboardSkillOverviewViewModel(getSkillsUseCase)
     }
 }

@@ -15,7 +15,7 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsRepository
+import com.instructure.horizon.data.repository.CommentsRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 

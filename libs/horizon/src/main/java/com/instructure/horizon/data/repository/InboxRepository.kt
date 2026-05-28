@@ -16,8 +16,10 @@
 package com.instructure.horizon.data.repository
 
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.horizon.data.datasource.InboxNetworkDataSource
 import javax.inject.Inject
@@ -79,6 +81,20 @@ class InboxRepository @Inject constructor(
 
     suspend fun getRecipientsForCourse(courseId: Long, searchQuery: String?, forceNetwork: Boolean): List<Recipient> {
         return networkDataSource.getRecipients(courseId.toString(), searchQuery, forceNetwork)
+    }
+
+    suspend fun getInboxCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {
+        val courses = networkDataSource.getInboxCourses(forceNetwork)
+        if (courses.isEmpty()) return emptyList()
+        val announcements = networkDataSource.getCourseAnnouncements(courses.map { it.contextId }, forceNetwork)
+        return announcements.map { announcement ->
+            val course = courses.first { it.contextId == announcement.contextCode }
+            course to announcement
+        }
+    }
+
+    suspend fun getInboxAccountAnnouncements(forceNetwork: Boolean): List<AccountNotification> {
+        return networkDataSource.getAccountAnnouncements(forceNetwork)
     }
 
     fun invalidateConversationListCachedResponse() {

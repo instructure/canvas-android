@@ -18,6 +18,7 @@ package com.instructure.horizon.features.inbox.details
 
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.horizon.data.repository.InboxRepository
 import com.instructure.horizon.domain.usecase.inbox.AddMessageToConversationUseCase
 import com.instructure.horizon.domain.usecase.inbox.GetConversationUseCase
 import io.mockk.coEvery
@@ -27,11 +28,15 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
+/**
+ * The old HorizonInboxDetailsRepository was a thin pass-through over inbox use cases.
+ * It is gone; the view model depends on GetConversationUseCase / AddMessageToConversationUseCase
+ * directly. These tests now exercise those use cases against InboxRepository.
+ */
 class HorizonInboxDetailsRepositoryTest {
-    private val getConversationUseCase: GetConversationUseCase = mockk(relaxed = true)
-    private val addMessageToConversationUseCase: AddMessageToConversationUseCase = mockk(relaxed = true)
-
-    private val repository = HorizonInboxDetailsRepository(getConversationUseCase, addMessageToConversationUseCase)
+    private val inboxRepository: InboxRepository = mockk(relaxed = true)
+    private val getConversationUseCase = GetConversationUseCase(inboxRepository)
+    private val addMessageToConversationUseCase = AddMessageToConversationUseCase(inboxRepository)
 
     private val testConversation = Conversation(
         id = 1L,
@@ -40,39 +45,39 @@ class HorizonInboxDetailsRepositoryTest {
     )
 
     @Test
-    fun `getConversation delegates to use case`() = runTest {
-        coEvery { getConversationUseCase(any()) } returns testConversation
+    fun `getConversation delegates to InboxRepository`() = runTest {
+        coEvery { inboxRepository.getConversation(any(), any(), any()) } returns testConversation
 
-        val result = repository.getConversation(id = 1L, forceRefresh = false)
+        val result = getConversationUseCase(GetConversationUseCase.Params(id = 1L, markAsRead = true, forceNetwork = false))
 
         assertEquals("Test Conversation", result.subject)
-        coVerify { getConversationUseCase(GetConversationUseCase.Params(1L, true, false)) }
+        coVerify { inboxRepository.getConversation(1L, true, false) }
     }
 
     @Test
-    fun `addMessageToConversation delegates to use case`() = runTest {
-        coEvery { addMessageToConversationUseCase(any()) } returns testConversation
+    fun `addMessageToConversation delegates to InboxRepository`() = runTest {
+        coEvery { inboxRepository.addMessageToConversation(any(), any(), any(), any(), any(), any()) } returns testConversation
 
-        val result = repository.addMessageToConversation(
-            contextCode = "course_1",
-            conversationId = 1L,
-            recipientIds = listOf("1", "2"),
-            body = "Reply",
-            includedMessageIds = listOf(10L),
-            attachmentIds = listOf(100L),
+        val result = addMessageToConversationUseCase(
+            AddMessageToConversationUseCase.Params(
+                contextCode = "course_1",
+                conversationId = 1L,
+                recipientIds = listOf("1", "2"),
+                body = "Reply",
+                includedMessageIds = listOf(10L),
+                attachmentIds = listOf(100L),
+            )
         )
 
         assertEquals("Test Conversation", result.subject)
         coVerify {
-            addMessageToConversationUseCase(
-                AddMessageToConversationUseCase.Params(
-                    contextCode = "course_1",
-                    conversationId = 1L,
-                    recipientIds = listOf("1", "2"),
-                    body = "Reply",
-                    includedMessageIds = listOf(10L),
-                    attachmentIds = listOf(100L),
-                )
+            inboxRepository.addMessageToConversation(
+                contextCode = "course_1",
+                conversationId = 1L,
+                recipientIds = listOf("1", "2"),
+                body = "Reply",
+                includedMessageIds = listOf(10L),
+                attachmentIds = listOf(100L),
             )
         }
     }

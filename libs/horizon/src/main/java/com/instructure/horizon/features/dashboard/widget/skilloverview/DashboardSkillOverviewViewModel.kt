@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetSkillsUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardSkillOverviewViewModel @Inject constructor(
-    private val repository: DashboardSkillOverviewRepository
+    private val getSkillsUseCase: GetSkillsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -50,7 +51,7 @@ class DashboardSkillOverviewViewModel @Inject constructor(
 
     private suspend fun loadSkillOverviewData(forceNetwork: Boolean = false) {
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-        val skills = repository.getSkills(completedOnly = true, forceNetwork = forceNetwork)
+        val skills = getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = forceNetwork))
 
         val completedSkillCount = skills.size
 
