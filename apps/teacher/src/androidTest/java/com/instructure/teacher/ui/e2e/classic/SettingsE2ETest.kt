@@ -142,6 +142,7 @@ class SettingsE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testProfileSettingsE2E() {
 
