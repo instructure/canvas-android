@@ -867,6 +867,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageForwardWithPdfAttachmentE2E() {
 
