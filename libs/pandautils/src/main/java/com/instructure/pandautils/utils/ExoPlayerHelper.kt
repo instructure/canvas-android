@@ -225,6 +225,11 @@ class ExoAgent private constructor(val uri: Uri) {
         player = null
     }
 
+    /** Pauses playback without releasing the player; safe to call from Fragment/Activity onPause. */
+    fun pause() {
+        player?.let { if (it.isPlaying) it.playWhenReady = false }
+    }
+
     /**
      * Releases this agent from life and resets the internal player.
      * This should only be called when we're confident that playback is no longer desired
