@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.IntentActionMatcher
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.utils.pressBackButton
@@ -371,6 +372,7 @@ class SettingsE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testPronounsE2E() {
 
@@ -559,6 +561,7 @@ class SettingsE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesWithDifferentUsersE2E() {
 
@@ -715,6 +718,7 @@ class SettingsE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesFABButtonWithDifferentUsersE2E() {
 
