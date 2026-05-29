@@ -86,26 +86,18 @@ class LoginActivity : BaseLoginInitActivity() {
     /**
      * ONLY USE FOR UI TESTING
      * Skips the traditional login process by directly setting the domain, token, and user info.
-     *
-     * When [skipSplash] is true, [InitActivity] is launched directly. SplashActivity's
-     * GlobalScope-scoped color/theme fetches outlive the activity and can race with the next
-     * test's pref reset, leaving InitActivity to read stale prefs and dispatch theme requests
-     * to invalid.domain.com.
      */
     fun loginWithToken(token: String, domain: String, user: User, skipSplash: Boolean) {
         ApiPrefs.accessToken = token
         ApiPrefs.domain = domain
         ApiPrefs.user = user
         ApiPrefs.userAgent = Utils.generateUserAgent(this, userAgent())
-        finish()
-        val nextActivity = if (skipSplash) {
+        if (skipSplash) {
             TeacherPrefs.isConfirmedTeacher = true
             ThemePrefs.isThemeApplied = true
             ColorKeeper.previouslySynced = true
-            InitActivity.createIntent(this, intent?.extras)
-        } else {
-            SplashActivity.createIntent(this, intent?.extras)
         }
-        startActivity(nextActivity)
+        finish()
+        startActivity(SplashActivity.createIntent(this, intent?.extras))
     }
 }
