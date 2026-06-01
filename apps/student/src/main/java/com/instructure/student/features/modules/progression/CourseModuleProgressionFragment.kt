@@ -770,6 +770,16 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             return
         }
 
+        val secondaryItemAsset = ModuleItemAsset.fromAssetType(secondaryAssetType)
+        if (canvasContext.type == CanvasContext.Type.GROUP && secondaryItemAsset?.routeClass != null) {
+            val newRoute = route.copy(
+                secondaryClass = secondaryItemAsset.routeClass,
+                removePreviousScreen = true
+            )
+            RouteMatcher.route(requireActivity(), newRoute)
+            return
+        }
+
         binding.progressBar.setVisible()
         lifecycleScope.tryLaunch {
             val moduleItemSequence = repository.getModuleItemSequence(canvasContext, assetType, assetId, true)
