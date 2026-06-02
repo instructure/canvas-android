@@ -7,6 +7,12 @@ on:
       - 'release/student'
       - 'release/teacher'
       - 'release/parent'
+  workflow_dispatch:
+    inputs:
+      record_video:
+        description: "Enable FTL video recording (for QA investigation reruns)"
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
@@ -444,7 +450,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./libs/horizon/flank.yml ./flank.yml
+        run: |
+          cp ./libs/horizon/flank.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -459,19 +470,96 @@ jobs:
              rm -rf horizon-debug-androidTest.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+            echo "Initial run failed but no candidates identified (job will fail)."
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+            echo "Missing shard(s) detected — full-suite rerun will run."
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            echo "Tests to rerun:"
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash horizon-ui results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash horizon-ui results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash horizon-ui results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
+          echo "Rerun recovered the suite; reporting success."
 
       - name: Cleanup sensitive files
         if: always()
@@ -504,7 +592,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./libs/horizon/flank_interaction.yml ./flank.yml
+        run: |
+          cp ./libs/horizon/flank_interaction.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -519,19 +612,96 @@ jobs:
              rm -rf horizon-debug-androidTest.apk
           fi
 
-      - name: Run Flank interaction tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank interaction tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+            echo "Initial run failed but no candidates identified (job will fail)."
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+            echo "Missing shard(s) detected — full-suite rerun will run."
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            echo "Tests to rerun:"
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash horizon-interaction results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash horizon-interaction results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash horizon-interaction results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
+          echo "Rerun recovered the suite; reporting success."
 
       - name: Cleanup sensitive files
         if: always()
@@ -563,7 +733,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/parent/flank.yml ./flank.yml
+        run: |
+          cp ./apps/parent/flank.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -583,19 +758,96 @@ jobs:
              rm -rf parent-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+            echo "Initial run failed but no candidates identified (job will fail)."
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+            echo "Missing shard(s) detected — full-suite rerun will run."
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            echo "Tests to rerun:"
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash parent results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash parent results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash parent results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
+          echo "Rerun recovered the suite; reporting success."
 
       - name: Cleanup sensitive files
         if: always()
@@ -627,7 +879,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/parent/flank_landscape.yml ./flank.yml
+        run: |
+          cp ./apps/parent/flank_landscape.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -647,19 +904,92 @@ jobs:
              rm -rf parent-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash parent results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash parent results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash parent results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
 
       - name: Cleanup sensitive files
         if: always()
@@ -691,7 +1021,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/student/flank.yml ./flank.yml
+        run: |
+          cp ./apps/student/flank.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -711,19 +1046,92 @@ jobs:
              rm -rf student-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash student results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash student results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash student results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
 
       - name: Cleanup sensitive files
         if: always()
@@ -755,7 +1163,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/student/flank_landscape.yml ./flank.yml
+        run: |
+          cp ./apps/student/flank_landscape.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -775,19 +1188,92 @@ jobs:
              rm -rf student-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash student results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash student results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash student results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
 
       - name: Cleanup sensitive files
         if: always()
@@ -819,7 +1305,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/teacher/flank.yml ./flank.yml
+        run: |
+          cp ./apps/teacher/flank.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -839,19 +1330,92 @@ jobs:
              rm -rf teacher-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash teacher results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash teacher results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
 
       - name: Cleanup sensitive files
         if: always()
@@ -883,7 +1447,12 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/teacher/flank_landscape.yml ./flank.yml
+        run: |
+          cp ./apps/teacher/flank_landscape.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -903,19 +1472,92 @@ jobs:
              rm -rf teacher-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
+      - name: Report initial results to Splunk
+        if: always() && (steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full')
+        run: |
+          if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
+            ./apps/postProcessTestRun.bash teacher results-initial/$(ls results-initial)
+          fi
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Report final results to Splunk
+        if: always() && hashFiles('results/**/JUnitReport.xml') != ''
+        run: ./apps/postProcessTestRun.bash teacher results/$(ls results)
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
 
       - name: Cleanup sensitive files
         if: always()
@@ -927,6 +1569,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: parent
+      record_video: ${{ github.event.inputs.record_video == 'true' }}
     secrets: inherit
 
   student-e2e-tests:
@@ -935,6 +1578,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: student
+      record_video: ${{ github.event.inputs.record_video == 'true' }}
     secrets: inherit
 
   teacher-e2e-tests:
@@ -943,6 +1587,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: teacher
+      record_video: ${{ github.event.inputs.record_video == 'true' }}
     secrets: inherit
 
   submodule-ui-tests:
@@ -975,7 +1620,12 @@ jobs:
         run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./libs/pandautils/flank.yml ./flank.yml
+        run: |
+          cp ./libs/pandautils/flank.yml ./flank.yml
+          if [ "${{ github.event.inputs.record_video }}" = "true" ]; then
+            sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
+            echo "Video recording enabled for this run"
+          fi
 
       - name: Copy APKs to expected locations
         run: |
@@ -983,10 +1633,69 @@ jobs:
           mv pandautils-test.apk libs/pandautils/
           mv pandautils-app.apk libs/pandautils/
 
-      - name: Run Flank E2E tests
+      - name: Download Flank
+        run: curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+
+      - name: Run Flank submodule UI tests (initial)
+        id: flank_initial
+        continue-on-error: true
         run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set -o pipefail
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank-initial.log
+          flank_exit=${PIPESTATUS[0]}
+          # Flank v23.07.0 sometimes exits 0 even when matrices fail. Backstop on the log.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank-initial.log; then
+            echo "::warning::Flank reported matrix failures despite exit code"
+            exit 1
+          fi
+          exit "$flank_exit"
+
+      - name: Detect failed tests for scoped rerun
+        id: detect
+        if: steps.flank_initial.outcome == 'failure'
+        run: |
+          python3 scripts/flank/detect_rerun.py results > rerun-tests.txt || true
+          if [ ! -s rerun-tests.txt ]; then
+            echo "rerun=none" >> $GITHUB_OUTPUT
+          elif grep -q '__MISSING_SHARDS__' rerun-tests.txt; then
+            echo "rerun=full" >> $GITHUB_OUTPUT
+          else
+            echo "rerun=scoped" >> $GITHUB_OUTPUT
+            cat rerun-tests.txt
+          fi
+
+      - name: Move initial results aside
+        if: steps.detect.outputs.rerun == 'scoped' || steps.detect.outputs.rerun == 'full'
+        run: mv results results-initial
+
+      - name: Build scoped rerun config
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+
+      - name: Rerun (scoped to failed tests)
+        if: steps.detect.outputs.rerun == 'scoped'
+        run: |
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank-rerun.yml
+
+      - name: Rerun (full suite — missing-shards fallback)
+        if: steps.detect.outputs.rerun == 'full'
+        run: |
           GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
+
+      - name: Determine final outcome
+        if: always() && steps.flank_initial.outcome == 'failure'
+        run: |
+          rerun="${{ steps.detect.outputs.rerun }}"
+          if [ -z "$rerun" ] || [ "$rerun" = "none" ]; then
+            echo "Initial run failed and no rerun was attempted."
+            exit 1
+          fi
+          python3 scripts/flank/detect_rerun.py results > final-fails.txt || true
+          if [ -s final-fails.txt ]; then
+            echo "Tests still failing after rerun:"
+            cat final-fails.txt
+            exit 1
+          fi
   unit-test-report:
     name: unit-test-report
     runs-on: ubuntu-latest-16core
