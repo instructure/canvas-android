@@ -1,0 +1,26 @@
+name: Manual Release Candidate
+
+# Manually builds, signs, and distributes a Release Candidate for the selected app,
+# bypassing the unit/flank/e2e test gates of the automatic release pipeline.
+# Run it from the Actions tab and pick the branch to build (e.g. a release/* branch).
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'App to build'
+        required: true
+        type: choice
+        options:
+          - student
+          - teacher
+          - parent
+
+jobs:
+  build:
+    uses: ./.github/workflows/reusable-build-rc.yml
+    with:
+      app-name: ${{ inputs.app }}
+      app-display-name: ${{ inputs.app == 'parent' && 'Parent' || inputs.app == 'student' && 'Student' || 'Teacher' }}
+      slack-emoji: ${{ inputs.app == 'parent' && ':parent-app:' || inputs.app == 'student' && ':student-app:' || ':teacher-app:' }}
+    secrets: inherit
