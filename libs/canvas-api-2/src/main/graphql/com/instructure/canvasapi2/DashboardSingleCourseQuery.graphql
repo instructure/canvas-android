@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query DashboardSingleCourseQuery($courseId: ID!) {
+query DashboardSingleCourseQuery($courseId: ID!, $userId: ID!) {
     course: legacyNode(_id: $courseId, type: Course) {
         ... on Course {
             _id
@@ -27,7 +27,10 @@ query DashboardSingleCourseQuery($courseId: ID!) {
                 color
                 image
             }
-            enrollmentsConnection(first: 1) {
+            enrollmentsConnection(
+                first: 1
+                filter: { userIds: [$userId], types: [StudentEnrollment, ObserverEnrollment] }
+            ) {
                 nodes {
                     _id
                     type
