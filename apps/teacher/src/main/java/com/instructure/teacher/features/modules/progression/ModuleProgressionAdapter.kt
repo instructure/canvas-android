@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 class ModuleProgressionAdapter(
     fragmentManager: FragmentManager,
     private val fragments: List<Fragment>
-) : FragmentStatePagerAdapter(fragmentManager) {
+) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getCount() = fragments.size
 
     override fun getItem(position: Int) = fragments[position]
