@@ -23,7 +23,8 @@ data class AttachmentCardItem (
     val status: AttachmentStatus, // TODO: Currently this is not used for proper state handling, but if the upload process will be refactored it can be useful
     val readOnly: Boolean,
     val uploadProgress: Float? = null, // Upload progress from 0.0 to 1.0, null if not uploading
-    val workerId: String? = null // WorkManager UUID to track which upload this belongs to
+    val workerId: String? = null, // WorkManager UUID to track which upload this belongs to
+    val showFileSize: Boolean = true
 )
 
 enum class AttachmentStatus {

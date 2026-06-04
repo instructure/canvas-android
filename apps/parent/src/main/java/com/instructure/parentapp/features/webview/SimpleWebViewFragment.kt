@@ -174,6 +174,20 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
             }
         }
 
+        webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback {
+            override fun downloadMedia(mime: String?, url: String?, filename: String?) {
+                if (!limitWebAccess) {
+                    viewModel.downloadFile(mime.orEmpty(), url.orEmpty(), filename.orEmpty())
+                }
+            }
+
+            override fun downloadInternalMedia(mime: String?, url: String?, filename: String?) {
+                if (!limitWebAccess) {
+                    viewModel.downloadFile(mime.orEmpty(), url.orEmpty(), filename.orEmpty())
+                }
+            }
+        })
+
         webView.loadUrl(mainUrl)
     }
 

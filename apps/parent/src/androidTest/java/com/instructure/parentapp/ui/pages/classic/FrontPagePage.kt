@@ -15,6 +15,7 @@
  */
 package com.instructure.parentapp.ui.pages.classic
 
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
@@ -27,7 +28,7 @@ import org.hamcrest.Matchers
 class FrontPagePage : BasePage() {
 
     fun assertFrontPageBody(body: String) {
-        Web.onWebView(withId(R.id.contentWebView))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
             .withElement(DriverAtoms.findElement(Locator.ID, "content"))
             .check(
                 WebViewAssertions.webMatches(
@@ -38,7 +39,7 @@ class FrontPagePage : BasePage() {
     }
 
     fun clickLink(linkId: String) {
-        Web.onWebView(withId(R.id.contentWebView))
+        Web.onWebView(Matchers.allOf(withId(R.id.contentWebView), isDisplayed()))
             .withElement(DriverAtoms.findElement(Locator.ID, linkId))
             .perform(DriverAtoms.webClick())
     }

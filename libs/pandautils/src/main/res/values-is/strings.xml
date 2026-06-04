@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Þessi nemandi hefur engin skil enn.</string>
     <string name="locked">Læst</string>
     <string name="lockedSubtext">Þetta verkefni er læst til %1$s klukkan %2$s.</string>
+    <string name="closedSubtext">Þessu verkefni var læst þann %1$s klukkan %2$s.</string>
     <string name="chooseFile">Velja skrá</string>
     <string name="chooseFileSubtext">Festu skrá við skilin með því að smella á valkostinn hér að neðan.</string>
     <string name="chooseFileForUploadSubtext">Veldu skrá til að hlaða upp með því að smella á valkostinn hér að neðan</string>

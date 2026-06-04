@@ -43,6 +43,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.TokenRefreshState
@@ -84,6 +85,8 @@ import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.LoginPrefs
+import com.instructure.loginapi.login.util.PKCEUtils
+import com.instructure.loginapi.login.util.PkcePair
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
@@ -97,6 +100,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -106,8 +110,14 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
-        const val SUCCESS_URL = "/canvas/login?code="
-        const val ERROR_URL = "/canvas/login?error=access_denied"
+        val SUCCESS_URL_COLLECTION = listOf(
+            "/canvas/login?code=", //success url
+            "login/oauth2/auth?code=" //legacy success url (needed for the fallback redirect_uri)
+        )
+        val ERROR_URL_COLLECTION = listOf(
+            "/canvas/login?error=access_denied", //error url
+            "/login/oauth2/auth?error=access_denied" //legacy error url (needed for the fallback redirect_uri)
+        )
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -128,6 +138,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) ?: AccountDomain() }
     private val progressBarHandler = Handler()
+    private var pkce: PkcePair? = null
 
     private val viewModel: LoginViewModel by viewModels()
 
@@ -240,13 +251,14 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         private fun handleShouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if (overrideUrlLoading(view, url)) return true
             return when {
-                url.contains(SUCCESS_URL) -> {
+                SUCCESS_URL_COLLECTION.any { url.contains(it) } -> {
+                    val responseUrl = SUCCESS_URL_COLLECTION.first { url.contains(it) }
                     domain = accountDomain.domain!!
-                    val oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length)
-                    getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
+                    val oAuthRequest = url.substring(url.indexOf(responseUrl) + responseUrl.length)
+                    getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback, pkce?.verifier)
                     true
                 }
-                url.contains(ERROR_URL) -> {
+                ERROR_URL_COLLECTION.any { url.contains(it) } -> {
                     clearCookies()
                     loadUrl(view, authenticationURL, headers)
                     true
@@ -273,7 +285,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 specialCase = true
                 domain = accountDomain.domain!!
                 val oAuthRequest = url.substringAfter("hash=")
-                getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback)
+                getToken(clientId, clientSecret, oAuthRequest, mGetTokenCallback, pkce?.verifier)
             }
         }
 
@@ -284,10 +296,13 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
         override fun onReceivedHttpError(view: WebView, request: WebResourceRequest?, errorResponse: WebResourceResponse) {
             if (errorResponse.statusCode == 400 && authenticationURL != null && request != null && request.url != null && authenticationURL == request.url.toString()) {
-                //If the institution does not support skipping the authentication screen this will catch that error and force the
-                //rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
-                buildAuthenticationUrl(protocol, accountDomain, clientId, true)
-                loadAuthenticationUrl(protocol, accountDomain.domain)
+                // Previously, when an institution did not support skipping the authentication screen (e.g. canvas.sfu.ca),
+                // we caught the 400 error here and rebuilt the authentication url using the OOB authorization screen flow as a fallback.
+                // OOB authentication is no longer supported, so there is no viable fallback in this case; instead we log a non-fatal
+                // to Crashlytics so we can track institutions that hit this path.
+                FirebaseCrashlytics.getInstance().recordException(
+                    IllegalStateException("Authentication failed with 400 for OOB fallback no longer supported.")
+                )
             }
             super.onReceivedHttpError(view, request, errorResponse)
         }
@@ -322,7 +337,6 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                         protocolEditText.text.toString(),
                         accountDomain,
                         clientId,
-                        false
                     )
                     loadUrl(webView, authenticationURL, headers)
                 }
@@ -390,7 +404,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
                     //Set the protocol
                     protocol = domainVerificationResult.protocol
-                    buildAuthenticationUrl(apiProtocol, accountDomain, clientId, false)
+                    buildAuthenticationUrl(apiProtocol, accountDomain, clientId)
                     loadAuthenticationUrl(apiProtocol, domain)
                 } else {
                     //Error message
@@ -430,6 +444,8 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         } else if (canvasLogin == MASQUERADE_FLOW) {
             // canvas_sa_delegated=1    identifies that we want to masquerade
             val cookieManager = CookieManager.getInstance()
+            // TODO(MBL-20032 M3): replace the unconditional accept with allowlist-gating so cookies
+            //  only forward to Canvas/Instructure/configured LTI hosts. Tracked as a follow-up ticket.
             cookieManager.setAcceptThirdPartyCookies(webView, true)
             if (domain!!.contains(".instructure.com")) {
                 val cookie = "canvas_sa_delegated=1;domain=.instructure.com;path=/;"
@@ -450,7 +466,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         }
     }
 
-    protected fun buildAuthenticationUrl(protocol: String?, accountDomain: AccountDomain?, clientId: String?, forceAuthRedirect: Boolean) {
+    protected fun buildAuthenticationUrl(protocol: String?, accountDomain: AccountDomain?, clientId: String?) {
         //Get device name for the login request.
         var deviceName = Build.MODEL
         if (deviceName == null || deviceName == "") {
@@ -463,6 +479,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         if (domain != null && domain.endsWith("/")) {
             domain = domain.substring(0, domain.length - 1)
         }
+        val pkcePair = PKCEUtils.generate().also { pkce = it }
         val builder = Uri.Builder()
             .scheme(protocol)
             .authority(domain)
@@ -473,12 +490,9 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             .appendQueryParameter("response_type", "code")
             .appendQueryParameter("mobile", "1")
             .appendQueryParameter("purpose", deviceName)
-        if (forceAuthRedirect || canvasLogin == MOBILE_VERIFY_FLOW || domain != null && domain.contains(".test.")) {
-            //Skip mobile verify
-            builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
-        } else {
-            builder.appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
-        }
+            .appendQueryParameter("code_challenge", pkcePair.challenge)
+            .appendQueryParameter("code_challenge_method", pkcePair.method)
+            .appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
         val authenticationProvider = accountDomain.authenticationProvider
@@ -586,9 +600,11 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     private fun populateWithSnickerDoodle(snickerDoodle: SnickerDoodle) {
         webView.settings.domStorageEnabled = true
         webView.webChromeClient = WebChromeClient()
+        val username = JSONObject.quote(snickerDoodle.username)
+        val password = JSONObject.quote(snickerDoodle.password)
         val js = "javascript: { " +
-                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = '" + snickerDoodle.username + "'; " +
-                "document.getElementsByName('pseudonym_session[password]')[0].value = '" + snickerDoodle.password + "'; " +
+                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = $username; " +
+                "document.getElementsByName('pseudonym_session[password]')[0].value = $password; " +
                 "document.getElementsByClassName('Button')[0].click(); " +
                 "};"
         webView.evaluateJavascript(js) { }

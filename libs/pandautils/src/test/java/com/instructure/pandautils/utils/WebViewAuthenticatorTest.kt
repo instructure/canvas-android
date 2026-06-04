@@ -35,21 +35,21 @@ class WebViewAuthenticatorTest {
     @Test
     fun `Authenticate webviews when timestamp is older than an hour`() = runTest {
         every { apiPrefs.webViewAuthenticationTimestamp } returns System.currentTimeMillis() - 1000 * 60 * 61
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         webViewAuthenticator.authenticateWebViews(this, mockk())
         this.testScheduler.advanceUntilIdle()
 
-        coVerify { oAuthApi.getAuthenticatedSession(any(), any()) }
+        coVerify { oAuthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 
     @Test
     fun `Do not authenticate webviews when timestamp is not older than an hour`() = runTest {
         every { apiPrefs.webViewAuthenticationTimestamp } returns System.currentTimeMillis()
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         webViewAuthenticator.authenticateWebViews(this, mockk())
 
-        coVerify(exactly = 0) { oAuthApi.getAuthenticatedSession(any(), any()) }
+        coVerify(exactly = 0) { oAuthApi.getAuthenticatedSession(any(), any(), any()) }
     }
 }

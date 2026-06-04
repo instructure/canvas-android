@@ -22,13 +22,19 @@ import android.view.View
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.*
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.EspressoKey
+import androidx.test.espresso.action.GeneralLocation
+import androidx.test.espresso.action.GeneralSwipeAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Swipe
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.SetViewPagerCurrentItemAction
+import com.instructure.canvas.espresso.utils.SetViewPagerCurrentItemAction
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import java.util.concurrent.*
+import java.util.concurrent.TimeUnit
 
 
 fun ViewInteraction.assertVisible(): ViewInteraction

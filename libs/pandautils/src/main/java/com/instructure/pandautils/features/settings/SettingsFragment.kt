@@ -241,6 +241,10 @@ class SettingsFragment : BaseCanvasFragment() {
                 settingsRouter.navigateToInboxSignature()
             }
 
+            SettingsItem.PRIVACY -> {
+                settingsRouter.navigateToPrivacySettings()
+            }
+
             else -> {
 
             }

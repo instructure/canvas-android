@@ -18,23 +18,19 @@
 package com.instructure.parentapp.features.splash
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.pandautils.utils.orDefault
 
 
 class SplashRepository(
     private val userApi: UserAPI.UsersInterface,
     private val themeApi: ThemeAPI.ThemeInterface,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val featuresApi: FeaturesAPI.FeaturesInterface
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
 ) {
 
     suspend fun getSelf(): User? {
@@ -69,10 +65,5 @@ class SplashRepository(
     suspend fun getBecomeUserPermission(): Boolean {
         val params = RestParams(isForceReadFromNetwork = true)
         return userApi.getBecomeUserPermission(params).dataOrNull?.becomeUser ?: false
-    }
-
-    suspend fun getSendUsageMetrics(): Boolean {
-        val params = RestParams(isForceReadFromNetwork = true)
-        return featuresApi.getEnvironmentFeatureFlags(params).dataOrNull?.get(FeaturesManager.SEND_USAGE_METRICS).orDefault()
     }
 }

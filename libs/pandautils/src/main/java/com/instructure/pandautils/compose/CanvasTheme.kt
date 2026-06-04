@@ -30,6 +30,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RippleConfiguration
 import androidx.compose.material.Typography
 import androidx.compose.material.ripple.RippleAlpha
+import androidx.compose.material3.LocalTextStyle as Material3LocalTextStyle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -60,13 +61,15 @@ fun CanvasTheme(
             body1 = typography.body1.copy(letterSpacing = TextUnit(0.0f, TextUnitType.Sp))
         )
     ) {
+        val textStyle = TextStyle(
+            fontFamily = currentFontFamily,
+            letterSpacing = TextUnit(0f, TextUnitType.Sp)
+        )
         CompositionLocalProvider(
             LocalRippleConfiguration provides RippleConfiguration(color = colorResource(id = R.color.backgroundDark), getRippleAlpha(isSystemInDarkTheme())),
             LocalTextSelectionColors provides getCustomTextSelectionColors(context = LocalContext.current),
-            LocalTextStyle provides TextStyle(
-                fontFamily = lato,
-                letterSpacing = TextUnit(0f, TextUnitType.Sp)
-            ),
+            LocalTextStyle provides textStyle,
+            Material3LocalTextStyle provides textStyle,
             LocalCourseColor provides courseColor,
             content = content
         )
@@ -79,17 +82,17 @@ private val lato = FontFamily(
     Font(R.font.lato_italic, style = FontStyle.Italic),
 )
 
+private var currentFontFamily: FontFamily = lato
+
 private var typography = Typography(
-    defaultFontFamily = lato,
+    defaultFontFamily = currentFontFamily,
 )
 
 fun overrideComposeFonts(@FontRes fontResource: Int) {
-    val newFont = FontFamily(
-        Font(fontResource)
-    )
+    currentFontFamily = FontFamily(Font(fontResource))
 
     typography = Typography(
-        defaultFontFamily = newFont,
+        defaultFontFamily = currentFontFamily,
     )
 }
 

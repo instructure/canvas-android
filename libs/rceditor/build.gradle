@@ -110,4 +110,6 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
 
     api Libs.RICH_EDITOR
+
+    implementation Libs.JSOUP
 }

@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.aiassistant.chat
 
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
@@ -39,8 +38,6 @@ class AiAssistChatViewModel @Inject constructor(
     private val aiAssistContextProvider: AiAssistContextProvider,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
-        onInputTextChanged = ::onTextInputChanged,
-        onInputTextSubmitted = ::onTextInputSubmitted,
         onClearChatHistory = ::onClearChatHistory,
         onChipClicked = ::onChipClicked,
         onNavigateToCards = ::onNavigateToCards,
@@ -50,27 +47,6 @@ class AiAssistChatViewModel @Inject constructor(
 
     private var aiAssistContextState = aiAssistContextProvider.aiAssistContext.state
     private var aiAssistMessages = aiAssistContextProvider.aiAssistContext.chatHistory.toMutableList()
-
-    private fun onTextInputChanged(newValue: TextFieldValue) {
-        _uiState.update {
-            it.copy(
-                inputTextValue = newValue,
-            )
-        }
-    }
-
-    private fun onTextInputSubmitted() {
-        val prompt = _uiState.value.inputTextValue.text
-        val message = addMessage(prompt)
-        _uiState.update {
-            it.copy(
-                inputTextValue = TextFieldValue(""),
-                messages = it.messages + message,
-            )
-        }
-
-        evaluatePrompt(message)
-    }
 
     private fun evaluatePrompt(message: AiAssistMessage) {
         viewModelScope.tryLaunch {

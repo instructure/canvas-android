@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Impossibile eseguire questa azione. Verificare la connessione e riprovare.</string>
     <string name="conversationArchived">Conversazione archiviata</string>
     <string name="conversationUnarchived">Conversazione non archiviata</string>
+    <string name="conversationMarkedAsRead">Conversazione contrassegnata come letta</string>
+    <string name="conversationMarkedAsUnread">Conversazione contrassegnata come non letta</string>
     <string name="messageDeleted">Messaggio eliminato</string>
     <string name="messageDeletedFailed">Impossibile eliminare messaggio</string>
     <string name="conversationDeleted">Conversazione eliminata</string>

@@ -16,12 +16,13 @@
  */
 package com.instructure.student.ui.pages.classic
 
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
@@ -33,6 +34,7 @@ class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
     private val deviceIcon by OnViewWithId(R.id.sourceDeviceIcon)
     private val cameraIcon by OnViewWithId(R.id.sourceCameraIcon)
     private val galleryIcon by OnViewWithId(R.id.sourceGalleryIcon)
+    private val scannerIcon by OnViewWithId(R.id.sourceScannerIcon)
     private val deleteButton by OnViewWithId(R.id.deleteButton)
 
     fun chooseDevice() {
@@ -45,6 +47,18 @@ class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
 
     fun chooseGallery() {
         galleryIcon.click()
+    }
+
+    fun chooseScanner() {
+        scannerIcon.click()
+    }
+
+    fun assertScannerButtonDisplayed() {
+        onView(withId(R.id.sourceScanner)).assertDisplayed()
+    }
+
+    fun assertScannerButtonNotDisplayed() {
+        onView(withId(R.id.sourceScanner)).assertNotDisplayed()
     }
 
     fun waitForSubmitButtonToAppear() {

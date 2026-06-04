@@ -1,0 +1,153 @@
+name: Build Test APKs
+
+on:
+  workflow_call:
+    inputs:
+      app-type-lower:
+        description: 'App type in lowercase (parent, student, or teacher)'
+        required: true
+        type: string
+      artifact-retention-days:
+        description: 'How long to retain uploaded APK artifacts'
+        required: false
+        type: number
+        default: 1
+    secrets:
+      # Private-data env vars consumed by MergePrivateData.kt at build time.
+      PSPDF_MAVEN_USER:
+        required: false
+      PSPDF_MAVEN_PASS:
+        required: false
+      PSPDFKIT_LICENSE_KEY_STUDENT:
+        required: false
+      PSPDFKIT_LICENSE_KEY_TEACHER:
+        required: false
+      CRASHLYTICS_API_KEY:
+        required: false
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN:
+        required: false
+      PARENT_LOGIN_CLIENT_SECRET:
+        required: false
+      PENDO_ACCESS_TOKEN_PARENT:
+        required: false
+      PENDO_ACCESS_TOKEN_STUDENT:
+        required: false
+      PENDO_ACCESS_TOKEN_TEACHER:
+        required: false
+      ROBO_TEST_API_KEY:
+        required: false
+      ROBO_TEST_USER_ID:
+        required: false
+      ROBO_TEST_USERNAME:
+        required: false
+      ROBO_TEST_USER_TOKEN:
+        required: false
+      ROBO_TEST_DOMAIN:
+        required: false
+      PRONOUN_TEST_STUDENT:
+        required: false
+      PRONOUN_TEST_STUDENT_PASSWORD:
+        required: false
+      PRONOUN_TEST_TEACHER:
+        required: false
+      PRONOUN_TEST_TEACHER_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD:
+        required: false
+      GOOGLE_SERVICES_PARENT_B64:
+        required: false
+      GOOGLE_SERVICES_STUDENT_B64:
+        required: false
+      GOOGLE_SERVICES_TEACHER_B64:
+        required: false
+      ANALYTICS_XML_STUDENT_B64:
+        required: false
+      PRIVATE_STRINGS_XML_STUDENT_B64:
+        required: false
+      ROBO_USER_JSON_TEACHER_B64:
+        required: false
+      PRIVATE_CONST_KT_B64:
+        required: false
+
+jobs:
+  build:
+    name: ${{ inputs.app-type-lower }}-test-apks
+    runs-on: ubuntu-latest-16core
+    timeout-minutes: 45
+    env:
+      PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+      PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+      PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+      PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+      CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+      PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+      PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+      PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+      PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+      PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+      ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+      ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+      ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+      ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+      ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+      PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+      PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+      PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+      PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+      PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+      PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+      GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+      GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+      GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+      ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+      PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+      ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+      PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Build QA debug and test APKs
+        run: |
+          ./gradle/gradlew -p apps \
+            :${{ inputs.app-type-lower }}:assembleQaDebug \
+            :${{ inputs.app-type-lower }}:assembleQaDebugAndroidTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Upload QA debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-type-lower }}-qa-debug.apk
+          path: apps/${{ inputs.app-type-lower }}/build/outputs/apk/qa/debug/${{ inputs.app-type-lower }}-qa-debug.apk
+          retention-days: ${{ inputs.artifact-retention-days }}
+
+      - name: Upload QA test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-type-lower }}-qa-debug-androidTest.apk
+          path: apps/${{ inputs.app-type-lower }}/build/outputs/apk/androidTest/qa/debug/${{ inputs.app-type-lower }}-qa-debug-androidTest.apk
+          retention-days: ${{ inputs.artifact-retention-days }}

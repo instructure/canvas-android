@@ -28,7 +28,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
@@ -394,6 +394,7 @@ class LoginE2ETest : StudentTest() {
         loginSignInPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testFindSchoolPageObjects() {
 
@@ -404,6 +405,7 @@ class LoginE2ETest : StudentTest() {
         loginFindSchoolPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginLandingPageObjects() {
 
@@ -411,6 +413,7 @@ class LoginE2ETest : StudentTest() {
         loginLandingPage.assertPageObjects()
     }
 
+    @E2E
     @Test
     fun testLoginSignInPageObjects() {
 

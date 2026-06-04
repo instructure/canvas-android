@@ -16,37 +16,159 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
+import com.instructure.canvasapi2.CourseAnnouncementsQuery
+import com.instructure.canvasapi2.DashboardCoursesQuery
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Enrollment.EnrollmentType as KotlinEnrollmentType
+import com.instructure.canvasapi2.models.Grades
+import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class LoadVisibleCoursesUseCase @Inject constructor(
-    private val loadAllCoursesUseCase: LoadAllCoursesUseCase,
+    private val dashboardCoursesManager: DashboardCoursesManager,
     private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase
 ) : BaseUseCase<LoadVisibleCoursesUseCase.Params, LoadVisibleCoursesUseCase.Result>() {
 
     override suspend fun execute(params: Params): Result {
-        val allCourses = loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(params.forceRefresh))
+        val data = dashboardCoursesManager.getDashboardCourses(
+            forceNetwork = params.forceRefresh
+        )
+
+        val allCourses = data.allCourses?.mapNotNull { mapGraphQlCourse(it) } ?: emptyList()
         val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(params.forceRefresh))
 
         val coursesMap = allCourses.associateBy { it.id }
-
         val visibleCourses = dashboardCards
-            .map { card -> courseFromDashboardCard(card, coursesMap) }
+            .mapNotNull { card -> applyNickname(coursesMap[card.id], card) }
             .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
 
-        return Result(visibleCourses = visibleCourses, allCourses = allCourses)
+        val announcementsMap = buildAnnouncementsMap(data, params.forceRefresh)
+
+        return Result(
+            visibleCourses = visibleCourses,
+            allCourses = allCourses,
+            announcementsMap = announcementsMap
+        )
     }
 
-    private fun courseFromDashboardCard(card: DashboardCard, coursesMap: Map<Long, Course>): Course {
-        return coursesMap[card.id]
-            ?: Course(
-                id = card.id,
-                name = card.shortName ?: card.originalName.orEmpty(),
-                originalName = card.originalName,
-                courseCode = card.courseCode
+    private suspend fun buildAnnouncementsMap(
+        data: DashboardCoursesQuery.Data,
+        forceRefresh: Boolean
+    ): Map<Long, List<DiscussionTopicHeader>> {
+        val announcementsMap = mutableMapOf<Long, List<DiscussionTopicHeader>>()
+
+        data.allCourses?.forEach { graphQlCourse ->
+            val courseId = graphQlCourse._id.toLongOrNull() ?: return@forEach
+            val hasNextPage = graphQlCourse.announcements?.pageInfo?.hasNextPage == true
+
+            val firstPageAnnouncements = mapDashboardAnnouncements(graphQlCourse.announcements?.nodes)
+
+            if (hasNextPage) {
+                val endCursor = graphQlCourse.announcements?.pageInfo?.endCursor
+                val announcementData = dashboardCoursesManager.getCourseAnnouncements(courseId, endCursor, forceRefresh)
+                announcementsMap[courseId] = firstPageAnnouncements + mapCourseAnnouncements(announcementData)
+            } else {
+                announcementsMap[courseId] = firstPageAnnouncements
+            }
+        }
+
+        return announcementsMap
+    }
+
+    private fun mapGraphQlCourse(graphQlCourse: DashboardCoursesQuery.AllCourse): Course? {
+        val courseId = graphQlCourse._id.toLongOrNull() ?: return null
+
+        val enrollmentNode = graphQlCourse.enrollmentsConnection?.nodes?.firstOrNull()
+        val enrollment = enrollmentNode?.let { node ->
+            Enrollment(
+                id = node._id?.toLongOrNull() ?: 0L,
+                type = mapEnrollmentType(node.type),
+                role = mapEnrollmentType(node.type),
+                grades = node.grades?.let { grades ->
+                    Grades(
+                        currentGrade = grades.currentGrade,
+                        currentScore = grades.currentScore
+                    )
+                }
             )
+        }
+
+        return Course(
+            id = courseId,
+            name = graphQlCourse.name,
+            courseCode = graphQlCourse.courseCode,
+            imageUrl = graphQlCourse.imageUrl,
+            courseColor = graphQlCourse.dashboardCard?.color,
+            isFavorite = graphQlCourse.dashboardCard?.isFavorited == true,
+            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
+        )
+    }
+
+    private fun applyNickname(course: Course?, card: DashboardCard): Course? {
+        course ?: return null
+        val nickname = card.shortName
+        return if (!nickname.isNullOrBlank()) {
+            course.copy(name = nickname, originalName = course.name)
+        } else {
+            course
+        }
+    }
+
+    private fun mapEnrollmentType(type: EnrollmentType): KotlinEnrollmentType {
+        return when (type) {
+            EnrollmentType.StudentEnrollment -> KotlinEnrollmentType.Student
+            EnrollmentType.TeacherEnrollment -> KotlinEnrollmentType.Teacher
+            EnrollmentType.TaEnrollment -> KotlinEnrollmentType.Ta
+            EnrollmentType.ObserverEnrollment -> KotlinEnrollmentType.Observer
+            EnrollmentType.DesignerEnrollment -> KotlinEnrollmentType.Designer
+            else -> KotlinEnrollmentType.NoEnrollment
+        }
+    }
+
+    private fun mapDashboardAnnouncements(
+        nodes: List<DashboardCoursesQuery.Node1?>?
+    ): List<DiscussionTopicHeader> {
+        return nodes?.mapNotNull { node ->
+            node ?: return@mapNotNull null
+            val isUnread = node.participant?.read != true
+            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
+            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
+
+            DiscussionTopicHeader(
+                id = node._id.toLongOrNull() ?: return@mapNotNull null,
+                title = node.title,
+                message = node.message,
+                postedDate = node.postedAt,
+                unreadCount = node.entryCounts?.unreadCount ?: 0,
+                announcement = true
+            )
+        } ?: emptyList()
+    }
+
+    private fun mapCourseAnnouncements(
+        announcementData: CourseAnnouncementsQuery.Data
+    ): List<DiscussionTopicHeader> {
+        val nodes = announcementData.course?.onCourse?.announcements?.nodes
+        return nodes?.mapNotNull { node ->
+            node ?: return@mapNotNull null
+            val isUnread = node.participant?.read != true
+            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
+            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
+
+            DiscussionTopicHeader(
+                id = node._id.toLongOrNull() ?: return@mapNotNull null,
+                title = node.title,
+                message = node.message,
+                postedDate = node.postedAt,
+                unreadCount = node.entryCounts?.unreadCount ?: 0,
+                announcement = true
+            )
+        } ?: emptyList()
     }
 
     data class Params(
@@ -55,6 +177,7 @@ class LoadVisibleCoursesUseCase @Inject constructor(
 
     data class Result(
         val visibleCourses: List<Course>,
-        val allCourses: List<Course>
+        val allCourses: List<Course>,
+        val announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
     )
 }

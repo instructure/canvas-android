@@ -89,7 +89,7 @@ fun AiAssistFlashcard(
             }
             .clearAndSetSemantics {
                 onClick(
-                    label = context.getString(R.string.a11y_aiAssistFlashcardClickActionLabel),
+                    label = context.getString(R.string.a11y_studyToolsFlashcardClickActionLabel),
                     action = { onClick(); true }
                 )
                 contentDescription = cardContentDescription

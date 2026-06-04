@@ -186,11 +186,11 @@ task jacocoFullReport(type: JacocoReport, group: 'Coverage reports') {
     reports {
         html {
             required = true
-            destination file('build/reports/jacoco/html')
+            outputLocation = file('build/reports/jacoco/html')
         }
         csv {
             required = true
-            destination file('build/reports/jacoco/jacocoFullReport.csv')
+            outputLocation = file('build/reports/jacoco/jacocoFullReport.csv')
         }
     }
 }
@@ -218,11 +218,11 @@ task jacocoFullCombinedReport(type: JacocoReport, group: 'Coverage reports') {
     reports {
         html {
             required = true
-            destination file('build/reports/jacoco/html')
+            outputLocation = file('build/reports/jacoco/html')
         }
         csv {
             required = true
-            destination file('build/reports/jacoco/jacocoFullCombinedReport.csv')
+            outputLocation = file('build/reports/jacoco/jacocoFullCombinedReport.csv')
         }
     }
 }

@@ -24,7 +24,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Account
@@ -40,11 +39,11 @@ import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.domain.usecase.splash.SetupPendoTrackingUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
-import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.toast
@@ -59,7 +58,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -70,6 +68,9 @@ class SplashActivity : BaseCanvasActivity() {
 
     @Inject
     lateinit var userApi: UserAPI.UsersInterface
+
+    @Inject
+    lateinit var setupPendoTrackingUseCase: SetupPendoTrackingUseCase
 
     private val binding by viewBinding(ActivitySplashBinding::inflate)
 
@@ -97,7 +98,6 @@ class SplashActivity : BaseCanvasActivity() {
                 // Grab user teacher status
                 try {
                     val user = userApi.getSelf(RestParams(isForceReadFromNetwork = true)).dataOrThrow
-                    val userWithIds = userApi.getSelfWithUUID(RestParams(isForceReadFromNetwork = true)).dataOrThrow
                     val shouldRestartForLocaleChange = setupUser(user)
                     if (shouldRestartForLocaleChange) {
                         if (BuildConfig.DEBUG) toast(R.string.localeRestartMessage)
@@ -105,7 +105,7 @@ class SplashActivity : BaseCanvasActivity() {
                         return@weave
                     }
 
-                    setupPendoTracking(userWithIds)
+                    setupPendoTracking()
 
                     // Determine if user is a Teacher, Ta, or Designer
                     // Use GlobalScope since this can continue executing after SplashActivity is destroyed
@@ -232,20 +232,8 @@ class SplashActivity : BaseCanvasActivity() {
         return ApiPrefs.effectiveLocale != oldLocale
     }
 
-    private suspend fun setupPendoTracking(user: User) {
-        val featureFlagsResult = FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
-        val sendUsageMetrics = featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
-        if (sendUsageMetrics) {
-            val visitorData = mapOf(
-                "locale" to ApiPrefs.effectiveLocale,
-            )
-            val accountData = mapOf(
-                "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
-            )
-            Pendo.startSession(user.uuid?.SHA256().orEmpty(), user.accountUuid.orEmpty(), visitorData, accountData)
-        } else {
-            Pendo.endSession()
-        }
+    private suspend fun setupPendoTracking() {
+        setupPendoTrackingUseCase(Unit)
     }
 
     override fun onStop() {

@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Ta študent še nima oddaje.</string>
     <string name="locked">Zaklenjeno</string>
     <string name="lockedSubtext">Ta naloga je zaklenjena do %1$s ob %2$s.</string>
+    <string name="closedSubtext">Ta naloga je bila zaklenjena %1$s ob %2$s.</string>
     <string name="chooseFile">Izberi datoteko</string>
     <string name="chooseFileSubtext">Tapnite spodnjo možnost, da oddaji dodate datoteko.</string>
     <string name="chooseFileForUploadSubtext">Izberite datoteko, ki jo želite naložiti, tako da tapnete spodnjo možnost</string>

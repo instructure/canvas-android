@@ -19,9 +19,12 @@ package com.instructure.horizon.horizonui.organisms.scaffolds
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -122,7 +125,7 @@ private fun CollapsableHeaderScreenContent(
                     }
                 }
         ) {
-            headerContent(statusBarWindowInsets.asPaddingValues())
+            headerContent(statusBarWindowInsets.add(navigationBarWindowInsets.only(WindowInsetsSides.Horizontal)).asPaddingValues())
         }
         val headerHeight = max(
             with(density) { statusBarWindowInsets.getTop(density).toDp() },
@@ -259,7 +262,7 @@ private fun CollapsableScaffoldContent(
                         }
                     }
             ) {
-                topBar(statusBarWindowInsets.asPaddingValues())
+                topBar(statusBarWindowInsets.add(navigationBarWindowInsets.only(WindowInsetsSides.Horizontal)).asPaddingValues())
             }
         },
         bottomBar = {

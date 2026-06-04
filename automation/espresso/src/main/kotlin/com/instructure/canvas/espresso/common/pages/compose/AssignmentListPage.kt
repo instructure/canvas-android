@@ -41,7 +41,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
@@ -63,6 +63,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         composeTestRule.onNodeWithText(assignment.name)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickAssignment(assignment: Assignment) {
@@ -91,6 +92,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         composeTestRule.onNodeWithText(quiz.title)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertDisplaysNoAssignmentsView() {
@@ -119,6 +121,10 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignmentName, dueAtString, dueAtStringSecondCheckpoint, expectedGrade, hasCheckPoints = true)
     }
 
+    fun assertHasAssignment(assignmentName: String, dueAtString: String, expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGradeLabel = expectedGrade)
+    }
+
     fun assertAssignmentNotDisplayed(assignmentName: String) {
         onView(withText(assignmentName) + withId(R.id.title) + hasSibling(withId(R.id.description))).check(
             doesNotExist()
@@ -143,6 +149,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         )
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickDiscussionCheckpointExpandCollapseIcon(discussionTitle: String) {
@@ -264,32 +271,35 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
     fun assertGradingPeriodLabel(gradingPeriodName: String? = null) {
         composeTestRule.onNode(
-            hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
+            hasContentDescription("Grading Period: ${gradingPeriodName ?: "All"}")
         )
         .assertIsDisplayed()
     }
 
     fun assertGradingPeriodLabelDoesNotExist(gradingPeriodName: String? = null) {
         composeTestRule.onNode(
-            hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
+            hasContentDescription("Grading Period: ${gradingPeriodName ?: "All"}")
         )
             .assertDoesNotExistWithTimeout(5)
     }
 
     private fun clickFilterMenu() {
         composeTestRule.onNodeWithContentDescription("Filter Assignments").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun filterAssignments(groupName: String, option: FilterOption) {
         clickFilterMenu()
         selectFilterOption(groupName, option)
         composeTestRule.onNodeWithText("Done").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun groupByAssignments(option: GroupByOption) {
         clickFilterMenu()
         selectGroupByOption("Grouped By", option)
         composeTestRule.onNodeWithText("Done").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertPublishedState(assignmentName: String, published: Boolean) {
@@ -322,7 +332,9 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             hasText(filterText).and(hasParent(hasParent(hasAnyDescendant(hasText(groupName))))),
             useUnmergedTree = true
         )
-        .performClick()
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
     }
 
     private fun selectGroupByOption(groupName: String, option: GroupByOption) {
@@ -336,6 +348,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             useUnmergedTree = true
         )
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     private fun String?.toDate(): Date? {

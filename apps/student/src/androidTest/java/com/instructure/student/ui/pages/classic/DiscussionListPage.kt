@@ -23,8 +23,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.OnViewWithId

@@ -91,7 +91,7 @@ class AiAssistRepositoryTest {
         )
 
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns apiResponse
 
         val result = repository.answerPrompt(
@@ -117,7 +117,7 @@ class AiAssistRepositoryTest {
         )
 
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns apiResponse
 
         val result = repository.answerPrompt(
@@ -144,7 +144,7 @@ class AiAssistRepositoryTest {
         )
 
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns JourneyAssistResponse(response = "Response")
 
         repository.answerPrompt(prompt, history, testState)
@@ -155,7 +155,8 @@ class AiAssistRepositoryTest {
                     requestBody.prompt == prompt &&
                     requestBody.history == history &&
                     requestBody.state == testState
-                }
+                },
+                true
             )
         }
     }
@@ -169,7 +170,7 @@ class AiAssistRepositoryTest {
         )
 
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns JourneyAssistResponse(
             response = "Response",
             state = updatedState
@@ -187,7 +188,7 @@ class AiAssistRepositoryTest {
     @Test
     fun `answerPrompt handles null state in response`() = runTest {
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns JourneyAssistResponse(
             response = "Response",
             state = null
@@ -205,7 +206,7 @@ class AiAssistRepositoryTest {
     @Test
     fun `answerPrompt with empty history`() = runTest {
         coEvery {
-            journeyAssistAPI.answerPrompt(any())
+            journeyAssistAPI.answerPrompt(any(), true)
         } returns JourneyAssistResponse(response = "Response")
 
         repository.answerPrompt(
@@ -216,7 +217,8 @@ class AiAssistRepositoryTest {
 
         coVerify {
             journeyAssistAPI.answerPrompt(
-                match { it.history.isEmpty() }
+                match { it.history.isEmpty() },
+                true
             )
         }
     }

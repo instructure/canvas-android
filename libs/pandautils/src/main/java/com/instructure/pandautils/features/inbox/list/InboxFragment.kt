@@ -111,6 +111,11 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
 
     private var confirmationSnackbar: Snackbar? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -125,7 +130,6 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         super.onViewCreated(view, savedInstanceState)
         setUpEditToolbar()
         applyTheme()
-        lifecycleScope.collectOneOffEvents(sharedEvents.events, ::handleSharedViewModelAction)
 
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {

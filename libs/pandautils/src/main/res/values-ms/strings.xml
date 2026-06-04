@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Pelajar ini belum ada serahan.</string>
     <string name="locked">Berkunci</string>
     <string name="lockedSubtext">Tugasan ini berkunci hingga %1$s pada %2$s.</string>
+    <string name="closedSubtext">Tugasan ini dikunci pada %1$s %2$s.</string>
     <string name="chooseFile">Pilih Fail</string>
     <string name="chooseFileSubtext">Kepilkan fail pada serahan anda dengan mengetik pilihan di bawah.</string>
     <string name="chooseFileForUploadSubtext">Pilih fail untuk dimuat naik dengan mengetik pilihan di bawah</string>

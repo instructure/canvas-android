@@ -22,14 +22,14 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import com.instructure.canvas.espresso.FeatureCategory
-import com.instructure.canvas.espresso.IntentActionMatcher
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.IntentActionMatcher
+import com.instructure.canvas.espresso.utils.checkToastText
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.api.ConversationsApi

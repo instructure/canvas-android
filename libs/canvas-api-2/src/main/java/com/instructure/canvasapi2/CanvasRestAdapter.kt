@@ -263,7 +263,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
     companion object {
 
-        private const val DEBUG = true
+        private val DEBUG = BuildConfig.DEBUG
         private const val TIMEOUT_IN_SECONDS = 60
         private const val CACHE_SIZE = (20 * 1024 * 1024).toLong()
 

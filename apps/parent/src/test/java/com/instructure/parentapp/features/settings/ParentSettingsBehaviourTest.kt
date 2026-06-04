@@ -38,7 +38,8 @@ class ParentSettingsBehaviourTest {
             R.string.inboxSettingsTitle to listOf(SettingsItem.INBOX_SIGNATURE),
             R.string.legal to listOf(
                 SettingsItem.ABOUT,
-                SettingsItem.LEGAL
+                SettingsItem.LEGAL,
+                SettingsItem.PRIVACY
             )
         )
 

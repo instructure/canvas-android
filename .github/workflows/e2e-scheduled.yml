@@ -1,0 +1,83 @@
+name: E2E Tests (Scheduled)
+
+on:
+  schedule:
+    # Sun, Mon-Fri at 17:00 UTC (= 19:00 Budapest CEST)
+    - cron: '0 17 * * 0-5'
+  workflow_dispatch:
+
+jobs:
+  parent-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
+
+  parent-e2e-tests:
+    needs: parent-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
+
+  parent-slack-notification:
+    if: ${{ !cancelled() && needs.parent-e2e-tests.result != 'cancelled' }}
+    needs: parent-e2e-tests
+    uses: ./.github/workflows/slack-notify-e2e.yml
+    with:
+      app-display-name: 'Android Canvas - Parent'
+      channel: github_android_test_parent
+      e2e-result: ${{ needs.parent-e2e-tests.result }}
+      matrix-url: ${{ needs.parent-e2e-tests.outputs.matrix-url }}
+      workflow-name: ${{ github.workflow }}
+    secrets: inherit
+
+  student-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  student-e2e-tests:
+    needs: student-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  student-slack-notification:
+    if: ${{ !cancelled() && needs.student-e2e-tests.result != 'cancelled' }}
+    needs: student-e2e-tests
+    uses: ./.github/workflows/slack-notify-e2e.yml
+    with:
+      app-display-name: 'Android Canvas - Student'
+      channel: github_android_test_student
+      e2e-result: ${{ needs.student-e2e-tests.result }}
+      matrix-url: ${{ needs.student-e2e-tests.outputs.matrix-url }}
+      workflow-name: ${{ github.workflow }}
+    secrets: inherit
+
+  teacher-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit
+
+  teacher-e2e-tests:
+    needs: teacher-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit
+
+  teacher-slack-notification:
+    if: ${{ !cancelled() && needs.teacher-e2e-tests.result != 'cancelled' }}
+    needs: teacher-e2e-tests
+    uses: ./.github/workflows/slack-notify-e2e.yml
+    with:
+      app-display-name: 'Android Canvas - Teacher'
+      channel: github_android_test_teacher
+      e2e-result: ${{ needs.teacher-e2e-tests.result }}
+      matrix-url: ${{ needs.teacher-e2e-tests.outputs.matrix-url }}
+      workflow-name: ${{ github.workflow }}
+    secrets: inherit

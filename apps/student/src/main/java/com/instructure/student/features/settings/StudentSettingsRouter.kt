@@ -22,6 +22,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.offline.sync.settings.SyncSettingsFragment
 import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.pandautils.features.privacysettings.PrivacySettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
@@ -100,6 +101,13 @@ class StudentSettingsRouter(
         RouteMatcher.route(
             activity,
             Route(null, InboxSignatureFragment::class.java)
+        )
+    }
+
+    override fun navigateToPrivacySettings() {
+        RouteMatcher.route(
+            activity,
+            Route(null, PrivacySettingsFragment::class.java)
         )
     }
 }

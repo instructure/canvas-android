@@ -28,5 +28,9 @@
         <activity android:name=".features.acceptableusepolicy.AcceptableUsePolicyActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"
             android:launchMode="singleTop"/>
+
+        <activity android:name=".features.cookieconsent.CookieConsentActivity"
+            android:theme="@style/LoginFlowTheme.NoActionBar"
+            android:launchMode="singleTop"/>
     </application>
 </manifest>

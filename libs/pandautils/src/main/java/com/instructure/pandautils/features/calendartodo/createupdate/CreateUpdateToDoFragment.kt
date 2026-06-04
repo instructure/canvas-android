@@ -110,7 +110,7 @@ class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, Frag
     )
 
     override fun applyTheme() {
-        ViewStyler.themeStatusBar(requireActivity())
+        ViewStyler.themeStatusBarDelayed(requireActivity())
     }
 
     override fun getFragment(): Fragment {

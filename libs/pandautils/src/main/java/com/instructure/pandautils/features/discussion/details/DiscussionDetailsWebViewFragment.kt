@@ -24,6 +24,9 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -78,6 +81,9 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     @Inject
     lateinit var discussionDetailsWebViewFragmentBehavior: DiscussionDetailsWebViewFragmentBehavior
 
+    @Inject
+    lateinit var localBroadcastManager: LocalBroadcastManager
+
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var discussionTopicHeader: DiscussionTopicHeader? by NullableParcelableArg(key = DISCUSSION_TOPIC_HEADER)
@@ -105,6 +111,13 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     override fun onStop() {
         super.onStop()
         discussionSharedEvents.sendEvent(lifecycleScope, DiscussionSharedAction.RefreshListScreen)
+        if (discussionTopicHeader?.announcement == true) {
+            val intent = Intent(Const.COURSE_THING_CHANGED).apply {
+                putExtra(Const.COURSE_ID, canvasContext.id)
+                putExtra(Const.RELOAD_ANNOUNCEMENTS, true)
+            }
+            localBroadcastManager.sendBroadcast(intent)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -112,6 +125,7 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
         viewModel.data.observe(viewLifecycleOwner) {
             setupToolbar(it.title)
         }
+        setupImeInsets()
         setupFilePicker()
         binding.discussionWebView.addVideoClient(requireActivity())
         binding.discussionWebView.enableAlgorithmicDarkening()
@@ -153,6 +167,24 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
                 return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
             }
         }
+    }
+
+    private fun setupImeInsets() {
+        val webView = binding.discussionWebView
+        val originalMargin = (webView.layoutParams as? ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val bottom = if (isInModulesPager) ime.bottom else maxOf(ime.bottom, systemBars.bottom)
+            val lp = webView.layoutParams as? ViewGroup.MarginLayoutParams
+            val target = originalMargin + bottom
+            if (lp != null && lp.bottomMargin != target) {
+                lp.bottomMargin = target
+                webView.layoutParams = lp
+            }
+            insets
+        }
+        if (binding.root.isAttachedToWindow) ViewCompat.requestApplyInsets(binding.root)
     }
 
     private fun setupFilePicker() {

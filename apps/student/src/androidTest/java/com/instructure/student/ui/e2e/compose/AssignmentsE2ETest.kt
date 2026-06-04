@@ -28,13 +28,14 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.checkToastText
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.api.GradingPeriodsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
@@ -109,8 +110,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.goToSubmissionDetails()
 
         Log.d(ASSERTION_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
@@ -125,7 +126,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
@@ -133,7 +134,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(ASSERTION_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
         assignmentDetailsPage.assertAttemptSpinnerDisplayed()
@@ -542,8 +543,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Navigate to Submission Details Page.")
         assignmentDetailsPage.goToSubmissionDetails()
@@ -557,10 +558,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 13 points.")
         val textGrade = SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "13")
@@ -690,7 +691,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    fun testMultipleAssignmentsE2E() {
+    fun testMultipleAssignmentsWithSearchE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -729,6 +730,36 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that '${letterGradeTextAssignment.name}' assignment is displayed with the corresponding grade: 16.")
         assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
+
+        Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
+        assignmentListPage.searchBar.clickOnSearchButton()
+
+        Log.d(STEP_TAG, "Type the name of the '${letterGradeTextAssignment.name}' assignment into the search bar.")
+        assignmentListPage.searchBar.typeToSearchBar(letterGradeTextAssignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${letterGradeTextAssignment.name}' is displayed and '${pointsTextAssignment.name}' is not.")
+        assignmentListPage.assertHasAssignment(letterGradeTextAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(pointsTextAssignment.name)
+
+        Log.d(STEP_TAG, "Clear the search input.")
+        assignmentListPage.searchBar.clickOnClearSearchButton()
+
+        Log.d(ASSERTION_TAG, "Assert that both assignments are visible again after clearing the search.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment, "13")
+        assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
+
+        Log.d(STEP_TAG, "Type a search query that does not match any assignment.")
+        assignmentListPage.searchBar.typeToSearchBar("xxxxxxxxxxx")
+
+        Log.d(ASSERTION_TAG, "Assert that the empty state ('No Assignments') view is displayed when no assignments match the search query.")
+        assignmentListPage.assertDisplaysNoAssignmentsView()
+
+        Log.d(STEP_TAG, "Close the search bar.")
+        assignmentListPage.searchBar.pressSearchBarButton()
+
+        Log.d(ASSERTION_TAG, "Assert that both assignments are displayed again after closing the search bar.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment, "13")
+        assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
     }
 
     @E2E
@@ -741,13 +772,13 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
-        val upcomingAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        Log.d(PREPARATION_TAG, "Seeding an upcoming assignment (future due date) for '${course.name}' course.")
+        val upcomingAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding an overdue assignment (past due date) for '${course.name}' course.")
         val missingAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, dueAt = 2.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG, "Seeding a GRADED assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding a GRADED assignment (no due date) for '${course.name}' course.")
         val gradedAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG, "Grade the '${gradedAssignment.name}' with '11' points out of 20.")
@@ -756,7 +787,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Create an Assignment Group for '${course.name}' course.")
         val assignmentGroup = AssignmentGroupsApi.createAssignmentGroup(teacher.token, course.id, name = "Discussions")
 
-        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding an assignment in the 'Discussions' group (no due date) for '${course.name}' course.")
         val otherTypeAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 20.0, assignmentGroupId = assignmentGroup.id, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
@@ -773,22 +804,22 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
         assignmentListPage.assertHasAssignment(gradedAssignment)
 
-        Log.d(STEP_TAG, "Filter the 'Not Yet Submitted' assignments.")
+        Log.d(STEP_TAG, "Filter to show only 'Not Yet Submitted' assignments.")
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${missingAssignment.name}' 'Not Yet Submitted' assignment is displayed and the others at NOT.")
+        Log.d(ASSERTION_TAG, "Assert that only the '${missingAssignment.name}' 'Not Yet Submitted' assignment is displayed and the others are NOT.")
         assignmentListPage.assertHasAssignment(missingAssignment)
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
 
-        Log.d(STEP_TAG, "Filter the 'GRADED' assignments.")
+        Log.d(STEP_TAG, "Filter to show only 'Graded' assignments.")
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NotYetSubmitted)
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${gradedAssignment.name}' GRADED assignment is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that only the '${gradedAssignment.name}' 'Graded' assignment is displayed and the others are NOT.")
         assignmentListPage.assertHasAssignment(gradedAssignment)
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
@@ -799,8 +830,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
         assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
 
-        Log.d(ASSERTION_TAG, "Assert that still all the assignment are displayed and the corresponding groups (Assignments, Discussions) as well.")
+        Log.d(STEP_TAG, "Group assignments by 'Assignment Group'.")
         assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.AssignmentGroup)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Assignments' and 'Discussions' groups are displayed with all assignments inside.")
         assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
         assignmentListPage.assertAssignmentGroupDisplayed("Discussions")
         assignmentListPage.assertHasAssignment(upcomingAssignment)
@@ -811,29 +844,118 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Collapse the 'Assignments' assignment group.")
         assignmentListPage.expandCollapseAssignmentGroup("Assignments")
 
-        Log.d(ASSERTION_TAG, "Assert that it's items are not displayed when the group is collapsed.")
+        Log.d(ASSERTION_TAG, "Assert that the items inside 'Assignments' group are NOT displayed when collapsed.")
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the other group's item is still displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Discussions' group item is still displayed.")
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
 
-        Log.d(STEP_TAG, "Expand the 'Assignments' assignment group.")
+        Log.d(STEP_TAG, "Expand the 'Assignments' group back.")
         assignmentListPage.expandCollapseAssignmentGroup("Assignments")
 
-        Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
-        assignmentListPage.searchBar.clickOnSearchButton()
-
-        Log.d(STEP_TAG, "Type the name of the '${missingAssignment.name}' assignment.")
-        assignmentListPage.searchBar.typeToSearchBar(missingAssignment.name.drop(5))
-
-        Log.d(ASSERTION_TAG, "Assert that the '${missingAssignment.name}' assignment has been found by previously typed search string.")
-        sleep(3000) // Allow the search input to propagate
+        Log.d(ASSERTION_TAG, "Assert that all assignments are visible again after expanding.")
+        assignmentListPage.assertHasAssignment(upcomingAssignment)
         assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+
+        Log.d(STEP_TAG, "Group assignments by 'Due Date'.")
+        assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.DueDate)
+
+        Log.d(ASSERTION_TAG, "Assert that the three due date groups are displayed.")
+        assignmentListPage.assertAssignmentGroupDisplayed("Overdue Assignments")
+        assignmentListPage.assertAssignmentGroupDisplayed("Upcoming Assignments")
+        assignmentListPage.assertAssignmentGroupDisplayed("Undated Assignments")
+
+        Log.d(ASSERTION_TAG, "Assert that all assignments are visible in the correct due date groups: '${missingAssignment.name}' overdue, '${upcomingAssignment.name}' upcoming, '${gradedAssignment.name}' and '${otherTypeAssignment.name}' undated.")
+        assignmentListPage.assertHasAssignment(missingAssignment)
+        assignmentListPage.assertHasAssignment(upcomingAssignment)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+        assignmentListPage.assertHasAssignment(otherTypeAssignment)
+
+        Log.d(STEP_TAG, "Collapse the 'Overdue Assignments' group.")
+        assignmentListPage.expandCollapseAssignmentGroup("Overdue Assignments")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${missingAssignment.name}' overdue assignment is NOT displayed when the group is collapsed.")
+        assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that assignments in the other groups are still displayed.")
+        assignmentListPage.assertHasAssignment(upcomingAssignment)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+        assignmentListPage.assertHasAssignment(otherTypeAssignment)
+
+        Log.d(STEP_TAG, "Expand the 'Overdue Assignments' group back.")
+        assignmentListPage.expandCollapseAssignmentGroup("Overdue Assignments")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${missingAssignment.name}' overdue assignment is visible again.")
+        assignmentListPage.assertHasAssignment(missingAssignment)
+
+        Log.d(STEP_TAG, "Collapse all three due date groups.")
+        assignmentListPage.expandCollapseAssignmentGroup("Overdue Assignments")
+        assignmentListPage.expandCollapseAssignmentGroup("Upcoming Assignments")
+        assignmentListPage.expandCollapseAssignmentGroup("Undated Assignments")
+
+        Log.d(ASSERTION_TAG, "Assert that none of the assignments is displayed when all groups are collapsed.")
+        assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testGradingPeriodFilterE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data with a grading period enabled.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, gradingPeriods = true)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Fetching the grading period for '${course.name}' course.")
+        val gradingPeriod = GradingPeriodsApi.getGradingPeriodsOfCourse(course.id).gradingPeriods[0]
+
+        Log.d(PREPARATION_TAG, "Seeding an assignment due within the grading period (2 days from now) for '${course.name}' course.")
+        val assignmentInPeriod = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 10.0, dueAt = 2.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Seeding an assignment due outside the grading period (30 days ago) for '${course.name}' course.")
+        val assignmentOutsidePeriod = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 10.0, dueAt = 30.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to its Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header shows '${gradingPeriod.title}' as the current grading period is pre-selected by default.")
+        assignmentListPage.assertGradingPeriodLabel(gradingPeriod.title)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${assignmentInPeriod.name}' is displayed by default (within the grading period) and '${assignmentOutsidePeriod.name}' is NOT.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
+
+        Log.d(STEP_TAG, "Switch the grading period filter to 'All Grading Periods'.")
+        assignmentListPage.filterAssignments("Grading Period", AssignmentListPage.FilterOption.GradingPeriod("All Grading Periods"))
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header now shows 'All'.")
+        assignmentListPage.assertGradingPeriodLabel()
+
+        Log.d(ASSERTION_TAG, "Assert that both assignments are visible when 'All Grading Periods' is selected.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertHasAssignment(assignmentOutsidePeriod)
+
+        Log.d(STEP_TAG, "Switch back to the '${gradingPeriod.title}' grading period.")
+        assignmentListPage.filterAssignments("Grading Period", AssignmentListPage.FilterOption.GradingPeriod(gradingPeriod.title))
+
+        Log.d(ASSERTION_TAG, "Assert that the grading period header shows '${gradingPeriod.title}' again.")
+        assignmentListPage.assertGradingPeriodLabel(gradingPeriod.title)
+
+        Log.d(ASSERTION_TAG, "Assert that only '${assignmentInPeriod.name}' is displayed again and '${assignmentOutsidePeriod.name}' is NOT.")
+        assignmentListPage.assertHasAssignment(assignmentInPeriod)
+        assignmentListPage.assertAssignmentNotDisplayed(assignmentOutsidePeriod.name)
     }
 
     @E2E
@@ -1112,8 +1234,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
         assignmentDetailsPage.clickSubmit()
@@ -1124,8 +1246,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
         textSubmissionUploadPage.clickToolbarBackButton()
         textSubmissionUploadPage.clickDontSaveDraft()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Feedback' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
 
         Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
         assignmentDetailsPage.clickSubmit()
@@ -1452,102 +1574,5 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assert(firstVideoPositionText != secondVideoPositionText) {
             "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
         }
-    }
-
-    @E2E
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
-    fun testShowOnlyLetterGradeOnGradesPageE2E() {
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val student = data.studentsList[0]
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val pointsTextAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible =  15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
-        dashboardPage.waitForRender()
-
-        Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 12 points.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "12")
-
-        Log.d(ASSERTION_TAG, "Assert that the grade is not displayed on the course's card by default.")
-        dashboardPage.assertCourseGradeNotDisplayed(course.name, "N/A", false)
-
-        Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
-        leftSideNavigationDrawerPage.setShowGrades(true)
-
-        Log.d(ASSERTION_TAG, "Assert that the grade is displayed on the course's card.")
-        dashboardPage.assertCourseGrade(course.name, "N/A")
-
-        Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
-        val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
-        restrictQuantitativeDataMap["restrict_quantitative_data"] = true
-        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
-
-        Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
-        retryWithIncreasingDelay(times = 15, maxDelay = 5000) {
-            dashboardPage.refresh()
-            dashboardPage.assertCourseGrade(course.name, "B-")
-        }
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val percentageAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(PREPARATION_TAG, "Grade submission: '${percentageAssignment.name}' with 66% of the maximum points (aka. 10).")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageAssignment.id, student.id, postedGrade = "10")
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val letterGradeAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.LETTER_GRADE, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(PREPARATION_TAG, "Grade submission: '${letterGradeAssignment.name}' with C.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, letterGradeAssignment.id, student.id, postedGrade = "C")
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val passFailAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PASS_FAIL, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(PREPARATION_TAG, "Grade submission: '${passFailAssignment.name}' with 'Incomplete'.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, passFailAssignment.id, student.id, postedGrade = "Incomplete")
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val gpaScaleAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.GPA_SCALE, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(PREPARATION_TAG, "Grade submission: '${gpaScaleAssignment.name}' with 3.7.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, gpaScaleAssignment.id, student.id, postedGrade = "3.7")
-
-        Log.d(STEP_TAG, "Refresh the Dashboard page to let the newly added submissions and their grades propagate.")
-        dashboardPage.refresh()
-
-        Log.d(STEP_TAG, "Select course: '${course.name}'. Select 'Grades' menu.")
-        dashboardPage.selectCourse(course)
-        courseBrowserPage.selectGrades()
-
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 'F' and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
-        gradesPage.assertTotalGradeText("F")
-        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "B-")
-        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "D")
-        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "C")
-        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
-        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "F")
-
-        Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
-        restrictQuantitativeDataMap["restrict_quantitative_data"] = false
-        CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
-
-        Log.d(STEP_TAG, "Swipe to the top of the Course Grades Page and refresh it.")
-        gradesPage.scrollDownScreen() // First go to the top of the recycler view
-        gradesPage.refresh() // Actual refresh
-
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is '49.47%' and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
-        gradesPage.assertTotalGradeText("49.47%")
-        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "12/15")
-        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "66.67%")
-        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "11.4/15 (C)")
-        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
-        gradesPage.scrollDownScreen()
-        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "3.7/15 (F)")
     }
 }

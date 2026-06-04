@@ -22,7 +22,7 @@ class AiAssistRepository @Inject constructor(
         state: JourneyAssistState
     ): AiAssistResponse {
         val requestBody = JourneyAssistRequestBody(prompt, history, state)
-        val response = journeyAssistAPI.answerPrompt(requestBody)
+        val response = journeyAssistAPI.answerPrompt(requestBody, true)
         val message = AiAssistMessage(
             text = response.response.orEmpty(),
             role = JourneyAssistRole.Assistant,

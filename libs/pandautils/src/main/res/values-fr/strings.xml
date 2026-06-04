@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Cet étudiant n\'a pas encore de soumission.</string>
     <string name="locked">Verrouillé</string>
     <string name="lockedSubtext">Ce travail est bloqué jusqu\'au %1$s à %2$s.</string>
+    <string name="closedSubtext">Ce travail a été verrouillé le %1$s à %2$s.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joignez un fichier à votre soumission en appuyant sur l\'une des options ci-dessous.</string>
     <string name="chooseFileForUploadSubtext">Sélectionnez un fichier à votre téléchargement en appuyant sur l\'une des options ci-dessous.</string>

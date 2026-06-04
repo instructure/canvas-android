@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -83,7 +84,11 @@ class TeacherInboxRouter(private val activity: FragmentActivity, private val fra
     }
 
     override fun routeToAttachment(attachment: Attachment) {
-        openMedia(activity, attachment.url)
+        openMedia(activity, attachment.url, attachment.displayName, mimeType = attachment.contentType, mimeClass = attachment.mimeClass)
+    }
+
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
+        openMedia(activity, mediaComment.url, mediaComment.displayName, mimeType = mediaComment.contentType)
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {

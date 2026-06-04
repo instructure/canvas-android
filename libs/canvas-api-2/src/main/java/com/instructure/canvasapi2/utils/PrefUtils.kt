@@ -226,6 +226,46 @@ class NStringPref(defaultValue: String? = null, keyName: String? = null) : Pref<
 }
 
 /**
+ * [Pref] delegate for sensitive [String] properties. Values are encrypted with a Keystore-backed
+ * AES-256-GCM key via [SecureCredentialCodec] and stored in the same [SharedPreferences] file as
+ * other prefs, prefixed with an envelope marker so legacy plaintext values can be detected and
+ * migrated lazily on first read. Falls back to plaintext storage if the Keystore is unavailable
+ * (e.g., a broken device), preserving today's behavior rather than failing the read/write.
+ *
+ * The decrypted plaintext is cached in memory so subsequent reads do not pay the per-read
+ * Keystore decrypt cost. The cache is invalidated on write and on [onClear].
+ */
+class SecureStringPref(defaultValue: String = "", keyName: String? = null) : Pref<String>(defaultValue, keyName) {
+
+    @Volatile
+    private var cachedPlaintext: String? = null
+
+    override fun onClear() {
+        cachedPlaintext = null
+    }
+
+    override fun SharedPreferences.getValue(key: String, default: String): String {
+        cachedPlaintext?.let { return it }
+        val stored = getString(key, null) ?: return default
+        val plaintext = if (stored.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)) {
+            SecureCredentialCodec.decrypt(stored) ?: return default
+        } else {
+            val migrated = SecureCredentialCodec.encrypt(stored)
+            if (migrated != null) edit().putString(key, migrated).apply()
+            stored
+        }
+        cachedPlaintext = plaintext
+        return plaintext
+    }
+
+    override fun Editor.setValue(key: String, value: String): Editor {
+        cachedPlaintext = value
+        val envelope = SecureCredentialCodec.encrypt(value) ?: value
+        return putString(key, envelope)
+    }
+}
+
+/**
  * [Pref] delegate for [String] properties. May only be used in [PrefManager] implementations.
  *
  * @param defaultValue The optional value returned for the property when no value has been set

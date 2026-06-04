@@ -28,9 +28,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
@@ -102,7 +102,7 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
     // Doesn't worry about having scrolling to the top of the page first...
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(50)))
-                .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+                .perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     fun openOptionMenuFor(itemName: String) {

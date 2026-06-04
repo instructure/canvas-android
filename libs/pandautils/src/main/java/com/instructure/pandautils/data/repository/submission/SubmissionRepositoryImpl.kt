@@ -42,7 +42,7 @@ class SubmissionRepositoryImpl(
                     course.submissions?.edges
                         ?.mapNotNull { edge ->
                             val submission = edge?.node ?: return@mapNotNull null
-                            val assignment = submission.assignment ?: return@mapNotNull null
+                            val assignment = submission.assignment
 
                             if (submission.gradeHidden) {
                                 return@mapNotNull null

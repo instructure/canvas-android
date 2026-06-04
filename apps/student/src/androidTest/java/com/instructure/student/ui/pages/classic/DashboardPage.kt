@@ -37,9 +37,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.waitForViewToDisappear
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.waitForViewToDisappear
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -216,12 +216,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun selectCourse(course: Course) {
         assertDisplaysCourse(course)
-        onView(withId(R.id.titleTextView) + withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        onView(withId(R.id.titleTextView) + withText(course.originalName)).perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
     fun selectCourse(courseName: String) {
         assertDisplaysCourse(courseName)
-        onView(withId(R.id.titleTextView) + withText(courseName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        onView(withId(R.id.titleTextView) + withText(courseName)).perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
     fun selectGroup(group: Group) {

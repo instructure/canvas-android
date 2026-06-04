@@ -40,8 +40,9 @@ object RestRetryInterceptor : Interceptor {
 
         if (response.failed) {
             val code = response.code
-            val body = response.body?.string()
-            throw RuntimeException("status code: $code\nbody: $body")
+            val contentType = response.body?.contentType()
+            response.close()
+            throw RuntimeException("status code: $code, content-type: $contentType")
         }
 
         return response

@@ -25,9 +25,9 @@ import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import com.instructure.canvas.espresso.has
-import com.instructure.canvas.espresso.hasTextInputLayoutErrorText
-import com.instructure.canvas.espresso.withIndex
+import com.instructure.canvas.espresso.utils.has
+import com.instructure.canvas.espresso.utils.hasTextInputLayoutErrorText
+import com.instructure.canvas.espresso.utils.withIndex
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.ClickUntilMethod
 import com.instructure.espresso.OnViewWithId

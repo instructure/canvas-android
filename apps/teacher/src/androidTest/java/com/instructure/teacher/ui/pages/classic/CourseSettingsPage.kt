@@ -18,8 +18,8 @@ package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import com.instructure.canvas.espresso.checked
-import com.instructure.canvas.espresso.matchToolbarText
+import com.instructure.canvas.espresso.utils.isRadioButtonChecked
+import com.instructure.canvas.espresso.utils.matchToolbarText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisabled
 import com.instructure.espresso.assertEnabled
@@ -87,7 +87,7 @@ class CourseSettingsPage : BasePage() {
     fun selectNewHomePage(): String {
         var newHomePageString = ""
         val unselectedRadioButton =
-            onView(checked(false) { newHomePageString = it })
+            onView(isRadioButtonChecked(false) { newHomePageString = it })
         val dialogOkButton = onViewWithText(android.R.string.ok)
         unselectedRadioButton.click()
         dialogOkButton.click()
