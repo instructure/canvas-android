@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">No es pot realitzar aquesta acció. Reviseu la connexió i torneu-ho a provar.</string>
     <string name="conversationArchived">Conversa arxivada</string>
     <string name="conversationUnarchived">Conversa no arxivada</string>
+    <string name="conversationMarkedAsRead">S’ha marcat la conversa com a llegida</string>
+    <string name="conversationMarkedAsUnread">S’ha marcat la conversa com a no llegida</string>
     <string name="messageDeleted">Missatge suprimit</string>
     <string name="messageDeletedFailed">No s\'ha pogut suprimir el missatge</string>
     <string name="conversationDeleted">S’ha suprimit la conversa</string>

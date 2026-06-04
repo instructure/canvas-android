@@ -2,6 +2,7 @@
 build
 out
 src/main/java/com/instructure/soseedy
+src/main/java/com/instructure/dataseeding/util/PrivateConst.kt
 *.html
 *.dsc
 *.pb

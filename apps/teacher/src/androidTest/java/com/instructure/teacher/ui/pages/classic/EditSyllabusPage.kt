@@ -18,7 +18,7 @@ package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.WaitForViewWithId
@@ -81,6 +81,6 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
      */
     fun editSyllabusToggleShowSummary() {
         editSyllabusShowCourseSummaryLabel.scrollTo()
-        onView(withId(R.id.showSummarySwitch)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+        onView(withId(R.id.showSummarySwitch)).perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 }

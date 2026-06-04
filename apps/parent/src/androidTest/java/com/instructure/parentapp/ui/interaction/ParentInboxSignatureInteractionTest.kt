@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteract
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDashboardCoursesManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
@@ -38,6 +39,7 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
@@ -97,6 +99,10 @@ class ParentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
+
+    @BindValue
+    @JvmField
+    val dashboardCoursesManager: DashboardCoursesManager = FakeDashboardCoursesManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.dataResult
 import retrofit2.Call
@@ -48,13 +49,14 @@ object OAuthAPI {
                 @Field("client_secret") clientSecret: String,
                 @Field("code") oAuthRequest: String,
                 @Field(value = "redirect_uri", encoded = true) redirectURI: String,
+                @Field("code_verifier") codeVerifier: String? = null,
                 @Field("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
-        fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
+        fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Query("mobile_consent") mobileConsent: Boolean = ConsentPrefs.currentUserConsent == true): Call<AuthenticatedSession>
 
         @GET("/login/session_token")
-        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams): DataResult<AuthenticatedSession>
+        suspend fun getAuthenticatedSession(@Query("return_to") targetUrl: String, @Tag params: RestParams, @Query("mobile_consent") mobileConsent: Boolean = ConsentPrefs.currentUserConsent == true): DataResult<AuthenticatedSession>
 
         @GET("/api/v1/login/session_token")
         fun getAuthenticatedSessionMasquerading(@Query("return_to") targetUrl: String, @Query("as_user_id") userId: Long): Call<AuthenticatedSession>
@@ -77,12 +79,12 @@ object OAuthAPI {
         callback.addCall(adapter.build(OAuthInterface::class.java, params).deleteToken()).enqueue(callback)
     }
 
-    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
-        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "urn:ietf:wg:oauth:2.0:oob")).enqueue(callback)
+    fun getToken(adapter: RestBuilder, params: RestParams, clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>, codeVerifier: String? = null) {
+        callback.addCall(adapter.build(OAuthInterface::class.java, params).getToken(clientID, clientSecret, oAuthRequest, "https://sso.canvaslms.com/canvas/login", codeVerifier)).enqueue(callback)
     }
 
     fun refreshAccessToken(adapter: RestBuilder, params: RestParams): DataResult<OAuthTokenResponse> {
-        return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "urn:ietf:wg:oauth:2.0:oob", ApiPrefs.refreshToken).dataResult()
+        return adapter.build(OAuthInterface::class.java, params).refreshAccessToken(ApiPrefs.clientId, ApiPrefs.clientSecret, "https://sso.canvaslms.com/canvas/login", ApiPrefs.refreshToken).dataResult()
     }
 
     fun getAuthenticatedSession(targetUrl: String, params: RestParams, adapter: RestBuilder, callback: StatusCallback<AuthenticatedSession>) {

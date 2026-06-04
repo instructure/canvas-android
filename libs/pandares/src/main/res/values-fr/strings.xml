@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Impossible d’effectuer cette action. Veuillez vérifier votre et réessayer.</string>
     <string name="conversationArchived">Conversion archivée</string>
     <string name="conversationUnarchived">Conversion retirée des archives</string>
+    <string name="conversationMarkedAsRead">Conversation marquée comme lue</string>
+    <string name="conversationMarkedAsUnread">Conversation marquée comme non lue</string>
     <string name="messageDeleted">Message supprimé</string>
     <string name="messageDeletedFailed">Impossible de supprimer le message</string>
     <string name="conversationDeleted">Conversation supprimée</string>

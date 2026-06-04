@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.widget.conferences
 
 import android.content.res.Resources
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -25,11 +24,15 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.domain.usecase.conference.LoadLiveConferencesUseCase
 import com.instructure.pandautils.domain.usecase.session.GetAuthenticatedSessionUseCase
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -40,7 +43,6 @@ class ConferencesViewModel @Inject constructor(
     private val loadLiveConferencesUseCase: LoadLiveConferencesUseCase,
     private val getAuthenticatedSessionUseCase: GetAuthenticatedSessionUseCase,
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist,
-    private val conferencesWidgetRouter: ConferencesWidgetRouter,
     private val apiPrefs: ApiPrefs,
     private val resources: Resources
 ) : ViewModel() {
@@ -54,6 +56,9 @@ class ConferencesViewModel @Inject constructor(
         )
     )
     val uiState: StateFlow<ConferencesUiState> = _uiState.asStateFlow()
+
+    private val _navigationEvents = MutableSharedFlow<DashboardNavigationEvent.Conferences>()
+    val navigationEvents: SharedFlow<DashboardNavigationEvent.Conferences> = _navigationEvents.asSharedFlow()
 
     init {
         loadConferences()
@@ -82,7 +87,7 @@ class ConferencesViewModel @Inject constructor(
         }
     }
 
-    private fun joinConference(activity: FragmentActivity, conference: ConferenceItem) {
+    private fun joinConference(conference: ConferenceItem) {
         if (_uiState.value.joiningConferenceId != null) return
 
         viewModelScope.launch {
@@ -97,7 +102,7 @@ class ConferencesViewModel @Inject constructor(
                 targetUrl
             }
 
-            conferencesWidgetRouter.launchConference(activity, conference.canvasContext, url)
+            _navigationEvents.emit(DashboardNavigationEvent.Conferences.LaunchConference(conference.canvasContext, url))
 
             // This delay is needed so the loading state does not immediately reset and cause a flicker in the UI. The conference join process may take a moment, and this provides a smoother user experience.
             delay(3000)

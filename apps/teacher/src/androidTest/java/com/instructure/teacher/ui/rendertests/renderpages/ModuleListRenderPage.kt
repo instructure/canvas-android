@@ -21,8 +21,8 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import com.instructure.canvas.espresso.SwipeRefreshLayoutMatchers
-import com.instructure.canvas.espresso.ViewSizeMatcher
+import com.instructure.canvas.espresso.utils.SwipeRefreshLayoutMatchers
+import com.instructure.canvas.espresso.utils.ViewSizeMatcher
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.assertDisplayed

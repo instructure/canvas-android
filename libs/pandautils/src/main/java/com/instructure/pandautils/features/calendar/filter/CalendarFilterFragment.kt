@@ -2,6 +2,8 @@ package com.instructure.pandautils.features.calendar.filter
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,8 +55,11 @@ class CalendarFilterFragment : BaseCanvasBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // Set status bar icons to light (white) for visibility over the dialog
-        WindowInsetsHelper.setStatusBarAppearance(requireActivity().window, isLightStatusBar = false)
+        // Due to the messed up navigation stack in the Student app some screens under this on config change can override the color of the statusbar,
+        // so we need to add a delay to make sure this gets called last.
+        Handler(Looper.getMainLooper()).postDelayed({
+            WindowInsetsHelper.setStatusBarAppearance(requireActivity().window, isLightStatusBar = false)
+        }, 100)
         setFullScreen()
     }
 

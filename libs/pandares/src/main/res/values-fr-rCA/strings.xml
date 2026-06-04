@@ -293,6 +293,7 @@
     <string name="monologue">Monologue</string>
     <string name="noItemsToDisplayShort">Pas d\'éléments à afficher</string>
     <string name="Todo">À faire</string>
+    <string name="TodoNew">À faire</string>
     <string name="todoFilter">Filtrer les cours</string>
     <string name="filterByEllipsis">Filtrer par...</string>
     <string name="favoriteCoursesLabel">Cours favoris</string>
@@ -411,6 +412,8 @@
     <string name="errorConversationGeneric">Impossible d\'effectuer cette action. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="conversationArchived">Conversation archivée</string>
     <string name="conversationUnarchived">Conversation désarchivée</string>
+    <string name="conversationMarkedAsRead">Conversation marquée comme lue</string>
+    <string name="conversationMarkedAsUnread">Conversation marquée comme non lue</string>
     <string name="messageDeleted">Message supprimé</string>
     <string name="messageDeletedFailed">Échec de la suppression du message</string>
     <string name="conversationDeleted">Conversation supprimée</string>
@@ -693,9 +696,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">À faire</string>
+    <string name="todoWidgetTitleNew">À faire</string>
     <string name="gradesWidgetTitle">Notes</string>
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas - À faire</string>
+    <string name="todoWidgetTitleLongNew">Canvas - À faire</string>
     <string name="gradesWidgetTitleLong">Canvas - Notes</string>
     <string name="gradeWidgetTitleLong">Canvas - Notes</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
@@ -731,6 +736,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Cours</string>
     <string name="toDoList">Liste de choses à faire</string>
+    <string name="toDoListNew">Liste des tâches à faire</string>
+
     <string name="notifications">Notifications</string>
     <string name="pushNotifications">Notifications Push</string>
     <string name="pushNotificationsError">Les notifications « Push » n\'ont pas été enregistrées pour ce dispositif.</string>
@@ -745,7 +752,6 @@
 
     <string name="launchSpeedgrader">Lancer Speedgrader</string>
 
-    <string name="search_todo">travail à faire travaux à faire liste des travaux à faire</string>
     <string name="search_course">cours cours classe classes</string>
     <string name="search_grades">note notes</string>
 
@@ -1389,6 +1395,10 @@
         <item quantity="one">%s point à faire</item>
         <item quantity="other">%s points à faire</item>
     </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s tâche à faire</item>
+        <item quantity="other">%s tâches à faire</item>
+    </plurals>
     <string name="noAnnotationSelected">Aucune annotation sélectionnée</string>
     <string name="emailNotifications">Notifications par courriel</string>
     <string name="emailNotificationsImmediately">Immédiatement</string>
@@ -1675,7 +1685,9 @@
     <string name="calendarNoEvents">Aucun événement d’aujourd’hui!</string>
     <string name="calendarNoEventsDescription">C’est une belle journée pour se reposer, se détendre et recharger nos batteries.</string>
     <string name="userCalendarToDo">À faire</string>
+    <string name="userCalendarToDoNew">À faire</string>
     <string name="courseToDo">%s À faire</string>
+    <string name="courseToDoNew">%s À faire</string>
     <string name="calendarEventExcused">Exempté</string>
     <string name="calendarEventMissing">Manquant</string>
     <string name="calendarEventGraded">Noté</string>
@@ -1700,21 +1712,30 @@
     <string name="a11y_eventCreatedAnnouncement">L\'événement %s a été créé avec succès.</string>
     <string name="a11y_eventUpdatedAnnouncement">L\'événement %s a été mis à jour avec succès.</string>
     <string name="a11y_toDoCreatedAnnouncement">À faire, %s a été créé avec succès.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Élément à faire %s créé avec succès.</string>
     <string name="a11y_toDoUpdatedAnnouncement">À faire, %s a été mis à jour avec succès.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Élément à faire %s actualisé avec succès.</string>
     <string name="todoScreenTitle">À faire</string>
+    <string name="todoScreenTitleNew">À faire</string>
     <string name="todoDateLabel">Date</string>
     <string name="todoDescriptionLabel">Description</string>
     <string name="todoDeleteConfirmationTitle">Effacer l’élément À faire?</string>
+    <string name="todoDeleteConfirmationTitleNew">Supprimer les tâches à faire?</string>
     <string name="todoDeleteConfirmationText">Cette opération supprime définitivement l’élément À faire.</string>
+    <string name="todoDeleteConfirmationTextNew">Cette opération supprime définitivement la tâche à faire.</string>
     <string name="todoDeleteErrorMessage">Une erreur est survenue lors de la suppression de ce travail À faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="todoDeleteErrorMessageNew">Une erreur est survenue lors de la suppression de cette tâche à faire. Vérifiez votre connexion et réessayez.</string>
     <string name="createTodoScreenTitle">Nouvelle action</string>
+    <string name="createTodoScreenTitleNew">Nouvelle tâche à faire</string>
     <string name="editTodoScreenTitle">Modification à faire</string>
+    <string name="editTodoScreenTitleNew">Modifier les tâches à faire</string>
     <string name="createToDoTitleHint">Ajouter un titre</string>
     <string name="createToDoDateLabel">Date</string>
     <string name="createToDoTimeLabel">Heure</string>
     <string name="createToDoCalendarLabel">Calendrier</string>
     <string name="createToDoDetailsLabel">Détails</string>
     <string name="todoSaveErrorMessage">Une erreur est survenue lors de l’enregistrement de ce travail À faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="todoSaveErrorMessageNew">Une erreur est survenue lors de l’enregistrement de cette tâche à faire. Vérifiez votre connexion et réessayez.</string>
     <string name="selectCalendarScreenTitle">Sélectionner le calendrier</string>
     <string name="errorContentRetryButton">Réessayer</string>
     <string name="eventLocationLabel">Emplacement</string>
@@ -1722,6 +1743,7 @@
     <string name="eventDetailsLabel">Détails</string>
     <string name="errorLoadingEvent">Il y a eu un problème de chargement de cet événement. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="errorLoadingTodo">Il y a eu un problème de chargement de ce travail à faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="errorLoadingTodoNew">Une erreur est survenue lors du chargement de cette tâche à faire. Vérifiez votre connexion et réessayez.</string>
     <string name="eventDeleteConfirmationTitle">Supprimer l’événement?</string>
     <string name="eventDeleteConfirmationText">Cela supprimera définitivement votre événement.</string>
     <string name="eventDeleteErrorMessage">Une erreur s\'est produite lors de la suppression de cet événement. Veuillez vérifier votre connexion et réessayer.</string>
@@ -1738,6 +1760,7 @@
     <string name="eventDeleteScopeAll">Tous les événements</string>
     <string name="eventDeleteScopeFollowing">Cet événement et tous les suivants</string>
     <string name="calendarAddToDo">Ajouter un élément À faire</string>
+    <string name="calendarAddToDoNew">Ajouter une tâche à faire</string>
     <string name="calendarAddEvent">Ajouter un événement</string>
     <string name="createEventScreenTitle">Nouvel événement</string>
     <string name="editEventScreenTitle">Modifier l’événement</string>
@@ -2116,7 +2139,9 @@
     <string name="widgetNotLoggedInTitle">Connectez-vous!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Pour voir vos travaux à accomplir, connectez-vous à votre compte dans l\'application. Cela ne prendra qu’une seconde!</string>
     <string name="a11y_widgetToDoOpenToDoList">Ouvrir l’écran Liste des travaux à accomplir</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Ouvrir l’écran de la liste de tâches à faire</string>
     <string name="a11y_widgetToDoCreateNewToDo">Créer un nouveau travail à accomplir</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Créer nouvelle tâche à faire</string>
     <string name="widgetGradesErrorSubtitle">Nous avons du mal à afficher vos notes en ce moment. Veuillez réessayer dans un instant ou rendez-vous à l’application.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Pour voir vos notes, veuillez vous connecter à votre compte dans l’application. Cela ne prendra qu’une seconde!</string>
     <string name="widgetSingleGradeErrorSubtitle">Nous avons du mal à afficher vos notes en ce moment.</string>
@@ -2215,6 +2240,7 @@
     <string name="errorLoadingToDos">Une erreur s’est produite lors du chargement de vos points à faire. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="errorUpdatingToDo">Une erreur s’est produite lors de la mise à jour de points à faire. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="noToDosForNow">Pas de points à faire pour l’instant!</string>
+    <string name="noToDosForNowNew">Aucune tâche à faire pour l’instant!</string>
     <string name="noToDosForNowSubtext">Il semble que ce soit un moment idéal pour se reposer, se détendre et se ressourcer.</string>
     <string name="todoSwipeDone">Terminé</string>
     <string name="todoSwipeUndo">Annuler</string>
@@ -2225,8 +2251,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Préférences de la liste de points à faire</string>
+    <string name="todoFilterPreferencesNew">Préférences de la liste de tâches à faire</string>
     <string name="todoFilterVisibleItems">Points visibles</string>
     <string name="todoFilterShowPersonalToDos">Afficher les points à faire personnels</string>
+    <string name="todoFilterShowPersonalToDosNew">Afficher les tâches personnelles à faire</string>
     <string name="todoFilterShowCalendarEvents">Afficher les événements de calendrier</string>
     <string name="todoFilterShowCompleted">Afficher les points terminés</string>
     <string name="todoFilterFavoriteCoursesOnly">Cours préférés uniquement</string>

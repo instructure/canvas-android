@@ -22,7 +22,7 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvas.espresso.assertFontSizeSP
+import com.instructure.canvas.espresso.utils.assertFontSizeSP
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating

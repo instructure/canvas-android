@@ -18,11 +18,9 @@
 package com.instructure.parentapp.features.splash
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.BecomeUserPermission
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
@@ -45,9 +43,8 @@ class SplashRepositoryTest {
     private val themeApi: ThemeAPI.ThemeInterface = mockk(relaxed = true)
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
-    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
-    private val repository = SplashRepository(userApi, themeApi, enrollmentApi, featuresApi)
+    private val repository = SplashRepository(userApi, themeApi, enrollmentApi)
 
     @Test
     fun `Get students successfully returns data`() = runTest {
@@ -152,34 +149,6 @@ class SplashRepositoryTest {
         coEvery { userApi.getBecomeUserPermission(any<RestParams>()) } returns DataResult.Fail()
 
         val result = repository.getBecomeUserPermission()
-        assertFalse(result)
-    }
-
-    @Test
-    fun `Get send usage metrics returns false when feature flag is disabled`() = runTest {
-        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
-            mapOf(FeaturesManager.SEND_USAGE_METRICS to false)
-        )
-
-        val result = repository.getSendUsageMetrics()
-        assertFalse(result)
-    }
-
-    @Test
-    fun `Get send usage metrics returns true when feature flag is enabled`() = runTest {
-        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
-            mapOf(FeaturesManager.SEND_USAGE_METRICS to true)
-        )
-
-        val result = repository.getSendUsageMetrics()
-        assertTrue(result)
-    }
-
-    @Test
-    fun `Get send usage metrics returns false when call fails`() = runTest {
-        coEvery { featuresApi.getEnvironmentFeatureFlags(any()) } returns DataResult.Fail()
-
-        val result = repository.getSendUsageMetrics()
         assertFalse(result)
     }
 

@@ -1,0 +1,125 @@
+name: E2E App
+
+on:
+  workflow_call:
+    inputs:
+      app-type-lower:
+        description: 'App type in lowercase (parent, student, or teacher)'
+        required: true
+        type: string
+      flank-config:
+        description: 'Flank config file under apps/<app>/ (e.g. flank_e2e.yml, flank_e2e_offline.yml)'
+        required: false
+        type: string
+        default: 'flank_e2e.yml'
+    outputs:
+      matrix-url:
+        description: 'Firebase Test Matrix URL for the run (empty if Flank produced no matrix link)'
+        value: ${{ jobs.e2e-tests.outputs.matrix-url }}
+    secrets:
+      GCLOUD_KEY:
+        required: true
+      SPLUNK_MOBILE_TOKEN:
+        required: false
+      OBSERVE_MOBILE_TOKEN:
+        required: false
+
+jobs:
+  e2e-tests:
+    name: ${{ inputs.app-type-lower }}-e2e-tests
+    runs-on: ubuntu-latest-16core
+    outputs:
+      matrix-url: ${{ steps.capture-matrix-url.outputs.url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        env:
+          APP: ${{ inputs.app-type-lower }}
+          FLANK_CONFIG: ${{ inputs.flank-config }}
+        run: |
+          case "$FLANK_CONFIG" in
+            flank_e2e.yml|flank_e2e_offline.yml) ;;
+            *) echo "Unsupported flank-config: $FLANK_CONFIG"; exit 1 ;;
+          esac
+          case "$APP" in
+            parent|student|teacher) ;;
+            *) echo "Unsupported app: $APP"; exit 1 ;;
+          esac
+          cp "./apps/$APP/$FLANK_CONFIG" ./flank.yml
+
+      - name: Copy APKs to expected locations
+        env:
+          APP: ${{ inputs.app-type-lower }}
+        run: |
+          if [ -d "${APP}-qa-debug.apk" ]; then
+             mkdir -p "apps/${APP}/build/outputs/apk/qa/debug"
+             mv "${APP}-qa-debug.apk/${APP}-qa-debug.apk" "apps/${APP}/build/outputs/apk/qa/debug/"
+             rm -rf "${APP}-qa-debug.apk"
+          fi
+          if [ -d "${APP}-qa-debug-androidTest.apk" ]; then
+             mkdir -p "apps/${APP}/build/outputs/apk/androidTest/qa/debug"
+             mv "${APP}-qa-debug-androidTest.apk/${APP}-qa-debug-androidTest.apk" "apps/${APP}/build/outputs/apk/androidTest/qa/debug/"
+             rm -rf "${APP}-qa-debug-androidTest.apk"
+          fi
+
+      - name: Run Flank E2E tests
+        run: |
+          set -o pipefail
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          set +e
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml 2>&1 | tee flank.log
+          flank_exit=${PIPESTATUS[0]}
+          set -e
+          # Flank v23.07.0 has been observed to exit 0 even when test cases within
+          # a matrix fail. Grep the log for the failure marker as a backstop.
+          if grep -qE '[1-9][0-9]* matri(x|ces) failed' flank.log; then
+            echo "::error::Flank reported matrix failures (see OUTCOME table above)"
+            exit 1
+          fi
+          if [ "$flank_exit" -ne 0 ]; then
+            echo "::error::Flank exited with code $flank_exit"
+            exit "$flank_exit"
+          fi
+
+      - name: Capture Firebase Test Matrix URL
+        id: capture-matrix-url
+        if: always()
+        run: |
+          if [ -f flank.log ]; then
+            url=$(grep -oE 'https://console\.firebase\.google\.com/project/[^/]+/testlab/histories/[^/]+/matrices/[a-zA-Z0-9_-]+' flank.log | head -1 || true)
+            echo "url=${url}" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report test results to Splunk
+        env:
+          APP: ${{ inputs.app-type-lower }}
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: ./apps/postProcessTestRun.bash "$APP" "results/$(ls results)"
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json

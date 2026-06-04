@@ -29,4 +29,5 @@ sealed class RouteValidatorAction {
     data class ShowToast(val message: String) : RouteValidatorAction()
     data class StartSignInActivity(val accountDomain: AccountDomain) : RouteValidatorAction()
     data object StartLoginActivity : RouteValidatorAction()
+    data object StartCookieConsent : RouteValidatorAction()
 }

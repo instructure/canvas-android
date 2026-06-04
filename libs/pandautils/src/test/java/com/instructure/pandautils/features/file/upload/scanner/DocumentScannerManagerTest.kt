@@ -20,7 +20,6 @@ import android.content.Context
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -37,7 +36,7 @@ class DocumentScannerManagerTest {
     @Before
     fun setup() {
         every { context.getSystemService(Context.ACTIVITY_SERVICE) } returns activityManager
-        documentScannerManager = DocumentScannerManager(context)
+        documentScannerManager = DocumentScannerManagerImpl(context)
     }
 
     @Test

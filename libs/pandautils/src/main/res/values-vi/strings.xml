@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Sinh viên này chưa có bài nộp.</string>
     <string name="locked">Bị Khóa</string>
     <string name="lockedSubtext">Bài tập này bị khóa cho đến %1$s vào %2$s.</string>
+    <string name="closedSubtext">Bài tập này đã bị khóa vào %1$s lúc %2$s.</string>
     <string name="chooseFile">Chọn Tập Tin</string>
     <string name="chooseFileSubtext">Đính kèm tập tin vào bài nộp của bạn bằng cách nhấn vào tùy chọn bên dưới.</string>
     <string name="chooseFileForUploadSubtext">Chọn tập tin để tải lên bằng cách nhấn vào tùy chọn bên dưới</string>

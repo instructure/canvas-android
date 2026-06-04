@@ -216,7 +216,9 @@ object UserApi {
         // If the code is already in the URL (no consent step needed), return it directly
         loginFinalUrl.toHttpUrlOrNull()?.queryParameter("code")?.let { return it }
 
-        val consentForm = Jsoup.parse(loginResponseHtml, "https://$domain").select("form").first()
+        val parsedConsentPage = Jsoup.parse(loginResponseHtml, "https://$domain")
+        val consentForm = parsedConsentPage.selectFirst("form#oauth2_accept_form")
+            ?: parsedConsentPage.selectFirst("form")
             ?: throw RuntimeException(
                 "OAuth consent form not found at: $loginFinalUrl (HTTP $loginStatusCode)\n" +
                 "CSRF token used: $csrfToken\n" +

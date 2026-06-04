@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.GradingPeriodsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -33,6 +34,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.R
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
@@ -90,24 +92,22 @@ class GradesElementaryE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the page is loaded correctly.")
         elementaryGradesPage.assertPageObjects()
 
-        Thread.sleep(3000)
-
         Log.d(ASSERTION_TAG, "Assert that the corresponding course grades are displayed.")
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        }
 
         Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${testAssignment2.name}' assignment.")
         SubmissionsApi.gradeSubmission(teacher.token, nonHomeroomCourses[0].id, testAssignment2.id, student.id, postedGrade = "C-")
 
-        Thread.sleep(5000) //This time is needed here to let the SubMissionApi does it's job.
-
-        Log.d(ASSERTION_TAG, "Refresh Grades Elementary Page. Assert that the previously graded, '${testAssignment2.name}' assignment's grade has been changed, but only that one.")
-        elementaryGradesPage.refresh()
-        Thread.sleep(5000) //We need to wait here because sometimes if we refresh the page fastly, the old grade will be seen.
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
-        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding course grades are displayed.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+            elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the 'Current Grading Period' option is selected.")
         elementaryGradesPage.assertSelectedGradingPeriod(elementaryGradesPage.getStringFromResource(R.string.currentGradingPeriod))

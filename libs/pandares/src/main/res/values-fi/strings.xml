@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Tämän toiminnon suorittaminen ei onnistunut. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="conversationArchived">Keskustelu arkistoitu</string>
     <string name="conversationUnarchived">Keskustelun arkistointi peruutettu</string>
+    <string name="conversationMarkedAsRead">Keskustelut: merkitse luetuksi</string>
+    <string name="conversationMarkedAsUnread">Keskustelut: merkitse lukemattomiksi</string>
     <string name="messageDeleted">Viesti on poistettu</string>
     <string name="messageDeletedFailed">Viestin poistaminen epäonnistui</string>
     <string name="conversationDeleted">Keskustelu poistettu</string>

@@ -16,24 +16,14 @@ on:
 jobs:
   student-notes:
     name: student-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'student'
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,36 +51,42 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":student-app: *Student Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":student-app: *Student Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":student-app: *Student Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
 
   teacher-notes:
     name: teacher-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'teacher'
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -118,36 +114,42 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":teacher-app: *Teacher Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":teacher-app: *Teacher Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":teacher-app: *Teacher Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
 
   parent-notes:
     name: parent-release-notes
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     if: inputs.apps == 'all' || inputs.apps == 'parent'
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -175,12 +177,28 @@ jobs:
           echo "$NOTES" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
 
+      - name: Compose Slack payload
+        env:
+          TAG: ${{ steps.notes.outputs.tag }}
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          set -euo pipefail
+          jq -n \
+            --arg channel "github_android_release" \
+            --arg tag     "$TAG" \
+            --arg notes   "$NOTES" \
+            '{
+              channel: $channel,
+              text: (":parent-app: *Parent Release Notes* (" + $tag + ")"),
+              blocks: [
+                { type: "section", text: { type: "mrkdwn", text: (":parent-app: *Parent Release Notes* (" + $tag + ")") } },
+                { type: "section", text: { type: "mrkdwn", text: ("```\n" + $notes + "\n```") } }
+              ]
+            }' > slack-payload.json
+
       - name: Post to Slack
         uses: slackapi/slack-github-action@v2
         with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":parent-app: *Parent Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
-            }
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json

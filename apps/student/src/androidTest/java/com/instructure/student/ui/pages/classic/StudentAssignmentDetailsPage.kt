@@ -27,7 +27,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed

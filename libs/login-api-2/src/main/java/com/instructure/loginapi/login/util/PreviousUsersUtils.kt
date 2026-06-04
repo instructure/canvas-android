@@ -20,7 +20,9 @@ import android.content.Context
 import com.google.gson.Gson
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.User
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.SecureCredentialCodec
 import com.instructure.loginapi.login.model.SignedInUser
 
 object PreviousUsersUtils {
@@ -33,20 +35,37 @@ object PreviousUsersUtils {
         val signedInUsers = ArrayList<SignedInUser>()
 
         val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
-        val keys = sharedPreferences.all
-        for ((_, value) in keys) {
-            var signedInUser: SignedInUser? = null
+        val migrationEditor = sharedPreferences.edit()
+        var migrated = false
 
-            try {
-                signedInUser = Gson().fromJson(value.toString(), SignedInUser::class.java)
+        for ((key, value) in sharedPreferences.all) {
+            val raw = value?.toString() ?: continue
+            val isEncrypted = raw.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)
+            val json = if (isEncrypted) {
+                SecureCredentialCodec.decrypt(raw) ?: run {
+                    reportDecryptFailure("get(): could not decrypt previous-user entry")
+                    continue
+                }
+            } else raw
+
+            val signedInUser = try {
+                Gson().fromJson(json, SignedInUser::class.java)
             } catch (ignore: Exception) {
-                //Do Nothing
+                null
             }
 
             if (signedInUser != null) {
                 signedInUsers.add(signedInUser)
+                if (!isEncrypted) {
+                    SecureCredentialCodec.encrypt(json)?.let {
+                        migrationEditor.putString(key, it)
+                        migrated = true
+                    }
+                }
             }
         }
+
+        if (migrated) migrationEditor.apply()
 
         //Sort by last signed in date.
         signedInUsers.sort()
@@ -90,17 +109,24 @@ object PreviousUsersUtils {
     ): Boolean {
 
         val signedInUserJSON = Gson().toJson(signedInUser)
+        val storedValue = SecureCredentialCodec.encrypt(signedInUserJSON) ?: signedInUserJSON
 
         //Save Signed In User to sharedPreferences
         val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putString(getGlobalUserId(domain, user), signedInUserJSON)
+        editor.putString(getGlobalUserId(domain, user), storedValue)
         return editor.commit()
     }
 
     fun getSignedInUser(context: Context, domain: String, userId: Long): SignedInUser? {
         val prefs = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
-        val userJson = prefs.getString(getGlobalUserId(domain, userId), null)
+        val raw = prefs.getString(getGlobalUserId(domain, userId), null) ?: return null
+        val userJson = if (raw.startsWith(SecureCredentialCodec.ENCRYPTED_PREFIX)) {
+            SecureCredentialCodec.decrypt(raw) ?: run {
+                reportDecryptFailure("getSignedInUser(): could not decrypt previous-user entry")
+                return null
+            }
+        } else raw
         return try {
             Gson().fromJson(userJson, SignedInUser::class.java)
         } catch (e: Exception) {
@@ -122,5 +148,12 @@ object PreviousUsersUtils {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+    }
+
+    private fun reportDecryptFailure(message: String) {
+        try {
+            FirebaseCrashlytics.getInstance().recordException(SecurityException(message))
+        } catch (_: Throwable) {
+        }
     }
 }

@@ -87,7 +87,7 @@ class CustomStatusesE2ETest: ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the custom status 'AMAZING'.")
         assignmentDetailsPage.assertCustomStatus("AMAZING")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
     }
 
     @After

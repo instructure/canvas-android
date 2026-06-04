@@ -25,7 +25,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.TextViewColorAssertion
 import com.instructure.espresso.WaitForViewWithId
@@ -167,12 +167,12 @@ class CourseBrowserPage : BasePage() {
 
     private fun scrollOpen(textName: String, scrollPosition: Int) {
         try {
-            waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+            waitForViewWithText(textName).perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(50)))
         } catch (e: Exception) {
             when(e) {
                 is NoMatchingViewException, is PerformException -> {
                     scrollDownToCourseBrowser(scrollPosition)
-                    waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
+                    waitForViewWithText(textName).perform(actionWithCustomConstraints(click(), isDisplayingAtLeast(50)))
                 }
                 else -> throw e
             }

@@ -20,8 +20,8 @@ package com.instructure.student.ui.pages.classic.offline
 import android.widget.TextView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.getView
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.getView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed

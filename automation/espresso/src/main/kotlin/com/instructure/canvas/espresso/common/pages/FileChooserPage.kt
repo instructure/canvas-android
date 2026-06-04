@@ -22,7 +22,7 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withChild
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -43,6 +43,7 @@ class FileChooserPage : BasePage() {
     private val cameraButton by OnViewWithId(R.id.fromCamera)
     private val galleryButton by OnViewWithId(R.id.fromGallery)
     private val deviceButton by OnViewWithId(R.id.fromDevice)
+    private val scannerButton by OnViewWithId(R.id.fromScanner)
     private val chooseFileTitle by OnViewWithId(R.id.chooseFileTitle)
     private val chooseFileSubtitle by OnViewWithId(R.id.chooseFileSubtitle)
     private val fileChooserTitle by WaitForViewWithId(R.id.alertTitle)
@@ -65,6 +66,10 @@ class FileChooserPage : BasePage() {
 
     fun chooseDevice() {
         deviceButton.scrollTo().click()
+    }
+
+    fun chooseScanner() {
+        scannerButton.scrollTo().click()
     }
 
     fun clickOkay() {

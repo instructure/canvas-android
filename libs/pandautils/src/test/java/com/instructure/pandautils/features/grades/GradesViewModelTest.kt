@@ -39,8 +39,12 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.features.grades.strategy.AcademicGradesStrategy
+import com.instructure.pandautils.features.grades.strategy.NGCGradesStrategy
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.orDefault
@@ -1353,12 +1357,122 @@ class GradesViewModelTest {
         }
     }
 
+    @Test
+    fun `NGC experience populates filter state via strategy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        val startDate = OffsetDateTime.now().minusDays(30).withNano(0)
+        val endDate = OffsetDateTime.now().plusDays(20).withNano(0)
+        val gradingPeriods = listOf(GradingPeriod(id = 1, startDate = startDate.toString(), endDate = endDate.toString()))
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns gradingPeriods
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        val filter = viewModel.uiState.value.filter
+        Assert.assertNotNull(filter)
+        Assert.assertEquals("Course 1", filter!!.courseName)
+        Assert.assertEquals(gradingPeriods.first(), filter.selectedFilters.selectedGradingPeriodFilter)
+    }
+
+    @Test
+    fun `Academic experience leaves filter null`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.Academic.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        Assert.assertNull(viewModel.uiState.value.filter)
+    }
+
+    @Test
+    fun `onFilterUpdated reloads grades when grading period changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        val period1 = GradingPeriod(id = 1, title = "Q1")
+        val period2 = GradingPeriod(id = 2, title = "Q2")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns listOf(period1, period2)
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilter = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(initialFilter.copy(selectedGradingPeriodFilter = period2))
+
+        coVerify(atLeast = 2) { gradesRepository.loadAssignmentGroups(1, any(), any()) }
+        Assert.assertEquals(period2, viewModel.uiState.value.gradePreferencesUiState.selectedGradingPeriod)
+    }
+
+    @Test
+    fun `onFilterUpdated does not reload when grading period unchanged`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        val period = GradingPeriod(id = 1, title = "Q1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns listOf(period)
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilter = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        )
+
+        coVerify(exactly = 1) { gradesRepository.loadAssignmentGroups(1, any(), any()) }
+    }
+
+    @Test
+    fun `onFilterUpdated syncs sortBy from selectedGroupByOption`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilter = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilter.copy(selectedGroupByOption = AssignmentGroupByOption.DueDate)
+        )
+
+        Assert.assertEquals(SortBy.DUE_DATE, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `onFilterScreenOpenChanged delegates to strategy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        viewModel.onFilterScreenOpenChanged(open = true)
+        Assert.assertEquals(true, viewModel.uiState.value.filter?.isFilterScreenOpen)
+
+        viewModel.onFilterScreenOpenChanged(open = false)
+        Assert.assertEquals(false, viewModel.uiState.value.filter?.isFilterScreenOpen)
+    }
+
     private fun createViewModel() {
+        val strategies = mapOf(
+            Experience.Academic to AcademicGradesStrategy(),
+            Experience.NGC to NGCGradesStrategy(),
+        )
         viewModel = GradesViewModel(
             context,
             gradesRepository,
             gradeFormatter, gradeCalculator,
             gradesViewModelBehavior,
+            strategies,
             savedStateHandle
         )
     }

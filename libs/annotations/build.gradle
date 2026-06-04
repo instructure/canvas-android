@@ -82,8 +82,10 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    configurations.all {
-        resolutionStrategy.force 'com.getkeepsafe.relinker:relinker:1.4.3'
+    configurations.configureEach {
+        if (canBeResolved) {
+            resolutionStrategy.force 'com.getkeepsafe.relinker:relinker:1.4.3'
+        }
     }
 }
 

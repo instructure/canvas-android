@@ -313,6 +313,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         noOverlayToolbar.setVisible(!useOverlay)
         overlayToolbar.setVisible(useOverlay)
         courseHeader.setVisible(useOverlay)
+        ViewCompat.requestApplyInsets(appBarLayout)
     }
 
     private var statusBarBackgroundView: View? = null

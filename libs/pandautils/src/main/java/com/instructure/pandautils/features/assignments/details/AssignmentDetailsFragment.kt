@@ -356,14 +356,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             scrollContent?.let {
                 ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
                     val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    val configuration = resources.configuration
-                    val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
-
-                    if (isPortrait) {
-                        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
-                    } else {
-                        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, 0)
-                    }
+                    view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
                     windowInsets
                 }
                 ViewCompat.requestApplyInsets(scrollContent)

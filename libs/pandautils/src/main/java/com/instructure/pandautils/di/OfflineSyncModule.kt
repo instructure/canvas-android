@@ -35,7 +35,9 @@ import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.StudioApi
+import com.instructure.canvasapi2.apis.StudioAuthAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.ModuleManager
@@ -210,8 +212,20 @@ class OfflineSyncModule {
         studioApi: StudioApi,
         studioMediaProgressDao: StudioMediaProgressDao,
         fileDownloadApi: FileDownloadAPI,
-        firebaseCrashlytics: FirebaseCrashlytics
+        firebaseCrashlytics: FirebaseCrashlytics,
+        domainServicesAuthApi: DomainServicesAuthenticationAPI,
+        studioAuthApi: StudioAuthAPI
     ): StudioSync {
-        return StudioSync(context, launchDefinitionsApi, apiPrefs, studioApi, studioMediaProgressDao, fileDownloadApi, firebaseCrashlytics)
+        return StudioSync(
+            context,
+            launchDefinitionsApi,
+            apiPrefs,
+            studioApi,
+            studioMediaProgressDao,
+            fileDownloadApi,
+            firebaseCrashlytics,
+            domainServicesAuthApi,
+            studioAuthApi
+        )
     }
 }

@@ -171,6 +171,7 @@
     <string name="noSubmissionTeacher">This student doesn\'t have a submission yet.</string>
     <string name="locked">Locked</string>
     <string name="lockedSubtext">This assignment is locked until %1$s at %2$s.</string>
+    <string name="closedSubtext">This assignment was locked on %1$s at %2$s.</string>
     <string name="chooseFile">Choose a File</string>
     <string name="chooseFileSubtext">Attach a file to your submission by tapping an option below.</string>
     <string name="chooseFileForUploadSubtext">Select a file to upload by tapping an option below</string>

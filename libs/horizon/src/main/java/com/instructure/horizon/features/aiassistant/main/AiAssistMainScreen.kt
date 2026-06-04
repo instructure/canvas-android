@@ -97,12 +97,6 @@ fun AiAssistMainScreen(
         navController = navController,
         onClearChatHistory = { },
         onDismiss = { onDismiss() },
-        inputTextValue = promptInput,
-        onInputTextChanged = { promptInput = it },
-        onInputTextSubmitted = {
-            state.sendMessage(promptInput.text)
-            promptInput = TextFieldValue("")
-        }
     ) { modifier ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -130,7 +124,7 @@ fun AiAssistMainScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics {
-                                contentDescription = context.getString(R.string.a11y_igniteAiLoadingContentDescription)
+                                contentDescription = context.getString(R.string.a11y_studyToolsLoadingContentDescription)
                             }
                             .focusRequester(loadingFocusRequester)
                             .focusable()

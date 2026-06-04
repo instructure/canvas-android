@@ -65,7 +65,7 @@ fun AiAssistQuizAnswer(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
-                .clip(HorizonCornerRadius.level2)
+                .clip(HorizonCornerRadius.level1_5)
                 .clickable { onClick() }
                 .conditional(status != AiAssistQuizAnswerStatus.UNSELECTED) {
                     this
@@ -75,7 +75,7 @@ fun AiAssistQuizAnswer(
                     this
                         .border(
                             HorizonBorder.level1(HorizonColors.Surface.pageSecondary()),
-                            shape = HorizonCornerRadius.level2,
+                            shape = HorizonCornerRadius.level1_5,
                         )
                 }
                 .padding(16.dp)

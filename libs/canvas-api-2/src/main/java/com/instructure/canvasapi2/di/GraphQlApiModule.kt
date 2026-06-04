@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManagerImpl
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManagerImpl
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
@@ -105,5 +107,10 @@ class GraphQlApiModule {
     @Provides
     fun provideRecentGradedSubmissionsManager(@DefaultApolloClient apolloClient: ApolloClient): RecentGradedSubmissionsManager {
         return RecentGradedSubmissionsManagerImpl(apolloClient)
+    }
+
+    @Provides
+    fun provideDashboardCoursesManager(@DefaultApolloClient apolloClient: ApolloClient): DashboardCoursesManager {
+        return DashboardCoursesManagerImpl(apolloClient)
     }
 }

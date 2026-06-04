@@ -152,7 +152,7 @@ class SpeedGraderCommentsViewModelTest {
                     draft = false,
                     attempt = 1,
                     read = true,
-                    attachments = null,
+                    attachments = emptyList(),
                     mediaCommentId = null
                 )
             )
@@ -188,7 +188,7 @@ class SpeedGraderCommentsViewModelTest {
                     draft = false,
                     attempt = 1,
                     read = true,
-                    attachments = null,
+                    attachments = emptyList(),
                     mediaCommentId = null
                 )
             )
@@ -338,7 +338,7 @@ class SpeedGraderCommentsViewModelTest {
                     draft = false,
                     attempt = 0,
                     read = true,
-                    attachments = null,
+                    attachments = emptyList(),
                     mediaCommentId = null
                 )
             )
@@ -374,7 +374,7 @@ class SpeedGraderCommentsViewModelTest {
                     draft = false,
                     attempt = 0,
                     read = true,
-                    attachments = null,
+                    attachments = emptyList(),
                     mediaCommentId = null
                 )
             )

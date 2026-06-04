@@ -1,0 +1,127 @@
+name: Slack Notify E2E
+
+on:
+  workflow_call:
+    inputs:
+      app-display-name:
+        description: 'Human-readable app name (e.g. "Android Canvas - Parent")'
+        required: true
+        type: string
+      channel:
+        description: 'Target Slack channel name (without leading #)'
+        required: true
+        type: string
+      e2e-result:
+        description: 'Result of the upstream e2e-tests job (success / failure / cancelled / skipped)'
+        required: true
+        type: string
+      matrix-url:
+        description: 'Firebase Test Matrix URL (may be empty if Flank produced no link)'
+        required: false
+        type: string
+        default: ''
+      workflow-name:
+        description: 'Name of the calling workflow (e.g. "E2E Tests (Scheduled)")'
+        required: true
+        type: string
+    secrets:
+      SLACK_GITHUB_ACTIONS_BOT_TOKEN:
+        required: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Compose Slack payload
+        env:
+          E2E_RESULT: ${{ inputs.e2e-result }}
+          MATRIX_URL: ${{ inputs.matrix-url }}
+          CHANNEL: ${{ inputs.channel }}
+          APP_DISPLAY_NAME: ${{ inputs.app-display-name }}
+          BRANCH: ${{ github.ref_name }}
+          WORKFLOW_NAME: ${{ inputs.workflow-name }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FALLBACK_URL: https://console.firebase.google.com/project/${{ vars.FIREBASE_PROJECT_ID }}/testlab/histories
+        run: |
+          set -euo pipefail
+          COMMIT_SUBJECT=$(git log -1 --pretty='%s')
+
+          if [ "$E2E_RESULT" = "success" ]; then
+            HEADER=":white_check_mark: Build Succeeded!"
+            COLOR="#36a64f"
+          else
+            HEADER=":x: Build Failed!"
+            COLOR="#d40e0d"
+          fi
+
+          if [ -n "$MATRIX_URL" ]; then
+            FTL_URL="${MATRIX_URL}/details"
+          else
+            FTL_URL="$FALLBACK_URL"
+          fi
+
+          jq -n \
+            --arg channel        "$CHANNEL" \
+            --arg header         "$HEADER" \
+            --arg color          "$COLOR" \
+            --arg commit_subject "$COMMIT_SUBJECT" \
+            --arg app            "$APP_DISPLAY_NAME" \
+            --arg branch         "$BRANCH" \
+            --arg workflow       "$WORKFLOW_NAME" \
+            --arg run_url        "$RUN_URL" \
+            --arg ftl_url        "$FTL_URL" \
+            '{
+              channel: $channel,
+              text: ($header + " — " + $app),
+              attachments: [
+                {
+                  color: $color,
+                  blocks: [
+                    {
+                      type: "header",
+                      text: { type: "plain_text", text: $header }
+                    },
+                    {
+                      type: "section",
+                      text: { type: "mrkdwn", text: ("*" + $commit_subject + "*") }
+                    },
+                    {
+                      type: "section",
+                      fields: [
+                        { type: "mrkdwn", text: ("*App*\n" + $app) },
+                        { type: "mrkdwn", text: ("*Branch*\n" + $branch) },
+                        { type: "mrkdwn", text: ("*Workflow*\n" + $workflow) }
+                      ]
+                    },
+                    {
+                      type: "actions",
+                      elements: [
+                        {
+                          type: "button",
+                          text: { type: "plain_text", text: "View Workflow Run" },
+                          url: $run_url
+                        },
+                        {
+                          type: "button",
+                          text: { type: "plain_text", text: "View Firebase Test Matrix" },
+                          url: $ftl_url
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }' > slack-payload.json
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v2
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json

@@ -10,90 +10,99 @@ on:
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event.action != 'labeled' }}
+
+# Private-data env vars consumed by MergePrivateData.kt at build time.
+# Every entry is required; missing values fail the build.
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+  PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+  PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+  ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+  ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+  ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+  ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+  ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+  PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+  PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+  PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+  PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+  GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+  ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+  PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
 
 jobs:
-  parent-build:
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Parent')
-    uses: ./.github/workflows/build-app.yml
+  parent-test-apks:
+    if: contains(github.event.pull_request.body, 'Parent')
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
+
+  parent-distribute:
+    if: contains(github.event.pull_request.body, 'Parent')
+    uses: ./.github/workflows/distribute-app.yml
     with:
       app-type: Parent
       app-type-lower: parent
-      firebase-app-id-secret: FIREBASE_ANDROID_PARENT_APP_ID
-    secrets:
-      GH_APP_ID: ${{ secrets.GH_APP_ID }}
-      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
-      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
-      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}
+    secrets: inherit
 
-  student-build:
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
-    uses: ./.github/workflows/build-app.yml
+  student-test-apks:
+    if: contains(github.event.pull_request.body, 'Student')
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
+
+  student-distribute:
+    if: contains(github.event.pull_request.body, 'Student')
+    uses: ./.github/workflows/distribute-app.yml
     with:
       app-type: Student
       app-type-lower: student
-      firebase-app-id-secret: FIREBASE_ANDROID_STUDENT_APP_ID
-    secrets:
-      GH_APP_ID: ${{ secrets.GH_APP_ID }}
-      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
-      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
-      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}
+    secrets: inherit
 
-  teacher-build:
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Teacher')
-    uses: ./.github/workflows/build-app.yml
+  teacher-test-apks:
+    if: contains(github.event.pull_request.body, 'Teacher')
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit
+
+  teacher-distribute:
+    if: contains(github.event.pull_request.body, 'Teacher')
+    uses: ./.github/workflows/distribute-app.yml
     with:
       app-type: Teacher
       app-type-lower: teacher
-      firebase-app-id-secret: FIREBASE_ANDROID_TEACHER_APP_ID
-    secrets:
-      GH_APP_ID: ${{ secrets.GH_APP_ID }}
-      GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
-      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
-      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}
+    secrets: inherit
 
   submodule-build-and-test:
     name: submodule-build-and-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && (
-        contains(github.event.pull_request.body, 'Parent') ||
-        contains(github.event.pull_request.body, 'Student') ||
-        contains(github.event.pull_request.body, 'Teacher')
-      )
+      contains(github.event.pull_request.body, 'Parent') ||
+      contains(github.event.pull_request.body, 'Student') ||
+      contains(github.event.pull_request.body, 'Teacher')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -152,28 +161,13 @@ jobs:
  
   parent-unit-tests:
     name: parent-unit-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Parent')
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Parent')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -215,28 +209,13 @@ jobs:
 
   student-unit-tests:
     name: student-unit-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Student')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -278,28 +257,13 @@ jobs:
 
   teacher-unit-tests:
     name: teacher-unit-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Teacher')
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Teacher')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -341,29 +305,14 @@ jobs:
 
   horizon-unit-tests:
     name: horizon-unit-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 30
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
+    if: contains(github.event.pull_request.body, 'Student')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -415,29 +364,14 @@ jobs:
 
   horizon-test-build:
     name: horizon-test-build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 30
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
+    if: contains(github.event.pull_request.body, 'Student')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -485,14 +419,10 @@ jobs:
 
   horizon-ui-tests:
     name: horizon-ui-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
-    needs: [student-build, horizon-test-build]
+    if: contains(github.event.pull_request.body, 'Student')
+    needs: [student-test-apks, horizon-test-build]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -530,12 +460,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash horizon-ui results/`ls results`
@@ -552,14 +479,10 @@ jobs:
 
   horizon-interaction-tests:
     name: horizon-interaction-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
-    needs: [student-build, horizon-test-build]
+    if: contains(github.event.pull_request.body, 'Student')
+    needs: [student-test-apks, horizon-test-build]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -597,12 +520,9 @@ jobs:
           fi
 
       - name: Run Flank interaction tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash horizon-interaction results/`ls results`
@@ -619,13 +539,9 @@ jobs:
 
   parent-portrait-ui-tests:
     name: parent-portrait-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Parent')
-    needs: [parent-build, parent-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Parent')
+    needs: [parent-test-apks, parent-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -668,12 +584,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash parent results/`ls results`
@@ -690,13 +603,9 @@ jobs:
 
   parent-landscape-ui-tests:
     name: parent-landscape-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Parent')
-    needs: [parent-build, parent-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Parent')
+    needs: [parent-test-apks, parent-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -739,12 +648,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash parent results/`ls results`
@@ -761,13 +667,9 @@ jobs:
 
   student-portrait-ui-tests:
     name: student-portrait-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
-    needs: [student-build, student-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Student')
+    needs: [student-test-apks, student-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -810,12 +712,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash student results/`ls results`
@@ -832,13 +731,9 @@ jobs:
 
   student-landscape-ui-tests:
     name: student-landscape-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student')
-    needs: [student-build, student-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Student')
+    needs: [student-test-apks, student-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -881,12 +776,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash student results/`ls results`
@@ -903,13 +795,9 @@ jobs:
 
   teacher-portrait-ui-tests:
     name: teacher-portrait-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Teacher')
-    needs: [teacher-build, teacher-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Teacher')
+    needs: [teacher-test-apks, teacher-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -952,12 +840,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash teacher results/`ls results`
@@ -974,13 +859,9 @@ jobs:
 
   teacher-landscape-ui-tests:
     name: teacher-landscape-ui-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Teacher')
-    needs: [teacher-build, teacher-unit-tests]
+    runs-on: ubuntu-latest-16core
+    if: contains(github.event.pull_request.body, 'Teacher')
+    needs: [teacher-test-apks, teacher-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -1023,12 +904,9 @@ jobs:
           fi
 
       - name: Run Flank UI tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results to Splunk
         run: ./apps/postProcessTestRun.bash teacher results/`ls results`
@@ -1044,230 +922,36 @@ jobs:
         run: rm -f service-account-key.json
 
   parent-e2e-tests:
-    name: parent-e2e-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Parent') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [parent-build, parent-unit-tests]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Setup Service account
-        env:
-          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: |
-          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
-            echo "Error: GCLOUD_KEY secret is not set"
-            exit 1
-          fi
-          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
-          chmod 600 service-account-key.json
-
-      - name: Setup Flank config
-        run: cp ./apps/parent/flank_e2e.yml ./flank.yml
-
-      - name: Copy APKs to expected locations
-        run: |
-          if [ -d "parent-qa-debug.apk" ]; then
-             mkdir -p apps/parent/build/outputs/apk/qa/debug
-             mv parent-qa-debug.apk/parent-qa-debug.apk apps/parent/build/outputs/apk/qa/debug/
-             rm -rf parent-qa-debug.apk
-          fi
-          if [ -d "parent-qa-debug-androidTest.apk" ]; then
-             mkdir -p apps/parent/build/outputs/apk/androidTest/qa/debug
-             mv parent-qa-debug-androidTest.apk/parent-qa-debug-androidTest.apk apps/parent/build/outputs/apk/androidTest/qa/debug/
-             rm -rf parent-qa-debug-androidTest.apk
-          fi
-          if [ -d "parent-dev-debugMinify.apk" ]; then
-             mkdir -p apps/parent/build/outputs/apk/dev/debugMinify
-             mv parent-dev-debugMinify.apk/parent-dev-debugMinify.apk apps/parent/build/outputs/apk/dev/debugMinify/
-             rm -rf parent-dev-debugMinify.apk
-          fi
-
-      - name: Run Flank E2E tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
-
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash parent results/`ls results`
-        env:
-          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
-          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
-          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
-          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Cleanup sensitive files
-        if: always()
-        run: rm -f service-account-key.json
+    if: contains(github.event.pull_request.body, 'Parent') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [parent-test-apks, parent-unit-tests]
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: parent
+    secrets: inherit
 
   student-e2e-tests:
-    name: student-e2e-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Student') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [student-build, student-unit-tests]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Setup Service account
-        env:
-          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: |
-          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
-            echo "Error: GCLOUD_KEY secret is not set"
-            exit 1
-          fi
-          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
-          chmod 600 service-account-key.json
-
-      - name: Setup Flank config
-        run: cp ./apps/student/flank_e2e.yml ./flank.yml
-
-      - name: Copy APKs to expected locations
-        run: |
-          if [ -d "student-qa-debug.apk" ]; then
-             mkdir -p apps/student/build/outputs/apk/qa/debug
-             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
-             rm -rf student-qa-debug.apk
-          fi
-          if [ -d "student-qa-debug-androidTest.apk" ]; then
-             mkdir -p apps/student/build/outputs/apk/androidTest/qa/debug
-             mv student-qa-debug-androidTest.apk/student-qa-debug-androidTest.apk apps/student/build/outputs/apk/androidTest/qa/debug/
-             rm -rf student-qa-debug-androidTest.apk
-          fi
-          if [ -d "student-dev-debugMinify.apk" ]; then
-             mkdir -p apps/student/build/outputs/apk/dev/debugMinify
-             mv student-dev-debugMinify.apk/student-dev-debugMinify.apk apps/student/build/outputs/apk/dev/debugMinify/
-             rm -rf student-dev-debugMinify.apk
-          fi
-
-      - name: Run Flank E2E tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
-
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash student results/`ls results`
-        env:
-          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
-          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
-          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
-          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Cleanup sensitive files
-        if: always()
-        run: rm -f service-account-key.json
+    if: contains(github.event.pull_request.body, 'Student') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [student-test-apks, student-unit-tests]
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: student
+    secrets: inherit
 
   teacher-e2e-tests:
-    name: teacher-e2e-tests
-    runs-on: ubuntu-latest
-    if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && contains(github.event.pull_request.body, 'Teacher') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [teacher-build, teacher-unit-tests]
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Setup Service account
-        env:
-          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: |
-          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
-            echo "Error: GCLOUD_KEY secret is not set"
-            exit 1
-          fi
-          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
-          chmod 600 service-account-key.json
-
-      - name: Setup Flank config
-        run: cp ./apps/teacher/flank_e2e.yml ./flank.yml
-
-      - name: Copy APKs to expected locations
-        run: |
-          if [ -d "teacher-qa-debug.apk" ]; then
-             mkdir -p apps/teacher/build/outputs/apk/qa/debug
-             mv teacher-qa-debug.apk/teacher-qa-debug.apk apps/teacher/build/outputs/apk/qa/debug/
-             rm -rf teacher-qa-debug.apk
-          fi
-          if [ -d "teacher-qa-debug-androidTest.apk" ]; then
-             mkdir -p apps/teacher/build/outputs/apk/androidTest/qa/debug
-             mv teacher-qa-debug-androidTest.apk/teacher-qa-debug-androidTest.apk apps/teacher/build/outputs/apk/androidTest/qa/debug/
-             rm -rf teacher-qa-debug-androidTest.apk
-          fi
-          if [ -d "teacher-dev-debugMinify.apk" ]; then
-             mkdir -p apps/teacher/build/outputs/apk/dev/debugMinify
-             mv teacher-dev-debugMinify.apk/teacher-dev-debugMinify.apk apps/teacher/build/outputs/apk/dev/debugMinify/
-             rm -rf teacher-dev-debugMinify.apk
-          fi
-
-      - name: Run Flank E2E tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
-
-      - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
-        env:
-          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
-          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
-          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
-          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Cleanup sensitive files
-        if: always()
-        run: rm -f service-account-key.json
+    if: contains(github.event.pull_request.body, 'Teacher') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [teacher-test-apks, teacher-unit-tests]
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: teacher
+    secrets: inherit
 
   submodule-ui-tests:
     name: submodule-ui-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     if: >-
-      (
-        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
-        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && (
-        contains(github.event.pull_request.body, 'Parent') ||
-        contains(github.event.pull_request.body, 'Student') ||
-        contains(github.event.pull_request.body, 'Teacher')
-      )
+      contains(github.event.pull_request.body, 'Parent') ||
+      contains(github.event.pull_request.body, 'Student') ||
+      contains(github.event.pull_request.body, 'Teacher')
     needs: submodule-build-and-test
     steps:
       - name: Checkout repository
@@ -1300,15 +984,12 @@ jobs:
           mv pandautils-app.apk libs/pandautils/
 
       - name: Run Flank E2E tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
   unit-test-report:
     name: unit-test-report
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     if: always()
     needs: [parent-unit-tests, student-unit-tests, teacher-unit-tests, horizon-unit-tests, submodule-build-and-test]
     permissions:

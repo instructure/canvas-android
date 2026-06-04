@@ -1,0 +1,14 @@
+{
+  "name": "instui-tokens",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Generates InstUI design tokens for Android/Compose from instructure-ui",
+  "scripts": {
+    "build": "node build-instui.js"
+  },
+  "dependencies": {
+    "@instructure/instructure-design-tokens": "github:instructure/instructure-design-tokens#c17bdb49f7",
+    "lucide": "1.16.0",
+    "style-dictionary": "^4.0.0"
+  }
+}

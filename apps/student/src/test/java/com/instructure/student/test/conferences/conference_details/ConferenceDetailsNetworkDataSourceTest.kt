@@ -112,17 +112,17 @@ class ConferenceDetailsNetworkDataSourceTest {
     @Test
     fun `Return authenticated session api model`() = runTest {
         val expected = AuthenticatedSession("url")
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Success(expected)
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Success(expected)
 
         val result = networkDataSource.getAuthenticatedSession("targetUrl")
 
         TestCase.assertEquals(expected, result)
-        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true)) }
+        coVerify(exactly = 1) { oAuthApi.getAuthenticatedSession("targetUrl", RestParams(isForceReadFromNetwork = true), any()) }
     }
 
     @Test(expected = IllegalStateException::class)
     fun `Throws exception if authenticated session call fails`() = runTest {
-        coEvery { oAuthApi.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthApi.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         networkDataSource.getAuthenticatedSession("targetUrl")
     }

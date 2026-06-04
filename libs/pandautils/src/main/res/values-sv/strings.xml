@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Den här studenten saknar fortfarande inlämning.</string>
     <string name="locked">Låst</string>
     <string name="lockedSubtext">Den här uppgiften är låst till och med %1$s kl. %2$s.</string>
+    <string name="closedSubtext">Den här uppgiften låstes den %1$s kl. %2$s.</string>
     <string name="chooseFile">Välj en fil</string>
     <string name="chooseFileSubtext">Välj en fil till din inlämning genom att trycka på alternativet nedan.</string>
     <string name="chooseFileForUploadSubtext">Välj en fil att ladda upp genom att trycka på ett av alternativen nedan.</string>

@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Níl uaslódáil ag an mac léinn seo go fóill.</string>
     <string name="locked">Faoi ghlas</string>
     <string name="lockedSubtext">Tá an tasc seo faoi ghlas go dtí %1$s ag %2$s.</string>
+    <string name="closedSubtext">Glasáladh an tasc seo ar %1$s ag %2$s.</string>
     <string name="chooseFile">Roghnaigh Comhad</string>
     <string name="chooseFileSubtext">Ceangail comhad le d’uaslódáil trí rogha a thapáil thíos.</string>
     <string name="chooseFileForUploadSubtext">Roghnaigh comhad le huaslódáil trí rogha a thapáil thíos</string>

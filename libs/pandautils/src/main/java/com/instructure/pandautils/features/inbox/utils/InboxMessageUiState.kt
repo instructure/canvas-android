@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.utils
 
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Message
 
 data class InboxMessageUiState(
@@ -35,5 +36,6 @@ sealed class MessageAction {
     data class Forward(val message: Message) : MessageAction()
     data class DeleteMessage(val message: Message) : MessageAction()
     data class OpenAttachment(val attachment: Attachment) : MessageAction()
+    data class OpenMediaAttachment(val mediaComment: MediaComment) : MessageAction()
     data class UrlSelected(val url: String) : MessageAction()
 }

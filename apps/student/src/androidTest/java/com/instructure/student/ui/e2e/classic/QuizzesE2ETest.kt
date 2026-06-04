@@ -29,7 +29,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion

@@ -10,28 +10,19 @@ on:
 jobs:
   create-tag:
     name: create-tag
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 10
     permissions:
       contents: write
+      actions: write
     env:
       JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
       JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -76,10 +67,20 @@ jobs:
             echo "tag-exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      # Tag pushes authored by GITHUB_TOKEN don't fan out to `on: push: tags` workflows.
+      # Dispatch the deploy workflow explicitly so the AAB build/upload chain still fires.
+      - name: Trigger deploy workflow
+        if: steps.create-tag.outputs.tag-exists != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          APP_NAME="${{ steps.app-info.outputs.app-name }}"
+          gh workflow run "deploy-${APP_NAME}.yml" --ref "${{ steps.app-info.outputs.tag }}"
+
       - name: Create GitHub Release
         if: steps.create-tag.outputs.tag-exists != 'true'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           APP_NAME="${{ steps.app-info.outputs.app-name }}"
           VERSION_NAME="${{ steps.app-info.outputs.version-name }}"

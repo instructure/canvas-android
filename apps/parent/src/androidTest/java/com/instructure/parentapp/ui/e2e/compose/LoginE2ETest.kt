@@ -290,35 +290,6 @@ class LoginE2ETest : ParentComposeTest() {
         loginSignInPage.assertLoginEmailErrorMessage(NO_EMAIL_GIVEN_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
     }
 
-    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
-
-        Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
-
-        if (lastSchoolSaved) {
-            Log.d(STEP_TAG, "Click 'Find Another School' button.")
-            loginLandingPage.clickFindAnotherSchoolButton()
-        } else {
-            Log.d(STEP_TAG, "Click 'Find My School' button.")
-            loginLandingPage.clickFindMySchoolButton()
-        }
-
-        Log.d(STEP_TAG, "Enter domain: '${user.domain}'.")
-        loginFindSchoolPage.enterDomain(user.domain)
-
-        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
-        loginFindSchoolPage.clickToolbarNextMenuItem()
-        loginSignInPage.loginAs(user)
-    }
-
-    private fun loginWithLastSavedSchool(user: CanvasUserApiModel) {
-
-        Log.d(STEP_TAG, "Click on last saved school's button.")
-        loginLandingPage.clickOnLastSavedSchoolButton()
-
-        Log.d(STEP_TAG, "Login with '${user.name}' user.")
-        loginSignInPage.loginAs(user)
-    }
-
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
@@ -405,7 +376,6 @@ class LoginE2ETest : ParentComposeTest() {
     }
 
     @Test
-    @Stub("Stubbed because there was some change on 7th or 8th of July, 2025 and on the CI it loads an invalid URL page, however the test runs locally.")
     @E2E
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.CANVAS_NETWORK)
     fun testCanvasNetworkSignInPageE2E() {
@@ -486,4 +456,32 @@ class LoginE2ETest : ParentComposeTest() {
         }
     }
 
+    private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
+
+        Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
+
+        if (lastSchoolSaved) {
+            Log.d(STEP_TAG, "Click 'Find Another School' button.")
+            loginLandingPage.clickFindAnotherSchoolButton()
+        } else {
+            Log.d(STEP_TAG, "Click 'Find My School' button.")
+            loginLandingPage.clickFindMySchoolButton()
+        }
+
+        Log.d(STEP_TAG, "Enter domain: '${user.domain}'.")
+        loginFindSchoolPage.enterDomain(user.domain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+        loginSignInPage.loginAs(user)
+    }
+
+    private fun loginWithLastSavedSchool(user: CanvasUserApiModel) {
+
+        Log.d(STEP_TAG, "Click on last saved school's button.")
+        loginLandingPage.clickOnLastSavedSchoolButton()
+
+        Log.d(STEP_TAG, "Login with '${user.name}' user.")
+        loginSignInPage.loginAs(user)
+    }
 }

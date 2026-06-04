@@ -16,9 +16,9 @@
 
 package com.instructure.teacher.di.feature
 
-import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.todo.DefaultTodoHomeScreenWidgetUpdater
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoHomeScreenWidgetUpdater
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
-import com.instructure.teacher.features.dashboard.widget.todo.TeacherTodoWidgetBehavior
 import com.instructure.teacher.features.dashboard.widget.todo.TeacherTodoWidgetRouter
 import dagger.Binds
 import dagger.Module
@@ -33,5 +33,5 @@ abstract class TodoWidgetModule {
     abstract fun bindTodoWidgetRouter(impl: TeacherTodoWidgetRouter): TodoWidgetRouter
 
     @Binds
-    abstract fun bindTodoWidgetBehavior(impl: TeacherTodoWidgetBehavior): TodoWidgetBehavior
+    abstract fun bindTodoHomeScreenWidgetUpdater(impl: DefaultTodoHomeScreenWidgetUpdater): TodoHomeScreenWidgetUpdater
 }

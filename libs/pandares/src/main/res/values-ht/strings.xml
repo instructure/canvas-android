@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Ou paka fè aksyon sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="conversationArchived">Konvèsasyon an achive</string>
     <string name="conversationUnarchived">Konvèsasyon an dezachive</string>
+    <string name="conversationMarkedAsRead">Konvèsasyon make kòm li</string>
+    <string name="conversationMarkedAsUnread">Konvèsasyon make kòm poko li</string>
     <string name="messageDeleted">Mesaj Efase</string>
     <string name="messageDeletedFailed">Enposib pou efase mesaj</string>
     <string name="conversationDeleted">Konvèsasyon elimine</string>

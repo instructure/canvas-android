@@ -24,9 +24,9 @@ import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.matchToolbarText
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.matchToolbarText
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage

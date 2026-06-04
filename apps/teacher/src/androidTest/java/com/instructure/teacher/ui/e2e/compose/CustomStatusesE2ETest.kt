@@ -6,7 +6,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CustomStatusApi
 import com.instructure.dataseeding.api.DifferentiationTagsApi

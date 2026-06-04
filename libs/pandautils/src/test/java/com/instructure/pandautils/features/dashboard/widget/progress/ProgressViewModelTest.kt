@@ -16,24 +16,25 @@
 
 package com.instructure.pandautils.features.dashboard.widget.progress
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -41,7 +42,6 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.util.UUID
@@ -53,7 +53,6 @@ class ProgressViewModelTest {
     private val observeSyncProgressUseCase: ObserveSyncProgressUseCase = mockk(relaxed = true)
     private val dismissUploadUseCase: DismissUploadUseCase = mockk(relaxed = true)
     private val dismissSyncProgressUseCase: DismissSyncProgressUseCase = mockk(relaxed = true)
-    private val progressWidgetRouter: ProgressWidgetRouter = mockk(relaxed = true)
     private val courseRepository: CourseRepository = mockk(relaxed = true)
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
@@ -100,12 +99,11 @@ class ProgressViewModelTest {
     }
 
     @Test
-    fun `Upload click for succeeded assignment upload navigates to submission details`() = runTest {
+    fun `Upload click for succeeded assignment upload emits navigation event`() = runTest {
         val course = Course(id = 456L)
         coEvery { courseRepository.getCourse(456L, false) } returns DataResult.Success(course)
 
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(
             state = UploadState.SUCCEEDED,
             courseId = 456L,
@@ -113,20 +111,30 @@ class ProgressViewModelTest {
             attemptId = 1L
         )
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
 
         coVerify { dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString()) }
-        verify { progressWidgetRouter.navigateToSubmissionDetails(activity, course, 789L, 1L) }
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.NavigateToSubmissionDetails
+        assertEquals(course, event.course)
+        assertEquals(789L, event.assignmentId)
+        assertEquals(1L, event.attemptId)
+
+        job.cancel()
     }
 
     @Test
-    fun `Upload click for succeeded file upload navigates to my files`() = runTest {
+    fun `Upload click for succeeded file upload emits navigation event`() = runTest {
         val user = User(id = 123L)
         every { apiPrefs.user } returns user
 
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(
             state = UploadState.SUCCEEDED,
             courseId = null,
@@ -135,19 +143,28 @@ class ProgressViewModelTest {
             folderId = 999L
         )
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
 
         coVerify { dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString()) }
-        verify { progressWidgetRouter.navigateToMyFiles(activity, user, 999L) }
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.NavigateToMyFiles
+        assertEquals(user, event.user)
+        assertEquals(999L, event.folderId)
+
+        job.cancel()
     }
 
     @Test
-    fun `Upload click for succeeded upload with failed course fetch opens progress dialog`() = runTest {
+    fun `Upload click for succeeded upload with failed course fetch emits open progress dialog event`() = runTest {
         coEvery { courseRepository.getCourse(456L, false) } returns DataResult.Fail()
 
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(
             state = UploadState.SUCCEEDED,
             courseId = 456L,
@@ -155,16 +172,24 @@ class ProgressViewModelTest {
             attemptId = 1L
         )
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { progressWidgetRouter.openProgressDialog(activity, item.workerId) }
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.OpenProgressDialog
+        assertEquals(item.workerId, event.workerId)
+
+        job.cancel()
     }
 
     @Test
-    fun `Upload click for succeeded upload with no destination opens progress dialog`() = runTest {
+    fun `Upload click for succeeded upload with no destination emits open progress dialog event`() = runTest {
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(
             state = UploadState.SUCCEEDED,
             courseId = null,
@@ -173,35 +198,60 @@ class ProgressViewModelTest {
             folderId = null
         )
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
 
         coVerify { dashboardFileUploadDao.deleteByWorkerId(item.workerId.toString()) }
-        verify { progressWidgetRouter.openProgressDialog(activity, item.workerId) }
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.OpenProgressDialog
+        assertEquals(item.workerId, event.workerId)
+
+        job.cancel()
     }
 
     @Test
-    fun `Upload click for uploading state opens progress dialog`() = runTest {
+    fun `Upload click for uploading state emits open progress dialog event`() = runTest {
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(state = UploadState.UPLOADING)
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { progressWidgetRouter.openProgressDialog(activity, item.workerId) }
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.OpenProgressDialog
+        assertEquals(item.workerId, event.workerId)
+
+        job.cancel()
     }
 
     @Test
-    fun `Upload click for failed state opens progress dialog`() = runTest {
+    fun `Upload click for failed state emits open progress dialog event`() = runTest {
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
         val item = createUploadItem(state = UploadState.FAILED)
 
-        viewModel.uiState.value.onUploadClick(activity, item)
-        testScheduler.advanceUntilIdle()
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { progressWidgetRouter.openProgressDialog(activity, item.workerId) }
+        viewModel.uiState.value.onUploadClick(item)
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Progress.OpenProgressDialog
+        assertEquals(item.workerId, event.workerId)
+
+        job.cancel()
     }
 
     @Test
@@ -210,19 +260,27 @@ class ProgressViewModelTest {
         val item = createUploadItem()
 
         viewModel.uiState.value.onUploadDismiss(item)
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         coVerify { dismissUploadUseCase(item.workerId) }
     }
 
     @Test
-    fun `Sync click opens sync progress screen`() = runTest {
+    fun `Sync click emits open sync progress event`() = runTest {
         val viewModel = getViewModel()
-        val activity: FragmentActivity = mockk(relaxed = true)
 
-        viewModel.uiState.value.onSyncClick(activity)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Progress>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
 
-        verify { progressWidgetRouter.openSyncProgress(activity) }
+        viewModel.uiState.value.onSyncClick()
+        advanceUntilIdle()
+
+        assertEquals(1, navigationEvents.size)
+        assertEquals(DashboardNavigationEvent.Progress.OpenSyncProgress, navigationEvents[0])
+
+        job.cancel()
     }
 
     @Test
@@ -230,7 +288,7 @@ class ProgressViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onSyncDismiss()
-        testScheduler.advanceUntilIdle()
+        advanceUntilIdle()
 
         coVerify { dismissSyncProgressUseCase() }
     }
@@ -277,7 +335,6 @@ class ProgressViewModelTest {
         observeSyncProgressUseCase,
         dismissUploadUseCase,
         dismissSyncProgressUseCase,
-        progressWidgetRouter,
         courseRepository,
         dashboardFileUploadDao,
         apiPrefs

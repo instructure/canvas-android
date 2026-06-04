@@ -22,27 +22,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
-import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.HorizonDivider
+import com.instructure.horizon.features.aiassistant.aiinformation.AiInformationScreen
 
 @Composable
 fun AiAssistScaffold(
     navController: NavHostController,
     onClearChatHistory: () -> Unit,
     onDismiss: () -> Unit,
-    inputTextValue: TextFieldValue? = null,
-    onInputTextChanged: ((TextFieldValue) -> Unit)? = null,
-    onInputTextSubmitted: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable (Modifier) -> Unit,
 ) {
+    var showAiInformation by rememberSaveable { mutableStateOf(false) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -61,28 +59,18 @@ fun AiAssistScaffold(
             } else {
                 null
             },
+            onInfoPressed = { showAiInformation = true },
             modifier = Modifier
-                .padding(horizontal = 16.dp)
         )
 
-        HorizonDivider(color = HorizonColors.Surface.pagePrimary())
-        HorizonSpace(SpaceSize.SPACE_16)
+        content(Modifier
+            .weight(1f)
+            .padding(horizontal = 24.dp))
+    }
 
-        content(Modifier.weight(1f).padding(horizontal = 24.dp))
-
-        if (inputTextValue != null && onInputTextChanged != null && onInputTextSubmitted != null) {
-            val focusManager = LocalFocusManager.current
-            AiAssistInput(
-                value = inputTextValue,
-                onValueChange = { onInputTextChanged(it) },
-                onSubmitPressed = {
-                    focusManager.clearFocus()
-                    onInputTextSubmitted()
-                },
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 8.dp, bottom = 24.dp)
-            )
-        }
+    if (showAiInformation) {
+        AiInformationScreen(
+            onDismiss = { showAiInformation = false },
+        )
     }
 }

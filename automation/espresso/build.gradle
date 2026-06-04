@@ -187,6 +187,8 @@ dependencies {
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
+
+    implementation Libs.MLKIT_DOCUMENT_SCANNER
 }
 
 

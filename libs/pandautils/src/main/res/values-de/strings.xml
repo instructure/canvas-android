@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Diese/r Studierende*r hat noch nichts abgegeben.</string>
     <string name="locked">Gesperrt</string>
     <string name="lockedSubtext">Diese Aufgabe wird gesperrt bis %1$s um %2$s.</string>
+    <string name="closedSubtext">Diese Aufgabe wurde am %1$s um %2$s gesperrt.</string>
     <string name="chooseFile">Eine Datei auswählen</string>
     <string name="chooseFileSubtext">Hängen Sie eine Datei an Ihre Abgabe an, indem Sie unten auf eine der Optionen tippen.</string>
     <string name="chooseFileForUploadSubtext">Wählen Sie eine Datei aus, indem Sie auf eine der Optionen unten tippen</string>

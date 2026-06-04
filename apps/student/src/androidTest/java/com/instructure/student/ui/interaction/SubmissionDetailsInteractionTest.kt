@@ -38,9 +38,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.RubricCriterion
-import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.dataseeding.model.RubricCriterion
+import com.instructure.dataseeding.model.RubricCriterionRating
 import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -155,7 +155,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
                 description = "Description of criterion",
                 longDescription = "0, 3, 7 or 10 points",
                 points = 10.0,
-                ratings = mutableListOf(
+                ratings = listOf(
                         RubricCriterionRating(id="1",points=0.0,description="No Marks", longDescription = "Really?"),
                         RubricCriterionRating(id="2",points=3.0,description="Meh", longDescription = "You're better than this!"),
                         RubricCriterionRating(id="3",points=7.0,description="Passable", longDescription = "Getting there!"),

@@ -17,6 +17,7 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -148,16 +149,22 @@ class HtmlContentFormatter(
         }
     }
 
-    private fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
+    @VisibleForTesting
+    internal fun iframeWithLink(srcUrl: String, iframe: String, context: Context): String {
+        if (!isSafeHttpUrl(srcUrl)) return iframe
         val buttonText = context.getString(R.string.loadFullContent)
-        val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=\'$srcUrl\'\">$buttonText</div></p>"
+        val encodedUrl = encodeForJsContext(srcUrl)
+        val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href=decodeURIComponent('$encodedUrl')\">$buttonText</div></p>"
 
         return iframe + htmlButton
     }
 
-    private fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
+    @VisibleForTesting
+    internal fun iframeWithGoogleDocsButton(srcUrl: String, iframe: String, buttonText: String): String {
+        if (!isSafeHttpUrl(srcUrl)) return iframe
+        val encodedUrl = encodeForJsContext(srcUrl)
         val button = "</br><p><div class=\"lti_button\" onClick=\"googleDocs.onGoogleDocsButtonPressed('%s')\">%s</div></p>"
-        val htmlButton = String.format(button, srcUrl, buttonText)
+        val htmlButton = String.format(button, encodedUrl, buttonText)
         return iframe + htmlButton
     }
 
@@ -172,12 +179,30 @@ class HtmlContentFormatter(
         }
     }
 
-    private fun iframeWithStudioEmbed(immersiveUrl: String, iframe: String): String {
-        val escapedUrl = immersiveUrl.replace("&", "&amp;")
+    @VisibleForTesting
+    internal fun iframeWithStudioEmbed(immersiveUrl: String, iframe: String): String {
+        if (!isSafeHttpUrl(immersiveUrl)) return iframe
+        val encodedUrl = encodeForJsContext(immersiveUrl)
 
-        val htmlButton = "</br><p><div class=\"studio_embed\" onClick=\"location.href='$escapedUrl'\"></div></p>"
+        val htmlButton = "</br><p><div class=\"studio_embed\" onClick=\"location.href=decodeURIComponent('$encodedUrl')\"></div></p>"
         return iframe + htmlButton
     }
+
+    /**
+     * Defense-in-depth scheme gate before splicing a URL into a JS string context. The server is
+     * expected to reject non-http(s) iframe `src` values, but we re-check here so a single sanitizer
+     * miss does not turn `location.href=decodeURIComponent('...')` into script execution.
+     */
+    private fun isSafeHttpUrl(url: String): Boolean =
+        url.startsWith("http://", ignoreCase = true) || url.startsWith("https://", ignoreCase = true)
+
+    /**
+     * Percent-encode a URL for splicing into a JS string literal. `+` is replaced with `%20` so the
+     * encoded form survives both `decodeURIComponent` (which does not decode `+`) and
+     * `URLDecoder.decode` (which decodes both) — keeping all three iframe-button helpers consistent.
+     */
+    private fun encodeForJsContext(url: String): String =
+        URLEncoder.encode(url, "UTF-8").replace("+", "%20")
 
     private fun extractVideoTitle(iframe: String): String? {
         // Try to find title attribute: title="Video player for filename.mp4"

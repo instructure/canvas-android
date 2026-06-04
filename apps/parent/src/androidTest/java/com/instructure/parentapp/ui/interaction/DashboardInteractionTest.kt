@@ -27,7 +27,7 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.init
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R
 import com.instructure.parentapp.utils.ParentComposeTest

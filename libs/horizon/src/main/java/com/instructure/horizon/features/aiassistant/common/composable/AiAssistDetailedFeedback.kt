@@ -74,7 +74,7 @@ fun AiAssistDetailedFeedback(
 ) {
     Column(
         modifier = modifier
-            .clip(HorizonCornerRadius.level2)
+            .clip(HorizonCornerRadius.level1_5)
             .background(Color.White.copy(alpha = 0.1f))
             .padding(16.dp)
     ) {

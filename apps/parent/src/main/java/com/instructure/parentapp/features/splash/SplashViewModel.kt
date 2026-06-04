@@ -25,16 +25,15 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.domain.usecase.splash.SetupPendoTrackingUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.SHA256
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import sdk.pendo.io.Pendo
 import javax.inject.Inject
 
 
@@ -45,6 +44,7 @@ class SplashViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val colorKeeper: ColorKeeper,
     private val featureFlagProvider: FeatureFlagProvider,
+    private val setupPendoTrackingUseCase: SetupPendoTrackingUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -83,19 +83,7 @@ class SplashViewModel @Inject constructor(
                 }
             }
 
-            val sendUsageMetrics = repository.getSendUsageMetrics()
-            if (sendUsageMetrics) {
-                val userWithIds = repository.getSelfWithUuid()
-                val visitorData = mapOf(
-                    "locale" to apiPrefs.effectiveLocale,
-                )
-                val accountData = mapOf(
-                    "surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag()
-                )
-                Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
-            } else {
-                Pendo.endSession()
-            }
+            setupPendoTrackingUseCase(Unit)
 
             val students = repository.getStudents()
             if (students.isEmpty() && apiPrefs.canBecomeUser == false) {

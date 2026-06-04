@@ -18,7 +18,7 @@ package com.instructure.student.ui.rendertests.renderpages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withAlpha
-import com.instructure.canvas.espresso.assertIsRefreshing
+import com.instructure.canvas.espresso.utils.assertIsRefreshing
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertGone
