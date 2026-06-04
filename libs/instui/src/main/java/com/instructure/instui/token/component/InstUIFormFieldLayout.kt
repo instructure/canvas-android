@@ -37,7 +37,7 @@ object InstUIFormFieldLayout {
     val readonlyTextColor @Composable get() = InstUISemanticColors.Text.muted()
     val asteriskColor @Composable get() = InstUISemanticColors.Text.error()
     val fontFamily = InstUILayoutTypography.FontFamily.Base.base
-    val fontWeight = InstUILayoutTypography.FontWeight.Body.strong
+    val fontWeight = InstUILayoutTypography.FontWeight.Body.base
     val fontSize = 16.sp
     val lineHeight = InstUILayoutTypography.LineHeight.Label.base
     val gapPrimitives = InstUILayoutSizes.Spacing.Gap.inputElements

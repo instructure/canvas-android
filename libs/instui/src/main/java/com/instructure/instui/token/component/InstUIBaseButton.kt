@@ -175,7 +175,7 @@ object InstUIBaseButton {
     val borderRadiusSm = InstUILayoutSizes.BorderRadius.Sm.sm
     val borderWidth = InstUILayoutSizes.BorderWidth.Interactive.base
     val fontFamily = InstUILayoutTypography.FontFamily.Base.base
-    val fontWeight = InstUILayoutTypography.FontWeight.Body.strong
+    val fontWeight = InstUILayoutTypography.FontWeight.Interactive.interactive
     val gapButtonContentLg = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
     val gapButtonContentMd = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
     val gapButtonContentSm = InstUILayoutSizes.Spacing.SpaceXs.spaceXs

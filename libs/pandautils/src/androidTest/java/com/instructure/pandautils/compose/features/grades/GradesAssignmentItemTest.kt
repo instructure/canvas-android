@@ -28,8 +28,8 @@ import com.instructure.composetest.hasDrawable
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
-import com.instructure.pandautils.features.grades.AssignmentItem
 import com.instructure.pandautils.features.grades.AssignmentUiState
+import com.instructure.pandautils.features.grades.components.GradesAssignmentItem
 import com.instructure.pandautils.utils.DisplayGrade
 import org.junit.Rule
 import org.junit.Test
@@ -48,7 +48,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textDark)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState(),
                 actionHandler = {},
                 contextColor = android.graphics.Color.RED,
@@ -79,7 +79,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textSuccess)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
@@ -102,7 +102,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textDanger)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     submissionStateLabel = SubmissionStateLabel.Missing
                 ),
@@ -125,7 +125,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textWarning)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     submissionStateLabel = SubmissionStateLabel.Late
                 ),
@@ -148,7 +148,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textSuccess)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     submissionStateLabel = SubmissionStateLabel.Graded
                 ),
@@ -171,7 +171,7 @@ class GradesAssignmentItemTest {
 
         composeTestRule.setContent {
             labelColor = colorResource(id = R.color.textInfo)
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     submissionStateLabel = SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status")
                 ),
@@ -191,7 +191,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreDisplayedWhenEnabled() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = 10.0,
                     displayGrade = DisplayGrade("10/15", "10 out of 15"),
@@ -215,7 +215,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreNotDisplayedWhenDisabled() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = 10.0,
                     displayGrade = DisplayGrade("10/15", "10 out of 15"),
@@ -239,7 +239,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreNotDisplayedWhenNull() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = 10.0,
                     displayGrade = DisplayGrade("10/15", "10 out of 15"),
@@ -263,7 +263,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreDisplayedWithoutExistingGrade() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = null,
                     displayGrade = DisplayGrade("", ""),
@@ -283,7 +283,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreWithZeroScore() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = 0.0,
                     displayGrade = DisplayGrade("0/15", "0 out of 15"),
@@ -307,7 +307,7 @@ class GradesAssignmentItemTest {
     @Test
     fun assertWhatIfScoreWithFullScore() {
         composeTestRule.setContent {
-            AssignmentItem(
+            GradesAssignmentItem(
                 uiState = getUiState().copy(
                     score = 15.0,
                     displayGrade = DisplayGrade("15/15", "15 out of 15"),

@@ -48,6 +48,7 @@ object Versions {
     const val LIVEDATA = "1.9.0"
     const val REORDERABLE = "2.4.0"
     const val MLKIT_DOCUMENT_SCANNER = "16.0.0"
+    const val JSOUP = "1.18.3"
 }
 
 object Libs {
@@ -173,8 +174,9 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
+    const val JSOUP = "org.jsoup:jsoup:${Versions.JSOUP}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.9.+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.9.3.8651"
 
     /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"

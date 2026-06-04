@@ -20,16 +20,20 @@ import android.graphics.Bitmap
 import android.media.ThumbnailUtils
 import android.os.Handler
 import android.os.Looper
+import android.util.Base64
 import android.util.Size
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.DownloadState
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.StudioApi
+import com.instructure.canvasapi2.apis.StudioAuthAPI
 import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.StudioCaption
 import com.instructure.canvasapi2.models.StudioLoginSession
@@ -58,7 +62,9 @@ class StudioSync(
     private val studioApi: StudioApi,
     private val studioMediaProgressDao: StudioMediaProgressDao,
     private val fileDownloadApi: FileDownloadAPI,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val domainServicesAuthApi: DomainServicesAuthenticationAPI,
+    private val studioAuthApi: StudioAuthAPI
 ) {
 
     private var dummyProgressId: Long? = null
@@ -81,26 +87,76 @@ class StudioSync(
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
-        val launchDefinitions = launchDefinitionsApi.getLaunchDefinitions(RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)).dataOrNull.orEmpty()
-        val studioLaunchDefinition = launchDefinitions.firstOrNull {
-            it.domain == LaunchDefinition.STUDIO_DOMAIN
+        val studioLaunchDefinition = getStudioLaunchDefinition() ?: return null
+        val studioBaseUrl = studioLaunchDefinition.url?.let {
+            val url = URL(it)
+            "${url.protocol}://${url.host}"
         } ?: return null
 
+        return authenticateStudioWithEndpoint(studioBaseUrl)
+            ?: authenticateStudioWithWebView(studioLaunchDefinition, studioBaseUrl)
+    }
+
+    private suspend fun getStudioLaunchDefinition(): LaunchDefinition? {
+        val launchDefinitions = launchDefinitionsApi.getLaunchDefinitions(
+            RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+        ).dataOrNull.orEmpty()
+        return launchDefinitions.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
+    }
+
+    private suspend fun authenticateStudioWithEndpoint(studioBaseUrl: String): StudioLoginSession? {
+        return try {
+            val jwtParams = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+            val jwtResponse = domainServicesAuthApi.getDomainServiceAuthentication(
+                audience = null,
+                canvasAudience = false,
+                workflows = DomainServicesWorkflow(listOf(CANVAS_TOKEN_EXCHANGE_WORKFLOW)),
+                params = jwtParams
+            ).dataOrNull ?: return null
+
+            val decodedJwt = String(Base64.decode(jwtResponse.token, Base64.DEFAULT), Charsets.UTF_8)
+
+            val exchangeUrl = "$studioBaseUrl/api/internal/canvas_token_exchange?force_synced=true"
+            val exchangeParams = RestParams(
+                isForceReadFromNetwork = true,
+                shouldIgnoreToken = true,
+                shouldLoginOnTokenError = false
+            )
+            val exchangeResponse = studioAuthApi.exchangeCanvasToken(
+                url = exchangeUrl,
+                authorization = "Bearer $decodedJwt",
+                params = exchangeParams
+            ).dataOrNull ?: return null
+
+            StudioLoginSession(
+                userId = "\"${exchangeResponse.userId}\"",
+                token = "\"${exchangeResponse.token}\"",
+                baseUrl = studioBaseUrl
+            )
+        } catch (e: Exception) {
+            firebaseCrashlytics.recordException(e)
+            null
+        }
+    }
+
+    private suspend fun authenticateStudioWithWebView(
+        studioLaunchDefinition: LaunchDefinition,
+        studioBaseUrl: String
+    ): StudioLoginSession? {
         val studioUrl = "${apiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=${studioLaunchDefinition.url}"
-        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(studioUrl, RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)).dataOrNull ?: return null
+        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(
+            studioUrl,
+            RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+        ).dataOrNull ?: return null
 
         return studioLti.url?.let {
             val webView = withTimeoutOrNull(10000) { loadUrlIntoHeadlessWebView(context, it) }
             if (webView == null) return null
 
-            // Get base url for Studio api calls
-            val url = URL(studioLaunchDefinition.url)
-            val baseUrl = "${url.protocol}://${url.host}"
-
             poll(block = {
                 val token = webView.evaluateJavascriptSuspend("sessionStorage.getItem('token')")
                 val userId = webView.evaluateJavascriptSuspend("sessionStorage.getItem('userId')")
-                StudioLoginSession(userId, token, baseUrl)
+                StudioLoginSession(userId, token, studioBaseUrl)
             }, validate = {
                 it.userId != "null" && it.token != "null"
             })
@@ -312,6 +368,8 @@ class StudioSync(
         return originalFile
     }
 }
+
+private const val CANVAS_TOKEN_EXCHANGE_WORKFLOW = "Api::Internal::CanvasTokenExchangeController"
 
 data class StudioVideoSyncData(
     val progressId: Long,

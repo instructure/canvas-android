@@ -1,10 +1,10 @@
 # InstUI Token Generator
 
-This directory contains scripts to generate Jetpack Compose design token files from the [instructure-ui](https://github.com/instructure/instructure-ui) design system.
+This directory contains scripts to generate Jetpack Compose design token files from the [instructure-design-tokens](https://github.com/instructure/instructure-design-tokens) package.
 
 ## Overview
 
-The generator downloads design tokens from the instructure-ui repository and uses [Style Dictionary](https://styledictionary.com/) to transform them into Kotlin files for Jetpack Compose. It produces three layers of tokens:
+The generator reads design tokens from the `@instructure/instructure-design-tokens` npm package (pinned to a specific commit SHA in `package.json`) and uses [Style Dictionary](https://styledictionary.com/) to transform them into Kotlin files for Jetpack Compose. Icons are still downloaded from the [instructure-ui](https://github.com/instructure/instructure-ui) repository (pinned to `INSTUI_ICONS_VERSION` in `build-instui.js`). It produces three layers of tokens:
 
 1. **Primitives** - Raw design values (colors, sizes, weights, fonts, opacities)
 2. **Semantics** - Theme-aware tokens that reference primitives (light/dark colors, layout, typography)
@@ -62,14 +62,21 @@ npm install
 npm run build
 ```
 
-## Updating InstUI Version
+## Updating Tokens
 
-To update to a newer version of instructure-ui:
+To update to a newer version of the design tokens:
 
-1. Edit `build-instui.js` and change `INSTUI_VERSION`
-2. Run the generator
+1. Edit `package.json` and bump the commit SHA on the
+   `@instructure/instructure-design-tokens` dependency
+   (`github:instructure/instructure-design-tokens#<sha>`)
+2. Run the generator (it will reinstall the package automatically)
 3. Verify the generated files
 4. Commit the changes
+
+## Updating Icons Version
+
+Icons are still pulled from `instructure-ui`. To update them, bump
+`INSTUI_ICONS_VERSION` in `build-instui.js` and re-run the generator.
 
 ## Font Files
 

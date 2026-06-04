@@ -182,6 +182,11 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
         exoAgent.prepare(binding.submissionMediaPlayerView)
     }
 
+    override fun onPause() {
+        super.onPause()
+        exoAgent.pause()
+    }
+
     override fun onDetach() {
         exoAgent.release()
         super.onDetach()

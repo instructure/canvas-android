@@ -5,6 +5,12 @@ name: Offline E2E Tests (On-Demand)
 
 on:
   workflow_dispatch:
+    inputs:
+      record_video:
+        description: 'Enable FTL video recording (for investigation reruns)'
+        required: false
+        type: boolean
+        default: false
 
 run-name: Offline E2E student @ ${{ github.ref_name }}
 
@@ -21,6 +27,7 @@ jobs:
     with:
       app-type-lower: student
       flank-config: flank_e2e_offline.yml
+      record_video: ${{ inputs.record_video }}
     secrets: inherit
 
   slack-notification:

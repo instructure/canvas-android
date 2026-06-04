@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -36,11 +35,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.instructure.instui.token.component.InstUIPill
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.component.InstUIPill
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.Warning
+import com.instructure.instui.token.icon.triangleAlert
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -102,7 +101,7 @@ private val PillTextStyle = TextStyle(
  * Usage:
  * ```
  * Pill(text = "Missing", variant = PillVariant.Error)
- * Pill(text = "Missing", variant = PillVariant.Error, icon = InstUIIcons.Line.Warning)
+ * Pill(text = "Missing", variant = PillVariant.Error, icon = InstUIIcons.triangleAlert)
  * ```
  */
 @Composable
@@ -186,7 +185,7 @@ private fun PillWithIconPreview() {
             Pill(
                 text = "Missing",
                 variant = PillVariant.Error,
-                icon = InstUIIcons.Line.Warning,
+                icon = InstUIIcons.triangleAlert,
             )
         }
     }

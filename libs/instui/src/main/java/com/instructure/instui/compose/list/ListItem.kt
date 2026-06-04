@@ -43,18 +43,16 @@ import com.instructure.instui.compose.indicator.IconColor
 import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
-import com.instructure.instui.compose.text.Heading
-import com.instructure.instui.compose.text.HeadingLevel
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIHeading
-import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.ArrowOpenDown
-import com.instructure.instui.token.icon.line.Assignment
-import com.instructure.instui.token.icon.line.Quiz
-import com.instructure.instui.token.icon.line.Warning
+import com.instructure.instui.token.icon.chevronDown
+import com.instructure.instui.token.icon.clipboardCheck
+import com.instructure.instui.token.icon.filePenLine
+import com.instructure.instui.token.icon.triangleAlert
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
+import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 
 // ---------------------------------------------------------------------------
 // Leading variants (maps to Figma ListItem.Leading modes)
@@ -147,7 +145,7 @@ sealed class ListItemTrailing {
  * ListItem(
  *     title = "Assignment name",
  *     subtext1 = "Due Oct 3, 2023 9:41",
- *     leading = ListItemLeading.Icon(InstUIIcons.Line.Assignment),
+ *     leading = ListItemLeading.Icon(InstUIIcons.filePenLine),
  *     trailing = ListItemTrailing.TextOnly(data = "90/100"),
  *     pill = { Pill(text = "Missing", variant = PillVariant.Error) },
  * )
@@ -338,7 +336,7 @@ private fun TrailingContent(trailing: ListItemTrailing) {
         }
         is ListItemTrailing.Accordion -> {
             Icon(
-                imageVector = InstUIIcons.Line.ArrowOpenDown,
+                imageVector = InstUIIcons.chevronDown,
                 size = IconSize.Small,
             )
         }
@@ -359,8 +357,8 @@ private fun ListItemComplexPreview() {
                 text = "Text",
                 subtext1 = "Subtext 1",
                 subtext2 = "Subtext 2",
-                leading = ListItemLeading.Icon(InstUIIcons.Line.Assignment),
-                pill = { Pill(text = "Missing", variant = PillVariant.Error, icon = InstUIIcons.Line.Warning) },
+                leading = ListItemLeading.Icon(InstUIIcons.filePenLine),
+                pill = { Pill(text = "Missing", variant = PillVariant.Error, icon = InstUIIcons.triangleAlert) },
                 score = {
                     Text(text = "-/100", style = InstUITextTokens.contentImportant, color = Color(0xFF00828E))
                 },
@@ -380,7 +378,7 @@ private fun ListItemSimplePreview() {
                 title = "Title",
                 text = "Text",
                 subtext1 = "Subtext 1",
-                leading = ListItemLeading.Icon(InstUIIcons.Line.Quiz),
+                leading = ListItemLeading.Icon(InstUIIcons.clipboardCheck),
                 trailing = ListItemTrailing.TextOnly(data = "Data"),
             )
         }
@@ -411,7 +409,7 @@ private fun ListItemTrailingModesPreview() {
             ListItem(
                 title = "With Icons",
                 trailing = ListItemTrailing.Icons(
-                    icons = listOf(InstUIIcons.Line.Assignment, InstUIIcons.Line.Quiz),
+                    icons = listOf(InstUIIcons.filePenLine, InstUIIcons.clipboardCheck),
                     data = "Data",
                 ),
             )
@@ -427,7 +425,7 @@ private fun ListItemLeadingModesPreview() {
         Column(modifier = Modifier.background(InstUISemanticColors.Background.base())) {
             ListItem(
                 title = "Icon leading",
-                leading = ListItemLeading.Icon(InstUIIcons.Line.Assignment),
+                leading = ListItemLeading.Icon(InstUIIcons.filePenLine),
             )
             Separator()
             ListItem(

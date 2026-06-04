@@ -109,9 +109,9 @@ object InstUILayoutSizes {
     object Spacing {
         object Gap {
             val sections = InstUISizes.size48
-            val cards_sm = InstUISizes.size16
-            val cards_md = InstUISizes.size24
-            val cards_lg = InstUISizes.size32
+            val cards_sm = InstUISizes.size12
+            val cards_md = InstUISizes.size16
+            val cards_lg = InstUISizes.size24
             val inputs_horizontal = InstUISizes.size12
             val inputs_vertical = InstUISizes.size16
             val inputElements = InstUISizes.size8

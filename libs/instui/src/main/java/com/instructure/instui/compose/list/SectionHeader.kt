@@ -36,8 +36,8 @@ import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIToggleDetails
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.ArrowOpenDown
-import com.instructure.instui.token.icon.line.MiniArrowDown
+import com.instructure.instui.token.icon.chevronDown
+import com.instructure.instui.token.primitives.InstUIColors
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -71,6 +71,7 @@ fun SectionHeader(
 ) {
     Row(
         modifier = modifier
+            .background(InstUISemanticColors.Background.base())
             .fillMaxWidth()
             .clickable(onClick = onClick)
             .padding(
@@ -87,7 +88,7 @@ fun SectionHeader(
             modifier = Modifier.weight(1f),
         )
         Icon(
-            imageVector = InstUIIcons.Line.ArrowOpenDown,
+            imageVector = InstUIIcons.chevronDown,
             size = IconSize.Medium,
             modifier = Modifier.rotate(if (expanded) 180f else 0f),
         )

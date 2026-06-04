@@ -1,1 +1,20 @@
+# Organization-wide ownership declaration - entire mobile team.
+# Superseded by the rules below for the purposes of review assignment.
 * @instructure-internal/mobile
+
+# Default reviewers for all changes in this repository.
+* @hermannakos @tamaskozmer @kristofnemere
+
+# Test and automation ownership.
+# Applies to the automation modules and all standard Android test sources,
+# as well as any file matching the *Test.kt or *Tests.kt naming convention.
+/automation/espresso/** @kdeakinstructure @adamNagy56
+/automation/dataseedingapi/** @kdeakinstructure @adamNagy56
+**/src/test/** @kdeakinstructure @adamNagy56
+**/src/androidTest/** @kdeakinstructure @adamNagy56
+*Test.kt @kdeakinstructure @adamNagy56
+*Tests.kt @kdeakinstructure @adamNagy56
+
+# Horizon module ownership.
+# Takes precedence over the test ownership rules for files within libs/horizon.
+/libs/horizon/** @domonkosadam @andrasmaczak

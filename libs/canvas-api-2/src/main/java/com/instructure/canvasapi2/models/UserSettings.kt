@@ -24,5 +24,6 @@ data class UserSettings(
         const val USAGE_METRICS_TRACK = "track_usage"
         const val USAGE_METRICS_NO_TRACK = "no_track_usage"
         const val USAGE_METRICS_ASK_FOR_CONSENT = "ask_for_consent"
+        const val USAGE_METRICS_ONLY_GUIDE_EVENTS = "only_guide_events"
     }
 }

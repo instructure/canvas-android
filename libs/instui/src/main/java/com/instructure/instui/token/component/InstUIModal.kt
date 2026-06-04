@@ -34,7 +34,7 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
 object InstUIModal {
     object Modal {
         val autoMinWidth = 256.dp
-        val backgroundColor @Composable get() = InstUISemanticColors.Background.container()
+        val backgroundColor @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
         val borderColor @Composable get() = InstUISemanticColors.Stroke.Container.base()
         val inverseBackgroundColor @Composable get() = InstUISemanticColors.Background.dark()
         val inverseBorderColor @Composable get() = InstUISemanticColors.Stroke.Container.dark()
@@ -65,14 +65,14 @@ object InstUIModal {
         val inverseBorderColor @Composable get() = InstUISemanticColors.Stroke.Container.dark()
         val borderRadius = InstUILayoutSizes.BorderRadius.Xl.xl
         val borderWidth = InstUILayoutSizes.BorderWidth.Sm.sm
-        val backgroundColor @Composable get() = InstUISemanticColors.Background.container()
+        val backgroundColor @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
         val inverseBackgroundColor @Composable get() = InstUISemanticColors.Background.dark()
         val padding = InstUILayoutSizes.Spacing.Padding.container_md
         val paddingCompact = InstUILayoutSizes.Spacing.Padding.container_xs
     }
 
     object ModalHeader {
-        val backgroundColor @Composable get() = InstUISemanticColors.Background.container()
+        val backgroundColor @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
         val inverseBackgroundColor @Composable get() = InstUISemanticColors.Background.dark()
         val borderColor @Composable get() = InstUISemanticColors.Stroke.Container.base()
         val inverseBorderColor @Composable get() = InstUISemanticColors.Stroke.Container.dark()

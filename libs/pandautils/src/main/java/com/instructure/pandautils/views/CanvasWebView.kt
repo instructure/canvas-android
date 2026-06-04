@@ -86,6 +86,7 @@ import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.requestWebPermissions
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.video.VideoWebChromeClient
+import instructure.rceditor.HtmlSanitizer
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.MalformedURLException
@@ -234,6 +235,9 @@ class CanvasWebView @JvmOverloads constructor(
                     canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
                 }
             }
+            // TODO(MBL-20032 M3): replace the unconditional accept with allowlist-gating in
+            //  CanvasWebViewClient.shouldInterceptRequest so cookies are only forwarded to
+            //  Canvas/Instructure/configured LTI hosts. Tracked as a follow-up ticket.
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
         }
     }
@@ -636,7 +640,7 @@ class CanvasWebView @JvmOverloads constructor(
         val colors = overrideHtmlFormatColors ?: htmlFormatColors
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
-            .replace("{\$TITLE$}", title ?: "")
+            .replace("{\$TITLE$}", HtmlSanitizer.escapeForHtmlContext(title))
             .replace("{\$BACKGROUND$}", colorResToHexString(colors.backgroundColorRes))
             .replace("{\$COLOR$}", colorResToHexString(colors.textColor))
             .replace("{\$LINK_COLOR$}", colorResToHexString(colors.linkColor))

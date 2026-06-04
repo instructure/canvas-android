@@ -127,4 +127,14 @@ class GetCookieConsentUseCaseTest {
 
         assertEquals(UserSettings.USAGE_METRICS_NO_TRACK, result.usageMetrics)
     }
+
+    @Test
+    fun `passes only_guide_events value through from settings`() = runTest {
+        val settings = UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS)
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(settings)
+
+        val result = useCase(Unit)
+
+        assertEquals(UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS, result.usageMetrics)
+    }
 }

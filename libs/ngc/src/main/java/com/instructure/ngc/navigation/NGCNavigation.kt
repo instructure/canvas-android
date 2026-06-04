@@ -16,23 +16,39 @@
 
 package com.instructure.ngc.navigation
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.graphics.Color
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.instructure.ngc.dashboard.NGCDashboardScreen
-import com.instructure.ngc.splash.SplashScreen
-import com.instructure.ngc.splash.SplashViewModel
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.models.Course
+import com.instructure.instui.compose.InstUITheme
+import com.instructure.ngc.features.coursehome.CourseHomeScreen
+import com.instructure.ngc.features.coursehome.CourseHomeViewModel
+import com.instructure.ngc.features.dashboard.NGCDashboardScreen
+import com.instructure.ngc.features.splash.SplashScreen
+import com.instructure.ngc.features.splash.SplashViewModel
+import com.instructure.pandautils.features.grades.EXPERIENCE_KEY
+import com.instructure.pandautils.features.grades.Experience
+import com.instructure.pandautils.utils.ColorKeeper
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NGCNavigationRoute(val route: String) {
     data object Splash : NGCNavigationRoute("splash")
     data object Dashboard : NGCNavigationRoute("dashboard")
+    data object CourseHome : NGCNavigationRoute("courses/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
+        fun createRoute(courseId: Long) = "courses/$courseId"
+    }
 }
 
 @Composable
@@ -61,6 +77,36 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
 
         composable(NGCNavigationRoute.Dashboard.route) {
             NGCDashboardScreen(navController)
+        }
+
+        composable(
+            route = NGCNavigationRoute.CourseHome.route,
+            arguments = listOf(
+                navArgument(CourseHomeViewModel.ARG_COURSE_ID) { type = NavType.LongType },
+                navArgument(EXPERIENCE_KEY) {
+                    type = NavType.StringType
+                    defaultValue = Experience.NGC.name
+                },
+            ),
+            deepLinks = listOf(
+                navDeepLink { uriPattern = "https://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "http://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "canvas-courses://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+                navDeepLink { uriPattern = "canvas-student://{domain}/courses/{${CourseHomeViewModel.ARG_COURSE_ID}}" },
+            )
+        ) { backStackEntry ->
+            val courseId = backStackEntry.arguments?.getLong(CourseHomeViewModel.ARG_COURSE_ID) ?: 0L
+            val isDark = isSystemInDarkTheme()
+            val themedColor = remember(courseId) {
+                ColorKeeper.getOrGenerateColor(Course(id = courseId))
+            }
+            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+
+            InstUITheme(courseColor = courseColor) {
+                CourseHomeScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                )
+            }
         }
     }
 }

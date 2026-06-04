@@ -31,12 +31,4 @@ object InstUILayoutConfig {
         val base = InstUIOpacities.opacity100
         val disabled = InstUIOpacities.opacity50
     }
-
-    object VisibleInCanvas {
-        val visibleInCanvas = false
-    }
-
-    object VisibleInRebrand {
-        val visibleInRebrand = true
-    }
 }

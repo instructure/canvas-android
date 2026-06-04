@@ -75,7 +75,7 @@ object InstUISharedTokens {
         object Card {
             val sm = 12.dp
             val md = InstUILayoutSizes.BorderRadius.Container.md
-            val lg = InstUILayoutSizes.BorderRadius.Container.lg
+            val lg = InstUILayoutSizes.BorderRadius.Container.md
 
             object NestedContainer {
                 val sm = InstUILayoutSizes.BorderRadius.Sm.sm
@@ -89,7 +89,7 @@ object InstUISharedTokens {
         /**
          * Box shadow (not directly representable in Compose).
          *   Shadow 1: x={dropShadow.x.elevation1.dropshadow1}, y={dropShadow.y.elevation1.dropshadow1}, blur={dropShadow.blur.elevation1.dropshadow1}, spread={dropShadow.spread.elevation1.dropshadow1}, color={color.dropShadow.shadowColor1}, type=dropShadow
-         *   Shadow 2: x={dropShadow.x.elevation1.dropshadow2}, y={dropShadow.y.elevation1.dropshadow2}, blur={dropShadow.blur.elevation1.dropshadow2}, spread={dropShadow.spread.elevation1.dropshadow2}, color={color.dropShadow.shadowColor2}, type=dropShadow
+         *   Shadow 2: x={dropShadow.x.elevation1.dropshadow1}, y={dropShadow.y.elevation1.dropshadow2}, blur={dropShadow.blur.elevation1.dropshadow2}, spread={dropShadow.spread.elevation1.dropshadow2}, color={color.dropShadow.shadowColor2}, type=dropShadow
          */
         // val elevation1: BoxShadow — not supported in Compose
         /**

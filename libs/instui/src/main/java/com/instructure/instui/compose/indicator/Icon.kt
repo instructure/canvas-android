@@ -19,7 +19,6 @@ package com.instructure.instui.compose.indicator
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.token.component.InstUIIcon
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.Check
-import com.instructure.instui.token.icon.line.Warning
+import com.instructure.instui.token.icon.check
+import com.instructure.instui.token.icon.triangleAlert
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
 /**
@@ -70,9 +69,9 @@ enum class IconColor(val color: @Composable () -> Color) {
  *
  * Usage:
  * ```
- * Icon(imageVector = InstUIIcons.Line.Check)
- * Icon(imageVector = InstUIIcons.Line.Warning, color = IconColor.Error, size = IconSize.Small)
- * Icon(imageVector = InstUIIcons.Line.Lock, tint = courseColor)
+ * Icon(imageVector = InstUIIcons.check)
+ * Icon(imageVector = InstUIIcons.triangleAlert, color = IconColor.Error, size = IconSize.Small)
+ * Icon(imageVector = InstUIIcons.lock, tint = courseColor)
  * ```
  */
 @Composable
@@ -126,12 +125,12 @@ private fun IconSizesPreview() {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Icon(InstUIIcons.Line.Check, size = IconSize.XSmall)
-            Icon(InstUIIcons.Line.Check, size = IconSize.Small)
-            Icon(InstUIIcons.Line.Check, size = IconSize.Medium)
-            Icon(InstUIIcons.Line.Check, size = IconSize.Large)
-            Icon(InstUIIcons.Line.Check, size = IconSize.XLarge)
-            Icon(InstUIIcons.Line.Check, size = IconSize.XXLarge)
+            Icon(InstUIIcons.check, size = IconSize.XSmall)
+            Icon(InstUIIcons.check, size = IconSize.Small)
+            Icon(InstUIIcons.check, size = IconSize.Medium)
+            Icon(InstUIIcons.check, size = IconSize.Large)
+            Icon(InstUIIcons.check, size = IconSize.XLarge)
+            Icon(InstUIIcons.check, size = IconSize.XXLarge)
         }
     }
 }
@@ -147,12 +146,12 @@ private fun IconColorsPreview() {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Base)
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Error)
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Warning)
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Success)
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Info)
-            Icon(InstUIIcons.Line.Warning, color = IconColor.Muted)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Base)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Error)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Warning)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Success)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Info)
+            Icon(InstUIIcons.triangleAlert, color = IconColor.Muted)
         }
     }
 }

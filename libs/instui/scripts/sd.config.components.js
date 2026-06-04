@@ -571,6 +571,13 @@ function literalToKotlin(value, type) {
     return `"${value}"`
   }
 
+  if (type === 'color') {
+    // Hex literal in source JSON (e.g. "#fff", "#ffffff", "#ffffffaa")
+    const hex = hexColorToArgb(value)
+    if (hex !== null) return `Color(0x${hex})`
+    return null
+  }
+
   if (type === 'other') {
     // CSS keywords and multi-value shorthands don't map to Compose
     const cssKeywords = ['currentcolor', 'inherit', 'initial', 'unset', 'auto', 'none']
@@ -834,6 +841,27 @@ function addImportsForLiteralType(type, imports) {
   if (type === 'text') {
     imports.add('com.instructure.instui.BorderStyle')
   }
+  if (type === 'color') {
+    imports.add('androidx.compose.ui.graphics.Color')
+  }
+}
+
+/**
+ * Convert a CSS hex color string to an AARRGGBB uppercase hex string suitable
+ * for `Color(0x${...})`. Accepts #rgb, #rgba, #rrggbb, #rrggbbaa (case
+ * insensitive). Returns null on any other format.
+ */
+function hexColorToArgb(value) {
+  if (typeof value !== 'string') return null
+  const m = value.trim().match(/^#([0-9a-fA-F]{3,8})$/)
+  if (!m) return null
+  let hex = m[1].toUpperCase()
+  // Expand short forms.
+  if (hex.length === 3) hex = hex.split('').map(c => c + c).join('') // RGB  -> RRGGBB
+  if (hex.length === 4) hex = hex.split('').map(c => c + c).join('') // RGBA -> RRGGBBAA
+  if (hex.length === 6) return `FF${hex}`                            // assume opaque
+  if (hex.length === 8) return hex.slice(6) + hex.slice(0, 6)        // RRGGBBAA -> AARRGGBB
+  return null
 }
 
 // ---------------------------------------------------------------------------

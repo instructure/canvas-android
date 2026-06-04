@@ -86,15 +86,18 @@ internal object RCEUtils {
     }
 
     /**
-     * When we do a PUT on the HTML there is often small things that'll cause the HTML to be invalid by the server and
-     * replaced by "&nbsp;". In order to avoid content getting nuked we use these workarounds. It is possible that
-     * the actual error is due to improper encoding on our end.
-     * @param html A valid HTML string
-     * @return A String or null value that has been sanitized.
+     * Prepare RCE-authored HTML for POSTing back to the server. Combines RFC Layer 1 sanitization
+     * (script/event-handler/dangerous-scheme stripping via [HtmlSanitizer.sanitize]) with the
+     * pre-existing server-roundtrip workarounds (rgb→hex, empty span cleanup).
+     *
+     * In practice the editor's `contenteditable` already escapes typed `<` to `&lt;`, so the
+     * sanitizer is a no-op on user typing; its real value is closing the direct-API-POST loophole
+     * the RFC names — i.e., a third-party tool that bypasses the editor and submits raw HTML.
      */
-    fun sanitizeHTML(html: String?): String? {
+    fun sanitizeForServer(html: String?): String? {
         html ?: return null
-        var validated: String = workaroundRbg2Hex(html) ?: return null
+        val cleaned = HtmlSanitizer.sanitize(html)
+        var validated: String = workaroundRbg2Hex(cleaned) ?: return null
         validated = workaroundInvalidSpan(validated) ?: return null
         return validated
     }

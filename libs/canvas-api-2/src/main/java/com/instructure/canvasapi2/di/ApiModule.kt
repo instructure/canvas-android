@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.apis.StudioApi
+import com.instructure.canvasapi2.apis.StudioAuthAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -380,6 +381,11 @@ class ApiModule {
     @Provides
     fun provideStudioApi(): StudioApi {
         return RestBuilder().build(StudioApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideStudioAuthAPI(): StudioAuthAPI {
+        return RestBuilder().build(StudioAuthAPI::class.java, RestParams())
     }
 
     @Provides

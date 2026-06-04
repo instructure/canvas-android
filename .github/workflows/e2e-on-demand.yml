@@ -11,6 +11,11 @@ on:
           - parent
           - student
           - teacher
+      record_video:
+        description: 'Enable FTL video recording (for investigation reruns)'
+        required: false
+        type: boolean
+        default: false
 
 run-name: E2E ${{ inputs.app }} @ ${{ github.ref_name }}
 
@@ -26,6 +31,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: ${{ inputs.app }}
+      record_video: ${{ inputs.record_video }}
     secrets: inherit
 
   slack-notification:

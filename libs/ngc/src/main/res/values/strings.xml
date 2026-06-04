@@ -19,6 +19,12 @@
     <string name="ngc_app_name">NGC</string>
     <string name="ngc_dashboardTitle">Dashboard</string>
 
+    <!-- Course Home -->
+    <string name="ngc_courseHomeTabHome">Home</string>
+    <string name="ngc_courseHomeTabModules">Modules</string>
+    <string name="ngc_courseHomeTabMyWork">My Work</string>
+    <string name="ngc_courseHomeTabMore">More</string>
+
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Customize dashboard</string>

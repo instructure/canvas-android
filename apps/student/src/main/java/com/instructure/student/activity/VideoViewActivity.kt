@@ -82,6 +82,11 @@ class VideoViewActivity : BaseCanvasActivity() {
         ViewStyler.setStatusBarDark(this, ThemePrefs.primaryColor)
     }
 
+    override fun onPause() {
+        super.onPause()
+        player?.playWhenReady = false
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         player?.release()

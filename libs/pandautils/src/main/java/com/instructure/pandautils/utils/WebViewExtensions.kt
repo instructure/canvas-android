@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.views.CanvasWebView
+import java.net.URLDecoder
 import kotlinx.coroutines.Job
 
 /**
@@ -93,7 +94,17 @@ class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit) {
 class JsGoogleDocsInterface(private val context: Context) {
     @JavascriptInterface
     fun onGoogleDocsButtonPressed(url: String) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+        val decodedUrl = URLDecoder.decode(url, "UTF-8")
+        val parsed = Uri.parse(decodedUrl)
+        // The HTML-side gate (HtmlContentFormatter.hasGoogleDocsUrl) is only a substring match
+        // and a compromised page could call the bridge directly, so re-validate here that the
+        // ACTION_VIEW target is an https docs.google.com URL before handing it to the OS.
+        val host = parsed.host.orEmpty().lowercase()
+        val scheme = parsed.scheme.orEmpty().lowercase()
+        val isAllowedScheme = scheme == "http" || scheme == "https"
+        val isAllowedHost = host == "docs.google.com" || host.endsWith(".docs.google.com")
+        if (!isAllowedScheme || !isAllowedHost) return
+        context.startActivity(Intent(Intent.ACTION_VIEW, parsed).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         })
     }

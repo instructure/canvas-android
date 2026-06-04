@@ -34,45 +34,79 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
  * These tokens reference the semantic layer for theme-aware values.
  */
 object InstUISideNavBarNew {
-    object SideNavBarItemNew {
+    val backgroundColor @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
+    val fill @Composable get() = InstUISemanticColors.Icon.Interactive.Action.PrimaryOnColor.base()
+    val borderColor @Composable get() = InstUISemanticColors.Stroke.muted()
+    val textColor @Composable get() = InstUISemanticColors.Text.base()
+    val minimizedminWidth = 104.dp
+    val toggleTransition = "300ms"
+    val minWidth = 276.dp
+    val margin = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
+    val minimizedMargin = 6.dp
+    val mainNavMargin = 12.dp
+    val mainNavMinimizedMargin = 0.dp
+    val mainNavGap = InstUILayoutSizes.Spacing.Padding.container_xxs
+    val navItemsGap = InstUILayoutSizes.Spacing.SpaceXs.spaceXs
+    /**
+     * Box shadow (not directly representable in Compose).
+     *   Shadow 1: x=0rem, y=0.0625rem, blur=0.125rem, spread=0rem, color={color.dropShadow.shadowColor1}, type=dropShadow
+     *   Shadow 2: x=0rem, y=0.125rem, blur=0.25rem, spread=0.125rem, color={color.dropShadow.shadowColor2}, type=dropShadow
+     */
+    // val boxShadow: BoxShadow — not supported in Compose
+    val borderRadius = InstUILayoutSizes.BorderRadius.Container.md
+    val minimizedBorderRadius = InstUILayoutSizes.BorderRadius.Container.sm
+    val borderWidth = InstUILayoutSizes.BorderWidth.Sm.sm
+
+    object Button {
+        val textColor @Composable get() = InstUISemanticColors.Text.base()
+    }
+
+    object DrilldownOption {
+        val backgroundColor = InstUIColors.transparent
+        val hoverBackgroundColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Tertiary.hover()
+        val activeBackgroundColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Tertiary.active()
+        val selectedBackgroundColor @Composable get() = InstUISemanticColors.Background.brand()
+        val textColor @Composable get() = InstUISemanticColors.Text.base()
+        val selectedTextColor @Composable get() = InstUISemanticColors.Text.inverse()
+        val logoutTextColor @Composable get() = InstUISemanticColors.Text.error()
+        val borderRadius = InstUILayoutSizes.BorderRadius.Lg.lg
+    }
+
+    object InstitutionLogo {
+        val textColor @Composable get() = InstUISemanticColors.Text.base()
+        val strokeColor @Composable get() = InstUISemanticColors.Stroke.muted()
+        val padding = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
+        val gap = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
+    }
+
+    object Item {
+        val horizontalPadding = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
+        val verticalPadding = 4.dp
         val iconWrapperHeight = 36.dp
         val borderRadius = InstUILayoutSizes.BorderRadius.Lg.lg
-        val backgroundColor = "transparent"
-        val contentPadding = 6.dp
+        // val backgroundColor: "transparent" (CSS-specific, not directly usable in Compose)
         val fontColor @Composable get() = InstUISemanticColors.Text.base()
         val fontFamily = InstUILayoutTypography.FontFamily.Base.base
-        val fontSize = 14.sp
+        val fontSize = 16.sp
         val fontWeight = InstUILayoutTypography.FontWeight.Body.base
+        val innerFocusOutlineColor @Composable get() = InstUISemanticColors.Stroke.Interactive.FocusRing.base()
+        val outerFocusOutlineColor = InstUIColors.transparent
         val hoverBackgroundColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Tertiary.hover()
         val lineHeight = InstUILayoutTypography.LineHeight.Paragraph.base
         // val linkTextDecoration: "none" (CSS-specific, not directly usable in Compose)
-        val selectedBackgroundColor @Composable get() = InstUISemanticColors.Background.brand()
-        val selectedFontColor @Composable get() = InstUISemanticColors.Text.inverse()
-        val innerFocusOutlineColor @Composable get() = InstUISemanticColors.Stroke.Interactive.FocusRing.base()
+        val currentBackgroundColor @Composable get() = InstUISemanticColors.Background.brand()
+        val selectedBackgroundColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Tertiary.active()
+        val currentTextColor @Composable get() = InstUISemanticColors.Text.inverse()
+        val selectedAccountBackgroundColor @Composable get() = InstUISemanticColors.Background.Interactive.Action.Tertiary.active()
+        val selectedAccountFontColor @Composable get() = InstUISemanticColors.Text.base()
         val selectedInnerFocusOutlineColor @Composable get() = InstUISemanticColors.Icon.inverse()
-        val outerFocusOutlineColor = InstUIColors.transparent
         val selectedOuterFocusOutlineColor = InstUIColors.transparent
     }
 
-    object SideNavBarNew {
-        val backgroundColor @Composable get() = InstUISemanticColors.Background.ElevatedSurface.base()
-        val fill @Composable get() = InstUISemanticColors.Icon.Interactive.Action.PrimaryOnColor.base()
-        val borderColor @Composable get() = InstUISemanticColors.Stroke.muted()
-        val fontColor @Composable get() = InstUISemanticColors.Text.base()
-        val minimizedWidth = 60.dp
-        val toggleTransition = "300ms"
-        val width = 94.dp
-        val margin = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
-        val minimizedMargin = 6.dp
-        val contentMargin = 6.dp
-        val contentGap = InstUILayoutSizes.Spacing.SpaceXs.spaceXs
-        /**
-         * Box shadow (not directly representable in Compose).
-         *   Shadow 1: x=0rem, y=0.0625rem, blur=0.125rem, spread=0rem, color={color.dropShadow.shadowColor1}, type=dropShadow
-         *   Shadow 2: x=0rem, y=0.125rem, blur=0.25rem, spread=0.125rem, color={color.dropShadow.shadowColor2}, type=dropShadow
-         */
-        // val boxShadow: BoxShadow — not supported in Compose
-        val borderRadius = InstUILayoutSizes.BorderRadius.Container.md
-        val minimizedBorderRadius = InstUILayoutSizes.BorderRadius.Container.sm
+    object SubNav {
+        val strokeColor @Composable get() = InstUISemanticColors.Stroke.muted()
+        val textColor @Composable get() = InstUISemanticColors.Text.base()
+        val padding = InstUILayoutSizes.Spacing.SpaceMd.spaceMd
+        val gap = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
     }
 }

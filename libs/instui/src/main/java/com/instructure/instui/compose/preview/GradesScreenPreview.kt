@@ -26,10 +26,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -37,11 +35,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.container.Card
 import com.instructure.instui.compose.container.Elevation
@@ -57,11 +53,12 @@ import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.compose.navigation.TopBar
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.line.ArrowLeft
-import com.instructure.instui.token.icon.line.Assignment
-import com.instructure.instui.token.icon.line.Lock
-import com.instructure.instui.token.icon.line.More
+import com.instructure.instui.token.icon.arrowLeft
+import com.instructure.instui.token.icon.ellipsis
+import com.instructure.instui.token.icon.filePenLine
+import com.instructure.instui.token.icon.lock
 import com.instructure.instui.token.semantic.InstUISemanticColors
+import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 
 /**
  * Dummy Grades screen preview demonstrating InstUI component usage.
@@ -100,12 +97,12 @@ private fun GradesScreenPreview() {
                     containerColor = CourseColor,
                     navigationIcon = {
                         IconButton(onClick = {}) {
-                            Icon(InstUIIcons.Line.ArrowLeft, color = IconColor.Inverse, contentDescription = "Back")
+                            Icon(InstUIIcons.arrowLeft, color = IconColor.Inverse, contentDescription = "Back")
                         }
                     },
                     actions = {
                         IconButton(onClick = {}) {
-                            Icon(InstUIIcons.Line.More, color = IconColor.Inverse, contentDescription = "More")
+                            Icon(InstUIIcons.ellipsis, color = IconColor.Inverse, contentDescription = "More")
                         }
                     },
                 )
@@ -138,7 +135,7 @@ private fun GradesScreenPreview() {
                                 modifier = Modifier.weight(1f),
                             )
                             Spacer(Modifier.width(8.dp))
-                            Icon(InstUIIcons.Line.Lock, size = IconSize.Medium)
+                            Icon(InstUIIcons.lock, size = IconSize.Medium)
                         }
                     }
                 }
@@ -173,7 +170,7 @@ private fun AssignmentListItem() {
     ListItem(
         title = "Assignment name",
         subtext1 = "Due Oct 3, 2023 9:41",
-        leading = ListItemLeading.Icon(InstUIIcons.Line.Assignment),
+        leading = ListItemLeading.Icon(InstUIIcons.filePenLine),
         pill = { Pill(text = "Missing", variant = PillVariant.Error) },
         score = {
             Text(

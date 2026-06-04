@@ -75,6 +75,6 @@ object InstUIProgressCircle {
     val largeRadius = 56.dp
     val xSmallBorderOffset = 15.04.dp
     val smallBorderOffset = 25.8.dp
-    val  mediumBorderOffset = 40.dp
+    val mediumBorderOffset = 40.dp
     val largeBorderOffset = 50.dp
 }
