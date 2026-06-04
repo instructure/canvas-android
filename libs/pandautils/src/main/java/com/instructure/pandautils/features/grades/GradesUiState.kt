@@ -86,6 +86,8 @@ data class AssignmentUiState(
     val score: Double?,
     val maxScore: Double?,
     val whatIfScore: Double?,
+    val commentCount: Int = 0,
+    val hasUnreadComments: Boolean = false,
     val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
     val checkpointsExpanded: Boolean = false
 )

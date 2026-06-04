@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.GradesUnreadCommentsManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -42,8 +43,15 @@ class GradesNetworkDataSourceTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val submissionApi: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
     private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
+    private val gradesUnreadCommentsManager: GradesUnreadCommentsManager = mockk(relaxed = true)
 
-    private val dataSource = GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager)
+    private val dataSource = GradesNetworkDataSource(
+        courseApi,
+        assignmentApi,
+        submissionApi,
+        customGradeStatusesManager,
+        gradesUnreadCommentsManager
+    )
 
     @Test
     fun `Get course with grade successfully returns data`() = runTest {
@@ -214,5 +222,22 @@ class GradesNetworkDataSourceTest {
         coEvery { customGradeStatusesManager.getCustomGradeStatuses(1L, true) } throws Exception("Network error")
 
         dataSource.getCustomGradeStatuses(1L, true)
+    }
+
+    @Test
+    fun `Get unread comment counts delegates to the manager`() = runTest {
+        val counts = mapOf(10L to 2, 20L to 0)
+        coEvery { gradesUnreadCommentsManager.getUnreadCommentCounts(1L, 5L, true) } returns counts
+
+        val result = dataSource.getUnreadCommentCounts(1L, 5L, true)
+
+        assertEquals(counts, result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `Get unread comment counts throws exception when fetch fails`() = runTest {
+        coEvery { gradesUnreadCommentsManager.getUnreadCommentCounts(1L, 5L, true) } throws Exception("Network error")
+
+        dataSource.getUnreadCommentCounts(1L, 5L, true)
     }
 }

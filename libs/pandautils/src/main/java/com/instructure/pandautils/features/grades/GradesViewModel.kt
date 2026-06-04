@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
@@ -85,6 +87,8 @@ class GradesViewModel @Inject constructor(
 
     private val strategy: GradesExperienceStrategy = experienceStrategies.getValue(experience)
 
+    private val isNgc = experience == Experience.NGC
+
     private val _uiState = MutableStateFlow(GradesUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -96,6 +100,7 @@ class GradesViewModel @Inject constructor(
     private var domainAssignmentGroups = emptyList<AssignmentGroup>()
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+    private var unreadCommentCounts = emptyMap<Long, Int>()
     private var allItems = emptyList<AssignmentGroupUiState>()
 
     private val debouncedSearch = debounce<String>(
@@ -175,6 +180,16 @@ class GradesViewModel @Inject constructor(
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
             domainAssignmentGroups = assignmentGroups
+
+            // Unread comment state is supplementary; never let a failure here break the grades list.
+            unreadCommentCounts = if (isNgc) {
+                runCatching {
+                    repository.getUnreadCommentCounts(courseId, repository.studentId, forceRefresh)
+                }.getOrDefault(emptyMap())
+            } else {
+                emptyMap()
+            }
+
             val groupsAfterStrategyFilter = applyStrategyFilters(assignmentGroups, initialFilter)
 
             allItems = when (sortBy) {
@@ -382,6 +397,8 @@ class GradesViewModel @Inject constructor(
 
         val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
 
+        val currentAttemptComments = if (isNgc) currentAttemptComments(assignment.submission) else emptyList()
+
         AssignmentUiState(
             id = assignment.id,
             iconRes = iconRes,
@@ -431,8 +448,29 @@ class GradesViewModel @Inject constructor(
             score = assignment.submission?.score,
             maxScore = assignment.pointsPossible,
             whatIfScore = null,
+            commentCount = currentAttemptComments.size,
+            // unreadCommentCount can include comments hidden from the student (e.g. unposted grades on
+            // anonymous/manually-posted assignments), which the student can never view to clear. Only
+            // surface the unread indicator when there's visible feedback from someone other than them,
+            // scoped to the same latest-attempt comments the pill count reflects.
+            hasUnreadComments = isNgc &&
+                unreadCommentCounts[assignment.id].orDefault() > 0 &&
+                currentAttemptComments.any { it.authorId != repository.studentId },
             checkpointsExpanded = false
         )
+    }
+
+    // Returns only the submission comments belonging to the latest attempt, mirroring the grouping the
+    // server uses for unreadCommentCount (attempts null/0/1 are treated as one group). Both the pill count
+    // and the unread indicator derive from this set so the two signals stay consistent.
+    private fun currentAttemptComments(submission: Submission?): List<SubmissionComment> {
+        val comments = submission?.submissionComments.orEmpty()
+        val currentAttempt = submission?.attempt.orDefault()
+        return if (currentAttempt <= 1) {
+            comments.filter { (it.attempt ?: 0L) <= 1L }
+        } else {
+            comments.filter { it.attempt == currentAttempt }
+        }
     }
 
     private fun getDateText(dueAt: Date?) = dueAt?.let {

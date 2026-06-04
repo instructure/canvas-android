@@ -523,18 +523,24 @@ private fun LegacyGradesScreenContent(
                 }
 
                 if (uiState.items.isEmpty()) {
-                    GradesEmptyContent(
-                        titleRes = if (uiState.searchQuery.length >= 3) {
-                            R.string.noMatchingAssignments
-                        } else {
-                            R.string.gradesEmptyTitle
-                        },
-                        messageRes = if (uiState.searchQuery.length >= 3) {
-                            R.string.noMatchingAssignmentsDescription
-                        } else {
-                            R.string.gradesEmptyMessage
-                        }
-                    )
+                    val selectedGradingPeriod = uiState.gradePreferencesUiState.selectedGradingPeriod
+                    when {
+                        uiState.searchQuery.length >= 3 -> GradesEmptyContent(
+                            titleRes = R.string.noMatchingAssignments,
+                            messageRes = R.string.noMatchingAssignmentsDescription
+                        )
+
+                        selectedGradingPeriod?.title != null -> GradesEmptyContent(
+                            titleRes = R.string.gradesEmptyTitle,
+                            messageRes = R.string.gradesEmptyMessageForPeriod,
+                            messageArg = selectedGradingPeriod.title
+                        )
+
+                        else -> GradesEmptyContent(
+                            titleRes = R.string.gradesEmptyTitle,
+                            messageRes = R.string.gradesEmptyMessage
+                        )
+                    }
                 }
             }
 
@@ -959,11 +965,16 @@ private fun FilterIcon(
 @Composable
 private fun GradesEmptyContent(
     titleRes: Int,
-    messageRes: Int
+    messageRes: Int,
+    messageArg: String? = null
 ) {
     EmptyContent(
         emptyTitle = stringResource(id = titleRes),
-        emptyMessage = stringResource(id = messageRes),
+        emptyMessage = if (messageArg != null) {
+            stringResource(id = messageRes, messageArg)
+        } else {
+            stringResource(id = messageRes)
+        },
         imageRes = R.drawable.ic_panda_space,
         modifier = Modifier
             .fillMaxWidth()

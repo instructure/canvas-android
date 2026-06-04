@@ -137,4 +137,12 @@ class GradesLocalDataSourceTest {
 
         assertEquals(data.map { it.toApiModel() }, result)
     }
+
+    // Unread comment state is not synced for offline, so the local source always returns no counts.
+    @Test
+    fun `Get unread comment counts returns empty map`() = runTest {
+        val result = dataSource.getUnreadCommentCounts(1L, 5L, false)
+
+        assertEquals(emptyMap<Long, Int>(), result)
+    }
 }

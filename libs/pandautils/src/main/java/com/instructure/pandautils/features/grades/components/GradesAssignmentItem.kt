@@ -69,13 +69,21 @@ import com.instructure.instui.compose.InstUITheme
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.indicator.Pill
+import com.instructure.instui.compose.indicator.PillVariant
 import com.instructure.instui.compose.input.TextInput
+import com.instructure.instui.compose.indicator.Icon as InstUIIcon
+import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.input.TextInputSize
 import com.instructure.instui.compose.list.ListItem
 import com.instructure.instui.compose.list.ListItemLeading
 import com.instructure.instui.compose.list.ListItemTrailing
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.chevronDown
+import com.instructure.instui.token.icon.messageSquare
+import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CheckpointItem
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.designsystem.DesignSystem
@@ -142,12 +150,35 @@ private fun InstUIAssignmentItem(
                     )
                 }
             } else null,
-            trailing = if (hasCheckpoints) {
-                ListItemTrailing.Accordion(
+            trailing = when {
+                uiState.commentCount > 0 -> ListItemTrailing.Custom {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        CommentBadge(
+                            count = uiState.commentCount,
+                            hasUnread = uiState.hasUnreadComments,
+                        )
+                        // Render the checkpoint accordion arrow alongside the comment pill (laid out in a
+                        // spaced Row so the two never overlap). Matches the standalone accordion arrow; the
+                        // arrow's expand interaction is handled outside this PR.
+                        if (hasCheckpoints) {
+                            InstUIIcon(
+                                imageVector = InstUIIcons.chevronDown,
+                                size = IconSize.Small,
+                            )
+                        }
+                    }
+                }
+
+                hasCheckpoints -> ListItemTrailing.Accordion(
                     expanded = uiState.checkpointsExpanded,
                     onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
                 )
-            } else null,
+
+                else -> null
+            },
             onClick = { actionHandler(GradesAction.AssignmentClick(uiState.id)) },
         )
         if (hasCheckpoints) {
@@ -166,6 +197,47 @@ private fun InstUIAssignmentItem(
             WhatIfScoreField(
                 uiState = uiState,
                 actionHandler = actionHandler,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommentBadge(
+    count: Int,
+    hasUnread: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val badgeContentDescription = if (hasUnread) {
+        stringResource(R.string.gradesUnreadCommentsContentDescription, count)
+    } else {
+        stringResource(R.string.gradesCommentsContentDescription, count)
+    }
+    Box(
+        modifier = modifier
+            .testTag("commentBadge")
+            .semantics { contentDescription = badgeContentDescription },
+    ) {
+        // Reserve room for the unread dot inside the badge bounds so it can never bleed into
+        // adjacent trailing content (e.g. the checkpoint accordion arrow) or the row above.
+        val dotInset = if (hasUnread) 3.dp else 0.dp
+        Pill(
+            text = count.toString(),
+            variant = PillVariant.Default,
+            icon = InstUIIcons.messageSquare,
+            modifier = Modifier.padding(top = dotInset, end = dotInset),
+        )
+        if (hasUnread) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(10.dp)
+                    .clip(CircleShape)
+                    .background(InstUISemanticColors.Background.base())
+                    .padding(1.dp)
+                    .clip(CircleShape)
+                    .background(InstUISemanticColors.Background.info())
+                    .testTag("unreadCommentDot"),
             )
         }
     }
@@ -446,6 +518,8 @@ private fun previewAssignment(
     grade: String = "85/100",
     state: SubmissionStateLabel = SubmissionStateLabel.Graded,
     whatIf: Double? = null,
+    commentCount: Int = 0,
+    hasUnreadComments: Boolean = false,
 ) = AssignmentUiState(
     id = id,
     iconRes = R.drawable.ic_assignment,
@@ -456,6 +530,8 @@ private fun previewAssignment(
     score = 85.0,
     maxScore = 100.0,
     whatIfScore = whatIf,
+    commentCount = commentCount,
+    hasUnreadComments = hasUnreadComments,
 )
 
 @Preview(name = "GradesAssignmentItem Legacy", showBackground = true)
@@ -477,7 +553,7 @@ private fun GradesAssignmentItemLegacyPreview() {
 private fun GradesAssignmentItemInstUIPreview() {
     InstUITheme(courseColor = Color(0xFF00828E)) {
         CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
-            androidx.compose.foundation.layout.Column {
+            Column {
                 GradesAssignmentItem(
                     uiState = previewAssignment(id = 1),
                     actionHandler = {},
@@ -496,6 +572,73 @@ private fun GradesAssignmentItemInstUIPreview() {
                     showWhatIfScore = false,
                 )
             }
+        }
+    }
+}
+
+@Preview(name = "GradesAssignmentItem InstUI Comments — Light", showBackground = true)
+@Preview(name = "GradesAssignmentItem InstUI Comments — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun GradesAssignmentItemInstUICommentsPreview() {
+    InstUITheme(courseColor = Color(0xFF00828E)) {
+        CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+            Column {
+                GradesAssignmentItem(
+                    uiState = previewAssignment(
+                        id = 1,
+                        name = "Interstellar Matter - ASTR 30300",
+                        commentCount = 5,
+                        hasUnreadComments = false,
+                    ),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = false,
+                )
+                GradesAssignmentItem(
+                    uiState = previewAssignment(
+                        id = 2,
+                        name = "Radiation Processes - ASTR 25400",
+                        commentCount = 2,
+                        hasUnreadComments = true,
+                    ),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = false,
+                )
+            }
+        }
+    }
+}
+
+@Preview(name = "GradesAssignmentItem InstUI Comments + Checkpoints", showBackground = true)
+@Preview(name = "GradesAssignmentItem InstUI Comments + Checkpoints — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun GradesAssignmentItemInstUICommentsCheckpointsPreview() {
+    InstUITheme(courseColor = Color(0xFF00828E)) {
+        CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+            GradesAssignmentItem(
+                uiState = previewAssignment(
+                    id = 1,
+                    name = "Energy, Space and Time - PHSC 12600 Matter",
+                    grade = "-/10",
+                    state = SubmissionStateLabel.NotSubmitted,
+                    commentCount = 5,
+                    hasUnreadComments = true,
+                ).copy(
+                    checkpoints = listOf(
+                        DiscussionCheckpointUiState(
+                            name = "Reply to topic",
+                            dueDate = "Due Jul 6, 2025 12:00",
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
+                            displayGrade = DisplayGrade("-/5", "-/5"),
+                            pointsPossible = 5,
+                        )
+                    )
+                ),
+                actionHandler = {},
+                contextColor = 0xFF00828E.toInt(),
+                showWhatIfScore = false,
+            )
         }
     }
 }

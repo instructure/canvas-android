@@ -57,4 +57,6 @@ interface GradesDataSource {
     ): List<AssignmentGroup>
 
     suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
+
+    suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceNetwork: Boolean): Map<Long, Int>
 }

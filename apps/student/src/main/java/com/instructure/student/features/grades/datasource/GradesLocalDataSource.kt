@@ -83,4 +83,10 @@ class GradesLocalDataSource(
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
         return customGradeStatusDao.getStatusesForCourse(courseId).map { it.toApiModel() }
     }
+
+    // Unread comment state is sourced from GraphQL and is not synced for offline, so there's nothing
+    // cached to return here. The comment count itself still works offline via the cached submissions.
+    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceNetwork: Boolean): Map<Long, Int> {
+        return emptyMap()
+    }
 }

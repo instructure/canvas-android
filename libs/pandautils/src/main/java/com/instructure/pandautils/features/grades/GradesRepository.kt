@@ -37,4 +37,5 @@ interface GradesRepository {
     fun getSortBy(): SortBy?
     fun setSortBy(sortBy: SortBy)
     suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
+    suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int>
 }

@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.GradesUnreadCommentsManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -34,7 +35,8 @@ class GradesNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
-    private val customGradeStatusesManager: CustomGradeStatusesManager
+    private val customGradeStatusesManager: CustomGradeStatusesManager,
+    private val gradesUnreadCommentsManager: GradesUnreadCommentsManager
 ) : GradesDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -109,5 +111,9 @@ class GradesNetworkDataSource(
             ?.nodes
             ?.filterNotNull()
             .orEmpty()
+    }
+
+    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceNetwork: Boolean): Map<Long, Int> {
+        return gradesUnreadCommentsManager.getUnreadCommentCounts(courseId, studentId, forceNetwork)
     }
 }

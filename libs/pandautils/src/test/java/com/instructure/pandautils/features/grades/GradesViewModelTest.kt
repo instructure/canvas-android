@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -97,6 +98,7 @@ class GradesViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
+        coEvery { gradesRepository.getUnreadCommentCounts(any(), any(), any()) } returns emptyMap()
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade()
         every { gradesRepository.getSortBy() } returns null
 
@@ -1881,6 +1883,155 @@ class GradesViewModelTest {
             AssignmentGroupByOption.AssignmentGroup,
             filter!!.selectedFilters.selectedGroupByOption
         )
+    }
+
+    @Test
+    fun `Maps comment count and unread state for NGC experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns ""
+
+        // Relaxed gradesRepository.studentId returns 0, so authorId = 0 represents the student's own
+        // comment and a non-zero authorId represents teacher feedback.
+        val teacherId = 999L
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 10,
+                        name = "Unread feedback",
+                        submission = Submission(
+                            id = 100,
+                            submissionComments = listOf(
+                                SubmissionComment(authorId = teacherId),
+                                SubmissionComment(authorId = teacherId),
+                                SubmissionComment(authorId = teacherId)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 20,
+                        name = "Read feedback",
+                        submission = Submission(
+                            id = 200,
+                            submissionComments = listOf(SubmissionComment(authorId = teacherId))
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 30,
+                        name = "No comments",
+                        submission = Submission(id = 300),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 40,
+                        name = "Hidden feedback (only student's own comment visible)",
+                        submission = Submission(
+                            id = 400,
+                            submissionComments = listOf(SubmissionComment(authorId = 0))
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    )
+                )
+            )
+        )
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.getUnreadCommentCounts(any(), any(), any()) } returns mapOf(10L to 2, 40L to 2)
+
+        createViewModel()
+
+        val assignments = viewModel.uiState.value.items.flatMap { it.assignments }
+        val unread = assignments.first { it.id == 10L }
+        val read = assignments.first { it.id == 20L }
+        val none = assignments.first { it.id == 30L }
+        val hiddenFeedback = assignments.first { it.id == 40L }
+
+        Assert.assertEquals(3, unread.commentCount)
+        Assert.assertTrue(unread.hasUnreadComments)
+        Assert.assertEquals(1, read.commentCount)
+        Assert.assertFalse(read.hasUnreadComments)
+        Assert.assertEquals(0, none.commentCount)
+        Assert.assertFalse(none.hasUnreadComments)
+        // unreadCommentCount > 0 but the only visible comment is the student's own → no dot.
+        Assert.assertEquals(1, hiddenFeedback.commentCount)
+        Assert.assertFalse(hiddenFeedback.hasUnreadComments)
+    }
+
+    @Test
+    fun `Comment count only includes the latest attempt`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns ""
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    // Latest attempt is 2 → only the two attempt-2 comments count, older/null ones are excluded.
+                    Assignment(
+                        id = 10,
+                        name = "Multiple attempts",
+                        submission = Submission(
+                            id = 100,
+                            attempt = 2,
+                            submissionComments = listOf(
+                                SubmissionComment(id = 1, attempt = 2),
+                                SubmissionComment(id = 2, attempt = 2),
+                                SubmissionComment(id = 3, attempt = 1),
+                                SubmissionComment(id = 4, attempt = null)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    // Latest attempt <= 1 → attempts null/0/1 are grouped together, attempt 2 excluded.
+                    Assignment(
+                        id = 20,
+                        name = "First attempt grouping",
+                        submission = Submission(
+                            id = 200,
+                            attempt = 1,
+                            submissionComments = listOf(
+                                SubmissionComment(id = 5, attempt = null),
+                                SubmissionComment(id = 6, attempt = 0),
+                                SubmissionComment(id = 7, attempt = 1),
+                                SubmissionComment(id = 8, attempt = 2)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    )
+                )
+            )
+        )
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.getUnreadCommentCounts(any(), any(), any()) } returns emptyMap()
+
+        createViewModel()
+
+        val assignments = viewModel.uiState.value.items.flatMap { it.assignments }
+        Assert.assertEquals(2, assignments.first { it.id == 10L }.commentCount)
+        Assert.assertEquals(3, assignments.first { it.id == 20L }.commentCount)
+    }
+
+    @Test
+    fun `Does not fetch unread comment counts for Academic experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.Academic.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+
+        createViewModel()
+
+        coVerify(exactly = 0) { gradesRepository.getUnreadCommentCounts(any(), any(), any()) }
     }
 
     private fun createViewModel() {

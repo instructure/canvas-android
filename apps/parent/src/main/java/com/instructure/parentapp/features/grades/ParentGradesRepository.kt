@@ -113,4 +113,9 @@ class ParentGradesRepository(
             ?.filterNotNull()
             .orEmpty()
     }
+
+    // Unread comment indicators are a student NGC-only feature; the parent app does not surface them.
+    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int> {
+        return emptyMap()
+    }
 }

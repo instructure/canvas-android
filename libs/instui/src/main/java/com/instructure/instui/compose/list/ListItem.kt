@@ -121,6 +121,14 @@ sealed class ListItemTrailing {
         val expanded: Boolean,
         val onClick: () -> Unit,
     ) : ListItemTrailing()
+
+    /**
+     * Escape hatch for trailing content that doesn't fit the predefined modes (e.g. a badge
+     * combined with another control). The caller is responsible for the full composition.
+     */
+    data class Custom(
+        val content: @Composable () -> Unit,
+    ) : ListItemTrailing()
 }
 
 // ---------------------------------------------------------------------------
@@ -339,6 +347,9 @@ private fun TrailingContent(trailing: ListItemTrailing) {
                 imageVector = InstUIIcons.chevronDown,
                 size = IconSize.Small,
             )
+        }
+        is ListItemTrailing.Custom -> {
+            trailing.content()
         }
     }
 }

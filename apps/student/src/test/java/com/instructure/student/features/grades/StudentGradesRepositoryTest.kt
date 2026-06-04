@@ -418,4 +418,46 @@ class StudentGradesRepositoryTest {
         }
         assertEquals("2", result.first()._id)
     }
+
+    @Test
+    fun `Get unread comment counts when device is online`() = runTest {
+        val onlineExpected = mapOf(10L to 2)
+        val offlineExpected = mapOf(20L to 3)
+
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { networkDataSource.getUnreadCommentCounts(any(), any(), any()) } returns onlineExpected
+        coEvery { localDataSource.getUnreadCommentCounts(any(), any(), any()) } returns offlineExpected
+
+        val result = repository.getUnreadCommentCounts(1, 5, true)
+
+        coVerify {
+            networkDataSource.getUnreadCommentCounts(
+                courseId = 1,
+                studentId = 5,
+                forceNetwork = true
+            )
+        }
+        assertEquals(onlineExpected, result)
+    }
+
+    @Test
+    fun `Get unread comment counts when device is offline`() = runTest {
+        val onlineExpected = mapOf(10L to 2)
+        val offlineExpected = mapOf(20L to 3)
+
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { networkDataSource.getUnreadCommentCounts(any(), any(), any()) } returns onlineExpected
+        coEvery { localDataSource.getUnreadCommentCounts(any(), any(), any()) } returns offlineExpected
+
+        val result = repository.getUnreadCommentCounts(1, 5, true)
+
+        coVerify {
+            localDataSource.getUnreadCommentCounts(
+                courseId = 1,
+                studentId = 5,
+                forceNetwork = true
+            )
+        }
+        assertEquals(offlineExpected, result)
+    }
 }

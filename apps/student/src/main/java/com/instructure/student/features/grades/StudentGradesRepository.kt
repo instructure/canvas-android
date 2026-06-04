@@ -106,4 +106,8 @@ class StudentGradesRepository(
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
         return dataSource().getCustomGradeStatuses(courseId, forceNetwork)
     }
+
+    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int> {
+        return dataSource().getUnreadCommentCounts(courseId, studentId, forceRefresh)
+    }
 }
