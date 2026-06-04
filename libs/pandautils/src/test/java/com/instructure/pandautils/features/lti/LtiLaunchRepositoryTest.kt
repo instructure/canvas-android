@@ -45,7 +45,7 @@ class LtiLaunchRepositoryTest {
     @Before
     fun setup() {
         val urlCaptor = slot<String>()
-        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any()) } answers {
+        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any(), any()) } answers {
             DataResult.Success(AuthenticatedSession(sessionUrl = urlCaptor.captured))
         }
     }
@@ -117,7 +117,7 @@ class LtiLaunchRepositoryTest {
     @Test
     fun `Get authenticated url returns data when successful`() = runTest {
         val urlCaptor = slot<String>()
-        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any()) } answers {
+        coEvery { oAuthInterface.getAuthenticatedSession(capture(urlCaptor), any(), any()) } answers {
             DataResult.Success(AuthenticatedSession(sessionUrl = urlCaptor.captured + "/authenticated"))
         }
 
@@ -130,7 +130,7 @@ class LtiLaunchRepositoryTest {
 
     @Test
     fun `Get authenticated url returns original url if request fails`() = runTest {
-        coEvery { oAuthInterface.getAuthenticatedSession(any(), any()) } returns DataResult.Fail()
+        coEvery { oAuthInterface.getAuthenticatedSession(any(), any(), any()) } returns DataResult.Fail()
 
         val url = "https://www.instructure.com"
 

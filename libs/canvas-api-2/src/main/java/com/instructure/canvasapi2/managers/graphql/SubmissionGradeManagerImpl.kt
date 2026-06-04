@@ -44,16 +44,22 @@ class SubmissionGradeManagerImpl(private val apolloClient: ApolloClient) : Submi
                 submission = data
             } else {
                 submission = submission.copy(
-                    submission = submission.submission?.copy(
-                        assignment = submission.submission.assignment?.copy(
-                            course = submission.submission.assignment.course?.copy(
-                                customGradeStatusesConnection = submission.submission.assignment.course.customGradeStatusesConnection?.copy(
-                                    edges = submission.submission.assignment.course.customGradeStatusesConnection.edges.orEmpty() +
-                                            data.submission?.assignment?.course?.customGradeStatusesConnection?.edges.orEmpty()
+                    submission = submission.submission?.let { sub ->
+                        sub.copy(
+                            assignment = sub.assignment.let { assignment ->
+                                assignment.copy(
+                                    course = assignment.course?.let { course ->
+                                        course.copy(
+                                            customGradeStatusesConnection = course.customGradeStatusesConnection?.copy(
+                                                edges = course.customGradeStatusesConnection.edges.orEmpty() +
+                                                        data.submission?.assignment?.course?.customGradeStatusesConnection?.edges.orEmpty()
+                                            )
+                                        )
+                                    }
                                 )
-                            )
+                            }
                         )
-                    )
+                    }
                 )
             }
 

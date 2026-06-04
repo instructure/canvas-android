@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
-import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.utils.ThemedColor
@@ -49,7 +48,7 @@ data class AssignmentItem(
     val score: Double? = null,
     val grade: String? = null,
     val submissionStateLabel: SubmissionStateLabel = SubmissionStateLabel.None,
-    val onClick: ((FragmentActivity) -> Unit)? = null,
+    val onClick: (() -> Unit)? = null,
 )
 
 data class ForecastWidgetUiState(
@@ -69,6 +68,5 @@ data class ForecastWidgetUiState(
     val onNavigateNext: () -> Unit = {},
     val onJumpToCurrentWeek: () -> Unit = {},
     val onSectionSelected: (ForecastSection) -> Unit = {},
-    val onAssignmentClick: (FragmentActivity, Long, Long) -> Unit = { _, _, _ -> },
     val onRetry: () -> Unit = {}
 )

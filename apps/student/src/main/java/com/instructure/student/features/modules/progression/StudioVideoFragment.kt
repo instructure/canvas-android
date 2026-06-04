@@ -24,6 +24,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.canvasapi2.utils.pageview.PageViewUrl
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.LongArg
@@ -39,6 +41,7 @@ private const val VIDEO_URI = "video_uri"
 private const val VIDEO_TITLE = "video_title"
 private const val POSTER_URI = "poster_uri"
 
+@PageView
 @AndroidEntryPoint
 class StudioVideoFragment : ParentFragment() {
 
@@ -46,6 +49,9 @@ class StudioVideoFragment : ParentFragment() {
     private var videoUri: String by StringArg(key = VIDEO_URI)
     private var videoTitle: String by StringArg(key = VIDEO_TITLE)
     private var posterUri: String? by NullableStringArg(key = POSTER_URI)
+
+    @PageViewUrl
+    fun makePageViewUrl() = videoUri
 
     override fun title(): String = videoTitle
 

@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.dashboard.widget.conferences
 
 import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -27,15 +26,16 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.usecase.conference.LoadLiveConferencesUseCase
 import com.instructure.pandautils.domain.usecase.session.GetAuthenticatedSessionUseCase
+import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.models.ConferenceDashboardBlacklist
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -64,7 +64,6 @@ class ConferencesViewModelTest {
     private val loadLiveConferencesUseCase: LoadLiveConferencesUseCase = mockk(relaxed = true)
     private val getAuthenticatedSessionUseCase: GetAuthenticatedSessionUseCase = mockk(relaxed = true)
     private val conferenceDashboardBlacklist: ConferenceDashboardBlacklist = mockk(relaxed = true)
-    private val conferencesWidgetRouter: ConferencesWidgetRouter = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
@@ -149,7 +148,7 @@ class ConferencesViewModelTest {
     }
 
     @Test
-    fun `onJoinConference calls router with authenticated URL`() = runTest {
+    fun `onJoinConference emits navigation event with authenticated URL`() = runTest {
         val course = Course(id = 1, name = "Biology 101")
         val conference = ConferenceItem(
             id = 1L,
@@ -158,7 +157,6 @@ class ConferencesViewModelTest {
             canvasContext = course
         )
         val conferences = listOf(conference)
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadLiveConferencesUseCase(any()) } returns conferences
         coEvery { getAuthenticatedSessionUseCase(any()) } returns "https://authenticated.session.url"
@@ -166,10 +164,20 @@ class ConferencesViewModelTest {
         viewModel = createViewModel()
         advanceUntilIdle()
 
-        viewModel.uiState.value.onJoinConference(activity, conference)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Conferences>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onJoinConference(conference)
         advanceUntilIdle()
 
-        verify { conferencesWidgetRouter.launchConference(activity, course, "https://authenticated.session.url") }
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Conferences.LaunchConference
+        assertEquals(course, event.canvasContext)
+        assertEquals("https://authenticated.session.url", event.url)
+
+        job.cancel()
     }
 
     @Test
@@ -182,7 +190,6 @@ class ConferencesViewModelTest {
             canvasContext = course
         )
         val conferences = listOf(conference)
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadLiveConferencesUseCase(any()) } returns conferences
         coEvery { getAuthenticatedSessionUseCase(any()) } throws Exception("Auth failed")
@@ -190,10 +197,20 @@ class ConferencesViewModelTest {
         viewModel = createViewModel()
         advanceUntilIdle()
 
-        viewModel.uiState.value.onJoinConference(activity, conference)
+        val navigationEvents = mutableListOf<DashboardNavigationEvent.Conferences>()
+        val job = launch(testDispatcher) {
+            viewModel.navigationEvents.collect { navigationEvents.add(it) }
+        }
+
+        viewModel.uiState.value.onJoinConference(conference)
         advanceUntilIdle()
 
-        verify { conferencesWidgetRouter.launchConference(activity, course, "https://external.conference.url/join") }
+        assertEquals(1, navigationEvents.size)
+        val event = navigationEvents[0] as DashboardNavigationEvent.Conferences.LaunchConference
+        assertEquals(course, event.canvasContext)
+        assertEquals("https://external.conference.url/join", event.url)
+
+        job.cancel()
     }
 
     @Test
@@ -216,7 +233,7 @@ class ConferencesViewModelTest {
         assertEquals("Chemistry 201", state.conferences[0].subtitle)
         assertNotNull(state.snackbarMessage)
         assertEquals("Conference dismissed", state.snackbarMessage?.message)
-        verify { conferenceDashboardBlacklist.conferenceDashboardBlacklist = setOf("1") }
+        coVerify { conferenceDashboardBlacklist.conferenceDashboardBlacklist = setOf("1") }
     }
 
     @Test
@@ -243,7 +260,6 @@ class ConferencesViewModelTest {
     fun `joining state is set during join and cleared after delay`() = runTest {
         val course = Course(id = 1, name = "Biology 101")
         val conference = ConferenceItem(1L, "Biology 101", "https://join.url", course)
-        val activity: FragmentActivity = mockk(relaxed = true)
 
         coEvery { loadLiveConferencesUseCase(any()) } returns listOf(conference)
         coEvery { getAuthenticatedSessionUseCase(any()) } returns "https://auth.url"
@@ -253,7 +269,7 @@ class ConferencesViewModelTest {
 
         assertNull(viewModel.uiState.value.joiningConferenceId)
 
-        viewModel.uiState.value.onJoinConference(activity, conference)
+        viewModel.uiState.value.onJoinConference(conference)
 
         assertEquals(1L, viewModel.uiState.value.joiningConferenceId)
 
@@ -267,7 +283,6 @@ class ConferencesViewModelTest {
             loadLiveConferencesUseCase,
             getAuthenticatedSessionUseCase,
             conferenceDashboardBlacklist,
-            conferencesWidgetRouter,
             apiPrefs,
             resources
         )

@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
@@ -42,6 +43,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentElementaryDashboardBinding
 import com.instructure.student.fragment.ParentFragment
 
+@PageView
 @ScreenView(SCREEN_VIEW_ELEMENTARY_DASHBOARD)
 class ElementaryDashboardFragment : ParentFragment() {
 

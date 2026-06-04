@@ -65,6 +65,7 @@ android {
 
 dependencies {
     implementation(project(":pandautils"))
+    implementation(project(":login-api-2"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)

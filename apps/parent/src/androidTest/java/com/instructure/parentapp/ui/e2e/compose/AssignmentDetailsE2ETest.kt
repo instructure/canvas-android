@@ -23,7 +23,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.pressBackButton
+import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
@@ -132,9 +132,9 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarTitle()
         assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the assignment status for '${student2.name}' student is 'Not Submitted' and the 'Submission & Rubric' label is displayed and the submission type is 'Text Entry'.")
+        Log.d(ASSERTION_TAG, "Assert that the assignment status for '${student2.name}' student is 'Not Submitted' and the 'Submission & Feedback' label is displayed and the submission type is 'Text Entry'.")
         assignmentDetailsPage.assertStatusNotSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.assertSubmissionAndFeedbackLabel()
         assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
         assignmentDetailsPage.assertReminderViewDisplayed()
         assignmentDetailsPage.assertNoDescriptionViewDisplayed()

@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">इस छात्र के पास अभी तक कोई सबमिशन नहीं है।</string>
     <string name="locked">लॉक किया गया</string>
     <string name="lockedSubtext">यह असाइनमेंट %2$s पर %1$s तक लॉक है।</string>
+    <string name="closedSubtext">यह असाइनमेंट %1$s को %2$s बजे लॉक कर दिया गया था।</string>
     <string name="chooseFile">फ़ाइल चुनें</string>
     <string name="chooseFileSubtext">नीचे दिए गए विकल्प पर टैप करके अपने सबमिशन में कोई फ़ाइल संलग्न करें।</string>
     <string name="chooseFileForUploadSubtext">नीचे दिए गए विकल्प पर टैप करके अपलोड करने के लिए फ़ाइल चुनें</string>

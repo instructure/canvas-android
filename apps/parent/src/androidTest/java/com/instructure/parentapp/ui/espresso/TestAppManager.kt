@@ -36,6 +36,4 @@ open class TestAppManager : BaseAppManager(), WorkManagerTestAppManager {
     override fun getScheduler(): AlarmScheduler? {
         return null
     }
-
-    override fun performFlutterAppMigration() = Unit
 }

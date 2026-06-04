@@ -19,18 +19,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigation
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.util.bottomSafeDrawing
+import com.instructure.horizon.util.zeroScreenInsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,18 +42,17 @@ fun AiAssistantScreen(
     val navController = rememberNavController()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
-        containerColor = colorResource(R.color.ai_gradient_end),
+        containerColor = Color.Transparent,
         onDismissRequest = { onDismiss() },
         dragHandle = null,
         sheetState = bottomSheetState,
-        contentWindowInsets = { WindowInsets.bottomSafeDrawing }
+        contentWindowInsets = { WindowInsets.zeroScreenInsets }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    brush = HorizonColors.Surface.aiGradient()
-                )
+                .background(brush = HorizonColors.Surface.aiGradient())
+                .windowInsetsPadding(WindowInsets.safeDrawing)
         ) {
             AiAssistNavigation(mainNavController, navController, onDismiss)
         }

@@ -83,7 +83,7 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         context.getActivityOrNull()?.let {
-            ViewStyler.setStatusBarLightDelayed(it)
+            ViewStyler.themeStatusBarDelayed(it)
         }
     }
 

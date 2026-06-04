@@ -41,10 +41,10 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
-import com.instructure.canvas.espresso.waitForMatcherWithSleeps
-import com.instructure.canvas.espresso.withResourceIdContaining
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.stringContainsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.utils.withResourceIdContaining
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
@@ -175,7 +175,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.gradeCell)).scrollTo().click()
     }
 
-    fun assertSubmissionAndRubricLabel() {
+    fun assertSubmissionAndFeedbackLabel() {
         onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).assertDisplayed()
     }
 
@@ -266,6 +266,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
+        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).scrollTo().assertDisplayed()
+    }
+
+    fun assertSubmissionOptionDisplayed(submissionType: String) {
         onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
     }
 

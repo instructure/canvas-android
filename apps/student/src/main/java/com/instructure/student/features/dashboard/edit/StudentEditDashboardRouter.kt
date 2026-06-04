@@ -16,14 +16,32 @@
 
 package com.instructure.student.features.dashboard.edit
 
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentEditDashboardRouter(private val activity: FragmentActivity) : EditDashboardRouter {
     override fun routeCourse(canvasContext: CanvasContext?) {
         RouteMatcher.route(activity, CourseBrowserFragment.makeRoute(canvasContext))
+    }
+
+    override fun showSnackbar(fragment: Fragment, resId: Int) {
+        val view = fragment.view ?: return
+        val snackbar = Snackbar.make(view, resId, Snackbar.LENGTH_LONG)
+        if (EdgeToEdgeHelper.isEdgeToEdgeEnforced()) {
+            // In Student app the Snackbar anchors to fullScreenCoordinatorLayout, which is already
+            // positioned above the bottom bar. Consuming the navigation bar insets prevents the
+            // Snackbar from adding an extra bottom margin that would double-count the nav bar space.
+            ViewCompat.setOnApplyWindowInsetsListener(snackbar.view) { _, _ -> WindowInsetsCompat.CONSUMED }
+        }
+        snackbar.show()
+        view.announceForAccessibility(fragment.requireContext().getString(resId))
     }
 }

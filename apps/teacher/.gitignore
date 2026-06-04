@@ -1,6 +1,7 @@
 # Private data
 private.properties
 google-services.json
+robo_user.json
 
 # built application files #
 *.apk

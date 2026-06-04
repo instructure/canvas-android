@@ -37,14 +37,14 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.init
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.checkToastText
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -668,10 +668,10 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
 
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Text Entry")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Website URL")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("File Upload")
-        assignmentDetailsPage.assertSubmissionTypeDisplayed("Media Recording")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Text Entry")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Website URL")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("File Upload")
+        assignmentDetailsPage.assertSubmissionOptionDisplayed("Media Recording")
 
         //Try 1 submission to check if it's possible to submit even when there are multiple submission types available.
         assignmentDetailsPage.selectSubmissionType(SubmissionType.ONLINE_URL)

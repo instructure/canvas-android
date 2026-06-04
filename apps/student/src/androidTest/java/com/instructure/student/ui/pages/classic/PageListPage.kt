@@ -20,7 +20,7 @@ import android.view.View
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Page
 import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.espresso.DoesNotExistAssertion

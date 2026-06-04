@@ -16,7 +16,7 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
-import com.instructure.canvas.espresso.getHintText
+import com.instructure.canvas.espresso.utils.getHintText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click

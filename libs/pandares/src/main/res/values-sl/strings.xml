@@ -412,6 +412,8 @@
     <string name="errorConversationGeneric">Tega dejanja ni mogoče izvesti. Preverite svojo povezavo in poskusite znova.</string>
     <string name="conversationArchived">Pogovor je arhiviran.</string>
     <string name="conversationUnarchived">Arhiviranje pogovora je razveljavljeno.</string>
+    <string name="conversationMarkedAsRead">Pogovor označen kot prebran</string>
+    <string name="conversationMarkedAsUnread">Pogovori označen kot neprebran</string>
     <string name="messageDeleted">Sporočilo je izbrisano.</string>
     <string name="messageDeletedFailed">Brisanje sporočila ni uspelo</string>
     <string name="conversationDeleted">Pogovor izbrisan</string>

@@ -2,8 +2,10 @@ apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'com.apollographql.apollo'
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 buildscript {
     repositories {
@@ -44,7 +46,7 @@ dependencies {
     /* Serialization */
     implementation Libs.GSON
 
-    implementation 'org.jsoup:jsoup:1.11.3'
+    implementation Libs.JSOUP
     implementation 'com.github.javafaker:javafaker:0.17.2'
     implementation Libs.APOLLO_RUNTIME
 

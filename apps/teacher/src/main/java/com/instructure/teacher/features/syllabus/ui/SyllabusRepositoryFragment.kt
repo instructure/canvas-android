@@ -20,12 +20,14 @@ package com.instructure.teacher.features.syllabus.ui
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.features.syllabus.SyllabusRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@PageView(url = "assignments/syllabus")
 @AndroidEntryPoint
 class SyllabusRepositoryFragment : SyllabusFragment() {
 

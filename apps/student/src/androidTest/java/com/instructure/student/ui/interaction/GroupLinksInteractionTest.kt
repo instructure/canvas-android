@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.mockcanvas.addFolderToCourse
 import com.instructure.canvas.espresso.mockcanvas.addGroupToCourse
 import com.instructure.canvas.espresso.mockcanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockcanvas.init
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group

@@ -61,6 +61,7 @@
             android:id="@+id/bottomBarContainer"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:minHeight="56dp"
             android:background="@color/backgroundLightestElevated">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView

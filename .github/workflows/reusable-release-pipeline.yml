@@ -21,10 +21,6 @@ on:
         required: true
         type: string
     secrets:
-      GH_APP_ID:
-        required: true
-      GH_APP_PRIVATE_KEY:
-        required: true
       ANDROID_RELEASE_KEYSTORE_B64:
         required: true
       GCLOUD_KEY:
@@ -39,91 +35,142 @@ on:
         required: true
       ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD:
         required: true
-      SLACK_URL:
+      SLACK_GITHUB_ACTIONS_BOT_TOKEN:
         required: true
+      FIREBASE_ANDROID_PARENT_APP_ID:
+        required: true
+      FIREBASE_ANDROID_STUDENT_APP_ID:
+        required: true
+      FIREBASE_ANDROID_TEACHER_APP_ID:
+        required: true
+      FIREBASE_SERVICE_ACCOUNT_KEY:
+        required: true
+      # Private-data env vars (see docs/private-data-migration-plan.md)
+      PSPDF_MAVEN_USER:
+        required: false
+      PSPDF_MAVEN_PASS:
+        required: false
+      PSPDFKIT_LICENSE_KEY_STUDENT:
+        required: false
+      PSPDFKIT_LICENSE_KEY_TEACHER:
+        required: false
+      CRASHLYTICS_API_KEY:
+        required: false
+      LOGIN_ANONYMOUS_SCHOOL_DOMAIN:
+        required: false
+      PARENT_LOGIN_CLIENT_SECRET:
+        required: false
+      PENDO_ACCESS_TOKEN_PARENT:
+        required: false
+      PENDO_ACCESS_TOKEN_STUDENT:
+        required: false
+      PENDO_ACCESS_TOKEN_TEACHER:
+        required: false
+      ROBO_TEST_API_KEY:
+        required: false
+      ROBO_TEST_USER_ID:
+        required: false
+      ROBO_TEST_USERNAME:
+        required: false
+      ROBO_TEST_USER_TOKEN:
+        required: false
+      ROBO_TEST_DOMAIN:
+        required: false
+      PRONOUN_TEST_STUDENT:
+        required: false
+      PRONOUN_TEST_STUDENT_PASSWORD:
+        required: false
+      PRONOUN_TEST_TEACHER:
+        required: false
+      PRONOUN_TEST_TEACHER_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT:
+        required: false
+      PUSH_NOTIF_TEST_STUDENT_PASSWORD:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER:
+        required: false
+      PUSH_NOTIF_TEST_TEACHER_PASSWORD:
+        required: false
+      GOOGLE_SERVICES_PARENT_B64:
+        required: false
+      GOOGLE_SERVICES_STUDENT_B64:
+        required: false
+      GOOGLE_SERVICES_TEACHER_B64:
+        required: false
+      ANALYTICS_XML_STUDENT_B64:
+        required: false
+      PRIVATE_STRINGS_XML_STUDENT_B64:
+        required: false
+      ROBO_USER_JSON_TEACHER_B64:
+        required: false
+      PRIVATE_CONST_KT_B64:
+        required: false
+
+env:
+  PSPDF_MAVEN_USER: ${{ secrets.PSPDF_MAVEN_USER }}
+  PSPDF_MAVEN_PASS: ${{ secrets.PSPDF_MAVEN_PASS }}
+  PSPDFKIT_LICENSE_KEY_STUDENT: ${{ secrets.PSPDFKIT_LICENSE_KEY_STUDENT }}
+  PSPDFKIT_LICENSE_KEY_TEACHER: ${{ secrets.PSPDFKIT_LICENSE_KEY_TEACHER }}
+  CRASHLYTICS_API_KEY: ${{ secrets.CRASHLYTICS_API_KEY }}
+  LOGIN_ANONYMOUS_SCHOOL_DOMAIN: ${{ secrets.LOGIN_ANONYMOUS_SCHOOL_DOMAIN }}
+  PARENT_LOGIN_CLIENT_ID: ${{ vars.PARENT_LOGIN_CLIENT_ID }}
+  PARENT_LOGIN_CLIENT_SECRET: ${{ secrets.PARENT_LOGIN_CLIENT_SECRET }}
+  PENDO_ACCESS_TOKEN_PARENT: ${{ secrets.PENDO_ACCESS_TOKEN_PARENT }}
+  PENDO_ACCESS_TOKEN_STUDENT: ${{ secrets.PENDO_ACCESS_TOKEN_STUDENT }}
+  PENDO_ACCESS_TOKEN_TEACHER: ${{ secrets.PENDO_ACCESS_TOKEN_TEACHER }}
+  ROBO_TEST_API_KEY: ${{ secrets.ROBO_TEST_API_KEY }}
+  ROBO_TEST_USER_ID: ${{ secrets.ROBO_TEST_USER_ID }}
+  ROBO_TEST_USERNAME: ${{ secrets.ROBO_TEST_USERNAME }}
+  ROBO_TEST_USER_TOKEN: ${{ secrets.ROBO_TEST_USER_TOKEN }}
+  ROBO_TEST_DOMAIN: ${{ secrets.ROBO_TEST_DOMAIN }}
+  PRONOUN_TEST_STUDENT: ${{ secrets.PRONOUN_TEST_STUDENT }}
+  PRONOUN_TEST_STUDENT_PASSWORD: ${{ secrets.PRONOUN_TEST_STUDENT_PASSWORD }}
+  PRONOUN_TEST_TEACHER: ${{ secrets.PRONOUN_TEST_TEACHER }}
+  PRONOUN_TEST_TEACHER_PASSWORD: ${{ secrets.PRONOUN_TEST_TEACHER_PASSWORD }}
+  PUSH_NOTIF_TEST_STUDENT: ${{ secrets.PUSH_NOTIF_TEST_STUDENT }}
+  PUSH_NOTIF_TEST_STUDENT_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_STUDENT_PASSWORD }}
+  PUSH_NOTIF_TEST_TEACHER: ${{ secrets.PUSH_NOTIF_TEST_TEACHER }}
+  PUSH_NOTIF_TEST_TEACHER_PASSWORD: ${{ secrets.PUSH_NOTIF_TEST_TEACHER_PASSWORD }}
+  GOOGLE_SERVICES_PARENT_B64: ${{ secrets.GOOGLE_SERVICES_PARENT_B64 }}
+  GOOGLE_SERVICES_STUDENT_B64: ${{ secrets.GOOGLE_SERVICES_STUDENT_B64 }}
+  GOOGLE_SERVICES_TEACHER_B64: ${{ secrets.GOOGLE_SERVICES_TEACHER_B64 }}
+  ANALYTICS_XML_STUDENT_B64: ${{ secrets.ANALYTICS_XML_STUDENT_B64 }}
+  PRIVATE_STRINGS_XML_STUDENT_B64: ${{ secrets.PRIVATE_STRINGS_XML_STUDENT_B64 }}
+  ROBO_USER_JSON_TEACHER_B64: ${{ secrets.ROBO_USER_JSON_TEACHER_B64 }}
+  PRIVATE_CONST_KT_B64: ${{ secrets.PRIVATE_CONST_KT_B64 }}
 
 jobs:
-  build-qa-debug:
-    name: build-qa-debug
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: wrapper
-          java-version: '17'
-
-      - name: Build QA debug and test APKs
-        run: |
-          ./gradle/gradlew -p apps \
-            :${{ inputs.app-name }}:assembleQaDebug \
-            :${{ inputs.app-name }}:assembleQaDebugAndroidTest \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
-        env:
-          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
-
-      - name: Upload QA debug APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.app-name }}-qa-debug.apk
-          path: apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/${{ inputs.app-name }}-qa-debug.apk
-          retention-days: 1
-
-      - name: Upload QA test APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ inputs.app-name }}-qa-debug-androidTest.apk
-          path: apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/${{ inputs.app-name }}-qa-debug-androidTest.apk
-          retention-days: 1
+  build-test-apks:
+    uses: ./.github/workflows/build-test-apks.yml
+    with:
+      app-type-lower: ${{ inputs.app-name }}
+    secrets: inherit
 
   unit-tests:
     name: unit-tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 30
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: wrapper
           java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'apps/**/gradle-wrapper.properties', 'apps/gradle.properties', 'apps/buildSrc/src/**/*.kt') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Run unit tests
         run: |
@@ -150,21 +197,21 @@ jobs:
 
   flank-tests:
     name: flank-${{ matrix.test-type }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    needs: build-qa-debug
+    needs: build-test-apks
     strategy:
       fail-fast: false
       matrix:
         include:
           - test-type: portrait
-            flank-config: flank.yml
+            flank-config: flank_portrait_interaction_release.yml
           - test-type: landscape
-            flank-config: flank_landscape.yml
+            flank-config: flank_landscape_interaction_release.yml
           - test-type: tablet
-            flank-config: flank_tablet.yml
+            flank-config: flank_tablet_interaction_release.yml
           - test-type: e2e
-            flank-config: flank_e2e.yml
+            flank-config: flank_e2e_release.yml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -186,7 +233,7 @@ jobs:
           chmod 600 service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/${{ inputs.app-name }}/${{ matrix.flank-config }} ./flank.yml
+        run: cp ./apps/${{ inputs.app-name }}/release_tests/${{ matrix.flank-config }} ./flank.yml
 
       - name: Copy APKs to expected locations
         run: |
@@ -202,12 +249,9 @@ jobs:
           fi
 
       - name: Run Flank tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results
         if: always()
@@ -230,9 +274,9 @@ jobs:
 
   e2e-offline:
     name: e2e-offline
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
-    needs: build-qa-debug
+    needs: build-test-apks
     if: ${{ inputs.include-e2e-offline }}
     steps:
       - name: Checkout repository
@@ -271,12 +315,9 @@ jobs:
           fi
 
       - name: Run Flank E2E offline tests
-        uses: Flank/flank@v23.10.1
-        with:
-          version: 'v23.07.0'
-          platform: 'android'
-          service_account: './service-account-key.json'
-          flank_configuration_file: './flank.yml'
+        run: |
+          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
+          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
 
       - name: Report test results
         if: always()
@@ -299,7 +340,7 @@ jobs:
 
   build-release-candidate:
     name: build-release-candidate
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest-16core
     timeout-minutes: 60
     needs: [unit-tests, flank-tests, e2e-offline]
     if: |
@@ -308,27 +349,25 @@ jobs:
       needs.flank-tests.result == 'success' &&
       (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
     steps:
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.GH_APP_ID }}
-          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
-          owner: ${{ github.repository_owner }}
-          repositories: canvas-android,android-vault
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ steps.app-token.outputs.token }}
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          gradle-version: wrapper
           java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'apps/**/gradle-wrapper.properties', 'apps/gradle.properties', 'apps/buildSrc/src/**/*.kt') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Decode release keystore
         env:
@@ -373,35 +412,134 @@ jobs:
           path: apps/${{ inputs.app-name }}/build/outputs/bundle/prodRelease/${{ inputs.app-name }}-prod-release.aab
           retention-days: 7
 
+      - name: Setup Firebase service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: FIREBASE_SERVICE_ACCOUNT_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools@14.2.0
+
+      - name: Resolve Firebase App ID
+        id: firebase-app-id
+        env:
+          APP_NAME: ${{ inputs.app-name }}
+          PARENT_APP_ID: ${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}
+          STUDENT_APP_ID: ${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}
+          TEACHER_APP_ID: ${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}
+        run: |
+          set -euo pipefail
+          case "$APP_NAME" in
+            parent)  app_id="$PARENT_APP_ID" ;;
+            student) app_id="$STUDENT_APP_ID" ;;
+            teacher) app_id="$TEACHER_APP_ID" ;;
+            *) echo "Error: unknown app-name '$APP_NAME'"; exit 1 ;;
+          esac
+          if [ -z "$app_id" ]; then
+            echo "Error: Firebase App ID is not configured for $APP_NAME"
+            exit 1
+          fi
+          echo "app-id=$app_id" >> "$GITHUB_OUTPUT"
+
+      - name: Distribute RC to Firebase App Distribution
+        id: distribute
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
+          APP_NAME: ${{ inputs.app-name }}
+          BRANCH: ${{ github.ref_name }}
+          FIREBASE_APP_ID: ${{ steps.firebase-app-id.outputs.app-id }}
+        run: |
+          set -euo pipefail
+          if ! firebase appdistribution:distribute \
+            "apps/${APP_NAME}/build/outputs/apk/prod/release/${APP_NAME}-prod-release.apk" \
+            --app "${FIREBASE_APP_ID}" \
+            --release-notes "RC build from ${BRANCH}" \
+            --groups "Testers" > result.txt 2>&1; then
+            echo "Firebase distribution failed:"
+            cat result.txt
+            exit 1
+          fi
+          cat result.txt
+          install_url=$(grep -o 'https://appdistribution\.firebase[^[:space:]]*' result.txt | head -1)
+          if [ -z "$install_url" ]; then
+            echo "Error: Could not extract install URL from Firebase output"
+            cat result.txt
+            exit 1
+          fi
+          echo "install-url=$install_url" >> "$GITHUB_OUTPUT"
+
+      # Slack notification runs in the same job to avoid cross-job output redaction:
+      # the install URL contains FIREBASE_ANDROID_*_APP_ID, which is registered as a secret,
+      # so GHA strips it when set as a job-level output.
+      - name: Compose Slack payload
+        env:
+          INSTALL_URL: ${{ steps.distribute.outputs.install-url }}
+          APP_DISPLAY_NAME: ${{ inputs.app-display-name }}
+          SLACK_EMOJI: ${{ inputs.slack-emoji }}
+          BRANCH: ${{ github.ref_name }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          COMMIT_SUBJECT=$(git log -1 --pretty='%s')
+          TITLE=":android::alert: $SLACK_EMOJI Android $APP_DISPLAY_NAME RC Available :android::alert:"
+
+          jq -n \
+            --arg channel        "github_android_release" \
+            --arg title          "$TITLE" \
+            --arg commit_subject "$COMMIT_SUBJECT" \
+            --arg app            "$APP_DISPLAY_NAME" \
+            --arg branch         "$BRANCH" \
+            --arg workflow       "$WORKFLOW_NAME" \
+            --arg run_url        "$RUN_URL" \
+            --arg install_url    "$INSTALL_URL" \
+            '{
+              channel: $channel,
+              text: $title,
+              attachments: [
+                {
+                  color: "#36a64f",
+                  blocks: [
+                    { type: "section", text: { type: "mrkdwn", text: $title } },
+                    { type: "section", text: { type: "mrkdwn", text: ("*Build Succeeded!*\n" + $commit_subject) } },
+                    {
+                      type: "section",
+                      fields: [
+                        { type: "mrkdwn", text: ("*App*\n" + $app) },
+                        { type: "mrkdwn", text: ("*Branch*\n" + $branch) },
+                        { type: "mrkdwn", text: ("*Workflow*\n" + $workflow) }
+                      ]
+                    },
+                    {
+                      type: "image",
+                      image_url: ("https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + ($install_url | @uri)),
+                      alt_text: "QR code for install page"
+                    },
+                    {
+                      type: "actions",
+                      elements: [
+                        { type: "button", text: { type: "plain_text", text: "View Workflow Run" }, url: $run_url },
+                        { type: "button", text: { type: "plain_text", text: "Install Page" }, url: $install_url }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }' > slack-payload.json
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v2
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_GITHUB_ACTIONS_BOT_TOKEN }}
+          payload-file-path: ./slack-payload.json
+
       - name: Cleanup sensitive files
         if: always()
-        run: rm -f release.jks
-
-  slack-notification:
-    name: slack-notification
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs: [build-release-candidate]
-    if: always()
-    steps:
-      - name: Notify Slack on success
-        if: needs.build-release-candidate.result == 'success'
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":android: ${{ inputs.slack-emoji }} Android ${{ inputs.app-display-name }} RC Available :android:\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Download artifacts from GitHub Actions>"
-            }
-
-      - name: Notify Slack on failure
-        if: needs.build-release-candidate.result != 'success'
-        uses: slackapi/slack-github-action@v2
-        with:
-          webhook: ${{ secrets.SLACK_URL }}
-          webhook-type: incoming-webhook
-          payload: |
-            {
-              "text": ":x: ${{ inputs.slack-emoji }} Android ${{ inputs.app-display-name }} Release Pipeline Failed\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View failed run>"
-            }
+        run: rm -f release.jks service-account-key.json result.txt slack-payload.json

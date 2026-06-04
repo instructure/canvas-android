@@ -1,20 +1,18 @@
-//
-// Copyright (C) 2018-present Instructure, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
-
+/*
+ * Copyright (C) 2018 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.AssignmentApiModel
@@ -23,6 +21,7 @@ import com.instructure.dataseeding.model.CreateSubmissionCommentWrapper
 import com.instructure.dataseeding.model.FileType
 import com.instructure.dataseeding.model.GradeSubmission
 import com.instructure.dataseeding.model.GradeSubmissionWrapper
+import com.instructure.dataseeding.model.RubricAssessmentEntry
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmissionWrapper
@@ -35,6 +34,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 object SubmissionsApi {
     interface SubmissionsService {
@@ -63,7 +63,8 @@ object SubmissionsApi {
                 @Path("courseId") courseId: Long,
                 @Path("assignmentId") assignmentId: Long,
                 @Path("studentId") studentId: Long,
-                @Body gradeSubmission: GradeSubmissionWrapper
+                @Body gradeSubmission: GradeSubmissionWrapper,
+                @Query("sub_assignment_tag") subAssignmentTag: String? = null
         ): Call<SubmissionApiModel>
 
     }
@@ -116,12 +117,31 @@ object SubmissionsApi {
                         studentId: Long,
                         excused: Boolean = false,
                         postedGrade: String? = null,
-                        customGradeStatusId: String? = null): SubmissionApiModel {
+                        customGradeStatusId: String? = null,
+                        subAssignmentTag: String? = null): SubmissionApiModel {
 
         return submissionsService(teacherToken)
-                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)))
+                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)), subAssignmentTag)
                 .execute()
                 .body()!!
+    }
+
+    fun gradeSubmissionWithRubric(
+        teacherToken: String,
+        courseId: Long,
+        assignmentId: Long,
+        studentId: Long,
+        rubricAssessment: Map<String, RubricAssessmentEntry>
+    ): SubmissionApiModel {
+        return submissionsService(teacherToken)
+            .gradeSubmission(courseId, assignmentId, studentId,
+                GradeSubmissionWrapper(
+                    submission = GradeSubmission(excused = false),
+                    rubricAssessment = rubricAssessment
+                )
+            )
+            .execute()
+            .body()!!
     }
 
     //

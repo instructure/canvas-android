@@ -31,7 +31,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.annotations.ReleaseExclude
-import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -59,8 +59,8 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
-    @ReleaseExclude
     fun testInboxSelectedButtonActionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -628,6 +628,7 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
 

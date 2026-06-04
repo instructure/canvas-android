@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.apis.StudioApi
+import com.instructure.canvasapi2.apis.StudioAuthAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -72,6 +73,7 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
+import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
@@ -166,6 +168,12 @@ class ApiModule {
     @Singleton
     fun provideApiPrefs(): ApiPrefs {
         return ApiPrefs
+    }
+
+    @Provides
+    @Singleton
+    fun provideConsentPrefs(): ConsentPrefs {
+        return ConsentPrefs
     }
 
     @Provides
@@ -373,6 +381,11 @@ class ApiModule {
     @Provides
     fun provideStudioApi(): StudioApi {
         return RestBuilder().build(StudioApi::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideStudioAuthAPI(): StudioAuthAPI {
+        return RestBuilder().build(StudioAuthAPI::class.java, RestParams())
     }
 
     @Provides

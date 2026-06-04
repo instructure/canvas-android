@@ -44,8 +44,6 @@ abstract class BaseAppManager : AppManager() {
     override fun onCreate() {
         super.onCreate()
 
-        performFlutterAppMigration()
-
         AppConfigProvider.appConfig = AppConfig(AppType.PARENT, MainActivity::class.java)
         MasqueradeHelper.masqueradeLogoutTask = Runnable { ParentLogoutTask(LogoutTask.Type.LOGOUT, alarmScheduler = getScheduler()).execute() }
 
@@ -65,16 +63,16 @@ abstract class BaseAppManager : AppManager() {
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.textDarkest)
 
-        try {
-            WebView.setWebContentsDebuggingEnabled(true)
-        } catch (e: Exception) {
-            FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+        if (BuildConfig.DEBUG) {
+            try {
+                WebView.setWebContentsDebuggingEnabled(true)
+            } catch (e: Exception) {
+                FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
+            }
         }
     }
 
     override fun performLogoutOnAuthError() = Unit
 
     abstract fun getScheduler(): AlarmScheduler?
-
-    abstract fun performFlutterAppMigration()
 }

@@ -37,4 +37,6 @@ interface SettingsRouter {
 
     fun navigateToInboxSignature() = Unit
 
+    fun navigateToPrivacySettings() = Unit
+
 }

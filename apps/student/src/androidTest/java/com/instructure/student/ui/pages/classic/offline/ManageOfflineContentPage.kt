@@ -24,9 +24,9 @@ import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.hasCheckedState
-import com.instructure.canvas.espresso.withRotation
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.hasCheckedState
+import com.instructure.canvas.espresso.utils.withRotation
 import com.instructure.espresso.ConstraintLayoutItemCountAssertion
 import com.instructure.espresso.ConstraintLayoutItemCountAssertionWithMatcher
 import com.instructure.espresso.DoesNotExistAssertion

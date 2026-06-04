@@ -28,9 +28,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.scrollRecyclerView
-import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
@@ -114,7 +114,7 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
      */
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(50)))
-            .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+            .perform(actionWithCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
     }
 
     /**

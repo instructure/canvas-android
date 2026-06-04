@@ -44,9 +44,9 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
-            DiscussionTopicHeader(id = 1, unreadCount = 2, readState = DiscussionTopicHeader.ReadState.READ.name),
-            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name),
-            DiscussionTopicHeader(id = 3, unreadCount = 1, readState = DiscussionTopicHeader.ReadState.READ.name)
+            DiscussionTopicHeader(id = 1, unreadCount = 2, readState = "read"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "read"),
+            DiscussionTopicHeader(id = 3, unreadCount = 1, readState = "read")
         )
 
         coEvery {
@@ -67,8 +67,8 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
-            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.UNREAD.name),
-            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name)
+            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = "unread"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "read")
         )
 
         coEvery {
@@ -79,7 +79,7 @@ class LoadCourseAnnouncementsUseCaseTest {
 
         assertEquals(1, result.size)
         assertEquals(1L, result[0].id)
-        assertEquals(DiscussionTopicHeader.ReadState.UNREAD.name, result[0].readState)
+        assertEquals(DiscussionTopicHeader.ReadState.UNREAD, result[0].status)
     }
 
     @Test
@@ -88,10 +88,10 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
-            DiscussionTopicHeader(id = 1, unreadCount = 2, readState = DiscussionTopicHeader.ReadState.READ.name),
-            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.UNREAD.name),
-            DiscussionTopicHeader(id = 3, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name),
-            DiscussionTopicHeader(id = 4, unreadCount = 1, readState = DiscussionTopicHeader.ReadState.UNREAD.name)
+            DiscussionTopicHeader(id = 1, unreadCount = 2, readState = "read"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "unread"),
+            DiscussionTopicHeader(id = 3, unreadCount = 0, readState = "read"),
+            DiscussionTopicHeader(id = 4, unreadCount = 1, readState = "unread")
         )
 
         coEvery {
@@ -110,8 +110,8 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
-            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name),
-            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name)
+            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = "read"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "read")
         )
 
         coEvery {
@@ -147,5 +147,25 @@ class LoadCourseAnnouncementsUseCaseTest {
         } returns DataResult.Fail()
 
         useCase(params)
+    }
+
+    @Test
+    fun `execute returns announcements with lowercase unread status`() = runTest {
+        val courseId = 1L
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
+
+        val announcements = listOf(
+            DiscussionTopicHeader(id = 1, unreadCount = 0, readState = "unread"),
+            DiscussionTopicHeader(id = 2, unreadCount = 0, readState = "read")
+        )
+
+        coEvery {
+            announcementRepository.getCourseAnnouncements(courseId, any())
+        } returns DataResult.Success(announcements)
+
+        val result = useCase(params)
+
+        assertEquals(1, result.size)
+        assertEquals(listOf(1L), result.map { it.id })
     }
 }

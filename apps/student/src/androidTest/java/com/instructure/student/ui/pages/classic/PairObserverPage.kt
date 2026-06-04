@@ -18,8 +18,8 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.getText
-import com.instructure.canvas.espresso.matchToolbarText
+import com.instructure.canvas.espresso.utils.getText
+import com.instructure.canvas.espresso.utils.matchToolbarText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed

@@ -25,7 +25,7 @@ import com.instructure.canvas.espresso.StringConstants.HelpMenu
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -77,7 +77,7 @@ class HelpMenuE2ETest : StudentTest() {
 
         try {
             helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.instructure.com/en/all-guides")
-            helpPage.assertHelpMenuURL(HelpMenu.SUBMIT_FEATURE_TITLE, "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL(HelpMenu.SHARE_A_CONTRIBUTION_TITLE, "https://community.instructure.com/en/categories/product-connection")
             helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "market://details?id=com.instructure.candroid")
         }
         finally {

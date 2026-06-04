@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
@@ -447,7 +448,7 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
-    fun `Test archiving conversation shows archived snackbar`() = runTest {
+    fun `Test archiving conversation shows archived toast`() = runTest {
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.ARCHIVED
         val newConversation = conversation.copy(workflowState = newState)
@@ -465,9 +466,49 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
-    fun `Test unarchiving conversation shows unarchived snackbar`() = runTest {
+    fun `Test unarchiving conversation shows unarchived toast`() = runTest {
+        val archivedConversation = conversation.copy(workflowState = Conversation.WorkflowState.ARCHIVED)
+        coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(archivedConversation)
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.READ
+        val newConversation = archivedConversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(archivedConversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(archivedConversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+    }
+
+    @Test
+    fun `Test marking conversation as read shows correct toast`() = runTest {
+        val unreadConversation = conversation.copy(workflowState = Conversation.WorkflowState.UNREAD)
+        coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(unreadConversation)
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.READ
+        val newConversation = unreadConversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(unreadConversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(unreadConversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationMarkedAsRead)), events[0])
+    }
+
+    @Test
+    fun `Test marking conversation as unread shows correct toast`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.UNREAD
         val newConversation = conversation.copy(workflowState = newState)
 
         coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
@@ -479,7 +520,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
 
-        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationMarkedAsUnread)), events[0])
     }
 
     @Test
@@ -518,6 +559,22 @@ class InboxDetailsViewModelTest {
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.OpenAttachment(attachment), events[0])
+    }
+
+    @Test
+    fun `Test MessageAction MediaComment onClick`() = runTest {
+        val viewModel = getViewModel()
+        val mediaComment = MediaComment(mediaId = "m-123", displayName = "Video", url = "https://example.com/video.mp4")
+
+        viewModel.messageActionHandler(MessageAction.OpenMediaAttachment(mediaComment))
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        assertEquals(1, events.size)
+        assertEquals(InboxDetailsFragmentAction.OpenMediaAttachment(mediaComment), events[0])
     }
 
     @Test

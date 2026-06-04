@@ -22,11 +22,14 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.shouldOpenMediaInternally
 import com.instructure.parentapp.features.inbox.coursepicker.ParentInboxCoursePickerBottomSheetDialog
+import com.instructure.parentapp.features.media.ViewMediaActivity
 import com.instructure.parentapp.util.navigation.Navigation
 
 
@@ -60,7 +63,21 @@ class ParentInboxRouter(
     }
 
     override fun routeToAttachment(attachment: Attachment) {
-        fileDownloader.downloadFileToDevice(attachment)
+        val url = attachment.url
+        if (!url.isNullOrEmpty() && shouldOpenMediaInternally(url, attachment.contentType, attachment.mimeClass)) {
+            activity.startActivity(ViewMediaActivity.createIntent(activity, url, attachment.contentType.orEmpty(), attachment.displayName))
+        } else {
+            fileDownloader.downloadFileToDevice(attachment)
+        }
+    }
+
+    override fun routeToMediaAttachment(mediaComment: MediaComment) {
+        val url = mediaComment.url
+        if (!url.isNullOrEmpty()) {
+            activity.startActivity(ViewMediaActivity.createIntent(activity, url, mediaComment.contentType.orEmpty(), mediaComment.displayName))
+        } else {
+            fileDownloader.downloadFileToDevice(mediaComment.url, mediaComment.displayName, mediaComment.contentType)
+        }
     }
 
     override fun popDetailsScreen(activity: FragmentActivity?) {

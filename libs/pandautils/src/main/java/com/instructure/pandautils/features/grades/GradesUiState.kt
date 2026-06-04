@@ -20,6 +20,8 @@ package com.instructure.pandautils.features.grades
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
@@ -47,7 +49,15 @@ data class GradesUiState(
     val isGradeLocked: Boolean = false,
     val snackbarMessage: String? = null,
     val searchQuery: String = "",
-    val isSearchExpanded: Boolean = false
+    val isSearchExpanded: Boolean = false,
+    val filter: GradesFilterUiState? = null,
+)
+
+data class GradesFilterUiState(
+    val courseName: String = "",
+    val isFilterScreenOpen: Boolean = false,
+    val selectedFilters: AssignmentListSelectedFilters = AssignmentListSelectedFilters(),
+    val filterOptions: AssignmentListFilterOptions? = null,
 )
 
 data class WhatIfScoreDialogData(

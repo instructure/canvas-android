@@ -30,7 +30,6 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ScaleXSpan
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -194,11 +193,11 @@ object ViewStyler {
         WindowInsetsHelper.setStatusBarLight(activity)
     }
 
-    fun setStatusBarLightDelayed(activity: Activity) {
+    fun themeStatusBarDelayed(activity: Activity) {
         // Due to the messed up navigation stack in the Student app some screens under this on config change can override the color of the statusbar,
         // so we need to add a delay to make sure this gets called last.
         Handler(Looper.getMainLooper()).postDelayed({
-            setStatusBarLight(activity)
+            themeStatusBar(activity)
         }, 100)
     }
 

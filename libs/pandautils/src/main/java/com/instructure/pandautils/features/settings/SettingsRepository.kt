@@ -18,16 +18,24 @@ package com.instructure.pandautils.features.settings
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.pandautils.R
 
 class SettingsRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val inboxSettingsManager: InboxSettingsManager,
     private val settingsBehaviour: SettingsBehaviour,
-    private val experienceAPI: ExperienceAPI
+    private val experienceAPI: ExperienceAPI,
+    private val userApi: UserAPI.UsersInterface
 ) {
+
+    suspend fun isAskForConsentMode(): Boolean {
+        val settings = userApi.getSelfMobileSettings(RestParams()).dataOrNull
+        return settings?.usageMetrics == UserSettings.USAGE_METRICS_ASK_FOR_CONSENT
+    }
 
     suspend fun getInboxSignatureState(): InboxSignatureState {
         val environmentSettings = featuresApi.getAccountSettingsFeatures(RestParams()).dataOrNull

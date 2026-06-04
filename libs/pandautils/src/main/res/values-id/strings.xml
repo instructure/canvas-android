@@ -172,6 +172,7 @@
     <string name="noSubmissionTeacher">Siswa ini belum memiliki penyerahan.</string>
     <string name="locked">Terkunci</string>
     <string name="lockedSubtext">Tugas ini terkunci hingga %1$s pada %2$s.</string>
+    <string name="closedSubtext">Tugas ini dikunci di %1$s pada %2$s.</string>
     <string name="chooseFile">Pilih File</string>
     <string name="chooseFileSubtext">Lampirkan file ke penyerahan Anda dengan mengetuk satu opsi di bawah ini.</string>
     <string name="chooseFileForUploadSubtext">Pilih file untuk diunggah dengan mengetuk satu opsi di bawah ini</string>
