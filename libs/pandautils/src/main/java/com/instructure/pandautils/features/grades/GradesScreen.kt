@@ -18,27 +18,19 @@
 package com.instructure.pandautils.features.grades
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -48,12 +40,11 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
@@ -62,7 +53,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.selection.selectable
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -97,66 +87,60 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.window.DialogWindowProvider
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowInsetsControllerCompat
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.instui.compose.text.Text as InstUIText
-import com.instructure.instui.token.component.InstUIText as InstUITextTokens
+import com.instructure.instui.compose.list.SectionHeader
+import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
-import com.instructure.pandautils.features.grades.components.NGCGradesFilterScreen
-import com.instructure.pandautils.compose.NoRippleInteractionSource
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
+import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.designsystem.DesignSystem
-import com.instructure.pandautils.designsystem.DSSectionHeader
-import com.instructure.pandautils.designsystem.DSSeparator
 import com.instructure.pandautils.designsystem.LocalDesignSystem
+import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.features.grades.components.GradesAssignmentItem
 import com.instructure.pandautils.features.grades.components.GradesCardContent
 import com.instructure.pandautils.features.grades.components.GradesToggleRow
+import com.instructure.pandautils.features.grades.components.NGCGradesFilterScreen
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
-import com.instructure.pandautils.utils.drawableId
-import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
+import com.instructure.instui.compose.text.Text as InstUIText
+import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 
 private val FadeInAnimation = fadeIn(animationSpec = tween(300))
 private val FadeOutAnimation = fadeOut(animationSpec = tween(300))
@@ -412,6 +396,40 @@ private fun GradesScreenContent(
     modifier: Modifier = Modifier,
     scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
+    if (LocalDesignSystem.current == DesignSystem.InstUI) {
+        NGCGradesScreenContent(
+            uiState = uiState,
+            contextColor = contextColor,
+            actionHandler = actionHandler,
+            showActionsOnCard = showActionsOnCard,
+            canvasContextColor = canvasContextColor,
+            modifier = modifier,
+            scaffoldPadding = scaffoldPadding,
+        )
+    } else {
+        LegacyGradesScreenContent(
+            uiState = uiState,
+            contextColor = contextColor,
+            actionHandler = actionHandler,
+            showActionsOnCard = showActionsOnCard,
+            canvasContextColor = canvasContextColor,
+            modifier = modifier,
+            scaffoldPadding = scaffoldPadding,
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@Composable
+private fun LegacyGradesScreenContent(
+    uiState: GradesUiState,
+    contextColor: Int,
+    actionHandler: (GradesAction) -> Unit,
+    showActionsOnCard: Boolean,
+    canvasContextColor: Int,
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
+) {
     val lazyListState = rememberLazyListState()
 
     val shouldShowNewText by remember {
@@ -462,7 +480,7 @@ private fun GradesScreenContent(
 
                 if (uiState.isWhatIfGradingEnabled) {
 
-                    DSSeparator(modifier = Modifier.padding(horizontal = 16.dp))
+                    CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
                     GradesToggleRow(
                         label = stringResource(id = R.string.showWhatIfScore),
@@ -473,11 +491,12 @@ private fun GradesScreenContent(
                         contextColor = Color(color = canvasContextColor),
                         testTagLabel = "showWhatIfScoreLabel",
                         testTagSwitch = "showWhatIfScoreSwitch",
+                        modifier = Modifier.padding(top = 16.dp),
                     )
                 }
 
                 if (uiState.gradePreferencesUiState.gradingPeriods.isNotEmpty()) {
-                    DSSeparator(modifier = Modifier.padding(horizontal = 16.dp))
+                    CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
                     Row(
                         modifier = Modifier
@@ -521,8 +540,8 @@ private fun GradesScreenContent(
 
             uiState.items.forEach { item ->
                 stickyHeader {
-                    DSSectionHeader(
-                        label = item.name,
+                    GroupHeader(
+                        name = item.name,
                         expanded = item.expanded,
                         onClick = {
                             actionHandler(GradesAction.GroupHeaderClick(item.id))
@@ -544,6 +563,143 @@ private fun GradesScreenContent(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@Composable
+private fun NGCGradesScreenContent(
+    uiState: GradesUiState,
+    contextColor: Int,
+    actionHandler: (GradesAction) -> Unit,
+    showActionsOnCard: Boolean,
+    canvasContextColor: Int,
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
+) {
+    val lazyListState = rememberLazyListState()
+
+    val shouldShowNewText by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
+        }
+    }
+
+    Column(modifier = modifier.fillMaxSize()) {
+        SearchCardTransition(
+            uiState = uiState,
+            contextColor = contextColor,
+            shouldShowNewText = shouldShowNewText,
+            actionHandler = actionHandler,
+            showActionsOnCard = showActionsOnCard
+        )
+        if (uiState.gradePreferencesUiState.gradingPeriods.isNotEmpty()) {
+            NGCGradingPeriodRow(uiState)
+        }
+
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier
+                .testTag("gradesList")
+                .imePadding(),
+            contentPadding = scaffoldPadding
+        ) {
+            item {
+                GradesToggleRow(
+                    label = stringResource(id = R.string.gradesBasedOnGraded),
+                    checked = uiState.onlyGradedAssignmentsSwitchEnabled,
+                    onCheckedChange = {
+                        actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(it))
+                    },
+                    contextColor = Color(color = canvasContextColor),
+                    testTagLabel = "basedOnGradedAssignmentsLabel",
+                    testTagSwitch = "basedOnGradedAssignmentsSwitch",
+                )
+
+                if (uiState.isWhatIfGradingEnabled) {
+
+                    Separator(modifier = Modifier.padding(horizontal = 16.dp))
+
+                    GradesToggleRow(
+                        label = stringResource(id = R.string.showWhatIfScore),
+                        checked = uiState.showWhatIfScore,
+                        onCheckedChange = {
+                            actionHandler(GradesAction.ShowWhatIfScoreSwitchCheckedChange(it))
+                        },
+                        contextColor = Color(color = canvasContextColor),
+                        testTagLabel = "showWhatIfScoreLabel",
+                        testTagSwitch = "showWhatIfScoreSwitch",
+                    )
+                }
+
+                if (uiState.items.isEmpty()) {
+                    GradesEmptyContent(
+                        titleRes = if (uiState.searchQuery.length >= 3) {
+                            R.string.noMatchingAssignments
+                        } else {
+                            R.string.gradesEmptyTitle
+                        },
+                        messageRes = if (uiState.searchQuery.length >= 3) {
+                            R.string.noMatchingAssignmentsDescription
+                        } else {
+                            R.string.gradesEmptyMessage
+                        }
+                    )
+                }
+            }
+
+            uiState.items.forEach { item ->
+                stickyHeader {
+                    SectionHeader(
+                        label = item.name,
+                        expanded = item.expanded,
+                        onClick = {
+                            actionHandler(GradesAction.GroupHeaderClick(item.id))
+                        },
+                        trailing = item.gradeText,
+                    )
+                }
+
+                items(
+                    items = item.assignments,
+                    key = { assignment -> assignment.id }
+                ) { assignment ->
+                    AnimatedVisibility(
+                        visible = item.expanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        GradesAssignmentItem(assignment, actionHandler, contextColor, uiState.showWhatIfScore)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NGCGradingPeriodRow(uiState: GradesUiState) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .defaultMinSize(minHeight = 48.dp)
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        InstUIText(
+            text = stringResource(id = R.string.gradePreferencesHeaderGradingPeriod),
+            style = InstUITextTokens.content,
+            color = InstUISemanticColors.Text.base(),
+            modifier = Modifier.testTag("gradingPeriodLabel")
+        )
+        InstUIText(
+            text = uiState.gradePreferencesUiState.selectedGradingPeriod?.title
+                ?: stringResource(id = R.string.allGradingPeriods),
+            style = InstUITextTokens.content,
+            color = InstUISemanticColors.Text.muted(),
+            modifier = Modifier.testTag("gradingPeriodName")
+        )
     }
 }
 
@@ -641,6 +797,7 @@ private fun SearchField(
                             color = colorResource(R.color.textDarkest),
                             fontSize = 16.sp
                         ),
+                        cursorBrush = SolidColor(Color(contextColor)),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Search

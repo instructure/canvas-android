@@ -72,7 +72,8 @@ data class AssignmentGroupUiState(
     val id: Long,
     val name: String,
     val assignments: List<AssignmentUiState>,
-    val expanded: Boolean
+    val expanded: Boolean,
+    val gradeText: String? = null
 )
 
 data class AssignmentUiState(

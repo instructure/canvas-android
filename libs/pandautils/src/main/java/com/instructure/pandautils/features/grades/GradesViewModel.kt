@@ -72,7 +72,7 @@ class GradesViewModel @Inject constructor(
     private val gradeFormatter: GradeFormatter,
     private val gradeCalculator: GradeCalculator,
     private val gradesViewModelBehavior: GradesViewModelBehavior,
-    private val experienceStrategies: Map<Experience, @JvmSuppressWildcards GradesExperienceStrategy>,
+    experienceStrategies: Map<Experience, @JvmSuppressWildcards GradesExperienceStrategy>,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -142,14 +142,28 @@ class GradesViewModel @Inject constructor(
             val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
             val currentGradingPeriod = gradingPeriods.getCurrentGradingPeriod()
 
+            val strategyInitialFilter = if (initialize) {
+                strategy.initialFilterState(course, gradingPeriods, currentGradingPeriod)
+            } else {
+                _uiState.value.filter
+            }
+
             var selectedGradingPeriod = _uiState.value.gradePreferencesUiState.selectedGradingPeriod
             var sortBy = _uiState.value.gradePreferencesUiState.sortBy
 
             if (initialize) {
                 selectedGradingPeriod = currentGradingPeriod
-                sortBy = repository.getSortBy() ?: sortBy
+                sortBy = repository.getSortBy()
+                    ?: strategyInitialFilter?.selectedFilters?.selectedGroupByOption?.toSortBy()
+                    ?: sortBy
             } else {
                 repository.setSortBy(_uiState.value.gradePreferencesUiState.sortBy)
+            }
+
+            val initialFilter = if (initialize) {
+                strategyInitialFilter?.syncGroupByOptionWith(sortBy)
+            } else {
+                strategyInitialFilter
             }
 
             val assignmentGroups = repository.loadAssignmentGroups(
@@ -161,12 +175,6 @@ class GradesViewModel @Inject constructor(
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
             domainAssignmentGroups = assignmentGroups
-
-            val initialFilter = if (initialize) {
-                strategy.initialFilterState(course, gradingPeriods, currentGradingPeriod)
-            } else {
-                _uiState.value.filter
-            }
             val groupsAfterStrategyFilter = applyStrategyFilters(assignmentGroups, initialFilter)
 
             allItems = when (sortBy) {
@@ -181,6 +189,10 @@ class GradesViewModel @Inject constructor(
                     updateAssignmentWhatIfScore(items, assignmentId, score)
                 }
             }
+
+            allItems = strategy.decorateGroupItems(
+                allItems, course, domainAssignmentGroups, sortBy, currentOnlyGraded, currentShowWhatIfScore
+            )
 
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
 
@@ -254,6 +266,10 @@ class GradesViewModel @Inject constructor(
             )
         }
 
+        if (newSortBy != previousPrefs.sortBy) {
+            repository.setSortBy(newSortBy)
+        }
+
         val gradingPeriodChanged = previousFilter?.selectedFilters?.selectedGradingPeriodFilter !=
             selected.selectedGradingPeriodFilter
         if (gradingPeriodChanged) {
@@ -269,16 +285,32 @@ class GradesViewModel @Inject constructor(
         AssignmentGroupByOption.AssignmentType -> null
     }
 
+    private fun SortBy.toGroupByOption(): AssignmentGroupByOption = when (this) {
+        SortBy.DUE_DATE -> AssignmentGroupByOption.DueDate
+        SortBy.GROUP -> AssignmentGroupByOption.AssignmentGroup
+    }
+
+    private fun GradesFilterUiState.syncGroupByOptionWith(sortBy: SortBy): GradesFilterUiState {
+        val target = sortBy.toGroupByOption()
+        if (selectedFilters.selectedGroupByOption == target) return this
+        return copy(selectedFilters = selectedFilters.copy(selectedGroupByOption = target))
+    }
+
     private fun recomputeAfterFilterChange() {
         val groups = domainAssignmentGroups
         if (groups.isEmpty()) return
-        val sortBy = _uiState.value.gradePreferencesUiState.sortBy
-        val groupsAfterFilter = applyStrategyFilters(groups, _uiState.value.filter)
+        val state = _uiState.value
+        val sortBy = state.gradePreferencesUiState.sortBy
+        val groupsAfterFilter = applyStrategyFilters(groups, state.filter)
         allItems = when (sortBy) {
             SortBy.GROUP -> groupByAssignmentGroup(groupsAfterFilter)
             SortBy.DUE_DATE -> groupByDueDate(groupsAfterFilter)
         }.filter { it.assignments.isNotEmpty() }
-        val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
+        allItems = strategy.decorateGroupItems(
+            allItems, course, domainAssignmentGroups, sortBy,
+            state.onlyGradedAssignmentsSwitchEnabled, state.showWhatIfScore
+        )
+        val filteredItems = filterItems(allItems, state.searchQuery)
         _uiState.update { it.copy(items = filteredItems) }
     }
 
@@ -547,10 +579,18 @@ class GradesViewModel @Inject constructor(
                     } else {
                         gradeFormatter.getGradeString(course, courseGrade, !action.checked)
                     }
+                    val sortBy = state.gradePreferencesUiState.sortBy
+                    val updatedItems = strategy.decorateGroupItems(
+                        state.items, course, domainAssignmentGroups, sortBy, action.checked, state.showWhatIfScore
+                    )
+                    allItems = strategy.decorateGroupItems(
+                        allItems, course, domainAssignmentGroups, sortBy, action.checked, state.showWhatIfScore
+                    )
 
                     state.copy(
                         onlyGradedAssignmentsSwitchEnabled = action.checked,
-                        gradeText = newGradeText
+                        gradeText = newGradeText,
+                        items = updatedItems
                     )
                 }
             }
@@ -605,10 +645,20 @@ class GradesViewModel @Inject constructor(
                     } else {
                         gradeFormatter.getGradeString(course, courseGrade, !state.onlyGradedAssignmentsSwitchEnabled)
                     }
+                    val sortBy = state.gradePreferencesUiState.sortBy
+                    val updatedItems = strategy.decorateGroupItems(
+                        state.items, course, domainAssignmentGroups, sortBy,
+                        state.onlyGradedAssignmentsSwitchEnabled, action.checked
+                    )
+                    allItems = strategy.decorateGroupItems(
+                        allItems, course, domainAssignmentGroups, sortBy,
+                        state.onlyGradedAssignmentsSwitchEnabled, action.checked
+                    )
 
                     state.copy(
                         showWhatIfScore = action.checked,
-                        gradeText = newGradeText
+                        gradeText = newGradeText,
+                        items = updatedItems
                     )
                 }
             }
@@ -648,8 +698,18 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.UpdateWhatIfScore -> {
                 _uiState.update { state ->
-                    val updatedItems = updateAssignmentWhatIfScore(state.items, action.assignmentId, action.score)
+                    val itemsWithScore = updateAssignmentWhatIfScore(state.items, action.assignmentId, action.score)
                     allItems = updateAssignmentWhatIfScore(allItems, action.assignmentId, action.score)
+
+                    val sortBy = state.gradePreferencesUiState.sortBy
+                    val updatedItems = strategy.decorateGroupItems(
+                        itemsWithScore, course, domainAssignmentGroups, sortBy,
+                        state.onlyGradedAssignmentsSwitchEnabled, state.showWhatIfScore
+                    )
+                    allItems = strategy.decorateGroupItems(
+                        allItems, course, domainAssignmentGroups, sortBy,
+                        state.onlyGradedAssignmentsSwitchEnabled, state.showWhatIfScore
+                    )
 
                     val newGradeText = if (state.showWhatIfScore) {
                         calculateWhatIfGrade(updatedItems, state.onlyGradedAssignmentsSwitchEnabled)

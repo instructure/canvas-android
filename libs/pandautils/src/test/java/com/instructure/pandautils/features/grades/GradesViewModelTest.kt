@@ -1462,10 +1462,431 @@ class GradesViewModelTest {
         Assert.assertEquals(false, viewModel.uiState.value.filter?.isFilterScreenOpen)
     }
 
+    @Test
+    fun `NGC populates per-group gradeText on initial load when sorted by group`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+
+        val group = viewModel.uiState.value.items.first()
+        Assert.assertNotNull(group.gradeText)
+        Assert.assertTrue(group.gradeText!!.contains("90"))
+    }
+
+    @Test
+    fun `NGC does not populate per-group gradeText when sorted by due date`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.items.all { it.gradeText == null })
+    }
+
+    @Test
+    fun `Academic experience leaves per-group gradeText null`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.items.all { it.gradeText == null })
+    }
+
+    @Test
+    fun `NGC hides no-weight groups when course applies assignment group weights`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 1",
+            isApplyAssignmentGroupWeights = true,
+        )
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Weighted",
+                groupWeight = 50.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            ),
+            AssignmentGroup(
+                id = 2,
+                name = "No weight",
+                groupWeight = 0.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 2,
+                        name = "A2",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+
+        val items = viewModel.uiState.value.items
+        Assert.assertEquals(1, items.size)
+        Assert.assertEquals(1L, items.first().id)
+    }
+
+    @Test
+    fun `NGC keeps no-weight groups when course does not apply group weights`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 1",
+            isApplyAssignmentGroupWeights = false,
+        )
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 2,
+                name = "No weight",
+                groupWeight = 0.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 2,
+                        name = "A2",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 8.0)
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
+
+        createViewModel()
+
+        val items = viewModel.uiState.value.items
+        Assert.assertEquals(1, items.size)
+        Assert.assertEquals(2L, items.first().id)
+    }
+
+    @Test
+    fun `NGC recomputes per-group gradeText when graded-only toggle changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+        every {
+            gradeCalculator.calculateGrade(any(), any(), any(), onlyGraded = true)
+        } returns 90.0
+        every {
+            gradeCalculator.calculateGrade(any(), any(), any(), onlyGraded = false)
+        } returns 45.0
+
+        createViewModel()
+        val beforeText = viewModel.uiState.value.items.first().gradeText
+
+        viewModel.handleAction(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(false))
+
+        val afterText = viewModel.uiState.value.items.first().gradeText
+        Assert.assertNotEquals(beforeText, afterText)
+        Assert.assertTrue(afterText!!.contains("45"))
+    }
+
+    @Test
+    fun `NGC recomputes per-group gradeText when what-if toggle changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 5.0)
+                    )
+                )
+            )
+        )
+        every { gradesViewModelBehavior.isWhatIfGradingEnabled(any()) } returns true
+        // Stub before what-if and after what-if results
+        every {
+            gradeCalculator.calculateGrade(any(), whatIfScores = emptyMap(), any(), any())
+        } returns 50.0
+        every {
+            gradeCalculator.calculateGrade(any(), whatIfScores = mapOf(1L to 9.0), any(), any())
+        } returns 90.0
+
+        createViewModel()
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1L, 9.0))
+
+        val beforeText = viewModel.uiState.value.items.first().gradeText
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        val afterText = viewModel.uiState.value.items.first().gradeText
+        Assert.assertNotEquals(beforeText, afterText)
+        Assert.assertTrue(afterText!!.contains("90"))
+    }
+
+    @Test
+    fun `NGC initial sortBy syncs with strategy's selectedGroupByOption when no saved pref`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        // NGCGradesStrategy.initialFilterState defaults selectedGroupByOption to AssignmentGroup,
+        // so sortBy must also land on GROUP to keep the filter chip and the actual sort aligned.
+        Assert.assertEquals(SortBy.GROUP, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `Academic initial sortBy stays at DUE_DATE when no saved pref`() {
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        Assert.assertEquals(SortBy.DUE_DATE, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `Saved sortBy preference wins over strategy filter default`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        Assert.assertEquals(SortBy.DUE_DATE, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `NGC filter's selectedGroupByOption is rewritten to match saved sortBy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        val filter = viewModel.uiState.value.filter
+        Assert.assertNotNull(filter)
+        Assert.assertEquals(
+            AssignmentGroupByOption.DueDate,
+            filter!!.selectedFilters.selectedGroupByOption
+        )
+    }
+
+    @Test
+    fun `onFilterUpdated persists newSortBy when it changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
+        )
+
+        verify { gradesRepository.setSortBy(SortBy.GROUP) }
+    }
+
+    @Test
+    fun `Non-grading-period filter change re-decorates group items with gradeText`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(
+                            score = 9.0,
+                            grade = "A",
+                            postedAt = java.util.Date(),
+                            workflowState = "graded",
+                        ),
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        // Trigger a non-grading-period filter change to exercise recomputeAfterFilterChange.
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        )
+
+        // After a non-grading-period filter change, recomputeAfterFilterChange should still run
+        // strategy.decorateGroupItems so the group's gradeText survives.
+        val items = viewModel.uiState.value.items
+        Assert.assertTrue(items.isNotEmpty())
+        Assert.assertNotNull(items.first().gradeText)
+    }
+
+    @Test
+    fun `onFilterUpdated does not persist sortBy when unchanged`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        )
+
+        verify(exactly = 0) { gradesRepository.setSortBy(any()) }
+    }
+
+    @Test
+    fun `NGC filter's selectedGroupByOption stays AssignmentGroup when no saved sortBy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        val filter = viewModel.uiState.value.filter
+        Assert.assertNotNull(filter)
+        Assert.assertEquals(
+            AssignmentGroupByOption.AssignmentGroup,
+            filter!!.selectedFilters.selectedGroupByOption
+        )
+    }
+
     private fun createViewModel() {
         val strategies = mapOf(
             Experience.Academic to AcademicGradesStrategy(),
-            Experience.NGC to NGCGradesStrategy(),
+            Experience.NGC to NGCGradesStrategy(gradeCalculator),
         )
         viewModel = GradesViewModel(
             context,
