@@ -151,7 +151,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         inboxDetailsPage.assertStarred(false)
-        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.clickStarButton(true)
         inboxDetailsPage.assertStarred(true)
 
         inboxDetailsPage.pressBackButton()
@@ -160,7 +160,7 @@ abstract class InboxDetailsInteractionTest : CanvasComposeTest() {
         inboxPage.assertConversationDisplayed(conversation.subject!!)
         inboxPage.openConversation(conversation.subject!!)
 
-        inboxDetailsPage.pressStarButton(false)
+        inboxDetailsPage.clickStarButton(false)
 
         inboxDetailsPage.assertStarred(false)
     }

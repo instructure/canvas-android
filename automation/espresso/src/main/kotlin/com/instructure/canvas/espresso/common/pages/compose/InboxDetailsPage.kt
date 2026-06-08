@@ -128,8 +128,8 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         replyButton.performClick()
     }
 
-    fun pressStarButton(newIsStarred: Boolean) {
-        if (newIsStarred) {
+    fun clickStarButton(notStarredYet: Boolean) {
+        if (notStarredYet) {
             composeTestRule.onNodeWithContentDescription("Star").performClick()
         } else {
             composeTestRule.onNodeWithContentDescription("Unstar").performClick()
