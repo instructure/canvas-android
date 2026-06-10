@@ -105,8 +105,13 @@ class LoadVisibleCoursesUseCase @Inject constructor(
             imageUrl = graphQlCourse.imageUrl,
             courseColor = graphQlCourse.dashboardCard?.color,
             isFavorite = graphQlCourse.dashboardCard?.isFavorited == true,
-            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
+            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf(),
+            homePage = mapHomePage(graphQlCourse.dashboardCard?.defaultView)
         )
+    }
+
+    private fun mapHomePage(defaultView: String?): Course.HomePage? {
+        return Course.HomePage.entries.firstOrNull { it.apiString == defaultView }
     }
 
     private fun applyNickname(course: Course?, card: DashboardCard): Course? {

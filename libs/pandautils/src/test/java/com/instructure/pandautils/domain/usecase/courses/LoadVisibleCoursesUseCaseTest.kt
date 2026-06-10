@@ -19,7 +19,9 @@ package com.instructure.pandautils.domain.usecase.courses
 import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.type.EnrollmentType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -305,6 +307,36 @@ class LoadVisibleCoursesUseCaseTest {
         assertTrue(result.announcementsMap.isEmpty())
     }
 
+    @Test
+    fun `defaultView modules is mapped to HOME_MODULES and routes to MODULES_ID`() = runTest {
+        val data = buildQueryData(
+            allCourse(id = "1", name = "Course", dashboardCard = dashboardCard(position = 0, defaultView = "modules"))
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val course = result.visibleCourses[0]
+        assertEquals(Course.HomePage.HOME_MODULES, course.homePage)
+        assertEquals(Tab.MODULES_ID, course.homePageID)
+    }
+
+    @Test
+    fun `null defaultView maps to null homePage and routes to NOTIFICATIONS_ID`() = runTest {
+        val data = buildQueryData(
+            allCourse(id = "1", name = "Course", dashboardCard = dashboardCard(position = 0, defaultView = null))
+        )
+        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
+
+        val result = useCase(LoadVisibleCoursesUseCase.Params())
+
+        val course = result.visibleCourses[0]
+        assertEquals(null, course.homePage)
+        assertEquals(Tab.NOTIFICATIONS_ID, course.homePageID)
+    }
+
     private fun buildQueryData(vararg courses: DashboardCoursesQuery.AllCourse): DashboardCoursesQuery.Data {
         return DashboardCoursesQuery.Data(allCourses = courses.toList())
     }
@@ -332,13 +364,15 @@ class LoadVisibleCoursesUseCaseTest {
     private fun dashboardCard(
         isFavorited: Boolean = false,
         position: Int? = null,
-        color: String? = null
+        color: String? = null,
+        defaultView: String? = null
     ): DashboardCoursesQuery.DashboardCard {
         return DashboardCoursesQuery.DashboardCard(
             isFavorited = isFavorited,
             position = position,
             color = color,
-            image = null
+            image = null,
+            defaultView = defaultView
         )
     }
 }

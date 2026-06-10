@@ -68,8 +68,13 @@ class LoadSingleCourseUseCase @Inject constructor(
             imageUrl = courseNode.imageUrl,
             courseColor = courseNode.dashboardCard?.color,
             isFavorite = courseNode.dashboardCard?.isFavorited == true,
-            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
+            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf(),
+            homePage = mapHomePage(courseNode.dashboardCard?.defaultView)
         )
+    }
+
+    private fun mapHomePage(defaultView: String?): Course.HomePage? {
+        return Course.HomePage.entries.firstOrNull { it.apiString == defaultView }
     }
 
     private fun mapEnrollmentType(type: EnrollmentType): KotlinEnrollmentType {
