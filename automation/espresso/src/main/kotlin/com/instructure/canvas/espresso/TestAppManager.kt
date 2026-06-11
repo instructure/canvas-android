@@ -28,7 +28,10 @@ open class TestAppManager : AppManager(), WorkManagerTestAppManager {
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
         super.onCreate()
-        RemoteConfigUtils.initialize()
+        // Skip fetching from Firebase so RemoteConfigPrefs is the sole source of truth for feature
+        // flags. Tests seed deterministic values via RemoteConfigOverrides instead of relying on a
+        // live (and racy) remote fetch.
+        RemoteConfigUtils.initialize(fetchRemoteValues = false)
     }
 
     override val workManagerConfiguration: Configuration
