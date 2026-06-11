@@ -37,6 +37,13 @@ import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 
+/**
+ * @param webViewStateKey When multiple [ComposeCanvasWebViewWrapper]s share a ViewModelStoreOwner,
+ * pass a unique key per wrapper so each gets its own state holder. Otherwise they share one
+ * [ComposeCanvasWebViewStateViewModel] and overwrite each other's [webViewState] (e.g. the syllabus
+ * and front-page tabs would display each other's content). The default `null` is equivalent to
+ * `viewModel()` and is safe when only one wrapper exists per scope.
+ */
 @Composable
 fun ComposeCanvasWebViewWrapper(
     content: String,
@@ -45,13 +52,14 @@ fun ComposeCanvasWebViewWrapper(
     useInAppFormatting: Boolean = true,
     title: String? = null,
     baseUrl: String? = null,
+    webViewStateKey: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks? = null,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
-    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel()
+    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel(key = webViewStateKey)
     val webViewState = stateViewModel.webViewState
     val savedHtml = rememberSaveable(content, stateSaver = Saver(
         save = { it },
