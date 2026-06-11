@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -248,6 +249,7 @@ class SettingsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesWithDifferentUsersE2E() {
 
@@ -437,6 +439,7 @@ class SettingsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesFABButtonWithDifferentUsersE2E() {
 
