@@ -31,6 +31,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
@@ -51,6 +52,7 @@ class InboxE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxSelectedButtonActionsE2E() {
 

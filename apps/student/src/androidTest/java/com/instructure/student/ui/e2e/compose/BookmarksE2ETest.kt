@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -231,6 +232,7 @@ class BookmarksE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.BOOKMARKS, TestCategory.E2E)
     fun testBookmarkAssignmentFromTodoAndNotificationsE2E() {
 
