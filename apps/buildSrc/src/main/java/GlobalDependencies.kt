@@ -176,7 +176,7 @@ object Libs {
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
     const val JSOUP = "org.jsoup:jsoup:${Versions.JSOUP}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.9.3.8651"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.13.2.9439"
 
     /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
