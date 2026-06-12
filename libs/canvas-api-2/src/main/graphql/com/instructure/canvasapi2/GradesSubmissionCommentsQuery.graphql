@@ -14,21 +14,22 @@
 #     limitations under the License.
 #
 
-query GradesUnreadCommentCountsQuery($courseId: ID!, $studentId: ID!, $pageSize: Int!, $submissionCursor: String) {
-    course(id: $courseId) {
-        submissionsConnection(
-            first: $pageSize
-            after: $submissionCursor
-            studentIds: [$studentId]
-        ) {
+# Comment-only pagination companion to GradesAssignmentGroupsQuery. The main query fetches the first
+# page of each submission's comments inline; when a submission has more (rare — usually only the
+# latest attempt matters), this fetches the remaining pages for that one submission without re-running
+# the whole assignment-groups query. Mirrors the CourseAnnouncementsQuery pagination pattern.
+query GradesSubmissionCommentsQuery($submissionId: ID!, $cursor: String, $pageSize: Int!) {
+    submission(id: $submissionId) {
+        commentsConnection(first: $pageSize, after: $cursor) {
             pageInfo {
                 hasNextPage
                 endCursor
             }
             nodes {
                 _id
-                unreadCommentCount
-                assignment {
+                attempt
+                createdAt
+                author {
                     _id
                 }
             }

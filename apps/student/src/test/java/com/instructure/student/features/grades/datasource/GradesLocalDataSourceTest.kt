@@ -75,7 +75,7 @@ class GradesLocalDataSourceTest {
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), any()) } returns expected
 
         val result =
-            dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+            dataSource.getAssignmentGroupsWithAssignments(1, gradingPeriodId = 1, forceNetwork = true, paginateComments = false)
 
         assertEquals(expected, result)
     }
@@ -119,7 +119,7 @@ class GradesLocalDataSourceTest {
 
         coEvery { assignmentFacade.getAssignmentGroupsWithAssignments(1) } returns expected
 
-        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, gradingPeriodId = null, forceNetwork = true, paginateComments = false)
 
         assertEquals(expected, result)
     }
@@ -136,13 +136,5 @@ class GradesLocalDataSourceTest {
         val result = dataSource.getCustomGradeStatuses(1, true)
 
         assertEquals(data.map { it.toApiModel() }, result)
-    }
-
-    // Unread comment state is not synced for offline, so the local source always returns no counts.
-    @Test
-    fun `Get unread comment counts returns empty map`() = runTest {
-        val result = dataSource.getUnreadCommentCounts(1L, 5L, false)
-
-        assertEquals(emptyMap<Long, Int>(), result)
     }
 }

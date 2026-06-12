@@ -17,8 +17,9 @@ package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.graphql.GradesUnreadCommentsManager
-import com.instructure.canvasapi2.managers.graphql.GradesUnreadCommentsManagerImpl
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManager
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManagerImpl
+import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,10 +27,13 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-class GradesUnreadCommentsModule {
+class GradesGraphQlModule {
 
     @Provides
-    fun provideGradesUnreadCommentsManager(@DefaultApolloClient apolloClient: ApolloClient): GradesUnreadCommentsManager {
-        return GradesUnreadCommentsManagerImpl(apolloClient)
+    fun provideGradesGraphQlManager(
+        @DefaultApolloClient apolloClient: ApolloClient,
+        apiPrefs: ApiPrefs
+    ): GradesGraphQlManager {
+        return GradesGraphQlManagerImpl(apolloClient, apiPrefs)
     }
 }

@@ -55,12 +55,15 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
 
@@ -75,6 +78,7 @@ class GradesViewModel @Inject constructor(
     private val gradeCalculator: GradeCalculator,
     private val gradesViewModelBehavior: GradesViewModelBehavior,
     experienceStrategies: Map<Experience, @JvmSuppressWildcards GradesExperienceStrategy>,
+    @GradesComputationDispatcher private val computationDispatcher: CoroutineDispatcher,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -141,10 +145,15 @@ class GradesViewModel @Inject constructor(
                 )
             }
 
-            customStatuses = repository.getCustomGradeStatuses(courseId, forceRefresh)
-            val course = repository.loadCourse(courseId, forceRefresh)
+            // Wave A: these calls are independent of each other, so run them in parallel.
+            val customStatusesDeferred = async { repository.getCustomGradeStatuses(courseId, forceRefresh) }
+            val courseDeferred = async { repository.loadCourse(courseId, forceRefresh) }
+            val gradingPeriodsDeferred = async { repository.loadGradingPeriods(courseId, forceRefresh) }
+
+            customStatuses = customStatusesDeferred.await()
+            val course = courseDeferred.await()
             this@GradesViewModel.course = course
-            val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
+            val gradingPeriods = gradingPeriodsDeferred.await()
             val currentGradingPeriod = gradingPeriods.getCurrentGradingPeriod()
 
             val strategyInitialFilter = if (initialize) {
@@ -171,52 +180,64 @@ class GradesViewModel @Inject constructor(
                 strategyInitialFilter
             }
 
-            val assignmentGroups = repository.loadAssignmentGroups(
-                courseId,
-                selectedGradingPeriod?.id,
-                forceRefresh
-            ).filterHiddenAssignments()
-            val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
+            // Wave B: both depend only on the selected grading period, so run them in parallel.
+            // paginateComments = isNgc: only the NGC comment pill needs the full comment list, so we
+            // skip comment pagination otherwise (the first page is still fetched but not shown).
+            val assignmentGroupsDeferred = async {
+                repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh, paginateComments = isNgc)
+                    .filterHiddenAssignments()
+            }
+            val enrollmentsDeferred = async {
+                repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
+            }
+            val assignmentGroups = assignmentGroupsDeferred.await()
+            val enrollments = enrollmentsDeferred.await()
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
             domainAssignmentGroups = assignmentGroups
 
-            // Unread comment state is supplementary; never let a failure here break the grades list.
+            // Unread comment counts come from the submissions loaded above (GraphQL unreadCommentCount),
+            // so no extra request is needed. Only meaningful for NGC, which shows the comment pill.
             unreadCommentCounts = if (isNgc) {
-                runCatching {
-                    repository.getUnreadCommentCounts(courseId, repository.studentId, forceRefresh)
-                }.getOrDefault(emptyMap())
+                assignmentGroups
+                    .flatMap { it.assignments }
+                    .associate { it.id to (it.submission?.unreadCommentCount ?: 0) }
             } else {
                 emptyMap()
             }
 
-            val groupsAfterStrategyFilter = applyStrategyFilters(assignmentGroups, initialFilter)
-
-            allItems = when (sortBy) {
-                SortBy.GROUP -> groupByAssignmentGroup(groupsAfterStrategyFilter)
-                SortBy.DUE_DATE -> groupByDueDate(groupsAfterStrategyFilter)
-            }.filter {
-                it.assignments.isNotEmpty()
-            }
-
-            if (currentWhatIfScores.isNotEmpty()) {
-                allItems = currentWhatIfScores.entries.fold(allItems) { items, (assignmentId, score) ->
-                    updateAssignmentWhatIfScore(items, assignmentId, score)
-                }
-            }
-
-            allItems = strategy.decorateGroupItems(
-                allItems, course, domainAssignmentGroups, sortBy, currentOnlyGraded, currentShowWhatIfScore
-            )
-
-            val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
-
             val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course)
+            val searchQuery = _uiState.value.searchQuery
 
-            val gradeText = if (currentWhatIfScores.isNotEmpty() && currentShowWhatIfScore) {
-                calculateWhatIfGrade(filteredItems, currentOnlyGraded)
-            } else {
-                gradeFormatter.getGradeString(course, courseGrade, !currentOnlyGraded)
+            // Grouping, mapping, filtering and grade calculation are CPU-bound; run them off the main thread.
+            val (filteredItems, gradeText) = withContext(computationDispatcher) {
+                val groupsAfterStrategyFilter = applyStrategyFilters(assignmentGroups, initialFilter)
+
+                var items = when (sortBy) {
+                    SortBy.GROUP -> groupByAssignmentGroup(groupsAfterStrategyFilter)
+                    SortBy.DUE_DATE -> groupByDueDate(groupsAfterStrategyFilter)
+                }.filter {
+                    it.assignments.isNotEmpty()
+                }
+
+                if (currentWhatIfScores.isNotEmpty()) {
+                    items = currentWhatIfScores.entries.fold(items) { acc, (assignmentId, score) ->
+                        updateAssignmentWhatIfScore(acc, assignmentId, score)
+                    }
+                }
+
+                items = strategy.decorateGroupItems(
+                    items, course, domainAssignmentGroups, sortBy, currentOnlyGraded, currentShowWhatIfScore
+                )
+                allItems = items
+
+                val filtered = filterItems(items, searchQuery)
+                val text = if (currentWhatIfScores.isNotEmpty() && currentShowWhatIfScore) {
+                    calculateWhatIfGrade(filtered, currentOnlyGraded)
+                } else {
+                    gradeFormatter.getGradeString(course, courseGrade, !currentOnlyGraded)
+                }
+                filtered to text
             }
 
             _uiState.update {

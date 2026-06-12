@@ -545,7 +545,7 @@ private fun LegacyGradesScreenContent(
             }
 
             uiState.items.forEach { item ->
-                stickyHeader {
+                stickyHeader(key = "group_${item.id}", contentType = "groupHeader") {
                     GroupHeader(
                         name = item.name,
                         expanded = item.expanded,
@@ -557,7 +557,8 @@ private fun LegacyGradesScreenContent(
 
                 items(
                     items = item.assignments,
-                    key = { assignment -> assignment.id }
+                    key = { assignment -> assignment.id },
+                    contentType = { "assignment" }
                 ) { assignment ->
                     AnimatedVisibility(
                         visible = item.expanded,

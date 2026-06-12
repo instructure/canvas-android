@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
-import com.instructure.canvasapi2.managers.graphql.GradesUnreadCommentsManager
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.grades.GradesRepository
 import com.instructure.pandautils.features.grades.GradesViewModelBehavior
@@ -63,9 +63,9 @@ class GradesModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
         customGradeStatusesManager: CustomGradeStatusesManager,
-        gradesUnreadCommentsManager: GradesUnreadCommentsManager
+        gradesGraphQlManager: GradesGraphQlManager
     ): GradesNetworkDataSource {
-        return GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager, gradesUnreadCommentsManager)
+        return GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager, gradesGraphQlManager)
     }
 
     @Provides

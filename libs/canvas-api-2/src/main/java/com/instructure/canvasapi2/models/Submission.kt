@@ -28,6 +28,8 @@ data class Submission(
         val grade: String? = null,
         val score: Double = 0.0,
         val attempt: Long = 0,
+        @SerializedName("unread_comment_count")
+        val unreadCommentCount: Int = 0,
         @SerializedName("submitted_at")
         var submittedAt: Date? = null,
         @SerializedName("submission_comments")

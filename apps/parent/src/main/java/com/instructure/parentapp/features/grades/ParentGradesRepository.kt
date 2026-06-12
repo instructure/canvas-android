@@ -45,7 +45,7 @@ class ParentGradesRepository(
 
     override val studentId = parentPrefs.currentStudent?.id.orDefault()
 
-    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup> {
+    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean, paginateComments: Boolean): List<AssignmentGroup> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForObserver(courseId, gradingPeriodId, params).depaginate {
@@ -112,10 +112,5 @@ class ParentGradesRepository(
             ?.nodes
             ?.filterNotNull()
             .orEmpty()
-    }
-
-    // Unread comment indicators are a student NGC-only feature; the parent app does not surface them.
-    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int> {
-        return emptyMap()
     }
 }

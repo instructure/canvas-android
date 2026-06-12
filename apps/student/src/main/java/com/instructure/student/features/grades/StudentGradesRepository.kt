@@ -56,13 +56,11 @@ class StudentGradesRepository(
     override suspend fun loadAssignmentGroups(
         courseId: Long,
         gradingPeriodId: Long?,
-        forceRefresh: Boolean
+        forceRefresh: Boolean,
+        paginateComments: Boolean
     ): List<AssignmentGroup> {
-        return gradingPeriodId?.let {
-            dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, it, true, forceRefresh)
-        } ?: run {
-            dataSource().getAssignmentGroupsWithAssignments(courseId, forceRefresh)
-        }.filterHiddenAssignments()
+        return dataSource().getAssignmentGroupsWithAssignments(courseId, gradingPeriodId, forceRefresh, paginateComments)
+            .filterHiddenAssignments()
     }
 
     override suspend fun loadGradingPeriods(courseId: Long, forceRefresh: Boolean): List<GradingPeriod> {
@@ -105,9 +103,5 @@ class StudentGradesRepository(
 
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
         return dataSource().getCustomGradeStatuses(courseId, forceNetwork)
-    }
-
-    override suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int> {
-        return dataSource().getUnreadCommentCounts(courseId, studentId, forceRefresh)
     }
 }

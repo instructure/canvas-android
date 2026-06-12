@@ -18,10 +18,12 @@
 package com.instructure.pandautils.features.grades.gradepreferences
 
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Immutable
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.R
 
 
+@Immutable
 data class GradePreferencesUiState(
     val show: Boolean = false,
     val courseName: String = "",

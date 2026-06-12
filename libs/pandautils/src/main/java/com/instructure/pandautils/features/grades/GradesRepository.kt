@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 interface GradesRepository {
 
     val studentId: Long
-    suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup>
+    suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean, paginateComments: Boolean = false): List<AssignmentGroup>
     suspend fun loadGradingPeriods(courseId: Long, forceRefresh: Boolean): List<GradingPeriod>
     suspend fun loadEnrollments(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<Enrollment>
     suspend fun loadCourse(courseId: Long, forceRefresh: Boolean): Course
@@ -37,5 +37,4 @@ interface GradesRepository {
     fun getSortBy(): SortBy?
     fun setSortBy(sortBy: SortBy)
     suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
-    suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceRefresh: Boolean): Map<Long, Int>
 }

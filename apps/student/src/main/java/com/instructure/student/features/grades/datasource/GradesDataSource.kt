@@ -28,13 +28,6 @@ interface GradesDataSource {
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
 
-    suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
-        courseId: Long,
-        gradingPeriodId: Long,
-        scopeToStudent: Boolean,
-        forceNetwork: Boolean
-    ): List<AssignmentGroup>
-
     suspend fun getSubmissionsForMultipleAssignments(
         studentId: Long,
         courseId: Long,
@@ -53,10 +46,10 @@ interface GradesDataSource {
 
     suspend fun getAssignmentGroupsWithAssignments(
         courseId: Long,
+        gradingPeriodId: Long?,
         forceNetwork: Boolean,
+        paginateComments: Boolean = false,
     ): List<AssignmentGroup>
 
     suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
-
-    suspend fun getUnreadCommentCounts(courseId: Long, studentId: Long, forceNetwork: Boolean): Map<Long, Int>
 }
