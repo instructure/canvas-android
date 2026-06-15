@@ -16,14 +16,18 @@
 package com.instructure.horizon.offline.sync
 
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.data.datasource.AssignmentCommentsLocalDataSource
 import com.instructure.horizon.data.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.horizon.data.datasource.AssignmentDetailsNetworkDataSource
 import com.instructure.horizon.data.datasource.SubmissionLocalDataSource
 import com.instructure.horizon.data.repository.HorizonFileSyncRepository
+import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.pandautils.features.offline.sync.HtmlParser
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class AssignmentSyncer @Inject constructor(
@@ -36,6 +40,7 @@ class AssignmentSyncer @Inject constructor(
     private val imageSyncer: ImageSyncer,
     @HorizonHtmlParserQualifier private val htmlParser: HtmlParser,
     private val fileSyncRepository: HorizonFileSyncRepository,
+    private val fileSyncPlanDao: HorizonFileSyncPlanDao,
 ) {
     suspend fun syncAssignments(courseId: Long, assignmentIds: List<Long>): ContentSyncResult {
         val additionalFileIds = mutableSetOf<Long>()
@@ -58,10 +63,12 @@ class AssignmentSyncer @Inject constructor(
                 if (submissionHistory.isNotEmpty()) {
                     submissionLocalDataSource.saveSubmissions(assignmentId, submissionHistory)
                     syncSubmissionAttachmentFiles(courseId, submissionHistory)
-                    syncSubmissionPreviewImages(submissionHistory)
+                    syncSubmissionPreviewImages(courseId, submissionHistory)
                 }
 
                 syncComments(assignmentId, submissionHistory)
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
                 // Skip individual assignment failures
             }
@@ -73,31 +80,57 @@ class AssignmentSyncer @Inject constructor(
         )
     }
 
-    private suspend fun syncSubmissionAttachmentFiles(courseId: Long, submissions: List<com.instructure.canvasapi2.models.Submission>) {
+    private suspend fun syncSubmissionAttachmentFiles(courseId: Long, submissions: List<Submission>) {
         val attachments = submissions.flatMap { it.attachments }
+        val existingPlanIds = fileSyncPlanDao.findByCourseId(courseId).map { it.fileId }.toSet()
         for (attachment in attachments) {
             val url = attachment.url ?: continue
             val displayName = attachment.displayName ?: "file_${attachment.id}"
+            val attachmentSize = attachment.size
             try {
-                fileSyncRepository.downloadFileByUrl(attachment.id, courseId, url, displayName)
+                if (attachment.id !in existingPlanIds) {
+                    fileSyncPlanDao.upsert(
+                        HorizonFileSyncPlanEntity(
+                            fileId = attachment.id,
+                            courseId = courseId,
+                            fileName = displayName,
+                            fileSize = attachmentSize,
+                            state = HorizonProgressState.PENDING,
+                            isAdditionalFile = true,
+                        )
+                    )
+                }
+                fileSyncPlanDao.updateProgress(attachment.id, courseId, 0, HorizonProgressState.IN_PROGRESS)
+                fileSyncRepository.downloadFileByUrl(
+                    attachment.id,
+                    courseId,
+                    url,
+                    displayName,
+                    expectedSize = attachmentSize.takeIf { it > 0 },
+                ) { percent ->
+                    fileSyncPlanDao.updateProgress(attachment.id, courseId, percent, HorizonProgressState.IN_PROGRESS)
+                }
+                fileSyncPlanDao.updateProgress(attachment.id, courseId, 100, HorizonProgressState.COMPLETED)
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
-                // Attachment download failure is non-fatal
+                fileSyncPlanDao.updateProgress(attachment.id, courseId, 0, HorizonProgressState.ERROR)
             }
         }
     }
 
-    private suspend fun syncSubmissionPreviewImages(submissions: List<com.instructure.canvasapi2.models.Submission>) {
+    private suspend fun syncSubmissionPreviewImages(courseId: Long, submissions: List<Submission>) {
         val imageUrls = submissions
             .flatMap { it.attachments }
             .mapNotNull { it.thumbnailUrl }
             .filter { it.isNotBlank() }
             .toSet()
         if (imageUrls.isNotEmpty()) {
-            imageSyncer.syncImages(imageUrls)
+            imageSyncer.syncImages(imageUrls, courseId = courseId)
         }
     }
 
-    private suspend fun syncComments(assignmentId: Long, submissions: List<com.instructure.canvasapi2.models.Submission>) {
+    private suspend fun syncComments(assignmentId: Long, submissions: List<Submission>) {
         val userId = apiPrefs.user?.id ?: return
         val attempts = submissions.map { it.attempt.toInt() }.distinct()
         for (attempt in attempts) {
@@ -109,6 +142,8 @@ class AssignmentSyncer @Inject constructor(
                     forceNetwork = true,
                 )
                 commentsLocalDataSource.saveComments(assignmentId, attempt, commentsData)
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
                 // Comment sync failure is non-fatal
             }

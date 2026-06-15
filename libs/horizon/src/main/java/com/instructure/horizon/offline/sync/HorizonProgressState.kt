@@ -19,8 +19,10 @@ enum class HorizonProgressState {
     PENDING,
     IN_PROGRESS,
     COMPLETED,
+    PARTIAL,
     ERROR;
 
-    fun isFinished() = this == COMPLETED || this == ERROR
+    fun isFinished() = this == COMPLETED || this == PARTIAL || this == ERROR
     fun isRunning() = this == IN_PROGRESS || this == PENDING
+    fun isAvailable() = this == COMPLETED || this == PARTIAL
 }

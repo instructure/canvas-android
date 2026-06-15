@@ -16,12 +16,19 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.Index
 import java.util.Date
 
-@Entity(tableName = "horizon_local_images")
+const val IMAGE_SCOPE_ACCOUNT: Long = 0L
+
+@Entity(
+    tableName = "horizon_local_images",
+    primaryKeys = ["url", "courseId"],
+    indices = [Index("courseId"), Index("localPath")],
+)
 data class HorizonLocalImageEntity(
-    @PrimaryKey val url: String,
+    val url: String,
     val localPath: String,
     val createdDate: Date,
+    val courseId: Long = IMAGE_SCOPE_ACCOUNT,
 )

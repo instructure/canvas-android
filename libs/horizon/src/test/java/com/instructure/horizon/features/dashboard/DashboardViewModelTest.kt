@@ -23,11 +23,10 @@ import com.instructure.horizon.domain.usecase.GetCanvasThemeUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonSyncProgressData
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
-import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -58,8 +57,8 @@ class DashboardViewModelTest {
     private val localeUtils: LocaleUtils = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val aggregateProgressObserver: HorizonAggregateProgressObserver = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -86,6 +85,7 @@ class DashboardViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkObject(ThemePrefs)
         every { aggregateProgressObserver.progressData } returns MutableStateFlow(HorizonSyncProgressData())
+        every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getUnreadCountsUseCase(any()) } returns notificationCounts
         every { ThemePrefs.mobileLogoUrl } returns ""
     }
@@ -189,8 +189,7 @@ class DashboardViewModelTest {
             localeUtils,
             dashboardEventHandler,
             aggregateProgressObserver,
-            networkStateProvider,
-            featureFlagProvider,
+            offlineState,
             getLastSyncedAtUseCase,
         )
     }

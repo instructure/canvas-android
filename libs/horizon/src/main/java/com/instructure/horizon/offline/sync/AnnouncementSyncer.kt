@@ -22,12 +22,12 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.horizon.data.datasource.AnnouncementLocalDataSource
 import com.instructure.horizon.data.datasource.AnnouncementNetworkDataSource
-import com.instructure.horizon.database.entity.ANNOUNCEMENT_TYPE_ACCOUNT
 import com.instructure.horizon.database.entity.ANNOUNCEMENT_TYPE_COURSE
 import com.instructure.horizon.database.entity.announcementKey
 import com.instructure.horizon.model.HorizonAnnouncement
 import com.instructure.horizon.model.HorizonAnnouncementComment
 import com.instructure.horizon.model.HorizonAnnouncementKind
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class AnnouncementSyncer @Inject constructor(
@@ -46,10 +46,14 @@ class AnnouncementSyncer @Inject constructor(
         val comments = mutableMapOf<String, List<HorizonAnnouncementComment>>()
         for (announcement in courseAnnouncements) {
             val courseId = announcement.courseId ?: continue
-            runCatching {
+            try {
                 val topic = networkDataSource.getAnnouncementTopic(courseId, announcement.id, forceRefresh = true)
                 val key = announcementKey(ANNOUNCEMENT_TYPE_COURSE, announcement.id, courseId)
                 comments[key] = topic.toComments()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                // Topic fetch failure is non-fatal for the announcement
             }
         }
 
@@ -98,7 +102,4 @@ class AnnouncementSyncer @Inject constructor(
             )
         }
     }
-
-    @Suppress("unused")
-    private val accountType: String = ANNOUNCEMENT_TYPE_ACCOUNT
 }

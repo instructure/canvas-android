@@ -30,7 +30,6 @@ import com.instructure.horizon.R
 import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
 import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
@@ -51,9 +50,8 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
+import androidx.lifecycle.ViewModel
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import com.instructure.pandautils.utils.orDefault
@@ -61,6 +59,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -82,10 +83,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val dashboardEventHandler: DashboardEventHandler,
     private val learnEventHandler: LearnEventHandler,
     savedStateHandle: SavedStateHandle,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private val offlineState: HorizonOfflineState,
+) : ViewModel() {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
@@ -130,8 +129,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             loadData()
-            if (isOffline()) {
-                onNetworkLost()
+            if (offlineState.isOffline.value) {
+                applyOfflineState()
             }
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
@@ -141,13 +140,17 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
+
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline ->
+                if (isOffline) applyOfflineState()
+                else _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            }
+            .launchIn(viewModelScope)
     }
 
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-    }
-
-    override fun onNetworkLost() {
+    private fun applyOfflineState() {
         viewModelScope.tryLaunch {
             val currentModuleItemId = _uiState.value.currentItem?.moduleItemId
             val lastSyncedAt = if (currentModuleItemId != null) {

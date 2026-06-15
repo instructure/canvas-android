@@ -16,12 +16,16 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 const val ANNOUNCEMENT_TYPE_COURSE = "course"
 const val ANNOUNCEMENT_TYPE_ACCOUNT = "account"
 
-@Entity(tableName = "horizon_announcement")
+@Entity(
+    tableName = "horizon_announcement",
+    indices = [Index("courseId")],
+)
 data class HorizonAnnouncementEntity(
     @PrimaryKey val key: String,
     val id: Long,

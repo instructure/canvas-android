@@ -15,28 +15,28 @@
  */
 package com.instructure.horizon.features.learn
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetEnrolledLearningLibrariesUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
     private val getEnrolledLearningLibrariesUseCase: GetEnrolledLearningLibrariesUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LearnUiState(
         updateSelectedTab = ::updateSelectedTab,
@@ -46,25 +46,22 @@ class LearnViewModel @Inject constructor(
     val state = _uiState.asStateFlow()
 
     init {
-        if (isOffline()) {
+        loadBrowseTab()
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
             viewModelScope.tryLaunch {
-                val lastSyncedAt = getLastSyncTime(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
+                val lastSyncedAt = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS))
                 _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
             } catch { }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            loadBrowseTab()
         }
-        loadBrowseTab()
-    }
-
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-        loadBrowseTab()
-    }
-
-    override fun onNetworkLost() {
-        viewModelScope.tryLaunch {
-            val lastSyncedAt = getLastSyncTime(SyncDataType.LEARN_MY_CONTENT_IN_PROGRESS)
-            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
-        } catch { }
     }
 
     private fun loadBrowseTab() {

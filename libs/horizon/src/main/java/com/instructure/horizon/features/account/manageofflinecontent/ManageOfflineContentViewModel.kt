@@ -19,24 +19,29 @@ import android.content.Context
 import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.domain.usecase.GetCoursesWithFilesUseCase
 import com.instructure.horizon.domain.usecase.GetDeviceStorageUseCase
 import com.instructure.horizon.domain.usecase.GetSelectedSyncFileIdsUseCase
-import com.instructure.horizon.domain.usecase.GetSyncedCourseIdsUseCase
 import com.instructure.horizon.domain.usecase.SaveOfflineSyncPlanUseCase
 import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.FileSyncPaths
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -47,19 +52,17 @@ class ManageOfflineContentViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCoursesWithFilesUseCase: GetCoursesWithFilesUseCase,
     private val getDeviceStorageUseCase: GetDeviceStorageUseCase,
-    private val getSyncedCourseIdsUseCase: GetSyncedCourseIdsUseCase,
     private val getSelectedSyncFileIdsUseCase: GetSelectedSyncFileIdsUseCase,
     private val saveOfflineSyncPlanUseCase: SaveOfflineSyncPlanUseCase,
     private val syncHelper: HorizonOfflineSyncHelper,
+    private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
+    private val apiPrefs: ApiPrefs,
 ) : ViewModel() {
-
-    private val _navigateToSyncing = MutableSharedFlow<Unit>()
-    val navigateToSyncing = _navigateToSyncing.asSharedFlow()
 
     private val _uiState = MutableStateFlow(
         ManageOfflineContentUiState(
             onSelectAllClick = ::onSelectAllClick,
-            onSyncClick = ::onSyncClick,
+            onDismissInsufficientStorageWarning = ::dismissInsufficientStorageWarning,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -74,15 +77,28 @@ class ManageOfflineContentViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.Eagerly, SyncInProgressUiState())
 
+    private var hasLocalSyncedFiles = false
+
     init {
         loadData()
+        observeSyncPlan()
     }
 
-    private fun loadData() {
+    private fun observeSyncPlan() {
+        courseSyncPlanDao.findAllFlow()
+            .onEach { plans ->
+                _uiState.update { state ->
+                    state.copy(hasSyncedContent = plans.isNotEmpty() || hasLocalSyncedFiles)
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun loadData() {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true)) }
+            _uiState.update { it.copy(loadingState = LoadingState(isLoading = true, onRefresh = ::loadData)) }
             val coursesWithFiles = getCoursesWithFilesUseCase()
-            val previouslySelectedCourseIds = getSyncedCourseIdsUseCase()
+            val previouslySelectedCourseIds = courseSyncPlanDao.findAll().map { it.courseId }.toSet()
             val previouslySelectedFileIds = getSelectedSyncFileIdsUseCase()
 
             val courses = coursesWithFiles.map { courseData ->
@@ -93,6 +109,7 @@ class ManageOfflineContentViewModel @Inject constructor(
                     OfflineFileItemUiState(
                         fileId = file.fileId,
                         fileName = file.displayName,
+                        fileSize = file.size,
                         fileSizeLabel = Formatter.formatShortFileSize(context, file.size),
                         isSelected = fileSelected,
                         onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
@@ -116,67 +133,89 @@ class ManageOfflineContentViewModel @Inject constructor(
                 )
             }
 
-            val canvasBytes = coursesWithFiles.sumOf { course ->
-                course.files.filter { it.isSynced }.sumOf { it.size }
-            }
+            val canvasBytes = computeCanvasFootprint()
             val storageData = getDeviceStorageUseCase()
-            val otherAppBytes = ((storageData.totalBytes - storageData.availableBytes) - canvasBytes).coerceAtLeast(0L)
+            val usedBytes = (storageData.totalBytes - storageData.availableBytes).coerceAtLeast(0L)
+            val canvasBytesClamped = canvasBytes.coerceAtMost(usedBytes)
+            val otherAppBytes = (usedBytes - canvasBytesClamped).coerceAtLeast(0L)
 
-            val hasSyncedContent = previouslySelectedCourseIds.isNotEmpty()
-                || coursesWithFiles.any { course -> course.files.any { it.isSynced } }
+            hasLocalSyncedFiles = coursesWithFiles.any { course -> course.files.any { it.isSynced } }
+            val hasSyncedContent = previouslySelectedCourseIds.isNotEmpty() || hasLocalSyncedFiles
 
             _uiState.update { state ->
                 state.copy(
-                    loadingState = LoadingState(isLoading = false),
+                    loadingState = LoadingState(isLoading = false, onRefresh = ::loadData),
                     courses = courses,
                     hasSyncedContent = hasSyncedContent,
-                    storageCanvasBytes = canvasBytes,
+                    storageCanvasBytes = canvasBytesClamped,
                     storageOtherAppBytes = otherAppBytes,
                     storageTotalBytes = storageData.totalBytes,
-                    storageUsedLabel = Formatter.formatShortFileSize(context, canvasBytes + otherAppBytes),
+                    storageUsedLabel = Formatter.formatShortFileSize(context, usedBytes),
                     storageTotalLabel = Formatter.formatShortFileSize(context, storageData.totalBytes),
                 )
             }
         } catch {
-            _uiState.update { it.copy(loadingState = LoadingState(isLoading = false, isError = true)) }
+            _uiState.update {
+                it.copy(loadingState = LoadingState(isLoading = false, isError = true, onRefresh = ::loadData))
+            }
         }
     }
 
-    private fun onSyncClick() {
-        viewModelScope.launch {
-            val selectedCourses = _uiState.value.courses
-                .filter { it.offlineState != CourseOfflineState.NONE }
+    suspend fun onSyncConfirmed(): Boolean {
+        val selectedCourses = _uiState.value.courses
+            .filter { it.offlineState != CourseOfflineState.NONE }
 
-            if (selectedCourses.isEmpty()) return@launch
+        if (selectedCourses.isEmpty()) return false
 
-            saveOfflineSyncPlanUseCase(
-                SaveOfflineSyncPlanUseCase.Params(
-                    courses = selectedCourses.map { course ->
-                        SaveOfflineSyncPlanUseCase.Params.Course(
-                            courseId = course.courseId,
-                            courseName = course.courseName,
-                            syncFiles = course.files.any { it.isSelected },
-                            files = course.files.filter { it.isSelected }.map { file ->
-                                SaveOfflineSyncPlanUseCase.Params.File(
-                                    fileId = file.fileId,
-                                    fileName = file.fileName,
-                                )
-                            },
-                        )
-                    },
+        val plannedBytes = selectedCourses
+            .flatMap { it.files }
+            .filter { it.isSelected }
+            .sumOf { it.fileSize }
+        val storage = getDeviceStorageUseCase()
+        if (plannedBytes > 0 && plannedBytes > storage.availableBytes) {
+            _uiState.update { state ->
+                state.copy(
+                    insufficientStorageWarning = InsufficientStorageWarning(
+                        requiredLabel = Formatter.formatShortFileSize(context, plannedBytes),
+                        availableLabel = Formatter.formatShortFileSize(context, storage.availableBytes),
+                    )
                 )
-            )
-
-            syncHelper.syncCourses(selectedCourses.map { it.courseId })
-            _navigateToSyncing.emit(Unit)
+            }
+            return false
         }
+
+        saveOfflineSyncPlanUseCase(
+            SaveOfflineSyncPlanUseCase.Params(
+                courses = selectedCourses.map { course ->
+                    SaveOfflineSyncPlanUseCase.Params.Course(
+                        courseId = course.courseId,
+                        courseName = course.courseName,
+                        syncFiles = course.files.any { it.isSelected },
+                        files = course.files.filter { it.isSelected }.map { file ->
+                            SaveOfflineSyncPlanUseCase.Params.File(
+                                fileId = file.fileId,
+                                fileName = file.fileName,
+                                size = file.fileSize,
+                            )
+                        },
+                    )
+                },
+            )
+        )
+
+        syncHelper.syncCoursesNow(selectedCourses.map { it.courseId })
+        return true
+    }
+
+    private fun dismissInsufficientStorageWarning() {
+        _uiState.update { it.copy(insufficientStorageWarning = null) }
     }
 
     private fun onSelectAllClick() {
         _uiState.update { state ->
-            val allSelected = state.courses.isNotEmpty() && state.courses.all { it.offlineState == CourseOfflineState.ALL }
-            val targetState = if (allSelected) CourseOfflineState.NONE else CourseOfflineState.ALL
-            val targetSelected = !allSelected
+            val anySelected = state.courses.any { it.offlineState != CourseOfflineState.NONE }
+            val targetState = if (anySelected) CourseOfflineState.NONE else CourseOfflineState.ALL
+            val targetSelected = !anySelected
             state.copy(
                 courses = state.courses.map { course ->
                     course.copy(
@@ -236,5 +275,14 @@ class ManageOfflineContentViewModel @Inject constructor(
                 }
             )
         }
+    }
+
+    private suspend fun computeCanvasFootprint(): Long = withContext(Dispatchers.IO) {
+        val userId = apiPrefs.user?.id ?: return@withContext 0L
+        val dir = FileSyncPaths.userDir(context.filesDir, userId)
+        if (!dir.exists()) return@withContext 0L
+        dir.walkTopDown()
+            .filter { it.isFile }
+            .sumOf { it.length() }
     }
 }

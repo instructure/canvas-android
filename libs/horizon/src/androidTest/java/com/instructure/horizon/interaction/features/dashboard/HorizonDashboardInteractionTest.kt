@@ -24,12 +24,14 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetLearningLibraryMa
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeHorizonManageOfflineContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeMyContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRedwoodApiManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyModule
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonManageOfflineContentManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
@@ -70,6 +72,10 @@ class HorizonDashboardInteractionTest: HorizonTest() {
     @BindValue
     @JvmField
     val getCoursesManager: HorizonGetCoursesManager = fakeGetHorizonCourseManager
+
+    @BindValue
+    @JvmField
+    val manageOfflineContentManager: HorizonManageOfflineContentManager = FakeHorizonManageOfflineContentManager()
 
     @BindValue
     @JvmField

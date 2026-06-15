@@ -17,16 +17,13 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.model.HorizonAnnouncement
 import com.instructure.horizon.model.HorizonAnnouncementKind
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -38,6 +35,7 @@ import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -53,9 +51,8 @@ class DashboardAnnouncementBannerViewModelTest {
     private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val eventHandler = DashboardEventHandler()
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -63,9 +60,7 @@ class DashboardAnnouncementBannerViewModelTest {
         mockkObject(ThemePrefs)
         every { ThemePrefs.brandColor } returns 1
         every { context.getString(R.string.notificationsAnnouncementCategoryLabel) } returns "Announcement"
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
-        every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { offlineState.isOffline } returns isOfflineFlow
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -245,9 +240,7 @@ class DashboardAnnouncementBannerViewModelTest {
             getUnreadAnnouncementsUseCase,
             eventHandler,
             context,
-            networkStateProvider,
-            featureFlagProvider,
-            getLastSyncedAtUseCase,
+            offlineState,
         )
     }
 }

@@ -33,8 +33,7 @@ import com.instructure.horizon.domain.usecase.notebook.RemoveNoteUseCase
 import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
@@ -45,11 +44,10 @@ class EditNoteViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val editNoteUseCase: EditNoteUseCase,
     private val removeNoteUseCase: RemoveNoteUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
+    offlineState: HorizonOfflineState,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     savedStateHandle: SavedStateHandle,
-) : AddEditViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+) : AddEditViewModel(offlineState, getLastSyncedAtUseCase) {
     private val noteId: String = savedStateHandle.toRoute<NotebookRoute.EditNotebook>().noteId
     private val noteType: String =
         savedStateHandle.toRoute<NotebookRoute.EditNotebook>().noteType
@@ -100,7 +98,7 @@ class EditNoteViewModel @Inject constructor(
     }
 
     private fun editNote(onFinished: () -> Unit) {
-        if (isOffline()) {
+        if (offlineState.isOffline.value) {
             _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
             return
         }
@@ -125,7 +123,7 @@ class EditNoteViewModel @Inject constructor(
     }
 
     private fun deleteNote(onFinished: () -> Unit) {
-        if (isOffline()) {
+        if (offlineState.isOffline.value) {
             _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
             return
         }

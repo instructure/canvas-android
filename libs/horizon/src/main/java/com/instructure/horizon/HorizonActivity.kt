@@ -40,12 +40,16 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
+import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.WebViewAuthenticator
@@ -58,12 +62,28 @@ class HorizonActivity : BaseCanvasActivity() {
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
 
+    @Inject
+    lateinit var offlineSyncHelper: HorizonOfflineSyncHelper
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val manager = getSystemService(ShortcutManager::class.java)
         manager?.removeAllDynamicShortcuts()
+        lifecycleScope.launch {
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                // Fall back to whatever flags are cached locally.
+            }
+            offlineSyncHelper.applyPeriodicSchedule()
+        }
         if (ThemePrefs.appTheme != AppTheme.LIGHT.ordinal) {
             setLightTheme() // Force the light theme for Horizon experience to avoid any glitches.
         }

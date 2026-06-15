@@ -16,12 +16,11 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.instructure.horizon.offline.sync.HorizonProgressState
 
-@Entity(tableName = "horizon_file_sync_plan")
+@Entity(tableName = "horizon_file_sync_plan", primaryKeys = ["fileId", "courseId"])
 data class HorizonFileSyncPlanEntity(
-    @PrimaryKey val fileId: Long,
+    val fileId: Long,
     val courseId: Long,
     val fileName: String,
     val fileSize: Long = 0,

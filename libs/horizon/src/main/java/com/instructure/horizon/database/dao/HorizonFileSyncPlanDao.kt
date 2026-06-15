@@ -44,8 +44,11 @@ interface HorizonFileSyncPlanDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(entities: List<HorizonFileSyncPlanEntity>)
 
-    @Query("UPDATE horizon_file_sync_plan SET progress = :progress, state = :state WHERE fileId = :fileId")
-    suspend fun updateProgress(fileId: Long, progress: Int, state: HorizonProgressState)
+    @Query("UPDATE horizon_file_sync_plan SET progress = :progress, state = :state WHERE fileId = :fileId AND courseId = :courseId")
+    suspend fun updateProgress(fileId: Long, courseId: Long, progress: Int, state: HorizonProgressState)
+
+    @Query("UPDATE horizon_file_sync_plan SET fileSize = :fileSize WHERE fileId = :fileId AND courseId = :courseId")
+    suspend fun updateFileSize(fileId: Long, courseId: Long, fileSize: Long)
 
     @Query("DELETE FROM horizon_file_sync_plan")
     suspend fun deleteAll()

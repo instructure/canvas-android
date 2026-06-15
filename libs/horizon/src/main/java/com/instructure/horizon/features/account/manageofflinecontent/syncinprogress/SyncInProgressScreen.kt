@@ -111,12 +111,21 @@ fun SyncInProgressScreen(
                     .background(HorizonColors.Surface.pageSecondary())
                     .padding(horizontal = 16.dp, vertical = 16.dp),
             ) {
-                Button(
-                    label = stringResource(R.string.offline_cancelSync),
-                    color = ButtonColor.BlackOutline,
-                    width = ButtonWidth.FILL,
-                    onClick = uiState.onCancelSyncClick,
-                )
+                if (uiState.isSyncFinished) {
+                    Button(
+                        label = stringResource(R.string.offline_doneSync),
+                        color = ButtonColor.Black,
+                        width = ButtonWidth.FILL,
+                        onClick = uiState.onDoneClick,
+                    )
+                } else {
+                    Button(
+                        label = stringResource(R.string.offline_cancelSync),
+                        color = ButtonColor.BlackOutline,
+                        width = ButtonWidth.FILL,
+                        onClick = uiState.onCancelSyncClick,
+                    )
+                }
             }
         }
     }
@@ -162,9 +171,15 @@ private fun SyncingCourseRow(course: OfflineCourseItemUiState) {
                     tint = HorizonColors.PrimitivesBlue.blue82(),
                     modifier = Modifier.size(24.dp),
                 )
+                CourseSyncState.PARTIAL -> Icon(
+                    painter = painterResource(R.drawable.error),
+                    contentDescription = stringResource(R.string.offline_syncStatusPartial),
+                    tint = HorizonColors.Surface.attention(),
+                    modifier = Modifier.size(24.dp),
+                )
                 CourseSyncState.ERROR -> Icon(
                     painter = painterResource(R.drawable.error),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.offline_syncStatusFailed),
                     tint = HorizonColors.Surface.attention(),
                     modifier = Modifier.size(24.dp),
                 )
@@ -195,10 +210,7 @@ private fun SyncingFileRow(file: OfflineFileItemUiState) {
             }
         }
         when (file.syncState) {
-            FileSyncState.SYNCING -> Spinner(
-                size = SpinnerSize.EXTRA_SMALL,
-                modifier = Modifier.size(24.dp),
-            )
+            FileSyncState.SYNCING,
             FileSyncState.PENDING -> Spinner(
                 size = SpinnerSize.EXTRA_SMALL,
                 modifier = Modifier.size(24.dp),
@@ -230,12 +242,14 @@ private fun SyncInProgressScreenPreview() {
                         OfflineFileItemUiState(
                             1L,
                             "file-name.pdf",
+                            64L * 1024 * 1024,
                             "~64 MB",
                             syncState = FileSyncState.DONE
                         ),
                         OfflineFileItemUiState(
                             2L,
                             "file-name.doc",
+                            64L * 1024 * 1024,
                             "~64 MB",
                             syncState = FileSyncState.SYNCING
                         ),

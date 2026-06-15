@@ -56,7 +56,9 @@ fun DeleteContentScreen(
     LaunchedEffect(isComplete){
         if (isComplete) {
             navController.popBackStack(AccountRoute.ManageOfflineContent.route, inclusive = true)
-            navController.navigate(AccountRoute.ManageOfflineContent.route)
+            navController.navigate(AccountRoute.ManageOfflineContent.route) {
+                launchSingleTop = true
+            }
         }
     }
 

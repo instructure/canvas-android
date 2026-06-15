@@ -16,9 +16,13 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "horizon_notes")
+@Entity(
+    tableName = "horizon_notes",
+    indices = [Index("courseId")],
+)
 data class HorizonNoteEntity(
     @PrimaryKey val id: String,
     val courseId: Long,

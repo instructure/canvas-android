@@ -22,5 +22,5 @@ class GetSyncedCourseIdsUseCase @Inject constructor(
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
 ) {
     suspend operator fun invoke(): Set<Long> =
-        courseSyncPlanDao.findAll().map { it.courseId }.toSet()
+        courseSyncPlanDao.findAllCompletedCourseIds().toSet()
 }

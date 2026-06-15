@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -75,6 +77,8 @@ import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.TriStateCheckboxItemState
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -87,6 +91,21 @@ fun ManageOfflineContentScreen(
     navController: NavHostController,
 ) {
     val scrollState = rememberScrollState()
+    uiState.insufficientStorageWarning?.let { warning ->
+        Modal(
+            ModalDialogState(
+                title = stringResource(R.string.offline_insufficientStorageTitle),
+                message = stringResource(
+                    R.string.offline_insufficientStorageMessage,
+                    warning.requiredLabel,
+                    warning.availableLabel,
+                ),
+                primaryButtonTitle = stringResource(R.string.offline_startSyncConfirmationCancel),
+                primaryButtonClick = uiState.onDismissInsufficientStorageWarning,
+            ),
+            onDismiss = uiState.onDismissInsufficientStorageWarning,
+        )
+    }
     HorizonScaffold(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = { navController.popBackStack() },
@@ -96,30 +115,55 @@ fun ManageOfflineContentScreen(
             modifier = modifier,
             containerColor = HorizonColors.Surface.pageSecondary(),
         ) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .verticalScroll(scrollState),
-                ) {
-                    StorageCard(
-                        uiState = uiState,
-                        modifier = Modifier.padding(top = 32.dp, start = 32.dp, end = 32.dp),
-                    )
-                    SelectingList(uiState)
+            if (!uiState.loadingState.isLoading && uiState.courses.isEmpty()) {
+                EmptyCoursesState(modifier = Modifier.fillMaxSize())
+            } else {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .verticalScroll(scrollState),
+                    ) {
+                        StorageCard(
+                            uiState = uiState,
+                            modifier = Modifier.padding(top = 32.dp, start = 32.dp, end = 32.dp),
+                        )
+                        SelectingList(uiState)
+                    }
+                    SelectingBottomBar(uiState, scrollState, navController)
                 }
-                SelectingBottomBar(uiState, scrollState, navController)
             }
         }
     }
 }
 
 @Composable
+private fun EmptyCoursesState(modifier: Modifier = Modifier) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier.padding(32.dp),
+    ) {
+        Text(
+            text = stringResource(R.string.offline_emptyCoursesTitle),
+            style = HorizonTypography.h3,
+            color = HorizonColors.Text.body(),
+        )
+        HorizonSpace(SpaceSize.SPACE_8)
+        Text(
+            text = stringResource(R.string.offline_emptyCoursesMessage),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.timestamp(),
+        )
+    }
+}
+
+@Composable
 private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier = Modifier) {
     val total = uiState.storageTotalBytes.toFloat().coerceAtLeast(1f)
-    val otherFraction = (uiState.storageOtherAppBytes / total).coerceIn(0f, 1f)
-    val canvasFraction = (uiState.storageCanvasBytes / total).coerceIn(0f, 1f - otherFraction)
-    val remainingFraction = (1f - otherFraction - canvasFraction).coerceAtLeast(0f)
+    val canvasFraction = (uiState.storageCanvasBytes / total).coerceIn(0f, 1f)
+    val otherFraction = (uiState.storageOtherAppBytes / total).coerceIn(0f, 1f - canvasFraction)
+    val remainingFraction = (1f - canvasFraction - otherFraction).coerceAtLeast(0f)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -173,12 +217,14 @@ private fun StorageCard(uiState: ManageOfflineContentUiState, modifier: Modifier
                         .background(HorizonColors.Surface.attention()),
                 )
             }
-            Box(
-                modifier = Modifier
-                    .weight(remainingFraction.coerceAtLeast(0.01f))
-                    .fillMaxSize()
-                    .background(HorizonColors.PrimitivesBlue.blue12()),
-            )
+            if (remainingFraction > 0f) {
+                Box(
+                    modifier = Modifier
+                        .weight(remainingFraction)
+                        .fillMaxSize()
+                        .background(HorizonColors.PrimitivesBlue.blue12()),
+                )
+            }
         }
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StorageLegendDot(color = HorizonColors.PrimitivesBlue.blue82(), label = stringResource(R.string.offline_storageOtherApps))
@@ -246,7 +292,7 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
             width = ButtonWidth.FILL,
             iconPosition = ButtonIconPosition.End(R.drawable.sync),
             enabled = hasSelection,
-            onClick = uiState.onSyncClick,
+            onClick = { navController.navigate(AccountRoute.SyncConfirmation.route) },
         )
         Button(
             label = stringResource(R.string.offline_removeSyncedContentTitle),
@@ -277,7 +323,8 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(76.dp),
+                .defaultMinSize(minHeight = 76.dp)
+                .wrapContentHeight(),
         ) {
             HorizonSpace(SpaceSize.SPACE_24)
             TriStateCheckboxItem(
@@ -356,7 +403,8 @@ private fun FileRow(file: OfflineFileItemUiState) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .height(76.dp),
+            .defaultMinSize(minHeight = 76.dp)
+            .wrapContentHeight(),
     ) {
         CheckboxItem(
             state = CheckboxItemState(
@@ -406,8 +454,8 @@ private fun ManageOfflineContentScreenPreview() {
                     offlineState = CourseOfflineState.PARTIAL,
                     isExpanded = true,
                     files = listOf(
-                        OfflineFileItemUiState(1L, "Chapter 1.pdf", "12 MB", isSelected = true),
-                        OfflineFileItemUiState(2L, "Chapter 2.pdf", "8 MB", isSelected = false),
+                        OfflineFileItemUiState(1L, "Chapter 1.pdf", 12L * 1024 * 1024, "12 MB", isSelected = true),
+                        OfflineFileItemUiState(2L, "Chapter 2.pdf", 8L * 1024 * 1024, "8 MB", isSelected = false),
                     ),
                 ),
                 OfflineCourseItemUiState(

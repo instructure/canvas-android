@@ -25,15 +25,13 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
-import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @HiltWorker
@@ -42,16 +40,27 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
     @Assisted workerParameters: WorkerParameters,
     private val featureFlagProvider: FeatureFlagProvider,
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
-    private val fileSyncPlanDao: HorizonFileSyncPlanDao,
     private val horizonCourseSync: HorizonCourseSync,
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncRouter: HorizonSyncRouter,
+    private val apiPrefs: ApiPrefs,
 ) : CoroutineWorker(context, workerParameters) {
 
-    private var observerJob: Job? = null
+    private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+    private val userIdTag = apiPrefs.user?.id ?: 0L
+    private val foregroundNotificationId = "horizon_offline_sync_foreground_$userIdTag".hashCode()
+    private val completionNotificationId = "horizon_offline_sync_completion_$userIdTag".hashCode()
 
     override suspend fun doWork(): Result {
         if (!featureFlagProvider.offlineEnabled()) return Result.success()
+
+        val enqueuedUserId = inputData.getLong(USER_ID_KEY, -1L)
+        val currentUserId = apiPrefs.user?.id ?: -1L
+        if (enqueuedUserId != -1L && currentUserId != -1L && enqueuedUserId != currentUserId) {
+            // User switched (or masquerade entered/exited) after enqueue — abort to avoid writing
+            // into the wrong user's database.
+            return Result.success()
+        }
 
         val inputCourseIds = inputData.getLongArray(COURSE_IDS_KEY)?.toList()
 
@@ -63,29 +72,40 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
 
         if (plans.isEmpty()) return Result.success()
 
-        setForeground(createForegroundInfo(0))
-        observeProgress()
+        return try {
+            setForeground(createForegroundInfo(0))
 
-        horizonCourseSync.isStopped = false
-        horizonCourseSync.syncCourses(plans)
-
-        observerJob?.cancel()
-        showCompletionNotification(plans.size)
-        return Result.success()
-    }
-
-    private fun observeProgress() {
-        observerJob = CoroutineScope(Dispatchers.Default).launch {
-            aggregateProgressObserver.progressData.collect { data ->
-                if (isStopped) {
-                    horizonCourseSync.isStopped = true
-                    observerJob?.cancel()
-                    return@collect
+            coroutineScope {
+                val observer = launch {
+                    aggregateProgressObserver.progressData.collect { data ->
+                        if (isStopped) return@collect
+                        if (data.isActive) {
+                            try {
+                                setForeground(createForegroundInfo((data.progress * 100).toInt()))
+                            } catch (_: IllegalStateException) {
+                                // Foreground service may have been torn down after cancellation
+                            }
+                        }
+                    }
                 }
-                if (data.isActive) {
-                    setForeground(createForegroundInfo((data.progress * 100).toInt()))
-                }
+
+                horizonCourseSync.syncCourses(plans)
+                observer.cancel()
             }
+
+            if (!isStopped) {
+                showCompletionNotification(plans.size)
+            }
+            val allFailed = plans.all { plan ->
+                courseSyncPlanDao.findByCourseId(plan.courseId)?.state == HorizonProgressState.ERROR
+            }
+            if (!isStopped && allFailed && runAttemptCount < MAX_RETRY_ATTEMPTS) {
+                Result.retry()
+            } else {
+                Result.success()
+            }
+        } finally {
+            notificationManager.cancel(foregroundNotificationId)
         }
     }
 
@@ -103,17 +123,18 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             .build()
 
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            ForegroundInfo(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
+            ForegroundInfo(foregroundNotificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC)
         } else {
-            ForegroundInfo(NOTIFICATION_ID, notification)
+            ForegroundInfo(foregroundNotificationId, notification)
         }
     }
 
     private fun showCompletionNotification(courseCount: Int) {
+        if (courseCount == 0) return
         createNotificationChannel()
 
-        val allPlans = aggregateProgressObserver.progressData.value
-        val isSuccess = allPlans.progressState == HorizonProgressState.COMPLETED
+        val state = aggregateProgressObserver.progressData.value
+        val isSuccess = state.progressState == HorizonProgressState.COMPLETED
 
         val title = if (isSuccess) {
             context.getString(R.string.offline_syncNotificationComplete)
@@ -121,7 +142,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             context.getString(R.string.offline_syncNotificationFailed)
         }
 
-        val subtitle = context.getString(R.string.offline_syncNotificationCoursesCount, courseCount)
+        val subtitle = context.resources.getQuantityString(R.plurals.offline_syncNotificationCoursesCount, courseCount, courseCount)
 
         val pendingIntent = syncRouter.routeToSyncProgress(context)
 
@@ -133,8 +154,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             .setAutoCancel(true)
             .build()
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, notification)
+        notificationManager.notify(completionNotificationId, notification)
     }
 
     private fun createNotificationChannel() {
@@ -143,15 +163,15 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             context.getString(R.string.offline_syncNotificationChannel),
             NotificationManager.IMPORTANCE_LOW,
         )
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
     companion object {
         const val CHANNEL_ID = "horizonSyncChannel"
-        const val NOTIFICATION_ID = 87654
         const val PERIODIC_TAG = "HorizonOfflineSyncPeriodic"
         const val ONE_TIME_TAG = "HorizonOfflineSyncOneTime"
         const val COURSE_IDS_KEY = "courseIds"
+        const val USER_ID_KEY = "userId"
+        private const val MAX_RETRY_ATTEMPTS = 3
     }
 }

@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
 import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsParams
 import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
@@ -30,8 +29,7 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
 import com.instructure.horizon.features.learn.mycontent.common.toCardState
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -41,10 +39,8 @@ class LearnMyContentCompletedViewModel @Inject constructor(
     private val getLearnMyContentCompletedItemsUseCase: GetLearnMyContentCompletedItemsUseCase,
     private val offlineCardStateHelper: OfflineCardStateHelper,
     getNextModuleItemUseCase: GetNextModuleItemUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : LearnMyContentViewModel<LearnContentCardState>(getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : LearnMyContentViewModel<LearnContentCardState>(getNextModuleItemUseCase, offlineState) {
 
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)

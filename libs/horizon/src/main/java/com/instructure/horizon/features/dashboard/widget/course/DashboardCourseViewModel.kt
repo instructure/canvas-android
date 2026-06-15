@@ -16,11 +16,11 @@
 package com.instructure.horizon.features.dashboard.widget.course
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetDashboardCoursesUseCase
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
@@ -29,14 +29,15 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.model.DashboardNextModuleItem
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,10 +48,8 @@ class DashboardCourseViewModel @Inject constructor(
     private val getDashboardCoursesUseCase: GetDashboardCoursesUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     private val offlineCardStateHelper: OfflineCardStateHelper,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DashboardCourseUiState(onRefresh = ::onRefresh))
     val uiState = _uiState.asStateFlow()
@@ -66,13 +65,14 @@ class DashboardCourseViewModel @Inject constructor(
                 }
             }
         }
+
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (isOffline) markCoursesOffline() else loadData() }
+            .launchIn(viewModelScope)
     }
 
-    override fun onNetworkRestored() {
-        loadData()
-    }
-
-    override fun onNetworkLost() {
+    private fun markCoursesOffline() {
         viewModelScope.tryLaunch {
             val offlineContext = offlineCardStateHelper.buildContext()
             _uiState.update { state ->

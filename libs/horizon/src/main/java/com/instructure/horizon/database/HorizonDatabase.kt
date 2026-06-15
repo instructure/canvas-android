@@ -106,9 +106,10 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonAnnouncementEntity::class,
         HorizonAnnouncementCommentEntity::class,
     ],
-    version = 21,
+    version = 1,
 )
 abstract class HorizonDatabase : RoomDatabase() {
+
     abstract fun dashboardEnrollmentDao(): HorizonDashboardEnrollmentDao
     abstract fun programDao(): HorizonProgramDao
     abstract fun dashboardModuleItemDao(): HorizonDashboardModuleItemDao

@@ -17,6 +17,8 @@ package com.instructure.horizon.offline.sync
 
 import android.text.format.Formatter
 import android.content.Context
+import com.instructure.horizon.R
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
@@ -24,12 +26,17 @@ import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
+import javax.inject.Provider
 import javax.inject.Singleton
 
 data class HorizonSyncProgressData(
@@ -42,18 +49,33 @@ data class HorizonSyncProgressData(
 
 @Singleton
 class HorizonAggregateProgressObserver @Inject constructor(
-    courseSyncPlanDao: HorizonCourseSyncPlanDao,
-    fileSyncPlanDao: HorizonFileSyncPlanDao,
+    // Provider keeps DAO refs fresh across user switch (DB is rebuilt per user).
+    private val courseSyncPlanDaoProvider: Provider<HorizonCourseSyncPlanDao>,
+    private val fileSyncPlanDaoProvider: Provider<HorizonFileSyncPlanDao>,
     @ApplicationContext private val context: Context,
+    databaseProvider: HorizonDatabaseProvider,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
-    val progressData: StateFlow<HorizonSyncProgressData> = combine(
-        courseSyncPlanDao.findAllFlow(),
-        fileSyncPlanDao.findAllFlow(),
-    ) { courses, files ->
-        calculateProgress(courses, files)
-    }.stateIn(scope, SharingStarted.Eagerly, HorizonSyncProgressData())
+    private val sourceRevision = MutableStateFlow(0)
+
+    init {
+        databaseProvider.addOnDatabaseChangedListener {
+            sourceRevision.value += 1
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val progressData: StateFlow<HorizonSyncProgressData> = sourceRevision
+        .flatMapLatest {
+            combine(
+                courseSyncPlanDaoProvider.get().findAllFlow().distinctUntilChanged(),
+                fileSyncPlanDaoProvider.get().findAllFlow().distinctUntilChanged(),
+            ) { courses, files ->
+                calculateProgress(courses, files)
+            }
+        }
+        .stateIn(scope, SharingStarted.WhileSubscribed(5_000), HorizonSyncProgressData())
 
     private fun calculateProgress(
         courses: List<HorizonCourseSyncPlanEntity>,
@@ -85,8 +107,8 @@ class HorizonAggregateProgressObserver @Inject constructor(
         }
 
         val progressLabel = when (progressState) {
-            HorizonProgressState.COMPLETED -> context.getString(com.instructure.horizon.R.string.offline_syncCompleted)
-            HorizonProgressState.ERROR -> context.getString(com.instructure.horizon.R.string.offline_syncError)
+            HorizonProgressState.COMPLETED -> context.getString(R.string.offline_syncCompleted)
+            HorizonProgressState.ERROR -> context.getString(R.string.offline_syncError)
             else -> {
                 val downloaded = Formatter.formatShortFileSize(context, downloadedSize)
                 val total = Formatter.formatShortFileSize(context, totalSize)

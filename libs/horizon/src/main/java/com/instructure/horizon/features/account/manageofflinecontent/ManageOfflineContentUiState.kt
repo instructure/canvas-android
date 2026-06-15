@@ -27,6 +27,7 @@ enum class CourseSyncState {
     PENDING,
     SYNCING,
     DONE,
+    PARTIAL,
     ERROR,
 }
 
@@ -51,6 +52,7 @@ enum class FileSyncState {
 data class OfflineFileItemUiState(
     val fileId: Long,
     val fileName: String,
+    val fileSize: Long,
     val fileSizeLabel: String,
     val isSelected: Boolean = false,
     val syncState: FileSyncState = FileSyncState.PENDING,
@@ -66,6 +68,12 @@ data class ManageOfflineContentUiState(
     val storageTotalLabel: String = "",
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val hasSyncedContent: Boolean = false,
+    val insufficientStorageWarning: InsufficientStorageWarning? = null,
     val onSelectAllClick: () -> Unit = {},
-    val onSyncClick: () -> Unit = {},
+    val onDismissInsufficientStorageWarning: () -> Unit = {},
+)
+
+data class InsufficientStorageWarning(
+    val requiredLabel: String,
+    val availableLabel: String,
 )

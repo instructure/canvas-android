@@ -25,8 +25,7 @@ import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetProgramsForCourseUseCase
 import com.instructure.horizon.domain.usecase.HasExternalToolsUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -36,6 +35,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -49,8 +49,8 @@ class CourseDetailsViewModelTest {
     private val getCourseDetailsUseCase: GetCourseDetailsUseCase = mockk(relaxed = true)
     private val getProgramsForCourseUseCase: GetProgramsForCourseUseCase = mockk(relaxed = true)
     private val hasExternalToolsUseCase: HasExternalToolsUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -78,8 +78,7 @@ class CourseDetailsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getCourseDetailsUseCase(any()) } returns testCourse
         coEvery { getProgramsForCourseUseCase(any()) } returns testPrograms
         coEvery { hasExternalToolsUseCase(any()) } returns false
@@ -256,8 +255,7 @@ class CourseDetailsViewModelTest {
             getCourseDetailsUseCase,
             getProgramsForCourseUseCase,
             hasExternalToolsUseCase,
-            networkStateProvider,
-            featureFlagProvider,
+            offlineState,
             getLastSyncedAtUseCase,
         )
     }

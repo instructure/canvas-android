@@ -15,7 +15,8 @@
  */
 package com.instructure.horizon.domain.usecase
 
-import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonManageOfflineContentManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.data.repository.CourseFilesRepository
 import javax.inject.Inject
 
@@ -33,53 +34,27 @@ data class CourseWithFilesData(
 )
 
 class GetCoursesWithFilesUseCase @Inject constructor(
-    private val getEnrollmentsUseCase: GetEnrollmentsUseCase,
-    private val getModulesWithItemsUseCase: GetModulesWithItemsUseCase,
+    private val manageOfflineContentManager: HorizonManageOfflineContentManager,
     private val courseFilesRepository: CourseFilesRepository,
+    private val apiPrefs: ApiPrefs,
 ) {
     suspend operator fun invoke(): List<CourseWithFilesData> {
-        val enrollments = getEnrollmentsUseCase()
-        return enrollments.map { enrollment ->
-            val courseId = enrollment.courseId
+        val userId = apiPrefs.user?.id ?: return emptyList()
+        val courses = manageOfflineContentManager.getCoursesWithFiles(userId, forceNetwork = false).dataOrThrow
 
-            // Files from the course Files tab (full recursive listing)
-            val courseFiles = runCatching { courseFilesRepository.getCourseFiles(courseId) }.getOrDefault(emptyList())
-            val courseFilesById = courseFiles.associateBy { it.id }
-
-            // Files referenced as module items — keep full item to use title as display name fallback
-            val moduleItemFilesByContentId = runCatching {
-                getModulesWithItemsUseCase(
-                    GetModulesWithItemsUseCase.Params(courseId = courseId, forceRefresh = true)
-                )
-            }.getOrDefault(emptyList())
-                .flatMap { it.items ?: emptyList() }
-                .filter { it.type == ModuleItem.Type.File.name && it.contentId != 0L }
-                .associateBy { it.contentId }
-
-            // Union of file IDs from both sources
-            val allFileIds = courseFilesById.keys + moduleItemFilesByContentId.keys
-            val syncedIds = courseFilesRepository.getSyncedFileIds(courseId)
-
-            val files = allFileIds.mapNotNull { fileId ->
-                val apiFile = courseFilesById[fileId]
-                    ?: runCatching { courseFilesRepository.getFileInfo(courseId, fileId) }.getOrNull()
-                val moduleItem = moduleItemFilesByContentId[fileId]
-                // Prefer display name from Files API; fall back to module item title
-                val displayName = apiFile?.displayName?.takeIf { it.isNotEmpty() }
-                    ?: moduleItem?.title?.takeIf { it.isNotEmpty() }
-                    ?: return@mapNotNull null
-                CourseFileData(
-                    fileId = fileId,
-                    displayName = displayName,
-                    size = apiFile?.size ?: 0L,
-                    isSynced = fileId in syncedIds,
-                )
-            }
-
+        return courses.map { course ->
+            val syncedIds = courseFilesRepository.getSyncedFileIds(course.courseId)
             CourseWithFilesData(
-                courseId = courseId,
-                courseName = enrollment.courseName,
-                files = files,
+                courseId = course.courseId,
+                courseName = course.courseName,
+                files = course.files.map { file ->
+                    CourseFileData(
+                        fileId = file.fileId,
+                        displayName = file.displayName,
+                        size = file.sizeBytes,
+                        isSynced = file.fileId in syncedIds,
+                    )
+                }
             )
         }
     }

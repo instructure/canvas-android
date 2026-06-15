@@ -18,6 +18,7 @@ package com.instructure.horizon.features.notebook
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -210,6 +211,7 @@ fun NotebookScreen(
                                         courseName,
                                         state.deleteLoadingNote,
                                         deleteEnabled = !state.isOffline,
+                                        unavailableOffline = state.isOffline && note.courseId !in state.syncedCourseIds,
                                         onDeleteClick = {
                                             state.updateShowDeleteConfirmation(note)
                                         }) {
@@ -265,7 +267,7 @@ fun NotebookScreen(
                         }
                     }
 
-                    if (state.isOffline) {
+                    if (state.isOffline && state.showOfflineBanner) {
                         OfflineBanner(
                             lastSyncedAtMs = state.lastSyncedAtMs,
                             modifier = Modifier
@@ -364,6 +366,7 @@ private fun NoteContent(
     courseName: String?,
     deleteLoading: Note?,
     deleteEnabled: Boolean,
+    unavailableOffline: Boolean = false,
     onDeleteClick: () -> Unit,
     onClick: () -> Unit,
 ) {
@@ -384,6 +387,7 @@ private fun NoteContent(
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { onClick() }
+            .offlineDisabled(unavailableOffline)
     ) {
         Column(
             modifier = Modifier

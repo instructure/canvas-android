@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.horizon.data.datasource.NotificationStreamLocalDataSource
 import com.instructure.horizon.data.datasource.NotificationStreamNetworkDataSource
 import com.instructure.horizon.model.NotificationStreamItem
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class NotificationStreamSyncer @Inject constructor(
@@ -33,8 +34,13 @@ class NotificationStreamSyncer @Inject constructor(
 
         val items = streamItems.map { item ->
             val courseName = if (item.courseId > 0L) {
-                localDataSource.courseNameFor(item.courseId)
-                    ?: runCatching { networkDataSource.getCourse(item.courseId).name }.getOrNull()
+                localDataSource.courseNameFor(item.courseId) ?: try {
+                    networkDataSource.getCourse(item.courseId).name
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (_: Exception) {
+                    null
+                }
             } else null
             NotificationStreamItem(
                 id = item.id,
@@ -57,8 +63,13 @@ class NotificationStreamSyncer @Inject constructor(
 
     private fun StreamItem.isRelevant(): Boolean {
         val isScored = grade != null || score != -1.0
-        val isDueDate = notificationCategory == "Due Date"
-        val isGradingPolicy = notificationCategory == "Grading Policies"
+        val isDueDate = notificationCategory == NOTIFICATION_CATEGORY_DUE_DATE
+        val isGradingPolicy = notificationCategory == NOTIFICATION_CATEGORY_GRADING_POLICIES
         return isDueDate || isScored || isGradingPolicy
+    }
+
+    companion object {
+        private const val NOTIFICATION_CATEGORY_DUE_DATE = "Due Date"
+        private const val NOTIFICATION_CATEGORY_GRADING_POLICIES = "Grading Policies"
     }
 }

@@ -16,9 +16,13 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "horizon_notification_stream_item")
+@Entity(
+    tableName = "horizon_notification_stream_item",
+    indices = [Index("courseId")],
+)
 data class HorizonNotificationStreamItemEntity(
     @PrimaryKey val id: Long,
     val type: String,

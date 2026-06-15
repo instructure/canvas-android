@@ -61,6 +61,7 @@ class SyncInProgressViewModel @Inject constructor(
             courses = courses,
             syncProgress = progressData.progress,
             syncProgressLabel = progressData.progressLabel,
+            isSyncFinished = progressData.progressState.isFinished(),
             onCancelSyncClick = ::onCancelSync,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, SyncInProgressUiState())
@@ -76,20 +77,24 @@ class SyncInProgressViewModel @Inject constructor(
             ""
         }
 
+        val visibleFiles = courseFiles.filter { !it.isAdditionalFile }
+
         return OfflineCourseItemUiState(
             courseId = plan.courseId,
             courseName = plan.courseName,
             courseSizeLabel = courseSizeLabel,
             syncState = when (plan.state) {
                 HorizonProgressState.COMPLETED -> CourseSyncState.DONE
+                HorizonProgressState.PARTIAL -> CourseSyncState.PARTIAL
                 HorizonProgressState.IN_PROGRESS -> CourseSyncState.SYNCING
                 HorizonProgressState.ERROR -> CourseSyncState.ERROR
                 HorizonProgressState.PENDING -> CourseSyncState.PENDING
             },
-            files = courseFiles.map { file ->
+            files = visibleFiles.map { file ->
                 OfflineFileItemUiState(
                     fileId = file.fileId,
                     fileName = file.fileName,
+                    fileSize = file.fileSize,
                     fileSizeLabel = if (file.fileSize > 0) {
                         "~${Formatter.formatShortFileSize(context, file.fileSize)}"
                     } else {
@@ -108,7 +113,7 @@ class SyncInProgressViewModel @Inject constructor(
 
     private fun onCancelSync() {
         viewModelScope.launch {
-            syncHelper.cancelRunningWorkers()
+            syncHelper.cancelCurrentSync()
         }
     }
 }

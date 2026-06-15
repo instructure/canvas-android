@@ -17,28 +17,46 @@ package com.instructure.horizon.offline.sync
 
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.horizon.database.HorizonDatabase
+import com.instructure.horizon.database.dao.HorizonAnnouncementDao
+import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
+import com.instructure.horizon.database.dao.HorizonLocalImageDao
+import com.instructure.horizon.database.dao.HorizonNotificationStreamItemDao
+import com.instructure.horizon.offline.FileSyncPaths
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import javax.inject.Inject
 
 class DeleteSyncedContentUseCase @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val database: HorizonDatabase,
     private val apiPrefs: ApiPrefs,
     private val syncHelper: HorizonOfflineSyncHelper,
+    private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
+    private val fileSyncPlanDao: HorizonFileSyncPlanDao,
+    private val localImageDao: HorizonLocalImageDao,
+    private val notificationStreamItemDao: HorizonNotificationStreamItemDao,
+    private val announcementDao: HorizonAnnouncementDao,
+    private val courseCleanupHelper: CourseCleanupHelper,
 ) {
     suspend operator fun invoke() {
-        syncHelper.cancelRunningWorkers()
-        syncHelper.cancelPeriodicSync()
+        syncHelper.fullStop()
+
+        val plannedCourseIds = courseSyncPlanDao.findAll().map { it.courseId }
+        for (courseId in plannedCourseIds) {
+            courseCleanupHelper.cleanupCourseContent(courseId)
+        }
+
+        courseSyncPlanDao.deleteAll()
+        fileSyncPlanDao.deleteAll()
+        localImageDao.deleteAll()
+        notificationStreamItemDao.deleteAll()
+        announcementDao.deleteAll()
+        announcementDao.deleteAllComments()
 
         withContext(Dispatchers.IO) {
-            database.clearAllTables()
-
             val userId = apiPrefs.user?.id ?: return@withContext
-            val userDir = File(context.filesDir, userId.toString())
+            val userDir = FileSyncPaths.userDir(context.filesDir, userId)
             if (userDir.exists()) {
                 userDir.deleteRecursively()
             }

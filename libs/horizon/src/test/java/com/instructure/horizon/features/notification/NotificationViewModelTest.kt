@@ -17,14 +17,11 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.model.NotificationStreamItem
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -34,6 +31,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -45,9 +43,8 @@ import org.junit.Test
 class NotificationViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val getNotificationStreamUseCase: GetNotificationStreamUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val courseId = 1L
@@ -105,9 +102,7 @@ class NotificationViewModelTest {
         every { context.getString(R.string.notificationsScoreCategoryLabel) } returns "Score"
         every { context.getString(R.string.notificationsScoreChangedCategoryLabel) } returns "Score changed"
         every { context.getString(R.string.notificationsScoredItemTitle, "Scored item") } returns "Scored item's score is now available"
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
-        every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getNotificationStreamUseCase(any()) } returns items
     }
 
@@ -180,9 +175,7 @@ class NotificationViewModelTest {
         return NotificationViewModel(
             context,
             getNotificationStreamUseCase,
-            networkStateProvider,
-            featureFlagProvider,
-            getLastSyncedAtUseCase,
+            offlineState,
         )
     }
 }

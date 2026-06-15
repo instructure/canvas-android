@@ -18,6 +18,7 @@ package com.instructure.horizon.features.notebook
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.weave.catch
@@ -25,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.domain.usecase.notebook.DeleteNoteUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotebookCoursesUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotesUseCase
@@ -33,15 +35,16 @@ import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -51,11 +54,11 @@ class NotebookViewModel @Inject constructor(
     private val getNotesUseCase: GetNotesUseCase,
     private val getNotebookCoursesUseCase: GetNotebookCoursesUseCase,
     private val deleteNoteUseCase: DeleteNoteUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     savedStateHandle: SavedStateHandle,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+) : ViewModel() {
     private var endCursor: String? = null
     private var loadJob: Job? = null
 
@@ -85,23 +88,42 @@ class NotebookViewModel @Inject constructor(
             navigateToEdit = navigateToEdit,
             updateShowDeleteConfirmation = ::updateShowDeleteConfirmation,
             deleteNote = ::deleteNote,
-            isOffline = isOffline(),
+            isOffline = offlineState.isOffline.value,
         )
     )
     val uiState = _uiState.asStateFlow()
 
     init {
-        if (isOffline()) {
+        viewModelScope.tryLaunch {
+            val offlineContext = offlineCardStateHelper.buildContext()
+            _uiState.update { it.copy(syncedCourseIds = offlineContext.syncedCourseIds) }
+        } catch { }
+        loadData()
+
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
             viewModelScope.tryLaunch {
+                val offlineContext = offlineCardStateHelper.buildContext()
                 _uiState.update {
                     it.copy(
                         isOffline = true,
-                        lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                        lastSyncedAtMs = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.NOTES)),
+                        syncedCourseIds = offlineContext.syncedCourseIds,
                     )
                 }
-            } catch { }
+            } catch {
+                _uiState.update { it.copy(isOffline = true) }
+            }
+        } else {
+            _uiState.update { it.copy(isOffline = false) }
+            endCursor = null
+            loadData()
         }
-        loadData()
     }
 
     fun loadData() {
@@ -208,9 +230,17 @@ class NotebookViewModel @Inject constructor(
     fun updateScreenState(
         showNoteTypeFilter: Boolean = true,
         showCourseFilter: Boolean = true,
-        showTopBar: Boolean = false
+        showTopBar: Boolean = false,
+        showOfflineBanner: Boolean = true,
     ) {
-        _uiState.update { it.copy(showTopBar = showTopBar, showCourseFilter = showCourseFilter, showNoteTypeFilter = showNoteTypeFilter) }
+        _uiState.update {
+            it.copy(
+                showTopBar = showTopBar,
+                showCourseFilter = showCourseFilter,
+                showNoteTypeFilter = showNoteTypeFilter,
+                showOfflineBanner = showOfflineBanner,
+            )
+        }
     }
 
     private fun getObjectTypeAndId(savedStateHandle: SavedStateHandle): Pair<String, String>? {
@@ -226,7 +256,7 @@ class NotebookViewModel @Inject constructor(
 
     private fun deleteNote(note: Note?) {
         if (note == null) return
-        if (isOffline()) {
+        if (offlineState.isOffline.value) {
             _uiState.update {
                 it.copy(
                     showDeleteConfirmationForNote = null,
@@ -243,25 +273,6 @@ class NotebookViewModel @Inject constructor(
             _uiState.update { it.copy(deleteLoadingNote = null, notes = it.notes.filterNot { it == note }) }
         } catch {
             _uiState.update { it.copy(deleteLoadingNote = null) }
-        }
-    }
-
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-        endCursor = null
-        loadData()
-    }
-
-    override fun onNetworkLost() {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(
-                    isOffline = true,
-                    lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
-                )
-            }
-        } catch {
-            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
         }
     }
 }

@@ -20,6 +20,7 @@ import com.instructure.horizon.data.datasource.PageNetworkDataSource
 import com.instructure.horizon.data.repository.HorizonFileSyncRepository
 import com.instructure.horizon.di.HorizonHtmlParserQualifier
 import com.instructure.pandautils.features.offline.sync.HtmlParser
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class PageSyncer @Inject constructor(
@@ -44,6 +45,8 @@ class PageSyncer @Inject constructor(
                     fileSyncRepository.syncHtmlFiles(courseId, parsedBody)
                 }
                 localDataSource.savePage(page, courseId, parsedBody?.htmlWithLocalFileLinks)
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
                 // Skip individual page failures
             }

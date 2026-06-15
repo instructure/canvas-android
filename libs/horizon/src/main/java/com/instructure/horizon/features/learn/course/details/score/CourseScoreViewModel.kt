@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.learn.course.details.score
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.Assignment
@@ -24,17 +25,17 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetCourseScoreDataUseCase
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -42,10 +43,8 @@ import javax.inject.Inject
 class CourseScoreViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getCourseScoreDataUseCase: GetCourseScoreDataUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         CourseScoreUiState(
@@ -58,6 +57,13 @@ class CourseScoreViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var assignments: List<Assignment> = emptyList()
+
+    init {
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (!isOffline && uiState.value.courseId != -1L) refresh() }
+            .launchIn(viewModelScope)
+    }
 
     fun loadState(courseId: Long) {
         _uiState.update {
@@ -80,14 +86,6 @@ class CourseScoreViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    override fun onNetworkRestored() {
-        if (uiState.value.courseId != -1L) refresh()
-    }
-
-    override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {

@@ -32,8 +32,7 @@ import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
 import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
@@ -44,11 +43,10 @@ import javax.inject.Inject
 class AddNoteViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val addNoteUseCase: AddNoteUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
+    offlineState: HorizonOfflineState,
     getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
     savedStateHandle: SavedStateHandle,
-) : AddEditViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+) : AddEditViewModel(offlineState, getLastSyncedAtUseCase) {
     private val courseId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().courseId
     private val objectType: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectType
     private val objectId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectId
@@ -88,7 +86,7 @@ class AddNoteViewModel @Inject constructor(
     }
 
     private fun addNote(onFinished: () -> Unit) {
-        if (isOffline()) {
+        if (offlineState.isOffline.value) {
             _uiState.update { it.copy(snackbarMessage = context.getString(R.string.notebookOfflineActionUnavailable)) }
             return
         }

@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
@@ -50,7 +51,15 @@ fun DashboardSyncInProgressWidget(
         widgetColor = HorizonColors.PrimitivesBlue.blue12(),
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
-        onClick = { navController.navigate(AccountRoute.SyncingContent.route) },
+        onClick = {
+            navController.navigate(AccountRoute.SyncingContent.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
+            }
+        },
         modifier = modifier,
     ) {
         Column {

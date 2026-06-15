@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.learn.course.details
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -25,12 +26,12 @@ import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetProgramsForCourseUseCase
 import com.instructure.horizon.domain.usecase.HasExternalToolsUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -40,10 +41,9 @@ class CourseDetailsViewModel @Inject constructor(
     private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
     private val getProgramsForCourseUseCase: GetProgramsForCourseUseCase,
     private val hasExternalToolsUseCase: HasExternalToolsUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
     val state = _uiState.asStateFlow()
@@ -52,11 +52,20 @@ class CourseDetailsViewModel @Inject constructor(
 
     init {
         loadData()
-        if (isOffline()) {
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
             viewModelScope.tryLaunch {
-                val lastSyncedAt = getLastSyncTime(SyncDataType.COURSE_DETAILS)
+                val lastSyncedAt = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.COURSE_DETAILS))
                 _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
             } catch { }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            loadData()
         }
     }
 
@@ -68,18 +77,6 @@ class CourseDetailsViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isError = true, isLoading = false)) }
         }
-    }
-
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-        loadData()
-    }
-
-    override fun onNetworkLost() {
-        viewModelScope.tryLaunch {
-            val lastSyncedAt = getLastSyncTime(SyncDataType.COURSE_DETAILS)
-            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
-        } catch { }
     }
 
     suspend fun fetchData(forceRefresh: Boolean = false) {

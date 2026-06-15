@@ -29,6 +29,7 @@ data class HorizonCourseSyncPlanEntity(
     val syncScores: Boolean = true,
     val syncFiles: Boolean = true,
     val syncNotes: Boolean = true,
+    val syncImages: Boolean = true,
     val state: HorizonProgressState = HorizonProgressState.PENDING,
     val modulesState: HorizonProgressState = HorizonProgressState.PENDING,
     val assignmentsState: HorizonProgressState = HorizonProgressState.PENDING,
@@ -36,13 +37,16 @@ data class HorizonCourseSyncPlanEntity(
     val scoresState: HorizonProgressState = HorizonProgressState.PENDING,
     val filesState: HorizonProgressState = HorizonProgressState.PENDING,
     val notesState: HorizonProgressState = HorizonProgressState.PENDING,
+    val imagesState: HorizonProgressState = HorizonProgressState.PENDING,
 ) {
     companion object {
-        const val CATEGORY_SIZE = 100_000L // 100KB weight per category for progress calculation
+        const val CATEGORY_SIZE = 100_000L // 100KB synthetic weight per non-file category for progress calculation
     }
 
+    // Files are excluded from the synthetic category count - real per-file bytes are tracked separately
+    // in horizon_file_sync_plan and contribute directly to fileTotalSize / fileDownloadedSize.
     val totalCategoryCount: Int
-        get() = listOf(syncModules, syncAssignments, syncPages, syncScores, syncFiles, syncNotes).count { it }
+        get() = listOf(syncModules, syncAssignments, syncPages, syncScores, syncNotes, syncImages).count { it }
 
     val completedCategoryCount: Int
         get() {
@@ -51,8 +55,8 @@ data class HorizonCourseSyncPlanEntity(
             if (syncAssignments && assignmentsState == HorizonProgressState.COMPLETED) count++
             if (syncPages && pagesState == HorizonProgressState.COMPLETED) count++
             if (syncScores && scoresState == HorizonProgressState.COMPLETED) count++
-            if (syncFiles && filesState == HorizonProgressState.COMPLETED) count++
             if (syncNotes && notesState == HorizonProgressState.COMPLETED) count++
+            if (syncImages && imagesState == HorizonProgressState.COMPLETED) count++
             return count
         }
 

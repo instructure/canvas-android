@@ -129,6 +129,7 @@ class PageDetailsViewModel @Inject constructor(
     }
 
     private fun addNote(highlightedData: NoteHighlightedData, type: String) {
+        if (!networkStateProvider.isOnline()) return
         viewModelScope.tryLaunch {
             addNoteUseCase(
                 AddNoteUseCase.Params(

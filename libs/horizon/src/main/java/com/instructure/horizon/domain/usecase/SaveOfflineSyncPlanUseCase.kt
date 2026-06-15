@@ -19,6 +19,7 @@ import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
+import com.instructure.horizon.offline.sync.CourseCleanupHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
@@ -26,6 +27,7 @@ import javax.inject.Inject
 class SaveOfflineSyncPlanUseCase @Inject constructor(
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
     private val fileSyncPlanDao: HorizonFileSyncPlanDao,
+    private val courseCleanupHelper: CourseCleanupHelper,
 ) : BaseUseCase<SaveOfflineSyncPlanUseCase.Params, Unit>() {
 
     data class Params(val courses: List<Course>) {
@@ -39,10 +41,18 @@ class SaveOfflineSyncPlanUseCase @Inject constructor(
         data class File(
             val fileId: Long,
             val fileName: String,
+            val size: Long = 0L,
         )
     }
 
     override suspend fun execute(params: Params) {
+        val existingCourseIds = courseSyncPlanDao.findAll().map { it.courseId }.toSet()
+        val newCourseIds = params.courses.map { it.courseId }.toSet()
+        val removedCourseIds = existingCourseIds - newCourseIds
+        for (removedId in removedCourseIds) {
+            courseCleanupHelper.cleanupCourseContent(removedId)
+        }
+
         courseSyncPlanDao.deleteAll()
         fileSyncPlanDao.deleteAll()
         for (course in params.courses) {
@@ -60,6 +70,7 @@ class SaveOfflineSyncPlanUseCase @Inject constructor(
                         fileId = file.fileId,
                         courseId = course.courseId,
                         fileName = file.fileName,
+                        fileSize = file.size,
                         state = HorizonProgressState.PENDING,
                     )
                 )

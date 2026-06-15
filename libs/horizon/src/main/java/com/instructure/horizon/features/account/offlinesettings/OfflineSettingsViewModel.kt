@@ -21,12 +21,19 @@ import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
 import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class OfflineSettingsViewModel @Inject constructor(
     private val syncSettingsDao: HorizonSyncSettingsDao,
@@ -42,8 +49,25 @@ class OfflineSettingsViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
+    private val pendingSettings = MutableSharedFlow<HorizonSyncSettingsEntity>(extraBufferCapacity = 16)
+    private val persistMutex = Mutex()
+
     init {
         loadSettings()
+        observePendingSettings()
+    }
+
+    private fun observePendingSettings() {
+        viewModelScope.launch {
+            pendingSettings
+                .debounce(DEBOUNCE_MS)
+                .collectLatest { settings ->
+                    persistMutex.withLock {
+                        syncSettingsDao.upsert(settings)
+                        syncHelper.applyPeriodicSchedule()
+                    }
+                }
+        }
     }
 
     private fun loadSettings() {
@@ -61,42 +85,31 @@ class OfflineSettingsViewModel @Inject constructor(
 
     private fun onAutoSyncToggled(enabled: Boolean) {
         _uiState.update { it.copy(autoSyncEnabled = enabled) }
-        viewModelScope.launch {
-            persistSettings()
-            if (enabled) {
-                syncHelper.schedulePeriodicSync()
-            } else {
-                syncHelper.cancelPeriodicSync()
-            }
-        }
+        emitPending()
     }
 
     private fun onSyncFrequencySelected(frequency: SyncFrequency) {
         _uiState.update { it.copy(syncFrequency = frequency) }
-        viewModelScope.launch {
-            persistSettings()
-            syncHelper.schedulePeriodicSync()
-        }
+        emitPending()
     }
 
     private fun onWifiOnlyToggled(enabled: Boolean) {
         _uiState.update { it.copy(wifiOnlyEnabled = enabled) }
-        viewModelScope.launch {
-            persistSettings()
-            if (_uiState.value.autoSyncEnabled) {
-                syncHelper.schedulePeriodicSync()
-            }
-        }
+        emitPending()
     }
 
-    private suspend fun persistSettings() {
+    private fun emitPending() {
         val state = _uiState.value
-        syncSettingsDao.upsert(
+        pendingSettings.tryEmit(
             HorizonSyncSettingsEntity(
                 autoSyncEnabled = state.autoSyncEnabled,
                 syncFrequency = state.syncFrequency,
                 wifiOnly = state.wifiOnlyEnabled,
             )
         )
+    }
+
+    companion object {
+        private const val DEBOUNCE_MS = 300L
     }
 }

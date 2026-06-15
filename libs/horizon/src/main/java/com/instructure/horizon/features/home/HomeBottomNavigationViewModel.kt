@@ -48,14 +48,15 @@ class HomeBottomNavigationViewModel @Inject constructor(
 
     init {
         viewModelScope.tryLaunch {
-            featureFlagProvider.fetchEnvironmentFeatureFlags()
+            val offlineEnabled = featureFlagProvider.offlineEnabled()
+            _uiState.update {
+                it.copy(isOffline = offlineEnabled && !networkStateProvider.isOnline())
+            }
+            if (!offlineEnabled) return@tryLaunch
             networkStateProvider.isOnlineLiveData.asFlow()
                 .distinctUntilChanged()
                 .collect { isOnline ->
-                    val offlineEnabled = featureFlagProvider.offlineEnabled()
-                    _uiState.update {
-                        it.copy(isOffline = !isOnline && offlineEnabled)
-                    }
+                    _uiState.update { it.copy(isOffline = !isOnline) }
                 }
         } catch { }
     }

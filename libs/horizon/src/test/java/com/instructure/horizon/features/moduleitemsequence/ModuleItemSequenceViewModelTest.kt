@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
 import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
@@ -38,8 +37,8 @@ import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
+import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -72,9 +71,8 @@ class ModuleItemSequenceViewModelTest {
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val learnEventHandler: LearnEventHandler = LearnEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -112,6 +110,7 @@ class ModuleItemSequenceViewModelTest {
         coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(id = 1L)
         coEvery { hasUnreadCommentsUseCase(any()) } returns false
         coEvery { moduleItemCardStateMapper.mapModuleItemToCardState(any(), any()) } returns mockk(relaxed = true)
+        every { offlineState.isOffline } returns isOfflineFlow
     }
 
     @After
@@ -180,9 +179,7 @@ class ModuleItemSequenceViewModelTest {
             dashboardEventHandler,
             learnEventHandler,
             savedStateHandle,
-            networkStateProvider,
-            featureFlagProvider,
-            getLastSyncedAtUseCase
+            offlineState
         )
     }
 }

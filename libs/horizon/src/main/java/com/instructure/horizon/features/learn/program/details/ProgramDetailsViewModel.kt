@@ -42,19 +42,20 @@ import com.instructure.horizon.features.learn.program.details.components.Program
 import com.instructure.horizon.features.learn.program.details.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.offline.HorizonOfflineViewModel
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.sum
 import com.instructure.pandautils.utils.toFormattedString
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -69,10 +70,9 @@ class ProgramDetailsViewModel @Inject constructor(
     private val enrollProgramCourseUseCase: EnrollProgramCourseUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     savedStateHandle: SavedStateHandle,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : ViewModel() {
 
     private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
 
@@ -88,11 +88,20 @@ class ProgramDetailsViewModel @Inject constructor(
 
     init {
         loadData()
-        if (isOffline()) {
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
             viewModelScope.tryLaunch {
-                val lastSyncedAt = getLastSyncTime(SyncDataType.DASHBOARD_PROGRAMS)
+                val lastSyncedAt = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.DASHBOARD_PROGRAMS))
                 _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
             } catch { }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            loadData()
         }
     }
 
@@ -323,18 +332,6 @@ class ProgramDetailsViewModel @Inject constructor(
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
             return (totalProgress / (courseCompletionCount * 100)) * 100
         }
-    }
-
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-        loadData()
-    }
-
-    override fun onNetworkLost() {
-        viewModelScope.tryLaunch {
-            val lastSyncedAt = getLastSyncTime(SyncDataType.DASHBOARD_PROGRAMS)
-            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
-        } catch { }
     }
 
     private fun refreshProgram() {

@@ -17,22 +17,23 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.NotificationStreamItem
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -40,10 +41,8 @@ import javax.inject.Inject
 class NotificationViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getNotificationStreamUseCase: GetNotificationStreamUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    private val offlineState: HorizonOfflineState,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(
         NotificationUiState(
             LoadingState(
@@ -56,14 +55,10 @@ class NotificationViewModel @Inject constructor(
 
     init {
         initData()
-    }
-
-    override fun onNetworkRestored() {
-        initData()
-    }
-
-    override fun onNetworkLost() {
-        initData()
+        offlineState.isOffline
+            .drop(1)
+            .onEach { initData() }
+            .launchIn(viewModelScope)
     }
 
     private fun initData() {
@@ -95,6 +90,10 @@ class NotificationViewModel @Inject constructor(
     }
 
     private fun refresh() {
+        if (offlineState.isOffline.value) {
+            _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
+            return
+        }
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(screenState = it.screenState.copy(isRefreshing = true))

@@ -17,11 +17,11 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
 import com.instructure.horizon.features.announcement.navigation.AnnouncementRoute
 import com.instructure.horizon.features.dashboard.DashboardEvent
@@ -33,13 +33,14 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -49,10 +50,8 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
     private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
     @ApplicationContext private val context: Context,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         DashboardAnnouncementBannerUiState(
@@ -78,14 +77,11 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
                 }
             }
         }
-    }
 
-    override fun onNetworkRestored() {
-        refresh()
-    }
-
-    override fun onNetworkLost() {
-        refresh()
+        offlineState.isOffline
+            .drop(1)
+            .onEach { refresh() }
+            .launchIn(viewModelScope)
     }
 
     private suspend fun loadAnnouncementData(forceNetwork: Boolean = false) {

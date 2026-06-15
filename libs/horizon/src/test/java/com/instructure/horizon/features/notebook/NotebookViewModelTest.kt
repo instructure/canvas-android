@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.notebook
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
@@ -27,13 +26,14 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectTyp
 import com.instructure.horizon.data.repository.NotebookPage
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.domain.usecase.notebook.DeleteNoteUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotebookCoursesUseCase
 import com.instructure.horizon.domain.usecase.notebook.GetNotesUseCase
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
+import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -60,8 +60,9 @@ class NotebookViewModelTest {
     private val getNotesUseCase: GetNotesUseCase = mockk(relaxed = true)
     private val getNotebookCoursesUseCase: GetNotebookCoursesUseCase = mockk(relaxed = true)
     private val deleteNoteUseCase: DeleteNoteUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val offlineCardStateHelper: OfflineCardStateHelper = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -87,9 +88,7 @@ class NotebookViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        every { networkStateProvider.isOnline() } returns true
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
-        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getNotesUseCase(any()) } returns pageWithMore
         coEvery { getNotebookCoursesUseCase(any()) } returns emptyList()
         coEvery { getLastSyncedAtUseCase(any()) } returns null
@@ -166,8 +165,7 @@ class NotebookViewModelTest {
 
     @Test
     fun `delete note offline shows snackbar and skips use case`() = runTest {
-        every { networkStateProvider.isOnline() } returns false
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        isOfflineFlow.value = true
         coEvery { getNotesUseCase(any()) } returns NotebookPage(listOf(testNote), false, null)
         every { context.getString(any()) } returns "msg"
 
@@ -183,8 +181,7 @@ class NotebookViewModelTest {
 
     @Test
     fun `offline init shows banner with last synced at`() = runTest {
-        every { networkStateProvider.isOnline() } returns false
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        isOfflineFlow.value = true
         coEvery { getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.NOTES)) } returns 12345L
         coEvery { getNotesUseCase(any()) } returns pageNoMore
 
@@ -208,8 +205,8 @@ class NotebookViewModelTest {
         getNotesUseCase,
         getNotebookCoursesUseCase,
         deleteNoteUseCase,
-        networkStateProvider,
-        featureFlagProvider,
+        offlineCardStateHelper,
+        offlineState,
         getLastSyncedAtUseCase,
         savedStateHandle,
     )

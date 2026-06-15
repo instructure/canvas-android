@@ -22,21 +22,22 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,10 +49,8 @@ class CourseProgressViewModel @Inject constructor(
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val learnEventHandler: LearnEventHandler,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(
         CourseProgressUiState(
             screenState = LoadingState(
@@ -71,6 +70,11 @@ class CourseProgressViewModel @Inject constructor(
                 }
             }
         }
+
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (!isOffline && uiState.value.courseId != -1L) refresh() }
+            .launchIn(viewModelScope)
     }
 
     fun loadState(courseId: Long) {
@@ -125,14 +129,6 @@ class CourseProgressViewModel @Inject constructor(
         }.mapKeys { it.key.id }
 
         _uiState.update { it.copy(moduleItemStates = moduleItemStates) }
-    }
-
-    override fun onNetworkRestored() {
-        if (uiState.value.courseId != -1L) refresh()
-    }
-
-    override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
     }
 
     fun refresh() {

@@ -22,11 +22,16 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.horizon.data.datasource.InboxNetworkDataSource
+import com.instructure.horizon.offline.OfflineSyncRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class InboxRepository @Inject constructor(
     private val networkDataSource: InboxNetworkDataSource,
-) {
+    networkStateProvider: NetworkStateProvider,
+    featureFlagProvider: FeatureFlagProvider,
+) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
     suspend fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean): List<Conversation> {
         return networkDataSource.getConversations(scope, forceNetwork)
     }
@@ -43,6 +48,7 @@ class InboxRepository @Inject constructor(
         includedMessageIds: List<Long>,
         attachmentIds: List<Long>,
     ): Conversation {
+        requireOnlineForWrite()
         return networkDataSource.addMessageToConversation(
             conversationId = conversationId,
             recipientIds = recipientIds,
@@ -61,6 +67,7 @@ class InboxRepository @Inject constructor(
         attachmentIds: LongArray,
         isBulkMessage: Boolean,
     ) {
+        requireOnlineForWrite()
         networkDataSource.createConversation(
             recipientIds = recipientIds,
             subject = subject,

@@ -21,5 +21,7 @@ data class SyncInProgressUiState(
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val syncProgress: Float = 0f,
     val syncProgressLabel: String = "",
+    val isSyncFinished: Boolean = false,
     val onCancelSyncClick: () -> Unit = {},
+    val onDoneClick: () -> Unit = {},
 )

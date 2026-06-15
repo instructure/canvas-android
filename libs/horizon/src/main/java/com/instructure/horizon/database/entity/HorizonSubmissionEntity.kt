@@ -16,6 +16,7 @@
 package com.instructure.horizon.database.entity
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 
 /**
@@ -50,13 +51,20 @@ data class HorizonSubmissionEntity(
 
 /**
  * Stores file attachments for a submission attempt.
- * Linked via [assignmentId] + [attempt] to [HorizonSubmissionEntity].
- * No FK constraint because [replaceForAssignment] handles cleanup via explicit DELETE.
+ * Linked via [assignmentId] + [attempt] to [HorizonSubmissionEntity] with CASCADE deletes.
  */
 @Entity(
     tableName = "horizon_submission_attachments",
     primaryKeys = ["id"],
-    indices = [Index("assignmentId", "attempt")]
+    indices = [Index("assignmentId", "attempt")],
+    foreignKeys = [
+        ForeignKey(
+            entity = HorizonSubmissionEntity::class,
+            parentColumns = ["assignmentId", "attempt"],
+            childColumns = ["assignmentId", "attempt"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
 )
 data class HorizonSubmissionAttachmentEntity(
     val id: Long,

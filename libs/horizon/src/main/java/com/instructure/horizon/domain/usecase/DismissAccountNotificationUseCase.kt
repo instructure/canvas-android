@@ -19,16 +19,14 @@ import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.data.repository.AnnouncementRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
-import com.instructure.pandautils.utils.NetworkStateProvider
 import javax.inject.Inject
 
 class DismissAccountNotificationUseCase @Inject constructor(
     private val repository: AnnouncementRepository,
-    private val networkStateProvider: NetworkStateProvider,
 ) : BaseUseCase<Long, DataResult<AccountNotification>>() {
 
     override suspend fun execute(params: Long): DataResult<AccountNotification> {
-        if (!networkStateProvider.isOnline()) return DataResult.Fail()
+        if (!repository.shouldFetchFromNetwork()) return DataResult.Fail()
         return repository.dismissAccountNotification(params)
     }
 }

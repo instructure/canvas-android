@@ -24,14 +24,31 @@ import com.instructure.horizon.database.entity.HorizonLocalImageEntity
 @Dao
 interface HorizonLocalImageDao {
 
-    @Query("SELECT * FROM horizon_local_images WHERE url = :url")
+    @Query("SELECT * FROM horizon_local_images WHERE url = :url LIMIT 1")
     suspend fun findByUrl(url: String): HorizonLocalImageEntity?
 
     @Query("SELECT * FROM horizon_local_images WHERE url IN (:urls)")
     suspend fun findByUrls(urls: List<String>): List<HorizonLocalImageEntity>
 
+    @Query("SELECT * FROM horizon_local_images WHERE courseId = :courseId")
+    suspend fun findByCourseId(courseId: Long): List<HorizonLocalImageEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(entity: HorizonLocalImageEntity)
+
+    @Query(
+        """
+        SELECT DISTINCT localPath FROM horizon_local_images
+        WHERE courseId = :courseId
+          AND localPath NOT IN (
+              SELECT localPath FROM horizon_local_images WHERE courseId != :courseId
+          )
+        """
+    )
+    suspend fun findOrphanPathsForCourse(courseId: Long): List<String>
+
+    @Query("DELETE FROM horizon_local_images WHERE courseId = :courseId")
+    suspend fun deleteByCourseId(courseId: Long)
 
     @Query("DELETE FROM horizon_local_images")
     suspend fun deleteAll()

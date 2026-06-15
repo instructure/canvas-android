@@ -17,16 +17,15 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.model.HorizonAnnouncement
 import com.instructure.horizon.model.HorizonAnnouncementKind
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.flow.MutableStateFlow
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,16 +50,14 @@ class DashboardAnnouncementBannerRepositoryTest {
     private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val context: Context = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        every { networkStateProvider.isOnline() } returns true
-        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        every { offlineState.isOffline } returns isOfflineFlow
     }
 
     @After
@@ -132,9 +129,7 @@ class DashboardAnnouncementBannerRepositoryTest {
             getUnreadAnnouncementsUseCase,
             dashboardEventHandler,
             context,
-            networkStateProvider,
-            featureFlagProvider,
-            getLastSyncedAtUseCase,
+            offlineState,
         )
     }
 }

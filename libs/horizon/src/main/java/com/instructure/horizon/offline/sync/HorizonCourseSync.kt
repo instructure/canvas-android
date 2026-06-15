@@ -22,11 +22,14 @@ import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.entity.HorizonCourseSyncPlanEntity
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlin.coroutines.coroutineContext
 import javax.inject.Inject
 
 class HorizonCourseSync @Inject constructor(
@@ -47,33 +50,27 @@ class HorizonCourseSync @Inject constructor(
     private val dashboardEnrollmentDao: HorizonDashboardEnrollmentDao,
     private val courseDao: HorizonCourseDao,
 ) {
-    @Volatile
-    var isStopped = false
-
     suspend fun syncCourses(plans: List<HorizonCourseSyncPlanEntity>) {
-        try {
-            accountSyncer.sync()
-            enrollmentSyncer.sync()
-            syncEnrollmentImages()
-        } catch (_: Exception) {
-            // Global sync failure is non-fatal for individual courses
-        }
-
-        try {
-            notificationStreamSyncer.sync()
-        } catch (_: Exception) {
-            // Notification stream sync failure is non-fatal
-        }
-
-        try {
-            announcementSyncer.sync()
-        } catch (_: Exception) {
-            // Announcement sync failure is non-fatal
-        }
+        runHeadSync { accountSyncer.sync() }
+        runHeadSync { enrollmentSyncer.sync() }
+        runHeadSync { syncEnrollmentImages() }
+        runHeadSync { notificationStreamSyncer.sync() }
+        runHeadSync { announcementSyncer.sync() }
 
         for (plan in plans) {
-            if (isStopped) break
+            coroutineContext.ensureActive()
             syncCourse(plan)
+        }
+    }
+
+    private suspend fun runHeadSync(block: suspend () -> Unit) {
+        coroutineContext.ensureActive()
+        try {
+            block()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Head syncer failure is non-fatal — per-course sync continues
         }
     }
 
@@ -84,7 +81,7 @@ class HorizonCourseSync @Inject constructor(
 
             val result = courseContentSyncer.sync(plan.courseId)
             courseSyncPlanDao.updateModulesState(plan.courseId, HorizonProgressState.COMPLETED)
-            if (isStopped) return
+            coroutineContext.ensureActive()
 
             val assignmentIds = extractAssignmentIds(result.moduleItems)
             val pageUrls = extractPageUrls(result.moduleItems)
@@ -94,16 +91,11 @@ class HorizonCourseSync @Inject constructor(
 
             coroutineScope {
                 if (plan.syncAssignments && assignmentIds.isNotEmpty()) {
-                    launch {
-                        try {
-                            val r = assignmentSyncer.syncAssignments(plan.courseId, assignmentIds)
-                            fileIdsMutex.withLock {
-                                allAdditionalFileIds += r.additionalFileIds
-                                allExternalUrls += r.externalFileUrls
-                            }
-                            courseSyncPlanDao.updateAssignmentsState(plan.courseId, HorizonProgressState.COMPLETED)
-                        } catch (_: Exception) {
-                            courseSyncPlanDao.updateAssignmentsState(plan.courseId, HorizonProgressState.ERROR)
+                    launchSubSync({ courseSyncPlanDao.updateAssignmentsState(plan.courseId, it) }) {
+                        val r = assignmentSyncer.syncAssignments(plan.courseId, assignmentIds)
+                        fileIdsMutex.withLock {
+                            allAdditionalFileIds += r.additionalFileIds
+                            allExternalUrls += r.externalFileUrls
                         }
                     }
                 } else if (plan.syncAssignments) {
@@ -111,16 +103,11 @@ class HorizonCourseSync @Inject constructor(
                 }
 
                 if (plan.syncPages && pageUrls.isNotEmpty()) {
-                    launch {
-                        try {
-                            val r = pageSyncer.syncPages(plan.courseId, pageUrls)
-                            fileIdsMutex.withLock {
-                                allAdditionalFileIds += r.additionalFileIds
-                                allExternalUrls += r.externalFileUrls
-                            }
-                            courseSyncPlanDao.updatePagesState(plan.courseId, HorizonProgressState.COMPLETED)
-                        } catch (_: Exception) {
-                            courseSyncPlanDao.updatePagesState(plan.courseId, HorizonProgressState.ERROR)
+                    launchSubSync({ courseSyncPlanDao.updatePagesState(plan.courseId, it) }) {
+                        val r = pageSyncer.syncPages(plan.courseId, pageUrls)
+                        fileIdsMutex.withLock {
+                            allAdditionalFileIds += r.additionalFileIds
+                            allExternalUrls += r.externalFileUrls
                         }
                     }
                 } else if (plan.syncPages) {
@@ -128,29 +115,19 @@ class HorizonCourseSync @Inject constructor(
                 }
 
                 if (plan.syncScores) {
-                    launch {
-                        try {
-                            scoreSyncer.sync(plan.courseId)
-                            courseSyncPlanDao.updateScoresState(plan.courseId, HorizonProgressState.COMPLETED)
-                        } catch (_: Exception) {
-                            courseSyncPlanDao.updateScoresState(plan.courseId, HorizonProgressState.ERROR)
-                        }
+                    launchSubSync({ courseSyncPlanDao.updateScoresState(plan.courseId, it) }) {
+                        scoreSyncer.sync(plan.courseId)
                     }
                 }
 
                 if (plan.syncNotes) {
-                    launch {
-                        try {
-                            notebookSyncer.syncNotes(plan.courseId)
-                            courseSyncPlanDao.updateNotesState(plan.courseId, HorizonProgressState.COMPLETED)
-                        } catch (_: Exception) {
-                            courseSyncPlanDao.updateNotesState(plan.courseId, HorizonProgressState.ERROR)
-                        }
+                    launchSubSync({ courseSyncPlanDao.updateNotesState(plan.courseId, it) }) {
+                        notebookSyncer.syncNotes(plan.courseId)
                     }
                 }
             }
 
-            if (isStopped) return
+            coroutineContext.ensureActive()
 
             if (plan.syncFiles) {
                 try {
@@ -162,19 +139,68 @@ class HorizonCourseSync @Inject constructor(
                         selectedFileIds = selectedFileIds,
                         additionalFileIds = allAdditionalFileIds,
                         externalUrls = allExternalUrls,
-                        isStopped = { isStopped },
                     )
-                    courseSyncPlanDao.updateFilesState(plan.courseId, HorizonProgressState.COMPLETED)
+                    val fileStates = fileSyncPlanDao.findByCourseId(plan.courseId).map { it.state }
+                    val anyErrored = fileStates.any { it == HorizonProgressState.ERROR }
+                    val anyCompleted = fileStates.any { it == HorizonProgressState.COMPLETED }
+                    val filesState = when {
+                        anyErrored && anyCompleted -> HorizonProgressState.PARTIAL
+                        anyErrored -> HorizonProgressState.ERROR
+                        else -> HorizonProgressState.COMPLETED
+                    }
+                    courseSyncPlanDao.updateFilesState(plan.courseId, filesState)
+                } catch (e: CancellationException) {
+                    throw e
                 } catch (_: Exception) {
                     courseSyncPlanDao.updateFilesState(plan.courseId, HorizonProgressState.ERROR)
                 }
             }
 
+            courseSyncPlanDao.updateImagesState(plan.courseId, HorizonProgressState.IN_PROGRESS)
             syncCourseImages(plan.courseId)
+            courseSyncPlanDao.updateImagesState(plan.courseId, HorizonProgressState.COMPLETED)
 
-            courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.COMPLETED)
+            courseSyncPlanDao.updateState(plan.courseId, resolveCourseFinalState(plan))
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.ERROR)
+        }
+    }
+
+    private suspend fun resolveCourseFinalState(plan: HorizonCourseSyncPlanEntity): HorizonProgressState {
+        val current = courseSyncPlanDao.findByCourseId(plan.courseId) ?: return HorizonProgressState.COMPLETED
+        val components = buildList {
+            add(current.modulesState)
+            if (plan.syncAssignments) add(current.assignmentsState)
+            if (plan.syncPages) add(current.pagesState)
+            if (plan.syncScores) add(current.scoresState)
+            if (plan.syncNotes) add(current.notesState)
+            if (plan.syncFiles) add(current.filesState)
+            add(current.imagesState)
+        }
+        val anyErrored = components.any { it == HorizonProgressState.ERROR }
+        val anyPartial = components.any { it == HorizonProgressState.PARTIAL }
+        val anyCompleted = components.any { it == HorizonProgressState.COMPLETED }
+        return when {
+            anyPartial -> HorizonProgressState.PARTIAL
+            anyErrored && anyCompleted -> HorizonProgressState.PARTIAL
+            anyErrored -> HorizonProgressState.ERROR
+            else -> HorizonProgressState.COMPLETED
+        }
+    }
+
+    private fun CoroutineScope.launchSubSync(
+        updateState: suspend (HorizonProgressState) -> Unit,
+        block: suspend () -> Unit,
+    ) = launch {
+        try {
+            block()
+            updateState(HorizonProgressState.COMPLETED)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            updateState(HorizonProgressState.ERROR)
         }
     }
 
@@ -184,6 +210,8 @@ class HorizonCourseSync @Inject constructor(
                 .mapNotNull { it.courseImageUrl }
                 .toSet()
             imageSyncer.syncImages(imageUrls)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             // Image sync failure is non-fatal
         }
@@ -193,7 +221,9 @@ class HorizonCourseSync @Inject constructor(
         try {
             val imageUrls = mutableSetOf<String>()
             courseDao.getByCourseId(courseId)?.imageUrl?.let { imageUrls.add(it) }
-            imageSyncer.syncImages(imageUrls)
+            imageSyncer.syncImages(imageUrls, courseId = courseId)
+        } catch (e: CancellationException) {
+            throw e
         } catch (_: Exception) {
             // Image sync failure is non-fatal
         }

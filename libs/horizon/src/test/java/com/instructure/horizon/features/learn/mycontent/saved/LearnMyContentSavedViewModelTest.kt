@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryItemsUseCase
 import com.instructure.horizon.domain.usecase.GetLearnLearningLibraryRecommendationsUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
@@ -32,8 +31,8 @@ import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.domain.usecase.ToggleLearnLearningLibraryItemBookmarkUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
+import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -63,9 +62,8 @@ class LearnMyContentSavedViewModelTest {
     private val toggleLearnLearningLibraryItemBookmarkUseCase: ToggleLearnLearningLibraryItemBookmarkUseCase = mockk(relaxed = true)
     private val offlineCardStateHelper: OfflineCardStateHelper = mockk(relaxed = true)
     private val getNextModuleItemUseCase: GetNextModuleItemUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyResponse = LearningLibraryCollectionItemsResponse(
@@ -82,7 +80,7 @@ class LearnMyContentSavedViewModelTest {
         coEvery { getLearnLearningLibraryItemsUseCase(any()) } returns emptyResponse
         coEvery { getLearnLearningLibraryRecommendationsUseCase(any()) } returns emptyList()
         coEvery { toggleLearnLearningLibraryItemBookmarkUseCase(any()) } returns false
-        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        every { offlineState.isOffline } returns isOfflineFlow
     }
 
     @After
@@ -315,7 +313,7 @@ class LearnMyContentSavedViewModelTest {
 
     private fun getViewModel() = LearnMyContentSavedViewModel(
         resources, getLearnLearningLibraryItemsUseCase, getLearnLearningLibraryRecommendationsUseCase,
-        toggleLearnLearningLibraryItemBookmarkUseCase, offlineCardStateHelper, getNextModuleItemUseCase, networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase
+        toggleLearnLearningLibraryItemBookmarkUseCase, offlineCardStateHelper, getNextModuleItemUseCase, offlineState
     )
 
     private fun createTestCollectionItem(

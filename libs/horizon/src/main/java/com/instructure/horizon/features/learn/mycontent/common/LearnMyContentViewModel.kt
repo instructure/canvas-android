@@ -16,35 +16,34 @@
  */
 package com.instructure.horizon.features.learn.mycontent.common
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class LearnMyContentViewModel<T>(
     protected val getNextModuleItemUseCase: GetNextModuleItemUseCase,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
 
     private data class Filters(
         val searchQuery: String = "",
@@ -54,6 +53,7 @@ abstract class LearnMyContentViewModel<T>(
 
     private var nextCursor: String? = null
     private var currentFilters = Filters()
+    private var lastEmittedFilters: Filters? = null
     private val filtersFlow = MutableSharedFlow<Filters>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     protected val _uiState = MutableStateFlow(
@@ -78,18 +78,19 @@ abstract class LearnMyContentViewModel<T>(
                 load()
             }
         }
-    }
 
-    override fun onNetworkRestored() {
-        refresh()
-    }
-
-    override fun onNetworkLost() {
-        // Offline banner is handled at the screen level; no action needed here
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (!isOffline) refresh() }
+            .launchIn(viewModelScope)
     }
 
     fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption, typeFilter: LearnLearningLibraryTypeFilter) {
-        filtersFlow.tryEmit(Filters(searchQuery, sortBy, typeFilter))
+        val newFilters = Filters(searchQuery, sortBy, typeFilter)
+        if (lastEmittedFilters != newFilters) {
+            lastEmittedFilters = newFilters
+            filtersFlow.tryEmit(newFilters)
+        }
     }
 
     private fun load() {

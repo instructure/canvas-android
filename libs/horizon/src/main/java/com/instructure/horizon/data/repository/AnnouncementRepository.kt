@@ -84,6 +84,7 @@ class AnnouncementRepository @Inject constructor(
     }
 
     suspend fun markCourseAnnouncementRead(courseId: Long, announcementId: Long, entryIds: Set<Long>): DataResult<Unit> {
+        if (!shouldFetchFromNetwork()) return DataResult.Fail()
         val result = networkDataSource.markCourseAnnouncementRead(courseId, announcementId, entryIds)
         if (result is DataResult.Success && shouldSync()) {
             localDataSource.markRead(HorizonAnnouncementKind.COURSE, announcementId, courseId)
@@ -92,6 +93,7 @@ class AnnouncementRepository @Inject constructor(
     }
 
     suspend fun dismissAccountNotification(announcementId: Long): DataResult<AccountNotification> {
+        if (!shouldFetchFromNetwork()) return DataResult.Fail()
         val result = networkDataSource.deleteAccountNotification(announcementId)
         if (result is DataResult.Success && shouldSync()) {
             localDataSource.markClosed(HorizonAnnouncementKind.ACCOUNT, announcementId, courseId = null)

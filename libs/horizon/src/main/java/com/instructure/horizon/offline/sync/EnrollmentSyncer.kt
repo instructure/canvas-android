@@ -15,7 +15,10 @@
  */
 package com.instructure.horizon.offline.sync
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItem
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
 import com.instructure.horizon.data.datasource.CourseEnrollmentLocalDataSource
 import com.instructure.horizon.data.datasource.CourseEnrollmentNetworkDataSource
 import com.instructure.horizon.data.datasource.LearnMyContentLocalDataSource
@@ -52,10 +55,13 @@ class EnrollmentSyncer @Inject constructor(
             .flatMap { it.sortedRequirements }
             .map { it.courseId }
             .distinct()
-        if (allCourseIds.isNotEmpty()) {
-            val courses = programDetailsNetworkDataSource.getCoursesById(allCourseIds, forceRefresh = true)
-            programDetailsLocalDataSource.saveCourses(courses)
+        if (allCourseIds.isEmpty()) return
+        val allCourses = mutableListOf<CourseWithModuleItemDurations>()
+        allCourseIds.chunked(50).forEach { batch ->
+            val courses = programDetailsNetworkDataSource.getCoursesById(batch, forceRefresh = true)
+            allCourses.addAll(courses)
         }
+        programDetailsLocalDataSource.saveCourses(allCourses)
     }
 
     private suspend fun syncLearnContent() {
@@ -63,17 +69,16 @@ class EnrollmentSyncer @Inject constructor(
             LearnMyContentLocalDataSource.QUERY_KEY_IN_PROGRESS,
             LearnMyContentLocalDataSource.QUERY_KEY_COMPLETED,
         )) {
-            val allItems = mutableListOf<com.instructure.canvasapi2.models.journey.mycontent.LearnItem>()
+            val allItems = mutableListOf<LearnItem>()
             var cursor: String? = null
             val status = when (queryKey) {
                 LearnMyContentLocalDataSource.QUERY_KEY_IN_PROGRESS -> listOf(
-                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.IN_PROGRESS,
-                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.NOT_STARTED,
+                    LearnItemStatus.IN_PROGRESS,
+                    LearnItemStatus.NOT_STARTED,
                 )
-                else -> listOf(
-                    com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus.COMPLETED
-                )
+                else -> listOf(LearnItemStatus.COMPLETED)
             }
+            var iterations = 0
             do {
                 val page = learnMyContentNetworkDataSource.getLearnItems(
                     cursor = cursor,
@@ -85,8 +90,14 @@ class EnrollmentSyncer @Inject constructor(
                 )
                 allItems.addAll(page.items)
                 cursor = if (page.pageInfo.hasNextPage) page.pageInfo.nextCursor else null
+                iterations++
+                if (iterations >= MAX_LEARN_PAGES) break
             } while (cursor != null)
             learnMyContentLocalDataSource.saveLearnItems(allItems, queryKey)
         }
+    }
+
+    companion object {
+        private const val MAX_LEARN_PAGES = 20
     }
 }

@@ -755,6 +755,11 @@
     <string name="offline_storageTitle">Storage</string>
     <string name="offline_syncButton">Sync</string>
     <string name="offline_cancelSync">Cancel sync</string>
+    <string name="offline_doneSync">Done</string>
+    <string name="offline_startSyncConfirmationTitle">Sync</string>
+    <string name="offline_startSyncConfirmationMessage">This will sync ~%1$s content while you are connected to a Wi-Fi network</string>
+    <string name="offline_startSyncConfirmationConfirm">Sync</string>
+    <string name="offline_startSyncConfirmationCancel">Cancel</string>
     <string name="offline_deletingContent">Deleting content</string>
     <string name="offline_syncProgressLabel">Downloading %1$s of %2$s</string>
     <string name="offline_removeSyncedContentTitle">Remove synced content</string>
@@ -764,11 +769,24 @@
     <string name="offline_syncInProgressTitle">Syncing offline content</string>
     <string name="offline_syncInProgressDescription">Syncing your content for offline use…</string>
     <string name="offline_syncStatusSynced">Synced</string>
+    <string name="offline_syncStatusPartial">Partially synced</string>
+    <string name="offline_syncStatusFailed">Sync failed</string>
+    <string name="offline_syncStatusPending">Pending</string>
+    <string name="offline_syncStatusSyncing">Syncing</string>
     <string name="offline_syncCompleted">Offline content synced</string>
     <string name="offline_syncError">Sync error</string>
+    <string name="offline_emptyCoursesTitle">No courses available</string>
+    <string name="offline_emptyCoursesMessage">You aren\'t enrolled in any courses that can be made available offline.</string>
+    <string name="offline_loadingCourses">Loading courses…</string>
+    <string name="offline_retry">Retry</string>
+    <string name="offline_insufficientStorageTitle">Not enough storage</string>
+    <string name="offline_insufficientStorageMessage">This sync needs about %1$s, but only %2$s is available on your device. Free up space or reduce your selection.</string>
     <string name="offline_syncNotificationChannel">Offline Sync</string>
     <string name="offline_syncNotificationTitle">Offline content syncing…</string>
     <string name="offline_syncNotificationComplete">Offline content synced</string>
     <string name="offline_syncNotificationFailed">Offline content sync failed</string>
-    <string name="offline_syncNotificationCoursesCount">%1$d course(s) synced</string>
+    <plurals name="offline_syncNotificationCoursesCount">
+        <item quantity="one">%1$d course synced</item>
+        <item quantity="other">%1$d courses synced</item>
+    </plurals>
 </resources>

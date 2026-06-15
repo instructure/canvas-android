@@ -19,9 +19,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.horizon.features.account.offlinesettings.SyncFrequency
 
+const val SETTINGS_SINGLETON_ID = 1L
+
 @Entity(tableName = "horizon_sync_settings")
 data class HorizonSyncSettingsEntity(
-    @PrimaryKey val id: Long = 1,
+    @PrimaryKey(autoGenerate = false) val id: Long = SETTINGS_SINGLETON_ID,
     val autoSyncEnabled: Boolean = true,
     val syncFrequency: SyncFrequency = SyncFrequency.DAILY,
     val wifiOnly: Boolean = true,

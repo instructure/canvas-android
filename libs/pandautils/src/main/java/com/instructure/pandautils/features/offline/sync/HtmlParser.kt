@@ -29,7 +29,7 @@ class HtmlParser(
     @ApplicationContext private val context: Context,
 ) {
 
-    private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
+    private val imageRegex = Regex("<img[^>]*\\ssrc\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
     private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
@@ -64,7 +64,10 @@ class HtmlParser(
 
         val matches = imageRegex.findAll(resultHtml)
         matches.forEach { match ->
-            val imageUrl = match.groupValues[1]
+            val imageUrl = match.groupValues
+                .drop(1)
+                .firstOrNull { it.isNotEmpty() }
+                .orEmpty()
             val fileId = internalFileRegex.find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
             if (fileId != null) {
                 val (newHtml, shouldSyncFile) = replaceInternalFileUrl(resultHtml, courseId, fileId, imageUrl)

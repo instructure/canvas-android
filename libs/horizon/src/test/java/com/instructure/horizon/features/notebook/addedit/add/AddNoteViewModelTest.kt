@@ -19,7 +19,6 @@ package com.instructure.horizon.features.notebook.addedit.add
 import android.content.Context
 import android.text.format.DateFormat
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.instructure.horizon.R
@@ -27,8 +26,8 @@ import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.notebook.AddNoteUseCase
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
+import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -54,8 +53,8 @@ import org.junit.Test
 class AddNoteViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val addNoteUseCase: AddNoteUseCase = mockk(relaxed = true)
-    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
@@ -71,9 +70,7 @@ class AddNoteViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkStatic("androidx.navigation.SavedStateHandleKt")
         mockkStatic("android.text.format.DateFormat")
-        every { networkStateProvider.isOnline() } returns true
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
-        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getLastSyncedAtUseCase(any()) } returns null
         every { context.getString(R.string.createNoteTitle) } returns "Add note"
         every { context.getString(R.string.noteHasBeenSavedMessage) } returns "Note has been saved"
@@ -126,8 +123,7 @@ class AddNoteViewModelTest {
 
     @Test
     fun `Test add note offline shows snackbar without invoking use case`() = runTest {
-        every { networkStateProvider.isOnline() } returns false
-        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        isOfflineFlow.value = true
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onSaveNote {}
@@ -173,8 +169,7 @@ class AddNoteViewModelTest {
         return AddNoteViewModel(
             context,
             addNoteUseCase,
-            networkStateProvider,
-            featureFlagProvider,
+            offlineState,
             getLastSyncedAtUseCase,
             savedStateHandle,
         )

@@ -15,7 +15,11 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
+import android.content.ContentValues
+import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +32,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.domain.usecase.GetFileDetailsUseCase
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.util.sanitizeAsFilename
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
@@ -39,6 +44,7 @@ import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import android.os.Environment
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +57,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FileDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val getFileDetailsUseCase: GetFileDetailsUseCase,
     private val oAuthApi: OAuthAPI.OAuthInterface,
     private val workManager: WorkManager,
@@ -133,30 +140,56 @@ class FileDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(downloadState = FileDownloadProgressState.STARTING) }
             val localFile = localFileDao.findById(_uiState.value.fileId)
-            if (localFile != null) {
-                val srcFile = File(localFile.path)
-                if (srcFile.exists()) {
-                    withContext(Dispatchers.IO) {
-                        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                        val destFile = File(downloadsDir, displayName_)
-                        srcFile.copyTo(destFile, overwrite = true)
-                    }
-                    _uiState.update {
-                        it.copy(
-                            downloadProgress = 1f,
-                            downloadState = FileDownloadProgressState.COMPLETED,
-                            filePathToOpen = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), displayName_).absolutePath,
-                        )
-                    }
-                } else {
-                    _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
-                }
-            } else {
+            val srcFile = localFile?.let { File(it.path) }?.takeIf { it.exists() }
+            if (srcFile == null) {
                 _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+                return@tryLaunch
+            }
+
+            val destUri = withContext(Dispatchers.IO) {
+                copyToDownloads(srcFile, displayName_.sanitizeAsFilename(), _uiState.value.mimeType)
+            }
+
+            _uiState.update {
+                it.copy(
+                    downloadProgress = 1f,
+                    downloadState = FileDownloadProgressState.COMPLETED,
+                    filePathToOpen = destUri.toString(),
+                )
             }
         } catch {
             _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
         }
+    }
+
+    private fun copyToDownloads(srcFile: File, displayName: String, mimeType: String): Uri {
+        val resolver = context.contentResolver
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Files.getContentUri("external")
+        }
+        val values = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, displayName)
+            put(MediaStore.Downloads.MIME_TYPE, mimeType)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                put(MediaStore.Downloads.IS_PENDING, 1)
+            }
+        }
+        val uri = resolver.insert(collection, values)
+            ?: throw java.io.IOException("Failed to register file in MediaStore Downloads")
+
+        resolver.openOutputStream(uri).use { out ->
+            requireNotNull(out) { "MediaStore returned no output stream for $uri" }
+            srcFile.inputStream().use { input -> input.copyTo(out) }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val finalize = ContentValues().apply { put(MediaStore.Downloads.IS_PENDING, 0) }
+            resolver.update(uri, finalize, null, null)
+        }
+        return uri
     }
 
     private fun onDownloadOnline() {

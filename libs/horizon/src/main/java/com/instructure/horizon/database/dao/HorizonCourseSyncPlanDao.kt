@@ -35,6 +35,9 @@ interface HorizonCourseSyncPlanDao {
     @Query("SELECT * FROM horizon_course_sync_plan WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): HorizonCourseSyncPlanEntity?
 
+    @Query("SELECT courseId FROM horizon_course_sync_plan WHERE state IN ('COMPLETED', 'PARTIAL')")
+    suspend fun findAllCompletedCourseIds(): List<Long>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entity: HorizonCourseSyncPlanEntity)
 
@@ -61,6 +64,9 @@ interface HorizonCourseSyncPlanDao {
 
     @Query("UPDATE horizon_course_sync_plan SET notesState = :state WHERE courseId = :courseId")
     suspend fun updateNotesState(courseId: Long, state: HorizonProgressState)
+
+    @Query("UPDATE horizon_course_sync_plan SET imagesState = :state WHERE courseId = :courseId")
+    suspend fun updateImagesState(courseId: Long, state: HorizonProgressState)
 
     @Query("DELETE FROM horizon_course_sync_plan")
     suspend fun deleteAll()

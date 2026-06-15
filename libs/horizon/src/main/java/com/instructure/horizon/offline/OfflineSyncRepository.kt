@@ -26,4 +26,8 @@ abstract class OfflineSyncRepository(
     suspend fun offlineEnabled() = featureFlagProvider.offlineEnabled()
     suspend fun shouldFetchFromNetwork() = isOnline() || !offlineEnabled()
     suspend fun shouldSync() = isOnline() && offlineEnabled()
+
+    suspend fun requireOnlineForWrite() {
+        if (!isOnline() && offlineEnabled()) throw OfflineWriteBlockedException()
+    }
 }

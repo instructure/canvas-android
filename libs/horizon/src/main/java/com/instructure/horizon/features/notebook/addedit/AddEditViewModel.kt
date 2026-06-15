@@ -1,40 +1,39 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
 package com.instructure.horizon.features.notebook.addedit
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.database.entity.SyncDataType
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.offline.HorizonOfflineViewModel
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.horizon.offline.HorizonOfflineState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
 abstract class AddEditViewModel(
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider,
-    getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
-) : HorizonOfflineViewModel(networkStateProvider, featureFlagProvider, getLastSyncedAtUseCase) {
+    protected val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+) : ViewModel() {
     protected val _uiState = MutableStateFlow(
         AddEditNoteUiState(
             onTypeChanged = ::onTypeChanged,
@@ -42,21 +41,31 @@ abstract class AddEditViewModel(
             onSnackbarDismiss = ::onSnackbarDismissed,
             updateDeleteConfirmationDialog = ::updateShowDeleteConfirmationDialog,
             updateExitConfirmationDialog = ::updateShowExitConfirmationDialog,
-            isOffline = isOffline(),
+            isOffline = offlineState.isOffline.value,
         )
     )
     val uiState = _uiState.asStateFlow()
 
     init {
-        if (isOffline()) {
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
             viewModelScope.tryLaunch {
                 _uiState.update {
                     it.copy(
                         isOffline = true,
-                        lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
+                        lastSyncedAtMs = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.NOTES)),
                     )
                 }
-            } catch { }
+            } catch {
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
+            }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
         }
     }
 
@@ -83,21 +92,4 @@ abstract class AddEditViewModel(
     }
 
     protected abstract fun hasContentChange(): Boolean
-
-    override fun onNetworkRestored() {
-        _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
-    }
-
-    override fun onNetworkLost() {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(
-                    isOffline = true,
-                    lastSyncedAtMs = getLastSyncTime(SyncDataType.NOTES),
-                )
-            }
-        } catch {
-            _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
-        }
-    }
 }
