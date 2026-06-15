@@ -17,11 +17,13 @@ package com.instructure.student.features.login
 
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.HorizonActivity
 import com.instructure.loginapi.login.CANVAS_CAREER
 import com.instructure.loginapi.login.NEXT_GEN_CANVAS
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
 import com.instructure.ngc.NGCActivity
+import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.activity.NavigationActivity
 
 class StudentCookieConsentRouter(
@@ -29,6 +31,8 @@ class StudentCookieConsentRouter(
 ) : CookieConsentRouter {
 
     override fun startApp() {
+        PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
+
         val isCanvasCareer = activity.intent?.getBooleanExtra(CANVAS_CAREER, false) ?: false
         val isNextGenCanvas = activity.intent?.getBooleanExtra(NEXT_GEN_CANVAS, false) ?: false
         val intent = when {

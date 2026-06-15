@@ -24,10 +24,12 @@ import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.features.cookieconsent.SetCookieConsentUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.PendoTokenConfig
 import com.instructure.pandautils.utils.PendoTokenHolder
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -46,6 +48,7 @@ class SetupPendoTrackingUseCaseTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val consentPrefs: ConsentPrefs = mockk(relaxed = true)
+    private val setCookieConsentUseCase: SetCookieConsentUseCase = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val pendoTokenConfig = PendoTokenConfig(
         fallbackToken = "fallback-token",
@@ -54,7 +57,7 @@ class SetupPendoTrackingUseCaseTest {
 
     private val useCase = SetupPendoTrackingUseCase(
         featuresRepository, userRepository, apiPrefs, featureFlagProvider,
-        consentPrefs, pendoTokenConfig, context
+        consentPrefs, pendoTokenConfig, setCookieConsentUseCase, context
     )
 
     @Before
@@ -201,6 +204,75 @@ class SetupPendoTrackingUseCaseTest {
         useCase(Unit)
 
         verify(exactly = 0) { consentPrefs.currentUserConsent }
+    }
+
+    @Test
+    fun `track_usage persists consent as true`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_TRACK)
+        )
+
+        useCase(Unit)
+
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) }
+    }
+
+    @Test
+    fun `no_track_usage persists consent as false`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_NO_TRACK)
+        )
+
+        useCase(Unit)
+
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(false)) }
+    }
+
+    @Test
+    fun `only_guide_events persists consent as false`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ONLY_GUIDE_EVENTS)
+        )
+
+        useCase(Unit)
+
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(false)) }
+    }
+
+    @Test
+    fun `feature flag enabled persists consent as true`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Fail()
+        coEvery { featuresRepository.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
+            mapOf(FeaturesManager.SEND_USAGE_METRICS to true)
+        )
+
+        useCase(Unit)
+
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(true)) }
+    }
+
+    @Test
+    fun `feature flag disabled persists consent as false`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Fail()
+        coEvery { featuresRepository.getEnvironmentFeatureFlags(any()) } returns DataResult.Success(
+            mapOf(FeaturesManager.SEND_USAGE_METRICS to false)
+        )
+
+        useCase(Unit)
+
+        coVerify { setCookieConsentUseCase(SetCookieConsentUseCase.Params(false)) }
+    }
+
+    @Test
+    fun `ask_for_consent does not persist consent`() = runTest {
+        coEvery { userRepository.getMobileSettings(any()) } returns DataResult.Success(
+            UserSettings(usageMetrics = UserSettings.USAGE_METRICS_ASK_FOR_CONSENT)
+        )
+        every { consentPrefs.currentUserConsent } returns true
+
+        useCase(Unit)
+
+        coVerify(exactly = 0) { setCookieConsentUseCase(any()) }
     }
 
     @Test

@@ -21,7 +21,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import dagger.hilt.android.HiltAndroidApp
@@ -46,9 +45,7 @@ class AppManager : BaseAppManager() {
 
     override fun onCreate() {
         super.onCreate()
-        if (ConsentPrefs.currentUserConsent == true) {
-            schedulePandataUpload()
-        }
+        schedulePandataUpload()
     }
 
     private fun schedulePandataUpload() {
