@@ -25,6 +25,7 @@ query DashboardCoursesQuery($pageSize: Int!, $userId: ID!) {
             position
             color
             image
+            defaultView
         }
         enrollmentsConnection(
             first: 1

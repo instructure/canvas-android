@@ -105,7 +105,8 @@ class LoadVisibleCoursesUseCase @Inject constructor(
             imageUrl = graphQlCourse.imageUrl,
             courseColor = graphQlCourse.dashboardCard?.color,
             isFavorite = graphQlCourse.dashboardCard?.isFavorited == true,
-            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
+            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf(),
+            homePage = Course.HomePage.fromApiString(graphQlCourse.dashboardCard?.defaultView)
         )
     }
 
