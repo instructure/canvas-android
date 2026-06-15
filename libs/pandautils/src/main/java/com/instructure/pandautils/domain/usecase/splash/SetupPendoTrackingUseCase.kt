@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.features.cookieconsent.SetCookieConsentUseCase
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.PendoTokenConfig
 import com.instructure.pandautils.utils.PendoTokenHolder
@@ -40,6 +41,7 @@ class SetupPendoTrackingUseCase @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider,
     private val consentPrefs: ConsentPrefs,
     private val pendoTokenConfig: PendoTokenConfig,
+    private val setCookieConsentUseCase: SetCookieConsentUseCase,
     @ApplicationContext private val context: Context
 ) : BaseUseCase<Unit, Unit>() {
 
@@ -55,6 +57,13 @@ class SetupPendoTrackingUseCase @Inject constructor(
                 .dataOrNull
                 ?.get(FeaturesManager.SEND_USAGE_METRICS)
                 .orDefault()
+        }
+
+        // Persist the resolved tracking decision so the app-wide consent gates (Pendo events,
+        // page-view uploads, OAuth mobile_consent) reflect it. Skip ASK_FOR_CONSENT, where the
+        // stored value must stay the user's explicit choice (or null to trigger the consent dialog).
+        if (settings?.usageMetrics != UserSettings.USAGE_METRICS_ASK_FOR_CONSENT) {
+            setCookieConsentUseCase(SetCookieConsentUseCase.Params(shouldTrack))
         }
 
         if (shouldTrack) {
