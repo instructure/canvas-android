@@ -67,6 +67,7 @@ import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
+import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setVisible
@@ -441,6 +442,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
                             putString(PageDetailsFragment.PAGE_NAME, homePageTitle)
                         }
                         RouteMatcher.route(requireActivity(), route)
+                    } else if (tab.isExternalNavMenuLink) {
+                        openCustomLink(tab)
                     } else {
                         val route = TabHelper.getRouteByTabId(tab, canvasContext)
                             ?.apply { ignoreDebounce = true }
@@ -545,6 +548,13 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
             toolbarAnimation?.start()
             titleAnimation?.start()
             subtitleAnimation?.start()
+        }
+    }
+
+    private fun openCustomLink(tab: Tab) {
+        val url = tab.externalUrl?.takeIf { it.isNotBlank() } ?: tab.htmlUrl?.takeIf { it.isNotBlank() } ?: return
+        if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true)) {
+            requireActivity().launchCustomTab(url, canvasContext.color)
         }
     }
 

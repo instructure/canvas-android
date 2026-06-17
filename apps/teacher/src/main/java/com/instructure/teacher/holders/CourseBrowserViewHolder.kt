@@ -50,6 +50,8 @@ class CourseBrowserViewHolder(private val binding: AdapterCourseBrowserBinding, 
                 val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
                 if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                     R.drawable.ic_attendance
+                } else if (tab.isExternalNavMenuLink) {
+                    R.drawable.ic_link
                 } else if (tab.type == Tab.TYPE_EXTERNAL) {
                     R.drawable.ic_lti
                 } else R.drawable.ic_canvas_logo

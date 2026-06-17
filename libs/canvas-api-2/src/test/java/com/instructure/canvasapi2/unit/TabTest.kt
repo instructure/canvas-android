@@ -78,4 +78,40 @@ class TabTest : Assert() {
     fun toString_TestCorrectFormat() {
         Assert.assertEquals("$id:$label", tabby1.toString())
     }
+
+    //region isExternalNavMenuLink
+    @Test
+    fun isExternalNavMenuLink_TrueForExternalTabWithBlankLtiUrl() {
+        val tab = Tab(
+            tabId = "nav_menu_link_123",
+            type = Tab.TYPE_EXTERNAL,
+            htmlUrl = "/courses/1/custom",
+            externalUrl = "https://example.com/custom",
+            ltiUrl = ""
+        )
+        Assert.assertTrue(tab.isExternalNavMenuLink)
+    }
+
+    @Test
+    fun isExternalNavMenuLink_FalseForRealLtiTool() {
+        val tab = Tab(
+            tabId = "context_external_tool_456",
+            type = Tab.TYPE_EXTERNAL,
+            htmlUrl = "/courses/1/external_tools/456",
+            externalUrl = "https://mobiledev.instructure.com/courses/1/external_tools/456",
+            ltiUrl = "https://mobiledev.instructure.com/api/v1/courses/1/external_tools/sessionless_launch?id=456"
+        )
+        Assert.assertFalse(tab.isExternalNavMenuLink)
+    }
+
+    @Test
+    fun isExternalNavMenuLink_FalseForInternalTab() {
+        val tab = Tab(
+            tabId = Tab.ASSIGNMENTS_ID,
+            type = Tab.TYPE_INTERNAL,
+            htmlUrl = "/courses/1/assignments"
+        )
+        Assert.assertFalse(tab.isExternalNavMenuLink)
+    }
+    //endregion
 }
