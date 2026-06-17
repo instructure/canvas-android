@@ -46,6 +46,8 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.toast
@@ -93,8 +95,11 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
     override fun title(): String = getString(R.string.message)
 
     override fun applyTheme() {
-        // Always use light/white status bar icons for better visibility
+        // Keep both system bar icons light/white for visibility, and color the status bar to match
+        // the inbox list and the app bar. Without an explicit background color the status bar renders
+        // white on tablets, hiding the white icons and the rest of its content.
         WindowInsetsHelper.setSystemBarsAppearance(requireActivity().window, false)
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
     override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
