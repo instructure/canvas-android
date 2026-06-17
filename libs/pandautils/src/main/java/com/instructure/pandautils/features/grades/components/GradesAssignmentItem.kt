@@ -71,15 +71,15 @@ import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
 import com.instructure.instui.compose.input.TextInput
-import com.instructure.instui.compose.indicator.Icon as InstUIIcon
 import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.input.TextInputSize
+import com.instructure.instui.compose.list.AccordionIcon
 import com.instructure.instui.compose.list.ListItem
 import com.instructure.instui.compose.list.ListItemLeading
 import com.instructure.instui.compose.list.ListItemTrailing
 import com.instructure.instui.token.icon.InstUIIcons
-import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.icon.messageSquare
+import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CheckpointItem
@@ -161,12 +161,15 @@ private fun InstUIAssignmentItem(
                             hasUnread = uiState.hasUnreadComments,
                         )
                         // Render the checkpoint accordion arrow alongside the comment pill (laid out in a
-                        // spaced Row so the two never overlap). Matches the standalone accordion arrow; the
-                        // arrow's expand interaction is handled outside this PR.
+                        // spaced Row so the two never overlap). The Accordion trailing variant can't be used
+                        // here because the trailing slot already holds the comment badge, so we reuse the
+                        // same AccordionIcon directly.
                         if (hasCheckpoints) {
-                            InstUIIcon(
-                                imageVector = InstUIIcons.chevronDown,
-                                size = IconSize.Small,
+                            AccordionIcon(
+                                expanded = uiState.checkpointsExpanded,
+                                onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
+                                contentDescription = checkpointAccordionContentDescription(uiState.checkpointsExpanded),
+                                modifier = Modifier.testTag("expandDiscussionCheckpoints"),
                             )
                         }
                     }
@@ -175,6 +178,7 @@ private fun InstUIAssignmentItem(
                 hasCheckpoints -> ListItemTrailing.Accordion(
                     expanded = uiState.checkpointsExpanded,
                     onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
+                    contentDescription = checkpointAccordionContentDescription(uiState.checkpointsExpanded),
                 )
 
                 else -> null
@@ -183,11 +187,14 @@ private fun InstUIAssignmentItem(
         )
         if (hasCheckpoints) {
             AnimatedVisibility(visible = uiState.checkpointsExpanded) {
-                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
+                // Indent so each checkpoint row's title lines up with the assignment title above it.
+                // The ListItem's own SpaceMd start padding accounts for the rest of the offset.
+                val checkpointIndent = IconSize.Large.dp + InstUILayoutSizes.Spacing.SpaceLg.spaceLg
+                Column(modifier = Modifier.padding(start = checkpointIndent, bottom = 8.dp)) {
                     uiState.checkpoints.forEach {
-                        CheckpointItem(
-                            discussionCheckpointUiState = it,
-                            contextColor = courseColor,
+                        InstUICheckpointItem(
+                            uiState = it,
+                            onClick = { actionHandler(GradesAction.AssignmentClick(uiState.id)) },
                         )
                     }
                 }
@@ -286,6 +293,45 @@ private fun WhatIfScoreField(
         )
     }
 }
+
+@Composable
+private fun InstUICheckpointItem(
+    uiState: DiscussionCheckpointUiState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val courseColor = LocalCourseColor.current
+    val pillData = mapSubmissionStateToPill(uiState.submissionStateLabel)
+    val gradeText = uiState.displayGrade.text
+    ListItem(
+        modifier = modifier,
+        title = uiState.name,
+        subtext1 = uiState.dueDate,
+        pill = pillData?.let { data ->
+            { Pill(text = data.text, variant = data.variant) }
+        },
+        score = if (gradeText.isNotEmpty()) {
+            {
+                InstUIText(
+                    text = gradeText,
+                    color = courseColor,
+                    style = InstUITextTokens.contentImportant,
+                )
+            }
+        } else null,
+        onClick = onClick,
+    )
+}
+
+@Composable
+private fun checkpointAccordionContentDescription(expanded: Boolean): String = stringResource(
+    if (expanded) {
+        R.string.content_description_collapse_content_with_param
+    } else {
+        R.string.content_description_expand_content_with_param
+    },
+    stringResource(R.string.a11y_discussion_checkpoints),
+)
 
 // endregion
 
@@ -633,6 +679,45 @@ private fun GradesAssignmentItemInstUICommentsCheckpointsPreview() {
                             displayGrade = DisplayGrade("-/5", "-/5"),
                             pointsPossible = 5,
                         )
+                    )
+                ),
+                actionHandler = {},
+                contextColor = 0xFF00828E.toInt(),
+                showWhatIfScore = false,
+            )
+        }
+    }
+}
+
+@Preview(name = "GradesAssignmentItem InstUI Checkpoints Expanded", showBackground = true)
+@Preview(name = "GradesAssignmentItem InstUI Checkpoints Expanded — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun GradesAssignmentItemInstUICheckpointsExpandedPreview() {
+    InstUITheme(courseColor = Color(0xFF00828E)) {
+        CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+            GradesAssignmentItem(
+                uiState = previewAssignment(
+                    id = 1,
+                    name = "Energy, Space and Time - PHSC 12600 Matter",
+                    grade = "-/10",
+                    state = SubmissionStateLabel.NotSubmitted,
+                ).copy(
+                    checkpointsExpanded = true,
+                    checkpoints = listOf(
+                        DiscussionCheckpointUiState(
+                            name = "Reply to topic",
+                            dueDate = "Due Jul 6, 2025 12:00",
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
+                            displayGrade = DisplayGrade("-/5", "-/5"),
+                            pointsPossible = 5,
+                        ),
+                        DiscussionCheckpointUiState(
+                            name = "Additional replies (2)",
+                            dueDate = "Due Jul 9, 2025 12:00",
+                            submissionStateLabel = SubmissionStateLabel.Graded,
+                            displayGrade = DisplayGrade("4/5", "4 out of 5"),
+                            pointsPossible = 5,
+                        ),
                     )
                 ),
                 actionHandler = {},
