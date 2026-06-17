@@ -454,14 +454,15 @@ class CanvasWebView @JvmOverloads constructor(
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            return handleShouldOverrideUrlLoading(view, request.url.toString())
+            val isAutomaticRedirect = request.isRedirect && !request.hasGesture()
+            return handleShouldOverrideUrlLoading(view, request.url.toString(), isAutomaticRedirect)
         }
 
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-            return handleShouldOverrideUrlLoading(view, url)
+            return handleShouldOverrideUrlLoading(view, url, isAutomaticRedirect = false)
         }
 
-        private fun handleShouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+        private fun handleShouldOverrideUrlLoading(view: WebView, url: String, isAutomaticRedirect: Boolean): Boolean {
             // Check to see if we need to do anything with the link that was clicked
 
             // Default headers
@@ -516,8 +517,9 @@ class CanvasWebView @JvmOverloads constructor(
                     return true
                 }
             }
-            // Is the URL something we can link to inside our application?
-            if (canvasWebViewClientCallback?.canRouteInternallyDelegate(url) == true) {
+            // Is the URL something we can link to inside our application? Automatic server redirects
+            // are followed in the WebView (not routed) so a page can't auto-open another screen by itself.
+            if (!isAutomaticRedirect && canvasWebViewClientCallback?.canRouteInternallyDelegate(url) == true) {
                 // Append Studio video title if available
                 val finalUrl = appendStudioTitleToUrl(url)
                 canvasWebViewClientCallback?.routeInternallyCallback(finalUrl)
