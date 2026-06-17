@@ -295,6 +295,9 @@ class PandaAvatarActivity : ParentActivity() {
                 if (up) lp.setMargins(0, partsOptions.width, 0, 0)
                 lp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
                 partsOptions.layoutParams = lp
+                // Reassigning layoutParams above drops the bottom margin applied for the
+                // system navigation bar, so re-dispatch insets to reapply it (MBL-20064).
+                ViewCompat.requestApplyInsets(binding.root)
                 if (up) {
                     editOptions.setGone()
                 } else {
