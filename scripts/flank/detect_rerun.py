@@ -20,6 +20,13 @@ Exit code is always 0 on a well-formed results dir; the caller checks the
 output. Errors reading the dir go to stderr and exit 2.
 """
 import sys
+
+# Python's stdlib XML parsers (Expat) are only hardened against XXE and
+# "billion laughs"/"quadratic blowup" DoS attacks on Python 3.11+ (Expat 2.6+).
+# Refuse to run on older interpreters where xml.etree.ElementTree is unsafe.
+if sys.version_info < (3, 11):
+    sys.exit("Python 3.11 or newer is required (secure XML parsing).")
+
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
