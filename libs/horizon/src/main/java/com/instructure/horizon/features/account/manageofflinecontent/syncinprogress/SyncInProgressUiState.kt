@@ -16,11 +16,13 @@
 package com.instructure.horizon.features.account.manageofflinecontent.syncinprogress
 
 import com.instructure.horizon.features.account.manageofflinecontent.OfflineCourseItemUiState
+import com.instructure.horizon.offline.sync.HorizonProgressState
 
 data class SyncInProgressUiState(
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val syncProgress: Float = 0f,
     val syncProgressLabel: String = "",
+    val progressState: HorizonProgressState = HorizonProgressState.PENDING,
     val isSyncFinished: Boolean = false,
     val onCancelSyncClick: () -> Unit = {},
     val onDoneClick: () -> Unit = {},

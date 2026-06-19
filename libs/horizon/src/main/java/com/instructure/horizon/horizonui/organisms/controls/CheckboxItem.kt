@@ -51,14 +51,16 @@ data class CheckboxItemState(
 @Composable
 fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
+    val interactiveModifier = state.onClick?.let { onClick ->
+        alphaModifier.triStateToggleable(
+            state = state.toggleableState,
+            onClick = onClick,
+            enabled = state.enabled
+        )
+    } ?: alphaModifier
 
     Row(
-        modifier = alphaModifier
-            .triStateToggleable(
-                state = state.toggleableState,
-                onClick = state.onClick ?: {},
-                enabled = state.enabled
-            )
+        modifier = interactiveModifier
     ) {
         val error = state.controlsContentState.error != null
         TriStateCheckbox(
@@ -82,14 +84,16 @@ fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = 
 @Composable
 fun CheckboxItem(state: CheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
+    val interactiveModifier = state.onCheckedChanged?.let { onCheckedChanged ->
+        alphaModifier.toggleable(
+            value = state.checked,
+            onValueChange = onCheckedChanged,
+            enabled = state.enabled
+        )
+    } ?: alphaModifier
 
     Row(
-        modifier = alphaModifier
-            .toggleable(
-                value = state.checked,
-                onValueChange = state.onCheckedChanged ?: {},
-                enabled = state.enabled
-            )
+        modifier = interactiveModifier
     ) {
         val error = state.controlsContentState.error != null
         Checkbox(

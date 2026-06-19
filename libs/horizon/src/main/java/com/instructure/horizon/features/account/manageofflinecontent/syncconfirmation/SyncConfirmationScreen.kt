@@ -15,13 +15,10 @@
  */
 package com.instructure.horizon.features.account.manageofflinecontent.syncconfirmation
 
-import android.text.format.Formatter
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -34,7 +31,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.manageofflinecontent.CourseOfflineState
 import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentViewModel
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -48,18 +44,7 @@ fun SyncConfirmationScreen(
 ) {
     val parentEntry = remember { navController.getBackStackEntry(AccountRoute.ManageOfflineContent.route) }
     val viewModel: ManageOfflineContentViewModel = hiltViewModel(parentEntry)
-    val uiState by viewModel.uiState.collectAsState()
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
-    val totalSizeBytes = remember(uiState.courses) {
-        uiState.courses
-            .filter { it.offlineState != CourseOfflineState.NONE }
-            .sumOf { course -> course.files.filter { it.isSelected }.sumOf { it.fileSize } }
-    }
-    val totalSizeLabel = remember(totalSizeBytes) {
-        Formatter.formatShortFileSize(context, totalSizeBytes)
-    }
 
     HorizonDialogScaffold(
         title = stringResource(R.string.offline_startSyncConfirmationTitle),
@@ -89,7 +74,7 @@ fun SyncConfirmationScreen(
                 .padding(horizontal = 24.dp, vertical = 24.dp),
         ) {
             Text(
-                text = stringResource(R.string.offline_startSyncConfirmationMessage, totalSizeLabel),
+                text = stringResource(R.string.offline_startSyncConfirmationMessage),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
             )

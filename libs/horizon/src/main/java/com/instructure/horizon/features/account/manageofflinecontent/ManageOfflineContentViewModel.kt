@@ -103,7 +103,6 @@ class ManageOfflineContentViewModel @Inject constructor(
 
             val courses = coursesWithFiles.map { courseData ->
                 val courseWasPreviouslySynced = courseData.courseId in previouslySelectedCourseIds
-                val totalSizeBytes = courseData.files.sumOf { it.size }
                 val files = courseData.files.map { file ->
                     val fileSelected = file.isSynced || file.fileId in previouslySelectedFileIds
                     OfflineFileItemUiState(
@@ -120,7 +119,6 @@ class ManageOfflineContentViewModel @Inject constructor(
                 OfflineCourseItemUiState(
                     courseId = courseData.courseId,
                     courseName = courseData.courseName,
-                    courseSizeLabel = if (courseData.files.isNotEmpty()) Formatter.formatShortFileSize(context, totalSizeBytes) else "",
                     offlineState = when {
                         courseWasPreviouslySynced && !anyFileSelected -> CourseOfflineState.ALL
                         allFilesSelected -> CourseOfflineState.ALL

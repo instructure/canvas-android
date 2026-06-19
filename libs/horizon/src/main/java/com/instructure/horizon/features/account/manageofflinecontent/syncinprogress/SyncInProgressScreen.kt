@@ -56,6 +56,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.offline.sync.HorizonProgressState
 import kotlin.collections.forEach
 
 @Composable
@@ -88,9 +89,14 @@ fun SyncInProgressScreen(
                         )
                         HorizonSpace(SpaceSize.SPACE_8)
                     }
+                    val progressColor = when (uiState.progressState) {
+                        HorizonProgressState.COMPLETED -> HorizonColors.Text.success()
+                        HorizonProgressState.ERROR -> HorizonColors.Text.error()
+                        else -> HorizonColors.PrimitivesBlue.blue82()
+                    }
                     ProgressBarSmall(
                         progress = (uiState.syncProgress * 100).toDouble(),
-                        style = ProgressBarStyle.Dark(overrideProgressColor = HorizonColors.PrimitivesBlue.blue82()),
+                        style = ProgressBarStyle.Dark(overrideProgressColor = progressColor),
                         showLabels = false,
                         modifier = Modifier.fillMaxWidth(),
                     )
@@ -142,20 +148,12 @@ private fun SyncingCourseRow(course: OfflineCourseItemUiState) {
                 .background(HorizonColors.Surface.pageSecondary())
                 .padding(horizontal = 24.dp, vertical = 16.dp),
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = course.courseName,
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.body(),
-                )
-                if (course.courseSizeLabel.isNotEmpty()) {
-                    Text(
-                        text = course.courseSizeLabel,
-                        style = HorizonTypography.p2,
-                        color = HorizonColors.Text.timestamp(),
-                    )
-                }
-            }
+            Text(
+                text = course.courseName,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.weight(1f),
+            )
             when (course.syncState) {
                 CourseSyncState.SYNCING -> Spinner(
                     size = SpinnerSize.EXTRA_SMALL,
@@ -203,12 +201,12 @@ private fun SyncingFileRow(file: OfflineFileItemUiState) {
             .background(HorizonColors.Surface.pageSecondary())
             .padding(start = 48.dp, end = 24.dp, top = 16.dp, bottom = 16.dp),
     ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(text = file.fileName, style = HorizonTypography.p1, color = HorizonColors.Text.body())
-            if (file.fileSizeLabel.isNotEmpty()) {
-                Text(text = file.fileSizeLabel, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
-            }
-        }
+        Text(
+            text = file.fileName,
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body(),
+            modifier = Modifier.weight(1f),
+        )
         when (file.syncState) {
             FileSyncState.SYNCING,
             FileSyncState.PENDING -> Spinner(
@@ -231,26 +229,24 @@ private fun SyncInProgressScreenPreview() {
     SyncInProgressScreen(
         uiState = SyncInProgressUiState(
             syncProgress = 0.2f,
-            syncProgressLabel = "Downloading 12.7 MB of 64 MB",
+            syncProgressLabel = "Downloading in progress",
+            progressState = HorizonProgressState.IN_PROGRESS,
             courses = listOf(
                 OfflineCourseItemUiState(
                     courseId = 1L,
                     courseName = "Lorem Ipsum Dolor Course",
-                    courseSizeLabel = "~64 MB",
                     syncState = CourseSyncState.SYNCING,
                     files = listOf(
                         OfflineFileItemUiState(
                             1L,
                             "file-name.pdf",
                             64L * 1024 * 1024,
-                            "~64 MB",
                             syncState = FileSyncState.DONE
                         ),
                         OfflineFileItemUiState(
                             2L,
                             "file-name.doc",
                             64L * 1024 * 1024,
-                            "~64 MB",
                             syncState = FileSyncState.SYNCING
                         ),
                     ),

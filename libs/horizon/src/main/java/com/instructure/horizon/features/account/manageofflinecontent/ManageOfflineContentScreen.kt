@@ -36,6 +36,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.selection.triStateToggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +52,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
@@ -324,14 +327,18 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
             modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 76.dp)
-                .wrapContentHeight(),
+                .wrapContentHeight()
+                .triStateToggleable(
+                    state = toggleableState,
+                    role = Role.Checkbox,
+                    onClick = { course.onOfflineStateChanged(nextOfflineState) },
+                ),
         ) {
             HorizonSpace(SpaceSize.SPACE_24)
             TriStateCheckboxItem(
                 state = TriStateCheckboxItemState(
                     controlsContentState = ControlsContentState(title = ""),
                     toggleableState = toggleableState,
-                    onClick = { course.onOfflineStateChanged(nextOfflineState) },
                 ),
             )
             HorizonSpace(SpaceSize.SPACE_24)
@@ -343,23 +350,12 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
                     .fillMaxHeight()
                     .padding(vertical = 16.dp),
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp),
+                Text(
+                    text = course.courseName,
+                    style = HorizonTypography.p1,
+                    color = HorizonColors.Text.body(),
                     modifier = Modifier.weight(1f),
-                ) {
-                    Text(
-                        text = course.courseName,
-                        style = HorizonTypography.p1,
-                        color = HorizonColors.Text.body(),
-                    )
-                    if (course.courseSizeLabel.isNotEmpty()) {
-                        Text(
-                            text = course.courseSizeLabel,
-                            style = HorizonTypography.p2,
-                            color = HorizonColors.Text.timestamp(),
-                        )
-                    }
-                }
+                )
                 if (course.files.isNotEmpty()) {
                     val context = LocalContext.current
                     val iconRotation by animateFloatAsState(
@@ -404,13 +400,17 @@ private fun FileRow(file: OfflineFileItemUiState) {
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 76.dp)
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .toggleable(
+                value = file.isSelected,
+                role = Role.Checkbox,
+                onValueChange = file.onSelectionChanged,
+            ),
     ) {
         CheckboxItem(
             state = CheckboxItemState(
                 controlsContentState = ControlsContentState(title = ""),
                 checked = file.isSelected,
-                onCheckedChanged = file.onSelectionChanged,
             ),
             modifier = Modifier
                 .width(68.dp)
@@ -427,11 +427,13 @@ private fun FileRow(file: OfflineFileItemUiState) {
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
             )
-            Text(
-                text = file.fileSizeLabel,
-                style = HorizonTypography.p2,
-                color = HorizonColors.Text.timestamp(),
-            )
+            if (file.fileSizeLabel.isNotEmpty()) {
+                Text(
+                    text = file.fileSizeLabel,
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.timestamp(),
+                )
+            }
         }
     }
 }
@@ -450,7 +452,6 @@ private fun ManageOfflineContentScreenPreview() {
                 OfflineCourseItemUiState(
                     courseId = 1L,
                     courseName = "Introduction to Biology",
-                    courseSizeLabel = "20 MB",
                     offlineState = CourseOfflineState.PARTIAL,
                     isExpanded = true,
                     files = listOf(
@@ -461,7 +462,6 @@ private fun ManageOfflineContentScreenPreview() {
                 OfflineCourseItemUiState(
                     courseId = 2L,
                     courseName = "Advanced Mathematics",
-                    courseSizeLabel = "",
                     offlineState = CourseOfflineState.NONE,
                     isExpanded = false,
                     files = emptyList(),

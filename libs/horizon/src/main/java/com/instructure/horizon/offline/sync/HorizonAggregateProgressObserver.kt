@@ -107,13 +107,12 @@ class HorizonAggregateProgressObserver @Inject constructor(
         }
 
         val progressLabel = when (progressState) {
-            HorizonProgressState.COMPLETED -> context.getString(R.string.offline_syncCompleted)
+            HorizonProgressState.COMPLETED -> context.getString(
+                R.string.offline_syncCompleted,
+                Formatter.formatShortFileSize(context, downloadedSize),
+            )
             HorizonProgressState.ERROR -> context.getString(R.string.offline_syncError)
-            else -> {
-                val downloaded = Formatter.formatShortFileSize(context, downloadedSize)
-                val total = Formatter.formatShortFileSize(context, totalSize)
-                "$downloaded / $total"
-            }
+            else -> context.getString(R.string.offline_syncInProgress)
         }
 
         return HorizonSyncProgressData(

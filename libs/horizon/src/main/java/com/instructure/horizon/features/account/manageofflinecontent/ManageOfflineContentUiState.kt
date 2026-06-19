@@ -34,7 +34,6 @@ enum class CourseSyncState {
 data class OfflineCourseItemUiState(
     val courseId: Long,
     val courseName: String,
-    val courseSizeLabel: String = "",
     val offlineState: CourseOfflineState = CourseOfflineState.NONE,
     val syncState: CourseSyncState = CourseSyncState.PENDING,
     val isExpanded: Boolean = false,
@@ -53,7 +52,7 @@ data class OfflineFileItemUiState(
     val fileId: Long,
     val fileName: String,
     val fileSize: Long,
-    val fileSizeLabel: String,
+    val fileSizeLabel: String = "",
     val isSelected: Boolean = false,
     val syncState: FileSyncState = FileSyncState.PENDING,
     val onSelectionChanged: (Boolean) -> Unit = {},

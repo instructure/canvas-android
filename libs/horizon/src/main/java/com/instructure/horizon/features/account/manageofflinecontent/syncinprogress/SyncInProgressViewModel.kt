@@ -15,8 +15,6 @@
  */
 package com.instructure.horizon.features.account.manageofflinecontent.syncinprogress
 
-import android.content.Context
-import android.text.format.Formatter
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
@@ -31,7 +29,6 @@ import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -41,7 +38,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SyncInProgressViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncHelper: HorizonOfflineSyncHelper,
     courseSyncPlanDao: HorizonCourseSyncPlanDao,
@@ -61,6 +57,7 @@ class SyncInProgressViewModel @Inject constructor(
             courses = courses,
             syncProgress = progressData.progress,
             syncProgressLabel = progressData.progressLabel,
+            progressState = progressData.progressState,
             isSyncFinished = progressData.progressState.isFinished(),
             onCancelSyncClick = ::onCancelSync,
         )
@@ -70,19 +67,11 @@ class SyncInProgressViewModel @Inject constructor(
         plan: HorizonCourseSyncPlanEntity,
         courseFiles: List<HorizonFileSyncPlanEntity>,
     ): OfflineCourseItemUiState {
-        val totalCourseFileSize = courseFiles.sumOf { it.fileSize }
-        val courseSizeLabel = if (totalCourseFileSize > 0) {
-            "~${Formatter.formatShortFileSize(context, totalCourseFileSize)}"
-        } else {
-            ""
-        }
-
         val visibleFiles = courseFiles.filter { !it.isAdditionalFile }
 
         return OfflineCourseItemUiState(
             courseId = plan.courseId,
             courseName = plan.courseName,
-            courseSizeLabel = courseSizeLabel,
             syncState = when (plan.state) {
                 HorizonProgressState.COMPLETED -> CourseSyncState.DONE
                 HorizonProgressState.PARTIAL -> CourseSyncState.PARTIAL
@@ -95,11 +84,6 @@ class SyncInProgressViewModel @Inject constructor(
                     fileId = file.fileId,
                     fileName = file.fileName,
                     fileSize = file.fileSize,
-                    fileSizeLabel = if (file.fileSize > 0) {
-                        "~${Formatter.formatShortFileSize(context, file.fileSize)}"
-                    } else {
-                        ""
-                    },
                     isSelected = true,
                     syncState = when (file.state) {
                         HorizonProgressState.COMPLETED -> FileSyncState.DONE

@@ -757,11 +757,11 @@
     <string name="offline_cancelSync">Cancel sync</string>
     <string name="offline_doneSync">Done</string>
     <string name="offline_startSyncConfirmationTitle">Sync</string>
-    <string name="offline_startSyncConfirmationMessage">This will sync ~%1$s content while you are connected to a Wi-Fi network</string>
+    <string name="offline_startSyncConfirmationMessage">Your files will download immediately, but total sizes are calculated during the download. Make sure you have a stable internet connection.</string>
     <string name="offline_startSyncConfirmationConfirm">Sync</string>
     <string name="offline_startSyncConfirmationCancel">Cancel</string>
     <string name="offline_deletingContent">Deleting content</string>
-    <string name="offline_syncProgressLabel">Downloading %1$s of %2$s</string>
+    <string name="offline_syncInProgress">Downloading in progress</string>
     <string name="offline_removeSyncedContentTitle">Remove synced content</string>
     <string name="offline_removeSyncedContentDescription">This will remove all previously synced content from your device.</string>
     <string name="offline_removeSyncedContentConfirm">Remove</string>
@@ -773,8 +773,8 @@
     <string name="offline_syncStatusFailed">Sync failed</string>
     <string name="offline_syncStatusPending">Pending</string>
     <string name="offline_syncStatusSyncing">Syncing</string>
-    <string name="offline_syncCompleted">Offline content synced</string>
-    <string name="offline_syncError">Sync error</string>
+    <string name="offline_syncCompleted">%1$s downloaded successfully</string>
+    <string name="offline_syncError">Some files could not be downloaded</string>
     <string name="offline_emptyCoursesTitle">No courses available</string>
     <string name="offline_emptyCoursesMessage">You aren\'t enrolled in any courses that can be made available offline.</string>
     <string name="offline_loadingCourses">Loading courses…</string>
