@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.database.dao.HorizonSyncSettingsDao
 import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
+import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -27,6 +28,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -38,6 +41,7 @@ import javax.inject.Inject
 class OfflineSettingsViewModel @Inject constructor(
     private val syncSettingsDao: HorizonSyncSettingsDao,
     private val syncHelper: HorizonOfflineSyncHelper,
+    private val aggregateProgressObserver: HorizonAggregateProgressObserver,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -55,6 +59,15 @@ class OfflineSettingsViewModel @Inject constructor(
     init {
         loadSettings()
         observePendingSettings()
+        observeSyncProgress()
+    }
+
+    private fun observeSyncProgress() {
+        aggregateProgressObserver.progressData
+            .onEach { data ->
+                _uiState.update { it.copy(isSyncActive = data.isActive) }
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun observePendingSettings() {

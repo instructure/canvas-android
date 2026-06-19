@@ -258,6 +258,7 @@ private fun StorageLegendDot(color: Color, label: String) {
 private fun SelectingList(uiState: ManageOfflineContentUiState) {
     val allSelected = uiState.courses.isNotEmpty() &&
         uiState.courses.all { it.offlineState == CourseOfflineState.ALL }
+    val controlsEnabled = !uiState.isSyncActive
 
     Column(modifier = Modifier.padding(top = 8.dp)) {
         Button(
@@ -267,11 +268,12 @@ private fun SelectingList(uiState: ManageOfflineContentUiState) {
                 stringResource(R.string.offline_selectAll)
             },
             color = ButtonColor.Ghost,
+            enabled = controlsEnabled,
             onClick = uiState.onSelectAllClick,
         )
         HorizonSpace(SpaceSize.SPACE_8)
         uiState.courses.forEach { course ->
-            CourseRow(course)
+            CourseRow(course, enabled = controlsEnabled)
         }
     }
 }
@@ -279,6 +281,7 @@ private fun SelectingList(uiState: ManageOfflineContentUiState) {
 @Composable
 private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState: ScrollState, navController: NavHostController) {
     val hasSelection = uiState.courses.any { it.offlineState != CourseOfflineState.NONE }
+    val controlsEnabled = !uiState.isSyncActive
 
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -295,7 +298,7 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
             color = ButtonColor.Black,
             width = ButtonWidth.FILL,
             iconPosition = ButtonIconPosition.End(R.drawable.sync),
-            enabled = hasSelection,
+            enabled = controlsEnabled && hasSelection,
             onClick = { navController.navigate(AccountRoute.SyncConfirmation.route) },
         )
         Button(
@@ -303,14 +306,14 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
             color = ButtonColor.DangerOutline,
             width = ButtonWidth.FILL,
             iconPosition = ButtonIconPosition.End(R.drawable.cancel),
-            enabled = uiState.hasSyncedContent,
+            enabled = controlsEnabled && uiState.hasSyncedContent,
             onClick = { navController.navigate(AccountRoute.RemoveSyncedContentConfirmation.route) },
         )
     }
 }
 
 @Composable
-private fun CourseRow(course: OfflineCourseItemUiState) {
+private fun CourseRow(course: OfflineCourseItemUiState, enabled: Boolean = true) {
     val toggleableState = when (course.offlineState) {
         CourseOfflineState.ALL -> ToggleableState.On
         CourseOfflineState.NONE -> ToggleableState.Off
@@ -340,6 +343,8 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
                 state = TriStateCheckboxItemState(
                     controlsContentState = ControlsContentState(title = ""),
                     toggleableState = toggleableState,
+                    enabled = enabled,
+                    onClick = { course.onOfflineStateChanged(nextOfflineState) },
                 ),
             )
             HorizonSpace(SpaceSize.SPACE_24)
@@ -386,7 +391,7 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
         ) {
             Column {
                 course.files.forEach { file ->
-                    FileRow(file)
+                    FileRow(file, enabled = enabled)
                     HorizontalDivider(color = HorizonColors.Surface.divider())
                 }
             }
@@ -395,7 +400,7 @@ private fun CourseRow(course: OfflineCourseItemUiState) {
 }
 
 @Composable
-private fun FileRow(file: OfflineFileItemUiState) {
+private fun FileRow(file: OfflineFileItemUiState, enabled: Boolean = true) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -412,6 +417,8 @@ private fun FileRow(file: OfflineFileItemUiState) {
             state = CheckboxItemState(
                 controlsContentState = ControlsContentState(title = ""),
                 checked = file.isSelected,
+                enabled = enabled,
+                onCheckedChanged = file.onSelectionChanged,
             ),
             modifier = Modifier
                 .width(68.dp)

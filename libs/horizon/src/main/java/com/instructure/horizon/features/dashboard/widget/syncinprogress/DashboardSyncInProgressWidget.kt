@@ -24,11 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
-import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -37,6 +40,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.offline.sync.HorizonSyncRouter
 import com.instructure.horizon.offline.sync.HorizonProgressState
 
 @Composable
@@ -62,13 +66,15 @@ fun DashboardSyncInProgressWidget(
         pageState = DashboardWidgetPageState.Empty,
         useMinWidth = false,
         onClick = {
-            navController.navigate(AccountRoute.SyncingContent.route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            val deepLink = NavDeepLinkRequest.Builder
+                .fromUri("${ApiPrefs.fullDomain}${HorizonSyncRouter.SYNC_PROGRESS_PATH}".toUri())
+                .build()
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(navController.graph.findStartDestination().id, false, true)
+                .setRestoreState(true)
+                .build()
+            navController.navigate(deepLink, navOptions)
         },
         onClose = onDismiss,
         modifier = modifier,

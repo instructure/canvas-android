@@ -23,7 +23,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.account.AccountScreen
+import com.instructure.horizon.offline.sync.HorizonSyncRouter
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
 import com.instructure.horizon.features.account.advanced.AccountAdvancedViewModel
@@ -134,7 +137,14 @@ fun NavGraphBuilder.accountNavigation(
             SyncConfirmationScreen(navController = navController)
         }
 
-        composable(AccountRoute.SyncingContent.route) {
+        composable(
+            route = AccountRoute.SyncingContent.route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}${HorizonSyncRouter.SYNC_PROGRESS_PATH}"
+                },
+            ),
+        ) {
             val viewModel = hiltViewModel<SyncInProgressViewModel>()
             val syncingUiState by viewModel.uiState.collectAsState()
             SyncInProgressScreen(

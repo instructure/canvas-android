@@ -66,6 +66,7 @@ data class ManageOfflineContentUiState(
     val storageTotalLabel: String = "",
     val courses: List<OfflineCourseItemUiState> = emptyList(),
     val hasSyncedContent: Boolean = false,
+    val isSyncActive: Boolean = false,
     val insufficientStorageWarning: InsufficientStorageWarning? = null,
     val onSelectAllClick: () -> Unit = {},
     val onDismissInsufficientStorageWarning: () -> Unit = {},

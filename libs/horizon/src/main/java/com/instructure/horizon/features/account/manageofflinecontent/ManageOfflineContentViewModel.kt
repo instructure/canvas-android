@@ -30,6 +30,7 @@ import com.instructure.horizon.domain.usecase.SaveOfflineSyncPlanUseCase
 import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.offline.FileSyncPaths
+import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -56,6 +57,7 @@ class ManageOfflineContentViewModel @Inject constructor(
     private val saveOfflineSyncPlanUseCase: SaveOfflineSyncPlanUseCase,
     private val syncHelper: HorizonOfflineSyncHelper,
     private val courseSyncPlanDao: HorizonCourseSyncPlanDao,
+    private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val apiPrefs: ApiPrefs,
 ) : ViewModel() {
 
@@ -82,6 +84,7 @@ class ManageOfflineContentViewModel @Inject constructor(
     init {
         loadData()
         observeSyncPlan()
+        observeSyncProgress()
     }
 
     private fun observeSyncPlan() {
@@ -90,6 +93,14 @@ class ManageOfflineContentViewModel @Inject constructor(
                 _uiState.update { state ->
                     state.copy(hasSyncedContent = plans.isNotEmpty() || hasLocalSyncedFiles)
                 }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeSyncProgress() {
+        aggregateProgressObserver.progressData
+            .onEach { data ->
+                _uiState.update { it.copy(isSyncActive = data.isActive) }
             }
             .launchIn(viewModelScope)
     }

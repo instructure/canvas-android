@@ -64,6 +64,7 @@ fun OfflineSettingsScreen(
                 .padding(horizontal = 24.dp, vertical = 32.dp)
                 .verticalScroll(rememberScrollState()),
         ) {
+            val controlsEnabled = !uiState.isSyncActive
             Button(
                 label = stringResource(R.string.offline_manageOfflineContentButton),
                 width = ButtonWidth.FILL,
@@ -85,6 +86,7 @@ fun OfflineSettingsScreen(
                             title = stringResource(R.string.offline_autoSyncLabel),
                         ),
                         checked = uiState.autoSyncEnabled,
+                        enabled = controlsEnabled,
                         onCheckedChanged = uiState.onAutoSyncToggled,
                     ),
                     modifier = Modifier.padding(vertical = 10.dp)
@@ -98,7 +100,7 @@ fun OfflineSettingsScreen(
             Column {
                 SyncFrequencyDropdown(
                     selected = uiState.syncFrequency,
-                    enabled = uiState.autoSyncEnabled,
+                    enabled = controlsEnabled && uiState.autoSyncEnabled,
                     onSelected = uiState.onSyncFrequencySelected,
                 )
                 HorizonSpace(SpaceSize.SPACE_4)
@@ -115,6 +117,7 @@ fun OfflineSettingsScreen(
                             title = stringResource(R.string.offline_wifiOnlyLabel),
                         ),
                         checked = uiState.wifiOnlyEnabled,
+                        enabled = controlsEnabled,
                         onCheckedChanged = uiState.onWifiOnlyToggled,
                     ),
                     modifier = Modifier.padding(vertical = 10.dp)

@@ -18,17 +18,28 @@ package com.instructure.horizon.offline.sync
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.HorizonActivity
+import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.utils.Const
 import javax.inject.Inject
 
-class HorizonSyncRouter @Inject constructor() {
+class HorizonSyncRouter @Inject constructor(private val apiPrefs: ApiPrefs) {
     fun routeToSyncProgress(context: Context): PendingIntent {
-        val intent = Intent(context, HorizonActivity::class.java)
+        val path = "${apiPrefs.fullDomain}$SYNC_PROGRESS_PATH"
+        val intent = Intent(context, HorizonActivity::class.java).apply {
+            putExtra(Const.LOCAL_NOTIFICATION, true)
+            putExtra(PushNotification.HTML_URL, path)
+        }
         return PendingIntent.getActivity(
             context,
             0,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
+    }
+
+    companion object {
+        const val SYNC_PROGRESS_PATH = "/syncProgress"
     }
 }
