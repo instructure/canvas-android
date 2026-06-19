@@ -116,8 +116,8 @@ fun NotebookScreen(
     )
 
     CollapsableHeaderScreen(
-        statusBarColor = HorizonColors.Surface.pagePrimary(),
-        navigationBarColor = HorizonColors.Surface.cardPrimary(),
+        statusBarColor = if (state.showTopBar) HorizonColors.Surface.pagePrimary() else null,
+        navigationBarColor = if (state.showTopBar) HorizonColors.Surface.cardPrimary() else null,
         modifier = Modifier
             .background(HorizonColors.Surface.pagePrimary()),
         headerContent = { contentPadding ->

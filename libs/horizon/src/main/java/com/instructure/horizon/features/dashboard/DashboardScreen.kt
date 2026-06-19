@@ -145,6 +145,7 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         CollapsableHeaderScreen(
+            contentExtendsBehindStatusBar = true,
             statusBarColor = HorizonColors.Surface.pagePrimary(),
             modifier = Modifier.padding(innerPadding),
             headerContent = { paddingValues ->

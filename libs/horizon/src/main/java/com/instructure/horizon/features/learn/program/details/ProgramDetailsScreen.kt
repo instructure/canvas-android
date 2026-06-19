@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.learn.program.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -85,6 +86,7 @@ private fun ProgramDetailsHeader(
     Column(
         modifier
             .fillMaxWidth()
+            .background(HorizonColors.Surface.pagePrimary())
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
         Row(

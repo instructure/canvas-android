@@ -42,22 +42,16 @@ fun HorizonScaffold(
         topBar = { HorizonTopAppBar(title, onBackPressed) },
         snackbarHost = snackbarHost,
         containerColor = HorizonColors.Surface.pagePrimary(),
-        contentColor = HorizonColors.Surface.pagePrimary()
+        contentColor = HorizonColors.Surface.pagePrimary(),
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .background(HorizonColors.Surface.pagePrimary())
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(HorizonCornerRadius.level5)
-                .background(HorizonColors.Surface.pageSecondary())
-
+                .background(HorizonColors.Surface.pageSecondary()),
         ) {
-            content(
-                Modifier
-                    .fillMaxSize()
-                    .background(HorizonColors.Surface.pageSecondary())
-            )
+            content(Modifier.fillMaxSize())
         }
     }
 }
@@ -72,7 +66,7 @@ private fun PreviewHorizonScaffoldPreview() {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp),
         ) {
             Column {
                 Text("This is a preview of the HorizonScaffold")

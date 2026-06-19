@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.learn.mycontent
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,6 +36,7 @@ import com.instructure.horizon.features.learn.mycontent.completed.LearnMyContent
 import com.instructure.horizon.features.learn.mycontent.inprogress.LearnMyContentInProgressScreen
 import com.instructure.horizon.features.learn.mycontent.saved.LearnMyContentSavedScreen
 import com.instructure.horizon.features.learn.navigation.LearnRoute
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
@@ -55,6 +57,7 @@ fun LearnMyContentScreen(
         headerContent = { paddingValues ->
             Column(
                 Modifier
+                    .background(HorizonColors.Surface.pagePrimary())
                     .padding(paddingValues)
                     .padding(horizontal = 24.dp)
             ) {
