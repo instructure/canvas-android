@@ -1,11 +1,11 @@
 package com.instructure.teacher.ui.e2e.classic
 
 import android.util.Log
-import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -65,6 +65,9 @@ class SyllabusE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Edit syllabus description (aka. 'Syllabus Body') by adding new value to it: '$syllabusBody'. Click on 'Save'.")
         editSyllabusPage.editSyllabusBody(syllabusBody)
         editSyllabusPage.saveSyllabusEdit()
+        
+        Log.d(STEP_TAG, "Select 'Syllabus' Tab.")
+        syllabusPage.selectSyllabusTab()
 
         Log.d(ASSERTION_TAG, "Assert that the previously made modifications has been applied on the syllabus.")
         syllabusPage.assertDisplaysSyllabus(syllabusBody = syllabusBody, shouldDisplayTabs = true)
