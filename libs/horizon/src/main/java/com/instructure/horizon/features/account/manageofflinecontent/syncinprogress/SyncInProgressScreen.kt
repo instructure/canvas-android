@@ -119,10 +119,10 @@ fun SyncInProgressScreen(
             ) {
                 if (uiState.isSyncFinished) {
                     Button(
-                        label = stringResource(R.string.offline_doneSync),
+                        label = stringResource(R.string.offline_dismissSync),
                         color = ButtonColor.Black,
                         width = ButtonWidth.FILL,
-                        onClick = uiState.onDoneClick,
+                        onClick = uiState.onDismissClick,
                     )
                 } else {
                     Button(

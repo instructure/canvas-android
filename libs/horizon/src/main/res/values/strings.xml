@@ -756,6 +756,7 @@
     <string name="offline_syncButton">Sync</string>
     <string name="offline_cancelSync">Cancel sync</string>
     <string name="offline_doneSync">Done</string>
+    <string name="offline_dismissSync">Dismiss</string>
     <string name="offline_startSyncConfirmationTitle">Sync</string>
     <string name="offline_startSyncConfirmationMessage">Your files will download immediately, but total sizes are calculated during the download. Make sure you have a stable internet connection.</string>
     <string name="offline_startSyncConfirmationConfirm">Sync</string>

@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.dashboard
 
 import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.horizon.offline.sync.HorizonProgressState
 
 data class DashboardUiState(
     val logoUrl: String = "",
@@ -27,9 +28,11 @@ data class DashboardUiState(
     val onSnackbarDismiss: () -> Unit = {},
     val isOffline: Boolean = false,
     val lastSyncedAtMs: Long? = null,
-    val isSyncInProgress: Boolean = false,
+    val showSyncWidget: Boolean = false,
     val syncProgress: Float = 0f,
     val syncProgressLabel: String = "",
+    val syncProgressState: HorizonProgressState = HorizonProgressState.PENDING,
+    val onSyncWidgetDismiss: () -> Unit = {},
 )
 
 data class DashboardUnreadState(

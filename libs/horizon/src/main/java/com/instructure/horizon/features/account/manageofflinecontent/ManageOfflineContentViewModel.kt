@@ -109,7 +109,6 @@ class ManageOfflineContentViewModel @Inject constructor(
                         fileId = file.fileId,
                         fileName = file.displayName,
                         fileSize = file.size,
-                        fileSizeLabel = Formatter.formatShortFileSize(context, file.size),
                         isSelected = fileSelected,
                         onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
                     )

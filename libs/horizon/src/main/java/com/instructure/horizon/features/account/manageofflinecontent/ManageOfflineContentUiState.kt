@@ -52,7 +52,6 @@ data class OfflineFileItemUiState(
     val fileId: Long,
     val fileName: String,
     val fileSize: Long,
-    val fileSizeLabel: String = "",
     val isSelected: Boolean = false,
     val syncState: FileSyncState = FileSyncState.PENDING,
     val onSelectionChanged: (Boolean) -> Unit = {},

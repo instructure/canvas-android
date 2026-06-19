@@ -201,10 +201,12 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             .verticalScroll(scrollState)
                     ) {
                         HorizonSpace(SpaceSize.SPACE_12)
-                        if (uiState.isSyncInProgress) {
+                        if (uiState.showSyncWidget) {
                             DashboardSyncInProgressWidget(
                                 syncProgress = uiState.syncProgress,
                                 syncProgressLabel = uiState.syncProgressLabel,
+                                progressState = uiState.syncProgressState,
+                                onDismiss = uiState.onSyncWidgetDismiss,
                                 navController = navController,
                                 modifier = Modifier
                                     .fillMaxWidth()

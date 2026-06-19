@@ -25,6 +25,7 @@ import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
 import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
+import com.instructure.horizon.offline.sync.HorizonProgressState
 import com.instructure.horizon.offline.sync.HorizonSyncProgressData
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
@@ -59,6 +60,7 @@ class DashboardViewModelTest {
     private val aggregateProgressObserver: HorizonAggregateProgressObserver = mockk(relaxed = true)
     private val offlineState: HorizonOfflineState = mockk(relaxed = true)
     private val isOfflineFlow = MutableStateFlow(false)
+    private val progressDataFlow = MutableStateFlow(HorizonSyncProgressData())
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -84,7 +86,7 @@ class DashboardViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         mockkObject(ThemePrefs)
-        every { aggregateProgressObserver.progressData } returns MutableStateFlow(HorizonSyncProgressData())
+        every { aggregateProgressObserver.progressData } returns progressDataFlow
         every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getUnreadCountsUseCase(any()) } returns notificationCounts
         every { ThemePrefs.mobileLogoUrl } returns ""
@@ -157,6 +159,116 @@ class DashboardViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(testMessage, state.snackbarMessage)
+    }
+
+    @Test
+    fun `Sync widget hidden on init when last sync already finished`() = runTest {
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.COMPLETED,
+            progress = 1f,
+            progressLabel = "64 MB downloaded successfully",
+            isActive = false,
+        )
+
+        val viewModel = getViewModel()
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(false, viewModel.uiState.value.showSyncWidget)
+    }
+
+    @Test
+    fun `Sync widget visible while sync is active`() = runTest {
+        val viewModel = getViewModel()
+
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.IN_PROGRESS,
+            progress = 0.3f,
+            progressLabel = "Downloading in progress",
+            isActive = true,
+        )
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(true, state.showSyncWidget)
+        assertEquals(HorizonProgressState.IN_PROGRESS, state.syncProgressState)
+    }
+
+    @Test
+    fun `Sync widget remains visible after sync completes`() = runTest {
+        val viewModel = getViewModel()
+
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.IN_PROGRESS,
+            progress = 0.5f,
+            isActive = true,
+        )
+        testScheduler.advanceUntilIdle()
+
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.COMPLETED,
+            progress = 1f,
+            progressLabel = "64 MB downloaded successfully",
+            isActive = false,
+        )
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(true, state.showSyncWidget)
+        assertEquals(HorizonProgressState.COMPLETED, state.syncProgressState)
+    }
+
+    @Test
+    fun `Dismissing sync widget hides it`() = runTest {
+        val viewModel = getViewModel()
+
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.COMPLETED,
+            progress = 1f,
+            isActive = true,
+        )
+        testScheduler.advanceUntilIdle()
+        progressDataFlow.value = HorizonSyncProgressData(
+            progressState = HorizonProgressState.COMPLETED,
+            progress = 1f,
+            isActive = false,
+        )
+        testScheduler.advanceUntilIdle()
+
+        viewModel.uiState.value.onSyncWidgetDismiss()
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(false, viewModel.uiState.value.showSyncWidget)
+    }
+
+    @Test
+    fun `Sync widget re-shows when a new sync starts after dismissal`() = runTest {
+        val viewModel = getViewModel()
+
+        progressDataFlow.value = HorizonSyncProgressData(progressState = HorizonProgressState.IN_PROGRESS, isActive = true)
+        testScheduler.advanceUntilIdle()
+        progressDataFlow.value = HorizonSyncProgressData(progressState = HorizonProgressState.COMPLETED, isActive = false)
+        testScheduler.advanceUntilIdle()
+        viewModel.uiState.value.onSyncWidgetDismiss()
+        testScheduler.advanceUntilIdle()
+        assertEquals(false, viewModel.uiState.value.showSyncWidget)
+
+        progressDataFlow.value = HorizonSyncProgressData(progressState = HorizonProgressState.IN_PROGRESS, isActive = true)
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(true, viewModel.uiState.value.showSyncWidget)
+    }
+
+    @Test
+    fun `DismissSyncWidget event hides the widget`() = runTest {
+        val viewModel = getViewModel()
+        progressDataFlow.value = HorizonSyncProgressData(progressState = HorizonProgressState.IN_PROGRESS, isActive = true)
+        testScheduler.advanceUntilIdle()
+        assertEquals(true, viewModel.uiState.value.showSyncWidget)
+
+        dashboardEventHandler.postEvent(DashboardEvent.DismissSyncWidget)
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(false, viewModel.uiState.value.showSyncWidget)
     }
 
     @Test

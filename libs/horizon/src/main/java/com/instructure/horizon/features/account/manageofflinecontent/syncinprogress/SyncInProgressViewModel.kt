@@ -25,6 +25,8 @@ import com.instructure.horizon.features.account.manageofflinecontent.CourseSyncS
 import com.instructure.horizon.features.account.manageofflinecontent.FileSyncState
 import com.instructure.horizon.features.account.manageofflinecontent.OfflineCourseItemUiState
 import com.instructure.horizon.features.account.manageofflinecontent.OfflineFileItemUiState
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
@@ -40,6 +42,7 @@ import javax.inject.Inject
 class SyncInProgressViewModel @Inject constructor(
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncHelper: HorizonOfflineSyncHelper,
+    private val dashboardEventHandler: DashboardEventHandler,
     courseSyncPlanDao: HorizonCourseSyncPlanDao,
     fileSyncPlanDao: HorizonFileSyncPlanDao,
 ) : ViewModel() {
@@ -60,6 +63,7 @@ class SyncInProgressViewModel @Inject constructor(
             progressState = progressData.progressState,
             isSyncFinished = progressData.progressState.isFinished(),
             onCancelSyncClick = ::onCancelSync,
+            onDismissClick = ::onDismiss,
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, SyncInProgressUiState())
 
@@ -98,6 +102,12 @@ class SyncInProgressViewModel @Inject constructor(
     private fun onCancelSync() {
         viewModelScope.launch {
             syncHelper.cancelCurrentSync()
+        }
+    }
+
+    private fun onDismiss() {
+        viewModelScope.launch {
+            dashboardEventHandler.postEvent(DashboardEvent.DismissSyncWidget)
         }
     }
 }

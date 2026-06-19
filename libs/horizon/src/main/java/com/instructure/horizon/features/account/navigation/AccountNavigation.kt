@@ -143,7 +143,10 @@ fun NavGraphBuilder.accountNavigation(
                         syncingUiState.onCancelSyncClick()
                         navController.popBackStack()
                     },
-                    onDoneClick = { navController.popBackStack() },
+                    onDismissClick = {
+                        syncingUiState.onDismissClick()
+                        navController.popBackStack()
+                    },
                 ),
                 navController = navController,
             )

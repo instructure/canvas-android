@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.account.manageofflinecontent
 
+import android.text.format.Formatter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
@@ -427,13 +428,11 @@ private fun FileRow(file: OfflineFileItemUiState) {
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
             )
-            if (file.fileSizeLabel.isNotEmpty()) {
-                Text(
-                    text = file.fileSizeLabel,
-                    style = HorizonTypography.p2,
-                    color = HorizonColors.Text.timestamp(),
-                )
-            }
+            Text(
+                text = Formatter.formatShortFileSize(LocalContext.current, file.fileSize),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.timestamp(),
+            )
         }
     }
 }
@@ -455,8 +454,8 @@ private fun ManageOfflineContentScreenPreview() {
                     offlineState = CourseOfflineState.PARTIAL,
                     isExpanded = true,
                     files = listOf(
-                        OfflineFileItemUiState(1L, "Chapter 1.pdf", 12L * 1024 * 1024, "12 MB", isSelected = true),
-                        OfflineFileItemUiState(2L, "Chapter 2.pdf", 8L * 1024 * 1024, "8 MB", isSelected = false),
+                        OfflineFileItemUiState(1L, "Chapter 1.pdf", 12L * 1024 * 1024, isSelected = true),
+                        OfflineFileItemUiState(2L, "Chapter 2.pdf", 8L * 1024 * 1024, isSelected = false),
                     ),
                 ),
                 OfflineCourseItemUiState(

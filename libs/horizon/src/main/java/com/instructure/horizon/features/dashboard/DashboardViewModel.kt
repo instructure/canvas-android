@@ -57,8 +57,18 @@ class DashboardViewModel @Inject constructor(
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
+    private val _uiState = MutableStateFlow(
+        DashboardUiState(
+            onSnackbarDismiss = ::dismissSnackbar,
+            updateExternalShouldRefresh = ::updateExternalShouldRefresh,
+            onSyncWidgetDismiss = ::dismissSyncWidget,
+        )
+    )
     val uiState = _uiState.asStateFlow()
+
+    private var hasSeenActiveSyncThisSession = false
+    private var syncWidgetDismissed = false
+    private var lastIsActive = false
 
     init {
         offlineState.isOffline
@@ -74,11 +84,24 @@ class DashboardViewModel @Inject constructor(
 
         viewModelScope.launch {
             aggregateProgressObserver.progressData.collect { data ->
+                if (data.isActive && !lastIsActive) {
+                    syncWidgetDismissed = false
+                }
+                if (data.isActive) {
+                    hasSeenActiveSyncThisSession = true
+                }
+                lastIsActive = data.isActive
+
+                val showWidget = !syncWidgetDismissed
+                    && hasSeenActiveSyncThisSession
+                    && (data.isActive || data.progressState.isFinished())
+
                 _uiState.update {
                     it.copy(
-                        isSyncInProgress = data.isActive,
+                        showSyncWidget = showWidget,
                         syncProgress = data.progress,
                         syncProgressLabel = data.progressLabel,
+                        syncProgressState = data.progressState,
                     )
                 }
             }
@@ -92,10 +115,16 @@ class DashboardViewModel @Inject constructor(
                         refresh()
                     }
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
+                    is DashboardEvent.DismissSyncWidget -> dismissSyncWidget()
                     else -> { /* No-op */ }
                 }
             }
         }
+    }
+
+    private fun dismissSyncWidget() {
+        syncWidgetDismissed = true
+        _uiState.update { it.copy(showSyncWidget = false) }
     }
 
     private fun handleOfflineStateChange(isOffline: Boolean) {

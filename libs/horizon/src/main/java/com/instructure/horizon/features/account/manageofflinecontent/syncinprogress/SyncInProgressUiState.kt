@@ -25,5 +25,5 @@ data class SyncInProgressUiState(
     val progressState: HorizonProgressState = HorizonProgressState.PENDING,
     val isSyncFinished: Boolean = false,
     val onCancelSyncClick: () -> Unit = {},
-    val onDoneClick: () -> Unit = {},
+    val onDismissClick: () -> Unit = {},
 )

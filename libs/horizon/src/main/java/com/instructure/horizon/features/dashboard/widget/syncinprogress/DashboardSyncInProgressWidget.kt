@@ -37,14 +37,24 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.offline.sync.HorizonProgressState
 
 @Composable
 fun DashboardSyncInProgressWidget(
     syncProgress: Float,
-    syncProgressLabel: String = "",
+    progressState: HorizonProgressState,
+    onDismiss: () -> Unit,
     navController: NavHostController,
+    syncProgressLabel: String = "",
     modifier: Modifier = Modifier,
 ) {
+    val progressColor = when (progressState) {
+        HorizonProgressState.COMPLETED -> HorizonColors.Text.success()
+        HorizonProgressState.ERROR -> HorizonColors.Text.error()
+        else -> HorizonColors.PrimitivesBlue.blue82()
+    }
+    val displayProgress = if (progressState.isFinished()) 100.0 else (syncProgress * 100).toDouble()
+
     DashboardWidgetCard(
         title = stringResource(R.string.offline_syncInProgressTitle),
         iconRes = R.drawable.sync,
@@ -60,6 +70,7 @@ fun DashboardSyncInProgressWidget(
                 restoreState = true
             }
         },
+        onClose = onDismiss,
         modifier = modifier,
     ) {
         Column {
@@ -72,8 +83,8 @@ fun DashboardSyncInProgressWidget(
                 HorizonSpace(SpaceSize.SPACE_8)
             }
             ProgressBarSmall(
-                progress = (syncProgress * 100).toDouble(),
-                style = ProgressBarStyle.Dark(overrideProgressColor = HorizonColors.PrimitivesBlue.blue82()),
+                progress = displayProgress,
+                style = ProgressBarStyle.Dark(overrideProgressColor = progressColor),
                 showLabels = false,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -86,7 +97,35 @@ fun DashboardSyncInProgressWidget(
 private fun DashboardSyncInProgressWidgetPreview() {
     DashboardSyncInProgressWidget(
         syncProgress = 0.4f,
-        syncProgressLabel = "Downloading 40 MB of 100 MB",
+        progressState = HorizonProgressState.IN_PROGRESS,
+        syncProgressLabel = "Downloading in progress",
+        onDismiss = {},
+        navController = rememberNavController(),
+        modifier = Modifier.padding(24.dp),
+    )
+}
+
+@Preview
+@Composable
+private fun DashboardSyncCompletedWidgetPreview() {
+    DashboardSyncInProgressWidget(
+        syncProgress = 1f,
+        progressState = HorizonProgressState.COMPLETED,
+        syncProgressLabel = "64 MB downloaded successfully",
+        onDismiss = {},
+        navController = rememberNavController(),
+        modifier = Modifier.padding(24.dp),
+    )
+}
+
+@Preview
+@Composable
+private fun DashboardSyncErrorWidgetPreview() {
+    DashboardSyncInProgressWidget(
+        syncProgress = 0.6f,
+        progressState = HorizonProgressState.ERROR,
+        syncProgressLabel = "Some files could not be downloaded",
+        onDismiss = {},
         navController = rememberNavController(),
         modifier = Modifier.padding(24.dp),
     )
