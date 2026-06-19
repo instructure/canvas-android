@@ -25,8 +25,16 @@ class PageNetworkDataSource @Inject constructor(
     private val pageApi: PageAPI.PagesInterface,
 ) {
 
-    suspend fun getPage(courseId: Long, pageUrl: String, forceRefresh: Boolean): Page {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+    suspend fun getPage(
+        courseId: Long,
+        pageUrl: String,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): Page {
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return pageApi.getDetailedPage(CanvasContext.Type.COURSE.apiString, courseId, pageUrl, params).dataOrThrow
     }
 }

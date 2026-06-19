@@ -25,12 +25,14 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -44,6 +46,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val syncRouter: HorizonSyncRouter,
     private val apiPrefs: ApiPrefs,
+    private val crashlytics: FirebaseCrashlytics,
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -102,6 +105,21 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
             if (!isStopped && allFailed && runAttemptCount < MAX_RETRY_ATTEMPTS) {
                 Result.retry()
             } else {
+                Result.success()
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            plans.forEach { plan ->
+                courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.ERROR)
+            }
+            if (runAttemptCount < MAX_RETRY_ATTEMPTS) {
+                Result.retry()
+            } else {
+                if (!isStopped) {
+                    showCompletionNotification(plans.size)
+                }
                 Result.success()
             }
         } finally {

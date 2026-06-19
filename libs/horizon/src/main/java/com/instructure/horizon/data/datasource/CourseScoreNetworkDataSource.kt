@@ -30,15 +30,31 @@ class CourseScoreNetworkDataSource @Inject constructor(
     private val apiPrefs: ApiPrefs,
 ) {
 
-    suspend fun getAssignmentGroups(courseId: Long, forceRefresh: Boolean): List<AssignmentGroup> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+    suspend fun getAssignmentGroups(
+        courseId: Long,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<AssignmentGroup> {
+        val restParams = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams)
             .depaginate { assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, restParams) }
             .dataOrThrow
     }
 
-    suspend fun getEnrollments(courseId: Long, forceRefresh: Boolean): List<Enrollment> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+    suspend fun getEnrollments(
+        courseId: Long,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<Enrollment> {
+        val restParams = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return enrollmentApi.getEnrollmentsForUserInCourse(courseId, apiPrefs.user?.id ?: -1, restParams)
             .depaginate { enrollmentApi.getNextPage(it, restParams) }
             .dataOrThrow

@@ -28,14 +28,20 @@ class NotificationStreamSyncer @Inject constructor(
 ) {
     suspend fun sync() {
         val courseIds = networkDataSource.getCoursesInProgressIds(forceRefresh = true).toSet()
-        val streamItems = networkDataSource.getStream(forceRefresh = true)
+        val streamItems = networkDataSource.getStream(
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        )
             .filter { it.courseId == -1L || courseIds.contains(it.courseId) }
             .filter { it.isRelevant() }
 
         val items = streamItems.map { item ->
             val courseName = if (item.courseId > 0L) {
                 localDataSource.courseNameFor(item.courseId) ?: try {
-                    networkDataSource.getCourse(item.courseId).name
+                    networkDataSource.getCourse(
+                        courseId = item.courseId,
+                        shouldLoginOnTokenError = false,
+                    ).name
                 } catch (e: CancellationException) {
                     throw e
                 } catch (_: Exception) {

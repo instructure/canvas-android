@@ -52,7 +52,11 @@ class CourseContentSyncer @Inject constructor(
         )
         fileSyncRepository.syncHtmlFiles(courseId, parsedSyllabus)
 
-        val modules = courseProgressNetworkDataSource.getModuleItems(courseId, forceRefresh = true)
+        val modules = courseProgressNetworkDataSource.getModuleItems(
+            courseId = courseId,
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        )
         courseProgressLocalDataSource.saveModuleItems(courseId, modules)
 
         val now = System.currentTimeMillis()

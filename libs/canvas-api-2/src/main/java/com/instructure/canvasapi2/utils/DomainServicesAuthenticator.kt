@@ -36,7 +36,7 @@ abstract class DomainServicesAuthenticator(
             return null
         }
 
-        val token = runBlocking { authenticationManager.getAuthenticationToken(true) }
+        val token = runBlocking { authenticationManager.getAuthenticationToken(true) } ?: return null
 
         return response.request.newBuilder()
             .header(authHeader, "Bearer $token")

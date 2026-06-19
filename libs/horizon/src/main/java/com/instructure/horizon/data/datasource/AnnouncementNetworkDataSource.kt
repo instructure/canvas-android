@@ -41,9 +41,17 @@ class AnnouncementNetworkDataSource @Inject constructor(
         return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1L, forceRefresh).dataOrThrow
     }
 
-    suspend fun getCourseAnnouncements(courses: List<CourseWithProgress>, forceRefresh: Boolean): List<DiscussionTopicHeader> {
+    suspend fun getCourseAnnouncements(
+        courses: List<CourseWithProgress>,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<DiscussionTopicHeader> {
         if (courses.isEmpty()) return emptyList()
-        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            usePerPageQueryParam = true,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return announcementApi.getFirstPageAnnouncements(
             courseCode = courses.map { "course_" + it.courseId }.toTypedArray(),
             params = params,
@@ -57,8 +65,16 @@ class AnnouncementNetworkDataSource @Inject constructor(
         return announcementApi.getCourseAnnouncement(courseId, announcementId, params).dataOrThrow
     }
 
-    suspend fun getAnnouncementTopic(courseId: Long, announcementId: Long, forceRefresh: Boolean): DiscussionTopic {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+    suspend fun getAnnouncementTopic(
+        courseId: Long,
+        announcementId: Long,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): DiscussionTopic {
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return discussionApi.getFullDiscussionTopic(
             CanvasContext.Type.COURSE.apiString,
             courseId,
@@ -68,8 +84,15 @@ class AnnouncementNetworkDataSource @Inject constructor(
         ).dataOrThrow
     }
 
-    suspend fun getAccountNotifications(forceRefresh: Boolean): List<AccountNotification> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
+    suspend fun getAccountNotifications(
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<AccountNotification> {
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            usePerPageQueryParam = true,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return accountNotificationApi.getAccountNotifications(params, includePast = true, showIsClosed = true)
             .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
             .dataOrThrow

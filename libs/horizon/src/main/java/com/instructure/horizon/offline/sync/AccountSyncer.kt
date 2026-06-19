@@ -25,7 +25,7 @@ class AccountSyncer @Inject constructor(
     private val localDataSource: AccountLocalDataSource,
 ) {
     suspend fun sync() {
-        val restParams = RestParams(isForceReadFromNetwork = true)
+        val restParams = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val user = userApi.getSelf(restParams).dataOrThrow
         localDataSource.saveUser(user)
     }

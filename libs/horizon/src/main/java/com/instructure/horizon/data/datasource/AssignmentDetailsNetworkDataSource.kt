@@ -24,8 +24,16 @@ class AssignmentDetailsNetworkDataSource @Inject constructor(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
 ) {
 
-    suspend fun getAssignment(courseId: Long, assignmentId: Long, forceRefresh: Boolean): Assignment {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+    suspend fun getAssignment(
+        courseId: Long,
+        assignmentId: Long,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): Assignment {
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
     }
 }

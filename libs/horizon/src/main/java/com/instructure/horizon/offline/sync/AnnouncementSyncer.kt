@@ -37,17 +37,27 @@ class AnnouncementSyncer @Inject constructor(
     suspend fun sync() {
         val courses = networkDataSource.getCoursesInProgress(forceRefresh = true)
 
-        val courseAnnouncements = networkDataSource.getCourseAnnouncements(courses, forceRefresh = true)
-            .map { it.toDomain(courses) }
+        val courseAnnouncements = networkDataSource.getCourseAnnouncements(
+            courses = courses,
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        ).map { it.toDomain(courses) }
 
-        val accountAnnouncements = networkDataSource.getAccountNotifications(forceRefresh = true)
-            .map { it.toDomain() }
+        val accountAnnouncements = networkDataSource.getAccountNotifications(
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        ).map { it.toDomain() }
 
         val comments = mutableMapOf<String, List<HorizonAnnouncementComment>>()
         for (announcement in courseAnnouncements) {
             val courseId = announcement.courseId ?: continue
             try {
-                val topic = networkDataSource.getAnnouncementTopic(courseId, announcement.id, forceRefresh = true)
+                val topic = networkDataSource.getAnnouncementTopic(
+                    courseId = courseId,
+                    announcementId = announcement.id,
+                    forceRefresh = true,
+                    shouldLoginOnTokenError = false,
+                )
                 val key = announcementKey(ANNOUNCEMENT_TYPE_COURSE, announcement.id, courseId)
                 comments[key] = topic.toComments()
             } catch (e: CancellationException) {

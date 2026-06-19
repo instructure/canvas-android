@@ -35,7 +35,12 @@ class PageSyncer @Inject constructor(
 
         for (pageUrl in pageUrls) {
             try {
-                val page = networkDataSource.getPage(courseId, pageUrl, forceRefresh = true)
+                val page = networkDataSource.getPage(
+                    courseId = courseId,
+                    pageUrl = pageUrl,
+                    forceRefresh = true,
+                    shouldLoginOnTokenError = false,
+                )
                 val parsedBody = page.body?.let {
                     htmlParser.createHtmlStringWithLocalFiles(it, courseId)
                 }

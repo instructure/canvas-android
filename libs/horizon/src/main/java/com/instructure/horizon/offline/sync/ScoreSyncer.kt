@@ -24,8 +24,16 @@ class ScoreSyncer @Inject constructor(
     private val localDataSource: CourseScoreLocalDataSource,
 ) {
     suspend fun sync(courseId: Long) {
-        val assignmentGroups = networkDataSource.getAssignmentGroups(courseId, forceRefresh = true)
-        val enrollments = networkDataSource.getEnrollments(courseId, forceRefresh = true)
+        val assignmentGroups = networkDataSource.getAssignmentGroups(
+            courseId = courseId,
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        )
+        val enrollments = networkDataSource.getEnrollments(
+            courseId = courseId,
+            forceRefresh = true,
+            shouldLoginOnTokenError = false,
+        )
         localDataSource.saveScoreData(courseId, assignmentGroups, enrollments)
     }
 }

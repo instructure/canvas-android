@@ -27,8 +27,16 @@ class CourseProgressNetworkDataSource @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
 ) {
 
-    suspend fun getModuleItems(courseId: Long, forceRefresh: Boolean): List<ModuleObject> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+    suspend fun getModuleItems(
+        courseId: Long,
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<ModuleObject> {
+        val params = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,
@@ -40,15 +48,19 @@ class CourseProgressNetworkDataSource @Inject constructor(
 
         return modules.map { module ->
             if (module.itemCount != module.items.size) {
-                module.copy(items = getAllModuleItems(courseId, module.id))
+                module.copy(items = getAllModuleItems(courseId, module.id, shouldLoginOnTokenError))
             } else {
                 module
             }
         }
     }
 
-    private suspend fun getAllModuleItems(courseId: Long, moduleId: Long): List<ModuleItem> {
-        val params = RestParams()
+    private suspend fun getAllModuleItems(
+        courseId: Long,
+        moduleId: Long,
+        shouldLoginOnTokenError: Boolean,
+    ): List<ModuleItem> {
+        val params = RestParams(shouldLoginOnTokenError = shouldLoginOnTokenError)
         return moduleApi.getFirstPageModuleItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,

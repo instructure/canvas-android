@@ -48,7 +48,12 @@ class AssignmentSyncer @Inject constructor(
 
         for (assignmentId in assignmentIds) {
             try {
-                val assignment = networkDataSource.getAssignment(courseId, assignmentId, forceRefresh = true)
+                val assignment = networkDataSource.getAssignment(
+                    courseId = courseId,
+                    assignmentId = assignmentId,
+                    forceRefresh = true,
+                    shouldLoginOnTokenError = false,
+                )
                 val parsedDescription = assignment.description?.let {
                     htmlParser.createHtmlStringWithLocalFiles(it, courseId)
                 }

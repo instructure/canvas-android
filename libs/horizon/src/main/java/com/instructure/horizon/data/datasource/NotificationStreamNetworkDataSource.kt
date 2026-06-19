@@ -31,8 +31,15 @@ class NotificationStreamNetworkDataSource @Inject constructor(
     private val getCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs,
 ) {
-    suspend fun getStream(forceRefresh: Boolean): List<StreamItem> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+    suspend fun getStream(
+        forceRefresh: Boolean,
+        shouldLoginOnTokenError: Boolean = true,
+    ): List<StreamItem> {
+        val params = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = forceRefresh,
+            shouldLoginOnTokenError = shouldLoginOnTokenError,
+        )
         return streamApi.getUserStream(params)
             .depaginate { streamApi.getNextPageStream(it, params) }
             .dataOrThrow
@@ -45,7 +52,10 @@ class NotificationStreamNetworkDataSource @Inject constructor(
             .map { it.courseId }
     }
 
-    suspend fun getCourse(courseId: Long): Course {
-        return courseApi.getCourse(courseId, RestParams()).dataOrThrow
+    suspend fun getCourse(courseId: Long, shouldLoginOnTokenError: Boolean = true): Course {
+        return courseApi.getCourse(
+            courseId,
+            RestParams(shouldLoginOnTokenError = shouldLoginOnTokenError),
+        ).dataOrThrow
     }
 }
