@@ -21,8 +21,11 @@ import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.horizon.offline.sync.HorizonOfflineSyncHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import com.instructure.horizon.offline.sync.HorizonSyncProgressData
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
@@ -30,6 +33,7 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -50,10 +54,12 @@ class OfflineSettingsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
-    fun setUp() {
+    fun setup() {
         Dispatchers.setMain(testDispatcher)
         every { aggregateProgressObserver.progressData } returns progressFlow
         coEvery { syncSettingsDao.getSettingsOnce() } returns HorizonSyncSettingsEntity()
+        coEvery { syncSettingsDao.upsert(any()) } just Runs
+        coEvery { syncHelper.applyPeriodicSchedule() } just Runs
     }
 
     @After
@@ -129,5 +135,66 @@ class OfflineSettingsViewModelTest {
         assertEquals(SyncFrequency.WEEKLY, state.syncFrequency)
         assertEquals(false, state.wifiOnlyEnabled)
         assertFalse(state.isSyncActive)
+    }
+
+    @Test
+    fun `toggling wifiOnly off shows confirmation and does not change wifiOnlyEnabled`() = runTest {
+        val viewModel = OfflineSettingsViewModel(syncSettingsDao, syncHelper, aggregateProgressObserver)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onWifiOnlyToggled(false)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.showWifiOnlyConfirmation)
+        assertTrue(viewModel.uiState.value.wifiOnlyEnabled)
+        coVerify(exactly = 0) { syncSettingsDao.upsert(match { !it.wifiOnly }) }
+    }
+
+    @Test
+    fun `confirming disables wifiOnly, hides dialog, and persists`() = runTest {
+        val viewModel = OfflineSettingsViewModel(syncSettingsDao, syncHelper, aggregateProgressObserver)
+        advanceUntilIdle()
+        viewModel.uiState.value.onWifiOnlyToggled(false)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onWifiOnlyConfirmationConfirmed()
+        advanceTimeBy(400)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.wifiOnlyEnabled)
+        assertFalse(viewModel.uiState.value.showWifiOnlyConfirmation)
+        coVerify { syncSettingsDao.upsert(match { !it.wifiOnly }) }
+        coVerify { syncHelper.applyPeriodicSchedule() }
+    }
+
+    @Test
+    fun `dismissing only hides the dialog and does not persist`() = runTest {
+        val viewModel = OfflineSettingsViewModel(syncSettingsDao, syncHelper, aggregateProgressObserver)
+        advanceUntilIdle()
+        viewModel.uiState.value.onWifiOnlyToggled(false)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onWifiOnlyConfirmationDismissed()
+        advanceTimeBy(400)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.showWifiOnlyConfirmation)
+        assertTrue(viewModel.uiState.value.wifiOnlyEnabled)
+        coVerify(exactly = 0) { syncSettingsDao.upsert(any()) }
+    }
+
+    @Test
+    fun `toggling wifiOnly on persists immediately without showing the dialog`() = runTest {
+        coEvery { syncSettingsDao.getSettingsOnce() } returns HorizonSyncSettingsEntity(wifiOnly = false)
+        val viewModel = OfflineSettingsViewModel(syncSettingsDao, syncHelper, aggregateProgressObserver)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onWifiOnlyToggled(true)
+        advanceTimeBy(400)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.wifiOnlyEnabled)
+        assertFalse(viewModel.uiState.value.showWifiOnlyConfirmation)
+        coVerify { syncSettingsDao.upsert(match { it.wifiOnly }) }
     }
 }

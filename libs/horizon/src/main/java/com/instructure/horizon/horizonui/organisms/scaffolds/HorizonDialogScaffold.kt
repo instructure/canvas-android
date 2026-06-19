@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -100,7 +101,9 @@ private fun HorizonDialogScaffoldTopBar(
             Text(
                 text = title,
                 style = HorizonTypography.h3,
-                color = HorizonColors.Text.title()
+                color = HorizonColors.Text.title(),
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         },
         actions = {
@@ -109,7 +112,8 @@ private fun HorizonDialogScaffoldTopBar(
                 contentDescription = stringResource(R.string.close),
                 onClick = onDismiss,
                 size = IconButtonSize.SMALL,
-                color = IconButtonColor.Ghost
+                color = IconButtonColor.Ghost,
+                modifier = Modifier.padding(end = 16.dp)
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(

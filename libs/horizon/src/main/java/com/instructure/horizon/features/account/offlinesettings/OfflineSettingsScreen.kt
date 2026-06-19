@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.account.offlinesettings
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +48,7 @@ import com.instructure.horizon.horizonui.organisms.controls.SwitchItemState
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonDialogScaffold
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
 @Composable
@@ -54,6 +56,13 @@ fun OfflineSettingsScreen(
     uiState: OfflineSettingsUiState,
     navController: NavHostController,
 ) {
+    if (uiState.showWifiOnlyConfirmation) {
+        WifiOnlyDisableConfirmationDialog(
+            onConfirm = uiState.onWifiOnlyConfirmationConfirmed,
+            onDismiss = uiState.onWifiOnlyConfirmationDismissed,
+        )
+        return
+    }
     HorizonScaffold(
         title = stringResource(R.string.offline_settingsTitle),
         onBackPressed = { navController.popBackStack() },
@@ -133,6 +142,31 @@ fun OfflineSettingsScreen(
 }
 
 @Composable
+private fun WifiOnlyDisableConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    BackHandler(onBack = onDismiss)
+    HorizonDialogScaffold(
+        title = stringResource(R.string.offline_wifiOnlyDisableConfirmationTitle),
+        confirmLabel = stringResource(R.string.offline_wifiOnlyDisableConfirmationConfirm),
+        onConfirm = onConfirm,
+        dismissLabel = stringResource(R.string.offline_wifiOnlyDisableConfirmationCancel),
+        onDismiss = onDismiss,
+        navigationBarColor = null,
+    ) { contentPadding ->
+        Text(
+            text = stringResource(R.string.offline_wifiOnlyDisableConfirmationDescription),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body(),
+            modifier = Modifier
+                .padding(contentPadding)
+                .padding(horizontal = 24.dp, vertical = 24.dp),
+        )
+    }
+}
+
+@Composable
 private fun SyncFrequencyDropdown(
     selected: SyncFrequency,
     enabled: Boolean,
@@ -166,6 +200,15 @@ private fun SyncFrequencyDropdown(
 private fun OfflineSettingsScreenPreview() {
     OfflineSettingsScreen(
         uiState = OfflineSettingsUiState(),
+        navController = rememberNavController(),
+    )
+}
+
+@Preview
+@Composable
+private fun OfflineSettingsScreenWifiOnlyConfirmationPreview() {
+    OfflineSettingsScreen(
+        uiState = OfflineSettingsUiState(showWifiOnlyConfirmation = true),
         navController = rememberNavController(),
     )
 }

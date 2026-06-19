@@ -49,6 +49,8 @@ class OfflineSettingsViewModel @Inject constructor(
             onAutoSyncToggled = ::onAutoSyncToggled,
             onSyncFrequencySelected = ::onSyncFrequencySelected,
             onWifiOnlyToggled = ::onWifiOnlyToggled,
+            onWifiOnlyConfirmationConfirmed = ::onWifiOnlyConfirmationConfirmed,
+            onWifiOnlyConfirmationDismissed = ::onWifiOnlyConfirmationDismissed,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -107,8 +109,21 @@ class OfflineSettingsViewModel @Inject constructor(
     }
 
     private fun onWifiOnlyToggled(enabled: Boolean) {
-        _uiState.update { it.copy(wifiOnlyEnabled = enabled) }
+        if (enabled) {
+            _uiState.update { it.copy(wifiOnlyEnabled = true) }
+            emitPending()
+        } else {
+            _uiState.update { it.copy(showWifiOnlyConfirmation = true) }
+        }
+    }
+
+    private fun onWifiOnlyConfirmationConfirmed() {
+        _uiState.update { it.copy(wifiOnlyEnabled = false, showWifiOnlyConfirmation = false) }
         emitPending()
+    }
+
+    private fun onWifiOnlyConfirmationDismissed() {
+        _uiState.update { it.copy(showWifiOnlyConfirmation = false) }
     }
 
     private fun emitPending() {

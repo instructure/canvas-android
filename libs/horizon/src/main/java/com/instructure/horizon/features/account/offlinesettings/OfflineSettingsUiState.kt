@@ -22,10 +22,13 @@ data class OfflineSettingsUiState(
     val autoSyncEnabled: Boolean = true,
     val syncFrequency: SyncFrequency = SyncFrequency.DAILY,
     val wifiOnlyEnabled: Boolean = true,
+    val showWifiOnlyConfirmation: Boolean = false,
     val isSyncActive: Boolean = false,
     val onAutoSyncToggled: (Boolean) -> Unit = {},
     val onSyncFrequencySelected: (SyncFrequency) -> Unit = {},
     val onWifiOnlyToggled: (Boolean) -> Unit = {},
+    val onWifiOnlyConfirmationConfirmed: () -> Unit = {},
+    val onWifiOnlyConfirmationDismissed: () -> Unit = {},
     val onManageOfflineContentClick: () -> Unit = {},
 )
 
