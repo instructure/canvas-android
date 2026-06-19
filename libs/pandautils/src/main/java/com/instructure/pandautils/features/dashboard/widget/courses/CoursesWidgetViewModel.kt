@@ -36,6 +36,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -85,7 +86,8 @@ class CoursesWidgetViewModel @Inject constructor(
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager
 ) : ViewModel() {
 
     private var visibleCourses: List<Course> = emptyList()
@@ -147,6 +149,9 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun onCourseClick(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
         viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                offlineAnalyticsManager.reportCourseOpenedInOfflineMode()
+            }
             _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToCourse(course))
         }
     }

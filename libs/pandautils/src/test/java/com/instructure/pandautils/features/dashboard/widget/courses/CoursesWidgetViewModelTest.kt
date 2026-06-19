@@ -35,6 +35,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
@@ -100,6 +101,7 @@ class CoursesWidgetViewModelTest {
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase = mockk()
     private val userRepository: UserRepository = mockk(relaxed = true)
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val offlineAnalyticsManager: OfflineAnalyticsManager = mockk(relaxed = true)
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -473,6 +475,36 @@ class CoursesWidgetViewModelTest {
         assertEquals(course, event.course)
 
         job.cancel()
+    }
+
+    @Test
+    fun `onCourseClick reports offline analytics when offline`() = runTest {
+        setupDefaultMocks()
+        every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        val course = Course(id = 1, name = "Course", isFavorite = true)
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(course))
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseClick(1)
+        advanceUntilIdle()
+
+        coVerify(exactly = 1) { offlineAnalyticsManager.reportCourseOpenedInOfflineMode() }
+    }
+
+    @Test
+    fun `onCourseClick does not report offline analytics when online`() = runTest {
+        setupDefaultMocks()
+        val course = Course(id = 1, name = "Course", isFavorite = true)
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(listOf(course))
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseClick(1)
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) { offlineAnalyticsManager.reportCourseOpenedInOfflineMode() }
     }
 
     @Test
@@ -1253,7 +1285,8 @@ class CoursesWidgetViewModelTest {
             observeWidgetConfigUseCase = observeWidgetConfigUseCase,
             observeOfflineSyncUpdatesUseCase = observeOfflineSyncUpdatesUseCase,
             observeGlobalConfigUseCase = observeGlobalConfigUseCase,
-            userRepository = userRepository
+            userRepository = userRepository,
+            offlineAnalyticsManager = offlineAnalyticsManager
         )
     }
 }
