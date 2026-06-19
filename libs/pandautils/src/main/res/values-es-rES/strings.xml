@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">No se ha realizado ningún anuncio todavía.</string>
     <string name="noCourses">No hay asignaturas</string>
     <string name="noCoursesSubtext">No parece haber asignaturas asociadas con esta cuenta. Visita la web para crear una asignatura hoy mismo.</string>
+    <string name="coursesWidgetEmptyTitle">¡Te damos la bienvenida a Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Todavía no tienes ninguna asignatura activa, así que todo está tranquilo por aquí. Cuando te inscribas en una clase, tu panel de control empezará a llenarse de nueva actividad.</string>
     <string name="noAssignments">No hay actividades</string>
     <string name="noAssignmentsSubtext">Al parecer no se han creado actividades en este espacio. Hora de salir y explorar</string>
     <string name="noAssignmentsTeacher">Al parecer no se han publicado actividades aún.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Nota: %s puntos</string>
     <string name="gradePercentTextFieldAccessibility">Nota: %d porcentaje, %s</string>
     <string name="gradePointsTextFieldAccessibility">Nota: %s puntos, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Ayúdanos a mejorar la aplicación</string>
+    <string name="cookieConsentDescription">Recopilamos datos anónimos de la aplicación para ayudar a nuestro equipo a identificar problemas técnicos y optimizar funcionalidades.</string>
+    <string name="cookieConsentNoProfiles">Sin perfiles personales: No rastreamos tu identidad ni mostramos anuncios.</string>
+    <string name="cookieConsentNoSelling">No se venden los datos: Tu información nunca se vende a terceros.</string>
+    <string name="cookieConsentFullControl">Control total: Puedes ajustar estas configuraciones en cualquier momento.</string>
+    <string name="cookieConsentAllow">Permitir</string>
+    <string name="cookieConsentDecline">Rechazar</string>
+    <string name="privacySettingsTitle">Configuraciones de privacidad</string>
+    <string name="privacySettingsToggleLabel">Analíticas de aplicación anónima</string>
+    <string name="privacySettingsDescription">Comparte datos anónimos sobre el rendimiento de la aplicación y el uso de las funcionalidades. Esto nos ayuda a corregir errores y mejorar la aplicación en general. No recopilamos identificadores personales.</string>
 </resources>

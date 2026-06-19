@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">尚未有任何通告。</string>
     <string name="noCourses">無課程</string>
     <string name="noCoursesSubtext">看來沒有與您帳戶關聯的課程。現在就前往網站，創建課程。</string>
+    <string name="coursesWidgetEmptyTitle">歡迎使用 Canvas！</string>
+    <string name="coursesWidgetEmptyMessage">您目前還沒有任何啟用課程，所以這裡暫時比較安靜。一旦您註冊了課程，您的控制面板就會開始充滿新的活動。</string>
     <string name="noAssignments">無作業</string>
     <string name="noAssignmentsSubtext">看來這裡並未建立任何作業。是時候出外探索。</string>
     <string name="noAssignmentsTeacher">看來尚未發佈任何作業。</string>
@@ -501,4 +503,15 @@
     <string name="gradePointsAccessibility">評分：%s 分</string>
     <string name="gradePercentTextFieldAccessibility">評分：%d 百分比，%s</string>
     <string name="gradePointsTextFieldAccessibility">評分：%s 分，%s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">幫助我們改進應用程式</string>
+    <string name="cookieConsentDescription">我們收集匿名應用資料，以幫助我們的團隊識別技術問題並最佳化應用功能。</string>
+    <string name="cookieConsentNoProfiles">無個人檔案：我們不會追蹤您的身份或向您顯示廣告。</string>
+    <string name="cookieConsentNoSelling">不出售資料：您的資訊絕不會出售給第三方。</string>
+    <string name="cookieConsentFullControl">完全控制：您可以隨時調整這些設定。</string>
+    <string name="cookieConsentAllow">允許</string>
+    <string name="cookieConsentDecline">拒絕</string>
+    <string name="privacySettingsTitle">隱私設定</string>
+    <string name="privacySettingsToggleLabel">匿名套用分析工具</string>
+    <string name="privacySettingsDescription">分享關於應用程式效能和功能使用情況的匿名資料。這有助於我們修復漏錯誤提升整體應用程式體驗。我們不會收集個人識別資訊。</string>
 </resources>

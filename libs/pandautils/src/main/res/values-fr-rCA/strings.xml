@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Rien n\'a été annoncé pour le moment.</string>
     <string name="noCourses">Aucun cours</string>
     <string name="noCoursesSubtext">Il semblerait qu’il n’y ait aucun cours associé à ce compte. Visitez le site Web pour créer un cours aujourd\'hui.</string>
+    <string name="coursesWidgetEmptyTitle">Bienvenue dans Canvas !</string>
+    <string name="coursesWidgetEmptyMessage">Vous n’avez pas encore de cours actifs - c’est donc un peu calme ici. Dès que vous vous inscrivez à un cours, votre tableau de bord se remplit de nouvelles activités.</string>
     <string name="noAssignments">Aucun travail</string>
     <string name="noAssignmentsSubtext">Il semblerait qu’il n’y ait pas de travail créé dans cet espace. C’est le temps d’y aller et d\'explorer.</string>
     <string name="noAssignmentsTeacher">Il semblerait qu\'aucun travail n\'ait encore été publié.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Note : %s points</string>
     <string name="gradePercentTextFieldAccessibility">Note : %d pourcent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Note : %s points, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Aidez-nous à améliorer l’application</string>
+    <string name="cookieConsentDescription">Nous collectons des données d’application anonymisées afin d’aider notre équipe à repérer les problèmes techniques et à améliorer les fonctionnalités de l’application.</string>
+    <string name="cookieConsentNoProfiles">Aucun profil personnel : Nous ne suivons pas votre identité et ne vous affichons aucune publicité.</string>
+    <string name="cookieConsentNoSelling">Aucune vente de données : Vos informations ne sont jamais vendues à des tiers.</string>
+    <string name="cookieConsentFullControl">Contrôle total : Vous pouvez modifier ces paramètres en tout temps.</string>
+    <string name="cookieConsentAllow">Autoriser</string>
+    <string name="cookieConsentDecline">Décliner</string>
+    <string name="privacySettingsTitle">Paramètres de confidentialité</string>
+    <string name="privacySettingsToggleLabel">Analyse anonyme des applications</string>
+    <string name="privacySettingsDescription">Partager des données anonymes sur la performance et l’utilisation des fonctionnalités. Ces données nous permettent de corriger les bogues et d’optimiser l’expérience utilisateur globale. Nous ne recueillons pas d’informations personnelles permettant de vous identifier.</string>
 </resources>

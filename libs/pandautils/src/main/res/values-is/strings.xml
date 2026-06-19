@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Ekkert hefur verið tilkynnt enn.</string>
     <string name="noCourses">Engin námskeið</string>
     <string name="noCoursesSubtext">Það virðast ekki vera nein námskeið tengd þessum reikningi. Heimsæktu vefinn til að búa til námskeið strax í dag.</string>
+    <string name="coursesWidgetEmptyTitle">Velkomin(n) í Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Þú hefur engin virk námskeið enn, því er allt svolítið rólegt hér. Þegar þú hefur innritað þig í námskeið fer stjórnborðið að fyllast upp af nýrri virkni.</string>
     <string name="noAssignments">Engin verkefni</string>
     <string name="noAssignmentsSubtext">Það virðast ekki vera nein verkefni búin til í þessu rými. Kominn tími til að fara út og kanna.</string>
     <string name="noAssignmentsTeacher">Engin verkefni virðast hafa verið birt enn.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Einkunn: %s punktar</string>
     <string name="gradePercentTextFieldAccessibility">Einkunn: %d prósent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Einkunn: %s punktar, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Hjálpaðu okkur að smíða betra app</string>
+    <string name="cookieConsentDescription">Við söfnum nafnlausum forritagögnum til að hjálpa teyminu okkar að bera kennsl á tæknileg vandamál og hámarka eiginleika forritsins.</string>
+    <string name="cookieConsentNoProfiles">Engir persónulegar prófílar: Við rekjum ekki auðkenni þitt né sýnum þér auglýsingar.</string>
+    <string name="cookieConsentNoSelling">Engin gagnasala: Upplýsingar þínar eru aldrei seldar til þriðja aðila.</string>
+    <string name="cookieConsentFullControl">Full stjórn: Þú getur breytt þessum stillingum hvenær sem er.</string>
+    <string name="cookieConsentAllow">Leyfa</string>
+    <string name="cookieConsentDecline">Hafna</string>
+    <string name="privacySettingsTitle">Persónuverndarstillingar</string>
+    <string name="privacySettingsToggleLabel">Nafnlaus forritagreining</string>
+    <string name="privacySettingsDescription">Deila nafnlausum gögnum um afköst forrita og notkun eiginleika. Þetta hjálpar okkur að laga villur og bæta heildarupplifun forritsins. Við söfnum ekki persónuauðkennum.</string>
 </resources>

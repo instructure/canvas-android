@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Kaore anō he pānui i tēnei wā.</string>
     <string name="noCourses">Kāore he Akoranga</string>
     <string name="noCoursesSubtext">Ko te āhua nei kaore ngā akoranga e pā ana ki tēnei pūkete. Haere ki te paetukutuku ki te hanga he akoranga i tēnei rā.</string>
+    <string name="coursesWidgetEmptyTitle">Nau mai ki Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Kāore anō kia whai akoranga e hohe ana — nō reira he marino te āhua o konei. Kia rēhita koe ki tētahi akomanga, ka tīmata tō papatohu ki te whakakī i ngā mahi hou.</string>
     <string name="noAssignments">Kaore ngā whakataunga</string>
     <string name="noAssignmentsSubtext">Ko te āhua nei kaore ngā whakataunga i hāngaia i roto i tēnei wāhi. Te wā ki te haere ki te tirotiro.</string>
     <string name="noAssignmentsTeacher">Anō nei kaore he whakataunga i pānuitia.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Taumata: %s ngā koinga</string>
     <string name="gradePercentTextFieldAccessibility">Taumata: %d ōrau, %s</string>
     <string name="gradePointsTextFieldAccessibility">Taumata: %s ngā tohu, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Āwhina mai ki te hanga i tētahi taupānga pai ake</string>
+    <string name="cookieConsentDescription">Ka kohia e mātou ngā raraunga taupānga ingoakore hei āwhina i tā mātou tīma ki te tautuhi i ngā take hangarau me te arotau i ngā āhuatanga o te taupānga.</string>
+    <string name="cookieConsentNoProfiles">Kāore he Kōtaha Whaiaro: Kāore mātou e aroturuki i tō tuakiri, e whakaatu ana rānei i ngā pānuitanga.</string>
+    <string name="cookieConsentNoSelling">Kāore he Hokonga Raraunga: Kāore ō mōhiohio e hokona ki tētahi atu rōpū tuatoru.</string>
+    <string name="cookieConsentFullControl">Mana Katoa: Ka taea e koe te whakarerekē i ēnei tautuhinga i ngā wā katoa.</string>
+    <string name="cookieConsentAllow">Tukua</string>
+    <string name="cookieConsentDecline">Te paheketanga</string>
+    <string name="privacySettingsTitle">Tautuhinga Tūmataitinga</string>
+    <string name="privacySettingsToggleLabel">Tātari Taupānga Ingoakore</string>
+    <string name="privacySettingsDescription">Tohaina ngā raraunga ingoakore mō te mahi a te taupānga me te whakamahinga o ngā āhuatanga. Mā tēnei ka āwhina mātou ki te whakatika i ngā hapa me te whakapai ake i te wheako whānui o te taupānga. Kāore mātou e kohi i ngā tohu tuakiri whaiaro.</string>
 </resources>

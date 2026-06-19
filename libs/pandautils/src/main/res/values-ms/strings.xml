@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Belum ada apa-apa diumumkan.</string>
     <string name="noCourses">Tiada Kursus</string>
     <string name="noCoursesSubtext">Nampaknya tidak terdapat apa-apa kursus yang dikaitkan dengan akaun ini. Lawati laman web untuk mencipta kursus hari ini.</string>
+    <string name="coursesWidgetEmptyTitle">Selamat Datang ke Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Anda belum mempunyai apa-apa kursus  — jadi suasana agak sunyi di sini. Setelah anda mendaftar dalam kelas, papan pemuka anda akan mula diisi dengan aktiviti baharu.</string>
     <string name="noAssignments">Tiada Tugasan</string>
     <string name="noAssignmentsSubtext">Nampaknya tugasan belum dicipta dalam ruang ini. Masa untuk keluar dan meneroka.</string>
     <string name="noAssignmentsTeacher">Nampaknya belum ada tugasan diterbitkan.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Gred: %s mata</string>
     <string name="gradePercentTextFieldAccessibility">Gred: %d peratusan, %s</string>
     <string name="gradePointsTextFieldAccessibility">Gred: %s mata, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Bantu kami membina aplikasi yang lebih baik</string>
+    <string name="cookieConsentDescription">Kami tidak mengumpulkan data aplikasi tanpa nama bagi membantu pasukan kami mengecam isu teknikal dan mengoptimumkan ciri aplikasi.</string>
+    <string name="cookieConsentNoProfiles">Tiada Profil Peribadi: Kami tidak menjejak identiti anda atau menunjukkan iklan.</string>
+    <string name="cookieConsentNoSelling">Tiada Penjualan Data: Maklumat anda tidak akan sekali-kali dijual kepada pihak ketiga.</string>
+    <string name="cookieConsentFullControl">Kawalan Penuh: Anda boleh melaraskan tetapan ini pada bila-bila masa.</string>
+    <string name="cookieConsentAllow">Benarkan</string>
+    <string name="cookieConsentDecline">Tolak</string>
+    <string name="privacySettingsTitle">Tetapan Privasi</string>
+    <string name="privacySettingsToggleLabel">Analisis Permohonan Tanpa Nama</string>
+    <string name="privacySettingsDescription">Kongsi data tanpa nama mengenai prestasi aplikasi dan penggunaan ciri. Tindakan ini membantu kami membetulkan pepijat dan menambah baik pengalaman aplikasi secara keseluruhan. Kami tidak mengumpulkan pengecam peribadi.</string>
 </resources>

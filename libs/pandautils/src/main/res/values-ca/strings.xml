@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Encara no s\'ha anunciat res.</string>
     <string name="noCourses">No hi ha cap assignatura</string>
     <string name="noCoursesSubtext">Sembla que no hi ha cap assignatura associada a aquest usuari. Aneu al lloc web per crear una assignatura ara mateix.</string>
+    <string name="coursesWidgetEmptyTitle">Us donem la benvinguda al Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Encara no teniu cap assignatura activa, de manera que tot està una mica tranquil aquí. Un cop us hàgiu inscrit en una classe, el panell de control començarà a omplir-se d’activitats noves.</string>
     <string name="noAssignments">No hi ha cap activitat</string>
     <string name="noAssignmentsSubtext">Sembla que en aquest espai no s\'ha creat cap activitat. És l\'hora de sortir i explorar.</string>
     <string name="noAssignmentsTeacher">Sembla que encara no s\'ha publicat cap activitat.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Nota: %s punts</string>
     <string name="gradePercentTextFieldAccessibility">Nota: %d per cent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Nota: %s punts, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Ajudeu-nos a millorar l’aplicació</string>
+    <string name="cookieConsentDescription">Recollim dades de l’aplicació anònimes perquè el nostre equip pugui identificar problemes tècnics i optimitzar les característiques opcionals de l’aplicació.</string>
+    <string name="cookieConsentNoProfiles">No hi ha cap perfil personal: No fem cap seguiment de la vostra identitat ni mostrem anuncis.</string>
+    <string name="cookieConsentNoSelling">Les dades no es venen: La vostra informació no es ven mai a tercers.</string>
+    <string name="cookieConsentFullControl">Control complet: Podeu ajustar aquesta configuració en qualsevol moment.</string>
+    <string name="cookieConsentAllow">Permet-ho</string>
+    <string name="cookieConsentDecline">Rebutja-ho</string>
+    <string name="privacySettingsTitle">Configuració de privacitat</string>
+    <string name="privacySettingsToggleLabel">Analítica d’aplicacions anònimes</string>
+    <string name="privacySettingsDescription">Compartiu dades anònimes sobre el rendiment de l’aplicació i l’ús de característiques opcionals. Aquesta acció ens ajudarà a corregir errors i millorar l’experiència general amb l’aplicació. No recollim cap dada d’identificació personal.</string>
 </resources>

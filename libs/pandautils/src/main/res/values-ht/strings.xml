@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Poko gen anyen ki anonse.</string>
     <string name="noCourses">Pa gen Kou</string>
     <string name="noCoursesSubtext">Ta sanble pa gen okenn kou ki asosye a kont sa a. Vizite paj wèb la pou ka kreye yon kou jodi a.</string>
+    <string name="coursesWidgetEmptyTitle">Byenvini nan Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Ou poko gen okenn kou ki aktif — se sa k fè pa gen anpil aktivite isit la. Lè w fin enskri nan yon klas, tablodbò ou a ap kòmanse ranpli ak nouvo aktivite.</string>
     <string name="noAssignments">Okenn Sesyon</string>
     <string name="noAssignmentsSubtext">Ta sanble pa gen sesyon ki te kreye nan espas sa a. Li fè lè pou soti pou dekouvri.</string>
     <string name="noAssignmentsTeacher">Ta sanble poko gen sesyon ki pibliye.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Nòt: %s pwen</string>
     <string name="gradePercentTextFieldAccessibility">Nòt: %d pousantaj, %s</string>
     <string name="gradePointsTextFieldAccessibility">Nòt: %s pwen, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Ede nou kreye yon pi bon aplikasyon</string>
+    <string name="cookieConsentDescription">Nou kolekte done anonim sou fason yo sèvi ak aplikasyon an pou ede ekip nou an idantifye pwoblèm teknik epi amelyore fonksyonalite aplikasyon an.</string>
+    <string name="cookieConsentNoProfiles">Pa gen Pwofil Pèsonèl: Nou pa swiv idantite w ni nou pa montre piblisite.</string>
+    <string name="cookieConsentNoSelling">Nou Pa Vann Done: Enfòmasyon ou yo pa janm vann bay lòt moun.</string>
+    <string name="cookieConsentFullControl">Kontwòl Total: Ou ka ajiste paramèt sa yo nenpòt ki lè.</string>
+    <string name="cookieConsentAllow">Pèmèt</string>
+    <string name="cookieConsentDecline">Refize</string>
+    <string name="privacySettingsTitle">Paramèt Konfidansyalite</string>
+    <string name="privacySettingsToggleLabel">Analiz Aplikasyon Anonim</string>
+    <string name="privacySettingsDescription">Pataje done anonim sou pèfòmans aplikasyon an ak itilizasyon karakteristik yo. Sa ede nou korije erè yo epi amelyore eksperyans jeneral aplikasyon an. Nou pa kolekte okenn idantifyan pèsonèl.</string>
 </resources>

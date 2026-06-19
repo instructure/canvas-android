@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Nada foi anunciado ainda.</string>
     <string name="noCourses">Sem Cursos</string>
     <string name="noCoursesSubtext">Parece que não há quaisquer cursos associados a essa conta. Visite a web para criar um curso hoje.</string>
+    <string name="coursesWidgetEmptyTitle">Bem-vindo ao Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Você ainda não tem nenhum curso ativo — então as coisas estão um pouco paradas por aqui. Depois de se matricular em uma aula, seu painel começará a se encher de novas atividades.</string>
     <string name="noAssignments">Sem tarefas</string>
     <string name="noAssignmentsSubtext">Parece que tarefas não foram criadas nesse espaço. Hora de sair e explorar.</string>
     <string name="noAssignmentsTeacher">Parece que nenhuma tarefa foi publicada ainda.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Nota: %s pontos</string>
     <string name="gradePercentTextFieldAccessibility">Nota: %d por cento, %s</string>
     <string name="gradePointsTextFieldAccessibility">Nota: %s pontos, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Ajude-nos a criar um aplicativo melhor</string>
+    <string name="cookieConsentDescription">Coletamos dados anônimos do aplicativo para ajudar nossa equipe a identificar problemas técnicos e otimizar os recursos do aplicativo.</string>
+    <string name="cookieConsentNoProfiles">Não há perfis pessoais: Não rastreamos sua identidade nem exibimos anúncios.</string>
+    <string name="cookieConsentNoSelling">Proibida a venda de dados: Suas informações nunca serão vendidas a terceiros.</string>
+    <string name="cookieConsentFullControl">Controle total: Você pode ajustar essas configurações a qualquer momento.</string>
+    <string name="cookieConsentAllow">Permitir</string>
+    <string name="cookieConsentDecline">Recusar</string>
+    <string name="privacySettingsTitle">Configurações de privacidade</string>
+    <string name="privacySettingsToggleLabel">Análise anônima de aplicativos</string>
+    <string name="privacySettingsDescription">Compartilhe dados anônimos sobre o desempenho do aplicativo e o uso de seus recursos. Isso nos ajuda a corrigir erros e a melhorar a experiência geral do aplicativo. Não coletamos dados pessoais identificáveis.</string>
 </resources>

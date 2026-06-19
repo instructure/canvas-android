@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">لم يتم الإعلان عن أي شيء حتى الآن.</string>
     <string name="noCourses">لا يوجد أي مساق</string>
     <string name="noCoursesSubtext">يبدو أنه لا توجد أي مساقات مقترنة بهذا الحساب. قم بزيارة الويب لإنشاء مساق اليوم.</string>
+    <string name="coursesWidgetEmptyTitle">مرحبًا بك في Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">ليس لديك أي مساقات نشطة بعد؛ ولذلك لا يوجد أي نشاط هنا. بمجرد أن تسجل في فصل، ستتم تعبئة لوحة المعلومات الخاصة بك بالأنشطة الجديدة.</string>
     <string name="noAssignments">لا توجد أي مهام</string>
     <string name="noAssignmentsSubtext">يبدو أنه لم يتم إنشاء مهام في هذه المساحة. حان وقت الانطلاق والاستكشاف.</string>
     <string name="noAssignmentsTeacher">يبدو أنه لم تنشر أي مهام حتى الآن.</string>
@@ -541,4 +543,15 @@
     <string name="gradePointsAccessibility">درجة التقييم: %s من النقاط</string>
     <string name="gradePercentTextFieldAccessibility">درجة التقييم: %d بالمئة، %s</string>
     <string name="gradePointsTextFieldAccessibility">درجة التقييم: %s من النقاط، %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">لمساعدتك في إنشاء تطبيق أفضل</string>
+    <string name="cookieConsentDescription">نجمع بيانات التطبيق مجهولة الهوية لمساعدة فريقنا في التعرف على المشكلات التقنية وتحسين ميزات التطبيق.</string>
+    <string name="cookieConsentNoProfiles">بدون ملفات تعريف شخصية: لا نتتبع هويتك أو نظهر إعلانات.</string>
+    <string name="cookieConsentNoSelling">بدون بيع للبيانات: معلوماتك لا تُباع أبدًا إلى أطراف خارجية.</string>
+    <string name="cookieConsentFullControl">تحكم كامل: يمكنك تعديل هذه الإعدادات في أي وقت.</string>
+    <string name="cookieConsentAllow">السماح</string>
+    <string name="cookieConsentDecline">رفض</string>
+    <string name="privacySettingsTitle">إعدادات الخصوصية</string>
+    <string name="privacySettingsToggleLabel">تحليلات التطبيق مجهولة الهوية</string>
+    <string name="privacySettingsDescription">شارك معلومات مجهولة الهوية حول أداء التطبيق واستخدام الميزة. يساعدنا هذا في إصلاح الأخطاء البرمجية وتحسين تجربة التطبيق في المجمل. نحن لا نجمع معرفات شخصية.</string>
 </resources>

@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Dim byd wedi’i gyhoeddi eto.</string>
     <string name="noCourses">Dim Cyrsiau</string>
     <string name="noCoursesSubtext">Mae’n edrych yn debyg nad oes unrhyw gyrsiau yn gysylltiedig â’r cyfrif hwn. Ewch ar y we i greu cwrs heddiw.</string>
+    <string name="coursesWidgetEmptyTitle">Croeso i Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Does gennych chi ddim cyrsiau gweithredol ar hyn o bryd –– felly mae hi’n dawel yma. Ar ôl i chi gofrestru ar gyfer dosbarth, bydd eich dangosfwrdd yn dechrau llenwi â gweithgarwch newydd.</string>
     <string name="noAssignments">Dim Aseiniadau</string>
     <string name="noAssignmentsSubtext">Mae’n edrych yn debyg nad oes unrhyw aseiniadau wedi’u creu yn y gofod hwn. Amser i fynd allan a chrwydro.</string>
     <string name="noAssignmentsTeacher">Mae’n edrych yn debyg nad oes aseiniadau wedi cael eu cyhoeddi eto.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Gradd: %s pwynt</string>
     <string name="gradePercentTextFieldAccessibility">Gradd: %d canran, %s</string>
     <string name="gradePointsTextFieldAccessibility">Gradd: %s pwynt, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Helpwch ni i greu ap gwell</string>
+    <string name="cookieConsentDescription">Rydym yn casglu data rhaglennu dienw i helpu ein tîm i nodi problemau technegol ac optimeiddio nodweddion apiau.</string>
+    <string name="cookieConsentNoProfiles">Dim Proffiliau Personol: Nid ydym yn olrhain eich hunaniaeth nac yn dangos hysbysebion.</string>
+    <string name="cookieConsentNoSelling">Dim Gwerthu Data: Ni chaiff eich gwybodaeth ei gwerthu i drydydd partïon byth.</string>
+    <string name="cookieConsentFullControl">Rheolaeth Lawn: Gallwch addasu\'r gosodiadau hyn unrhyw bryd.</string>
+    <string name="cookieConsentAllow">Caniatáu</string>
+    <string name="cookieConsentDecline">Gwrthod</string>
+    <string name="privacySettingsTitle">Gosodiadau Preifatrwydd</string>
+    <string name="privacySettingsToggleLabel">Dadansoddeg Rhaglenni Dienw</string>
+    <string name="privacySettingsDescription">Rhannu ddata dienw am berfformiad apiau a defnydd o nodweddion. Mae hyn yn ein helpu i ddatys bygiau a gwella profiad cyffredinol y rhaglen. Nid ydym yn casglu manylion adnabod personol.</string>
 </resources>
