@@ -50,6 +50,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.max
+import androidx.compose.ui.zIndex
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.minus
@@ -114,6 +115,7 @@ private fun CollapsableHeaderScreenContent(
         Box(
             modifier = Modifier
                 .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
+                .zIndex(1f)
                 .onGloballyPositioned { coordinates ->
                     if (coordinates.size.height != headerHeight) {
                         headerHeight = coordinates.size.height
@@ -246,6 +248,7 @@ private fun CollapsableScaffoldContent(
             Box(
                 Modifier
                     .offset { IntOffset(0, nestedScrollConnection.topBarOffset) }
+                    .zIndex(1f)
                     .onGloballyPositioned { coordinates ->
                         if (coordinates.size.height != topBarHeight) {
                             topBarHeight = coordinates.size.height

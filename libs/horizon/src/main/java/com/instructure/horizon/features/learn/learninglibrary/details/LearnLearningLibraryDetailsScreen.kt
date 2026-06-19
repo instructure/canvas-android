@@ -47,7 +47,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -59,7 +59,6 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.pandautils.compose.modifiers.conditional
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,9 +154,11 @@ private fun LearnLearningLibraryDetailsContentFilter(
             .fillMaxWidth()
             .background(HorizonColors.Surface.pagePrimary())
             .padding(horizontal = 24.dp, vertical = 16.dp)
-            .conditional(scrollState.canScrollBackward) {
-                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
-            }
+            .horizonTopBarShadow(
+                scrollState = scrollState,
+                backgroundColor = HorizonColors.Surface.pagePrimary(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+            )
     ) {
         DropdownChip(
             items = LearnLearningLibraryStatusFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },

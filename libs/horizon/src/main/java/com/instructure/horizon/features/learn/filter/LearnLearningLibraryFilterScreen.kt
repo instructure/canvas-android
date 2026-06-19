@@ -98,8 +98,11 @@ private fun LearnLearningLibraryFilterTopBar(onClose: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .horizonBorder(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
-            .background(HorizonColors.Surface.pageSecondary())
+            .horizonBorder(
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
+                bottom = 1.dp,
+            )
             .padding(bottom = 16.dp)
             .padding(horizontal = 16.dp)
     ) {
@@ -131,8 +134,11 @@ private fun LearnLearningLibraryButtonSection(
 ) {
     Column(
         modifier = Modifier
-            .horizonBorder(HorizonColors.LineAndBorder.lineStroke(), top = 1.dp)
-            .background(HorizonColors.Surface.cardPrimary())
+            .horizonBorder(
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.cardPrimary(),
+                top = 1.dp,
+            )
             .padding(top = 16.dp)
 
     ) {
