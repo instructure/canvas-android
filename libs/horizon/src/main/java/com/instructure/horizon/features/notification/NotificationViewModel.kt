@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,12 +32,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: NotificationRepository
+    private val repository: NotificationRepository,
+    private val dashboardEventHandler: DashboardEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         NotificationUiState(
@@ -43,6 +47,7 @@ class NotificationViewModel @Inject constructor(
                 onRefresh = ::refresh,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
+            onItemRead = ::markAsRead,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -72,6 +77,7 @@ class NotificationViewModel @Inject constructor(
     private suspend fun loadData(forceRefresh: Boolean = false) {
         val userNotifications = repository.getNotifications(forceRefresh).map {
             NotificationItem(
+                id = it.id,
                 category = getNotificationItemCategoryLabel(it),
                 title = getNotificationItemTitle(it),
                 courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
@@ -151,6 +157,21 @@ class NotificationViewModel @Inject constructor(
 
     private suspend fun getCourseName(courseId: Long): String {
         return repository.getCourse(courseId).name
+    }
+
+    private fun markAsRead(id: Long) {
+        val item = _uiState.value.notificationItems.firstOrNull { it.id == id } ?: return
+        if (item.isRead) return
+        _uiState.update { state ->
+            state.copy(
+                notificationItems = state.notificationItems.map {
+                    if (it.id == id) it.copy(isRead = true) else it
+                }
+            )
+        }
+        viewModelScope.launch {
+            dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh)
+        }
     }
 
     private fun dismissSnackbar() {

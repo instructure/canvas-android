@@ -7,9 +7,11 @@ import java.util.Date
 data class NotificationUiState(
     val screenState: LoadingState,
     val notificationItems: List<NotificationItem> = emptyList(),
+    val onItemRead: (Long) -> Unit = {},
 )
 
 data class NotificationItem(
+    val id: Long,
     val category: NotificationItemCategory,
     val courseLabel: String?,
     val title: String,

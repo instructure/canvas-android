@@ -82,7 +82,7 @@ fun DashboardAnnouncementBannerSection(
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
-                modifier.padding(horizontal = 24.dp)
+                modifier.padding(horizontal = 24.dp).padding(bottom = 16.dp)
             )
         }
         DashboardItemState.SUCCESS -> {

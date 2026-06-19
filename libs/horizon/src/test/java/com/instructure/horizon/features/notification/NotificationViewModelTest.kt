@@ -21,8 +21,11 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -33,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -42,6 +46,7 @@ import org.junit.Test
 class NotificationViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: NotificationRepository = mockk(relaxed = true)
+    private val dashboardEventHandler: DashboardEventHandler = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val course = Course(1L, "Course 1")
@@ -102,6 +107,7 @@ class NotificationViewModelTest {
         assertEquals(3, state.notificationItems.size)
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 1L,
                 category = NotificationItemCategory(
                     "Score changed",
                     StatusChipColor.Violet
@@ -115,6 +121,7 @@ class NotificationViewModelTest {
         ))
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 2L,
                 category = NotificationItemCategory(
                     "Score",
                     StatusChipColor.Violet
@@ -128,6 +135,7 @@ class NotificationViewModelTest {
         ))
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 3L,
                 category = NotificationItemCategory(
                     "Due date",
                     StatusChipColor.Honey
@@ -141,6 +149,7 @@ class NotificationViewModelTest {
         ))
         assertFalse(state.notificationItems.contains(
             NotificationItem(
+                id = 4L,
                 category = NotificationItemCategory(
                     "Announcement",
                     StatusChipColor.Sky
@@ -154,7 +163,36 @@ class NotificationViewModelTest {
         ))
     }
 
+    @Test
+    fun `onItemRead flips the local item to read and posts NotificationsRefresh`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onItemRead(2L)
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state.notificationItems.first { it.id == 2L }.isRead)
+        assertFalse(state.notificationItems.first { it.id == 1L }.isRead)
+        assertFalse(state.notificationItems.first { it.id == 3L }.isRead)
+        coVerify { dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh) }
+    }
+
+    @Test
+    fun `onItemRead does nothing when the item is already read`() = runTest {
+        coEvery { repository.getNotifications(any()) } returns listOf(
+            streamItems[0].copy(isReadState = true),
+            streamItems[1],
+            streamItems[2],
+        )
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onItemRead(1L)
+        testScheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { dashboardEventHandler.postEvent(any()) }
+    }
+
     private fun getViewModel(): NotificationViewModel {
-        return NotificationViewModel(context, repository)
+        return NotificationViewModel(context, repository, dashboardEventHandler)
     }
 }

@@ -121,22 +121,24 @@ private fun LearnScoreContent(
             .padding(horizontal = 24.dp),
         contentPadding = PaddingValues(bottom = 4.dp)
     ) {
-        item {
-            Column {
-                CollapsableContentCard(
-                    title = stringResource(
-                        R.string.averageScoreHeader,
-                        state.currentScore.orEmpty()
-                    ),
-                    expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
-                    expanded = isExpanded,
-                    onExpandChanged = { isExpanded = it },
-                    expandableContent = {
-                        GroupWeightsContent(state.assignmentGroups)
-                    },
-                )
+        if (state.assignmentGroups.isNotEmpty()) {
+            item {
+                Column {
+                    CollapsableContentCard(
+                        title = stringResource(
+                            R.string.averageScoreHeader,
+                            state.currentScore.orEmpty()
+                        ),
+                        expandableSubtitle = stringResource(R.string.assignmentGroupWeights),
+                        expanded = isExpanded,
+                        onExpandChanged = { isExpanded = it },
+                        expandableContent = {
+                            GroupWeightsContent(state.assignmentGroups)
+                        },
+                    )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
         }
 

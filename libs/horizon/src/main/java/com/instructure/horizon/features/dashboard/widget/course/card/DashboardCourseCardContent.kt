@@ -225,7 +225,7 @@ private fun CourseImage(
         GlideImage(
             state.imageUrl,
             contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             requestBuilderTransform = {
                 it.addListener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
