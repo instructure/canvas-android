@@ -18,11 +18,14 @@ package com.instructure.horizon.horizonui.foundation
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.semantics
 
 fun Modifier.offlineDisabled(disabled: Boolean): Modifier {
     if (!disabled) return this
     return this
         .alpha(0.38f)
+        .semantics { disabled() }
         .pointerInput(Unit) {
             awaitPointerEventScope {
                 while (true) {
