@@ -66,6 +66,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
+import com.instructure.pandautils.compose.composables.ShimmerBox
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
@@ -75,6 +76,8 @@ import com.instructure.pandautils.utils.color
 import sdk.pendo.io.pendoTag
 
 internal val COURSE_CARD_HEIGHT = 76.dp
+
+private const val MAX_ANNOUNCEMENT_BADGE_COUNT = 99
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -254,7 +257,17 @@ fun CourseCard(
                     )
                 }
 
-                if (courseCard.announcements.isNotEmpty()) {
+                if (courseCard.announcementsLoading) {
+                    Box(
+                        modifier = Modifier.size(48.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ShimmerBox(
+                            modifier = Modifier.size(24.dp),
+                            shape = CircleShape
+                        )
+                    }
+                } else if (courseCard.announcements.isNotEmpty()) {
                     Box(
                         modifier = Modifier
                             .clip(CircleShape)
@@ -282,7 +295,11 @@ fun CourseCard(
                                 .padding(horizontal = 5.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = courseCard.announcements.size.toString(),
+                                text = if (courseCard.announcements.size > MAX_ANNOUNCEMENT_BADGE_COUNT) {
+                                    "$MAX_ANNOUNCEMENT_BADGE_COUNT+"
+                                } else {
+                                    courseCard.announcements.size.toString()
+                                },
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = colorResource(R.color.textLightest),
@@ -426,6 +443,31 @@ private fun CourseCardPreview() {
         onCourseClick = { },
         onCustomizeCourse = { },
         onManageOfflineContent = { },
+        onAnnouncementClick = { }
+    )
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CourseCardAnnouncementsLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CourseCard(
+        courseCard = CourseCardItem(
+            id = 2L,
+            name = "Introduction to Computer Science",
+            courseCode = "CS 101",
+            imageUrl = null,
+            grade = GradeDisplay.Percentage("85%"),
+            announcements = emptyList(),
+            announcementsLoading = true,
+            isSynced = false,
+            isClickable = true,
+            color = android.graphics.Color.BLUE
+        ),
+        showGrade = true,
+        showColorOverlay = false,
+        onCourseClick = { },
         onAnnouncementClick = { }
     )
 }

@@ -60,6 +60,8 @@ import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
+import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
@@ -122,12 +124,10 @@ class CoursesWidgetViewModelTest {
 
     private fun visibleCoursesResult(
         visibleCourses: List<Course> = emptyList(),
-        allCourses: List<Course> = visibleCourses,
-        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
+        allCourses: List<Course> = visibleCourses
     ) = LoadVisibleCoursesUseCase.Result(
         visibleCourses = visibleCourses,
-        allCourses = allCourses,
-        announcementsMap = announcementsMap
+        allCourses = allCourses
     )
 
     private fun setupDefaultMocks() {
@@ -661,25 +661,21 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `init loads announcements from graphql result`() {
+    fun `init loads announcements from background pass`() {
         setupDefaultMocks()
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
-        val announcements1 = listOf(
-            mockk<DiscussionTopicHeader>(relaxed = true)
-        )
+        val announcements1 = listOf(DiscussionTopicHeader(id = 10, announcement = true))
         val announcements2 = listOf(
-            mockk<DiscussionTopicHeader>(relaxed = true),
-            mockk<DiscussionTopicHeader>(relaxed = true)
+            DiscussionTopicHeader(id = 20, announcement = true),
+            DiscussionTopicHeader(id = 21, announcement = true)
         )
-        val announcementsMap = mapOf(1L to announcements1, 2L to announcements2)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
-            courses,
-            announcementsMap = announcementsMap
-        )
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } returns announcements1
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = false)) } returns announcements2
 
         viewModel = createViewModel()
 
@@ -712,13 +708,11 @@ class CoursesWidgetViewModelTest {
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
-        val announcement = mockk<DiscussionTopicHeader>(relaxed = true)
+        val announcement = DiscussionTopicHeader(id = 10, announcement = true)
         val announcements = listOf(announcement)
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(
-            courses,
-            announcementsMap = mapOf(1L to announcements)
-        )
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } returns announcements
 
         viewModel = createViewModel()
 
@@ -952,8 +946,10 @@ class CoursesWidgetViewModelTest {
         val initialAnnouncements = listOf(DiscussionTopicHeader(id = 10, announcement = true))
         val refreshedAnnouncements = listOf(DiscussionTopicHeader(id = 11, announcement = true))
 
-        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses, announcementsMap = mapOf(1L to initialAnnouncements))
-        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L)) } returns refreshedAnnouncements
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        // Background init pass is cache-honoring (forceNetwork = false); the reload broadcast forces a network refresh (forceNetwork = true).
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } returns initialAnnouncements
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = true)) } returns refreshedAnnouncements
 
         viewModel = createViewModel()
 
@@ -1266,6 +1262,199 @@ class CoursesWidgetViewModelTest {
         viewModel = createViewModel()
 
         verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `first state after load has isLoading false, non-empty courses, and announcementsLoading true when online`() = runTest {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val announcements1 = listOf(DiscussionTopicHeader(id = 10, announcement = true))
+        val announcements2 = listOf(DiscussionTopicHeader(id = 20, announcement = true))
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+
+        // Gate the announcements fetch so the background pass suspends before completing.
+        // With UnconfinedTestDispatcher the launched loadAnnouncements coroutine runs eagerly
+        // until it hits this suspension point, then yields — giving us a window to read the
+        // intermediate uiState before the second emission.
+        val gate = CompletableDeferred<Unit>()
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } coAnswers {
+            gate.await()
+            announcements1
+        }
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = false)) } coAnswers {
+            gate.await()
+            announcements2
+        }
+
+        viewModel = createViewModel()
+
+        // The announcements coroutine is suspended at gate.await() — verify INTERMEDIATE state:
+        // isLoading=false (first emission done), courses non-empty, announcementsLoading=true.
+        val intermediateState = viewModel.uiState.value
+        assertFalse(intermediateState.isLoading)
+        assertFalse(intermediateState.isError)
+        assertEquals(2, intermediateState.courses.size)
+        assertTrue(intermediateState.courses[0].announcementsLoading)
+        assertTrue(intermediateState.courses[1].announcementsLoading)
+        assertEquals(0, intermediateState.courses[0].announcements.size)
+        assertEquals(0, intermediateState.courses[1].announcements.size)
+
+        // Release the gate and let the background pass finish.
+        gate.complete(Unit)
+        advanceUntilIdle()
+
+        // Verify FINAL state: announcements populated, announcementsLoading=false.
+        val finalState = viewModel.uiState.value
+        assertFalse(finalState.isLoading)
+        assertFalse(finalState.isError)
+        assertEquals(1, finalState.courses[0].announcements.size)
+        assertEquals(10L, finalState.courses[0].announcements[0].id)
+        assertFalse(finalState.courses[0].announcementsLoading)
+        assertEquals(1, finalState.courses[1].announcements.size)
+        assertEquals(20L, finalState.courses[1].announcements[0].id)
+        assertFalse(finalState.courses[1].announcementsLoading)
+    }
+
+    @Test
+    fun `refresh cancels in-flight announcements job and final state reflects second pass data`() = runTest {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val staleAnnouncement = DiscussionTopicHeader(id = 99, announcement = true)
+        val freshAnnouncement1 = listOf(DiscussionTopicHeader(id = 100, announcement = true))
+        val freshAnnouncement2 = listOf(DiscussionTopicHeader(id = 200, announcement = true))
+
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+
+        // First pass: gate so the announcements coroutine suspends and can be cancelled.
+        val firstPassGate = CompletableDeferred<Unit>()
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } coAnswers {
+            firstPassGate.await()
+            listOf(staleAnnouncement)
+        }
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = false)) } coAnswers {
+            firstPassGate.await()
+            listOf(staleAnnouncement)
+        }
+
+        viewModel = createViewModel()
+
+        // At this point the first-pass announcements job is suspended at firstPassGate.await().
+        // Reconfigure the mock to return fresh data for the second pass, then trigger refresh().
+        // refresh() calls loadData() which calls loadAnnouncements() which cancels the old job.
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = true)) } returns freshAnnouncement1
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = true)) } returns freshAnnouncement2
+
+        viewModel.refresh()
+        advanceUntilIdle()
+
+        // The second (fresh) pass has completed. Now release the first-pass gate: if the stale
+        // job was correctly cancelled, its coroutine never resumes and cannot overwrite state.
+        // If announcementsJob?.cancel() were missing, the resumed stale pass would emit id 99
+        // here and clobber the fresh data — making the assertions below fail.
+        firstPassGate.complete(Unit)
+        advanceUntilIdle()
+
+        // The stale job was cancelled; the second pass's fresh data survives.
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertFalse(state.isError)
+        assertFalse(state.courses[0].announcementsLoading)
+        assertFalse(state.courses[1].announcementsLoading)
+        // Fresh announcements win — stale id 99 must not appear.
+        assertEquals(1, state.courses[0].announcements.size)
+        assertEquals(100L, state.courses[0].announcements[0].id)
+        assertEquals(1, state.courses[1].announcements.size)
+        assertEquals(200L, state.courses[1].announcements[0].id)
+    }
+
+    @Test
+    fun `after background announcements pass, courses have announcements populated and announcementsLoading false`() = runTest {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val announcements1 = listOf(DiscussionTopicHeader(id = 10, announcement = true))
+        val announcements2 = listOf(
+            DiscussionTopicHeader(id = 20, announcement = true),
+            DiscussionTopicHeader(id = 21, announcement = true)
+        )
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) } returns announcements1
+        coEvery { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = false)) } returns announcements2
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isLoading)
+        assertFalse(state.isError)
+        assertEquals(1, state.courses[0].announcements.size)
+        assertEquals(10L, state.courses[0].announcements[0].id)
+        assertFalse(state.courses[0].announcementsLoading)
+        assertEquals(2, state.courses[1].announcements.size)
+        assertFalse(state.courses[1].announcementsLoading)
+    }
+
+    @Test
+    fun `loadCourseAnnouncementsUseCase is called once per visible course`() = runTest {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true),
+            Course(id = 3, name = "Course 3", isFavorite = true)
+        )
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
+
+        viewModel = createViewModel()
+
+        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(1L, forceNetwork = false)) }
+        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(2L, forceNetwork = false)) }
+        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(3L, forceNetwork = false)) }
+    }
+
+    @Test
+    fun `background announcements failure does not set isError`() = runTest {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+        // Per-course failures are absorbed by runCatching inside loadAnnouncements, yielding empty list
+        coEvery { loadCourseAnnouncementsUseCase(any()) } throws RuntimeException("Announcements fetch failed")
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isError)
+        assertFalse(state.isLoading)
+        assertEquals(1, state.courses.size)
+        // announcementsLoading is cleared to false after background pass completes
+        assertFalse(state.courses[0].announcementsLoading)
+        // announcements list is empty because the fetch failed and fell back to default
+        assertEquals(0, state.courses[0].announcements.size)
+    }
+
+    @Test
+    fun `announcements are not loaded when offline`() = runTest {
+        setupDefaultMocks()
+        every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
+        val courses = listOf(Course(id = 1, name = "Course 1", isFavorite = true))
+        coEvery { loadVisibleCoursesUseCase(any()) } returns visibleCoursesResult(courses)
+
+        viewModel = createViewModel()
+
+        // loadCourseAnnouncementsUseCase should not be called for the background pass when offline
+        coVerify(exactly = 0) { loadCourseAnnouncementsUseCase(any()) }
+        // announcementsLoading should be false (never set to true when offline)
+        assertFalse(viewModel.uiState.value.courses[0].announcementsLoading)
     }
 
     private fun createViewModel(): CoursesWidgetViewModel {
