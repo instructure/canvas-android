@@ -20,9 +20,12 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
@@ -47,6 +50,8 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertTrue
+import java.util.Date
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -160,6 +165,84 @@ class ModuleItemSequenceViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         coVerify { hasUnreadCommentsUseCase(match { it.assignmentId == 123L }) }
+    }
+
+    @Test
+    fun `Score tag is shown when the current assignment is graded`() = runTest {
+        every { context.getString(R.string.attemptCard_score, any<String>(), any<String>()) } answers {
+            val varargs = args[1] as Array<*>
+            "Score: ${varargs[0]}/${varargs[1]}"
+        }
+        every { context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, any(), any()) } answers {
+            val varargs = args[2] as Array<*>
+            "${varargs[0]} points possible"
+        }
+        val gradedItem = testModuleItem.copy(
+            moduleDetails = ModuleContentDetails(pointsPossible = "100")
+        )
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(testModule.copy(items = listOf(gradedItem)))
+        coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(
+            id = 1L,
+            pointsPossible = 100.0,
+            submission = Submission(
+                grade = "A",
+                score = 85.0,
+                workflowState = "graded",
+                postedAt = Date()
+            )
+        )
+
+        val viewModel = getViewModel(savedStateHandle)
+
+        val tags = viewModel.uiState.value.currentItem?.detailTags.orEmpty()
+        assertTrue("Expected score tag, was $tags", tags.any { it == "Score: 85/100" })
+        assertFalse("Score should replace points possible, was $tags", tags.any { it.contains("points possible") })
+    }
+
+    @Test
+    fun `Points possible tag is shown when the assignment is not graded yet`() = runTest {
+        every { context.getString(R.string.attemptCard_score, any<String>(), any<String>()) } answers {
+            val varargs = args[1] as Array<*>
+            "Score: ${varargs[0]}/${varargs[1]}"
+        }
+        every { context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, any(), any()) } answers {
+            val varargs = args[2] as Array<*>
+            "${varargs[0]} points possible"
+        }
+        val ungradedItem = testModuleItem.copy(
+            moduleDetails = ModuleContentDetails(pointsPossible = "100")
+        )
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(testModule.copy(items = listOf(ungradedItem)))
+        coEvery { getAssignmentDetailsUseCase(any()) } returns Assignment(
+            id = 1L,
+            pointsPossible = 100.0,
+            submission = Submission(grade = "A", score = 85.0, workflowState = "graded", postedAt = null)
+        )
+
+        val viewModel = getViewModel(savedStateHandle)
+
+        val tags = viewModel.uiState.value.currentItem?.detailTags.orEmpty()
+        assertTrue("Expected points possible tag, was $tags", tags.any { it == "100 points possible" })
+        assertFalse("Score tag should not appear, was $tags", tags.any { it.startsWith("Score:") })
+    }
+
+    @Test
+    fun `Points possible tag is shown for non-assignment items`() = runTest {
+        every { context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, any(), any()) } answers {
+            val varargs = args[2] as Array<*>
+            "${varargs[0]} points possible"
+        }
+        val pageItem = testModuleItem.copy(
+            type = "Page",
+            moduleDetails = ModuleContentDetails(pointsPossible = "100")
+        )
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(testModule.copy(items = listOf(pageItem)))
+
+        val viewModel = getViewModel(savedStateHandle)
+
+        val tags = viewModel.uiState.value.currentItem?.detailTags.orEmpty()
+        assertTrue("Expected points possible tag, was $tags", tags.any { it == "100 points possible" })
+        assertFalse("Score tag should not appear, was $tags", tags.any { it.startsWith("Score:") })
     }
 
     private fun getViewModel(savedStateHandle: SavedStateHandle): ModuleItemSequenceViewModel {

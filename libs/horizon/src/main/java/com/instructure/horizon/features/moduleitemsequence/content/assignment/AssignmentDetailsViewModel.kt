@@ -35,6 +35,7 @@ import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
+import com.instructure.horizon.util.formatScore
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -46,7 +47,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -369,15 +369,6 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun List<Submission>.lastGradedOrSubmitted(): Submission? {
         return filter { it.workflowState == "graded" || it.workflowState == "submitted" }
             .maxByOrNull { it.attempt }
-    }
-
-    private fun formatScore(value: Double): String {
-        val formatter = NumberFormat.getNumberInstance().apply {
-            maximumFractionDigits = 2
-            minimumFractionDigits = 0
-            isGroupingUsed = false
-        }
-        return formatter.format(value)
     }
 
     private fun onAssignmentUpdatedForAddSubmission() {

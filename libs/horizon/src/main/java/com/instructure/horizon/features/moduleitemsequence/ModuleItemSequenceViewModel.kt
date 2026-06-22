@@ -52,6 +52,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.offline.HorizonOfflineState
 import androidx.lifecycle.ViewModel
+import com.instructure.horizon.util.formatScore
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import com.instructure.pandautils.utils.orDefault
@@ -198,8 +199,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
-                val currentAttempts = if (it.id == moduleItemId) attempts else null
-                createModuleItemUiState(it, modules, currentAttempts)
+                val isCurrent = it.id == moduleItemId
+                val currentAttempts = if (isCurrent) attempts else null
+                val currentAssignment = if (isCurrent) assignment else null
+                createModuleItemUiState(it, modules, currentAttempts, currentAssignment)
             }
 
         val progressPages = modules.map { createProgressPage(it) }
@@ -243,7 +246,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private fun createModuleItemUiState(item: ModuleItem, modules: List<ModuleObject>, attempts: String?): ModuleItemUiState? {
+    private fun createModuleItemUiState(
+        item: ModuleItem,
+        modules: List<ModuleObject>,
+        attempts: String?,
+        assignment: Assignment?
+    ): ModuleItemUiState? {
         val moduleItemContent: ModuleItemContent? = when {
             item.isLocked() -> ModuleItemContent.Locked(
                 item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked)
@@ -299,13 +307,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
             moduleItemName = item.title.orEmpty(),
             moduleItemId = item.id,
             moduleItemContent = moduleItemContent,
-            detailTags = createDetailTags(item, attempts),
+            detailTags = createDetailTags(item, attempts, assignment),
             pillText = createPillText(item),
             markAsDoneUiState = markDoneUiState
         )
     }
 
-    private fun createDetailTags(item: ModuleItem, attempts: String?): List<String> {
+    private fun createDetailTags(item: ModuleItem, attempts: String?, assignment: Assignment?): List<String> {
         val detailTags = mutableListOf<String>()
         item.estimatedDuration?.let {
             detailTags.add(it.formatIsoDuration(context))
@@ -313,9 +321,19 @@ class ModuleItemSequenceViewModel @Inject constructor(
         item.moduleDetails?.dueDate?.let {
             detailTags.add(context.getString(R.string.modulePager_dueDate, it.localisedFormatMonthDay()))
         }
-        item.moduleDetails?.pointsPossible?.let {
-            val points = it.toDoubleOrNull()?.toInt() ?: 0
-            detailTags.add(context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, points, points))
+        if (assignment != null && assignment.isGraded()) {
+            detailTags.add(
+                context.getString(
+                    R.string.attemptCard_score,
+                    formatScore(assignment.submission?.score.orDefault()),
+                    formatScore(assignment.pointsPossible)
+                )
+            )
+        } else {
+            item.moduleDetails?.pointsPossible?.let {
+                val points = it.toDoubleOrNull()?.toInt() ?: 0
+                detailTags.add(context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, points, points))
+            }
         }
         attempts?.let {
             detailTags.add(it)
@@ -378,7 +396,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(
                     moduleItem,
                     modules,
-                    attempts
+                    attempts,
+                    assignment
                 ) else it
             }
             val currentItem = getCurrentItem(items = newItems)
@@ -451,8 +470,14 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val attempts = getAttemptCount(assignment)
             val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
+            val currentReloadModuleItemId = currentModuleItem?.id
             val items = modules
-                .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
+                .flatMap { it.items }.mapNotNull {
+                    val isCurrent = it.id == currentReloadModuleItemId
+                    val currentAttempts = if (isCurrent) attempts else null
+                    val currentAssignment = if (isCurrent) assignment else null
+                    createModuleItemUiState(it, modules, currentAttempts, currentAssignment)
+                }
 
             val progressPages = modules.map { createProgressPage(it) }
 
