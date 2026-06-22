@@ -38,6 +38,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsMana
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.canvasapi2.models.ModuleCompletionRequirement
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.espresso.HorizonTest
 import dagger.hilt.android.testing.BindValue
@@ -100,8 +102,19 @@ class HorizonDashboardInteractionTest: HorizonTest() {
         val course2 = data.courses.values.toList()[1]
         val module1 = data.addModuleToCourse(course1, "Module 0")
         val module2 = data.addModuleToCourse(course2, "Module 1")
-        val moduleItem1 = data.addItemToModule(course1, module1.id, Page(title = "Module Item 1"))
-        val moduleItem2 = data.addItemToModule(course2, module2.id, Page(title = "Module Item 2"))
+        val incompleteRequirement = ModuleCompletionRequirement(type = ModuleItem.MUST_VIEW, completed = false)
+        val moduleItem1 = data.addItemToModule(
+            course1,
+            module1.id,
+            Page(title = "Module Item 1"),
+            completionRequirement = incompleteRequirement,
+        )
+        val moduleItem2 = data.addItemToModule(
+            course2,
+            module2.id,
+            Page(title = "Module Item 2"),
+            completionRequirement = incompleteRequirement,
+        )
         val student = data.students.first()
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)

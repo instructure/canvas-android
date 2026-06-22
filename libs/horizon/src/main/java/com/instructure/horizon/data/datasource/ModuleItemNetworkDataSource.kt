@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.horizon.model.DashboardNextModuleItem
 import com.instructure.horizon.model.LearningObjectType
 import okhttp3.ResponseBody
@@ -31,14 +32,25 @@ class ModuleItemNetworkDataSource @Inject constructor(
 ) {
 
     suspend fun getNextModuleItemForCourse(courseId: Long, forceRefresh: Boolean): DashboardNextModuleItem? {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        val params = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = forceRefresh,
+        )
         val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,
             params,
             includes = listOf("estimated_durations"),
-        ).dataOrThrow
-        val item = modules.flatMap { it.items }.firstOrNull() ?: return null
+        ).depaginate { moduleApi.getNextPageModuleObjectList(it, params) }.dataOrThrow
+
+        val item = modules.firstNotNullOfOrNull { module ->
+            module.items.firstOrNull { it.completionRequirement?.completed == false }
+                ?: if (module.itemCount > module.items.size) {
+                    getAllModuleItems(courseId, module.id, params)
+                        .firstOrNull { it.completionRequirement?.completed == false }
+                } else null
+        } ?: return null
+
         return DashboardNextModuleItem(
             moduleItemId = item.id,
             courseId = courseId,
@@ -49,6 +61,20 @@ class ModuleItemNetworkDataSource @Inject constructor(
             estimatedDuration = item.estimatedDuration,
             isQuizLti = item.quizLti,
         )
+    }
+
+    private suspend fun getAllModuleItems(
+        courseId: Long,
+        moduleId: Long,
+        params: RestParams,
+    ): List<ModuleItem> {
+        return moduleApi.getFirstPageModuleItems(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            params,
+            includes = listOf("estimated_durations"),
+        ).depaginate { moduleApi.getNextPageModuleItemList(it, params) }.dataOrThrow
     }
 
     suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
