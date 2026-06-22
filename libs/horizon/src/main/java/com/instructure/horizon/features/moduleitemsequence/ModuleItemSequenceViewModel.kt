@@ -23,12 +23,15 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
@@ -37,6 +40,7 @@ import com.instructure.horizon.domain.usecase.HasUnreadCommentsUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsDoneUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsNotDoneUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsReadUseCase
+import com.instructure.horizon.domain.usecase.SyncCourseProgressUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -83,6 +87,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val aiAssistContextProvider: AiAssistContextProvider,
     private val dashboardEventHandler: DashboardEventHandler,
     private val learnEventHandler: LearnEventHandler,
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+    private val syncCourseProgressUseCase: SyncCourseProgressUseCase,
     savedStateHandle: SavedStateHandle,
     private val offlineState: HorizonOfflineState,
 ) : ViewModel() {
@@ -94,6 +100,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val showMyProgressButton = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().showMyProgressButton
 
     private var courseProgressChanged = false
+    private var courseProgressSyncTriggered = false
 
     private val _uiState =
         MutableStateFlow(
@@ -683,6 +690,23 @@ class ModuleItemSequenceViewModel @Inject constructor(
         viewModelScope.launch {
             dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
             learnEventHandler.postEvent(LearnEvent.RefreshCourseProgress)
+            syncCourseProgressIfNeeded()
+        }
+    }
+
+    private suspend fun syncCourseProgressIfNeeded() {
+        if (courseProgressSyncTriggered) return
+        val course = try {
+            getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(courseId, forceRefresh = true))
+        } catch (e: Exception) {
+            return
+        }
+
+        if (course.progress < 100.0) return
+
+        val result = syncCourseProgressUseCase(courseId)
+        if (result is DataResult.Success) {
+            courseProgressSyncTriggered = true
         }
     }
 }

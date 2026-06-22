@@ -19,14 +19,19 @@ package com.instructure.horizon.features.moduleitemsequence
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleContentDetails
+import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.horizon.R
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
 import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
 import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
@@ -35,6 +40,7 @@ import com.instructure.horizon.domain.usecase.HasUnreadCommentsUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsDoneUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsNotDoneUseCase
 import com.instructure.horizon.domain.usecase.MarkModuleItemAsReadUseCase
+import com.instructure.horizon.domain.usecase.SyncCourseProgressUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
@@ -50,6 +56,7 @@ import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
+import okhttp3.ResponseBody
 import junit.framework.TestCase.assertTrue
 import java.util.Date
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +83,8 @@ class ModuleItemSequenceViewModelTest {
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase = mockk(relaxed = true)
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase = mockk(relaxed = true)
+    private val syncCourseProgressUseCase: SyncCourseProgressUseCase = mockk(relaxed = true)
     private val offlineState: HorizonOfflineState = mockk(relaxed = true)
     private val isOfflineFlow = MutableStateFlow(false)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
@@ -91,6 +100,23 @@ class ModuleItemSequenceViewModelTest {
         title = "Test Item",
         moduleId = 1L,
         type = "Assignment"
+    )
+
+    private val markDoneModuleItem = ModuleItem(
+        id = moduleItemId,
+        title = "Mark-Done Item",
+        moduleId = 1L,
+        type = "Assignment",
+        completionRequirement = ModuleCompletionRequirement(
+            type = ModuleItem.MUST_MARK_DONE,
+            completed = false,
+        ),
+    )
+
+    private val markDoneTestModule = ModuleObject(
+        id = 1L,
+        name = "Test Module",
+        items = listOf(markDoneModuleItem),
     )
 
     private val testModule = ModuleObject(
@@ -166,7 +192,6 @@ class ModuleItemSequenceViewModelTest {
 
         coVerify { hasUnreadCommentsUseCase(match { it.assignmentId == 123L }) }
     }
-
     @Test
     fun `Score tag is shown when the current assignment is graded`() = runTest {
         every { context.getString(R.string.attemptCard_score, any<String>(), any<String>()) } answers {
@@ -245,6 +270,93 @@ class ModuleItemSequenceViewModelTest {
         assertFalse("Score tag should not appear, was $tags", tags.any { it.startsWith("Score:") })
     }
 
+
+    @Test
+    fun `syncCourseProgress is called once when mark-done brings course to 100 percent`() = runTest {
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(markDoneTestModule)
+        coEvery { getModuleItemUseCase(any()) } returns markDoneModuleItem
+        coEvery { markModuleItemAsDoneUseCase(any()) } returns DataResult.Success(mockk<ResponseBody>(relaxed = true))
+        coEvery { getCourseDetailsUseCase(any()) } returns CourseWithProgress(
+            courseId = courseId,
+            courseName = "Course",
+            courseImageUrl = null,
+            courseSyllabus = null,
+            progress = 100.0,
+        )
+        coEvery { syncCourseProgressUseCase(any()) } returns DataResult.Success(Unit)
+
+        val viewModel = getViewModel(savedStateHandle)
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+
+        coVerify(exactly = 1) { syncCourseProgressUseCase(courseId) }
+    }
+
+    @Test
+    fun `syncCourseProgress is not called when course progress stays below 100 percent`() = runTest {
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(markDoneTestModule)
+        coEvery { getModuleItemUseCase(any()) } returns markDoneModuleItem
+        coEvery { markModuleItemAsDoneUseCase(any()) } returns DataResult.Success(mockk<ResponseBody>(relaxed = true))
+        coEvery { getCourseDetailsUseCase(any()) } returns CourseWithProgress(
+            courseId = courseId,
+            courseName = "Course",
+            courseImageUrl = null,
+            courseSyllabus = null,
+            progress = 50.0,
+        )
+
+        val viewModel = getViewModel(savedStateHandle)
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+
+        coVerify(exactly = 0) { syncCourseProgressUseCase(any()) }
+    }
+
+    @Test
+    fun `syncCourseProgress is called only once across repeated 100 percent completions in the same session`() = runTest {
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(markDoneTestModule)
+        coEvery { getModuleItemUseCase(any()) } returns markDoneModuleItem
+        coEvery { markModuleItemAsDoneUseCase(any()) } returns DataResult.Success(mockk<ResponseBody>(relaxed = true))
+        coEvery { getCourseDetailsUseCase(any()) } returns CourseWithProgress(
+            courseId = courseId,
+            courseName = "Course",
+            courseImageUrl = null,
+            courseSyllabus = null,
+            progress = 100.0,
+        )
+        coEvery { syncCourseProgressUseCase(any()) } returns DataResult.Success(Unit)
+
+        val viewModel = getViewModel(savedStateHandle)
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+
+        coVerify(exactly = 1) { syncCourseProgressUseCase(courseId) }
+    }
+
+    @Test
+    fun `syncCourseProgress is not called when course progress fetch fails`() = runTest {
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(markDoneTestModule)
+        coEvery { getModuleItemUseCase(any()) } returns markDoneModuleItem
+        coEvery { markModuleItemAsDoneUseCase(any()) } returns DataResult.Success(mockk<ResponseBody>(relaxed = true))
+        coEvery { getCourseDetailsUseCase(any()) } throws RuntimeException("network error")
+
+        val viewModel = getViewModel(savedStateHandle)
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+
+        coVerify(exactly = 0) { syncCourseProgressUseCase(any()) }
+    }
+
+    @Test
+    fun `syncCourseProgress is not called when mark-done itself fails`() = runTest {
+        coEvery { getModulesWithItemsUseCase(any()) } returns listOf(markDoneTestModule)
+        coEvery { getModuleItemUseCase(any()) } returns markDoneModuleItem
+        coEvery { markModuleItemAsDoneUseCase(any()) } returns DataResult.Fail(Failure.Network("nope"))
+
+        val viewModel = getViewModel(savedStateHandle)
+        viewModel.uiState.value.currentItem?.markAsDoneUiState?.onMarkAsDoneClick?.invoke()
+
+        coVerify(exactly = 0) { getCourseDetailsUseCase(any()) }
+        coVerify(exactly = 0) { syncCourseProgressUseCase(any()) }
+    }
+
     private fun getViewModel(savedStateHandle: SavedStateHandle): ModuleItemSequenceViewModel {
         return ModuleItemSequenceViewModel(
             context,
@@ -261,6 +373,8 @@ class ModuleItemSequenceViewModelTest {
             aiAssistContextProvider,
             dashboardEventHandler,
             learnEventHandler,
+            getCourseDetailsUseCase,
+            syncCourseProgressUseCase,
             savedStateHandle,
             offlineState
         )
