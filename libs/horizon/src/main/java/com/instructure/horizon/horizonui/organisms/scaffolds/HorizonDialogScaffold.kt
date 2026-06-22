@@ -16,11 +16,12 @@
  */
 package com.instructure.horizon.horizonui.organisms.scaffolds
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -65,22 +66,22 @@ fun HorizonDialogScaffold(
         statusBarColor = statusBarColor,
         navigationBarColor = navigationBarColor,
         containerColor = containerColor,
-        topBar = { paddingValues ->
+        topBar = {
             HorizonDialogScaffoldTopBar(
-                title,
-                onDismiss,
-                Modifier.padding(paddingValues)
+                title = title,
+                onDismiss = onDismiss,
+                applyStatusBarInset = statusBarColor != null
             )
         },
-        bottomBar = { paddingValues ->
+        bottomBar = {
             HorizonDialogScaffoldBottomBar(
-                confirmLabel,
-                dismissLabel,
-                isConfirmButtonLoading,
-                confirmColor,
-                onConfirm,
-                onDismiss,
-                Modifier.padding(paddingValues)
+                confirmLabel = confirmLabel,
+                dismissLabel = dismissLabel,
+                isConfirmButtonLoading = isConfirmButtonLoading,
+                confirmColor = confirmColor,
+                onConfirm = onConfirm,
+                onDismiss = onDismiss,
+                applyNavigationBarInset = navigationBarColor != null
             )
         }
     ) { contentPadding ->
@@ -93,10 +94,11 @@ fun HorizonDialogScaffold(
 private fun HorizonDialogScaffoldTopBar(
     title: String,
     onDismiss: () -> Unit,
+    applyStatusBarInset: Boolean,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
-        windowInsets = WindowInsets.zeroScreenInsets,
+        windowInsets = if (applyStatusBarInset) WindowInsets.statusBars else WindowInsets.zeroScreenInsets,
         title = {
             Text(
                 text = title,
@@ -123,10 +125,10 @@ private fun HorizonDialogScaffoldTopBar(
         ),
         modifier = modifier
             .horizonBorder(
-                HorizonColors.LineAndBorder.lineStroke(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
                 bottom = 1.dp
             )
-            .background(HorizonColors.Surface.pageSecondary())
     )
 }
 
@@ -138,18 +140,19 @@ private fun HorizonDialogScaffoldBottomBar(
     confirmColor: ButtonColor,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
+    applyNavigationBarInset: Boolean,
     modifier: Modifier = Modifier
 ) {
     BottomAppBar(
-        windowInsets = WindowInsets.zeroScreenInsets,
+        windowInsets = if (applyNavigationBarInset) WindowInsets.navigationBars else WindowInsets.zeroScreenInsets,
         contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
         containerColor = HorizonColors.Surface.pageSecondary(),
         modifier = modifier
             .horizonBorder(
-                HorizonColors.LineAndBorder.lineStroke(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
                 top = 1.dp
             )
-            .background(HorizonColors.Surface.pageSecondary())
     ) {
         Button(
             label = dismissLabel,

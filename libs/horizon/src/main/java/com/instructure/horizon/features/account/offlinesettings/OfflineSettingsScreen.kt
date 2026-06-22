@@ -154,6 +154,7 @@ private fun WifiOnlyDisableConfirmationDialog(
         dismissLabel = stringResource(R.string.offline_wifiOnlyDisableConfirmationCancel),
         onDismiss = onDismiss,
         navigationBarColor = null,
+        statusBarColor = HorizonColors.Surface.pageSecondary()
     ) { contentPadding ->
         Text(
             text = stringResource(R.string.offline_wifiOnlyDisableConfirmationDescription),

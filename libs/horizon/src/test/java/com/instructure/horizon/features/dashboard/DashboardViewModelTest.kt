@@ -157,12 +157,12 @@ class DashboardViewModelTest {
             UnreadNotificationCount(type = "Message", count = 3, unreadCount = 4),
             UnreadNotificationCount(type = "Conversation", count = 1, unreadCount = 2),
         )
-        coEvery { repository.getUnreadCounts(any()) } returns updatedCounts
+        coEvery { getUnreadCountsUseCase(any()) } returns updatedCounts
 
         dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh)
         testScheduler.advanceUntilIdle()
 
-        coVerify(atLeast = 2) { repository.getUnreadCounts(true) }
+        coVerify(atLeast = 2) { getUnreadCountsUseCase(true) }
         val state = viewModel.uiState.value
         assertEquals(4, state.unreadCountState.unreadNotifications)
         assertEquals(2, state.unreadCountState.unreadConversations)

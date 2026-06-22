@@ -84,6 +84,7 @@ private fun ConfirmationDialogView(
         confirmColor = ButtonColor.Danger,
         dismissLabel = stringResource(R.string.offline_removeSyncedContentCancel),
         navigationBarColor = null,
+        statusBarColor = HorizonColors.Surface.pageSecondary(),
         onDismiss = { navController.popBackStack() },
     ) { contentPadding ->
         Column(

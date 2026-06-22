@@ -96,11 +96,13 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
                 observer.cancel()
             }
 
-            if (!isStopped) {
-                showCompletionNotification(plans.size)
+            val finalStates = plans.map { plan ->
+                courseSyncPlanDao.findByCourseId(plan.courseId)?.state ?: HorizonProgressState.ERROR
             }
-            val allFailed = plans.all { plan ->
-                courseSyncPlanDao.findByCourseId(plan.courseId)?.state == HorizonProgressState.ERROR
+            val isSuccess = finalStates.none { it == HorizonProgressState.ERROR }
+            val allFailed = finalStates.all { it == HorizonProgressState.ERROR }
+            if (!isStopped) {
+                showCompletionNotification(plans.size, isSuccess)
             }
             if (!isStopped && allFailed && runAttemptCount < MAX_RETRY_ATTEMPTS) {
                 Result.retry()
@@ -118,7 +120,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
                 Result.retry()
             } else {
                 if (!isStopped) {
-                    showCompletionNotification(plans.size)
+                    showCompletionNotification(plans.size, isSuccess = false)
                 }
                 Result.success()
             }
@@ -147,12 +149,9 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
         }
     }
 
-    private fun showCompletionNotification(courseCount: Int) {
+    private fun showCompletionNotification(courseCount: Int, isSuccess: Boolean) {
         if (courseCount == 0) return
         createNotificationChannel()
-
-        val state = aggregateProgressObserver.progressData.value
-        val isSuccess = state.progressState == HorizonProgressState.COMPLETED
 
         val title = if (isSuccess) {
             context.getString(R.string.offline_syncNotificationComplete)

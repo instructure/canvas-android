@@ -290,7 +290,11 @@ private fun SelectingBottomBar(uiState: ManageOfflineContentUiState, scrollState
         modifier = Modifier
             .fillMaxWidth()
             .conditional(scrollState.canScrollForward) {
-                horizonBorderShadow(color = HorizonColors.LineAndBorder.lineStroke(), top = 1.dp)
+                horizonBorderShadow(
+                    color = HorizonColors.LineAndBorder.lineStroke(),
+                    backgroundColor = HorizonColors.Surface.pageSecondary(),
+                    top = 1.dp,
+                )
             }
             .background(HorizonColors.Surface.pageSecondary())
             .padding(horizontal = 16.dp, vertical = 16.dp)
@@ -334,11 +338,13 @@ private fun CourseRow(course: OfflineCourseItemUiState, enabled: Boolean = true)
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 76.dp)
                 .wrapContentHeight()
-                .triStateToggleable(
-                    state = toggleableState,
-                    role = Role.Checkbox,
-                    onClick = { course.onOfflineStateChanged(nextOfflineState) },
-                ),
+                .conditional(enabled) {
+                    triStateToggleable(
+                        state = toggleableState,
+                        role = Role.Checkbox,
+                        onClick = { course.onOfflineStateChanged(nextOfflineState) },
+                    )
+                },
         ) {
             HorizonSpace(SpaceSize.SPACE_24)
             TriStateCheckboxItem(
@@ -407,7 +413,7 @@ private fun FileRow(file: OfflineFileItemUiState, enabled: Boolean = true) {
         .fillMaxWidth()
         .defaultMinSize(minHeight = 76.dp)
         .wrapContentHeight()
-        .conditional(!file.isLocked) {
+        .conditional(enabled && !file.isLocked) {
             toggleable(
                 value = file.isSelected,
                 role = Role.Checkbox,

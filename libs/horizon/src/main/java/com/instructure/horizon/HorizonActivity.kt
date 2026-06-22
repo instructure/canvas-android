@@ -113,6 +113,7 @@ class HorizonActivity : BaseCanvasActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        setIntent(intent)
         if (hasLocalNotificationLink(intent.extras) ||
             hasUnreadPushNotification(intent.extras)
         ) {
