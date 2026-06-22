@@ -43,6 +43,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
@@ -401,29 +403,48 @@ private fun CourseRow(course: OfflineCourseItemUiState, enabled: Boolean = true)
 
 @Composable
 private fun FileRow(file: OfflineFileItemUiState, enabled: Boolean = true) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .defaultMinSize(minHeight = 76.dp)
-            .wrapContentHeight()
-            .toggleable(
+    val rowModifier = Modifier
+        .fillMaxWidth()
+        .defaultMinSize(minHeight = 76.dp)
+        .wrapContentHeight()
+        .conditional(!file.isLocked) {
+            toggleable(
                 value = file.isSelected,
                 role = Role.Checkbox,
                 onValueChange = file.onSelectionChanged,
-            ),
+            )
+        }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = rowModifier,
     ) {
-        CheckboxItem(
-            state = CheckboxItemState(
-                controlsContentState = ControlsContentState(title = ""),
-                checked = file.isSelected,
-                enabled = enabled,
-                onCheckedChanged = file.onSelectionChanged,
-            ),
-            modifier = Modifier
-                .width(68.dp)
-                .padding(start = 48.dp),
-        )
+        if (file.isLocked) {
+            Box(
+                modifier = Modifier
+                    .width(68.dp)
+                    .padding(start = 48.dp),
+                contentAlignment = Alignment.CenterStart,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.lock),
+                    contentDescription = stringResource(R.string.a11y_locked),
+                    tint = HorizonColors.Icon.medium(),
+                    modifier = Modifier.size(20.dp),
+                )
+            }
+        } else {
+            CheckboxItem(
+                state = CheckboxItemState(
+                    controlsContentState = ControlsContentState(title = ""),
+                    checked = file.isSelected,
+                    enabled = enabled,
+                    onCheckedChanged = file.onSelectionChanged,
+                ),
+                modifier = Modifier
+                    .width(68.dp)
+                    .padding(start = 48.dp),
+            )
+        }
         Column(
             verticalArrangement = Arrangement.spacedBy(2.dp),
             modifier = Modifier
@@ -433,7 +454,7 @@ private fun FileRow(file: OfflineFileItemUiState, enabled: Boolean = true) {
             Text(
                 text = file.fileName,
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
+                color = if (file.isLocked) HorizonColors.Text.timestamp() else HorizonColors.Text.body(),
             )
             Text(
                 text = Formatter.formatShortFileSize(LocalContext.current, file.fileSize),
@@ -463,6 +484,7 @@ private fun ManageOfflineContentScreenPreview() {
                     files = listOf(
                         OfflineFileItemUiState(1L, "Chapter 1.pdf", 12L * 1024 * 1024, isSelected = true),
                         OfflineFileItemUiState(2L, "Chapter 2.pdf", 8L * 1024 * 1024, isSelected = false),
+                        OfflineFileItemUiState(3L, "Chapter 3.pdf", 5L * 1024 * 1024, isLocked = true),
                     ),
                 ),
                 OfflineCourseItemUiState(

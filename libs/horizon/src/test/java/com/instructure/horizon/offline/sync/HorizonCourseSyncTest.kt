@@ -15,6 +15,8 @@
  */
 package com.instructure.horizon.offline.sync
 
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonDashboardEnrollmentDao

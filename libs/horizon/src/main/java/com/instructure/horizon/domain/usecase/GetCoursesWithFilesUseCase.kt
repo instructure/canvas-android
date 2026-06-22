@@ -25,6 +25,7 @@ data class CourseFileData(
     val displayName: String,
     val size: Long,
     val isSynced: Boolean,
+    val isLocked: Boolean,
 )
 
 data class CourseWithFilesData(
@@ -53,6 +54,7 @@ class GetCoursesWithFilesUseCase @Inject constructor(
                         displayName = file.displayName,
                         size = file.sizeBytes,
                         isSynced = file.fileId in syncedIds,
+                        isLocked = file.isLocked,
                     )
                 }
             )

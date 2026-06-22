@@ -115,17 +115,19 @@ class ManageOfflineContentViewModel @Inject constructor(
             val courses = coursesWithFiles.map { courseData ->
                 val courseWasPreviouslySynced = courseData.courseId in previouslySelectedCourseIds
                 val files = courseData.files.map { file ->
-                    val fileSelected = file.isSynced || file.fileId in previouslySelectedFileIds
+                    val fileSelected = !file.isLocked && (file.isSynced || file.fileId in previouslySelectedFileIds)
                     OfflineFileItemUiState(
                         fileId = file.fileId,
                         fileName = file.displayName,
                         fileSize = file.size,
                         isSelected = fileSelected,
+                        isLocked = file.isLocked,
                         onSelectionChanged = { selected -> updateFileSelection(courseData.courseId, file.fileId, selected) },
                     )
                 }
-                val anyFileSelected = files.any { it.isSelected }
-                val allFilesSelected = files.isNotEmpty() && files.all { it.isSelected }
+                val selectableFiles = files.filterNot { it.isLocked }
+                val anyFileSelected = selectableFiles.any { it.isSelected }
+                val allFilesSelected = selectableFiles.isNotEmpty() && selectableFiles.all { it.isSelected }
                 OfflineCourseItemUiState(
                     courseId = courseData.courseId,
                     courseName = courseData.courseName,
@@ -229,7 +231,9 @@ class ManageOfflineContentViewModel @Inject constructor(
                 courses = state.courses.map { course ->
                     course.copy(
                         offlineState = targetState,
-                        files = course.files.map { it.copy(isSelected = targetSelected) },
+                        files = course.files.map { file ->
+                            if (file.isLocked) file else file.copy(isSelected = targetSelected)
+                        },
                     )
                 }
             )
@@ -254,7 +258,9 @@ class ManageOfflineContentViewModel @Inject constructor(
                         val selected = offlineState != CourseOfflineState.NONE
                         course.copy(
                             offlineState = offlineState,
-                            files = course.files.map { it.copy(isSelected = selected) },
+                            files = course.files.map { file ->
+                                if (file.isLocked) file else file.copy(isSelected = selected)
+                            },
                         )
                     } else course
                 }
@@ -267,11 +273,14 @@ class ManageOfflineContentViewModel @Inject constructor(
             state.copy(
                 courses = state.courses.map { course ->
                     if (course.courseId == courseId) {
+                        val targetFile = course.files.firstOrNull { it.fileId == fileId }
+                        if (targetFile?.isLocked == true) return@map course
                         val updatedFiles = course.files.map { file ->
                             if (file.fileId == fileId) file.copy(isSelected = selected) else file
                         }
-                        val allSelected = updatedFiles.all { it.isSelected }
-                        val noneSelected = updatedFiles.none { it.isSelected }
+                        val selectableFiles = updatedFiles.filterNot { it.isLocked }
+                        val allSelected = selectableFiles.isNotEmpty() && selectableFiles.all { it.isSelected }
+                        val noneSelected = selectableFiles.none { it.isSelected }
                         course.copy(
                             files = updatedFiles,
                             offlineState = when {

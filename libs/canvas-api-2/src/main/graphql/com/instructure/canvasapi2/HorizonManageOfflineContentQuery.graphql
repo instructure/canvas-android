@@ -20,6 +20,9 @@ query HorizonManageOfflineContent($id: ID!) {
                                             mimeClass
                                             title
                                             url
+                                            locked
+                                            lockAt
+                                            unlockAt
                                         }
                                     }
                                 }

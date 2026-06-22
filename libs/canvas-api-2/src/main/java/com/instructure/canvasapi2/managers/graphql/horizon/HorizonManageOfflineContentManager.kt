@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.HorizonManageOfflineContentQuery
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import java.util.Date
 
 data class OfflineCourseWithFiles(
     val courseId: Long,
@@ -31,6 +32,7 @@ data class OfflineFile(
     val fileId: Long,
     val displayName: String,
     val sizeBytes: Long,
+    val isLocked: Boolean,
 )
 
 interface HorizonManageOfflineContentManager {
@@ -47,6 +49,7 @@ class HorizonManageOfflineContentManagerImpl(
             val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
             val enrollments = result.legacyNode?.onUser?.enrollments.orEmpty()
 
+            val now = Date()
             val courses = enrollments.mapNotNull { enrollment ->
                 val course = enrollment?.course ?: return@mapNotNull null
                 val courseId = course._id.toLongOrNull() ?: return@mapNotNull null
@@ -62,6 +65,7 @@ class HorizonManageOfflineContentManagerImpl(
                             fileId = fileId,
                             displayName = file.displayName.orEmpty(),
                             sizeBytes = (file.sizeBytes ?: 0).toLong(),
+                            isLocked = isFileLocked(file.locked, file.lockAt, file.unlockAt, file.url, now),
                         )
                     }
                     .distinctBy { it.fileId }
@@ -77,5 +81,13 @@ class HorizonManageOfflineContentManagerImpl(
         } catch (e: Exception) {
             DataResult.Fail(Failure.Exception(e))
         }
+    }
+
+    private fun isFileLocked(locked: Boolean?, lockAt: Date?, unlockAt: Date?, url: String?, now: Date): Boolean {
+        if (url.isNullOrBlank()) return true
+        if (locked == true) return true
+        if (lockAt != null && lockAt.before(now)) return true
+        if (unlockAt != null && unlockAt.after(now)) return true
+        return false
     }
 }

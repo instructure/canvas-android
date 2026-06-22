@@ -156,6 +156,11 @@ class HorizonFileSyncRepository @Inject constructor(
             RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         ).dataOrNull ?: return null
 
+        if (file.isLockedForUser || file.isLocked || file.url.isNullOrBlank()) {
+            fileSyncPlanDao.updateProgress(fileId, courseId, 100, HorizonProgressState.COMPLETED)
+            return null
+        }
+
         val url = file.url ?: return null
         val displayName = file.displayName ?: return null
 
