@@ -21,7 +21,6 @@ package com.instructure.student.ui.utils.extensions
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -334,7 +333,7 @@ fun uploadTextFile(
 
     // Create the file
     val file = File(
-            Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+            Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
             .apply { createNewFile() }
 
     // Add contents to file

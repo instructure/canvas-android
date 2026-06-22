@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.e2e.classic
 
-import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.media3.ui.R
@@ -108,7 +107,7 @@ class FilesE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Create a discussion attachment file.")
         val discussionAttachmentFile = File(
-                Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+                Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
                 .apply { createNewFile() }
 
         Log.d(STEP_TAG, "Add some random content to the '${discussionAttachmentFile.name}' file.")

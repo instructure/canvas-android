@@ -56,7 +56,7 @@ class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     fun assertEntryDisplayed(entryMessage: String) {
-        onWebView().check(webContent(hasElementWithXpath("//span[text()='$entryMessage']")))
+        onWebView(withId(R.id.discussionWebView)).check(webContent(hasElementWithXpath("//*[normalize-space(text())='$entryMessage']")))
     }
 
     fun assertModulesToolbarDiscussionTitle(discussionTitle: String) {
@@ -92,7 +92,7 @@ class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
         waitForWebElement(
             webViewMatcher = withId(R.id.discussionWebView),
             locator = Locator.XPATH,
-            value = "//span[text()='$entryMessage']",
+            value = "//*[normalize-space(text())='$entryMessage']",
             timeoutMillis = 10000,
             intervalMillis = 500
         )
