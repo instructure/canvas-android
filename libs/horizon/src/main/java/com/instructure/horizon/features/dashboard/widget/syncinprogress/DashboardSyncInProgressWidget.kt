@@ -76,7 +76,7 @@ fun DashboardSyncInProgressWidget(
                 .build()
             navController.navigate(deepLink, navOptions)
         },
-        onClose = onDismiss,
+        onClose = if (progressState == HorizonProgressState.IN_PROGRESS || progressState == HorizonProgressState.PENDING) null else onDismiss,
         modifier = modifier,
     ) {
         Column {

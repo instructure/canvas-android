@@ -23,6 +23,7 @@ import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.HorizonActivity
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.loginapi.login.CANVAS_FOR_ELEMENTARY
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -41,12 +42,18 @@ import com.instructure.student.widget.todo.ToDoWidgetReceiver
 class StudentLoginNavigation(
     private val activity: FragmentActivity,
     private val databaseProvider: DatabaseProvider,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val horizonDatabaseProvider: HorizonDatabaseProvider,
 ) : LoginNavigation(activity) {
     override val checkElementary: Boolean = true
 
     override fun logout() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
+        StudentLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            databaseProvider = databaseProvider,
+            alarmScheduler = alarmScheduler,
+            horizonDatabaseProvider = horizonDatabaseProvider,
+        ).execute()
     }
 
     override fun initMainActivityIntent(experience: Experience): Intent {

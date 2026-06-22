@@ -99,16 +99,19 @@ class OfflineSettingsViewModel @Inject constructor(
     }
 
     private fun onAutoSyncToggled(enabled: Boolean) {
+        if (_uiState.value.autoSyncEnabled == enabled) return
         _uiState.update { it.copy(autoSyncEnabled = enabled) }
         emitPending()
     }
 
     private fun onSyncFrequencySelected(frequency: SyncFrequency) {
+        if (_uiState.value.syncFrequency == frequency) return
         _uiState.update { it.copy(syncFrequency = frequency) }
         emitPending()
     }
 
     private fun onWifiOnlyToggled(enabled: Boolean) {
+        if (_uiState.value.wifiOnlyEnabled == enabled) return
         if (enabled) {
             _uiState.update { it.copy(wifiOnlyEnabled = true) }
             emitPending()

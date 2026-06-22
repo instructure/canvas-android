@@ -212,6 +212,7 @@ class ManageOfflineContentViewModel @Inject constructor(
         )
 
         syncHelper.syncCoursesNow(selectedCourses.map { it.courseId })
+        syncHelper.applyPeriodicSchedule()
         return true
     }
 

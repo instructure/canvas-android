@@ -780,6 +780,7 @@
     <string name="offline_syncStatusSyncing">Syncing</string>
     <string name="offline_syncCompleted">%1$s downloaded successfully</string>
     <string name="offline_syncError">Some files could not be downloaded</string>
+    <string name="offline_syncWaiting">Waiting to sync</string>
     <string name="offline_emptyCoursesTitle">No courses available</string>
     <string name="offline_emptyCoursesMessage">You aren\'t enrolled in any courses that can be made available offline.</string>
     <string name="offline_loadingCourses">Loading courses…</string>

@@ -54,6 +54,7 @@ class HorizonAggregateProgressObserver @Inject constructor(
     private val fileSyncPlanDaoProvider: Provider<HorizonFileSyncPlanDao>,
     @ApplicationContext private val context: Context,
     databaseProvider: HorizonDatabaseProvider,
+    private val syncHelper: HorizonOfflineSyncHelper,
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
@@ -71,8 +72,9 @@ class HorizonAggregateProgressObserver @Inject constructor(
             combine(
                 courseSyncPlanDaoProvider.get().findAllFlow().distinctUntilChanged(),
                 fileSyncPlanDaoProvider.get().findAllFlow().distinctUntilChanged(),
-            ) { courses, files ->
-                calculateProgress(courses, files)
+                syncHelper.isRunning().distinctUntilChanged(),
+            ) { courses, files, workerRunning ->
+                calculateProgress(courses, files, workerRunning)
             }
         }
         .stateIn(scope, SharingStarted.WhileSubscribed(5_000), HorizonSyncProgressData())
@@ -80,6 +82,7 @@ class HorizonAggregateProgressObserver @Inject constructor(
     private fun calculateProgress(
         courses: List<HorizonCourseSyncPlanEntity>,
         files: List<HorizonFileSyncPlanEntity>,
+        workerRunning: Boolean,
     ): HorizonSyncProgressData {
         if (courses.isEmpty()) return HorizonSyncProgressData()
 
@@ -96,6 +99,7 @@ class HorizonAggregateProgressObserver @Inject constructor(
 
         val allStates = courses.map { it.state }
         val allFinished = allStates.all { it.isFinished() }
+        val anyInProgress = allStates.any { it == HorizonProgressState.IN_PROGRESS }
         val anyRunning = allStates.any { it.isRunning() }
         val anyError = allStates.any { it == HorizonProgressState.ERROR }
 
@@ -106,12 +110,13 @@ class HorizonAggregateProgressObserver @Inject constructor(
             else -> HorizonProgressState.PENDING
         }
 
-        val progressLabel = when (progressState) {
-            HorizonProgressState.COMPLETED -> context.getString(
+        val progressLabel = when {
+            progressState == HorizonProgressState.COMPLETED -> context.getString(
                 R.string.offline_syncCompleted,
                 Formatter.formatShortFileSize(context, downloadedSize),
             )
-            HorizonProgressState.ERROR -> context.getString(R.string.offline_syncError)
+            progressState == HorizonProgressState.ERROR -> context.getString(R.string.offline_syncError)
+            !anyInProgress -> context.getString(R.string.offline_syncWaiting)
             else -> context.getString(R.string.offline_syncInProgress)
         }
 
@@ -120,7 +125,7 @@ class HorizonAggregateProgressObserver @Inject constructor(
             progress = progress.coerceIn(0f, 1f),
             progressLabel = progressLabel,
             courseCount = courses.size,
-            isActive = anyRunning,
+            isActive = workerRunning,
         )
     }
 }
