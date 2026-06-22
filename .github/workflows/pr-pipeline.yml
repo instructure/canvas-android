@@ -430,6 +430,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Student')
     needs: [student-test-apks, horizon-test-build]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -510,7 +515,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -572,6 +579,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Student')
     needs: [student-test-apks, horizon-test-build]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -652,7 +664,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -713,6 +727,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Parent')
     needs: [parent-test-apks, parent-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -798,7 +817,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -859,6 +880,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Parent')
     needs: [parent-test-apks, parent-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -941,7 +967,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1001,6 +1029,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Student')
     needs: [student-test-apks, student-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -1083,7 +1116,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1143,6 +1178,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Student')
     needs: [student-test-apks, student-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -1225,7 +1265,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1285,6 +1327,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Teacher')
     needs: [teacher-test-apks, teacher-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -1367,7 +1414,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1427,6 +1476,11 @@ jobs:
     if: contains(github.event.pull_request.body, 'Teacher')
     needs: [teacher-test-apks, teacher-unit-tests]
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -1509,7 +1563,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1599,6 +1655,11 @@ jobs:
       contains(github.event.pull_request.body, 'Teacher')
     needs: submodule-build-and-test
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -1670,7 +1731,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'
@@ -1704,6 +1767,11 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Download all test results
         uses: actions/download-artifact@v4
         with:

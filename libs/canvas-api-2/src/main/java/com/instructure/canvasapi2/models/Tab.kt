@@ -44,6 +44,8 @@ data class Tab(
 
     val isExternal: Boolean get() = type == TYPE_EXTERNAL
 
+    val isExternalNavMenuLink: Boolean get() = isExternal && ltiUrl.isBlank()
+
     // Domain strips off trailing slashes.
     val url: String
         get() {

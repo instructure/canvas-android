@@ -51,21 +51,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -80,7 +74,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -130,6 +123,7 @@ import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.OfflineAwareContent
 import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.OfflineContentState
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsingBarsNestedScrollConnection
 import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -266,32 +260,24 @@ private fun ModuleItemSequenceContent(
     modifier: Modifier = Modifier
 ) {
     val parentNavController = navController
-    val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
-        save = { it.value.appBarMaxHeight to it.value.appBarOffset },
-        restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
-    )
     val density = LocalDensity.current
-    var moduleHeaderHeight by rememberSaveable { mutableIntStateOf(0) }
-    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
+    val connection = rememberSaveable(saver = CollapsingBarsNestedScrollConnection.Saver) {
+        CollapsingBarsNestedScrollConnection()
+    }
+    // Body is padded down by the visible header height, so the connection should consume scroll
+    // for the full header range — otherwise the header collapses *and* the inner scrollable
+    // scrolls in the same gesture, giving a double-speed feel.
+    connection.topBodyFloorCollapsePx = connection.topBarMaxHeight
     val contentScrollState = rememberScrollState()
 
     Box(
         modifier = modifier
-            .nestedScroll(nestedScrollConnection)
+            .nestedScroll(connection)
     ) {
         Box(
             modifier = Modifier
-                .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
-                .onGloballyPositioned { coordinates ->
-                    if (coordinates.size.height != moduleHeaderHeight) {
-                        moduleHeaderHeight = coordinates.size.height
-                        val temp = nestedScrollConnection.appBarOffset
-                        nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply {
-                                appBarOffset = temp
-                            }
-                    }
-                }
+                .offset { IntOffset(0, connection.topBarOffset) }
+                .onGloballyPositioned { connection.topBarMaxHeight = it.size.height }
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
@@ -302,7 +288,9 @@ private fun ModuleItemSequenceContent(
                 onBackPressed = onBackPressed
             )
         }
-        var moduleHeaderHeight = max(0.dp, with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+        val moduleHeaderHeight = with(density) {
+            (connection.topBarMaxHeight + connection.topBarOffset).coerceAtLeast(0).toDp()
+        }
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -320,7 +308,7 @@ private fun ModuleItemSequenceContent(
                 var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
                     if (uiState.currentPosition != previousPosition) {
-                        nestedScrollConnection.appBarOffset = 0
+                        connection.topBarOffset = 0
                         previousPosition = uiState.currentPosition
                     }
                     contentScrollState.scrollTo(0)
@@ -663,22 +651,6 @@ private fun ModuleItemSequenceBottomBar(
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
-    }
-}
-
-private class CollapsingAppBarNestedScrollConnection(
-    val appBarMaxHeight: Int
-) : NestedScrollConnection {
-
-    var appBarOffset: Int by mutableIntStateOf(0)
-
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.y.toInt()
-        val newOffset = appBarOffset + delta
-        val previousOffset = appBarOffset
-        appBarOffset = newOffset.coerceIn(-appBarMaxHeight, 0)
-        val consumed = appBarOffset - previousOffset
-        return Offset(0f, consumed.toFloat())
     }
 }
 

@@ -134,6 +134,49 @@
                 app:layout_constraintTop_toBottomOf="@id/versionTitle"
                 tools:text="student1@gmail.com" />
 
+            <LinearLayout
+                android:id="@+id/openSourceRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/version">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/openSourceTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/aboutOpenSourceTitle"
+                        android:textColor="@color/textDarkest"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/openSourceSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/aboutOpenSourceSubtitle"
+                        android:textColor="@color/textDark"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/openSourceLinkIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/ic_external_link" />
+
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/instructureLogo"
                 android:layout_width="wrap_content"
@@ -143,7 +186,7 @@
                 android:src="@drawable/instructure_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/version" />
+                app:layout_constraintTop_toBottomOf="@id/openSourceRow" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

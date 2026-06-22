@@ -28,6 +28,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import com.instructure.instui.compose.indicator.Icon as InstUIIcon
+import com.instructure.instui.compose.text.Text as InstUIText
+import com.instructure.instui.token.component.InstUIHeading
+import com.instructure.instui.token.semantic.InstUILayoutSizes
+import com.instructure.instui.token.semantic.InstUISemanticColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,8 +51,6 @@ import androidx.compose.ui.unit.sp
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.container.Card as InstUICard
 import com.instructure.instui.compose.container.Elevation
-import com.instructure.instui.compose.list.ListItem
-import com.instructure.instui.compose.list.ListItemTrailing
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.lock
 import com.instructure.pandautils.R
@@ -66,33 +69,56 @@ fun GradesCardContent(
 ) {
     when (LocalDesignSystem.current) {
         DesignSystem.Legacy -> LegacyGradesCard(uiState, contextColor, shouldShowNewText, modifier)
-        DesignSystem.InstUI -> InstUIGradesCard(uiState, modifier)
+        DesignSystem.InstUI -> InstUIGradesCard(uiState, shouldShowNewText, modifier)
     }
 }
 
 @Composable
 private fun InstUIGradesCard(
     uiState: GradesUiState,
+    shouldShowNewText: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val whatIf = uiState.showWhatIfScore
+    val onlyGraded = uiState.onlyGradedAssignmentsSwitchEnabled
+    val showToggleLabel = shouldShowNewText && (onlyGraded || whatIf)
+    val title = when {
+        !showToggleLabel -> stringResource(id = R.string.gradesTotal)
+        whatIf && onlyGraded -> stringResource(id = R.string.gradesBasedOnGradedAndWhatIf)
+        whatIf -> stringResource(id = R.string.whatIfScoreLabel)
+        onlyGraded -> stringResource(id = R.string.gradesBasedOnGraded)
+        else -> stringResource(id = R.string.gradesTotal)
+    }
     InstUICard(
         elevation = Elevation.Level1,
         modifier = modifier.fillMaxWidth(),
     ) {
-        if (uiState.isGradeLocked) {
-            ListItem(
-                title = stringResource(id = R.string.gradeLockedContentDescription),
-                trailing = ListItemTrailing.Icons(
-                    icons = listOf(InstUIIcons.lock),
-                ),
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+            horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceLg.spaceLg),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            InstUIText(
+                text = if (uiState.isGradeLocked) {
+                    stringResource(id = R.string.gradeLockedContentDescription)
+                } else {
+                    title
+                },
+                style = InstUIHeading.titleCardMini,
+                color = InstUISemanticColors.Text.base(),
+                modifier = Modifier.weight(1f),
             )
-        } else {
-            ListItem(
-                title = stringResource(id = R.string.gradesTotal),
-                trailing = ListItemTrailing.TextOnly(
-                    value = uiState.gradeText,
-                ),
-            )
+            if (uiState.isGradeLocked) {
+                InstUIIcon(imageVector = InstUIIcons.lock)
+            } else {
+                InstUIText(
+                    text = uiState.gradeText,
+                    style = InstUIHeading.titleCardMini,
+                    color = InstUISemanticColors.Text.base(),
+                )
+            }
         }
     }
 }

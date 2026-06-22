@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.inbox.list
 
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
@@ -27,6 +28,11 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 interface InboxRouter {
 
     fun openConversation(conversation: Conversation, scope: InboxApi.Scope)
+
+    // Hook for app-specific edge-to-edge handling of the Inbox Snackbar position. No-op by default;
+    // apps whose host activity already positions the Snackbar's parent above the bottom bar can
+    // override this to consume the navigation bar insets and avoid an extra bottom margin.
+    fun adjustSnackbarForInsets(snackbar: Snackbar) = Unit
 
     fun attachNavigationIcon(toolbar: Toolbar)
 

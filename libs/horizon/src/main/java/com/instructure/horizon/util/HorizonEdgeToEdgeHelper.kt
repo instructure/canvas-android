@@ -22,18 +22,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsEndWidth
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.windowInsetsStartWidth
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.runtime.Composable
@@ -44,145 +46,117 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.unit.coerceAtLeast
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
+/**
+ * Paints translucent overlays over the system status bar and navigation bar so screens can render
+ * edge-to-edge while still showing system bar tinting that matches the screen's design.
+ *
+ * Side strips covering display cutouts are painted with `statusBarColor` (camera bumps live in the
+ * top region semantically). The light/dark appearance of the system bars is set from each color's
+ * luminance.
+ */
 @Composable
 fun HorizonEdgeToEdgeSystemBars(
     statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
     navigationBarColor: Color? = null,
-    modifier: Modifier = Modifier,
-    statusBarAlpha: Float = 0.8f,
-    navigationBarAlpha: Float = 0.8f,
-    content: @Composable (statusBarWindowInsets: WindowInsets, navigationBarWindowInsets: WindowInsets) -> Unit
+    statusBarAlpha: Float = DefaultBarAlpha,
+    navigationBarAlpha: Float = DefaultBarAlpha,
+    content: @Composable (statusBarInsets: WindowInsets, navigationBarInsets: WindowInsets) -> Unit,
 ) {
-    val statusBarWindowsInsets = if (statusBarColor != null) {
-        WindowInsets.statusBars
-    } else {
-        WindowInsets.zeroScreenInsets
+    val view = LocalView.current
+    SideEffect {
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
+        val controller = WindowCompat.getInsetsController(window, view)
+        statusBarColor?.let { controller.isAppearanceLightStatusBars = it.luminance() > 0.5f }
+        navigationBarColor?.let { controller.isAppearanceLightNavigationBars = it.luminance() > 0.5f }
     }
 
-    val navigationBarWindowsInsets = if (navigationBarColor != null) {
+    val statusBarInsets = if (statusBarColor != null) WindowInsets.statusBars else WindowInsets.zeroScreenInsets
+    val navigationBarInsets = if (navigationBarColor != null) {
         WindowInsets.navigationBars
     } else {
         WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
     }
-    val view = LocalView.current
-
-    SideEffect {
-        val window = (view.context as? Activity)?.window ?: return@SideEffect
-        val insetsController = WindowCompat.getInsetsController(window, view)
-
-        statusBarColor?.let { color ->
-            val isLight = color.luminance() > 0.5f
-            insetsController.isAppearanceLightStatusBars = isLight
-        }
-
-        navigationBarColor?.let { color ->
-            val isLight = color.luminance() > 0.5f
-            insetsController.isAppearanceLightNavigationBars = isLight
-        }
-    }
 
     Box {
-        content(statusBarWindowsInsets, navigationBarWindowsInsets)
+        content(statusBarInsets, navigationBarInsets)
+
+        // Side strips for display-cutout areas. Painted with statusBarColor (cutouts live in the
+        // "top" region semantically). Width = safeDrawing horizontal = max(navBars.start, cutout.start).
+        val sideStripColor = statusBarColor ?: navigationBarColor
+        val sideStripAlpha = if (statusBarColor != null) statusBarAlpha else navigationBarAlpha
+        Box(
+            Modifier
+                .align(Alignment.CenterStart)
+                .fillMaxHeight()
+                .windowInsetsStartWidth(WindowInsets.safeDrawing)
+                .background(sideStripColor?.copy(alpha = sideStripAlpha) ?: Color.Transparent)
+        )
+        Box(
+            Modifier
+                .align(Alignment.CenterEnd)
+                .fillMaxHeight()
+                .windowInsetsEndWidth(WindowInsets.safeDrawing)
+                .background(sideStripColor?.copy(alpha = sideStripAlpha) ?: Color.Transparent)
+        )
+
+        // Status bar overlay. Horizontal padding from `navigationBars` (not safeDrawing) so the
+        // overlay extends OVER a top-edge cutout corner — drawn after the side strips so the corner
+        // ends up the right color.
         statusBarColor?.let {
             Box(
-                modifier = modifier
+                Modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
                     .windowInsetsTopHeight(WindowInsets.statusBars)
-                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-                    .background(statusBarColor.copy(alpha = statusBarAlpha))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
+                    .background(it.copy(alpha = statusBarAlpha))
             )
         }
 
         navigationBarColor?.let {
             Box(
-                modifier = modifier
+                Modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .windowInsetsBottomHeight(WindowInsets.navigationBars)
-                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
-                    .background(navigationBarColor.copy(alpha = navigationBarAlpha))
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
+                    .background(it.copy(alpha = navigationBarAlpha))
             )
         }
-
-        Box(
-            modifier = modifier
-                .align(Alignment.CenterStart)
-                .fillMaxHeight()
-                .windowInsetsStartWidth(WindowInsets.navigationBars)
-                .background(navigationBarColor?.copy(alpha = navigationBarAlpha) ?: Color.Transparent)
-        )
-
-        Box(
-            modifier = modifier
-                .align(Alignment.CenterEnd)
-                .fillMaxHeight()
-                .windowInsetsEndWidth(WindowInsets.navigationBars)
-                .background(navigationBarColor?.copy(alpha = navigationBarAlpha) ?: Color.Transparent)
-        )
     }
 }
 
-private val WindowInsetsSides.Companion.BottomHorizontalSides: WindowInsetsSides
-    get() = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
+const val DefaultBarAlpha = 0.8f
 
-private val WindowInsetsSides.Companion.TopHorizontalSides: WindowInsetsSides
-    get() = WindowInsetsSides.Horizontal + WindowInsetsSides.Top
+/** Cutout + side nav horizontal extent; for keeping content clear of camera bumps and side nav. */
+val WindowInsets.Companion.horizontalSafeDrawing: WindowInsets
+    @Composable
+    get() = safeDrawing.only(WindowInsetsSides.Horizontal)
 
+/** System bars + display cutout, **without** IME — for bars that should stay under the keyboard. */
+val WindowInsets.Companion.staticBars: WindowInsets
+    @Composable
+    get() = systemBars.union(displayCutout)
+
+/** Zero-sized inset, useful as a conditional fallback when a colored overlay isn't desired. */
 val WindowInsets.Companion.zeroScreenInsets: WindowInsets
     get() = WindowInsets(0, 0, 0, 0)
 
+/** Used by SkillspaceScreen for a one-off top + horizontal safe-drawing area. */
 val WindowInsets.Companion.topHorizontalWindowInsets: WindowInsets
     @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.TopHorizontalSides)
-
-val WindowInsets.Companion.bottomHorizontalWindowInsets: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.BottomHorizontalSides)
-
-val WindowInsets.Companion.horizontalSafeDrawing: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal)
-
-val WindowInsets.Companion.verticalSafeDrawing: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
-
-val WindowInsets.Companion.topSafeDrawing: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
-
-val WindowInsets.Companion.bottomSafeDrawing: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-
-val WindowInsets.Companion.fullScreenInsets: WindowInsets
-    @Composable
-    get() = WindowInsets.safeDrawing
+    get() = safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
 
 @Composable
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
-        start = this.calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
-        top = this.calculateTopPadding() + other.calculateTopPadding(),
-        end = this.calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
-        bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
-    )
-}
-
-@Composable
-operator fun PaddingValues.minus(other: PaddingValues): PaddingValues {
-    val layoutDirection = LocalLayoutDirection.current
-    return PaddingValues(
-        start = (this.calculateStartPadding(layoutDirection) - other.calculateStartPadding(layoutDirection)).coerceAtLeast(0.dp),
-        top = (this.calculateTopPadding() - other.calculateTopPadding()).coerceAtLeast(0.dp),
-        end = (this.calculateEndPadding(layoutDirection) - other.calculateEndPadding(layoutDirection)).coerceAtLeast(0.dp),
-        bottom = (this.calculateBottomPadding() - other.calculateBottomPadding()).coerceAtLeast(0.dp)
+        start = calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
+        top = calculateTopPadding() + other.calculateTopPadding(),
+        end = calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
+        bottom = calculateBottomPadding() + other.calculateBottomPadding()
     )
 }

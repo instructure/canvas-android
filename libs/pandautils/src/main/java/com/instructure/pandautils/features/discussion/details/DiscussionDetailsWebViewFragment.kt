@@ -151,7 +151,12 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
                 if (isCanvasFileDownloadUrl(url)) {
                     fileDownloader.downloadFileToDevice(url, URLUtil.guessFileName(url, null, null), null)
                 } else if (url.contains("discussion_topics") || url.contains("announcements")) {
-                    binding.discussionWebView.loadUrl(url)
+                    val listType = discussionListRedirectType(url)
+                    if (listType != null) {
+                        handleDeletedFromWebView(listType)
+                    } else {
+                        binding.discussionWebView.loadUrl(url)
+                    }
                 } else if (url.contains("speed_grader")) {
                     val uri = url.toUri()
                     val assignmentId = uri.getQueryParameter("assignment_id")?.toLongOrNull() ?: 0
@@ -179,6 +184,17 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     private fun isCanvasFileDownloadUrl(url: String): Boolean {
         return url.contains("/files/") && url.contains("download_frd=1") && url.contains("verifier=")
+    }
+
+    // The topic was deleted inside the WebView and Canvas redirected to the list index. Confirm with
+    // a toast and pop back to the native list, which refreshes itself in onStop().
+    private fun handleDeletedFromWebView(listType: DiscussionListType) {
+        val messageRes = when (listType) {
+            DiscussionListType.ANNOUNCEMENT -> R.string.utils_announcementDeleted
+            DiscussionListType.DISCUSSION -> R.string.utils_discussionDeleted
+        }
+        Toast.makeText(requireContext(), messageRes, Toast.LENGTH_SHORT).show()
+        activity?.onBackPressed()
     }
 
     private fun setupImeInsets() {

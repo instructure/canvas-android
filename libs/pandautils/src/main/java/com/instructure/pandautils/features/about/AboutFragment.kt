@@ -18,6 +18,8 @@
 package com.instructure.pandautils.features.about
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +29,10 @@ import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.viewModels
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentAboutBinding
+import com.instructure.pandautils.utils.ThemePrefs
 import dagger.hilt.android.AndroidEntryPoint
+
+private const val OPEN_SOURCE_URL = "https://github.com/instructure/canvas-android"
 
 @AndroidEntryPoint
 class AboutFragment : BaseCanvasDialogFragment() {
@@ -51,6 +56,10 @@ class AboutFragment : BaseCanvasDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.openSourceLinkIcon.setColorFilter(ThemePrefs.buttonColor)
+        binding.openSourceRow.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(OPEN_SOURCE_URL)))
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

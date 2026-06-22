@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Nic jeszcze nie ogłoszono.</string>
     <string name="noCourses">Brak kursów</string>
     <string name="noCoursesSubtext">Wygląda na to, że nie ma kursów powiązanych z tym kontem. Odwiedź witrynę, aby utworzyć dzisiaj kurs.</string>
+    <string name="coursesWidgetEmptyTitle">Witamy w systemie Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Nie masz jeszcze aktywnych kursów, dlatego jest tu dość cicho. Gdy zapiszesz się na zajęcia, pulpit nawigacyjny zacznie wypełniać się nowymi aktywnościami.</string>
     <string name="noAssignments">Brak zadań</string>
     <string name="noAssignmentsSubtext">Wygląda na to, że w tej przestrzeni nie utworzono zadań. Pora wyjść na zewnątrz i zbadać teren.</string>
     <string name="noAssignmentsTeacher">Wygląda na to, że nie opublikowano jeszcze stron zadań.</string>
@@ -527,4 +529,15 @@
     <string name="gradePointsAccessibility">Ocena: %s punkty</string>
     <string name="gradePercentTextFieldAccessibility">Ocena: %d %. %s</string>
     <string name="gradePointsTextFieldAccessibility">Ocena: %s pkt, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Pomóż nam stworzyć lepszą aplikację</string>
+    <string name="cookieConsentDescription">Zbieramy anonimowe dane aplikacji, które pozwolą naszemu zespołowi wykryć problemy techniczne i zoptymalizować funkcje.</string>
+    <string name="cookieConsentNoProfiles">Bez profilów osobistych: Nie śledzimy Twojej tożsamości ani nie wyświetlamy reklam.</string>
+    <string name="cookieConsentNoSelling">Bez sprzedaży danych: Informacje użytkownika nie są nigdy sprzedawane stronom trzecim.</string>
+    <string name="cookieConsentFullControl">Pełna kontrola: Ustawienia te można dostosować w dowolnej chwili.</string>
+    <string name="cookieConsentAllow">Zezwól</string>
+    <string name="cookieConsentDecline">Odrzuć</string>
+    <string name="privacySettingsTitle">Ustawienia poufności</string>
+    <string name="privacySettingsToggleLabel">Anonimowa analiza aplikacji</string>
+    <string name="privacySettingsDescription">Udostępnij anonimowe dane wydajności aplikacji i użycia funkcji. Pomoże to nam naprawić błędy i ulepszyć ogólne wrażenia z używania aplikacji. Nie gromadzimy danych umożliwiających identyfikację osób.</string>
 </resources>

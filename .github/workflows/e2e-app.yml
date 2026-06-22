@@ -36,6 +36,11 @@ jobs:
     outputs:
       matrix-url: ${{ steps.capture-matrix-url.outputs.url }}
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -142,7 +147,9 @@ jobs:
 
       - name: Build scoped rerun config
         if: steps.detect.outputs.rerun == 'scoped'
-        run: python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
+        run: |
+          pip install --quiet pyyaml
+          python3 scripts/flank/build_rerun_flank.py ./flank.yml rerun-tests.txt > flank-rerun.yml
 
       - name: Rerun (scoped to failed tests)
         if: steps.detect.outputs.rerun == 'scoped'

@@ -150,6 +150,26 @@ class DashboardViewModelTest {
     }
 
     @Test
+    fun `NotificationsRefresh event refreshes unread counts without setting externalShouldRefresh`() = runTest {
+        val viewModel = getViewModel()
+
+        val updatedCounts = listOf(
+            UnreadNotificationCount(type = "Message", count = 3, unreadCount = 4),
+            UnreadNotificationCount(type = "Conversation", count = 1, unreadCount = 2),
+        )
+        coEvery { repository.getUnreadCounts(any()) } returns updatedCounts
+
+        dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh)
+        testScheduler.advanceUntilIdle()
+
+        coVerify(atLeast = 2) { repository.getUnreadCounts(true) }
+        val state = viewModel.uiState.value
+        assertEquals(4, state.unreadCountState.unreadNotifications)
+        assertEquals(2, state.unreadCountState.unreadConversations)
+        assertEquals(false, state.externalShouldRefresh)
+    }
+
+    @Test
     fun `ShowSnackbar event updates snackbar message in UI state`() = runTest {
         val viewModel = getViewModel()
 

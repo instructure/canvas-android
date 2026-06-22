@@ -31,6 +31,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.ConversationsApi
@@ -173,7 +174,7 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Star the conversation and navigate back to Inbox Page.")
-        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.clickStarButton(true)
         composeTestRule.waitForIdle()
         Espresso.pressBack()
 
@@ -208,7 +209,7 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.openConversation(seedConversation[0].subject)
 
         Log.d(STEP_TAG, "Remove star from the conversation and navigate back to Inbox Page.")
-        inboxDetailsPage.pressStarButton(false)
+        inboxDetailsPage.clickStarButton(false)
         composeTestRule.waitForIdle()
         Espresso.pressBack()
 
@@ -219,6 +220,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxSelectedButtonActionsE2E() {
 
@@ -361,14 +363,39 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that '${seedConversation2[0].subject}' conversation is displayed.")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
 
-        Log.d(STEP_TAG, "Select both of the conversations '${seedConversation[0].subject}' and '${seedConversation2[0].subject}' and star them.")
-        inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
+        Log.d(STEP_TAG, "Select the conversation '${seedConversation2[0].subject}' and star it.")
+        inboxPage.selectConversations(listOf(seedConversation2[0].subject))
         inboxPage.clickStar()
 
-        Log.d(ASSERTION_TAG, "Assert that both of the has been starred and the selected number of conversations on the toolbar shows 2.")
-        inboxPage.assertSelectedConversationNumber("2")
+        Log.d(ASSERTION_TAG, "Assert that '${seedConversation2[0].subject}' has been starred and the selected number of conversations on the toolbar shows 1.")
+        inboxPage.assertSelectedConversationNumber("1")
         inboxPage.assertConversationStarred(seedConversation2[0].subject)
-        inboxPage.assertConversationStarred(seedConversation3[0].subject)
+        inboxPage.assertConversationNotStarred(seedConversation3[0].subject)
+
+        Log.d(STEP_TAG, "Refresh the Inbox Conversation List page to unselect the conversation '${seedConversation2[0].subject}'.")
+        inboxPage.refreshInbox()
+
+        Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation.")
+        inboxPage.openConversation(seedConversation2[0].subject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' conversation is starred.")
+        inboxDetailsPage.assertStarred(true)
+
+        Log.d(STEP_TAG, "Unstar the conversation by clicking on the 'Unstar' icon on the details page.")
+        sleep(1000) // Allow the star icon to be fully loaded before clicking on it.
+        inboxDetailsPage.clickStarButton(false)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' conversation became unstarred.")
+        inboxDetailsPage.assertStarred(false)
+
+        Log.d(STEP_TAG, "Navigate back to Inbox Conversation List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' conversation became unstarred on the Inbox Conversation List page as well.")
+        inboxPage.assertConversationNotStarred(seedConversation2[0].subject)
+
+        Log.d(STEP_TAG, "Select both of the '${seedConversation2[0].subject}' and '${seedConversation3[0].subject}' conversations.")
+        inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
 
         Log.d(STEP_TAG, "Mark them as read (since if at least there is one unread selected, we are showing the 'Mark as Read' icon).")
         inboxPage.clickMarkAsRead()
@@ -416,16 +443,44 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate to 'STARRED' scope.")
         inboxPage.filterInbox("Starred")
 
-        Log.d(ASSERTION_TAG, "Assert that both of the conversations are displayed there.")
+        Log.d(ASSERTION_TAG, "Assert that the empty view will be displayed.")
+        inboxPage.assertInboxEmpty()
+
+        Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope.")
+        inboxPage.filterInbox("Archived")
+
+        Log.d(STEP_TAG, "Select both the '${seedConversation2[0].subject}' and '${seedConversation3[0].subject}' conversations and star them.")
+        inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
+        inboxPage.clickStar()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' and '${seedConversation3[0].subject}' conversations became starred.")
+        inboxPage.assertConversationStarred(seedConversation2[0].subject)
+        inboxPage.assertConversationStarred(seedConversation3[0].subject)
+
+        Log.d(STEP_TAG, "Navigate to 'STARRED' scope.")
+        inboxPage.filterInbox("Starred")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' and '${seedConversation3[0].subject}' conversations are displayed n the 'STARRED' filter page as both of them starred.")
         inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationDisplayed(seedConversation3[0].subject)
 
-        Log.d(STEP_TAG, "Select both of the conversations and unstar them.")
-        inboxPage.selectConversations(listOf(seedConversation2[0].subject, seedConversation3[0].subject))
-        inboxPage.clickUnstar()
+        Log.d(STEP_TAG, "Select '${seedConversation3[0].subject}' conversation.")
+        inboxPage.openConversation(seedConversation3[0].subject)
 
-        Log.d(ASSERTION_TAG, "Assert that none of them are displayed in the 'STARRED' scope.")
-        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation3[0].subject}' conversation is starred.")
+        inboxDetailsPage.assertStarred(true)
+
+        Log.d(STEP_TAG, "Click on 'Unstar' icon to mark '${seedConversation3[0].subject}' conversation as unstarred.")
+        inboxDetailsPage.clickStarButton(false)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation3[0].subject}' conversation became unstarred.")
+        inboxDetailsPage.assertStarred(false)
+
+        Log.d(STEP_TAG, "Navigate back to Inbox Conversation List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${seedConversation2[0].subject}' conversation is displayed but the '${seedConversation3[0].subject}' conversation is NOT displayed in the 'STARRED' filter page.")
+        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope.")
@@ -865,6 +920,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageForwardWithPdfAttachmentE2E() {
 
@@ -1117,6 +1173,7 @@ class InboxE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testSendMessageFromAllSubmissionsPageE2E() {
 

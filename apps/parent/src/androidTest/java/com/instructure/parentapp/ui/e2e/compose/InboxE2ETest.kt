@@ -30,6 +30,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
@@ -58,6 +59,7 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxSelectedButtonActionsE2E() {
 
@@ -93,7 +95,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.assertStarred(false)
 
         Log.d(STEP_TAG, "Toggle Starred to mark '${seededConversation.subject}' conversation as favourite.")
-        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.clickStarButton(true)
 
         Log.d(ASSERTION_TAG, "Assert that it has became starred.")
         inboxDetailsPage.assertStarred(true)
@@ -626,6 +628,7 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
 

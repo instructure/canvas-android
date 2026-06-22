@@ -114,6 +114,7 @@ class DashboardViewModel @Inject constructor(
                         _uiState.update { it.copy(externalShouldRefresh = true) }
                         refresh()
                     }
+                    is DashboardEvent.NotificationsRefresh -> refresh()
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
                     is DashboardEvent.DismissSyncWidget -> dismissSyncWidget()
                     else -> { /* No-op */ }

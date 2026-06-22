@@ -52,6 +52,7 @@ import com.instructure.pandautils.utils.ViewStyler
 @Composable
 fun CourseHomeScreen(
     onNavigateBack: () -> Unit,
+    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
     viewModel: CourseHomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,6 +61,7 @@ fun CourseHomeScreen(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
         onTabSelected = viewModel::onTabSelected,
+        onAssignmentClick = onAssignmentClick,
     )
 }
 
@@ -69,6 +71,7 @@ fun CourseHomeScreenContent(
     uiState: CourseHomeUiState,
     onNavigateBack: () -> Unit,
     onTabSelected: (CourseHomeTab) -> Unit,
+    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
 ) {
     if (uiState.isLoading) {
         val context = LocalContext.current
@@ -132,7 +135,11 @@ fun CourseHomeScreenContent(
                     scrollBehavior = scrollBehavior,
                 )
                 CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
-                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(courseId = uiState.courseId, modifier = Modifier.fillMaxSize())
+                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(
+                    courseId = uiState.courseId,
+                    onAssignmentClick = onAssignmentClick,
+                    modifier = Modifier.fillMaxSize(),
+                )
                 CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
             }
         }

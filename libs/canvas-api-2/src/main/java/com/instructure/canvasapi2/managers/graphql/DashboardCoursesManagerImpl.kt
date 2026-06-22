@@ -23,6 +23,9 @@ import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.utils.ApiPrefs
+
+private const val ANNOUNCEMENT_FETCH_CAP = 100
 
 class DashboardCoursesManagerImpl(
     private val apolloClient: ApolloClient
@@ -31,7 +34,9 @@ class DashboardCoursesManagerImpl(
     override suspend fun getDashboardCourses(
         forceNetwork: Boolean
     ): DashboardCoursesQuery.Data {
-        val query = DashboardCoursesQuery(pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE)
+        val query = DashboardCoursesQuery(
+            userId = currentUserId()
+        )
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
     }
 
@@ -39,21 +44,23 @@ class DashboardCoursesManagerImpl(
         courseId: Long,
         forceNetwork: Boolean
     ): DashboardSingleCourseQuery.Data {
-        val query = DashboardSingleCourseQuery(courseId = courseId.toString())
+        val query = DashboardSingleCourseQuery(
+            courseId = courseId.toString(),
+            userId = currentUserId()
+        )
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
     }
 
+    private fun currentUserId(): String = ApiPrefs.user?.id?.toString().orEmpty()
+
     override suspend fun getCourseAnnouncements(
         courseId: Long,
-        cursor: String?,
         forceNetwork: Boolean
     ): CourseAnnouncementsQuery.Data {
         val pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE
-        val initialCursor = if (cursor != null) Optional.present(cursor) else Optional.absent()
         val query = CourseAnnouncementsQuery(
             courseId = courseId.toString(),
-            pageSize = pageSize,
-            cursor = initialCursor
+            pageSize = pageSize
         )
         val initialData = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
 
@@ -62,7 +69,7 @@ class DashboardCoursesManagerImpl(
         var hasNextPage = course.announcements?.pageInfo?.hasNextPage == true
         var nextCursor = course.announcements?.pageInfo?.endCursor
 
-        while (hasNextPage) {
+        while (hasNextPage && allNodes.size < ANNOUNCEMENT_FETCH_CAP) {
             val paginatedQuery = CourseAnnouncementsQuery(
                 courseId = courseId.toString(),
                 pageSize = pageSize,
@@ -80,7 +87,7 @@ class DashboardCoursesManagerImpl(
             course = CourseAnnouncementsQuery.Course(
                 __typename = "Course",
                 onCourse = course.copy(
-                    announcements = course.announcements?.copy(nodes = allNodes)
+                    announcements = course.announcements?.copy(nodes = allNodes.take(ANNOUNCEMENT_FETCH_CAP))
                 )
             )
         )

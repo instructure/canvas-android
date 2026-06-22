@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.NotificationStreamItem
@@ -35,12 +37,14 @@ import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getNotificationStreamUseCase: GetNotificationStreamUseCase,
+    private val dashboardEventHandler: DashboardEventHandler,
     private val offlineState: HorizonOfflineState,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -49,6 +53,7 @@ class NotificationViewModel @Inject constructor(
                 onRefresh = ::refresh,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
+            onItemRead = ::markAsRead,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -113,12 +118,17 @@ class NotificationViewModel @Inject constructor(
 
     private fun NotificationStreamItem.toUiItem(): NotificationItem {
         return NotificationItem(
-            category = categoryLabel(),
-            title = displayTitle(),
+            id = this.id,
+            category = this.categoryLabel(),
+            title = this.displayTitle(),
             courseLabel = if (isCourseNotification) courseName else null,
-            date = updatedAt,
-            isRead = isRead,
-            deepLink = deepLink,
+            date = this.updatedAt,
+            isRead = this.isRead,
+            deepLink = if (this.assignmentHtmlUrl != null) {
+                this.assignmentHtmlUrl
+            } else {
+                this.htmlUrl
+            }
         )
     }
 
@@ -149,6 +159,21 @@ class NotificationViewModel @Inject constructor(
             context.getString(R.string.notificationsScoredItemTitle, title)
         } else {
             title
+        }
+    }
+
+    private fun markAsRead(id: Long) {
+        val item = _uiState.value.notificationItems.firstOrNull { it.id == id } ?: return
+        if (item.isRead) return
+        _uiState.update { state ->
+            state.copy(
+                notificationItems = state.notificationItems.map {
+                    if (it.id == id) it.copy(isRead = true) else it
+                }
+            )
+        }
+        viewModelScope.launch {
+            dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh)
         }
     }
 

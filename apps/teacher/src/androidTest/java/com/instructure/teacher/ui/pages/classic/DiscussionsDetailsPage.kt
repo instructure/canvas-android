@@ -60,8 +60,12 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
     }
 
     fun assertDiscussionEntryMessageDisplayed(entryMessage: String) {
-        Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$entryMessage']")))
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//*[normalize-space(text())='$entryMessage']",
+            timeoutMillis = 10000
+        )
     }
 
     fun assertReplyCounter(replyCount: Int) {
@@ -76,8 +80,8 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
     }
 
     fun assertReplyDisplayed(replyMessage: String) {
-        Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$replyMessage']")))
+        Web.onWebView(withId(R.id.discussionWebView))
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//*[normalize-space(text())='$replyMessage']")))
     }
 
 
@@ -96,7 +100,7 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
         waitForWebElement(
             webViewMatcher = withId(R.id.discussionWebView),
             locator = Locator.XPATH,
-            value = "//span[text()='$replyMessage']",
+            value = "//*[normalize-space(text())='$replyMessage']",
             timeoutMillis = 10000,
             intervalMillis = 500
         )

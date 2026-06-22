@@ -18,6 +18,8 @@ package com.instructure.pandautils.domain.usecase.courses
 
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.type.EnrollmentType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -88,6 +90,32 @@ class LoadSingleCourseUseCaseTest {
         assertEquals(88.0, enrollment?.currentScore)
     }
 
+    @Test
+    fun `defaultView modules is mapped to HOME_MODULES and routes to MODULES_ID`() = runTest {
+        val data = buildData(
+            onCourse(id = "1", name = "Course", dashboardCard = dashboardCard(defaultView = "modules"))
+        )
+        coEvery { dashboardCoursesManager.getSingleCourse(any(), any()) } returns data
+
+        val result = useCase(LoadSingleCourseUseCase.Params(courseId = 1))
+
+        assertEquals(Course.HomePage.HOME_MODULES, result.homePage)
+        assertEquals(Tab.MODULES_ID, result.homePageID)
+    }
+
+    @Test
+    fun `null defaultView maps to null homePage and routes to NOTIFICATIONS_ID`() = runTest {
+        val data = buildData(
+            onCourse(id = "1", name = "Course", dashboardCard = dashboardCard(defaultView = null))
+        )
+        coEvery { dashboardCoursesManager.getSingleCourse(any(), any()) } returns data
+
+        val result = useCase(LoadSingleCourseUseCase.Params(courseId = 1))
+
+        assertEquals(null, result.homePage)
+        assertEquals(Tab.NOTIFICATIONS_ID, result.homePageID)
+    }
+
     @Test(expected = IllegalStateException::class)
     fun `throws when course not found`() = runTest {
         val data = DashboardSingleCourseQuery.Data(course = null)
@@ -132,13 +160,15 @@ class LoadSingleCourseUseCaseTest {
     private fun dashboardCard(
         isFavorited: Boolean = false,
         position: Int? = null,
-        color: String? = null
+        color: String? = null,
+        defaultView: String? = null
     ): DashboardSingleCourseQuery.DashboardCard {
         return DashboardSingleCourseQuery.DashboardCard(
             isFavorited = isFavorited,
             position = position,
             color = color,
-            image = null
+            image = null,
+            defaultView = defaultView
         )
     }
 }

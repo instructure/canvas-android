@@ -18,11 +18,14 @@
 package com.instructure.pandautils.features.grades.strategy
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.GradesFilterUiState
 import com.instructure.pandautils.features.grades.GradesUiState
+import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 
 interface GradesExperienceStrategy {
 
@@ -46,4 +49,13 @@ interface GradesExperienceStrategy {
         uiState: GradesUiState,
         selected: AssignmentListSelectedFilters,
     ): GradesUiState = uiState
+
+    fun decorateGroupItems(
+        items: List<AssignmentGroupUiState>,
+        course: Course?,
+        domainGroups: List<AssignmentGroup>,
+        sortBy: SortBy,
+        onlyGraded: Boolean,
+        showWhatIfScore: Boolean,
+    ): List<AssignmentGroupUiState> = items
 }

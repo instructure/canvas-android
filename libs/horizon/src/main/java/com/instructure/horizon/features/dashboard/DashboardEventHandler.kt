@@ -25,6 +25,7 @@ sealed interface DashboardEvent {
     data object ProgressRefresh : DashboardEvent
     data object AnnouncementRefresh : DashboardEvent
     data object DismissSyncWidget : DashboardEvent
+    data object NotificationsRefresh : DashboardEvent
     data class ShowSnackbar(val message: String) : DashboardEvent
 }
 

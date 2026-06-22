@@ -21,8 +21,8 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.utils.parse
-import org.junit.Assert
 import org.intellij.lang.annotations.Language
+import org.junit.Assert
 import org.junit.Test
 
 class SubmissionUnitTest : Assert() {
@@ -102,7 +102,7 @@ class SubmissionUnitTest : Assert() {
             "hidden": false,
             "lock_at": null,
             "hidden_for_user": false,
-            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/32243761/websnappr20130418-12214-1gq3ocy_thumb.png?AWSAccessKeyId=AKIAJBQ7MOX3B5WFZGBA&Expires=1381963822&Signature=k%2FgYsnnQzqtkC7khLocgI%2BpkDxw%3D",
+            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/32243761/websnappr20130418-12214-1gq3ocy_thumb.png?AWSAccessKeyId=AKIA...REDACTED&Expires=1381963822&Signature=k%2FgYsnnQzqtkC7khLocgI%2BpkDxw%3D",
             "locked_for_user": false
           }
         ],

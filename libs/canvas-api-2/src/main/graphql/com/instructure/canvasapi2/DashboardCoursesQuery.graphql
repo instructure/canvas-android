@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query DashboardCoursesQuery($pageSize: Int!) {
+query DashboardCoursesQuery($userId: ID!) {
     allCourses {
         _id
         name
@@ -25,35 +25,18 @@ query DashboardCoursesQuery($pageSize: Int!) {
             position
             color
             image
+            defaultView
         }
-        enrollmentsConnection(first: 1) {
+        enrollmentsConnection(
+            first: 1
+            filter: { userIds: [$userId], types: [StudentEnrollment, ObserverEnrollment] }
+        ) {
             nodes {
                 _id
                 type
                 grades {
                     currentGrade
                     currentScore
-                }
-            }
-        }
-        announcements: discussionsConnection(
-            first: $pageSize
-            filter: { isAnnouncement: true }
-        ) {
-            pageInfo {
-                hasNextPage
-                endCursor
-            }
-            nodes {
-                _id
-                title
-                message
-                postedAt
-                participant {
-                    read
-                }
-                entryCounts {
-                    unreadCount
                 }
             }
         }

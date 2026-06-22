@@ -401,6 +401,8 @@ class MockCanvas {
 
     var offlineModeEnabled = false
 
+    var widgetDashboardEnabled = false
+
     var assignmentEnhancementsEnabled = true
 
     companion object {

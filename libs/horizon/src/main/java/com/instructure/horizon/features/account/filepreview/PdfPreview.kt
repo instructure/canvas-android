@@ -39,6 +39,7 @@ fun PdfPreview(
             PdfActivityConfiguration
                 .Builder(it)
                 .setUserInterfaceViewMode(userInterfaceViewMode)
+                .immersiveModeEnabled(false)
                 .scrollMode(PageScrollMode.CONTINUOUS)
                 .scrollDirection(PageScrollDirection.VERTICAL)
                 .build()

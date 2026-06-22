@@ -22,6 +22,9 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Surface
@@ -30,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.horizon.util.staticBars
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -96,6 +100,10 @@ fun HomeBottomNavigationBar(
         Surface(shadowElevation = HorizonElevation.level5) {
             NavigationBar(
                 containerColor = HorizonColors.Surface.pageSecondary(),
+                // System bars + display cutout, no IME — the bar should stay at screen bottom and
+                // hide behind the keyboard, not grow above it.
+                windowInsets = WindowInsets.staticBars
+                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
                 modifier = modifier
             ) {
                 bottomNavItems.forEach { item ->

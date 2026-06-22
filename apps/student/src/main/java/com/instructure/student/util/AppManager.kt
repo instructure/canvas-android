@@ -24,7 +24,6 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import com.instructure.canvasapi2.utils.ConsentPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -70,9 +69,7 @@ class AppManager : BaseAppManager() {
             ).execute()
         }
 
-        if (ConsentPrefs.currentUserConsent == true) {
-            schedulePandataUpload()
-        }
+        schedulePandataUpload()
     }
 
     override fun performLogoutOnAuthError() {

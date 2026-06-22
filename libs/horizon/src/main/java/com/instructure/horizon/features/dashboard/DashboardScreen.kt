@@ -86,6 +86,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.offlineDisabled
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
@@ -97,7 +98,6 @@ import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.zeroScreenInsets
-import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -148,18 +148,17 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         CollapsableHeaderScreen(
+            contentExtendsBehindStatusBar = true,
             statusBarColor = HorizonColors.Surface.pagePrimary(),
             modifier = Modifier.padding(innerPadding),
             headerContent = { paddingValues ->
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .conditional(scrollState.canScrollBackward) {
-                            shadow(
-                                elevation = HorizonElevation.level3,
-                                spotColor = Color.Transparent,
-                            )
-                        }
+                        .horizonTopBarShadow(
+                            scrollState = scrollState,
+                            backgroundColor = HorizonColors.Surface.pagePrimary(),
+                        )
                 ) {
                     DashboardTopBar(
                         uiState,

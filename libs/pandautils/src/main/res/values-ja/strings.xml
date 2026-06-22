@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">まだなにもアナウンスされていません</string>
     <string name="noCourses">コースなし</string>
     <string name="noCoursesSubtext">このアカウントに関連付けられているコースはないようです。今日コースを作成するには、ウェブをご覧ください。</string>
+    <string name="coursesWidgetEmptyTitle">Canvas へようこそ!</string>
+    <string name="coursesWidgetEmptyMessage">受講中のアクティブなコースはまだありません — \そのため、ここは少し静かです。クラスに登録すると、ダッシュボードに新しい活動が表示され始めます。</string>
     <string name="noAssignments">課題なし</string>
     <string name="noAssignmentsSubtext">このスペースには課題が作成されていないようです。外に出て探検する時間。</string>
     <string name="noAssignmentsTeacher">まだ課題が公開されていないようです。</string>
@@ -501,4 +503,15 @@
     <string name="gradePointsAccessibility">学年：%s 点</string>
     <string name="gradePercentTextFieldAccessibility">学年：%d パーセント、%s</string>
     <string name="gradePointsTextFieldAccessibility">評定：%s 点、%s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">より良いアプリ作りにご協力ください</string>
+    <string name="cookieConsentDescription">技術的な問題の特定やアプリ機能の最適化に役立てるため、匿名化されたアプリデータを収集しています。</string>
+    <string name="cookieConsentNoProfiles">個人プロファイルなし：ユーザーの身元を追跡したり、広告を表示したりすることはありません。</string>
+    <string name="cookieConsentNoSelling">データの販売なし：ユーザーの情報が第三者に販売されることはありません。</string>
+    <string name="cookieConsentFullControl">完全な管理：これらの設定はいつでも変更可能です。</string>
+    <string name="cookieConsentAllow">許可</string>
+    <string name="cookieConsentDecline">同意しない</string>
+    <string name="privacySettingsTitle">プライバシー設定</string>
+    <string name="privacySettingsToggleLabel">匿名アプリ分析</string>
+    <string name="privacySettingsDescription">アプリのパフォーマンスや機能の利用状況に関する匿名データを共有します。これにより、バグの修正やアプリ全体のユーザー体験の向上に役立ちます。個人を特定できる情報は収集しません。</string>
 </resources>

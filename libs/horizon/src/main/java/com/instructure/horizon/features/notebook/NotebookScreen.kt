@@ -69,7 +69,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorder
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -118,8 +118,8 @@ fun NotebookScreen(
     )
 
     CollapsableHeaderScreen(
-        statusBarColor = HorizonColors.Surface.pagePrimary(),
-        navigationBarColor = HorizonColors.Surface.cardPrimary(),
+        statusBarColor = if (state.showTopBar) HorizonColors.Surface.pagePrimary() else null,
+        navigationBarColor = if (state.showTopBar) HorizonColors.Surface.cardPrimary() else null,
         modifier = Modifier
             .background(HorizonColors.Surface.pagePrimary()),
         headerContent = { contentPadding ->
@@ -167,14 +167,11 @@ fun NotebookScreen(
                             state,
                             scrollState,
                             Modifier
-                                .background(HorizonColors.Surface.pagePrimary())
+                                .horizonTopBarShadow(
+                                    scrollState = scrollState,
+                                    backgroundColor = HorizonColors.Surface.pagePrimary(),
+                                )
                                 .clip(HorizonCornerRadius.level5)
-                                .conditional(scrollState.canScrollBackward) {
-                                    horizonBorderShadow(
-                                        HorizonColors.Surface.inversePrimary(),
-                                        bottom = 1.dp,
-                                    )
-                                }
                                 .background(HorizonColors.Surface.pageSecondary())
                         )
                     }
@@ -374,16 +371,13 @@ private fun NoteContent(
         modifier = Modifier
             .fillMaxWidth()
             .horizonBorder(
-                colorResource(note.type.highlightColor),
-                6.dp,
-                1.dp,
-                1.dp,
-                6.dp,
-                16.dp
-            )
-            .background(
-                color = HorizonColors.PrimitivesWhite.white10(),
-                shape = HorizonCornerRadius.level2,
+                color = colorResource(note.type.highlightColor),
+                backgroundColor = HorizonColors.PrimitivesWhite.white10(),
+                start = 6.dp,
+                top = 1.dp,
+                end = 1.dp,
+                bottom = 6.dp,
+                cornerRadius = 16.dp,
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { onClick() }
