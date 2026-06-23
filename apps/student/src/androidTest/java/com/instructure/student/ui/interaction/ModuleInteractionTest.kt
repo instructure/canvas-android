@@ -490,7 +490,7 @@ class ModuleInteractionTest : StudentComposeTest() {
             moduleProgressionPage.assertModuleTitle(module.name!!)
 
             // Make sure that the module item title is displayed
-            moduleProgressionPage.assertModuleItemTitleDisplayed(moduleItem.title!!)
+            moduleProgressionPage.assertModuleItemTitleDisplayed(moduleItem.title!!, composeTestRule)
 
             // Let's navigate to our next page
             moduleIndex += 1
@@ -503,7 +503,7 @@ class ModuleInteractionTest : StudentComposeTest() {
             // Let's make sure that the "previous" button works as well.
             moduleProgressionPage.clickPreviousButton()
             val moduleItem = moduleItemList[moduleItemList.count() - 2]
-            moduleProgressionPage.assertModuleItemTitleDisplayed(moduleItem.title!!)
+            moduleProgressionPage.assertModuleItemTitleDisplayed(moduleItem.title!!, composeTestRule)
         }
     }
 

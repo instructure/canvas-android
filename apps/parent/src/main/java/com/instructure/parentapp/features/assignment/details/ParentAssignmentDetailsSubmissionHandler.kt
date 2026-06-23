@@ -19,12 +19,11 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewData
 import java.io.File
 
 class ParentAssignmentDetailsSubmissionHandler(
@@ -37,7 +36,17 @@ class ParentAssignmentDetailsSubmissionHandler(
     override var lastSubmissionIsDraft: Boolean = false
     override var lastSubmissionEntry: String? = null
 
-    override fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit, updateGradeCell: () -> Unit) = Unit
+    override fun addAssignmentSubmissionObserver(
+        context: Context,
+        assignmentId: Long,
+        userId: Long,
+        resources: Resources,
+        getAttempts: () -> List<AssignmentDetailsAttemptViewData>,
+        setAttempts: (List<AssignmentDetailsAttemptViewData>) -> Unit,
+        setHasDraft: (Boolean) -> Unit,
+        refreshAssignment: () -> Unit,
+        updateGradeCell: () -> Unit
+    ) = Unit
 
     override fun removeAssignmentSubmissionObserver() = Unit
 

@@ -17,34 +17,25 @@
 package com.instructure.student.features.assignments.details
 
 import android.app.Dialog
+import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
-import android.os.Bundle
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
-import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
-import com.instructure.interactions.Navigation
-import com.instructure.interactions.bookmarks.Bookmarker
-import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
-import com.instructure.pandautils.utils.toast
-import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.databinding.DialogSubmissionPickerBinding
 import com.instructure.student.databinding.DialogSubmissionPickerMediaBinding
@@ -52,19 +43,21 @@ import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.mobius.assignmentDetails.launchAudio
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.getResourceSelectorUrl
-import java.io.File
 
-class StudentAssignmentDetailsBehaviour (
+class StudentAssignmentDetailsBehaviour(
     private val router: AssignmentDetailsRouter,
-): AssignmentDetailsBehaviour() {
+) : AssignmentDetailsBehaviour() {
     override val dialogColor: Int = ThemePrefs.textButtonColor
+
+    override fun applyStatusBarTheme(activity: FragmentActivity, course: Course?) {
+        course?.let { ViewStyler.setStatusBarDark(activity, it.color) }
+    }
 
     override fun showMediaDialog(
         activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        recordCallback: (File?) -> Unit,
+        onLaunchAudioRecording: () -> Unit,
         startVideoCapture: () -> Unit,
-        onLaunchMediaPicker: () -> Unit,
+        onLaunchMediaPicker: () -> Unit
     ) {
         val builder = AlertDialog.Builder(activity)
         val dialogBinding = DialogSubmissionPickerMediaBinding.inflate(LayoutInflater.from(activity))
@@ -72,8 +65,8 @@ class StudentAssignmentDetailsBehaviour (
 
         dialog.setOnShowListener {
             setupDialogRow(dialog, dialogBinding.submissionEntryAudio, true) {
-                activity.launchAudio({ activity.toast(R.string.permissionDenied) }) {
-                    showAudioRecordingView(binding, recordCallback)
+                activity.launchAudio({ Toast.makeText(activity, R.string.permissionDenied, Toast.LENGTH_SHORT).show() }) {
+                    onLaunchAudioRecording()
                 }
             }
             setupDialogRow(dialog, dialogBinding.submissionEntryVideo, true) {
@@ -86,22 +79,9 @@ class StudentAssignmentDetailsBehaviour (
         dialog.show()
     }
 
-
-    private fun showAudioRecordingView(binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit) {
-        binding?.floatingRecordingView?.apply {
-            setContentType(RecordingMediaType.Audio)
-            setVisible()
-            stoppedCallback = {}
-            recordingCallback = {
-                recordCallback(it)
-            }
-        }
-    }
-
     override fun showSubmitDialog(
         activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        recordCallback: (File?) -> Unit,
+        onLaunchAudioRecording: () -> Unit,
         startVideoCapture: () -> Unit,
         onLaunchMediaPicker: () -> Unit,
         assignment: Assignment,
@@ -158,7 +138,7 @@ class StudentAssignmentDetailsBehaviour (
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
                 })
-                showMediaDialog(activity, binding, recordCallback, startVideoCapture, onLaunchMediaPicker)
+                showMediaDialog(activity, onLaunchAudioRecording, startVideoCapture, onLaunchMediaPicker)
             }
             setupDialogRow(
                 dialog,
@@ -175,7 +155,7 @@ class StudentAssignmentDetailsBehaviour (
                 Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
                 })
-                assignment.submission?.id?.let{
+                assignment.submission?.id?.let {
                     router.navigateToAnnotationSubmissionScreen(
                         activity,
                         course,
@@ -211,57 +191,6 @@ class StudentAssignmentDetailsBehaviour (
                 nextAttempt.toLong()
             )
         )
-    }
-
-    override fun applyTheme(
-        activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        bookmark: Bookmarker,
-        course: Course?,
-        toolbar: Toolbar
-    ) {
-        binding?.toolbar?.apply {
-            setupAsBackButton {
-                activity.onBackPressed()
-            }
-
-            title = activity.getString(R.string.assignmentDetails)
-            subtitle = course?.name
-
-            setupToolbarMenu(activity, bookmark, toolbar)
-
-            ViewStyler.themeToolbarColored(activity, this, course)
-        }
-    }
-
-    private fun setupToolbarMenu(activity: FragmentActivity, bookmark: Bookmarker, toolbar: Toolbar) {
-        addBookmarkMenuIfAllowed(activity, bookmark, toolbar)
-        addOnMenuItemClickListener(activity, toolbar)
-    }
-
-    private fun addBookmarkMenuIfAllowed(activity: FragmentActivity, bookmark: Bookmarker, toolbar: Toolbar) {
-        val navigation = activity as? Navigation
-        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
-        if (bookmarkFeatureAllowed && bookmark.canBookmark && toolbar.menu.findItem(
-                R.id.bookmark) == null) {
-            toolbar.inflateMenu(R.menu.bookmark_menu)
-        }
-    }
-
-    private fun addOnMenuItemClickListener(activity: FragmentActivity, toolbar: Toolbar) {
-        toolbar.setOnMenuItemClickListener { item -> onOptionsItemSelected(activity, item) }
-    }
-
-    override fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean {
-        if (item.itemId == R.id.bookmark) {
-            if (APIHelper.hasNetworkConnection()) {
-                (activity as? Navigation)?.addBookmark()
-            } else {
-                Toast.makeText(activity, activity.getString(com.instructure.pandautils.R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
-            }
-            return true
-        }
-        return false
     }
 
     override fun getThemeColor(course: Course): Int {

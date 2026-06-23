@@ -16,41 +16,50 @@
  */
 package com.instructure.pandautils.features.assignments.details
 
-import android.view.MenuItem
 import androidx.annotation.ColorInt
-import androidx.appcompat.widget.Toolbar
+import androidx.annotation.DrawableRes
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
-import com.instructure.interactions.bookmarks.Bookmarker
-import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import java.io.File
 
 abstract class AssignmentDetailsBehaviour {
     @get:ColorInt
     abstract val dialogColor: Int
 
-    open fun showMediaDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit) = Unit
+    abstract fun getThemeColor(course: Course): Int
 
-    open fun showSubmitDialog(activity: FragmentActivity, binding: FragmentAssignmentDetailsBinding?, recordCallback: (File?) -> Unit, startVideoCapture: () -> Unit, onLaunchMediaPicker: () -> Unit, assignment: Assignment, course: Course, isStudioEnabled: Boolean, studioLTITool: LTITool?) = Unit
+    open fun applyStatusBarTheme(activity: FragmentActivity, course: Course?) = Unit
 
-    open fun applyTheme(activity: FragmentActivity,
-                        binding: FragmentAssignmentDetailsBinding?,
-                        bookmark: Bookmarker,
-                        course: Course?,
-                        toolbar: Toolbar) = Unit
-
-    open fun setupAppSpecificViews(
+    open fun showMediaDialog(
         activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        course: Course,
-        assignment: Assignment?,
-        routeToCompose: ((InboxComposeOptions) -> Unit)?
+        onLaunchAudioRecording: () -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit
     ) = Unit
 
-    open fun onOptionsItemSelected(activity: FragmentActivity, item: MenuItem): Boolean = false
+    open fun showSubmitDialog(
+        activity: FragmentActivity,
+        onLaunchAudioRecording: () -> Unit,
+        startVideoCapture: () -> Unit,
+        onLaunchMediaPicker: () -> Unit,
+        assignment: Assignment,
+        course: Course,
+        isStudioEnabled: Boolean,
+        studioLTITool: LTITool?
+    ) = Unit
 
-    abstract fun getThemeColor(course: Course): Int
+    /**
+     * App-specific configuration for the message floating action button (e.g. the Parent app's
+     * "send message about this assignment" FAB). Returns null when the app has no message action
+     * (e.g. Student), in which case no FAB is shown.
+     */
+    open fun getMessageFabConfig(course: Course?, assignment: Assignment?): MessageFabConfig? = null
 }
+
+data class MessageFabConfig(
+    @DrawableRes val iconRes: Int,
+    val contentDescription: String,
+    val options: InboxComposeOptions
+)

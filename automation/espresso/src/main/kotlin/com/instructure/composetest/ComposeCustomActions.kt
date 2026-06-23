@@ -20,6 +20,7 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.performClick
 
 /**
@@ -33,9 +34,12 @@ fun ComposeTestRule.clickToolbarIconButton(
     toolbarTag: String = "toolbar"
 ) {
     waitForIdle()
-    onNode(
+    // When Compose screens are stacked (e.g. a sub-screen pushed over another Compose screen), the
+    // underlying screen's toolbar stays in the semantics tree, so more than one node can match.
+    // Target the topmost (last-attached) screen's toolbar button.
+    onAllNodes(
         hasParent(hasTestTag(toolbarTag)).and(
             hasContentDescription(contentDescription)
         )
-    ).performClick()
+    ).onLast().performClick()
 }

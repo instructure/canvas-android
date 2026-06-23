@@ -16,261 +16,284 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
-import android.view.View
-import android.widget.ScrollView
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.test.espresso.AmbiguousViewMatcherException
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import com.instructure.canvas.espresso.CanvasTest
-import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.utils.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.utils.withResourceIdContaining
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
-import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.swipeDown
-import com.instructure.espresso.swipeUp
 import com.instructure.espresso.typeText
-import com.instructure.espresso.waitForCheck
 import com.instructure.pandautils.R
-import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.anyOf
-import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
-    val toolbar by OnViewWithId(R.id.toolbar)
-    val points by OnViewWithId(R.id.points)
-    val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
+/**
+ * Page object for the (now Jetpack Compose) shared Assignment Details screen used by the Student
+ * and Parent apps. Most interactions go through [composeTestRule]. A few collaborators are still
+ * Android Views and are matched with Espresso: the submit-type picker dialog, the custom reminder
+ * dialog, the description WebView, and the PSPDFKit viewer.
+ */
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, val composeTestRule: ComposeTestRule) : BasePage() {
+
+    override fun assertPageObjects(duration: Long) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentDetailsPage").assertIsDisplayed()
+    }
+
+    // The previous screen (e.g. the Assignment List) is also Compose and stays in the semantics
+    // tree behind this one, so the shared "toolbar"/"overflowMenu" tags exist twice. Scope matches
+    // to this screen's root to keep them unambiguous.
+    private fun inToolbar(text: String) = hasText(text) and
+        hasAnyAncestor(hasTestTag("toolbar")) and
+        hasAnyAncestor(hasTestTag("assignmentDetailsPage"))
 
     fun assertDisplayToolbarTitle() {
-        onView(allOf(withText(R.string.assignmentDetails), withParent(R.id.toolbar))).assertDisplayed()
+        composeTestRule.onNode(inToolbar(getStringFromResource(R.string.assignmentDetails))).assertIsDisplayed()
     }
 
     fun assertDisplayToolbarTitle(toolbarTitle: String) {
-        onView(allOf(withText(toolbarTitle), withParent(R.id.toolbar))).assertDisplayed()
+        composeTestRule.onNode(inToolbar(toolbarTitle)).assertIsDisplayed()
     }
 
     fun assertDisplayToolbarSubtitle(courseNameText: String) {
-        onView(allOf(withText(courseNameText), withParent(R.id.toolbar), withAncestor(R.id.assignmentDetailsPage))).assertDisplayed()
+        composeTestRule.onNode(inToolbar(courseNameText)).assertIsDisplayed()
     }
 
     fun assertDisplaysDate(dateText: String, position: Int = 0) {
-        composeTestRule.onNodeWithTag("dueDateText-$position").assertTextEquals(dateText).isDisplayed()
+        // Scroll the due-date row into view first — on landscape / small screens it is below the fold.
+        composeTestRule.onNodeWithTag("dueDateText-$position").performScrollTo().assertTextEquals(dateText).assertIsDisplayed()
     }
 
     fun assertAssignmentDetails(assignment: Assignment) {
-        onView(withId(R.id.assignmentName)).assertHasText(assignment.name!!)
-        onView(allOf(withId(R.id.points), isDisplayed()))
-                .check(matches(containsTextCaseInsensitive(assignment.pointsPossible.toInt().toString())))
+        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignment.name!!)
+        composeTestRule.onNodeWithTag("points").assertTextContains(assignment.pointsPossible.toInt().toString(), substring = true, ignoreCase = true)
     }
 
     fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        waitForView(withId(R.id.assignmentName)).assertHasText(assignment.name)
-        onView(allOf(withId(R.id.points), isDisplayed()))
-            .check(matches(containsTextCaseInsensitive(assignment.pointsPossible?.toInt().toString())))
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignment.name)
+        composeTestRule.onNodeWithTag("points").assertTextContains(assignment.pointsPossible?.toInt().toString(), substring = true, ignoreCase = true)
     }
 
     fun assertAssignmentTitle(assignmentName: String) {
-        onView(withId(R.id.assignmentName)).assertHasText(assignmentName)
+        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignmentName)
     }
 
     fun assertAssignmentSubmitted() {
-        onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.submissionStatusSuccessTitle)).performScrollTo().assertIsDisplayed()
         assertAssignmentSubmittedStatus()
     }
 
     fun assertAssignmentSubmittedStatus() {
-        onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
+        waitForStatus(getStringFromResource(R.string.submitted))
     }
 
     fun assertAssignmentGraded(score: String) {
-        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
-        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
-        onView(allOf(withId(R.id.submissionStatus), withText(R.string.gradedSubmissionLabel))).scrollTo().assertDisplayed()
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("gradeCellScore", useUnmergedTree = true).assertTextContains(score, substring = true)
+        waitForStatus(getStringFromResource(R.string.gradedSubmissionLabel))
     }
 
     fun assertGradeDisplayed(grade: String) {
-        onView(withId(R.id.gradeCell)).scrollTo().assertDisplayed()
-        onView(withId(R.id.grade)).scrollTo().assertContainsText(grade)
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("gradeCellGrade", useUnmergedTree = true).assertTextContains(grade, substring = true)
     }
 
     fun assertGradeNotDisplayed() {
-        onView(withId(R.id.grade)).assertNotDisplayed()
+        composeTestRule.onNodeWithTag("gradeCellGrade", useUnmergedTree = true).assertDoesNotExist()
     }
 
     fun assertOutOfTextDisplayed(outOfText: String) {
-        onView(withId(R.id.outOf)).scrollTo().assertContainsText(outOfText)
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo()
+        composeTestRule.onNodeWithTag("gradeCellOutOf", useUnmergedTree = true).assertTextContains(outOfText, substring = true)
     }
 
     fun assertOutOfTextNotDisplayed() {
-        onView(withId(R.id.outOf)).assertNotDisplayed()
+        composeTestRule.onNodeWithTag("gradeCellOutOf", useUnmergedTree = true).assertDoesNotExist()
     }
 
     fun assertScoreDisplayed(score: String) {
-        onView(withId(R.id.score)).scrollTo().assertContainsText(score)
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo()
+        composeTestRule.onNodeWithTag("gradeCellScore", useUnmergedTree = true).assertTextContains(score, substring = true)
     }
 
     fun assertScoreNotDisplayed() {
-        onView(withId(R.id.score)).assertNotDisplayed()
+        composeTestRule.onNodeWithTag("gradeCellScore", useUnmergedTree = true).assertDoesNotExist()
     }
 
     fun assertAssignmentLocked() {
-        if(CanvasTest.isLandscapeDevice()) onView(withId(R.id.swipeRefreshLayout) + withAncestor(R.id.assignmentDetailsPage)).swipeUp()
-        onView(withId(R.id.lockedMessageTextView)).scrollTo().assertDisplayed()
-        onView(withId(R.id.lockedMessageTextView)).check(matches(containsTextCaseInsensitive("this assignment is locked by the module")))
+        composeTestRule.onNodeWithTag("lockedMessage").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("lockedMessage").assertTextContains("this assignment is locked by the module", substring = true, ignoreCase = true)
     }
 
     fun refresh() {
-        // Scroll up to the top in case we are not there already.
-        onView(allOf(isAssignableFrom(ScrollView::class.java), isDisplayed())).perform(ScrollToTop())
-
-        // Now swipe down -- twice, just for good measure (may update twice)
-        onView(allOf(withId(R.id.swipeRefreshLayout),  isDisplayed())).swipeDown().swipeDown()
+        composeTestRule.waitForIdle()
+        // Deliberate (non-fling) drag starting inside the content area so the Compose pull-to-refresh
+        // engages rather than the gesture being treated as a scroll/fling.
+        composeTestRule.onNodeWithTag("assignmentDetailsPage").performTouchInput {
+            swipeDown(startY = centerY, endY = bottom, durationMillis = 600)
+        }
+        composeTestRule.waitForIdle()
     }
 
     fun waitForSubmissionComplete() {
-        waitForViewWithText(R.string.submissionStatusSuccessTitle)
+        composeTestRule.waitUntil(20000) {
+            composeTestRule.onAllNodes(hasText(getStringFromResource(R.string.submissionStatusSuccessTitle))).fetchSemanticsNodes().isNotEmpty()
+        }
     }
 
     fun goToSubmissionDetails() {
-        onView(withId(R.id.gradeCell)).scrollTo().click()
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo().performClick()
+        // The grade-cell click posts a navigation consumed by the host on the next recomposition;
+        // wait so the submission-details screen is in place before callers interact with it.
+        composeTestRule.waitForIdle()
     }
 
     fun assertSubmissionAndFeedbackLabel() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).assertDisplayed()
+        composeTestRule.onNodeWithTag("submissionAndRubricLabel", useUnmergedTree = true).assertTextEquals(getStringFromResource(R.string.submissionAndFeedback))
     }
 
-    private fun assertStatus(statusResourceId: Int) {
-        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
+    private fun waitForStatus(text: String) {
+        composeTestRule.waitUntil(10000) {
+            composeTestRule.onAllNodes(hasTestTag("submissionStatus") and hasText(text)).fetchSemanticsNodes().isNotEmpty()
+        }
     }
 
     fun assertCustomStatus(status: String) {
-        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(status)))
+        waitForStatus(status)
     }
 
     fun assertStatusSubmitted() {
-        assertStatus(R.string.submitted)
+        waitForStatus(getStringFromResource(R.string.submitted))
     }
 
     fun assertStatusLate() {
-        assertStatus(R.string.lateSubmissionLabel)
+        waitForStatus(getStringFromResource(R.string.lateSubmissionLabel))
     }
 
     fun assertStatusNotSubmitted() {
-        assertStatus(R.string.notSubmitted)
+        waitForStatus(getStringFromResource(R.string.notSubmitted))
     }
 
     fun assertStatusMissing() {
-        assertStatus(R.string.missingAssignment)
+        waitForStatus(getStringFromResource(R.string.missingAssignment))
     }
 
     fun assertStatusGraded() {
-        assertStatus(R.string.gradedSubmissionLabel)
+        waitForStatus(getStringFromResource(R.string.gradedSubmissionLabel))
     }
 
     fun viewQuiz() {
-        onView(withId(R.id.submitButton)).assertHasText(R.string.viewQuiz).click()
+        composeTestRule.onNodeWithTag("submitButton").assertTextContains(getStringFromResource(R.string.viewQuiz), ignoreCase = true).performClick()
     }
 
     fun clickSubmit() {
-        onView(withId(R.id.submitButton)).click()
+        composeTestRule.onNodeWithTag("submitButton").performClick()
     }
 
     fun scrollToAssignmentDescription() {
         Thread.sleep(3000)
-        waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000).scrollTo()
+        // The description WebView is an Android View hosted inside the Compose screen's vertical
+        // scroll, so Espresso's scrollTo() (which needs a ScrollView/NestedScrollView ancestor)
+        // can't reach it. Scroll the Compose content to the description wrapper instead, then wait
+        // for the hosted WebView to be present.
+        composeTestRule.onNodeWithTag("assignmentDescription").performScrollTo()
+        composeTestRule.waitForIdle()
+        waitForMatcherWithSleeps(withId(R.id.contentWebView), timeout = 30000, pollInterval = 1000)
     }
 
     fun openOverflowMenu() {
-        Espresso.onView(
-            allOf(
-                withContentDescription(stringContainsTextCaseInsensitive("More options")),
-                isDisplayed()
-            )).click()
+        try {
+            // View-based screens (e.g. the course home page) expose the overflow as an Android view.
+            Espresso.onView(
+                allOf(
+                    ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                    ViewMatchers.isDisplayed()
+                )
+            ).click()
+        } catch (e: NoMatchingViewException) {
+            // The migrated (Compose) Assignment Details screen; scope to its root so the list
+            // screen's overflow lingering behind it isn't matched as a second node.
+            composeTestRule.onNode(
+                hasTestTag("overflowMenu") and hasAnyAncestor(hasTestTag("assignmentDetailsPage"))
+            ).performClick()
+        }
     }
 
     fun assertDisplaysAddBookmarkButton() {
-        onViewWithText(R.string.addBookmark).assertDisplayed()
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.addBookmark)).assertIsDisplayed()
     }
 
     fun assertSelectedAttempt(attemptNumber: Int) {
-        try {
-            onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)), withText("Attempt $attemptNumber"))).assertDisplayed()
-        }
-        catch(e: Exception) { // We need to check 'attemptView' if we don't find 'attemptTitle' under 'attemptSpinner' because if no 'attemptSpinner', the 'attemptTitle' will be placed under 'attemptView'.
-            when (e) {
-                is AmbiguousViewMatcherException, is NoMatchingViewException ->
-                    onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptView)), withText("Attempt $attemptNumber"))).assertDisplayed()
-                else -> throw e  // Re-throw other exceptions to avoid absorption of valid expections
-            }
-
-        }
+        composeTestRule.onNode(hasTestTag("attemptTitle") and hasText("Attempt $attemptNumber"), useUnmergedTree = true).assertExists()
     }
 
     fun assertNoAttemptSpinner() {
-        onView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
-        onView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).check(doesNotExist())
+        composeTestRule.onNodeWithTag("attemptSpinner").assertDoesNotExist()
     }
 
     fun assertAttemptSpinnerDisplayed() {
-        waitForView(withId(R.id.attemptSpinner)).assertDisplayed()
+        // A refresh reloads attempts asynchronously, so wait for the spinner (shown once there is
+        // more than one attempt) to appear rather than asserting immediately.
+        composeTestRule.waitUntil(20000) {
+            composeTestRule.onAllNodesWithTag("attemptSpinner").fetchSemanticsNodes().isNotEmpty()
+        }
+        composeTestRule.onNodeWithTag("attemptSpinner").assertIsDisplayed()
     }
 
     fun selectAttempt(attemptNumber: Int) {
-        onView(withId(R.id.attemptSpinner)).click()
-        onView(allOf(withId(R.id.attemptTitle), withText("Attempt $attemptNumber"))).click()
+        composeTestRule.onNodeWithTag("attemptSpinner").performClick()
+        // The dropdown opens in a Popup composed after the click; wait for the target item.
+        composeTestRule.waitUntil(10000) {
+            composeTestRule.onAllNodes(hasTestTag("attemptListItem") and hasText("Attempt $attemptNumber", substring = true))
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+        composeTestRule.onNode(hasTestTag("attemptListItem") and hasText("Attempt $attemptNumber", substring = true)).performClick()
     }
 
     fun assertAttemptInformation() {
-        waitForView(allOf(withId(R.id.attemptTitle), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
-        waitForView(allOf(withId(R.id.attemptDate), withAncestor(withId(R.id.attemptSpinner)))).assertDisplayed()
+        composeTestRule.onNodeWithTag("attemptSpinner").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("attemptTitle", useUnmergedTree = true).assertExists()
+        composeTestRule.onNodeWithTag("attemptDate", useUnmergedTree = true).assertExists()
     }
 
     fun assertSubmissionTypeDisplayed(submissionType: String) {
-        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).scrollTo().assertDisplayed()
+        composeTestRule.onNodeWithTag("submissionTypes").performScrollTo().assertTextContains(submissionType, substring = true)
     }
 
     fun assertSubmissionOptionDisplayed(submissionType: String) {
-        onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
+        // Submit-type picker is still an AlertDialog (Android View).
+        onView(withText(submissionType)).inRoot(isDialog()).check(matches(ViewMatchers.isDisplayed()))
     }
 
     fun assertReminderViewDisplayed(position: Int = 0) {
@@ -293,11 +316,12 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertNoDescriptionViewDisplayed() {
-        onView(withId(R.id.noDescriptionTextView) + withText("No Content")).scrollTo().assertDisplayed()
+        composeTestRule.onNodeWithTag("noDescription").performScrollTo().assertIsDisplayed()
     }
 
     fun clickCustom() {
-        onData(anything()).inRoot(isDialog()).atPosition(6).perform(click())
+        // Custom reminder picker is still an AlertDialog (Android View).
+        Espresso.onData(org.hamcrest.Matchers.anything()).inRoot(isDialog()).atPosition(6).perform(click())
     }
 
     fun fillQuantity(quantity: String) {
@@ -322,36 +346,36 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun clickDraftSubmission() {
-        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).click()
+        composeTestRule.onNodeWithTag("draftContainer").performScrollTo().performClick()
     }
 
     fun clickSubmissionAndRubric() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).click()
+        composeTestRule.onNodeWithTag("gradeCell").performScrollTo().performClick()
+        // The grade-cell click posts a navigation that the host consumes via a LaunchedEffect on
+        // the next recomposition; wait so the resulting WebView (and its initial cookies) is in
+        // place before callers assert on it.
+        composeTestRule.waitForIdle()
     }
 
     fun clickComposeMessageFAB() {
-        onView(withContentDescription("Send a message about this assignment")).click()
+        composeTestRule.onNodeWithTag("messageFab").performClick()
     }
 
     fun assertDraftAvailableInformation() {
-        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).assertDisplayed()
-        onView(withId(R.id.draftSubtitle) + withText(R.string.submissionDraftAvailableSubtitle)).assertDisplayed()
-        onView(withId(R.id.draftDivider)).assertDisplayed()
+        composeTestRule.onNodeWithTag("draftTitle", useUnmergedTree = true).assertTextEquals(getStringFromResource(R.string.submissionDraftAvailableTitle))
+        composeTestRule.onNodeWithTag("draftSubtitle", useUnmergedTree = true).assertTextEquals(getStringFromResource(R.string.submissionDraftAvailableSubtitle))
+        composeTestRule.onNodeWithTag("draftDivider").assertExists()
     }
 
     fun assertAttachmentIconDisplayed() {
-        onView(withId(R.id.attachmentIcon))
-            .scrollTo()
-            .assertDisplayed()
+        composeTestRule.onNodeWithTag("attachmentIcon").performScrollTo().assertIsDisplayed()
     }
 
     fun clickAttachmentIcon() {
-        onView(withId(R.id.attachmentIcon))
-            .scrollTo()
-            .click()
+        composeTestRule.onNodeWithTag("attachmentIcon").performScrollTo().performClick()
     }
 
-    // PDF viewer method for PSPDFKit toolbar verification
+    // PDF viewer method for PSPDFKit toolbar verification (Android View)
     fun assertPdfViewerToolbarDisplayed() {
         Espresso.onView(withResourceIdContaining("pspdf__toolbar_main"))
             .assertDisplayed()
@@ -359,28 +383,6 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     //OfflineMethod
     fun assertSubmitButtonDisabled() {
-        onView(withId(R.id.submitButton)).check(matches(ViewMatchers.isNotEnabled()))
+        composeTestRule.onNodeWithTag("submitButton").assertIsNotEnabled()
     }
 }
-
-/**
- * Custom view action to scroll to top of scrollview.
- * TODO: Move this to a central location, as we will probably want to reuse it.
- */
-class ScrollToTop : ViewAction {
-    override fun getDescription(): String {
-        return "Scroll to top of scroll view"
-    }
-
-    override fun getConstraints(): Matcher<View> {
-        return isAssignableFrom(ScrollView::class.java)
-    }
-
-    override fun perform(uiController: UiController?, view: View?) {
-        when(view) {
-            is ScrollView -> view.smoothScrollTo(0,0)
-        }
-    }
-
-}
-

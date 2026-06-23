@@ -44,7 +44,6 @@ import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvas.espresso.utils.checkToastText
-import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -338,7 +337,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         device.findObject(UiSelector().resourceIdMatches(".*sendAudioButton")).click()
 
-        refresh()
+        assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
     }
 

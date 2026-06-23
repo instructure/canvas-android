@@ -22,11 +22,8 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import androidx.annotation.ColorInt
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,25 +42,18 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.correctAttemptNumbers
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.isRtl
-import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
-import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
-import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
-import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState
-import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
@@ -79,8 +69,8 @@ import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
@@ -102,27 +92,17 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val reminderManager: ReminderManager
 ) : ViewModel() {
 
-    val state: LiveData<ViewState>
-        get() = _state
-    private val _state = MutableLiveData<ViewState>()
-
-    val data: LiveData<AssignmentDetailsViewData>
-        get() = _data
-    private val _data = MutableLiveData<AssignmentDetailsViewData>()
-
-    val events: LiveData<Event<AssignmentDetailAction>>
-        get() = _events
-    private val _events = MutableLiveData<Event<AssignmentDetailAction>>()
+    private val _uiState = MutableStateFlow(AssignmentDetailsUiState().withCallbacks())
+    val uiState = _uiState.asStateFlow()
 
     private val courseId = savedStateHandle.get<Long>(Const.COURSE_ID).orDefault()
-    val course: LiveData<Course>
-        get() = _course
-    private val _course = MutableLiveData(Course(id = courseId))
+    var currentCourse: Course? = Course(id = courseId)
+        private set
 
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
     private val submissionId = savedStateHandle.get<Long>(Const.SUBMISSION_ID)
 
-    var bookmarker = Bookmarker(true, course.value).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())
+    var bookmarker = Bookmarker(true, currentCourse).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())
 
     private var isObserver: Boolean = false
     private var quizResult: Quiz? = null
@@ -142,12 +122,6 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var reminderEntities: List<ReminderEntity> = emptyList()
     private var themeColor: Color? = null
-    private val _dueDateReminderViewStates = mutableStateListOf<ReminderViewState>()
-    val dueDateReminderViewStates: List<ReminderViewState>
-        get() = _dueDateReminderViewStates
-
-    private val _discussionCheckpoints = MutableStateFlow<List<DiscussionCheckpointViewState>>(emptyList())
-    val discussionCheckpoints: StateFlow<List<DiscussionCheckpointViewState>> = _discussionCheckpoints.asStateFlow()
 
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
@@ -162,25 +136,27 @@ class AssignmentDetailsViewModel @Inject constructor(
             assignmentId,
             apiPrefs.user?.id.orDefault(),
             resources,
-            _data,
-            ::refreshAssignment,
-            ::updateGradeCell
+            getAttempts = { _uiState.value.attempts },
+            setAttempts = { attempts -> _uiState.update { it.copy(attempts = attempts) } },
+            setHasDraft = { hasDraft -> _uiState.update { it.copy(hasDraft = hasDraft) } },
+            refreshAssignment = ::refreshAssignment,
+            updateGradeCell = ::updateGradeCell
         )
 
-        _state.postValue(ViewState.Loading)
         loadData()
 
         reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), assignmentId) { reminderEntities ->
             this.reminderEntities = reminderEntities
-            updateDueDatesViewState(reminderEntities)
+            updateRemindersInUiState()
         }
     }
 
-    private fun updateDueDatesViewState(reminderEntities: List<ReminderEntity>) {
-        for (i in 0.._dueDateReminderViewStates.lastIndex) {
-            val tag = _dueDateReminderViewStates[i].tag
-            _dueDateReminderViewStates[i] = _dueDateReminderViewStates[i].copy(
-                reminders = getReminderItems(tag)
+    private fun updateRemindersInUiState() {
+        _uiState.update { state ->
+            state.copy(
+                reminders = state.reminders.map { reminderState ->
+                    reminderState.copy(reminders = getReminderItems(reminderState.tag))
+                }
             )
         }
     }
@@ -212,7 +188,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courseResult = assignmentDetailsRepository.getCourseWithGrade(courseId.orDefault(), forceNetwork)
-                _course.postValue(courseResult)
+                currentCourse = courseResult
                 restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
                 gradingScheme = courseResult.gradingScheme
 
@@ -257,23 +233,24 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 assignment = assignmentResult
 
-                if (assignment?.checkpoints?.isNotEmpty() == true) {
-                    _dueDateReminderViewStates.clear()
-                    val checkpointsList = mutableListOf<DiscussionCheckpointViewState>()
-                    assignment?.orderedCheckpoints?.forEach { checkpoint ->
+                val reminderStates = mutableListOf<ReminderViewState>()
+                val checkpointsList = mutableListOf<DiscussionCheckpointViewState>()
+
+                if (assignmentResult.checkpoints.isNotEmpty()) {
+                    assignmentResult.orderedCheckpoints.forEach { checkpoint ->
                         val dueLabel = when (checkpoint.tag) {
                             Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic_due)
                             Const.REPLY_TO_ENTRY -> {
                                 application.getString(
                                     R.string.additional_replies_due,
-                                    assignment?.discussionTopicHeader?.replyRequiredCount ?: 0
+                                    assignmentResult.discussionTopicHeader?.replyRequiredCount ?: 0
                                 )
                             }
 
                             else -> application.getString(R.string.dueLabel)
                         }
-                        val subAssignment = assignment?.submission?.subAssignmentSubmissions?.firstOrNull { it.subAssignmentTag == checkpoint.tag }
-                        _dueDateReminderViewStates.add(
+                        val subAssignment = assignmentResult.submission?.subAssignmentSubmissions?.firstOrNull { it.subAssignmentTag == checkpoint.tag }
+                        reminderStates.add(
                             ReminderViewState(
                                 dueLabel = dueLabel,
                                 themeColor = themeColor,
@@ -287,7 +264,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                             Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic)
                             Const.REPLY_TO_ENTRY -> application.getString(
                                 R.string.additional_replies,
-                                assignment?.discussionTopicHeader?.replyRequiredCount.orDefault()
+                                assignmentResult.discussionTopicHeader?.replyRequiredCount.orDefault()
                             )
                             else -> checkpoint.name.orEmpty()
                         }
@@ -306,19 +283,16 @@ class AssignmentDetailsViewModel @Inject constructor(
                                 name = checkpointName,
                                 stateLabel = stateLabel,
                                 grade = grade.text,
-                                courseColor = assignmentDetailsColorProvider.getContentColor(course.value).color()
+                                courseColor = assignmentDetailsColorProvider.getContentColor(currentCourse).color()
                             )
                         )
                     }
-                    _discussionCheckpoints.value = checkpointsList
                 } else {
-                    _dueDateReminderViewStates.clear()
-                    _discussionCheckpoints.value = emptyList()
-                    _dueDateReminderViewStates.add(
+                    reminderStates.add(
                         ReminderViewState(
                             dueLabel = application.getString(R.string.dueLabel),
                             themeColor = themeColor,
-                            dueDate = if (assignment?.submission?.excused.orDefault()) null else assignment?.dueDate,
+                            dueDate = if (assignmentResult.submission?.excused.orDefault()) null else assignmentResult.dueDate,
                             tag = null,
                             reminders = getReminderItems()
                         )
@@ -327,8 +301,12 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 submissionHandler.ensureSubmissionStateIsCurrent(assignmentId, apiPrefs.user?.id.orDefault())
 
-                _data.postValue(getViewData(assignmentResult, hasDraft))
-                _state.postValue(ViewState.Success)
+                val content = buildContentUiState(assignmentResult, hasDraft)
+                _uiState.value = content.withCallbacks().copy(
+                    reminders = reminderStates,
+                    checkpoints = checkpointsList,
+                    isRefreshing = false
+                )
 
                 submissionId?.let { subId ->
                     val submission = assignmentResult.submission
@@ -337,8 +315,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                         && submission.submissionType != SubmissionType.NOT_GRADED.apiString
                         && submission.submissionType != SubmissionType.ON_PAPER.apiString)
                     {
-                        postAction(
-                            AssignmentDetailAction.NavigateToSubmissionScreen(
+                        postNavigation(
+                            AssignmentDetailsNavigation.SubmissionScreen(
                                 isObserver,
                                 submission.attempt,
                                 assignmentResult.htmlUrl,
@@ -354,7 +332,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                 } else {
                     resources.getString(R.string.errorLoadingAssignment)
                 }
-                _state.postValue(ViewState.Error(errorString))
+                _uiState.update {
+                    it.copy(
+                        screenState = AssignmentDetailsScreenState.Error(errorString),
+                        errorMessage = errorString,
+                        isRefreshing = false
+                    )
+                }
             }
         }
     }
@@ -363,21 +347,29 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, courseId.orDefault(), true)
+                assignmentResult.isStudioEnabled = studioLTITool != null
+                assignment = assignmentResult
                 submissionHandler.ensureSubmissionStateIsCurrent(assignmentId, apiPrefs.user?.id.orDefault())
-                _data.postValue(getViewData(assignmentResult, submissionHandler.lastSubmissionIsDraft))
+                val content = buildContentUiState(assignmentResult, submissionHandler.lastSubmissionIsDraft)
+                _uiState.update { current ->
+                    content.withCallbacks().copy(
+                        reminders = current.reminders,
+                        checkpoints = current.checkpoints,
+                        isRefreshing = false
+                    )
+                }
             } catch (e: Exception) {
-                _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
+                _uiState.update { it.copy(toastMessage = resources.getString(R.string.assignmentRefreshError)) }
             }
         }
     }
 
     private fun updateGradeCell() {
-        val currentData = _data.value ?: return
         val assignment = assignment ?: return
 
-        currentData.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
+        val gradeCell = GradeCellViewData.fromSubmission(
             resources,
-            assignmentDetailsColorProvider.getContentColor(course.value),
+            assignmentDetailsColorProvider.getContentColor(currentCourse),
             assignmentDetailsColorProvider.submissionAndRubricLabelColor,
             assignment,
             assignment.submission,
@@ -386,10 +378,12 @@ class AssignmentDetailsViewModel @Inject constructor(
             failed = submissionHandler.isFailed,
             gradingScheme = gradingScheme
         )
-        currentData.notifyPropertyChanged(BR.selectedGradeCellViewData)
+        // A new uploading/failed attempt is prepended at index 0 by the submission observer, so
+        // select it to keep the attempt selector and the grade cell in sync.
+        _uiState.update { it.copy(gradeCell = gradeCell, selectedAttemptPosition = 0) }
     }
 
-    private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
+    private suspend fun buildContentUiState(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsUiState {
         val points = if (restrictQuantitativeData) {
             ""
         } else {
@@ -419,6 +413,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     || assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING
                     || (assignment.turnInType != Assignment.TurnInType.ON_PAPER && assignment.turnInType != Assignment.TurnInType.NONE)
 
+        val courseColor = assignmentDetailsColorProvider.getContentColor(currentCourse)
+
         if (assignment.isLocked) {
             val lockedMessage = if (assignment.lockInfo?.contextModule != null) {
                 val name = assignment.lockInfo?.lockedModuleName
@@ -431,9 +427,9 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
             }.orEmpty()
 
-            return AssignmentDetailsViewData(
-                courseColor = assignmentDetailsColorProvider.getContentColor(course.value),
-                submissionAndRubricLabelColor = assignmentDetailsColorProvider.submissionAndRubricLabelColor,
+            return AssignmentDetailsUiState(
+                screenState = AssignmentDetailsScreenState.Content,
+                courseColor = courseColor,
                 assignmentName = assignment.name.orEmpty(),
                 points = points,
                 submissionStatusText = submittedLabelText,
@@ -442,6 +438,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionStatusVisible = submissionStatusVisible,
                 fullLocked = true,
                 lockedMessage = lockedMessage,
+                gradeCell = GradeCellViewData(
+                    courseColor = courseColor,
+                    submissionAndRubricLabelColor = assignmentDetailsColorProvider.submissionAndRubricLabelColor,
+                    state = GradeCellViewData.State.EMPTY
+                ),
                 baseUrl = assignment.htmlUrl
             )
         }
@@ -462,12 +463,10 @@ class AssignmentDetailsViewModel @Inject constructor(
                 .sortedByDescending { it.attempt }
                 .mapNotNull { submission ->
                     submission.submittedAt?.toFormattedString()?.let { formattedDate ->
-                        AssignmentDetailsAttemptItemViewModel(
-                            AssignmentDetailsAttemptViewData(
-                                resources.getString(R.string.attempt, submission.attempt),
-                                formattedDate,
-                                submission
-                            )
+                        AssignmentDetailsAttemptViewData(
+                            resources.getString(R.string.attempt, submission.attempt),
+                            formattedDate,
+                            submission
                         )
                     }
                 }
@@ -480,10 +479,6 @@ class AssignmentDetailsViewModel @Inject constructor(
         val allowedFileTypes = assignment.allowedExtensions.joinToString().takeIf {
             assignment.getSubmissionTypes().contains(SubmissionType.ONLINE_UPLOAD)
         }.orEmpty()
-
-        val due = assignment.dueDate?.let {
-            DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT, Locale.getDefault()).format(it)
-        } ?: resources.getString(R.string.toDoNoDueDate)
 
         val submitEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let {
             it < assignment.allowedAttempts
@@ -505,8 +500,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             isObserver -> false
             assignment.submission?.excused.orDefault() -> false
             else -> when (assignment.turnInType) {
-                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> course.value?.isBetweenValidDateRange().orDefault()
-                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmitWithOverrides(course.value)
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> currentCourse?.isBetweenValidDateRange().orDefault()
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmitWithOverrides(currentCourse)
                 else -> false
             }
         }
@@ -556,29 +551,35 @@ class AssignmentDetailsViewModel @Inject constructor(
         }.orEmpty()
 
         val discussionTopicHeader = assignment.discussionTopicHeader
-        val discussionHeaderViewData = DiscussionHeaderViewData(
+        val discussionHeaderUiState = DiscussionHeaderUiState(
             authorAvatarUrl = discussionTopicHeader?.author?.avatarImageUrl.orEmpty(),
             authorName = discussionTopicHeader?.author?.displayName ?: resources.getString(R.string.discussions_unknown_author),
-            authorNameWithPronouns = Pronouns.span(
-                discussionTopicHeader?.author?.displayName ?: resources.getString(R.string.discussions_unknown_author),
-                discussionTopicHeader?.author?.pronouns.orEmpty(),
-            ),
+            authorPronouns = discussionTopicHeader?.author?.pronouns.orEmpty(),
             authoredDate = DateHelper.getMonthDayAtTime(
                 application.applicationContext,
                 discussionTopicHeader?.postedDate,
                 resources.getString(R.string.at)
             ) ?: resources.getString(R.string.discussions_unknown_date),
-            attachmentIconVisible = !discussionTopicHeader?.attachments.isNullOrEmpty(),
-            onAttachmentClicked = {
-                postAction(AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked(discussionTopicHeader?.attachments.orEmpty()))
-            }
+            attachmentIconVisible = !discussionTopicHeader?.attachments.isNullOrEmpty()
         ).takeIf {
             !discussionTopicHeader?.author.isDiscussionAuthorNull().orDefault(true)
         }
 
-        return AssignmentDetailsViewData(
-            courseColor = assignmentDetailsColorProvider.getContentColor(course.value),
-            submissionAndRubricLabelColor = assignmentDetailsColorProvider.submissionAndRubricLabelColor,
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            courseColor,
+            assignmentDetailsColorProvider.submissionAndRubricLabelColor,
+            assignment,
+            assignment.submission,
+            restrictQuantitativeData,
+            uploading = submissionHandler.isUploading,
+            failed = submissionHandler.isFailed,
+            gradingScheme = gradingScheme
+        )
+
+        return AssignmentDetailsUiState(
+            screenState = AssignmentDetailsScreenState.Content,
+            courseColor = courseColor,
             assignmentName = assignment.name.orEmpty(),
             points = points,
             submissionStatusText = submittedLabelText,
@@ -590,23 +591,14 @@ class AssignmentDetailsViewModel @Inject constructor(
             submitEnabled = (submitEnabled && assignmentDetailsRepository.isOnline()) || (submitEnabled && assignment.turnInType == Assignment.TurnInType.DISCUSSION),
             submitVisible = submitVisible,
             attempts = attempts,
-            selectedGradeCellViewData = GradeCellViewData.fromSubmission(
-                resources,
-                assignmentDetailsColorProvider.getContentColor(course.value),
-                assignmentDetailsColorProvider.submissionAndRubricLabelColor,
-                assignment,
-                assignment.submission,
-                restrictQuantitativeData,
-                uploading = submissionHandler.isUploading,
-                failed = submissionHandler.isFailed,
-                gradingScheme = gradingScheme
-            ),
-            dueDate = due,
+            selectedAttemptPosition = 0,
+            gradeCell = gradeCell,
             submissionTypes = submissionTypes,
             allowedFileTypes = allowedFileTypes,
             description = formattedDescription,
             descriptionLabelText = descriptionLabel,
-            discussionHeaderViewData = discussionHeaderViewData,
+            noDescriptionVisible = formattedDescription.isEmpty(),
+            discussionHeader = discussionHeaderUiState,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
             hasDraft = hasDraft,
@@ -614,28 +606,78 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun postAction(action: AssignmentDetailAction) {
-        _events.postValue(Event(action))
+    private fun AssignmentDetailsUiState.withCallbacks(): AssignmentDetailsUiState = copy(
+        actions = AssignmentDetailsActions(
+            onRefresh = ::refresh,
+            onSubmitClick = ::onSubmitButtonClicked,
+            onGradeCellClick = ::onGradeCellClicked,
+            onAttemptSelected = ::onAttemptSelected,
+            onDraftClick = ::onDraftClicked,
+            onLtiButtonPressed = ::onLtiButtonPressed,
+            onDiscussionAttachmentClick = ::onDiscussionAttachmentClicked,
+            onAddReminderClick = ::onAddReminderClicked,
+            onRemoveReminderClick = ::onRemoveReminderClicked
+        ),
+        onNavigationHandled = ::onNavigationHandled,
+        onToastShown = ::onToastShown,
+        onMediaDialogShown = ::onMediaDialogShown,
+        onSubmitDialogShown = ::onSubmitDialogShown,
+        onCreateReminderShown = ::onCreateReminderShown,
+        onDeleteReminderShown = ::onDeleteReminderShown
+    )
+
+    private fun postNavigation(navigation: AssignmentDetailsNavigation) {
+        _uiState.update { it.copy(navigation = navigation) }
     }
 
-    private fun mapReminders(reminders: List<ReminderEntity>) = reminders
-        .sortedBy {
-            it.time
-        }
-        .map {
-            ReminderItemViewModel(ReminderViewData(it.id, it.text)) {
-                postAction(AssignmentDetailAction.ShowDeleteReminderConfirmationDialog(it))
-            }
-        }
+    private fun onNavigationHandled() {
+        _uiState.update { it.copy(navigation = null) }
+    }
+
+    private fun onToastShown() {
+        _uiState.update { it.copy(toastMessage = null) }
+    }
+
+    private fun onMediaDialogShown() {
+        _uiState.update { it.copy(mediaDialogAssignment = null) }
+    }
+
+    private fun onSubmitDialogShown() {
+        _uiState.update { it.copy(submitDialog = null) }
+    }
+
+    private fun onCreateReminderShown() {
+        _uiState.update { it.copy(createReminder = null) }
+    }
+
+    private fun onDeleteReminderShown() {
+        _uiState.update { it.copy(deleteReminderId = null) }
+    }
+
+    private fun onDiscussionAttachmentClicked() {
+        postNavigation(
+            AssignmentDetailsNavigation.DiscussionAttachment(
+                assignment?.discussionTopicHeader?.attachments.orEmpty()
+            )
+        )
+    }
+
+    private fun onAddReminderClicked(tag: String?) {
+        _uiState.update { it.copy(createReminder = CreateReminderUiState(tag)) }
+    }
+
+    private fun onRemoveReminderClicked(reminderId: Long) {
+        _uiState.update { it.copy(deleteReminderId = reminderId) }
+    }
 
     fun refresh() {
-        _state.postValue(ViewState.Refresh)
+        _uiState.update { it.copy(isRefreshing = true) }
         loadData(true)
     }
 
-    fun onAttemptSelected(position: Int) {
+    private fun onAttemptSelected(position: Int) {
         val assignment = assignment
-        val attempt = _data.value?.attempts?.getOrNull(position)?.data
+        val attempt = _uiState.value.attempts.getOrNull(position)
         val selectedSubmission = attempt?.submission
         this.selectedSubmission = selectedSubmission
 
@@ -652,9 +694,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             attempt?.isFailed.orDefault()
         }
 
-        _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
+        val gradeCell = GradeCellViewData.fromSubmission(
             resources,
-            assignmentDetailsColorProvider.getContentColor(course.value),
+            assignmentDetailsColorProvider.getContentColor(currentCourse),
             assignmentDetailsColorProvider.submissionAndRubricLabelColor,
             assignment,
             selectedSubmission,
@@ -663,30 +705,30 @@ class AssignmentDetailsViewModel @Inject constructor(
             isFailed,
             gradingScheme
         )
-        _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
+        _uiState.update { it.copy(selectedAttemptPosition = position, gradeCell = gradeCell) }
     }
 
-    fun onLtiButtonPressed(url: String) {
-        postAction(AssignmentDetailAction.NavigateToLtiScreen(url))
+    private fun onLtiButtonPressed(url: String) {
+        postNavigation(AssignmentDetailsNavigation.LtiScreen(url))
     }
 
-    fun onGradeCellClicked() {
+    private fun onGradeCellClicked() {
         if (submissionHandler.isUploading || submissionHandler.isFailed) {
             when (submissionHandler.lastSubmissionSubmissionType) {
                 SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
-                    postAction(
-                        AssignmentDetailAction.NavigateToTextEntryScreen(
+                    postNavigation(
+                        AssignmentDetailsNavigation.TextEntryScreen(
                             assignment?.name,
                             submissionHandler.lastSubmissionEntry,
                             isFailure = submissionHandler.isFailed
                         )
                     )
                 }
-                SubmissionType.ONLINE_UPLOAD.apiString, SubmissionType.MEDIA_RECORDING.apiString -> postAction(
-                    AssignmentDetailAction.NavigateToUploadStatusScreen(submissionHandler.lastSubmissionId.orDefault())
+                SubmissionType.ONLINE_UPLOAD.apiString, SubmissionType.MEDIA_RECORDING.apiString -> postNavigation(
+                    AssignmentDetailsNavigation.UploadStatusScreen(submissionHandler.lastSubmissionId.orDefault())
                 )
-                SubmissionType.ONLINE_URL.apiString -> postAction(
-                    AssignmentDetailAction.NavigateToUrlSubmissionScreen(
+                SubmissionType.ONLINE_URL.apiString -> postNavigation(
+                    AssignmentDetailsNavigation.UrlSubmissionScreen(
                         assignment?.name,
                         submissionHandler.lastSubmissionEntry,
                         isFailure = submissionHandler.isFailed
@@ -695,8 +737,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
         } else {
             Analytics.logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-            postAction(
-                AssignmentDetailAction.NavigateToSubmissionScreen(
+            postNavigation(
+                AssignmentDetailsNavigation.SubmissionScreen(
                     isObserver,
                     selectedSubmission?.attempt,
                     assignment?.htmlUrl,
@@ -707,9 +749,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    fun onDraftClicked() {
-        postAction(
-            AssignmentDetailAction.NavigateToTextEntryScreen(
+    private fun onDraftClicked() {
+        postNavigation(
+            AssignmentDetailsNavigation.TextEntryScreen(
                 assignment?.name,
                 submissionHandler.lastSubmissionEntry,
                 isFailure = false
@@ -717,8 +759,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         )
     }
 
-    fun onSubmitButtonClicked() {
-        val course = course ?: return
+    private fun onSubmitButtonClicked() {
+        val course = currentCourse ?: return
         val assignment = assignment ?: return
         val turnInType = assignment.turnInType
         val submissionTypes = assignment.getSubmissionTypes()
@@ -728,49 +770,47 @@ class AssignmentDetailsViewModel @Inject constructor(
         if (turnInType == Assignment.TurnInType.QUIZ) {
             val quiz = quizResult ?: return
             Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-            postAction(AssignmentDetailAction.NavigateToQuizScreen(quiz))
+            postNavigation(AssignmentDetailsNavigation.QuizScreen(quiz))
         } else if (turnInType == Assignment.TurnInType.DISCUSSION) {
-            course.value?.let {
-                Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
-                postAction(
-                    AssignmentDetailAction.NavigateToDiscussionScreen(
-                        assignment.discussionTopicHeader?.id.orDefault(),
-                        it
-                    )
+            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_DISCUSSIONLAUNCH)
+            postNavigation(
+                AssignmentDetailsNavigation.DiscussionScreen(
+                    assignment.discussionTopicHeader?.id.orDefault(),
+                    course
                 )
-            }
+            )
         } else if (hasSingleSubmissionType) {
             when (submissionTypes.first()) {
-                SubmissionType.ONLINE_UPLOAD -> postAction(AssignmentDetailAction.NavigateToUploadScreen(assignment))
-                SubmissionType.ONLINE_TEXT_ENTRY -> postAction(AssignmentDetailAction.NavigateToTextEntryScreen(assignment.name))
-                SubmissionType.ONLINE_URL -> postAction(AssignmentDetailAction.NavigateToUrlSubmissionScreen(assignment.name))
-                SubmissionType.STUDENT_ANNOTATION -> postAction(AssignmentDetailAction.NavigateToAnnotationSubmissionScreen(assignment))
-                SubmissionType.MEDIA_RECORDING -> postAction(AssignmentDetailAction.ShowMediaDialog(assignment))
+                SubmissionType.ONLINE_UPLOAD -> postNavigation(AssignmentDetailsNavigation.UploadScreen(assignment))
+                SubmissionType.ONLINE_TEXT_ENTRY -> postNavigation(AssignmentDetailsNavigation.TextEntryScreen(assignment.name))
+                SubmissionType.ONLINE_URL -> postNavigation(AssignmentDetailsNavigation.UrlSubmissionScreen(assignment.name))
+                SubmissionType.STUDENT_ANNOTATION -> postNavigation(AssignmentDetailsNavigation.AnnotationSubmissionScreen(assignment))
+                SubmissionType.MEDIA_RECORDING -> _uiState.update { it.copy(mediaDialogAssignment = assignment) }
                 SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> {
                     if (externalLTITool != null) {
                         Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), externalLTITool, assignment.ltiToolType().openInternally))
+                        postNavigation(AssignmentDetailsNavigation.LtiLaunchScreen(assignment.name.orEmpty(), externalLTITool, assignment.ltiToolType().openInternally))
                     } else {
-                        postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.generalUnexpectedError)))
+                        _uiState.update { it.copy(toastMessage = resources.getString(R.string.generalUnexpectedError)) }
                     }
                 }
                 else -> Unit
             }
         } else {
-            postAction(AssignmentDetailAction.ShowSubmitDialog(assignment, studioLTITool))
+            _uiState.update { it.copy(submitDialog = SubmitDialogUiState(assignment, studioLTITool)) }
         }
     }
 
     fun uploadAudioSubmission(context: Context?, file: File?) {
-        submissionHandler.uploadAudioSubmission(context, course.value, assignment, file)
+        submissionHandler.uploadAudioSubmission(context, currentCourse, assignment, file)
     }
 
-    fun showContent(viewState: ViewState?): Boolean {
-        return (viewState == ViewState.Success || viewState == ViewState.Refresh) && assignment != null
+    fun onAudioRecordingRequested() {
+        _uiState.update { it.copy(showAudioRecording = true) }
     }
 
-    fun onAddReminderClicked() {
-        postAction(AssignmentDetailAction.ShowReminderDialog)
+    fun onAudioRecordingFinished() {
+        _uiState.update { it.copy(showAudioRecording = false) }
     }
 
     fun isStudioAccepted(): Boolean {
@@ -785,15 +825,17 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     fun updateReminderColor(@ColorInt color: Int) {
         themeColor = Color(color)
-        for (i in 0.._dueDateReminderViewStates.lastIndex) {
-            _dueDateReminderViewStates[i] = _dueDateReminderViewStates[i].copy(themeColor = themeColor)
+        _uiState.update { state ->
+            state.copy(
+                reminders = state.reminders.map { it.copy(themeColor = themeColor) }
+            )
         }
     }
 
     fun showCreateReminderDialog(context: Context, @ColorInt color: Int, tag: String? = null) {
         assignment?.let { assignment ->
             viewModelScope.launch {
-                val dueDate = _dueDateReminderViewStates.firstOrNull { it.tag == tag }?.dueDate
+                val dueDate = _uiState.value.reminders.firstOrNull { it.tag == tag }?.dueDate
                 when {
                     dueDate == null -> reminderManager.showCustomReminderDialog(
                         context,

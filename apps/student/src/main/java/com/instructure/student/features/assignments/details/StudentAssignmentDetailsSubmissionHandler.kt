@@ -20,16 +20,12 @@ import android.content.res.Resources
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
-import com.instructure.pandautils.BR
-import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewData
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
@@ -65,7 +61,9 @@ class StudentAssignmentDetailsSubmissionHandler(
         assignmentId: Long,
         userId: Long,
         resources: Resources,
-        data: MutableLiveData<AssignmentDetailsViewData>,
+        getAttempts: () -> List<AssignmentDetailsAttemptViewData>,
+        setAttempts: (List<AssignmentDetailsAttemptViewData>) -> Unit,
+        setHasDraft: (Boolean) -> Unit,
         refreshAssignment: () -> Unit,
         updateGradeCell: () -> Unit
     ) {
@@ -95,7 +93,7 @@ class StudentAssignmentDetailsSubmissionHandler(
 
         submissionLiveData = studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(assignmentId, userId)
 
-        setupObserver(context, resources, data, refreshAssignment, updateGradeCell)
+        setupObserver(context, resources, getAttempts, setAttempts, setHasDraft, refreshAssignment, updateGradeCell)
 
         submissionObserver?.let { observer ->
             submissionLiveData?.observeForever(observer)
@@ -168,7 +166,9 @@ class StudentAssignmentDetailsSubmissionHandler(
     private fun setupObserver(
         context: Context,
         resources: Resources,
-        data: MutableLiveData<AssignmentDetailsViewData>,
+        getAttempts: () -> List<AssignmentDetailsAttemptViewData>,
+        setAttempts: (List<AssignmentDetailsAttemptViewData>) -> Unit,
+        setHasDraft: (Boolean) -> Unit,
         refreshAssignment: () -> Unit,
         updateGradeCell: () -> Unit
     ) {
@@ -180,11 +180,10 @@ class StudentAssignmentDetailsSubmissionHandler(
                 lastSubmissionIsDraft = submission?.isDraft ?: false
                 lastSubmissionEntry = submission?.submissionEntry
 
-                val attempts = data.value?.attempts
+                val attempts = getAttempts()
                 submission?.let { dbSubmission ->
                     val isDraft = dbSubmission.isDraft
-                    data.value?.hasDraft = isDraft
-                    data.value?.notifyPropertyChanged(BR.hasDraft)
+                    setHasDraft(isDraft)
 
                     val isActivelyUploading = !isDraft && dbSubmission.submissionState.isActive
                     val hasFailedSubmission = dbSubmission.submissionState == SubmissionState.FAILED || dbSubmission.errorFlag
@@ -193,37 +192,37 @@ class StudentAssignmentDetailsSubmissionHandler(
                     if (isActivelyUploading && !isUploading) {
                         isUploading = true
                         isFailed = false
-                        data.value?.attempts = attempts?.toMutableList()?.apply {
-                            add(
-                                0, AssignmentDetailsAttemptItemViewModel(
-                                    AssignmentDetailsAttemptViewData(
+                        setAttempts(
+                            attempts.toMutableList().apply {
+                                add(
+                                    0, AssignmentDetailsAttemptViewData(
                                         resources.getString(R.string.attempt, attempts.size + 1),
                                         dateString,
                                         isUploading = true
                                     )
                                 )
-                            )
-                        }.orEmpty()
-                        data.value?.notifyPropertyChanged(BR.attempts)
+                            }
+                        )
+                        updateGradeCell()
                     }
 
                     if (hasFailedSubmission && !isFailed) {
                         isUploading = false
                         isFailed = true
-                        data.value?.attempts = attempts?.toMutableList()?.apply {
-                            if (isNotEmpty() && firstOrNull()?.data?.isUploading == true) {
-                                removeAt(0)
-                            }
-                            add(0, AssignmentDetailsAttemptItemViewModel(
-                                AssignmentDetailsAttemptViewData(
-                                    resources.getString(R.string.attempt, attempts.size),
-                                    dateString,
-                                    isFailed = true
+                        setAttempts(
+                            attempts.toMutableList().apply {
+                                if (isNotEmpty() && firstOrNull()?.isUploading == true) {
+                                    removeAt(0)
+                                }
+                                add(
+                                    0, AssignmentDetailsAttemptViewData(
+                                        resources.getString(R.string.attempt, attempts.size),
+                                        dateString,
+                                        isFailed = true
+                                    )
                                 )
-                            )
-                            )
-                        }.orEmpty()
-                        data.value?.notifyPropertyChanged(BR.attempts)
+                            }
+                        )
                         updateGradeCell()
                     }
 
