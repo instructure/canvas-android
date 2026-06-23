@@ -41,7 +41,17 @@ interface HorizonCourseModuleDao {
     @Query("SELECT * FROM horizon_course_module_items WHERE courseId = :courseId ORDER BY moduleId, position")
     suspend fun getItemsForCourse(courseId: Long): List<HorizonCourseModuleItemEntity>
 
-    @Query("SELECT * FROM horizon_course_module_items WHERE courseId = :courseId ORDER BY moduleId, position LIMIT 1")
+    @Query(
+        """
+        SELECT items.* FROM horizon_course_module_items AS items
+        INNER JOIN horizon_course_modules AS modules ON modules.moduleId = items.moduleId
+        WHERE items.courseId = :courseId
+          AND items.completionRequirementType IS NOT NULL
+          AND items.completionRequirementCompleted = 0
+        ORDER BY modules.position, items.position
+        LIMIT 1
+        """
+    )
     suspend fun getNextModuleItemForCourse(courseId: Long): HorizonCourseModuleItemEntity?
 
     @Query("SELECT * FROM horizon_course_module_items WHERE itemId = :itemId LIMIT 1")
