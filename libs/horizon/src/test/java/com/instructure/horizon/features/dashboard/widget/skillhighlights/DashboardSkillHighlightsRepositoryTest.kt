@@ -18,6 +18,8 @@ package com.instructure.horizon.features.dashboard.widget.skillhighlights
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Skill
+import com.instructure.horizon.data.datasource.SkillsNetworkDataSource
+import com.instructure.horizon.data.repository.SkillsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -94,7 +96,7 @@ class DashboardSkillHighlightsRepositoryTest {
         assertEquals(null, result[0].proficiencyLevel)
     }
 
-    private fun getRepository(): DashboardSkillHighlightsRepository {
-        return DashboardSkillHighlightsRepository(getSkillsManager)
+    private fun getRepository(): SkillsRepository {
+        return SkillsRepository(SkillsNetworkDataSource(getSkillsManager))
     }
 }

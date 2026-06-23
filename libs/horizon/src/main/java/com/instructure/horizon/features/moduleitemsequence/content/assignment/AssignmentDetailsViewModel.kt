@@ -19,34 +19,47 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetSubmissionHistoryUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
+import com.instructure.horizon.util.formatScore
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.localisedFormat
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val assignmentDetailsRepository: AssignmentDetailsRepository,
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
+    private val getSubmissionHistoryUseCase: GetSubmissionHistoryUseCase,
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val oAuthApi: OAuthAPI.OAuthInterface,
+    private val apiPrefs: ApiPrefs,
     private val aiAssistContextProvider: AiAssistContextProvider,
+    private val networkStateProvider: NetworkStateProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -83,10 +96,10 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun loadData() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
-            val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = false))
             _assignmentFlow.value = assignment
-            val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
-            val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
+            val attempts = getSubmissionHistoryUseCase(GetSubmissionHistoryUseCase.Params(courseId, assignmentId, apiPrefs.user?.id.orDefault()))
+            val lastActualSubmission = attempts.lastGradedOrSubmitted()
             val submissions = if (lastActualSubmission != null) {
                 mapSubmissions(attempts)
             } else {
@@ -98,7 +111,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
-            val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+            val hasUnreadComments = getUnreadCommentsCountUseCase(
+                GetUnreadCommentsCountUseCase.Params(assignmentId, apiPrefs.user?.id.orDefault())
+            ) > 0
 
             aiAssistContextProvider.aiAssistContext = AiAssistContext(
                 contextString = assignment.description.orEmpty(),
@@ -106,6 +121,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     AiAssistContextSource.Assignment(assignment.id.toString())
             )
 
+            val isOffline = !networkStateProvider.isOnline()
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
@@ -116,10 +132,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                         currentSubmissionAttempt = initialAttempt
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
-                    showAddSubmission = lastActualSubmission == null,
+                    showAddSubmission = lastActualSubmission == null && !isOffline,
                     onSubmissionSuccess = ::updateAssignment,
                     attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
-                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments)
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments),
+                    isOffline = isOffline,
                 )
             }
         } catch {
@@ -215,9 +232,10 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun ltiButtonPressed(ltiUrl: String) {
         viewModelScope.launch {
             try {
-                val authenticatedSessionURL =
-                    assignmentDetailsRepository.authenticateUrl(ltiUrl)
-
+                val authenticatedSessionURL = oAuthApi.getAuthenticatedSession(
+                    ltiUrl,
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull?.sessionUrl ?: ltiUrl
                 _uiState.update { it.copy(urlToOpen = authenticatedSessionURL) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(urlToOpen = ltiUrl) }
@@ -242,10 +260,10 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private suspend fun updateAssignment() {
-        val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
+        val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, forceRefresh = true))
         _assignmentFlow.value = assignment
-        val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
-        val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
+        val attempts = getSubmissionHistoryUseCase(GetSubmissionHistoryUseCase.Params(courseId, assignmentId, apiPrefs.user?.id.orDefault(), forceRefresh = true))
+        val lastActualSubmission = attempts.lastGradedOrSubmitted()
         val submissions = if (lastActualSubmission != null) {
             mapSubmissions(attempts)
         } else {
@@ -348,13 +366,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun formatScore(value: Double): String {
-        val formatter = NumberFormat.getNumberInstance().apply {
-            maximumFractionDigits = 2
-            minimumFractionDigits = 0
-            isGroupingUsed = false
-        }
-        return formatter.format(value)
+    private fun List<Submission>.lastGradedOrSubmitted(): Submission? {
+        return filter { it.workflowState == "graded" || it.workflowState == "submitted" }
+            .maxByOrNull { it.attempt }
     }
 
     private fun onAssignmentUpdatedForAddSubmission() {

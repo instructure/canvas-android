@@ -24,21 +24,27 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetCourseScoreDataUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class CourseScoreViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val courseScoreRepository: CourseScoreRepository,
-): ViewModel() {
+    private val getCourseScoreDataUseCase: GetCourseScoreDataUseCase,
+    offlineState: HorizonOfflineState,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         CourseScoreUiState(
@@ -51,6 +57,13 @@ class CourseScoreViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var assignments: List<Assignment> = emptyList()
+
+    init {
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (!isOffline && uiState.value.courseId != -1L) refresh() }
+            .launchIn(viewModelScope)
+    }
 
     fun loadState(courseId: Long) {
         _uiState.update {
@@ -76,11 +89,10 @@ class CourseScoreViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val assignmentGroups = courseScoreRepository.getAssignmentGroups(courseId, forceRefresh)
-        val assignmentGroupItems = assignmentGroups.map { AssignmentGroupScoreItem(it) }
-        val enrollments = courseScoreRepository.getEnrollments(courseId, forceRefresh)
-        val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
-        assignments = assignmentGroups.flatMap { it.assignments }
+        val data = getCourseScoreDataUseCase(GetCourseScoreDataUseCase.Params(courseId, forceRefresh))
+        val assignmentGroupItems = data.assignmentGroups.map { AssignmentGroupScoreItem(it) }
+        val grades = data.enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
+        assignments = data.assignmentGroups.flatMap { it.assignments }
         val sortedAssignments = sortAssignments()
         _uiState.update {
             it.copy(

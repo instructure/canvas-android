@@ -25,6 +25,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -53,6 +54,9 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var horizonDatabaseProvider: HorizonDatabaseProvider
+
     override fun onCreate() {
         super.onCreate()
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
@@ -60,7 +64,8 @@ class AppManager : BaseAppManager() {
                 LogoutTask.Type.LOGOUT,
                 typefaceBehavior = typefaceBehavior,
                 databaseProvider = databaseProvider,
-                alarmScheduler = alarmScheduler
+                alarmScheduler = alarmScheduler,
+                horizonDatabaseProvider = horizonDatabaseProvider,
             ).execute()
         }
 
@@ -72,7 +77,8 @@ class AppManager : BaseAppManager() {
             LogoutTask.Type.LOGOUT,
             typefaceBehavior = typefaceBehavior,
             databaseProvider = databaseProvider,
-            alarmScheduler = alarmScheduler
+            alarmScheduler = alarmScheduler,
+            horizonDatabaseProvider = horizonDatabaseProvider,
         ).execute()
     }
 

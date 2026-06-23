@@ -18,6 +18,7 @@ package com.instructure.horizon.features.notebook
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -79,6 +80,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -178,14 +180,14 @@ fun NotebookScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         state = scrollState,
                         modifier = Modifier
-                            .fillMaxHeight()
+                            .weight(1f)
                             .background(HorizonColors.Surface.pageSecondary()),
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
                             top = 2.dp,
                             bottom = 16.dp
-                        ) + bottomPadding
+                        ) + (if (state.isOffline) PaddingValues(0.dp) else bottomPadding)
                     ) {
                         if (state.notes.isEmpty()) {
                             item {
@@ -205,6 +207,8 @@ fun NotebookScreen(
                                         note,
                                         courseName,
                                         state.deleteLoadingNote,
+                                        deleteEnabled = !state.isOffline,
+                                        unavailableOffline = state.isOffline && note.courseId !in state.syncedCourseIds,
                                         onDeleteClick = {
                                             state.updateShowDeleteConfirmation(note)
                                         }) {
@@ -258,6 +262,15 @@ fun NotebookScreen(
                                 }
                             }
                         }
+                    }
+
+                    if (state.isOffline && state.showOfflineBanner) {
+                        OfflineBanner(
+                            lastSyncedAtMs = state.lastSyncedAtMs,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottomPadding),
+                        )
                     }
                 }
             }
@@ -349,6 +362,8 @@ private fun NoteContent(
     note: Note,
     courseName: String?,
     deleteLoading: Note?,
+    deleteEnabled: Boolean,
+    unavailableOffline: Boolean = false,
     onDeleteClick: () -> Unit,
     onClick: () -> Unit,
 ) {
@@ -366,6 +381,7 @@ private fun NoteContent(
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { onClick() }
+            .offlineDisabled(unavailableOffline)
     ) {
         Column(
             modifier = Modifier
@@ -437,6 +453,7 @@ private fun NoteContent(
                     contentDescription = stringResource(R.string.a11y_notebookDeleteNoteButtonContentDescription),
                     color = IconButtonColor.InverseDanger,
                     size = IconButtonSize.SMALL,
+                    enabled = deleteEnabled,
                     onClick = { onDeleteClick() },
                     loading = note == deleteLoading,
                     modifier = Modifier.align(Alignment.Bottom)

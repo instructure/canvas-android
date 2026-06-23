@@ -25,6 +25,9 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.inbox.CreateConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
 import com.instructure.horizon.features.inbox.InboxEvent
 import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
@@ -44,7 +47,9 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxComposeViewModel @Inject constructor(
-    private val repository: HorizonInboxComposeRepository,
+    private val getInboxCoursesUseCase: GetInboxCoursesUseCase,
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase,
+    private val createConversationUseCase: CreateConversationUseCase,
     @ApplicationContext private val context: Context,
     private val inboxEventHandler: InboxEventHandler
 ): ViewModel() {
@@ -71,7 +76,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
     init {
         viewModelScope.tryLaunch {
-            val courses = repository.getAllInboxCourses(forceNetwork = true)
+            val courses = getInboxCoursesUseCase(GetInboxCoursesUseCase.Params(forceNetwork = true))
             val selectedCourse = if (courses.size == 1) {
                 courses.firstOrNull()
             } else {
@@ -99,9 +104,11 @@ class HorizonInboxComposeViewModel @Inject constructor(
         uiState.value.selectedCourse?.id?.let { courseId ->
             viewModelScope.tryLaunch {
                 _uiState.update { it.copy(isRecipientPickerLoading = true) }
-                val recipients = repository.getRecipients(
-                    courseId = courseId,
-                    searchQuery = uiState.value.recipientSearchQuery.text,
+                val recipients = getInboxRecipientsUseCase(
+                    GetInboxRecipientsUseCase.Params(
+                        courseId = courseId,
+                        searchQuery = uiState.value.recipientSearchQuery.text,
+                    )
                 )
                 _uiState.update {
                     it.copy(
@@ -145,15 +152,16 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isSendLoading = true) }
-            repository.createConversation(
-                recipientIds = uiState.value.selectedRecipients.mapNotNull { it.stringId },
-                body = uiState.value.body.text,
-                subject = uiState.value.subject.text,
-                contextCode = selectedCourse.contextId,
-                attachmentIds = uiState.value.attachments.map { it.id }.toLongArray(),
-                isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100
+            createConversationUseCase(
+                CreateConversationUseCase.Params(
+                    recipientIds = uiState.value.selectedRecipients.mapNotNull { it.stringId },
+                    body = uiState.value.body.text,
+                    subject = uiState.value.subject.text,
+                    contextCode = selectedCourse.contextId,
+                    attachmentIds = uiState.value.attachments.map { it.id }.toLongArray(),
+                    isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100,
+                )
             )
-            repository.invalidateConversationListCachedResponse()
 
             viewModelScope.launch {
                 inboxEventHandler.postEvent(

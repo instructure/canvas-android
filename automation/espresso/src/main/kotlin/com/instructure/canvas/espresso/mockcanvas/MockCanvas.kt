@@ -59,6 +59,7 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleContentDetails
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
@@ -1799,7 +1800,8 @@ fun MockCanvas.addItemToModule(
         contentId: Long = 0,
         published: Boolean = true,
         moduleContentDetails: ModuleContentDetails? = null,
-        unpublishable: Boolean = true
+        unpublishable: Boolean = true,
+        completionRequirement: ModuleCompletionRequirement? = null
 ) : ModuleItem {
 
     // Placeholders for itemType and itemTitle values that we will compute below
@@ -1864,7 +1866,8 @@ fun MockCanvas.addItemToModule(
             htmlUrl = itemUrl,
             contentId = contentId,
             moduleDetails = moduleContentDetails,
-            unpublishable = unpublishable
+            unpublishable = unpublishable,
+            completionRequirement = completionRequirement
     )
 
     // Copy/update/replace the module

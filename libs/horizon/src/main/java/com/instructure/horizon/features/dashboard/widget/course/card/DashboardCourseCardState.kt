@@ -14,6 +14,7 @@ data class DashboardCourseCardState(
     val moduleItem: DashboardCourseCardModuleItemState? = null,
     val onClickAction: CardClickAction? = null,
     val pageState: DashboardWidgetPageState = DashboardWidgetPageState.Empty,
+    val isSynced: Boolean = true,
 ) {
     companion object {
         val Loading = DashboardCourseCardState(

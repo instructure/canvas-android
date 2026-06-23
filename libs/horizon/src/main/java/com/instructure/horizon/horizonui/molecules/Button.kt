@@ -92,6 +92,7 @@ sealed class ButtonColor(
     data object WhiteOutline : ButtonColor(Color.Transparent, HorizonColors.Text.surfaceColored(), HorizonColors.Surface.pageSecondary())
     data object Danger : ButtonColor(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored())
     data object DangerInverse : ButtonColor(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.error())
+    data object DangerOutline : ButtonColor(Color.Transparent, HorizonColors.Text.error(), HorizonColors.Surface.error())
     data object Ghost : ButtonColor(Color.Transparent, HorizonColors.Text.title())
     data object Institution : ButtonColor(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored())
     data object Beige : ButtonColor(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())

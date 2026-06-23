@@ -21,6 +21,8 @@ import com.instructure.canvasapi2.models.ErrorReportResult
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.ErrorReportNetworkDataSource
+import com.instructure.horizon.data.repository.ErrorReportRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -35,7 +37,8 @@ import org.junit.Test
 class ReportABugRepositoryTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val errorReportAPI: ErrorReportAPI.ErrorReportInterface = mockk(relaxed = true)
-    private lateinit var repository: ReportABugRepository
+    private lateinit var networkDataSource: ErrorReportNetworkDataSource
+    private lateinit var repository: ErrorReportRepository
 
     private val testUser = User(
         id = 1L,
@@ -53,7 +56,8 @@ class ReportABugRepositoryTest {
         every { apiPrefs.fullDomain } returns "https://test.instructure.com"
         every { apiPrefs.user } returns testUser
 
-        repository = ReportABugRepository(apiPrefs, errorReportAPI)
+        networkDataSource = ErrorReportNetworkDataSource(apiPrefs, errorReportAPI)
+        repository = ErrorReportRepository(networkDataSource)
     }
 
     @After

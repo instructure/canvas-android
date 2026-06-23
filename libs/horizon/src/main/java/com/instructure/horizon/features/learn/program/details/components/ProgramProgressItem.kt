@@ -82,7 +82,8 @@ sealed class ProgramProgressItemStatus(val borderColor: Color) {
 fun ProgramProgressItem(
     state: ProgramProgressItemState,
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOffline: Boolean = false,
 ) {
     var courseCardHeight by remember { mutableIntStateOf(0) }
 
@@ -133,7 +134,9 @@ fun ProgramProgressItem(
                 .onGloballyPositioned {
                     courseCardHeight = it.size.height
                 }
-                .padding(vertical = 8.dp))
+                .padding(vertical = 8.dp),
+            isOffline = isOffline,
+        )
     }
 }
 

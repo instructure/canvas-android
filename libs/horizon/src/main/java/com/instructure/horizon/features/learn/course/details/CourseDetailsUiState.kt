@@ -29,6 +29,8 @@ data class CourseDetailsUiState(
     val courseSyllabus: String = "",
     val parentPrograms: List<Program> = emptyList(),
     val availableTabs: List<CourseDetailsTab> = CourseDetailsTab.entries,
+    val isOffline: Boolean = false,
+    val lastSyncedAtMs: Long? = null,
 )
 
 enum class CourseDetailsTab(@StringRes val titleRes: Int) {

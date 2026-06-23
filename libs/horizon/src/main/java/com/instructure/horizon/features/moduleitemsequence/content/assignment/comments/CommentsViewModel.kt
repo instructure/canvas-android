@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetCommentsUseCase
+import com.instructure.horizon.domain.usecase.PostSubmissionCommentUseCase
 import com.instructure.horizon.horizonui.organisms.cards.CommentAttachmentState
 import com.instructure.horizon.horizonui.organisms.cards.CommentCardState
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
@@ -46,7 +48,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CommentsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val commentsRepository: CommentsRepository,
+    private val getCommentsUseCase: GetCommentsUseCase,
+    private val postSubmissionCommentUseCase: PostSubmissionCommentUseCase,
     private val apiPrefs: ApiPrefs,
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
@@ -85,11 +88,13 @@ class CommentsViewModel @Inject constructor(
         hasPreviousPage = false
 
         viewModelScope.tryLaunch {
-            val commentsData = commentsRepository.getComments(
-                assignmentId = assignmentId,
-                userId = apiPrefs.user?.id.orDefault(),
-                attempt = attempt,
-                forceNetwork = false
+            val commentsData = getCommentsUseCase(
+                GetCommentsUseCase.Params(
+                    assignmentId = assignmentId,
+                    userId = apiPrefs.user?.id.orDefault(),
+                    attempt = attempt,
+                    forceNetwork = false,
+                )
             )
 
             updateState(commentsData)
@@ -101,13 +106,15 @@ class CommentsViewModel @Inject constructor(
     private fun loadNextPage() {
         _uiState.update { it.copy(loading = true) }
         viewModelScope.tryLaunch {
-            val commentsData = commentsRepository.getComments(
-                assignmentId = assignmentId,
-                userId = apiPrefs.user?.id.orDefault(),
-                attempt = attempt,
-                forceNetwork = false,
-                endCursor = endCursor,
-                nextPage = true
+            val commentsData = getCommentsUseCase(
+                GetCommentsUseCase.Params(
+                    assignmentId = assignmentId,
+                    userId = apiPrefs.user?.id.orDefault(),
+                    attempt = attempt,
+                    forceNetwork = false,
+                    endCursor = endCursor,
+                    nextPage = true,
+                )
             )
 
             updateState(commentsData)
@@ -119,13 +126,15 @@ class CommentsViewModel @Inject constructor(
     private fun loadPreviousPage() {
         _uiState.update { it.copy(loading = true) }
         viewModelScope.tryLaunch {
-            val commentsData = commentsRepository.getComments(
-                assignmentId = assignmentId,
-                userId = apiPrefs.user?.id.orDefault(),
-                attempt = attempt,
-                forceNetwork = false,
-                startCursor = startCursor,
-                nextPage = false
+            val commentsData = getCommentsUseCase(
+                GetCommentsUseCase.Params(
+                    assignmentId = assignmentId,
+                    userId = apiPrefs.user?.id.orDefault(),
+                    attempt = attempt,
+                    forceNetwork = false,
+                    startCursor = startCursor,
+                    nextPage = false,
+                )
             )
 
             updateState(commentsData)
@@ -199,7 +208,15 @@ class CommentsViewModel @Inject constructor(
         }
 
         viewModelScope.tryLaunch {
-            commentsRepository.postComment(courseId, assignmentId, apiPrefs.user?.id.orDefault(), attempt, commentText).dataOrThrow
+            postSubmissionCommentUseCase(
+                PostSubmissionCommentUseCase.Params(
+                    courseId = courseId,
+                    assignmentId = assignmentId,
+                    userId = apiPrefs.user?.id.orDefault(),
+                    attempt = attempt,
+                    commentText = commentText,
+                )
+            ).dataOrThrow
             _uiState.update {
                 it.copy(comment = TextFieldValue(""), postingComment = false)
             }
@@ -215,11 +232,13 @@ class CommentsViewModel @Inject constructor(
         hasNextPage = false
         hasPreviousPage = false
 
-        val commentsData = commentsRepository.getComments(
-            assignmentId = assignmentId,
-            userId = apiPrefs.user?.id.orDefault(),
-            attempt = attempt,
-            forceNetwork = true
+        val commentsData = getCommentsUseCase(
+            GetCommentsUseCase.Params(
+                assignmentId = assignmentId,
+                userId = apiPrefs.user?.id.orDefault(),
+                attempt = attempt,
+                forceNetwork = true,
+            )
         )
 
         updateState(commentsData)

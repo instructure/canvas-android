@@ -20,6 +20,7 @@ import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -33,7 +34,8 @@ import com.instructure.student.tasks.StudentLogoutTask
 class StudentAcceptableUsePolicyRouter(
     private val activity: FragmentActivity,
     private val databaseProvider: DatabaseProvider,
-    private val alarmScheduler: AlarmScheduler
+    private val alarmScheduler: AlarmScheduler,
+    private val horizonDatabaseProvider: HorizonDatabaseProvider,
 ) : AcceptableUsePolicyRouter {
 
     override fun openPolicy(content: String) {
@@ -55,6 +57,11 @@ class StudentAcceptableUsePolicyRouter(
     }
 
     override fun logout() {
-        StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
+        StudentLogoutTask(
+            LogoutTask.Type.LOGOUT,
+            databaseProvider = databaseProvider,
+            alarmScheduler = alarmScheduler,
+            horizonDatabaseProvider = horizonDatabaseProvider,
+        ).execute()
     }
 }

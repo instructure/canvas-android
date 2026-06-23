@@ -57,6 +57,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.util.plus
@@ -64,16 +65,21 @@ import com.instructure.horizon.util.plus
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, navController: NavHostController, modifier: Modifier = Modifier) {
-    LoadingStateWrapper(loadingState = uiState.loadingState, modifier) {
-        CollapsableHeaderScreen(
-            statusBarColor = HorizonColors.Surface.pagePrimary(),
-            headerContent = { paddingValues ->
-                ProgramDetailsHeader(uiState, navController, Modifier.padding(paddingValues))
-            },
-            bodyContent = { paddingValues ->
-                ProgramDetailsContent(uiState, navController, paddingValues)
-            }
-        )
+    OfflineScreenWrapper(
+        isOffline = uiState.isOffline,
+        lastSyncedAtMs = uiState.lastSyncedAtMs,
+    ) {
+        LoadingStateWrapper(loadingState = uiState.loadingState, modifier) {
+            CollapsableHeaderScreen(
+                statusBarColor = HorizonColors.Surface.pagePrimary(),
+                headerContent = { paddingValues ->
+                    ProgramDetailsHeader(uiState, navController, Modifier.padding(paddingValues))
+                },
+                bodyContent = { paddingValues ->
+                    ProgramDetailsContent(uiState, navController, paddingValues)
+                }
+            )
+        }
     }
 }
 
@@ -152,7 +158,7 @@ private fun ProgramDetailsContent(
         item {
             Column {
                 HorizonSpace(SpaceSize.SPACE_8)
-                ProgramProgress(uiState.programProgressState, navController)
+                ProgramProgress(uiState.programProgressState, navController, isOffline = uiState.isOffline)
             }
         }
     }

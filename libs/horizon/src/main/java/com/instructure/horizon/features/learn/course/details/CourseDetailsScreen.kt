@@ -57,6 +57,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -73,6 +74,10 @@ fun CourseDetailsScreen(
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
 
+    OfflineScreenWrapper(
+        isOffline = state.isOffline,
+        lastSyncedAtMs = state.lastSyncedAtMs,
+    ) {
     LoadingStateWrapper(state.loadingState){
         CollapsableHeaderScreen(
             statusBarColor = HorizonColors.Surface.pagePrimary(),
@@ -173,6 +178,7 @@ fun CourseDetailsScreen(
                 }
             }
         )
+    }
     }
 }
 

@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -43,6 +44,7 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -62,6 +64,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -104,6 +107,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
@@ -116,6 +120,9 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.OfflineAwareContent
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
+import com.instructure.horizon.horizonui.organisms.OfflineContentState
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsingBarsNestedScrollConnection
 import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -134,33 +141,41 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         statusBarAlpha = 1f,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            ModuleItemSequenceBottomBar(
-                showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                showPreviousButton = uiState.currentPosition > 0,
-                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
-                        || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
-                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                onNextClick = uiState.onNextClick,
-                onPreviousClick = uiState.onPreviousClick,
-                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = {
-                    navController.navigate(
-                        NotebookRoute.Notebook.route(
-                            uiState.courseId.toString(),
-                            uiState.objectTypeAndId.first,
-                            uiState.objectTypeAndId.second,
-                            true,
-                            false,
-                            true
-                        )
+            Column {
+                if (uiState.isOffline) {
+                    OfflineBanner(
+                        lastSyncedAtMs = uiState.lastSyncedAtMs,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                },
-                notebookEnabled = uiState.notebookButtonEnabled,
-                aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                hasUnreadComments = uiState.hasUnreadComments
-            )
+                }
+                ModuleItemSequenceBottomBar(
+                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                    showPreviousButton = uiState.currentPosition > 0,
+                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                    showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
+                            || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
+                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                    onNextClick = uiState.onNextClick,
+                    onPreviousClick = uiState.onPreviousClick,
+                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                    onNotebookClick = {
+                        navController.navigate(
+                            NotebookRoute.Notebook.route(
+                                uiState.courseId.toString(),
+                                uiState.objectTypeAndId.first,
+                                uiState.objectTypeAndId.second,
+                                true,
+                                false,
+                                true
+                            )
+                        )
+                    },
+                    notebookEnabled = uiState.notebookButtonEnabled,
+                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                    hasUnreadComments = uiState.hasUnreadComments
+                )
+            }
         }
     ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -179,14 +194,21 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             )
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
-                MarkAsDoneButton(markAsDoneState)
+                MarkAsDoneButton(
+                    markAsDoneState = markAsDoneState,
+                    isOffline = uiState.isOffline,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifier: Modifier = Modifier) {
+private fun BoxScope.MarkAsDoneButton(
+    markAsDoneState: MarkAsDoneUiState,
+    isOffline: Boolean = false,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier
             .align(Alignment.BottomEnd)
@@ -219,10 +241,12 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
             Button(
                 label = stringResource(id = if (markAsDoneState.isDone) R.string.modulePager_done else R.string.modulePager_markAsDone),
                 color = ButtonColor.Ghost,
+                enabled = !isOffline,
                 onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
                 iconPosition = ButtonIconPosition.Start(
                     iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
-                )
+                ),
+                modifier = Modifier.offlineDisabled(isOffline),
             )
         }
     }
@@ -425,7 +449,9 @@ private fun ModuleItemContentScreen(
     scrollToNoteId: String?,
     modifier: Modifier = Modifier
 ) {
-    if (moduleItemUiState.isLoading) {
+    if (!moduleItemUiState.isAvailableOffline) {
+        OfflineAwareContent(state = OfflineContentState.NotAvailableOffline, modifier = modifier) { }
+    } else if (moduleItemUiState.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxSize()

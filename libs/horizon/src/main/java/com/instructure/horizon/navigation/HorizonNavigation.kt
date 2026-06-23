@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.features.announcement.navigation.announcementNavigation
 import com.instructure.horizon.features.home.HomeBottomNavigationBar
 import com.instructure.horizon.features.home.horizonHomeNavigation
 import com.instructure.horizon.features.home.isBottomBarVisible
@@ -139,6 +140,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 }
             }
             horizonInboxNavigation(navController)
+            announcementNavigation(navController)
             composable<MainNavigationRoute.ModuleItemSequence>(
                 enterTransition = { enterTransition() },
                 exitTransition = { exitTransition() },

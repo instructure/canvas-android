@@ -17,17 +17,30 @@ package com.instructure.horizon.features.moduleitemsequence
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.database.entity.EntitySyncType
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetEntityLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemSequenceUseCase
+import com.instructure.horizon.domain.usecase.GetModuleItemUseCase
+import com.instructure.horizon.domain.usecase.GetModulesWithItemsUseCase
+import com.instructure.horizon.domain.usecase.HasUnreadCommentsUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsNotDoneUseCase
+import com.instructure.horizon.domain.usecase.MarkModuleItemAsReadUseCase
+import com.instructure.horizon.domain.usecase.SyncCourseProgressUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
@@ -41,6 +54,9 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.offline.HorizonOfflineState
+import androidx.lifecycle.ViewModel
+import com.instructure.horizon.util.formatScore
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import com.instructure.pandautils.utils.orDefault
@@ -48,6 +64,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -55,12 +74,23 @@ import javax.inject.Inject
 @HiltViewModel
 class ModuleItemSequenceViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ModuleItemSequenceRepository,
+    private val getModuleItemSequenceUseCase: GetModuleItemSequenceUseCase,
+    private val getModulesWithItemsUseCase: GetModulesWithItemsUseCase,
+    private val getModuleItemUseCase: GetModuleItemUseCase,
+    private val markModuleItemAsDoneUseCase: MarkModuleItemAsDoneUseCase,
+    private val markModuleItemAsNotDoneUseCase: MarkModuleItemAsNotDoneUseCase,
+    private val markModuleItemAsReadUseCase: MarkModuleItemAsReadUseCase,
+    private val hasUnreadCommentsUseCase: HasUnreadCommentsUseCase,
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
+    private val getEntityLastSyncedAtUseCase: GetEntityLastSyncedAtUseCase,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val aiAssistContextProvider: AiAssistContextProvider,
-    savedStateHandle: SavedStateHandle,
     private val dashboardEventHandler: DashboardEventHandler,
-    private val learnEventHandler: LearnEventHandler
+    private val learnEventHandler: LearnEventHandler,
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+    private val syncCourseProgressUseCase: SyncCourseProgressUseCase,
+    savedStateHandle: SavedStateHandle,
+    private val offlineState: HorizonOfflineState,
 ) : ViewModel() {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
@@ -70,6 +100,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val showMyProgressButton = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().showMyProgressButton
 
     private var courseProgressChanged = false
+    private var courseProgressSyncTriggered = false
 
     private val _uiState =
         MutableStateFlow(
@@ -106,6 +137,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             loadData()
+            if (offlineState.isOffline.value) {
+                applyOfflineState()
+            }
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
@@ -114,6 +148,37 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
+
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline ->
+                if (isOffline) applyOfflineState()
+                else _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun applyOfflineState() {
+        viewModelScope.tryLaunch {
+            val currentModuleItemId = _uiState.value.currentItem?.moduleItemId
+            val lastSyncedAt = if (currentModuleItemId != null) {
+                getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, currentModuleItemId)
+            } else null
+            val updatedItems = _uiState.value.items.map { item ->
+                val itemSyncedAt = getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, item.moduleItemId)
+                item.copy(isAvailableOffline = itemSyncedAt != null)
+            }
+            _uiState.update { state ->
+                state.copy(
+                    isOffline = true,
+                    lastSyncedAtMs = lastSyncedAt,
+                    items = updatedItems,
+                    currentItem = updatedItems.getOrNull(state.currentPosition),
+                    aiAssistButtonEnabled = false,
+                    notebookButtonEnabled = false,
+                )
+            }
+        } catch { }
     }
 
     private suspend fun loadData() {
@@ -124,23 +189,27 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
             val assetId = moduleItemAssetId
                 ?: throw IllegalArgumentException("Module item sequence shouldn't be opened without moduleItemId or moduleItemAsset")
-            val moduleItemSequence = repository.getModuleItemSequence(courseId, assetType, assetId)
+            val moduleItemSequence = getModuleItemSequenceUseCase(
+                GetModuleItemSequenceUseCase.Params(courseId, assetType, assetId)
+            )
             moduleItemSequence.items?.firstOrNull()?.current?.id ?: -1L
         }
 
-        modules = repository.getModulesWithItems(courseId, forceNetwork = true)
+        modules = getModulesWithItemsUseCase(GetModulesWithItemsUseCase.Params(courseId, forceRefresh = true))
         moduleItems = modules.flatMap { it.items }
 
         currentModuleItem = moduleItems.find { it.id == moduleItemId }
 
         val assignment = getAssignment(currentModuleItem, forceNetwork = true)
         val attempts = getAttemptCount(assignment)
-        val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+        val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
-                val currentAttempts = if (it.id == moduleItemId) attempts else null
-                createModuleItemUiState(it, modules, currentAttempts)
+                val isCurrent = it.id == moduleItemId
+                val currentAttempts = if (isCurrent) attempts else null
+                val currentAssignment = if (isCurrent) assignment else null
+                createModuleItemUiState(it, modules, currentAttempts, currentAssignment)
             }
 
         val progressPages = modules.map { createProgressPage(it) }
@@ -184,7 +253,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private fun createModuleItemUiState(item: ModuleItem, modules: List<ModuleObject>, attempts: String?): ModuleItemUiState? {
+    private fun createModuleItemUiState(
+        item: ModuleItem,
+        modules: List<ModuleObject>,
+        attempts: String?,
+        assignment: Assignment?
+    ): ModuleItemUiState? {
         val moduleItemContent: ModuleItemContent? = when {
             item.isLocked() -> ModuleItemContent.Locked(
                 item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked)
@@ -240,13 +314,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
             moduleItemName = item.title.orEmpty(),
             moduleItemId = item.id,
             moduleItemContent = moduleItemContent,
-            detailTags = createDetailTags(item, attempts),
+            detailTags = createDetailTags(item, attempts, assignment),
             pillText = createPillText(item),
             markAsDoneUiState = markDoneUiState
         )
     }
 
-    private fun createDetailTags(item: ModuleItem, attempts: String?): List<String> {
+    private fun createDetailTags(item: ModuleItem, attempts: String?, assignment: Assignment?): List<String> {
         val detailTags = mutableListOf<String>()
         item.estimatedDuration?.let {
             detailTags.add(it.formatIsoDuration(context))
@@ -254,9 +328,19 @@ class ModuleItemSequenceViewModel @Inject constructor(
         item.moduleDetails?.dueDate?.let {
             detailTags.add(context.getString(R.string.modulePager_dueDate, it.localisedFormatMonthDay()))
         }
-        item.moduleDetails?.pointsPossible?.let {
-            val points = it.toDoubleOrNull()?.toInt() ?: 0
-            detailTags.add(context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, points, points))
+        if (assignment != null && assignment.isGraded()) {
+            detailTags.add(
+                context.getString(
+                    R.string.attemptCard_score,
+                    formatScore(assignment.submission?.score.orDefault()),
+                    formatScore(assignment.pointsPossible)
+                )
+            )
+        } else {
+            item.moduleDetails?.pointsPossible?.let {
+                val points = it.toDoubleOrNull()?.toInt() ?: 0
+                detailTags.add(context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, points, points))
+            }
         }
         attempts?.let {
             detailTags.add(it)
@@ -295,33 +379,44 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
         _uiState.update {
             it.copy(
+                loadingState = it.loadingState.copy(isError = false),
                 notebookButtonEnabled = false,
                 aiAssistButtonEnabled = false
             )
         }
 
         viewModelScope.tryLaunch {
-            val moduleItem =
-                repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val moduleItem = getModuleItemUseCase(
+                GetModuleItemUseCase.Params(
+                    courseId = courseId,
+                    moduleId = moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(),
+                    moduleItemId = moduleItemId,
+                )
+            )
 
             val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+            val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(
                     moduleItem,
                     modules,
-                    attempts
+                    attempts,
+                    assignment
                 ) else it
             }
             val currentItem = getCurrentItem(items = newItems)
+            val lastSyncedAtMs = if (_uiState.value.isOffline) {
+                getEntityLastSyncedAtUseCase(EntitySyncType.MODULE_ITEM, moduleItemId)
+            } else _uiState.value.lastSyncedAtMs
             _uiState.update {
                 it.copy(
                     items = newItems,
                     currentItem = currentItem,
-                    hasUnreadComments = hasUnreadComments
+                    hasUnreadComments = hasUnreadComments,
+                    lastSyncedAtMs = lastSyncedAtMs,
                 )
             }
         } catch {
@@ -375,15 +470,21 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun reloadData() {
         viewModelScope.tryLaunch {
-            modules = repository.getModulesWithItems(courseId, forceNetwork = true)
+            modules = getModulesWithItemsUseCase(GetModulesWithItemsUseCase.Params(courseId, forceRefresh = true))
             moduleItems = modules.flatMap { it.items }
 
             val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
+            val hasUnreadComments = hasUnreadCommentsUseCase(HasUnreadCommentsUseCase.Params(assignment?.id, forceNetwork = true))
 
+            val currentReloadModuleItemId = currentModuleItem?.id
             val items = modules
-                .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
+                .flatMap { it.items }.mapNotNull {
+                    val isCurrent = it.id == currentReloadModuleItemId
+                    val currentAttempts = if (isCurrent) attempts else null
+                    val currentAssignment = if (isCurrent) assignment else null
+                    createModuleItemUiState(it, modules, currentAttempts, currentAssignment)
+                }
 
             val progressPages = modules.map { createProgressPage(it) }
 
@@ -470,7 +571,11 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun changeDoneState(item: ModuleItem, markDone: Boolean) {
         viewModelScope.launch {
             updateMarkAsDoneStateForItem(item, loading = true)
-            val result = if (markDone) repository.markAsDone(courseId, item) else repository.markAsNotDone(courseId, item)
+            val result = if (markDone) {
+                markModuleItemAsDoneUseCase(MarkModuleItemAsDoneUseCase.Params(courseId, item))
+            } else {
+                markModuleItemAsNotDoneUseCase(MarkModuleItemAsNotDoneUseCase.Params(courseId, item))
+            }
             if (result.isSuccess) {
                 updateMarkAsDoneStateForItem(item, loading = false, done = markDone)
                 courseProgressChanged()
@@ -513,7 +618,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val completionRequirement = item.completionRequirement
         if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
             viewModelScope.launch {
-                repository.markAsRead(courseId, item.moduleId, item.id)
+                markModuleItemAsReadUseCase(MarkModuleItemAsReadUseCase.Params(courseId, item.moduleId, item.id))
                 courseProgressChanged()
             }
         }
@@ -522,7 +627,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private suspend fun getAssignment(item: ModuleItem?, forceNetwork: Boolean): Assignment? {
         if (item?.type != Type.Assignment.name) return null
 
-        return repository.getAssignment(item.contentId, courseId, forceNetwork = forceNetwork)
+        return getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, item.contentId, forceNetwork))
     }
 
     private fun getAttemptCount(assignment: Assignment?): String? {
@@ -585,6 +690,23 @@ class ModuleItemSequenceViewModel @Inject constructor(
         viewModelScope.launch {
             dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
             learnEventHandler.postEvent(LearnEvent.RefreshCourseProgress)
+            syncCourseProgressIfNeeded()
+        }
+    }
+
+    private suspend fun syncCourseProgressIfNeeded() {
+        if (courseProgressSyncTriggered) return
+        val course = try {
+            getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(courseId, forceRefresh = true))
+        } catch (e: Exception) {
+            return
+        }
+
+        if (course.progress < 100.0) return
+
+        val result = syncCourseProgressUseCase(courseId)
+        if (result is DataResult.Success) {
+            courseProgressSyncTriggered = true
         }
     }
 }

@@ -46,6 +46,10 @@ class FakeGetProgramsManager : GetProgramsManager {
         }
     }
 
+    override suspend fun syncCourseProgress(canvasCourseId: Long): DataResult<Unit> {
+        return DataResult.Success(Unit)
+    }
+
     private fun getProgramsData(): List<Program> {
         val program1 = Program(
             id = "1",

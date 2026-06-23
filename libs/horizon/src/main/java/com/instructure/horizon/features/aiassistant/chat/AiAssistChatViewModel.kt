@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.toContextSourceList
 import com.instructure.horizon.features.aiassistant.common.model.toJourneyAssistChatMessages
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistChatViewModel @Inject constructor(
-    private val repository: AiAssistRepository,
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase,
     private val aiAssistContextProvider: AiAssistContextProvider,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
@@ -73,10 +73,12 @@ class AiAssistChatViewModel @Inject constructor(
     }
 
     private suspend fun answerPrompt(prompt: String): AiAssistMessage {
-        val response = repository.answerPrompt(
-            prompt,
-            aiAssistMessages.toJourneyAssistChatMessages(),
-            aiAssistContextState
+        val response = answerAiAssistPromptUseCase(
+            AnswerAiAssistPromptUseCase.Params(
+                prompt = prompt,
+                history = aiAssistMessages.toJourneyAssistChatMessages(),
+                state = aiAssistContextState,
+            )
         )
         aiAssistContextState = response.state ?: aiAssistContextState
         return response.message

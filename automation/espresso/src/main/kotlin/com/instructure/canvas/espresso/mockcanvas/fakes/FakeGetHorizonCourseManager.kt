@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.DashboardEnrollment
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
@@ -89,6 +90,37 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
         )
     }
 
+    override suspend fun getDashboardEnrollments(
+        userId: Long,
+        forceNetwork: Boolean
+    ): DataResult<List<DashboardEnrollment>> {
+        val activeCourse = getCourses()[0]
+        val completedCourse = getCourses()[1]
+
+        return DataResult.Success(listOf(
+            DashboardEnrollment(
+                enrollmentId = MockCanvas.data.enrollments.values.toList()[0].id,
+                enrollmentState = MockCanvas.data.enrollments.values.toList()[0].enrollmentState.orEmpty(),
+                courseId = activeCourse.courseId,
+                courseName = activeCourse.courseName,
+                courseImageUrl = activeCourse.courseImageUrl,
+                courseSyllabus = activeCourse.courseSyllabus,
+                institutionName = null,
+                completionPercentage = activeCourse.progress
+            ),
+            DashboardEnrollment(
+                enrollmentId = MockCanvas.data.enrollments.values.toList()[1].id,
+                enrollmentState = MockCanvas.data.enrollments.values.toList()[1].enrollmentState.orEmpty(),
+                courseId = completedCourse.courseId,
+                courseName = completedCourse.courseName,
+                courseImageUrl = completedCourse.courseImageUrl,
+                courseSyllabus = completedCourse.courseSyllabus,
+                institutionName = null,
+                completionPercentage = completedCourse.progress
+            )
+        ))
+    }
+
     override suspend fun getProgramCourses(
         courseId: Long,
         forceNetwork: Boolean
@@ -112,7 +144,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 courseName = courses[0].name,
                 courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 1",
-                progress = 0.25
+                progress = 25.0
             )
         } else { null }
         val completedCourse = if (courses.size > 1) {
@@ -121,7 +153,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
                 courseName = courses[1].name,
                 courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 2",
-                progress = 1.0
+                progress = 100.0
             )
         } else { null }
         val invitedCourse = if (courses.size > 2) {

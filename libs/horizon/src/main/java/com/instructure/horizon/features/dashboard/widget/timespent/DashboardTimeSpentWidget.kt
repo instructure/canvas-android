@@ -26,6 +26,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardOffline
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
@@ -38,6 +39,7 @@ fun DashboardTimeSpentWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     pageState: DashboardWidgetPageState,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardTimeSpentViewModel>()
@@ -52,15 +54,27 @@ fun DashboardTimeSpentWidget(
         }
     }
 
-    DashboardTimeSpentSection(state, pageState, modifier)
+    DashboardTimeSpentSection(state, pageState, isOffline, modifier)
 }
 
 @Composable
 fun DashboardTimeSpentSection(
     state: DashboardTimeSpentUiState,
     pageState: DashboardWidgetPageState,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
+    if (isOffline) {
+        DashboardWidgetCardOffline(
+            title = stringResource(R.string.dashboardTimeLearningTitle),
+            iconRes = R.drawable.schedule,
+            widgetColor = HorizonColors.PrimitivesHoney.honey12(),
+            useMinWidth = false,
+            pageState = pageState,
+            modifier = modifier
+        )
+        return
+    }
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardTimeSpentCardContent(

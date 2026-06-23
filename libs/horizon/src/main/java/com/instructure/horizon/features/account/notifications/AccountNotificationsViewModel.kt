@@ -23,7 +23,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetNotificationPreferencesUseCase
+import com.instructure.horizon.domain.usecase.UpdateNotificationPreferenceUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.model.AccountNotificationFrequency
+import com.instructure.horizon.model.AccountNotificationPreference
+import com.instructure.horizon.model.AccountNotificationType
+import com.instructure.horizon.model.HorizonAccountNotificationCategory
+import com.instructure.horizon.model.HorizonAccountNotificationPreference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +41,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountNotificationsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: AccountNotificationsRepository,
+    private val getNotificationPreferencesUseCase: GetNotificationPreferencesUseCase,
+    private val updateNotificationPreferenceUseCase: UpdateNotificationPreferenceUseCase,
     private val apiPrefs: ApiPrefs
 ): ViewModel() {
 
@@ -53,7 +61,7 @@ class AccountNotificationsViewModel @Inject constructor(
     private fun loadData() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = true)) }
-            val settings = repository.getNotificationPreferences(apiPrefs.user!!.id)
+            val settings = getNotificationPreferencesUseCase(apiPrefs.user!!.id)
             val horizonSettings = getHorizonSettings(settings)
             val uiGroups = getUiGroupStates(horizonSettings)
 
@@ -110,14 +118,16 @@ class AccountNotificationsViewModel @Inject constructor(
                             viewModelScope.tryLaunch {
                                 updatePreference(groupTitle, typeLabel, enabled = false)
                                 preference.category.categories.forEach { category ->
-                                    repository.updateNotificationPreference(
-                                        category = category,
-                                        channelId = it.channel.id,
-                                        frequency = if (checked) {
-                                            AccountNotificationFrequency.IMMEDIATELY
-                                        } else {
-                                            AccountNotificationFrequency.NEVER
-                                        }
+                                    updateNotificationPreferenceUseCase(
+                                        UpdateNotificationPreferenceUseCase.Params(
+                                            category = category,
+                                            channelId = it.channel.id,
+                                            frequency = if (checked) {
+                                                AccountNotificationFrequency.IMMEDIATELY
+                                            } else {
+                                                AccountNotificationFrequency.NEVER
+                                            },
+                                        )
                                     )
                                 }
                                 updatePreference(groupTitle, typeLabel, enabled = true, checked = checked)
@@ -189,4 +199,3 @@ class AccountNotificationsViewModel @Inject constructor(
         }
     }
 }
-
