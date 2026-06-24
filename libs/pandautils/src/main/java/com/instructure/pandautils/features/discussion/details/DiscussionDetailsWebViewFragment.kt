@@ -26,10 +26,10 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -152,10 +152,13 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
                     fileDownloader.downloadFileToDevice(url, URLUtil.guessFileName(url, null, null), null)
                 } else if (url.contains("discussion_topics") || url.contains("announcements")) {
                     val listType = discussionListRedirectType(url)
-                    if (listType != null) {
-                        handleDeletedFromWebView(listType)
-                    } else {
-                        binding.discussionWebView.loadUrl(url)
+                    when {
+                        listType != null -> handleDeletedFromWebView(listType)
+                        // Same-instance links open the native screen (MBL-20102).
+                        webViewRouter.canRouteInternally(url) -> webViewRouter.routeInternally(url)
+                        // Cross-instance (trusted) links can't route natively (MBL-17753), so load
+                        // them in the WebView with embed=true to keep the web toolbar hidden.
+                        else -> binding.discussionWebView.loadUrl(url.withEmbedParam())
                     }
                 } else if (url.contains("speed_grader")) {
                     val uri = url.toUri()
@@ -185,6 +188,10 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     private fun isCanvasFileDownloadUrl(url: String): Boolean {
         return url.contains("/files/") && url.contains("download_frd=1") && url.contains("verifier=")
     }
+
+    // Appends embed=true so the loaded page hides the web toolbar, handling URLs that already
+    // contain a query string (uses & instead of a second ?).
+    private fun String.withEmbedParam() = toUri().buildUpon().appendQueryParameter("embed", "true").build().toString()
 
     // The topic was deleted inside the WebView and Canvas redirected to the list index. Confirm with
     // a toast and pop back to the native list, which refreshes itself in onStop().
