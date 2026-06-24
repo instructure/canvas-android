@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -47,6 +48,7 @@ class ManageStudentsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
+    @Stub("Self registration disabled temporary due to security reasons. When it will be enabled, remove stub from the test.")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.MANAGE_STUDENTS, TestCategory.E2E, SecondaryFeatureCategory.ADD_STUDENT)
     fun testManageStudentsAddStudentE2E() {
 
