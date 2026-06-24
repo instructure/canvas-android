@@ -38,23 +38,33 @@ class NetworkStateProviderImpl(context: Context) : NetworkStateProvider {
 
     private val _isOnlineLiveData = MutableLiveData<Boolean>()
 
+    private var lastPostedValue: Boolean? = null
+
     override val isOnlineLiveData: LiveData<Boolean>
         get() = _isOnlineLiveData
 
     init {
-        _isOnlineLiveData.postValue(hasActiveNetwork)
+        updateOnlineState(hasActiveNetwork)
         connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
             override fun onCapabilitiesChanged(network: Network, capabilities: NetworkCapabilities) {
                 super.onCapabilitiesChanged(network, capabilities)
                 val validated = capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-                _isOnlineLiveData.postValue(validated)
+                updateOnlineState(validated)
             }
 
             override fun onLost(network: Network) {
                 super.onLost(network)
-                _isOnlineLiveData.postValue(false)
+                updateOnlineState(false)
             }
         })
+    }
+
+    @Synchronized
+    private fun updateOnlineState(isOnline: Boolean) {
+        if (lastPostedValue != isOnline) {
+            lastPostedValue = isOnline
+            _isOnlineLiveData.postValue(isOnline)
+        }
     }
 
     override fun isOnline(): Boolean {
