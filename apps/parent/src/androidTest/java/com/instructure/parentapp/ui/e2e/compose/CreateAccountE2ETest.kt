@@ -30,7 +30,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.dataseeding.api.UserApi
 import com.instructure.espresso.randomString
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -50,7 +49,6 @@ class CreateAccountE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ACCOUNT_CREATION, TestCategory.E2E)
     fun testAccountCreationE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")

@@ -628,7 +628,6 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
 

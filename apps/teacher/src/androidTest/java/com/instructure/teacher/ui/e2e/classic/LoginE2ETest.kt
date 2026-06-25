@@ -27,7 +27,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -50,7 +49,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2E() {
 
@@ -105,7 +103,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginWithNotTeacherRole() {
 
@@ -146,7 +143,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2EWithLastSavedSchool() {
 
@@ -173,7 +169,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.ACCESS_TOKEN_EXPIRATION)
     fun testTokenExpirationForcedLogoutThenLogBackE2E() {
 
@@ -275,7 +270,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testWrongDomainE2E() {
 
