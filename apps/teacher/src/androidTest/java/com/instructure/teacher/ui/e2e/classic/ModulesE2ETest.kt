@@ -138,9 +138,11 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the previous arrow button is not displayed because the user is on the first assignment's details page, but the next arrow button is displayed.")
         assignmentDetailsPage.moduleItemInteractions.assertPreviousArrowNotDisplayed()
         assignmentDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to the module list page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Open the '${testPage.title}' assignment module item.")
+        Log.d(STEP_TAG, "Open the '${testPage.title}' page module item.")
         moduleListPage.clickOnModuleItem(testPage.title)
 
         Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
