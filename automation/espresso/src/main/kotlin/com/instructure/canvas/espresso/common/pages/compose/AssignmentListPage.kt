@@ -44,7 +44,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.dataseeding.model.ClassicQuizzesApiModel
 import com.instructure.espresso.R
 import com.instructure.espresso.assertDoesNotExistWithTimeout
 import com.instructure.espresso.page.plus
@@ -86,7 +86,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.waitForIdle()
     }
 
-    fun clickQuiz(quiz: QuizApiModel) {
+    fun clickQuiz(quiz: ClassicQuizzesApiModel) {
         composeTestRule.onNodeWithTag("assignmentList")
             .performScrollToNode(hasText(quiz.title))
 
@@ -259,7 +259,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         }
     }
 
-    fun assertQuizNotDisplayed(quiz: QuizApiModel) {
+    fun assertQuizNotDisplayed(quiz: ClassicQuizzesApiModel) {
         composeTestRule.onNodeWithText(quiz.title)
             .assertIsNotDisplayed()
     }

@@ -1,24 +1,29 @@
-//
-// Copyright (C) 2018-present Instructure, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
+/*
+ * Copyright (C) 2018 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 
 package com.instructure.dataseeding.api
 
 import com.google.gson.annotations.SerializedName
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.ClassicQuizzesApiModel
+import com.instructure.dataseeding.model.CreateQuizQuestion
+import com.instructure.dataseeding.model.QuizListApiModel
+import com.instructure.dataseeding.model.QuizQuestion
+import com.instructure.dataseeding.model.QuizSubmissionApiModel
+import com.instructure.dataseeding.model.UpdateQuiz
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
@@ -27,10 +32,10 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-object QuizzesApi {
+object ClassicQuizzesApi {
     interface QuizzesService {
         @POST("courses/{courseId}/quizzes")
-        fun createQuiz(@Path("courseId") courseId: Long, @Body createQuiz: CreateQuiz): Call<QuizApiModel>
+        fun createQuiz(@Path("courseId") courseId: Long, @Body createQuiz: CreateQuiz): Call<ClassicQuizzesApiModel>
 
         @POST("courses/{courseId}/quizzes/{quizId}/submissions")
         fun createQuizSubmission(@Path("courseId") courseId: Long, @Path("quizId") quizId: Long): Call<QuizSubmissionsResponse>
@@ -49,7 +54,7 @@ object QuizzesApi {
         @PUT("courses/{courseId}/quizzes/{quizId}")
         fun publishQuiz(@Path("courseId") courseId: Long,
                         @Path("quizId") quizId: Long,
-                        @Body publishQuiz: PublishQuizRequest): Call<QuizApiModel>
+                        @Body publishQuiz: PublishQuizRequest): Call<ClassicQuizzesApiModel>
 
     }
 
@@ -66,7 +71,7 @@ object QuizzesApi {
             val dueAt: String = ""
     )
 
-    fun createQuiz(request: CreateQuizRequest) : QuizApiModel {
+    fun createQuiz(request: CreateQuizRequest) : ClassicQuizzesApiModel {
         return createQuiz(
                 courseId = request.courseId,
                 withDescription = request.withDescription,
@@ -86,7 +91,7 @@ object QuizzesApi {
             unlockAt: String = "",
             dueAt: String = "",
             published: Boolean = true
-            ): QuizApiModel {
+            ): ClassicQuizzesApiModel {
         val quiz = CreateQuiz(Randomizer.randomQuiz(withDescription, lockAt, unlockAt, dueAt, published))
 
         return quizzesService(token)
@@ -160,7 +165,7 @@ object QuizzesApi {
     }
 
     // Note that publishing an already published quiz does nothing. Must unpublish then publish.
-    fun publishQuiz(courseId: Long, quizId: Long, teacherToken: String, published: Boolean = true): QuizApiModel {
+    fun publishQuiz(courseId: Long, quizId: Long, teacherToken: String, published: Boolean = true): ClassicQuizzesApiModel {
         val publishQuizRequest = PublishQuizRequest(
                 quiz = UpdateQuiz(published = published)
         )
@@ -208,7 +213,7 @@ object QuizzesApi {
     }
 
     // Convenience method to create and publish a quiz with questions
-    fun createAndPublishQuiz(courseId: Long, teacherToken: String, questions: List<QuizQuestion>) : QuizApiModel {
+    fun createAndPublishQuiz(courseId: Long, teacherToken: String, questions: List<QuizQuestion>) : ClassicQuizzesApiModel {
         val result = createQuiz(CreateQuizRequest(
                 courseId = courseId,
                 withDescription = true,

@@ -26,10 +26,10 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.ModuleItemTypes
 import com.instructure.dataseeding.model.SubmissionType
@@ -75,7 +75,7 @@ class OfflineModulesE2ETest : StudentComposeTest() {
             SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG, "Create a PUBLISHED quiz for '${course.name}' course.")
-        val testQuiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 3.days.fromNow.iso8601)
+        val testQuiz = ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Create a page for '${course.name}' course.")
         val testPage = PagesApi.createCoursePage(course.id, teacher.token)

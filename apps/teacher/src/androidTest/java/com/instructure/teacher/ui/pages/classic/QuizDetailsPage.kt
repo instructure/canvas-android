@@ -24,7 +24,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.dataseeding.model.ClassicQuizzesApiModel
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
@@ -152,7 +152,7 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
      *
      * @param quiz The Quiz object representing the quiz details.
      */
-    fun assertQuizDetails(quiz: QuizApiModel) {
+    fun assertQuizDetails(quiz: ClassicQuizzesApiModel) {
         assertQuizDetails(quiz.title, quiz.published)
     }
 

@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.utils.pressBackButton
-import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
 import com.instructure.student.R
@@ -43,7 +43,7 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Test
 
 @HiltAndroidTest
-class QuizzesE2ETest: StudentComposeTest() {
+class ClassicQuizzesE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -61,13 +61,13 @@ class QuizzesE2ETest: StudentComposeTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course.")
-        val quizUnpublished = QuizzesApi.createQuiz(course.id, teacher.token, published = false)
+        val quizUnpublished = ClassicQuizzesApi.createQuiz(course.id, teacher.token, published = false)
 
         Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' with some questions.")
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG, "Publish the previously seeded quiz.")
-        val quizPublished = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
+        val quizPublished = ClassicQuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)

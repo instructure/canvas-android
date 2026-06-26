@@ -8,11 +8,11 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.FileFolderApi
 import com.instructure.dataseeding.api.ModulesApi
 import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.ModuleItemTypes
@@ -65,7 +65,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seeding quiz for '${course.name}' course.")
-        val quiz = QuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
+        val quiz = ClassicQuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Create an unpublished page for course: '${course.name}'.")
         val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
@@ -228,7 +228,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         val assignment2 = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seeding quiz for '${course.name}' course.")
-        val quiz =  QuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
+        val quiz =  ClassicQuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Create an unpublished page for course: '${course.name}'.")
         val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = false, body = "<h1 id=\"header1\">Test Page Text</h1>")

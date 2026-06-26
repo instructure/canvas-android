@@ -27,9 +27,9 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
@@ -75,7 +75,7 @@ class NotificationsE2ETest : StudentComposeTest() {
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG, "Create and publish a quiz with the previously seeded questions.")
-        QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
+        ClassicQuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
