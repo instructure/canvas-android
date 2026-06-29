@@ -23,4 +23,5 @@ import com.instructure.canvasapi2.utils.DataResult
 interface AssignmentRepository {
     suspend fun getMissingAssignments(forceRefresh: Boolean): DataResult<List<Assignment>>
     suspend fun getAssignmentGroups(courseId: Long, forceRefresh: Boolean): DataResult<List<AssignmentGroup>>
+    suspend fun getAssignmentWithHistory(courseId: Long, assignmentId: Long, forceRefresh: Boolean): DataResult<Assignment>
 }

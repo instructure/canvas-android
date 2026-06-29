@@ -36,4 +36,22 @@
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Customize dashboard</string>
     <string name="a11y_submissionSupportingPaneExpand">Expand additional info</string>
     <string name="a11y_submissionSupportingPaneCollapse">Collapse additional info</string>
+
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Submit Assignment</string>
+    <string name="ngc_submission_newSubmission">New Submission</string>
+    <string name="ngc_submission_textEntry">Text Entry</string>
+    <string name="ngc_submission_submit">Submit</string>
+    <string name="ngc_submission_deleteDraft">Delete draft</string>
+    <string name="ngc_submission_draftSaved">Saved %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Enter your submission text here</string>
+    <string name="ngc_submission_submissionError">Error submitting assignment</string>
+    <string name="ngc_submission_loadError">Failed to load assignment</string>
+    <string name="ngc_submission_dueDate">Due %1$s</string>
+    <string name="ngc_submission_retry">Retry</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Delete draft?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Your draft will be permanently deleted and cannot be recovered.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Delete</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cancel</string>
+    <string name="ngc_back">Back</string>
 </resources>
