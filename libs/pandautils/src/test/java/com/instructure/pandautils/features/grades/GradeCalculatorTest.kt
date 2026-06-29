@@ -413,7 +413,9 @@ class GradeCalculatorTest {
     }
 
     @Test
-    fun calculateGrade_unpostedSubmission_includedInFinalGrade() {
+    fun calculateGrade_unpostedSubmission_excludedFromFinalGrade() {
+        // Web parity: a graded-but-unposted ("hidden") submission is excluded from the final grade,
+        // while an unsubmitted assignment still counts as zero.
         val groups = listOf(
             createAssignmentGroup(
                 id = 1,
@@ -428,8 +430,54 @@ class GradeCalculatorTest {
 
         val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = false)
 
-        // Include all assignments: (80 + 90 + 0) / 300 = 56.67%
-        assertEquals(56.67, result, 0.01)
+        // Hidden assignment 2 excluded, unsubmitted assignment 3 counts as 0: (80 + 0) / 200 = 40%
+        assertEquals(40.0, result, 0.01)
+    }
+
+    @Test
+    fun calculateGrade_hiddenSubmission_excludedFromBothCurrentAndFinalGrade() {
+        // Mirrors Canvas web's "ignores hidden submissions" test: a hidden submission must not
+        // affect either the current or the final grade.
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                assignments = listOf(
+                    createAssignment(1, "Assignment 1", 100.0, submission = createSubmission(80.0, posted = true)),
+                    createAssignment(2, "Assignment 2", 100.0, submission = createSubmission(50.0, posted = false))
+                )
+            )
+        )
+
+        // Current grade: hidden assignment 2 excluded -> 80 / 100 = 80%
+        val currentResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+        assertEquals(80.0, currentResult, 0.01)
+
+        // Final grade: hidden assignment 2 still excluded -> 80 / 100 = 80% (same as current)
+        val finalResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = false)
+        assertEquals(80.0, finalResult, 0.01)
+    }
+
+    @Test
+    fun calculateGrade_unpostedWithWhatIfScore_includedInFinalGrade() {
+        // A what-if score overrides the hidden filter even in final-grade mode.
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                assignments = listOf(
+                    createAssignment(1, "Assignment 1", 100.0, submission = createSubmission(80.0, posted = true)),
+                    createAssignment(2, "Assignment 2", 100.0, submission = createSubmission(90.0, posted = false))
+                )
+            )
+        )
+
+        val whatIfScores = mapOf(2L to 60.0)
+
+        val result = calculator.calculateGrade(groups, whatIfScores, applyGroupWeights = false, onlyGraded = false)
+
+        // What-if score makes the hidden assignment count: (80 + 60) / 200 = 70%
+        assertEquals(70.0, result, 0.01)
     }
 
     @Test

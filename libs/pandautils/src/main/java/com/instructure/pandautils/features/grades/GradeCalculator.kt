@@ -372,7 +372,8 @@ class GradeCalculator @Inject constructor() {
      * Builds submission data for calculations.
      * Handles:
      * - Excused submissions (filtered out)
-     * - Unposted submissions (filtered out unless what-if score)
+     * - Hidden submissions (graded but not posted; filtered out of both current and final grade
+     *   unless there's a what-if score)
      * - What-if scores (always included)
      * - Pending review (excluded for current grade, included for final grade)
      */
@@ -384,19 +385,21 @@ class GradeCalculator @Inject constructor() {
         return assignments.mapNotNull { assignment ->
             val submission = assignment.submission
             val whatIfScore = whatIfScores[assignment.id]
+            val hasGrade = submission?.grade != null
 
             // Filter excused submissions (always, even with what-if scores)
             if (submission?.excused == true) {
                 return@mapNotNull null
             }
 
-            // Filter unposted submissions for current grade (unless there's a what-if score)
-            // For final grade (includeUngraded=true), include all assignments even if unposted
-            if (!includeUngraded && submission?.postedAt == null && whatIfScore == null) {
+            // Filter unposted submissions (unless there's a what-if score), matching Canvas web.
+            // A submission that has been graded but not yet posted ("hidden") is excluded from both
+            // the current and the final grade. An assignment without a posted grade is also excluded
+            // from the current grade; for the final grade it stays so it can count as zero.
+            if (whatIfScore == null && submission?.postedAt == null && (hasGrade || !includeUngraded)) {
                 return@mapNotNull null
             }
 
-            val hasGrade = submission?.grade != null
             val isPendingReview = submission?.workflowState == "pending_review"
             val score = whatIfScore ?: submission?.score.orDefault()
 
