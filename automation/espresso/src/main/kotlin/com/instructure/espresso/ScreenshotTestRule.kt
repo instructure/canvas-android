@@ -25,13 +25,16 @@ import com.instructure.espresso.matchers.WaitForViewMatcher
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.junit.runners.model.TestTimedOutException
 import java.util.concurrent.atomic.AtomicBoolean
 
 class ScreenshotTestRule : TestRule {
 
     // Run all test methods tryCount times. Take screenshots on failure.
     // A method rule would allow targeting specific (method.getAnnotation(Retry.class))
-    private val tryCount = 5
+    // Reduced from 5: in-process retries beyond 2 rarely succeed; FTL's
+    // num-flaky-test-attempts handles the remaining flake budget on a fresh device.
+    private val tryCount = 2
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
@@ -68,11 +71,20 @@ class ScreenshotTestRule : TestRule {
                         }
                         error = t
 
-                        // Report all failures, using "disposition" to distinguish between fails/retries
-                        if(failureHandler != null) {
-                            val disposition = if(i == tryCount-1) "failed" else "retry"
-                            failureHandler!!(error, description.methodName, description.className, disposition)
+                        // Only AndroidJUnitRunner's per-test timeout (timeout_msec) throws
+                        // TestTimedOutException. Production-code TimeoutException is excluded
+                        // so app code that catches/rethrows it still benefits from retry.
+                        val isTimeout = t is TestTimedOutException
+                        val disposition = when {
+                            isTimeout -> "timeout"
+                            i == tryCount - 1 -> "failed"
+                            else -> "retry"
                         }
+                        failureHandler?.invoke(error!!, description.methodName, description.className, disposition)
+
+                        // Per-test timeouts indicate a hang, not a flake — retrying just amplifies
+                        // the wasted shard time. Fail fast so the shard can move on.
+                        if (isTimeout) throw t
                     }
 
                 }

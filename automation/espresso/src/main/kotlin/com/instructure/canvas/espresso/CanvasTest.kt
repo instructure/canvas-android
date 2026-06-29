@@ -132,6 +132,7 @@ abstract class CanvasTest : InstructureTestingContract {
             configChecked = true
         }
         setupCoverageFolder()
+        grantExactAlarmPermissionViaADB()
         UiControllerSingleton.get()
 
         // Let's set ourselves up to log information about our retries and failures.
@@ -198,8 +199,10 @@ abstract class CanvasTest : InstructureTestingContract {
         eventObject.put("sourcetype", "mobile-android-qa-testresult")
         // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
         // they contain a view hierarchy, and there is typically not much useful info after the
-        // first few lines.
-        eventObject.put("message", error.toString().take(4096))
+        // first few lines. Also strip auth/cookie headers in case an OkHttp exception message
+        // embedded the offending Request — we don't want bearer tokens shipped off-CI.
+        val safeMessage = redactSensitiveHeaders(error.message.orEmpty())
+        eventObject.put("message", "${error.javaClass.name}: $safeMessage".take(4096))
 
         val payloadObject = JSONObject()
 
@@ -251,6 +254,14 @@ abstract class CanvasTest : InstructureTestingContract {
             if (inputStream != null) inputStream.close()
             if (conn != null) conn.disconnect()
         }
+    }
+
+    private fun redactSensitiveHeaders(text: String): String {
+        if (text.isEmpty()) return text
+        return text
+            .replace(Regex("(?i)(authorization\\s*[:=]\\s*)(bearer|basic|digest|token)\\s+\\S+"), "$1$2 <redacted>")
+            .replace(Regex("(?i)(set-cookie|cookie)\\s*:\\s*[^\\r\\n]+", RegexOption.MULTILINE), "$1: <redacted>")
+            .replace(Regex("(?i)(x-api-key|x-auth-token|api[_-]?key)\\s*[:=]\\s*\\S+"), "$1: <redacted>")
     }
 
     // Creates an /sdcard/coverage folder if it does not already exist.
@@ -537,13 +548,30 @@ abstract class CanvasTest : InstructureTestingContract {
         /* Both read & write permission are required for saving screenshots
          * otherwise the code will error with permission denied.
          * Read also required due to a bug specifically with full read/write external storage not being granted
-         * https://issuetracker.google.com/issues/64389280 */
+         * https://issuetracker.google.com/issues/64389280
+         *
+         * These legacy storage permissions are only declared (maxSdkVersion=29) and grantable up to
+         * API 29. From API 30+ scoped storage applies, so attempting to grant them throws a
+         * SecurityException ("Package ... has not requested permission") that fails every test in the
+         * class before it runs.
+         *
+         * On API 33+ we instead grant POST_NOTIFICATIONS so the runtime notification prompt does not
+         * block tests. Firebase Test Lab auto-grants it on install, but local runs do not, so granting
+         * it here keeps local behavior consistent with CI. The permission only exists from API 33, so
+         * it must not be granted on API 30-32. */
         @ClassRule
         @JvmField
-        val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-        )
+        val grantPermissionRule: GrantPermissionRule =
+                when {
+                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q ->
+                        GrantPermissionRule.grant(
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                        )
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ->
+                        GrantPermissionRule.grant(Manifest.permission.POST_NOTIFICATIONS)
+                    else -> GrantPermissionRule.grant()
+                }
 
         private var configChecked = false
 
@@ -552,6 +580,12 @@ abstract class CanvasTest : InstructureTestingContract {
 
         private const val ENABLE_MOBILE_DATA_COMMAND: String = "svc data enable"
         private const val DISABLE_MOBILE_DATA_COMMAND: String = "svc data disable"
+
+        // SCHEDULE_EXACT_ALARM is an app-op (special access) permission, not a runtime permission, so
+        // the test runner does not auto-grant it on install. On API 33+ devices it is denied by default,
+        // which makes the reminder flows redirect to the system "Alarms & reminders" settings screen and
+        // fail. Granting the app-op via shell keeps those flows on the happy path.
+        private const val GRANT_EXACT_ALARM_COMMAND: String = "appops set %s SCHEDULE_EXACT_ALARM allow"
 
         private fun getDeviceOrientation(context: Context): Int {
             val configuration = context.resources.configuration
@@ -585,6 +619,13 @@ abstract class CanvasTest : InstructureTestingContract {
             val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
             device.executeShellCommand(ENABLE_WIFI_COMMAND)
             device.executeShellCommand(ENABLE_MOBILE_DATA_COMMAND)
+        }
+
+        fun grantExactAlarmPermissionViaADB() {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+            val targetPackage = InstrumentationRegistry.getInstrumentation().targetContext.packageName
+            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+                .executeShellCommand(GRANT_EXACT_ALARM_COMMAND.format(targetPackage))
         }
 
     }

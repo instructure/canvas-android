@@ -20,6 +20,9 @@ import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.horizon.domain.usecase.inbox.CreateConversationUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCoursesUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
 import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
@@ -46,7 +49,9 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class HorizonInboxComposeViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: HorizonInboxComposeRepository = mockk(relaxed = true)
+    private val getInboxCoursesUseCase: GetInboxCoursesUseCase = mockk(relaxed = true)
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase = mockk(relaxed = true)
+    private val createConversationUseCase: CreateConversationUseCase = mockk(relaxed = true)
     private val inboxEventHandler: InboxEventHandler = InboxEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -63,10 +68,9 @@ class HorizonInboxComposeViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        coEvery { repository.getAllInboxCourses(any()) } returns testCourses
-        coEvery { repository.getRecipients(any(), any()) } returns testRecipients
-        coEvery { repository.createConversation(any(), any(), any(), any(), any(), any()) } returns Unit
-        coEvery { repository.invalidateConversationListCachedResponse() } returns Unit
+        coEvery { getInboxCoursesUseCase(any()) } returns testCourses
+        coEvery { getInboxRecipientsUseCase(any()) } returns testRecipients
+        coEvery { createConversationUseCase(any()) } returns Unit
     }
 
     @After
@@ -81,12 +85,12 @@ class HorizonInboxComposeViewModelTest {
 
         assertFalse(viewModel.uiState.value.coursePickerOptions.isEmpty())
         assertEquals(2, viewModel.uiState.value.coursePickerOptions.size)
-        coVerify { repository.getAllInboxCourses(forceNetwork = true) }
+        coVerify { getInboxCoursesUseCase(match { it.forceNetwork }) }
     }
 
     @Test
     fun `Test single course is auto-selected`() = runTest {
-        coEvery { repository.getAllInboxCourses(any()) } returns listOf(testCourses.first())
+        coEvery { getInboxCoursesUseCase(any()) } returns listOf(testCourses.first())
 
         val viewModel = getViewModel()
 
@@ -194,7 +198,7 @@ class HorizonInboxComposeViewModelTest {
         var finished = false
         viewModel.uiState.value.onSendConversation { finished = true }
 
-        coVerify { repository.createConversation(any(), any(), any(), any(), any(), any()) }
+        coVerify { createConversationUseCase(any()) }
         assertTrue(finished)
     }
 
@@ -256,7 +260,7 @@ class HorizonInboxComposeViewModelTest {
 
     @Test
     fun `Test snackbar dismiss clears message`() = runTest {
-        coEvery { repository.getAllInboxCourses(any()) } throws Exception("Error")
+        coEvery { getInboxCoursesUseCase(any()) } throws Exception("Error")
 
         val viewModel = getViewModel()
         assertNotNull(viewModel.uiState.value.snackbarMessage)
@@ -275,10 +279,18 @@ class HorizonInboxComposeViewModelTest {
         // Wait for debounce
         delay(250)
 
-        coVerify { repository.getRecipients(courseId = 1L, searchQuery = "test query", any()) }
+        coVerify {
+            getInboxRecipientsUseCase(match { it.courseId == 1L && it.searchQuery == "test query" })
+        }
     }
 
     private fun getViewModel(): HorizonInboxComposeViewModel {
-        return HorizonInboxComposeViewModel(repository, context, inboxEventHandler)
+        return HorizonInboxComposeViewModel(
+            getInboxCoursesUseCase,
+            getInboxRecipientsUseCase,
+            createConversationUseCase,
+            context,
+            inboxEventHandler,
+        )
     }
 }

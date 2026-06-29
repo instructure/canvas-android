@@ -103,6 +103,8 @@ class AvatarCropActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        // The toolbar and background are dark, so keep the system bar icons light/white.
+        WindowInsetsHelper.setSystemBarsAppearance(window, isLight = false)
         setupViews()
         obtainSourceImage()
     }
@@ -141,6 +143,10 @@ class AvatarCropActivity : BaseCanvasActivity() {
 
         // Set up 'close' button and menu listener
         toolbar.setNavigationIcon(R.drawable.ic_close)
+        // Keep the toolbar below the status bar and keep its content (and the crop area) clear of
+        // the navigation bar, which sits on the side in landscape.
+        toolbar.applyTopSystemBarInsets()
+        root.applySystemBarInsets(left = true, right = true)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         toolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.save) performCrop()

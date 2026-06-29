@@ -16,15 +16,17 @@
  */
 package com.instructure.teacher.ui.e2e.classic
 
+import android.content.ContentValues
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
-import android.os.Environment
 import android.os.SystemClock.sleep
+import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -53,7 +55,6 @@ import com.instructure.teacher.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileWriter
 
 @HiltAndroidTest
@@ -108,7 +109,7 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(PREPARATION_TAG, "Create a discussion attachment file.")
         val discussionAttachmentFile = File(
-                Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+                Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
                 .apply { createNewFile() }
 
         Log.d(PREPARATION_TAG, "Add some content to '${discussionAttachmentFile.name}' file")
@@ -291,23 +292,31 @@ class FilesE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${submissionUploadInfo.fileName}' file has selected.")
         speedGraderPage.assertSelectedAttachmentItemDisplayed(submissionUploadInfo.fileName)
 
-        Log.d(PREPARATION_TAG, "Create a PDF file for comment attachment test.")
+        Log.d(PREPARATION_TAG, "Create a PDF file for comment attachment test in the device Downloads folder.")
         val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
-        val pdfFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), pdfFileName)
-        pdfFile.createNewFile()
+        val resolver = InstrumentationRegistry.getInstrumentation().targetContext.contentResolver
+        val pdfUri = resolver.insert(
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+            ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, pdfFileName)
+                put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
+            }
+        ) ?: error("Failed to create Downloads entry for '$pdfFileName'.")
 
-        Log.d(PREPARATION_TAG, "Write content to PDF file '${pdfFile.name}'.")
-        PdfDocument().apply {
-            val pageInfo = PdfDocument.PageInfo.Builder(300, 300, 1).create()
-            val page = startPage(pageInfo)
-            val canvas = page.canvas
-            val paint = Paint()
-            paint.color = Color.BLACK
-            paint.textSize = 12f
-            canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
-            finishPage(page)
-            writeTo(FileOutputStream(pdfFile))
-            close()
+        Log.d(PREPARATION_TAG, "Write content to PDF file '$pdfFileName'.")
+        resolver.openOutputStream(pdfUri).use { outputStream ->
+            PdfDocument().apply {
+                val pageInfo = PdfDocument.PageInfo.Builder(300, 300, 1).create()
+                val page = startPage(pageInfo)
+                val canvas = page.canvas
+                val paint = Paint()
+                paint.color = Color.BLACK
+                paint.textSize = 12f
+                canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
+                finishPage(page)
+                writeTo(outputStream)
+                close()
+            }
         }
 
         Log.d(STEP_TAG, "Click on comment attachment button.")
@@ -347,9 +356,9 @@ class FilesE2ETest: TeacherComposeTest() {
         fileChooserPage.clickUpload()
         triggerWorkManagerJobs("FileUploadWorker")
 
-        Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '${pdfFile.name}' is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '$pdfFileName' is displayed.")
         Thread.sleep(5000) // Wait for upload to complete and comment to be sent
-        speedGraderPage.assertCommentAttachmentDisplayed(pdfFile.name)
+        speedGraderPage.assertCommentAttachmentDisplayed(pdfFileName)
 
         Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because one comment with attachment was uploaded.")
         speedGraderPage.assertCommentsLabelDisplayed(1)

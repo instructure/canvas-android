@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.journey.assist.JourneyAssistQuizItem
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistResponse
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
+import com.instructure.horizon.data.datasource.AiAssistNetworkDataSource
+import com.instructure.horizon.data.repository.AiAssistRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -71,7 +73,7 @@ class AiAssistRepositoryTest {
 
     @Before
     fun setup() {
-        repository = AiAssistRepository(journeyAssistAPI)
+        repository = AiAssistRepository(AiAssistNetworkDataSource(journeyAssistAPI))
     }
 
     @After

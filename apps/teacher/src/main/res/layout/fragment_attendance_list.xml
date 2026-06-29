@@ -36,7 +36,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize"
             android:elevation="6dp"
             app:popupTheme="@style/ToolBarPopupStyle"
             app:theme="@style/ToolBarStyle"
@@ -69,7 +70,8 @@
         <FrameLayout
             android:id="@+id/markRestButton"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
+            android:minHeight="54dp"
             android:foreground="?android:selectableItemBackground"
             android:background="@color/textDark"
             android:visibility="gone"
@@ -77,9 +79,10 @@
 
             <TextView
                 android:id="@+id/markRestButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_gravity="top"
+                android:gravity="center"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 style="@style/TextFont.Medium"

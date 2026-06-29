@@ -183,8 +183,12 @@ fun Context.openFile(
     mimeType: String,
     chooserTitle: String
 ) {
-    val file = File(filePathToOpen)
-    val uri = FileProvider.getUriForFile(this, applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+    val uri = if (filePathToOpen.startsWith("content://")) {
+        filePathToOpen.toUri()
+    } else {
+        val file = File(filePathToOpen)
+        FileProvider.getUriForFile(this, applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+    }
 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, mimeType)

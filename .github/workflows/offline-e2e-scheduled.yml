@@ -19,6 +19,7 @@ jobs:
     with:
       app-type-lower: student
       flank-config: flank_e2e_offline.yml
+      record_video: true
     secrets: inherit
 
   student-slack-notification:

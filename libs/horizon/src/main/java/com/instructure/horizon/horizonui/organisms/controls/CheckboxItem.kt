@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.utils.orDefault
 
 data class TriStateCheckboxItemState(
     val controlsContentState: ControlsContentState,
@@ -50,26 +51,32 @@ data class CheckboxItemState(
 @Composable
 fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
+    val interactiveModifier = state.onClick?.let { onClick ->
+        alphaModifier.triStateToggleable(
+            state = state.toggleableState,
+            onClick = onClick,
+            enabled = state.enabled
+        )
+    } ?: alphaModifier
 
     Row(
-        modifier = alphaModifier
-            .triStateToggleable(
-                state = state.toggleableState,
-                onClick = state.onClick ?: {},
-                enabled = state.enabled
-            )
+        modifier = interactiveModifier
     ) {
         val error = state.controlsContentState.error != null
         TriStateCheckbox(
             state = state.toggleableState,
-            onClick = {},
+            onClick = null,
             enabled = state.enabled,
             colors = horizonCheckboxColors(error),
             modifier = Modifier
-                .size(20.dp)
                 .clearAndSetSemantics {}
         )
-        HorizonSpace(SpaceSize.SPACE_8)
+        if (state.controlsContentState.title.isNotEmpty() ||
+            state.controlsContentState.description?.isNotEmpty().orDefault() ||
+            state.controlsContentState.error?.isNotEmpty().orDefault()
+        ) {
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
         ControlsContent(state = state.controlsContentState)
     }
 }
@@ -77,14 +84,16 @@ fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = 
 @Composable
 fun CheckboxItem(state: CheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
+    val interactiveModifier = state.onCheckedChanged?.let { onCheckedChanged ->
+        alphaModifier.toggleable(
+            value = state.checked,
+            onValueChange = onCheckedChanged,
+            enabled = state.enabled
+        )
+    } ?: alphaModifier
 
     Row(
-        modifier = alphaModifier
-            .toggleable(
-                value = state.checked,
-                onValueChange = state.onCheckedChanged ?: {},
-                enabled = state.enabled
-            )
+        modifier = interactiveModifier
     ) {
         val error = state.controlsContentState.error != null
         Checkbox(

@@ -28,9 +28,14 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
+fun LearningLibraryCollectionItem.canEnroll(): Boolean {
+    return (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM)
+        && !this.isEnrolledInCanvas.orDefault(true)
+}
+
 fun List<EnrolledLearningLibraryCollection>.toUiState(
     resources: Resources,
-    recommendations: List<LearningLibraryRecommendation>
+    recommendations: List<LearningLibraryRecommendation>,
 ): List<LearnLearningLibraryCollectionState> {
     return this.map {
         LearnLearningLibraryCollectionState(
@@ -46,17 +51,18 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(
 
 fun LearningLibraryCollectionItem.toUiState(
     resources: Resources,
-    recommendations: List<LearningLibraryRecommendation>
+    recommendations: List<LearningLibraryRecommendation>,
+    isSynced: Boolean = true,
+    resolvedImageUrls: Map<String, String> = emptyMap(),
 ): LearnLearningLibraryCollectionItemState {
-    val canEnroll = (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM) && !this.isEnrolledInCanvas.orDefault(true)
-
+    val imageUrl = this.canvasCourse?.courseImageUrl
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
-        imageUrl = this.canvasCourse?.courseImageUrl,
+        imageUrl = imageUrl?.let { resolvedImageUrls[it] ?: it },
         name = this.canvasCourse?.courseName.orEmpty(),
         description = null,
         isBookmarked = this.isBookmarked,
-        canEnroll = canEnroll,
+        canEnroll = canEnroll(),
         bookmarkLoading = false,
         type = this.itemType,
         route = this.getRoute(),
@@ -66,22 +72,21 @@ fun LearningLibraryCollectionItem.toUiState(
             this.toEstimatedDurationUiChipState(resources),
             this.toUnitsUiChipState(resources),
             this.toProgressUiChipState(resources),
-        )
+        ),
+        isSynced = isSynced,
     )
 }
 
 fun LearningLibraryRecommendation.toUiState(
     resources: Resources,
 ): LearnLearningLibraryCollectionItemState {
-    val canEnroll = (this.item.itemType == CollectionItemType.COURSE || this.item.itemType == CollectionItemType.PROGRAM) && !this.item.isEnrolledInCanvas.orDefault(true)
-
     return LearnLearningLibraryCollectionItemState(
         id = this.item.id,
         imageUrl = this.item.canvasCourse?.courseImageUrl,
         name = this.item.canvasCourse?.courseName.orEmpty(),
         description = this.item.itemDescription(resources, listOf(this)),
         isBookmarked = this.item.isBookmarked,
-        canEnroll = canEnroll,
+        canEnroll = this.item.canEnroll(),
         bookmarkLoading = false,
         type = this.item.itemType,
         route = this.item.getRoute(),
@@ -91,7 +96,7 @@ fun LearningLibraryRecommendation.toUiState(
             this.item.toEstimatedDurationUiChipState(resources),
             this.item.toUnitsUiChipState(resources),
             this.item.toProgressUiChipState(resources),
-        )
+        ),
     )
 }
 

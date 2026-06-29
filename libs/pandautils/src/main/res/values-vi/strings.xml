@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Chưa có gì được thông báo.</string>
     <string name="noCourses">Không Có Khóa Học</string>
     <string name="noCoursesSubtext">Có vẻ không có khóa học nào liên quan đến tài khoản này. Truy cập trang web để tạo khóa học hôm nay.</string>
+    <string name="coursesWidgetEmptyTitle">Chào mừng bạn đến với Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Bạn chưa có bất kỳ khóa học nào đang hoạt động — vì vậy mà mọi thứ ở đây có vẻ hơi yên ắng. Khi bạn ghi danh vào một lớp học, bảng điều khiển sẽ bắt đầu lấp đầy với hoạt động mới.</string>
     <string name="noAssignments">Không Có Bài Tập</string>
     <string name="noAssignmentsSubtext">Có vẻ bài tập chưa được tạo trong không gian này. Đã đến lúc ra ngoài khám phá.</string>
     <string name="noAssignmentsTeacher">Có vẻ chưa có bài tập nào được công bố.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Điểm: %s điểm</string>
     <string name="gradePercentTextFieldAccessibility">Điểm: %d phần trăm, %s</string>
     <string name="gradePointsTextFieldAccessibility">Điểm: %s điểm, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Giúp chúng tôi xây dựng ứng dụng tốt hơn</string>
+    <string name="cookieConsentDescription">Chúng tôi chỉ thu thập dữ liệu ứng dụng ẩn danh để giúp đội ngũ phát hiện vấn đề kỹ thuật và tối ưu hóa các tính năng ứng dụng.</string>
+    <string name="cookieConsentNoProfiles">Không Hồ Sơ Cá Nhân: Chúng tôi không theo dõi danh tính của bạn hoặc hiển thị quảng cáo.</string>
+    <string name="cookieConsentNoSelling">Không Bán Dữ Liệu: Thông tin của bạn sẽ không bao giờ được bán cho các bên thứ ba.</string>
+    <string name="cookieConsentFullControl">Toàn Quyền Kiểm Soát: Bạn có thể điều chỉnh các cài đặt này bất cứ lúc nào.</string>
+    <string name="cookieConsentAllow">Cho phép</string>
+    <string name="cookieConsentDecline">Từ Chối</string>
+    <string name="privacySettingsTitle">Cài Đặt Quyền Riêng Tư</string>
+    <string name="privacySettingsToggleLabel">Phân Tích Ứng Dụng Ẩn Danh</string>
+    <string name="privacySettingsDescription">Chia sẻ dữ liệu ẩn danh về hiệu suất ứng dụng và cách sử dụng tính năng. Điều này giúp chúng tôi sửa lỗi và cải thiện trải nghiệm tổng thể của ứng dụng. Chúng tôi không thu thập thông tin nhận dạng cá nhân.</string>
 </resources>

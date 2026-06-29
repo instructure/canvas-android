@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetCommentsUseCase
+import com.instructure.horizon.domain.usecase.PostSubmissionCommentUseCase
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
@@ -56,7 +58,8 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class CommentsViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: CommentsRepository = mockk(relaxed = true)
+    private val getCommentsUseCase: GetCommentsUseCase = mockk(relaxed = true)
+    private val postSubmissionCommentUseCase: PostSubmissionCommentUseCase = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
     private val fileDownloadProgressDao: FileDownloadProgressDao = mockk(relaxed = true)
@@ -91,8 +94,8 @@ class CommentsViewModelTest {
         every { DateFormat.is24HourFormat(any()) } returns false
         every { DateFormat.getBestDateTimePattern(any(), any()) } returns ""
         every { apiPrefs.user } returns User(id = userId, name = "Test User")
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any()) } returns testCommentsData
-        coEvery { repository.postComment(any(), any(), any(), any(), any()) } returns DataResult.Success(mockk(relaxed = true))
+        coEvery { getCommentsUseCase(any()) } returns testCommentsData
+        coEvery { postSubmissionCommentUseCase(any()) } returns DataResult.Success(mockk(relaxed = true))
         coEvery { fileDownloadProgressDao.findByWorkerIdFlow(any()) } returns flowOf(null)
         coEvery { fileDownloadProgressDao.deleteByWorkerId(any()) } returns Unit
         every { workManager.enqueue(any<WorkRequest>()) } returns mockk {
@@ -115,7 +118,7 @@ class CommentsViewModelTest {
         assertFalse(viewModel.uiState.value.loading)
         assertEquals(1, viewModel.uiState.value.comments.size)
         assertEquals("Test comment", viewModel.uiState.value.comments.first().commentText)
-        coVerify { repository.getComments(assignmentId, userId, attempt, false, null, null) }
+        coVerify { getCommentsUseCase(match { it.assignmentId == assignmentId && it.userId == userId && it.attempt == attempt && !it.forceNetwork }) }
     }
 
     @Test
@@ -157,7 +160,7 @@ class CommentsViewModelTest {
             hasNextPage = false,
             hasPreviousPage = true
         )
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any(), any()) } returns testCommentsData andThen nextPageData
+        coEvery { getCommentsUseCase(any()) } returns testCommentsData andThen nextPageData
 
         val viewModel = getViewModel()
         viewModel.initWithAttempt(assignmentId, attempt, courseId)
@@ -165,20 +168,20 @@ class CommentsViewModelTest {
         viewModel.uiState.value.onNextPageClicked()
 
         assertEquals("Next page comment", viewModel.uiState.value.comments.first().commentText)
-        coVerify { repository.getComments(assignmentId, userId, attempt, any(), null, "cursor1", any()) }
+        coVerify { getCommentsUseCase(match { it.assignmentId == assignmentId && it.endCursor == "cursor1" && it.nextPage }) }
     }
 
     @Test
     fun `Test load previous page`() = runTest {
         val firstPageData = testCommentsData.copy(hasPreviousPage = true)
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any()) } returns firstPageData andThen testCommentsData
+        coEvery { getCommentsUseCase(any()) } returns firstPageData andThen testCommentsData
 
         val viewModel = getViewModel()
         viewModel.initWithAttempt(assignmentId, attempt, courseId)
 
         viewModel.uiState.value.onPreviousPageClicked()
 
-        coVerify { repository.getComments(assignmentId, userId, attempt, false, null, null) }
+        coVerify { getCommentsUseCase(match { it.assignmentId == assignmentId && it.userId == userId && it.attempt == attempt && !it.forceNetwork }) }
     }
 
     @Test
@@ -198,7 +201,7 @@ class CommentsViewModelTest {
 
         viewModel.uiState.value.onPostClicked()
 
-        coVerify { repository.postComment(courseId, assignmentId, userId, attempt, "New comment") }
+        coVerify { postSubmissionCommentUseCase(PostSubmissionCommentUseCase.Params(courseId, assignmentId, userId, attempt, "New comment")) }
         assertEquals("", viewModel.uiState.value.comment.text)
         assertFalse(viewModel.uiState.value.postingComment)
     }
@@ -210,12 +213,12 @@ class CommentsViewModelTest {
 
         viewModel.uiState.value.onPostClicked()
 
-        coVerify(exactly = 0) { repository.postComment(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { postSubmissionCommentUseCase(any()) }
     }
 
     @Test
     fun `Test post comment error shows message`() = runTest {
-        coEvery { repository.postComment(any(), any(), any(), any(), any()) } throws Exception("Post error")
+        coEvery { postSubmissionCommentUseCase(any()) } throws Exception("Post error")
 
         val viewModel = getViewModel()
         viewModel.initWithAttempt(assignmentId, attempt, courseId)
@@ -229,7 +232,7 @@ class CommentsViewModelTest {
 
     @Test
     fun `Test error dismissed clears message`() = runTest {
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any()) } throws Exception("Load error")
+        coEvery { getCommentsUseCase(any()) } throws Exception("Load error")
 
         val viewModel = getViewModel()
         viewModel.initWithAttempt(assignmentId, attempt, courseId)
@@ -260,7 +263,7 @@ class CommentsViewModelTest {
 
     @Test
     fun `Test load comments error shows message`() = runTest {
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any()) } throws Exception("Load error")
+        coEvery { getCommentsUseCase(any()) } throws Exception("Load error")
 
         val viewModel = getViewModel()
 
@@ -305,7 +308,7 @@ class CommentsViewModelTest {
                 )
             )
         )
-        coEvery { repository.getComments(any(), any(), any(), any(), any(), any(), any()) } returns otherUserComment
+        coEvery { getCommentsUseCase(any()) } returns otherUserComment
 
         val viewModel = getViewModel()
         viewModel.initWithAttempt(assignmentId, attempt, courseId)
@@ -318,7 +321,8 @@ class CommentsViewModelTest {
     private fun getViewModel(): CommentsViewModel {
         return CommentsViewModel(
             context,
-            repository,
+            getCommentsUseCase,
+            postSubmissionCommentUseCase,
             apiPrefs,
             workManager,
             fileDownloadProgressDao

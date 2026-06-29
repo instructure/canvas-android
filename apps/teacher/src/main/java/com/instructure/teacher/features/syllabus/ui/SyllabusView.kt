@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.utils.ViewStyler
@@ -83,11 +84,21 @@ class SyllabusView(
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            if (tab?.position == SYLLABUS_TAB_POSITION) {
+            val position = tab?.position ?: return
+            val syllabusSelected = position == SYLLABUS_TAB_POSITION
+            // Override TabLayout's smooth scroll so the master pane animation doesn't race with ViewPager scrolling.
+            if (binding.syllabusPager.currentItem != position) {
+                binding.syllabusPager.setCurrentItem(position, false)
+            }
+            if (syllabusSelected) {
                 binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusScrollView)
             } else {
                 binding.swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
             }
+            (activity as? MasterDetailInteractions)?.setMasterPaneExpanded(
+                expanded = syllabusSelected,
+                animate = true
+            )
         }
     }
 
@@ -166,7 +177,13 @@ class SyllabusView(
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
 
-        syllabusPager.setCurrentItem(if (state.syllabus == null) SUMMARY_TAB_POSITION else SYLLABUS_TAB_POSITION, false)
+        if (state.syllabus == null && syllabusPager.currentItem != SUMMARY_TAB_POSITION) {
+            syllabusPager.setCurrentItem(SUMMARY_TAB_POSITION, false)
+        }
+        (activity as? MasterDetailInteractions)?.setMasterPaneExpanded(
+            expanded = syllabusPager.currentItem == SYLLABUS_TAB_POSITION,
+            animate = true
+        )
 
         val syllabusWebViewWrapper = binding.root.findViewById<CanvasWebViewWrapper>(R.id.syllabusWebViewWrapper)
         if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(R.string.syllabus), baseUrl = canvasContext.toBaseUrl())

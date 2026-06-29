@@ -16,7 +16,6 @@
  */
 package com.instructure.student.ui.e2e.classic
 
-import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.media3.ui.R
@@ -28,6 +27,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -65,6 +65,7 @@ class FilesE2ETest: StudentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
@@ -108,7 +109,7 @@ class FilesE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Create a discussion attachment file.")
         val discussionAttachmentFile = File(
-                Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+                Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
                 .apply { createNewFile() }
 
         Log.d(STEP_TAG, "Add some random content to the '${discussionAttachmentFile.name}' file.")

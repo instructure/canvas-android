@@ -83,6 +83,16 @@ val animationRules = listOf(
         to = AccountRoute.Profile.route,
         style = NavigationTransitionAnimation.SLIDE
     ),
+    NavigationTransitionAnimationRule(
+        from = HomeNavigationRoute.Account.route,
+        to = AccountRoute.OfflineSettings.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
+    NavigationTransitionAnimationRule(
+        from = AccountRoute.OfflineSettings.route,
+        to =AccountRoute.ManageOfflineContent.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
 
     //Inbox
     NavigationTransitionAnimationRule(

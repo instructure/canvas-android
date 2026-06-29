@@ -177,7 +177,8 @@ private fun CourseDetailsScreenContent(
                         onLtiButtonPressed = {
                             actionHandler(CourseDetailsAction.OnLtiClicked(it))
                         },
-                        baseUrl = uiState.baseUrl
+                        baseUrl = uiState.baseUrl,
+                        webViewStateKey = "syllabus"
                     )
                 }
             }

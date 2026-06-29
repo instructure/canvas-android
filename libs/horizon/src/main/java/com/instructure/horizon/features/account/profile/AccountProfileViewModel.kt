@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetUserUseCase
+import com.instructure.horizon.domain.usecase.UpdateUserNameUseCase
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -38,7 +40,8 @@ import javax.inject.Inject
 class AccountProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val apiPrefs: ApiPrefs,
-    private val repository: AccountProfileRepository
+    private val getUserUseCase: GetUserUseCase,
+    private val updateUserNameUseCase: UpdateUserNameUseCase,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountProfileUiState(
@@ -86,7 +89,7 @@ class AccountProfileViewModel @Inject constructor(
             )
         }
         viewModelScope.tryLaunch {
-            val user = repository.getUser(apiPrefs.user!!.id)
+            val user = getUserUseCase(GetUserUseCase.Params(apiPrefs.user!!.id, forceNetwork = true))
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(isLoading = false),
@@ -205,9 +208,11 @@ class AccountProfileViewModel @Inject constructor(
 
     private fun saveChanges(notifyParent: (String) -> Unit) {
         viewModelScope.tryLaunch {
-            repository.updateUser(
-                uiState.value.fullNameInputState.value.text,
-                uiState.value.displayNameInputState.value.text,
+            updateUserNameUseCase(
+                UpdateUserNameUseCase.Params(
+                    name = uiState.value.fullNameInputState.value.text,
+                    shortName = uiState.value.displayNameInputState.value.text,
+                )
             )
             _uiState.update {
                 it.copy(

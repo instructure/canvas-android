@@ -36,6 +36,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
+import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -52,6 +53,11 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -66,7 +72,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import javax.inject.Inject
+
+private const val MAX_CONCURRENT_ANNOUNCEMENT_REQUESTS = 6
 
 @HiltViewModel
 class CoursesWidgetViewModel @Inject constructor(
@@ -85,11 +95,13 @@ class CoursesWidgetViewModel @Inject constructor(
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val offlineAnalyticsManager: OfflineAnalyticsManager
 ) : ViewModel() {
 
     private var visibleCourses: List<Course> = emptyList()
     private var groups: List<Group> = emptyList()
+    private var announcementsJob: Job? = null
 
     private var allCourses: List<Course> = emptyList()
 
@@ -147,6 +159,9 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun onCourseClick(courseId: Long) {
         val course = visibleCourses.find { it.id == courseId } ?: return
         viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                offlineAnalyticsManager.reportCourseOpenedInOfflineMode()
+            }
             _navigationEvents.emit(DashboardNavigationEvent.Courses.NavigateToCourse(course))
         }
     }
@@ -265,7 +280,9 @@ class CoursesWidgetViewModel @Inject constructor(
                 val isAnyGroupFavorited = allActiveGroups.any { it.isFavorite }
                 groups = if (isAnyGroupFavorited) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
-                val courseCards = mapCoursesToCardItems(visibleCourses, result.announcementsMap)
+                // Offline, announcements come pre-populated from the local cache and are shown
+                // immediately; online they load via the background pass below (shimmer until then).
+                val courseCards = mapCoursesToCardItems(visibleCourses, result.announcementsMap, announcementsLoading = isOnline)
                 val groupCards = mapGroupsToCardItems(groups)
 
                 _uiState.update {
@@ -274,6 +291,10 @@ class CoursesWidgetViewModel @Inject constructor(
                         courses = courseCards,
                         groups = groupCards
                     )
+                }
+
+                if (isOnline) {
+                    loadAnnouncements(visibleCourses, forceRefresh)
                 }
             } catch (e: Exception) {
                 _uiState.update {
@@ -287,9 +308,45 @@ class CoursesWidgetViewModel @Inject constructor(
         }
     }
 
+    private fun loadAnnouncements(courses: List<Course>, forceRefresh: Boolean) {
+        announcementsJob?.cancel()
+        announcementsJob = viewModelScope.launch {
+            try {
+                val semaphore = Semaphore(MAX_CONCURRENT_ANNOUNCEMENT_REQUESTS)
+                val announcementsMap = coroutineScope {
+                    courses.map { course ->
+                        async {
+                            semaphore.withPermit {
+                                course.id to try {
+                                    loadCourseAnnouncementsUseCase(
+                                        LoadCourseAnnouncementsUseCase.Params(course.id, forceNetwork = forceRefresh)
+                                    )
+                                } catch (e: CancellationException) {
+                                    throw e
+                                } catch (e: Exception) {
+                                    emptyList()
+                                }
+                            }
+                        }
+                    }.awaitAll()
+                }.toMap()
+
+                val courseCards = mapCoursesToCardItems(courses, announcementsMap, announcementsLoading = false)
+                _uiState.update { it.copy(courses = courseCards) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+                val courseCards = mapCoursesToCardItems(courses, announcementsLoading = false)
+                _uiState.update { it.copy(courses = courseCards) }
+            }
+        }
+    }
+
     private suspend fun mapCoursesToCardItems(
         courses: List<Course>,
-        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
+        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap(),
+        announcementsLoading: Boolean = false
     ): List<CourseCardItem> {
         val syncedIds = getSyncedCourseIds()
         val isOnline = networkStateProvider.isOnline()
@@ -304,6 +361,7 @@ class CoursesWidgetViewModel @Inject constructor(
                 color = course.color,
                 grade = mapGrade(course),
                 announcements = announcementsMap[course.id] ?: emptyList(),
+                announcementsLoading = announcementsLoading,
                 isSynced = isSynced,
                 isClickable = isOnline || isSynced
             )

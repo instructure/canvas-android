@@ -22,12 +22,18 @@ import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.horizon.util.staticBars
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -35,6 +41,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
 
 data class BottomNavItem(
@@ -68,12 +75,19 @@ fun isBottomBarVisible(navController: NavHostController): Boolean {
             || currentDestination?.hierarchy?.drop(1)?.any { it.route in subPageRoutes } == true
 }
 
+private val offlineDisabledRoutes = setOf(
+    HomeNavigationRoute.Skillspace.route,
+)
+
 @Composable
 fun HomeBottomNavigationBar(
     navController: NavHostController,
     buttonsEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
+    val viewModel = hiltViewModel<HomeBottomNavigationViewModel>()
+    val state by viewModel.uiState.collectAsState()
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val visible = isBottomBarVisible(navController)
@@ -86,23 +100,35 @@ fun HomeBottomNavigationBar(
         Surface(shadowElevation = HorizonElevation.level5) {
             NavigationBar(
                 containerColor = HorizonColors.Surface.pageSecondary(),
+                // System bars + display cutout, no IME — the bar should stay at screen bottom and
+                // hide behind the keyboard, not grow above it.
+                windowInsets = WindowInsets.staticBars
+                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom),
                 modifier = modifier
             ) {
                 bottomNavItems.forEach { item ->
                     val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                    SelectableNavigationItem(item, selected, buttonsEnabled, onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
+                    val isDisabledOffline = state.isOffline && item.route in offlineDisabledRoutes
+                    val itemEnabled = buttonsEnabled && !isDisabledOffline
+                    SelectableNavigationItem(
+                        item,
+                        selected,
+                        itemEnabled,
+                        onClick = {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
 
-                            // Do not restore screen state when navigating to Dashboard screen
-                            // Restore when navigating between other screens
-                            restoreState = item.route != HomeNavigationRoute.Dashboard.route ||
-                                    (item.route == HomeNavigationRoute.Dashboard.route && currentDestination?.route == HomeNavigationRoute.Dashboard.route)
-                        }
-                    })
+                                // Do not restore screen state when navigating to Dashboard screen
+                                // Restore when navigating between other screens
+                                restoreState = item.route != HomeNavigationRoute.Dashboard.route ||
+                                        (item.route == HomeNavigationRoute.Dashboard.route && currentDestination?.route == HomeNavigationRoute.Dashboard.route)
+                            }
+                        },
+                        modifier = Modifier.offlineDisabled(isDisabledOffline)
+                    )
                 }
             }
         }

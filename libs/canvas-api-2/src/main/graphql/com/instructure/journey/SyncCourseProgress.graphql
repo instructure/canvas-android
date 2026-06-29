@@ -1,0 +1,7 @@
+mutation SyncCourseProgress($canvasCourseId: String!) {
+    syncCourseProgress(canvasCourseId: $canvasCourseId) {
+        completionPercentage
+        updatedProgramIds
+        failedProgramIds
+    }
+}

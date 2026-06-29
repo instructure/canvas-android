@@ -38,7 +38,7 @@ data class SubmissionCommentWithAttachments(
             mediaComment?.toApiModel(),
             attachments?.let { it.map { it.toApiModel() } }?.let { ArrayList(it) } ?: ArrayList(),
             author?.toApiModel(),
-            submissionComment.attemptId
+            submissionComment.commentAttempt
         )
     }
 }

@@ -99,7 +99,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxDetailsPage.assertStarred(false)
 
         Log.d(STEP_TAG, "Toggle Starred to mark '${seededConversation.subject}' conversation as favourite.")
-        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.clickStarButton(true)
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is starred.")
         inboxDetailsPage.assertStarred(true)

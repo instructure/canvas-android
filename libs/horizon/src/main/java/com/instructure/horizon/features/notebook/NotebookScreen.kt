@@ -18,6 +18,7 @@ package com.instructure.horizon.features.notebook
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -68,7 +69,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorder
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -79,6 +80,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -116,8 +118,8 @@ fun NotebookScreen(
     )
 
     CollapsableHeaderScreen(
-        statusBarColor = HorizonColors.Surface.pagePrimary(),
-        navigationBarColor = HorizonColors.Surface.cardPrimary(),
+        statusBarColor = if (state.showTopBar) HorizonColors.Surface.pagePrimary() else null,
+        navigationBarColor = if (state.showTopBar) HorizonColors.Surface.cardPrimary() else null,
         modifier = Modifier
             .background(HorizonColors.Surface.pagePrimary()),
         headerContent = { contentPadding ->
@@ -165,14 +167,11 @@ fun NotebookScreen(
                             state,
                             scrollState,
                             Modifier
-                                .background(HorizonColors.Surface.pagePrimary())
+                                .horizonTopBarShadow(
+                                    scrollState = scrollState,
+                                    backgroundColor = HorizonColors.Surface.pagePrimary(),
+                                )
                                 .clip(HorizonCornerRadius.level5)
-                                .conditional(scrollState.canScrollBackward) {
-                                    horizonBorderShadow(
-                                        HorizonColors.Surface.inversePrimary(),
-                                        bottom = 1.dp,
-                                    )
-                                }
                                 .background(HorizonColors.Surface.pageSecondary())
                         )
                     }
@@ -181,14 +180,14 @@ fun NotebookScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         state = scrollState,
                         modifier = Modifier
-                            .fillMaxHeight()
+                            .weight(1f)
                             .background(HorizonColors.Surface.pageSecondary()),
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
                             top = 2.dp,
                             bottom = 16.dp
-                        ) + bottomPadding
+                        ) + (if (state.isOffline) PaddingValues(0.dp) else bottomPadding)
                     ) {
                         if (state.notes.isEmpty()) {
                             item {
@@ -208,6 +207,8 @@ fun NotebookScreen(
                                         note,
                                         courseName,
                                         state.deleteLoadingNote,
+                                        deleteEnabled = !state.isOffline,
+                                        unavailableOffline = state.isOffline && note.courseId !in state.syncedCourseIds,
                                         onDeleteClick = {
                                             state.updateShowDeleteConfirmation(note)
                                         }) {
@@ -261,6 +262,15 @@ fun NotebookScreen(
                                 }
                             }
                         }
+                    }
+
+                    if (state.isOffline && state.showOfflineBanner) {
+                        OfflineBanner(
+                            lastSyncedAtMs = state.lastSyncedAtMs,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottomPadding),
+                        )
                     }
                 }
             }
@@ -352,6 +362,8 @@ private fun NoteContent(
     note: Note,
     courseName: String?,
     deleteLoading: Note?,
+    deleteEnabled: Boolean,
+    unavailableOffline: Boolean = false,
     onDeleteClick: () -> Unit,
     onClick: () -> Unit,
 ) {
@@ -359,19 +371,17 @@ private fun NoteContent(
         modifier = Modifier
             .fillMaxWidth()
             .horizonBorder(
-                colorResource(note.type.highlightColor),
-                6.dp,
-                1.dp,
-                1.dp,
-                6.dp,
-                16.dp
-            )
-            .background(
-                color = HorizonColors.PrimitivesWhite.white10(),
-                shape = HorizonCornerRadius.level2,
+                color = colorResource(note.type.highlightColor),
+                backgroundColor = HorizonColors.PrimitivesWhite.white10(),
+                start = 6.dp,
+                top = 1.dp,
+                end = 1.dp,
+                bottom = 6.dp,
+                cornerRadius = 16.dp,
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { onClick() }
+            .offlineDisabled(unavailableOffline)
     ) {
         Column(
             modifier = Modifier
@@ -443,6 +453,7 @@ private fun NoteContent(
                     contentDescription = stringResource(R.string.a11y_notebookDeleteNoteButtonContentDescription),
                     color = IconButtonColor.InverseDanger,
                     size = IconButtonSize.SMALL,
+                    enabled = deleteEnabled,
                     onClick = { onDeleteClick() },
                     loading = note == deleteLoading,
                     modifier = Modifier.align(Alignment.Bottom)

@@ -16,150 +16,107 @@
  */
 package com.instructure.horizon.features.inbox.list
 
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.InboxApi
-import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
-import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.repository.InboxRepository
+import com.instructure.horizon.domain.usecase.inbox.GetConversationsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxAccountAnnouncementsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCourseAnnouncementsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
+import com.instructure.horizon.domain.usecase.inbox.InvalidateConversationListCacheUseCase
 import io.mockk.coEvery
-import io.mockk.every
+import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Test
 
+/**
+ * The old HorizonInboxListRepository was a thin pass-through over inbox use cases plus
+ * a couple of direct AnnouncementAPI / AccountNotificationAPI calls that now live on
+ * InboxRepository and are exposed via GetInboxCourseAnnouncementsUseCase /
+ * GetInboxAccountAnnouncementsUseCase. These tests now exercise those use cases.
+ */
 class HorizonInboxListRepositoryTest {
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val inboxApi: InboxApi.InboxInterface = mockk(relaxed = true)
-    private val recipientsApi: RecipientAPI.RecipientInterface = mockk(relaxed = true)
-    private val announcementsApi: AnnouncementAPI.AnnouncementInterface = mockk(relaxed = true)
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface = mockk(relaxed = true)
-    private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-
-    private val userId = 1L
-
-    @Before
-    fun setup() {
-        every { apiPrefs.user } returns User(id = userId, name = "Test User")
-    }
+    private val inboxRepository: InboxRepository = mockk(relaxed = true)
+    private val getConversationsUseCase: GetConversationsUseCase = mockk(relaxed = true)
+    private val getInboxRecipientsUseCase = GetInboxRecipientsUseCase(inboxRepository)
+    private val getInboxCourseAnnouncementsUseCase = GetInboxCourseAnnouncementsUseCase(inboxRepository)
+    private val getInboxAccountAnnouncementsUseCase = GetInboxAccountAnnouncementsUseCase(inboxRepository)
+    private val invalidateConversationListCacheUseCase = InvalidateConversationListCacheUseCase(inboxRepository)
 
     @Test
-    fun `Test successful conversations retrieval`() = runTest {
-        val conversations = listOf(
-            Conversation(id = 1L, subject = "Conversation 1", lastMessage = "Message 1"),
-            Conversation(id = 2L, subject = "Conversation 2", lastMessage = "Message 2")
+    fun `getConversations delegates to use case`() = runTest {
+        val conversations = listOf(Conversation(id = 1L, subject = "Convo"))
+        coEvery { getConversationsUseCase(any()) } returns conversations
+
+        val result = getConversationsUseCase(
+            GetConversationsUseCase.Params(scope = InboxApi.Scope.INBOX, forceNetwork = true)
         )
-        coEvery { inboxApi.getConversations(any(), any()) } returns DataResult.Success(conversations)
 
-        val result = getRepository().getConversations(forceNetwork = false)
-
-        assertEquals(2, result.size)
         assertEquals(conversations, result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed conversations retrieval throws exception`() = runTest {
-        coEvery { inboxApi.getConversations(any(), any()) } returns DataResult.Fail()
-
-        getRepository().getConversations(forceNetwork = false)
+        coVerify {
+            getConversationsUseCase(
+                GetConversationsUseCase.Params(scope = InboxApi.Scope.INBOX, forceNetwork = true)
+            )
+        }
     }
 
     @Test
-    fun `Test successful recipients retrieval filters by person type`() = runTest {
-        val recipients = listOf(
-            Recipient(stringId = "1", name = "Person 1"),
-            Recipient(stringId = "3", name = "Person 2")
+    fun `getRecipients delegates to use case`() = runTest {
+        val recipients = listOf(Recipient(stringId = "1", name = "P1"))
+        coEvery { inboxRepository.getRecipientsForUserContext(any(), any()) } returns recipients
+
+        val result = getInboxRecipientsUseCase(
+            GetInboxRecipientsUseCase.Params(searchQuery = "p", forceNetwork = false)
         )
-        coEvery { recipientsApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Success(recipients)
 
-        val result = getRepository().getRecipients("query", false)
-
-        assertEquals(2, result.size)
-        assertTrue(result.all { it.recipientType == Recipient.Type.Person })
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed recipients retrieval throws exception`() = runTest {
-        coEvery { recipientsApi.getFirstPageRecipientList(any(), any(), any()) } returns DataResult.Fail()
-
-        getRepository().getRecipients("query", false)
+        assertEquals(recipients, result)
+        coVerify { inboxRepository.getRecipientsForUserContext("p", false) }
     }
 
     @Test
-    fun `Test successful course announcements retrieval`() = runTest {
-        val course = Course(id = 1L, name = "Course 1",)
-        val announcement = DiscussionTopicHeader(id = 1L, title = "Announcement 1", contextCode = "course_1")
+    fun `getCourseAnnouncements with no courses returns empty`() = runTest {
+        coEvery { inboxRepository.getInboxCourseAnnouncements(any()) } returns emptyList()
 
-        coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(listOf(course))
-        coEvery { announcementsApi.getFirstPageAnnouncements(any(), params = any()) } returns
-            DataResult.Success(listOf(announcement))
-
-        val result = getRepository().getCourseAnnouncements(false)
-
-        assertEquals(1, result.size)
-        assertEquals(course, result[0].first)
-        assertEquals(announcement, result[0].second)
-    }
-
-    @Test
-    fun `Test course announcements with no courses returns empty list`() = runTest {
-        coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(emptyList())
-
-        val result = getRepository().getCourseAnnouncements(false)
+        val result = getInboxCourseAnnouncementsUseCase(false)
 
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `Test successful account announcements retrieval`() = runTest {
-        val notifications = listOf(
-            AccountNotification(id = 1L, subject = "Notification 1"),
-            AccountNotification(id = 2L, subject = "Notification 2")
-        )
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns
-            DataResult.Success(notifications)
+    fun `getCourseAnnouncements returns course-announcement pairs`() = runTest {
+        val course = Course(id = 1L, name = "Course 1")
+        val announcement = DiscussionTopicHeader(id = 1L, title = "Hello", contextCode = course.contextId)
+        coEvery { inboxRepository.getInboxCourseAnnouncements(false) } returns listOf(course to announcement)
 
-        val result = getRepository().getAccountAnnouncements(false)
+        val result = getInboxCourseAnnouncementsUseCase(false)
 
-        assertEquals(2, result.size)
-        assertEquals(notifications, result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed account announcements retrieval throws exception`() = runTest {
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Fail()
-
-        getRepository().getAccountAnnouncements(false)
+        assertEquals(1, result.size)
+        assertEquals(course, result.first().first)
+        assertEquals(announcement, result.first().second)
     }
 
     @Test
-    fun `Test conversations scope filter`() = runTest {
-        val conversations = listOf(Conversation(id = 1L, subject = "Test"))
-        coEvery { inboxApi.getConversations(any(), any()) } returns DataResult.Success(conversations)
+    fun `getAccountAnnouncements returns notifications from repository`() = runTest {
+        val notifications = listOf(AccountNotification(id = 1L, subject = "S"))
+        coEvery { inboxRepository.getInboxAccountAnnouncements(false) } returns notifications
 
-        getRepository().getConversations(InboxApi.Scope.SENT, false)
+        val result = getInboxAccountAnnouncementsUseCase(false)
 
-        coEvery { inboxApi.getConversations("sent", any()) }
+        assertEquals(notifications, result)
     }
 
-    private fun getRepository(): HorizonInboxListRepository {
-        return HorizonInboxListRepository(
-            apiPrefs,
-            inboxApi,
-            recipientsApi,
-            announcementsApi,
-            accountNotificationApi,
-            courseApi
-        )
+    @Test
+    fun `invalidate delegates to inbox repository`() {
+        invalidateConversationListCacheUseCase()
+
+        verify { inboxRepository.invalidateConversationListCachedResponse() }
     }
 }

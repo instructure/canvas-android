@@ -1,0 +1,36 @@
+query HorizonManageOfflineContent($id: ID!) {
+    legacyNode(_id: $id, type: User) {
+        ... on User {
+            enrollments(currentOnly: false, horizonCourses: true) {
+                _id
+                course {
+                    _id
+                    name
+                    modulesConnection {
+                        edges {
+                            node {
+                                moduleItems {
+                                    content {
+                                        ... on File {
+                                            id
+                                            _id
+                                            displayName
+                                            sizeBytes
+                                            updatedAt
+                                            mimeClass
+                                            title
+                                            url
+                                            locked
+                                            lockAt
+                                            unlockAt
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

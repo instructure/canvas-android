@@ -18,8 +18,12 @@ package com.instructure.horizon.features.moduleitemsequence.content.assessment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
@@ -33,7 +37,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssessmentViewModel @Inject constructor(
-    val repository: AssessmentRepository,
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase,
+    private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
+    private val oAuthApi: OAuthAPI.OAuthInterface,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -54,7 +60,7 @@ class AssessmentViewModel @Inject constructor(
     private fun onAssessmentCompletion() {
         _uiState.update { it.copy(assessmentCompletionLoading = true) }
         viewModelScope.launch {
-            delay(15000) // This is based on the iOS app, we need to add a loading delay so the quiz result would be processed correctly
+            delay(15000) // Loading delay so the quiz result is processed correctly before we refresh
             _uiState.update { it.copy(assessmentCompletionLoading = false) }
         }
     }
@@ -70,7 +76,7 @@ class AssessmentViewModel @Inject constructor(
             it.copy(loadingState = LoadingState(isLoading = true))
         }
         viewModelScope.tryLaunch {
-            val assignment = repository.getAssignment(assignmentId, courseId, false)
+            val assignment = getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId))
             assessmentUrl = assignment.url
             _uiState.update {
                 it.copy(loadingState = LoadingState(isLoading = false), assessmentName = assignment.name.orEmpty())
@@ -86,7 +92,11 @@ class AssessmentViewModel @Inject constructor(
         _uiState.update { it.copy(showAssessmentDialog = true, assessmentLoading = true) }
         viewModelScope.tryLaunch {
             assessmentUrl?.let { url ->
-                val authenticatedUrl = repository.authenticateUrl(url)
+                val ltiTool = launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
+                val authenticatedUrl = ltiTool.url?.let { ltiUrl ->
+                    oAuthApi.getAuthenticatedSession(ltiUrl, RestParams(isForceReadFromNetwork = true))
+                        .dataOrNull?.sessionUrl ?: url
+                } ?: url
                 _uiState.update { it.copy(urlToLoad = authenticatedUrl) }
             } ?: run {
                 _uiState.update { it.copy(assessmentLoading = false) }

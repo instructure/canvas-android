@@ -17,6 +17,7 @@
 package com.instructure.ngc.navigation
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,6 +38,8 @@ import com.instructure.ngc.features.coursehome.CourseHomeViewModel
 import com.instructure.ngc.features.dashboard.NGCDashboardScreen
 import com.instructure.ngc.features.splash.SplashScreen
 import com.instructure.ngc.features.splash.SplashViewModel
+import com.instructure.ngc.features.submission.NGCSubmissionScreen
+import com.instructure.ngc.features.submission.NGCSubmissionViewModel
 import com.instructure.pandautils.features.grades.EXPERIENCE_KEY
 import com.instructure.pandautils.features.grades.Experience
 import com.instructure.pandautils.utils.ColorKeeper
@@ -48,6 +51,11 @@ sealed class NGCNavigationRoute(val route: String) {
     data object Dashboard : NGCNavigationRoute("dashboard")
     data object CourseHome : NGCNavigationRoute("courses/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
         fun createRoute(courseId: Long) = "courses/$courseId"
+    }
+    data object Submission : NGCNavigationRoute(
+        "courses/{${NGCSubmissionViewModel.ARG_COURSE_ID}}/assignments/{${NGCSubmissionViewModel.ARG_ASSIGNMENT_ID}}/submission"
+    ) {
+        fun createRoute(courseId: Long, assignmentId: Long) = "courses/$courseId/assignments/$assignmentId/submission"
     }
 }
 
@@ -105,6 +113,31 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             InstUITheme(courseColor = courseColor) {
                 CourseHomeScreen(
                     onNavigateBack = { navController.popBackStack() },
+                    onAssignmentClick = { cId, aId ->
+                        navController.navigate(NGCNavigationRoute.Submission.createRoute(cId, aId))
+                    },
+                )
+            }
+        }
+
+        composable(
+            route = NGCNavigationRoute.Submission.route,
+            arguments = listOf(
+                navArgument(NGCSubmissionViewModel.ARG_COURSE_ID) { type = NavType.LongType },
+                navArgument(NGCSubmissionViewModel.ARG_ASSIGNMENT_ID) { type = NavType.LongType },
+            ),
+        ) { backStackEntry ->
+            val courseId = backStackEntry.arguments?.getLong(NGCSubmissionViewModel.ARG_COURSE_ID) ?: 0L
+            val isDark = isSystemInDarkTheme()
+            val themedColor = remember(courseId) {
+                ColorKeeper.getOrGenerateColor(Course(id = courseId))
+            }
+            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+
+            InstUITheme(courseColor = courseColor) {
+                NGCSubmissionScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

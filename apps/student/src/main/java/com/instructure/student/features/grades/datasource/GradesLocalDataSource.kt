@@ -41,15 +41,6 @@ class GradesLocalDataSource(
         return courseFacade.getCourseById(courseId) ?: throw IllegalStateException("Could not load from DB")
     }
 
-    override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
-        courseId: Long,
-        gradingPeriodId: Long,
-        scopeToStudent: Boolean,
-        forceNetwork: Boolean
-    ): List<AssignmentGroup> {
-        return assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId)
-    }
-
     override suspend fun getSubmissionsForMultipleAssignments(
         studentId: Long,
         courseId: Long,
@@ -76,8 +67,15 @@ class GradesLocalDataSource(
         }
     }
 
-    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
-        return assignmentFacade.getAssignmentGroupsWithAssignments(courseId)
+    override suspend fun getAssignmentGroupsWithAssignments(
+        courseId: Long,
+        gradingPeriodId: Long?,
+        forceNetwork: Boolean,
+        paginateComments: Boolean
+    ): List<AssignmentGroup> {
+        return gradingPeriodId?.let {
+            assignmentFacade.getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, it)
+        } ?: assignmentFacade.getAssignmentGroupsWithAssignments(courseId)
     }
 
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {

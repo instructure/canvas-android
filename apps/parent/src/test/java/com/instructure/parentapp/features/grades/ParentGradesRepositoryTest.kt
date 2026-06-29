@@ -97,7 +97,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        val result = repository.loadAssignmentGroups(1, 1, false)
+        val result = repository.loadAssignmentGroups(1, 1, false, false)
 
         assertEquals(expected, result)
     }
@@ -147,7 +147,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        val result = repository.loadAssignmentGroups(1, 1, true)
+        val result = repository.loadAssignmentGroups(1, 1, true, false)
 
         assertEquals(page1 + page2, result)
     }
@@ -194,7 +194,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        val result = repository.loadAssignmentGroups(1, 1, false)
+        val result = repository.loadAssignmentGroups(1, 1, false, false)
 
         val expected = assignmentGroups.map { group -> group.copy(assignments = group.assignments.filter { it.published }) }
         assertEquals(expected, result)
@@ -231,7 +231,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        val result = repository.loadAssignmentGroups(1, 1, false)
+        val result = repository.loadAssignmentGroups(1, 1, false, false)
 
         val expected = listOf(
             AssignmentGroup(
@@ -259,7 +259,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        repository.loadAssignmentGroups(1, 1, true)
+        repository.loadAssignmentGroups(1, 1, true, false)
     }
 
     @Test
@@ -414,7 +414,7 @@ class ParentGradesRepositoryTest {
 
         createRepository()
 
-        val result = repository.loadAssignmentGroups(1, 1, false)
+        val result = repository.loadAssignmentGroups(1, 1, false, false)
 
         val expected = listOf(
             AssignmentGroup(

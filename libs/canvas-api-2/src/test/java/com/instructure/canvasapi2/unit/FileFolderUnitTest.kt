@@ -118,7 +118,7 @@ class FileFolderUnitTest : Assert() {
           "hidden": false,
           "lock_at": "2015-01-22T22:41:01Z",
           "hidden_for_user": false,
-          "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/46772199/1387235693988_thumb.jpg?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1427302233&Signature=eQQA4I7YMn%2BENlC7qlXk1UNms0c%3D",
+          "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/46772199/1387235693988_thumb.jpg?AWSAccessKeyId=AKIA...REDACTED&Expires=1427302233&Signature=eQQA4I7YMn%2BENlC7qlXk1UNms0c%3D",
           "locked_for_user": false,
           "lock_info": {
             "asset_string": "attachment_63383591",
@@ -139,7 +139,7 @@ class FileFolderUnitTest : Assert() {
           "hidden": false,
           "lock_at": "2015-01-22T22:41:01Z",
           "hidden_for_user": false,
-          "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/49303928/1393530686715_thumb.jpg?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1427302233&Signature=9qXqCnaFcqNHqZ08KDmxZ3alWhA%3D",
+          "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/thumbnails/49303928/1393530686715_thumb.jpg?AWSAccessKeyId=AKIA...REDACTED&Expires=1427302233&Signature=9qXqCnaFcqNHqZ08KDmxZ3alWhA%3D",
           "locked_for_user": false,
           "lock_info": {
             "asset_string": "attachment_63383591",

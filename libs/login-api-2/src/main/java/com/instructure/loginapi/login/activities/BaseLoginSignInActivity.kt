@@ -27,6 +27,7 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.webkit.CookieManager
 import android.webkit.HttpAuthHandler
+import android.webkit.JavascriptInterface
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -100,7 +101,6 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import java.util.Locale
@@ -130,6 +130,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     private val binding by viewBinding(ActivitySignInBinding::inflate)
 
     private lateinit var webView: WebView
+    private val snickerDoodleCredentials = SnickerDoodleCredentials()
     private var canvasLogin = 0
     private var specialCase = false
     private var authenticationURL: String? = null
@@ -220,6 +221,9 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         webView.webViewClient = mWebViewClient
         if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             WebView.setWebContentsDebuggingEnabled(true)
+            // Register the Snicker Doodle bridge before the login page loads so it is available in the
+            // page's JavaScript context (an interface added after load isn't visible until a reload).
+            webView.addJavascriptInterface(snickerDoodleCredentials, SNICKER_DOODLE_BRIDGE)
         }
     }
 
@@ -600,11 +604,13 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     private fun populateWithSnickerDoodle(snickerDoodle: SnickerDoodle) {
         webView.settings.domStorageEnabled = true
         webView.webChromeClient = WebChromeClient()
-        val username = JSONObject.quote(snickerDoodle.username)
-        val password = JSONObject.quote(snickerDoodle.password)
+        // Credentials are read back through the JavaScript bridge (registered in setupViews before the
+        // page loaded) instead of being concatenated into the script, so the user-supplied values never
+        // become part of the evaluated JavaScript source.
+        snickerDoodleCredentials.snickerDoodle = snickerDoodle
         val js = "javascript: { " +
-                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = $username; " +
-                "document.getElementsByName('pseudonym_session[password]')[0].value = $password; " +
+                "document.getElementsByName('pseudonym_session[unique_id]')[0].value = $SNICKER_DOODLE_BRIDGE.getUsername(); " +
+                "document.getElementsByName('pseudonym_session[password]')[0].value = $SNICKER_DOODLE_BRIDGE.getPassword(); " +
                 "document.getElementsByClassName('Button')[0].click(); " +
                 "};"
         webView.evaluateJavascript(js) { }
@@ -617,4 +623,16 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             }
         }, 750)
     } //endregion
+
+    private class SnickerDoodleCredentials {
+        var snickerDoodle: SnickerDoodle? = null
+
+        @JavascriptInterface
+        fun getUsername(): String = snickerDoodle?.username.orEmpty()
+
+        @JavascriptInterface
+        fun getPassword(): String = snickerDoodle?.password.orEmpty()
+    }
 }
+
+private const val SNICKER_DOODLE_BRIDGE = "snickerDoodleCredentials"

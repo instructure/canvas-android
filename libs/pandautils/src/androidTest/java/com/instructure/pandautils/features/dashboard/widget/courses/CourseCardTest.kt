@@ -225,6 +225,44 @@ class CourseCardTest {
     }
 
     @Test
+    fun testCourseCardCapsAnnouncementBadgeAt99Plus() {
+        val announcements = (1..100L).map { DiscussionTopicHeader(id = it, title = "Announcement $it") }
+        val courseCard = createSampleCourseCard(announcements = announcements)
+
+        composeTestRule.setContent {
+            CourseCard(
+                courseCard = courseCard,
+                showGrade = false,
+                showColorOverlay = false,
+                onCourseClick = { },
+                onAnnouncementClick = { }
+            )
+        }
+
+        composeTestRule.onNodeWithText("99+").assertIsDisplayed()
+        composeTestRule.onNodeWithText("100").assertDoesNotExist()
+    }
+
+    @Test
+    fun testCourseCardShowsExactCountAtBadgeCapBoundary() {
+        val announcements = (1..99L).map { DiscussionTopicHeader(id = it, title = "Announcement $it") }
+        val courseCard = createSampleCourseCard(announcements = announcements)
+
+        composeTestRule.setContent {
+            CourseCard(
+                courseCard = courseCard,
+                showGrade = false,
+                showColorOverlay = false,
+                onCourseClick = { },
+                onAnnouncementClick = { }
+            )
+        }
+
+        composeTestRule.onNodeWithText("99").assertIsDisplayed()
+        composeTestRule.onNodeWithText("99+").assertDoesNotExist()
+    }
+
+    @Test
     fun testCourseCardHidesAnnouncementIconWhenNoAnnouncements() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
         val courseCard = createSampleCourseCard(announcements = emptyList())

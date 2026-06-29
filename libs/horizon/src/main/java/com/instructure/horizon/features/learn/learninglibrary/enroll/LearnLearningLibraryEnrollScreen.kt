@@ -142,10 +142,10 @@ private fun LearnLearningLibraryEnrollScreenTopBar(
         ),
         modifier = Modifier
             .horizonBorder(
-                HorizonColors.LineAndBorder.lineStroke(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
                 bottom = 1.dp
             )
-            .background(HorizonColors.Surface.pageSecondary())
     )
 }
 
@@ -160,10 +160,10 @@ private fun LearnLearningLibraryEnrollScreenBottomBar(
         containerColor = HorizonColors.Surface.pageSecondary(),
         modifier = Modifier
             .horizonBorder(
-                HorizonColors.LineAndBorder.lineStroke(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+                backgroundColor = HorizonColors.Surface.pageSecondary(),
                 top = 1.dp
             )
-            .background(HorizonColors.Surface.pageSecondary())
     ) {
         Button(
             label = stringResource(R.string.learnLearningLibraryEnrollDialogNotNowLabel),

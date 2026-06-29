@@ -66,6 +66,7 @@ fun <T> TabRow(
     spacing: Dp = 24.dp,
     tabAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     selectedIndicator: @Composable BoxScope.(Modifier) -> Unit = { SelectedTabIndicator(it) },
+    isTabEnabled: (T) -> Boolean = { true },
     tab: @Composable (T, Boolean, Modifier) -> Unit,
 ) {
     val localDensity = LocalDensity.current
@@ -129,7 +130,7 @@ fun <T> TabRow(
                                     this[index] = width
                                 }
                         }
-                        .clickable {
+                        .clickable(enabled = isTabEnabled(tabItem)) {
                             onTabSelected(index)
                         }
                 )
@@ -185,7 +186,7 @@ fun <T> TabRow(
 }
 
 @Composable
-private fun Tab(
+internal fun Tab(
     label: String,
     isSelected: Boolean,
     modifier: Modifier = Modifier,

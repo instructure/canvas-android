@@ -34,6 +34,8 @@ interface HorizonGetCoursesManager {
 
     suspend fun getEnrollments(userId: Long, forceNetwork: Boolean = false): DataResult<List<GetCoursesQuery.Enrollment>>
 
+    suspend fun getDashboardEnrollments(userId: Long, forceNetwork: Boolean = false): DataResult<List<DashboardEnrollment>>
+
     suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations>
 }
 
@@ -101,6 +103,33 @@ class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): Hori
         }
     }
 
+    override suspend fun getDashboardEnrollments(userId: Long, forceNetwork: Boolean): DataResult<List<DashboardEnrollment>> {
+        return try {
+            val query = GetCoursesQuery(userId.toString())
+            val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
+            val enrollments = result.legacyNode?.onUser?.enrollments.orEmpty().mapNotNull { enrollment ->
+                val course = enrollment.course ?: return@mapNotNull null
+                val courseId = course.id.toLongOrNull() ?: return@mapNotNull null
+                val enrollmentId = enrollment.id?.toLongOrNull() ?: return@mapNotNull null
+                val progress = course.usersConnection?.nodes?.firstOrNull()
+                    ?.courseProgression?.requirements?.completionPercentage ?: 0.0
+                DashboardEnrollment(
+                    enrollmentId = enrollmentId,
+                    enrollmentState = enrollment.state.rawValue,
+                    courseId = courseId,
+                    courseName = course.name,
+                    courseImageUrl = course.image_download_url,
+                    courseSyllabus = course.syllabus_body,
+                    institutionName = course.account?.name,
+                    completionPercentage = progress,
+                )
+            }
+            DataResult.Success(enrollments)
+        } catch (e: Exception) {
+            DataResult.Fail(Failure.Exception(e))
+        }
+    }
+
     override suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean): DataResult<CourseWithModuleItemDurations> {
         var hasNextPage = true
         var nextCursor: String? = null
@@ -134,6 +163,23 @@ class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): Hori
         } catch (e: Exception) {
             return DataResult.Fail(Failure.Exception(e))
         }
+    }
+}
+
+data class DashboardEnrollment(
+    val enrollmentId: Long,
+    val enrollmentState: String,
+    val courseId: Long,
+    val courseName: String,
+    val courseImageUrl: String?,
+    val courseSyllabus: String?,
+    val institutionName: String?,
+    val completionPercentage: Double,
+) {
+    companion object {
+        const val STATE_ACTIVE = "active"
+        const val STATE_INVITED = "invited"
+        const val STATE_COMPLETED = "completed"
     }
 }
 

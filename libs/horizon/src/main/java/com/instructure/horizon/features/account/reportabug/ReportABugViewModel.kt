@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.SubmitErrorReportUseCase
 import com.instructure.horizon.features.account.AccountEvent
 import com.instructure.horizon.features.account.AccountEventHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +38,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReportABugViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ReportABugRepository,
+    private val submitErrorReportUseCase: SubmitErrorReportUseCase,
     private val apiPrefs: ApiPrefs,
     private val accountEventHandler: AccountEventHandler
 ) : ViewModel() {
@@ -107,11 +108,13 @@ class ReportABugViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                repository.submitErrorReport(
-                    subject = currentState.subject.text,
-                    description = currentState.description.text,
-                    email = email,
-                    severity = severity
+                submitErrorReportUseCase(
+                    SubmitErrorReportUseCase.Params(
+                        subject = currentState.subject.text,
+                        description = currentState.description.text,
+                        email = email,
+                        severity = severity,
+                    )
                 )
 
                 accountEventHandler.postEvent(

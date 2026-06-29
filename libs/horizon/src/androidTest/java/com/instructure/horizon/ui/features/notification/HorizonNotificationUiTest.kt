@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.ui.features.notification
 
+import android.R.attr.category
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -68,6 +69,7 @@ class HorizonNotificationUiTest {
             screenState = LoadingState(),
             notificationItems = listOf(
                 NotificationItem(
+                    id = 1L,
                     category = NotificationItemCategory("Announcement", StatusChipColor.Sky),
                     courseLabel = "Biology 101",
                     title = "New Announcement",
@@ -103,6 +105,7 @@ class HorizonNotificationUiTest {
             screenState = LoadingState(),
             notificationItems = listOf(
                 NotificationItem(
+                    id = 1L,
                     category = NotificationItemCategory("Announcement", StatusChipColor.Sky),
                     courseLabel = "Biology 101",
                     title = "New Announcement",
@@ -139,6 +142,7 @@ class HorizonNotificationUiTest {
             screenState = LoadingState(),
             notificationItems = listOf(
                 NotificationItem(
+                    id = 1L,
                     category = NotificationItemCategory("Announcement", StatusChipColor.Sky),
                     courseLabel = "Biology 101",
                     title = "New Announcement",
@@ -176,6 +180,7 @@ class HorizonNotificationUiTest {
             screenState = LoadingState(),
             notificationItems = listOf(
                 NotificationItem(
+                    id = 1L,
                     category = NotificationItemCategory("Announcement", StatusChipColor.Sky),
                     courseLabel = "Biology 101",
                     title = "New Announcement",

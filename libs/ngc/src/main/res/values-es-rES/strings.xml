@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<resources>
+
+    <string name="ngc_app_name">NGC</string>
+    <string name="ngc_dashboardTitle">Panel de control</string>
+
+    <!-- Course Home -->
+    <string name="ngc_courseHomeTabHome">Inicio</string>
+    <string name="ngc_courseHomeTabModules">Contenidos</string>
+    <string name="ngc_courseHomeTabMyWork">Mi trabajo</string>
+    <string name="ngc_courseHomeTabMore">Más</string>
+
+    <!-- Accessibility -->
+    <string name="a11y_dashboardManageOfflineContentDescription">Administrar contenido sin conexión</string>
+    <string name="a11y_dashboardCustomizeDashboardContentDescription">Personalizar el panel de control</string>
+</resources>

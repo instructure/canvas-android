@@ -17,12 +17,15 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.domain.usecase.GetNotificationStreamUseCase
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.model.NotificationStreamItem
+import com.instructure.horizon.offline.HorizonOfflineState
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -31,8 +34,10 @@ import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -41,39 +46,56 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: NotificationRepository = mockk(relaxed = true)
+    private val dashboardEventHandler: DashboardEventHandler = mockk(relaxed = true)
+    private val getNotificationStreamUseCase: GetNotificationStreamUseCase = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val course = Course(1L, "Course 1")
-    val streamItems = listOf(
-        StreamItem(
+    private val courseId = 1L
+    private val courseName = "Course 1"
+    val items = listOf(
+        NotificationStreamItem(
             id = 1,
             type = "Message",
+            notificationCategory = "",
             title = "Scored item",
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
             score = 5.0,
-            course_id = course.id,
+            grade = null,
+            updatedAt = null,
             htmlUrl = "deeplinkUrl1",
-            assignment = Assignment(
-                id = 1L,
-                name = "Assignment 1",
-                htmlUrl = "assignmentUrl1"
-            )
+            assignmentHtmlUrl = "assignmentUrl1",
         ),
-        StreamItem(
+        NotificationStreamItem(
             id = 2,
             type = "Message",
             notificationCategory = "Grading Policies",
             title = "Grading period item",
-            course_id = course.id,
-            htmlUrl = "deeplinkUrl2"
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
+            score = -1.0,
+            grade = null,
+            updatedAt = null,
+            htmlUrl = "deeplinkUrl2",
+            assignmentHtmlUrl = null,
         ),
-        StreamItem(
+        NotificationStreamItem(
             id = 3,
             type = "Message",
-            notificationCategory = "Due date",
+            notificationCategory = "Due Date",
             title = "Due Date",
-            course_id = course.id,
-            htmlUrl = "deeplinkUrl3"
+            courseId = courseId,
+            courseName = courseName,
+            isRead = false,
+            score = -1.0,
+            grade = null,
+            updatedAt = null,
+            htmlUrl = "deeplinkUrl3",
+            assignmentHtmlUrl = null,
         ),
     )
 
@@ -85,8 +107,8 @@ class NotificationViewModelTest {
         every { context.getString(R.string.notificationsScoreCategoryLabel) } returns "Score"
         every { context.getString(R.string.notificationsScoreChangedCategoryLabel) } returns "Score changed"
         every { context.getString(R.string.notificationsScoredItemTitle, "Scored item") } returns "Scored item's score is now available"
-        coEvery { repository.getCourse(course.id) } returns course
-        coEvery { repository.getNotifications(any()) } returns streamItems
+        every { offlineState.isOffline } returns isOfflineFlow
+        coEvery { getNotificationStreamUseCase(any()) } returns items
     }
 
     @After
@@ -102,6 +124,7 @@ class NotificationViewModelTest {
         assertEquals(3, state.notificationItems.size)
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 1L,
                 category = NotificationItemCategory(
                     "Score changed",
                     StatusChipColor.Violet
@@ -115,6 +138,7 @@ class NotificationViewModelTest {
         ))
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 2L,
                 category = NotificationItemCategory(
                     "Score",
                     StatusChipColor.Violet
@@ -128,6 +152,7 @@ class NotificationViewModelTest {
         ))
         assertTrue(state.notificationItems.contains(
             NotificationItem(
+                id = 3L,
                 category = NotificationItemCategory(
                     "Due date",
                     StatusChipColor.Honey
@@ -141,12 +166,13 @@ class NotificationViewModelTest {
         ))
         assertFalse(state.notificationItems.contains(
             NotificationItem(
+                id = 4L,
                 category = NotificationItemCategory(
                     "Announcement",
                     StatusChipColor.Sky
                 ),
                 title = "Announcement 1",
-                courseLabel = course.name,
+                courseLabel = courseName,
                 date = null,
                 isRead = false,
                 deepLink = "deeplinkUrl4"
@@ -154,7 +180,41 @@ class NotificationViewModelTest {
         ))
     }
 
+    @Test
+    fun `onItemRead flips the local item to read and posts NotificationsRefresh`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onItemRead(2L)
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertTrue(state.notificationItems.first { it.id == 2L }.isRead)
+        assertFalse(state.notificationItems.first { it.id == 1L }.isRead)
+        assertFalse(state.notificationItems.first { it.id == 3L }.isRead)
+        coVerify { dashboardEventHandler.postEvent(DashboardEvent.NotificationsRefresh) }
+    }
+
+    @Test
+    fun `onItemRead does nothing when the item is already read`() = runTest {
+        coEvery { getNotificationStreamUseCase(any()) } returns listOf(
+            items[0].copy(isRead = true),
+            items[1],
+            items[2],
+        )
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onItemRead(1L)
+        testScheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { dashboardEventHandler.postEvent(any()) }
+    }
+
     private fun getViewModel(): NotificationViewModel {
-        return NotificationViewModel(context, repository)
+        return NotificationViewModel(
+            context,
+            getNotificationStreamUseCase,
+            dashboardEventHandler,
+            offlineState,
+        )
     }
 }

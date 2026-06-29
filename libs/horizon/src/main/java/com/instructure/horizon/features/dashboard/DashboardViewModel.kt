@@ -22,6 +22,13 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetCanvasThemeUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
+import com.instructure.horizon.offline.HorizonOfflineState
+import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
@@ -29,6 +36,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,22 +45,66 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val dashboardRepository: DashboardRepository,
+    private val getSelfUserUseCase: GetSelfUserUseCase,
+    private val getCanvasThemeUseCase: GetCanvasThemeUseCase,
+    private val getUnreadCountsUseCase: GetUnreadCountsUseCase,
     private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
     private val localeUtils: LocaleUtils,
-    private val dashboardEventHandler: DashboardEventHandler
+    private val dashboardEventHandler: DashboardEventHandler,
+    private val aggregateProgressObserver: HorizonAggregateProgressObserver,
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
+    private val _uiState = MutableStateFlow(
+        DashboardUiState(
+            onSnackbarDismiss = ::dismissSnackbar,
+            updateExternalShouldRefresh = ::updateExternalShouldRefresh,
+            onSyncWidgetDismiss = ::dismissSyncWidget,
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
+    private var hasSeenActiveSyncThisSession = false
+    private var syncWidgetDismissed = false
+    private var lastIsActive = false
+
     init {
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+
         viewModelScope.tryLaunch {
             loadUnreadCount()
             loadLogo()
         } catch {
 
+        }
+
+        viewModelScope.launch {
+            aggregateProgressObserver.progressData.collect { data ->
+                if (data.isActive && !lastIsActive) {
+                    syncWidgetDismissed = false
+                }
+                if (data.isActive) {
+                    hasSeenActiveSyncThisSession = true
+                }
+                lastIsActive = data.isActive
+
+                val showWidget = !syncWidgetDismissed
+                    && hasSeenActiveSyncThisSession
+                    && (data.isActive || data.progressState.isFinished())
+
+                _uiState.update {
+                    it.copy(
+                        showSyncWidget = showWidget,
+                        syncProgress = data.progress,
+                        syncProgressLabel = data.progressLabel,
+                        syncProgressState = data.progressState,
+                    )
+                }
+            }
         }
 
         viewModelScope.launch {
@@ -61,18 +114,42 @@ class DashboardViewModel @Inject constructor(
                         _uiState.update { it.copy(externalShouldRefresh = true) }
                         refresh()
                     }
+                    is DashboardEvent.NotificationsRefresh -> refresh()
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
+                    is DashboardEvent.DismissSyncWidget -> dismissSyncWidget()
                     else -> { /* No-op */ }
                 }
             }
         }
     }
 
+    private fun dismissSyncWidget() {
+        syncWidgetDismissed = true
+        _uiState.update { it.copy(showSyncWidget = false) }
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
+            viewModelScope.tryLaunch {
+                _uiState.update {
+                    it.copy(
+                        isOffline = true,
+                        lastSyncedAtMs = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.DASHBOARD_ENROLLMENTS))
+                    )
+                }
+            } catch {
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = null) }
+            }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+        }
+    }
+
     private suspend fun loadLogo() {
-        val user = dashboardRepository.getSelf()
+        val user = getSelfUserUseCase(Unit)
         user?.let { saveUserInfo(it) }
 
-        val theme = dashboardRepository.getTheme()
+        val theme = getCanvasThemeUseCase(Unit)
         _uiState.update { it.copy(theme = theme) }
         // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
         poll(
@@ -84,7 +161,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadUnreadCount() {
-        val unreadCounts = dashboardRepository.getUnreadCounts(true)
+        val unreadCounts = getUnreadCountsUseCase(true)
         val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.unreadCount ?: 0
         val unreadNotifications = unreadCounts.filter { it.type == "Message" }.sumOf { it.unreadCount }
         _uiState.update {
@@ -106,6 +183,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun refresh() {
+        if (offlineState.isOffline.value) return
         viewModelScope.tryLaunch {
             loadUnreadCount()
         } catch {

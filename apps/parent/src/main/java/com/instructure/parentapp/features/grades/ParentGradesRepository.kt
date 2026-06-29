@@ -45,7 +45,7 @@ class ParentGradesRepository(
 
     override val studentId = parentPrefs.currentStudent?.id.orDefault()
 
-    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup> {
+    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean, paginateComments: Boolean): List<AssignmentGroup> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
 
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForObserver(courseId, gradingPeriodId, params).depaginate {

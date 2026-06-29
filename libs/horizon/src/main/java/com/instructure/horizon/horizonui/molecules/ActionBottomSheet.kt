@@ -26,13 +26,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -57,6 +55,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeModalBottomSheet
 import kotlinx.coroutines.launch
 
 @Composable
@@ -68,11 +67,11 @@ fun ActionBottomSheet(
     onDismiss: () -> Unit = {}
 ) {
     val localCoroutineScope = rememberCoroutineScope()
-    ModalBottomSheet(
+    EdgeToEdgeModalBottomSheet(
         containerColor = HorizonColors.Surface.pagePrimary(),
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        modifier = modifier.statusBarsPadding(),
+        modifier = modifier,
         dragHandle = null,
     ) {
         Column(

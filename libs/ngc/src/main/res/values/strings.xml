@@ -25,7 +25,15 @@
     <string name="ngc_courseHomeTabMyWork">My Work</string>
     <string name="ngc_courseHomeTabMore">More</string>
 
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Additional info</string>
+    <string name="ngc_submissionSegmentInstructions">Instructions</string>
+    <string name="ngc_submissionSegmentRubric">Rubric</string>
+    <string name="ngc_submissionSegmentComments">Comments</string>
+
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Customize dashboard</string>
+    <string name="a11y_submissionSupportingPaneExpand">Expand additional info</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Collapse additional info</string>
 </resources>

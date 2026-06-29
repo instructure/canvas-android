@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.Failure
 import com.instructure.journey.EnrollCourseMutation
 import com.instructure.journey.EnrolledProgramsQuery
 import com.instructure.journey.GetProgramByIdQuery
+import com.instructure.journey.SyncCourseProgressMutation
 import com.instructure.journey.fragment.ProgramFields
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
@@ -55,6 +56,7 @@ interface GetProgramsManager {
     suspend fun getPrograms(forceNetwork: Boolean = false): List<Program>
     suspend fun getProgramById(programId: String, forceNetwork: Boolean = false): Program
     suspend fun enrollCourse(progressId: String): DataResult<Unit>
+    suspend fun syncCourseProgress(canvasCourseId: Long): DataResult<Unit>
 }
 
 class GetProgramManagerImpl @Inject constructor(
@@ -135,6 +137,16 @@ class GetProgramManagerImpl @Inject constructor(
 
     override suspend fun enrollCourse(progressId: String): DataResult<Unit> {
         val mutation = EnrollCourseMutation(progressId)
+        val result = journeyClient.enqueueMutation(mutation)
+        return if (result.exception != null) {
+            DataResult.Fail(Failure.Exception(result.exception!!))
+        } else {
+            DataResult.Success(Unit)
+        }
+    }
+
+    override suspend fun syncCourseProgress(canvasCourseId: Long): DataResult<Unit> {
+        val mutation = SyncCourseProgressMutation(canvasCourseId.toString())
         val result = journeyClient.enqueueMutation(mutation)
         return if (result.exception != null) {
             DataResult.Fail(Failure.Exception(result.exception!!))

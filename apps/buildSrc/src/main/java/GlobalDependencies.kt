@@ -176,7 +176,7 @@ object Libs {
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
     const val JSOUP = "org.jsoup:jsoup:${Versions.JSOUP}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.9.3.8651"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.13.2.9439"
 
     /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
@@ -196,7 +196,8 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0"
-    const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive"
+    const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive:1.1.0"
+    const val COMPOSE_ADAPTIVE_NAVIGATION = "androidx.compose.material3.adaptive:adaptive-navigation:1.1.0"
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
     const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
     const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"

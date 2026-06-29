@@ -17,27 +17,19 @@
 package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
-import android.net.Uri
-import com.instructure.canvasapi2.apis.FileFolderAPI
-import com.instructure.canvasapi2.builders.RestParams
+import androidx.core.net.toUri
 import com.instructure.canvasapi2.models.StudioMediaMetadata
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.offline.daos.FileFolderDao
-import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
-import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 
 class HtmlParser(
-    private var localFileDao: LocalFileDao,
+    private val fileSource: HtmlParserFileSource,
     private val apiPrefs: ApiPrefs,
-    private val fileFolderDao: FileFolderDao,
     @ApplicationContext private val context: Context,
-    private val fileSyncSettingsDao: FileSyncSettingsDao,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
 
-    private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
+    private val imageRegex = Regex("<img[^>]*\\ssrc\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
     private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
@@ -72,14 +64,30 @@ class HtmlParser(
 
         val matches = imageRegex.findAll(resultHtml)
         matches.forEach { match ->
-            val imageUrl = match.groupValues[1]
+            val imageUrl = match.groupValues
+                .drop(1)
+                .firstOrNull { it.isNotEmpty() }
+                .orEmpty()
             val fileId = internalFileRegex.find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
             if (fileId != null) {
                 val (newHtml, shouldSyncFile) = replaceInternalFileUrl(resultHtml, courseId, fileId, imageUrl)
                 resultHtml = newHtml
                 if (shouldSyncFile) internalFileIds.add(fileId)
-            } else {
-                val fileUri = Uri.parse(imageUrl)
+            } else if (imageUrl.toUri().isRelative) {
+                val relativeInternalFileRegex = Regex(".*files/(\\d+)")
+                val fileId = relativeInternalFileRegex.find(imageUrl)?.groupValues?.get(1)?.toLongOrNull()
+                if (fileId != null) {
+                    val (newHtml, shouldSyncFile) = replaceInternalFileUrl(
+                        resultHtml,
+                        courseId,
+                        fileId,
+                        imageUrl
+                    )
+                    resultHtml = newHtml
+                    if (shouldSyncFile) internalFileIds.add(fileId)
+                }
+            } else  {
+                val fileUri = imageUrl.toUri()
                 val fileName = fileUri.lastPathSegment
                 if (fileName != null && fileUri.scheme == "https") { // We don't allow cleartext traffic in the app.
                     resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePathForExternalFile(fileName, courseId)}")
@@ -95,12 +103,12 @@ class HtmlParser(
         var resultHtml = html
         var shouldSyncFile = false
 
-        val filePath = localFileDao.findById(fileId)?.path
+        val filePath = fileSource.findLocalFilePath(fileId)
         if (!filePath.isNullOrEmpty()) {
             resultHtml = resultHtml.replace(imageUrl, "file://$filePath")
         } else {
             resultHtml = resultHtml.replace(imageUrl, "file://${createLocalFilePath(fileId, courseId)}")
-            if (fileSyncSettingsDao.findById(fileId) == null) {
+            if (!fileSource.isRegisteredForSync(fileId)) {
                 shouldSyncFile = true
             }
         }
@@ -109,16 +117,10 @@ class HtmlParser(
     }
 
     private suspend fun createLocalFilePath(fileId: Long, courseId: Long): String {
-        var fileName = fileFolderDao.findById(fileId)?.displayName.orEmpty()
-        if (fileName.isEmpty()) {
-            val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(isForceReadFromNetwork = false, shouldLoginOnTokenError = false)).dataOrNull
-            fileName = file?.displayName.orEmpty()
-        }
+        val fileName = fileSource.findDisplayName(fileId, courseId).orEmpty()
         val fileNameWithId = if (fileName.isNotEmpty()) "${fileId}_$fileName" else "$fileId"
         val dir = File(context.filesDir, apiPrefs.user?.id.toString())
-
-        val downloadedFile = File(dir, fileNameWithId)
-        return downloadedFile.absolutePath
+        return File(dir, fileNameWithId).absolutePath
     }
 
     private fun createLocalFilePathForExternalFile(fileName: String, courseId: Long): String {
@@ -136,7 +138,7 @@ class HtmlParser(
             val fileUrl = match.groupValues[1]
             val fileId = internalFileRegex.find(fileUrl)?.groupValues?.get(1)?.toLongOrNull()
             if (fileId != null) {
-                if (fileSyncSettingsDao.findById(fileId) == null) {
+                if (!fileSource.isRegisteredForSync(fileId)) {
                     internalFileIds.add(fileId)
                 }
             }

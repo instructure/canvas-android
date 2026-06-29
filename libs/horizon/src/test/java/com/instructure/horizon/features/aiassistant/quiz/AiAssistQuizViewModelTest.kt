@@ -20,8 +20,8 @@ import com.instructure.canvasapi2.models.journey.assist.JourneyAssistQuizItem
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
-import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
+import com.instructure.horizon.data.repository.AiAssistResponse
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
@@ -47,7 +47,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AiAssistQuizViewModelTest {
-    private val repository: AiAssistRepository = mockk(relaxed = true)
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -173,7 +173,7 @@ class AiAssistQuizViewModelTest {
     }
 
     @Test
-    fun `regenerateQuiz calls repository when at last quiz`() = runTest {
+    fun `regenerateQuiz calls use case when at last quiz`() = runTest {
         val newQuizItems = listOf(
             JourneyAssistQuizItem(
                 question = "New question?",
@@ -189,7 +189,7 @@ class AiAssistQuizViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(responseMessage, JourneyAssistState())
 
         val viewModel = getViewModel()
@@ -198,7 +198,7 @@ class AiAssistQuizViewModelTest {
         viewModel.uiState.value.regenerateQuiz()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { repository.answerPrompt(any(), any(), any()) }
+        coVerify { answerAiAssistPromptUseCase(any()) }
         assertEquals(3, viewModel.uiState.value.quizList.size)
         assertEquals(2, viewModel.uiState.value.currentQuizIndex)
         assertEquals("New question?", viewModel.uiState.value.quizList[2].question)
@@ -207,7 +207,7 @@ class AiAssistQuizViewModelTest {
     @Test
     fun `regenerateQuiz shows loading state during API call`() = runTest {
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
             val message = AiAssistMessage(
@@ -235,7 +235,7 @@ class AiAssistQuizViewModelTest {
     @Test
     fun `regenerateQuiz handles error gracefully`() = runTest {
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } throws Exception("Network error")
 
         val viewModel = getViewModel()
@@ -257,7 +257,7 @@ class AiAssistQuizViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(responseMessage, JourneyAssistState())
 
         val viewModel = getViewModel()
@@ -317,6 +317,6 @@ class AiAssistQuizViewModelTest {
     }
 
     private fun getViewModel(): AiAssistQuizViewModel {
-        return AiAssistQuizViewModel(repository, aiAssistContextProvider)
+        return AiAssistQuizViewModel(answerAiAssistPromptUseCase, aiAssistContextProvider)
     }
 }

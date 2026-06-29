@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetUserUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountCalendarFeedViewModel @Inject constructor(
-    private val repository: AccountCalendarFeedRepository,
+    private val getUserUseCase: GetUserUseCase,
     private val apiPrefs: ApiPrefs,
     @ApplicationContext private val context: Context
 ): ViewModel() {
@@ -77,7 +78,7 @@ class AccountCalendarFeedViewModel @Inject constructor(
                 it.copy(screenState = it.screenState.copy(isLoading = true))
             }
 
-            val user = repository.getUser(apiPrefs.user!!.id)
+            val user = getUserUseCase(GetUserUseCase.Params(apiPrefs.user!!.id))
             val icsFile = downloadIcsToCache(context, user.calendar!!.ics)!!
             val icsUri = FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, icsFile)
             _uiState.update {

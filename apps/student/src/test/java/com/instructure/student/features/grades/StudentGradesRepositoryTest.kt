@@ -68,30 +68,20 @@ class StudentGradesRepositoryTest {
 
         every { networkStateProvider.isOnline() } returns true
         coEvery {
-            networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any()
-            )
+            networkDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns onlineExpected
         coEvery {
-            localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any()
-            )
+            localDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns offlineExpected
 
-        val result = repository.loadAssignmentGroups(1, 1, true)
+        val result = repository.loadAssignmentGroups(1, 1, true, false)
 
         coVerify {
-            networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+            networkDataSource.getAssignmentGroupsWithAssignments(
                 courseId = 1,
                 gradingPeriodId = 1,
-                scopeToStudent = true,
-                forceNetwork = true
+                forceNetwork = true,
+                paginateComments = false
             )
         }
         assertEquals(onlineExpected, result)
@@ -104,30 +94,20 @@ class StudentGradesRepositoryTest {
 
         every { networkStateProvider.isOnline() } returns false
         coEvery {
-            networkDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any()
-            )
+            networkDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns onlineExpected
         coEvery {
-            localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any()
-            )
+            localDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns offlineExpected
 
-        val result = repository.loadAssignmentGroups(1, 1, true)
+        val result = repository.loadAssignmentGroups(1, 1, true, false)
 
         coVerify {
-            localDataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+            localDataSource.getAssignmentGroupsWithAssignments(
                 courseId = 1,
                 gradingPeriodId = 1,
-                scopeToStudent = true,
-                forceNetwork = true
+                forceNetwork = true,
+                paginateComments = false
             )
         }
         assertEquals(offlineExpected, result)
@@ -140,22 +120,25 @@ class StudentGradesRepositoryTest {
 
         every { networkStateProvider.isOnline() } returns true
         coEvery {
-            networkDataSource.getAssignmentGroupsWithAssignments(any(), any())
+            networkDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns onlineExpected
         coEvery {
-            localDataSource.getAssignmentGroupsWithAssignments(any(), any())
+            localDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns offlineExpected
 
         val result = repository.loadAssignmentGroups(
             courseId = 1,
             gradingPeriodId = null,
-            forceRefresh = true
+            forceRefresh = true,
+            paginateComments = false
         )
 
         coVerify {
             networkDataSource.getAssignmentGroupsWithAssignments(
                 courseId = 1,
-                forceNetwork = true
+                gradingPeriodId = null,
+                forceNetwork = true,
+                paginateComments = false
             )
         }
         assertEquals(onlineExpected, result)
@@ -168,22 +151,25 @@ class StudentGradesRepositoryTest {
 
         every { networkStateProvider.isOnline() } returns false
         coEvery {
-            networkDataSource.getAssignmentGroupsWithAssignments(any(), any())
+            networkDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns onlineExpected
         coEvery {
-            localDataSource.getAssignmentGroupsWithAssignments(any(), any())
+            localDataSource.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
         } returns offlineExpected
 
         val result = repository.loadAssignmentGroups(
             courseId = 1,
             gradingPeriodId = null,
-            forceRefresh = true
+            forceRefresh = true,
+            paginateComments = false
         )
 
         coVerify {
             localDataSource.getAssignmentGroupsWithAssignments(
                 courseId = 1,
-                forceNetwork = true
+                gradingPeriodId = null,
+                forceNetwork = true,
+                paginateComments = false
             )
         }
         assertEquals(offlineExpected, result)

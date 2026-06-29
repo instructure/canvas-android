@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isCourseOrGroup
@@ -68,6 +69,7 @@ import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.activity.ParentActivity
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListNotificationBinding
@@ -150,6 +152,15 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 R.id.emptyView,
                 R.id.listView
             )
+        }
+
+        // This fragment is hosted both as a course Home (no bottom bar, so it must clear the system
+        // navigation bar itself) and as the bottom-navigation Notifications screen (the bottom bar
+        // already clears it). Only apply the bottom inset in the former case to avoid a double gap.
+        val bottomBarVisible = (activity as? NavigationActivity)?.isBottomNavigationBarVisible(this) ?: false
+        if (!bottomBarVisible) {
+            recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
+            binding.editOptions.applyBottomSystemBarMargin()
         }
 
         recyclerBinding.listView.isSelectionEnabled = false

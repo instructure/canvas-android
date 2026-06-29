@@ -18,6 +18,7 @@
 
 package com.instructure.student.di
 
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.EnabledTabsImpl
@@ -34,8 +35,8 @@ import javax.inject.Singleton
 class ApplicationModule {
 
     @Provides
-    fun provideLogoutHelper(): LogoutHelper {
-        return StudentLogoutHelper()
+    fun provideLogoutHelper(horizonDatabaseProvider: HorizonDatabaseProvider): LogoutHelper {
+        return StudentLogoutHelper(horizonDatabaseProvider)
     }
 
     @Provides

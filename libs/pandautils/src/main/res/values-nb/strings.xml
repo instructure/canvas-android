@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Ingen kunngjøringer er gjort ennå.</string>
     <string name="noCourses">Ingen emner</string>
     <string name="noCoursesSubtext">Det ser ut til at det ikke er noen emner tilsluttet denne kontoen. Besøk nettet for å lage et emne i dag.</string>
+    <string name="coursesWidgetEmptyTitle">Velkommen til Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Du har ingen aktive emner ennå – så det er litt stille her. Når du har meldt deg på et emne, begynner dashbordet ditt å fylles opp med ny aktivitet.</string>
     <string name="noAssignments">Ingen oppgaver</string>
     <string name="noAssignmentsSubtext">Det ser ut som ingen oppgaver er laget i dette området. På tide å gå ut og utforske.</string>
     <string name="noAssignmentsTeacher">Det ser ut til at ingen oppgaver er publisert ennå.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Vurdering: %s poeng</string>
     <string name="gradePercentTextFieldAccessibility">Vurdering: %d prosent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Vurdering: %s poeng, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Hjelp oss med å bygge en bedre app</string>
+    <string name="cookieConsentDescription">Vi samler inn anonyme applikasjonsdata for å hjelpe teamet vårt med å identifisere tekniske problemer og optimalisere appfunksjoner.</string>
+    <string name="cookieConsentNoProfiles">Ingen personlige profiler: Vi sporer ikke identiteten din eller viser annonser.</string>
+    <string name="cookieConsentNoSelling">Ingen datasalg: Informasjonen din blir aldri solgt til tredjeparter.</string>
+    <string name="cookieConsentFullControl">Full kontroll: Du kan justere disse innstillingene når som helst.</string>
+    <string name="cookieConsentAllow">Tillat</string>
+    <string name="cookieConsentDecline">Avslå</string>
+    <string name="privacySettingsTitle">Personverninnstillinger</string>
+    <string name="privacySettingsToggleLabel">Anonym applikasjonsanalyse</string>
+    <string name="privacySettingsDescription">Del anonyme data om appytelse og funksjonsbruk. Dette hjelper oss med å fikse feil og forbedre den generelle applikasjonsopplevelsen. Vi samler ikke inn personlige identifikatorer.</string>
 </resources>

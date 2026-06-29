@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Er is nog niets aangekondigd.</string>
     <string name="noCourses">Geen cursussen</string>
     <string name="noCoursesSubtext">Het lijkt erop dat er geen cursussen aan dit account zijn gekoppeld. Ga naar het web om vandaag nog een cursus te maken.</string>
+    <string name="coursesWidgetEmptyTitle">Welkom bij Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Je hebt nog geen actieve cursussen – het is hier dus nog een beetje rustig. Zodra je je inschrijft voor een klas, vult je dashboard zich met nieuwe activiteit.</string>
     <string name="noAssignments">Geen opdrachten</string>
     <string name="noAssignmentsSubtext">Het lijkt erop dat er in deze ruimte geen opdrachten zijn gemaakt. Dus kijk wat er zoal te vinden is.</string>
     <string name="noAssignmentsTeacher">Het lijkt erop dat er nog geen opdrachten zijn gepubliceerd.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Cijfer: %s punten</string>
     <string name="gradePercentTextFieldAccessibility">Cijfer: %d procent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Cijfer: %s punten, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Help ons een betere app te bouwen</string>
+    <string name="cookieConsentDescription">We verzamelen anonieme applicatiegegevens zodat ons team technische problemen kan identificeren en de app-functies kan optimaliseren.</string>
+    <string name="cookieConsentNoProfiles">Geen persoonlijke profielen: We houden je identiteit niet bij en tonen je ook geen advertenties.</string>
+    <string name="cookieConsentNoSelling">Geen verkoop van gegevens: Je informatie wordt nooit aan derde partijen verkocht.</string>
+    <string name="cookieConsentFullControl">Volledige controle: Je kunt deze instellingen op elk gewenst moment aanpassen.</string>
+    <string name="cookieConsentAllow">Toestaan</string>
+    <string name="cookieConsentDecline">Weigeren</string>
+    <string name="privacySettingsTitle">Privacyinstellingen</string>
+    <string name="privacySettingsToggleLabel">Anonieme analyse van applicatie</string>
+    <string name="privacySettingsDescription">Deel anonieme gegevens over de prestaties van de app en het gebruik van de functie. Dit helpt bugs op te lossen en verbetert de algehele ervaring met de applicatie. We verzamelen geen persoonlijke identificatiegegevens.</string>
 </resources>

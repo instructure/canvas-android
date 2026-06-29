@@ -18,6 +18,7 @@ package com.instructure.student.ui.utils
 
 import android.app.Activity
 import android.content.Context
+import com.instructure.canvas.espresso.RemoteConfigOverrides
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
@@ -33,6 +34,7 @@ class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : Instructu
         CacheControlFlags.clearPrefs()
         PreviousUsersUtils.clear(context)
         LoginPrefs.clearPrefs()
+        RemoteConfigOverrides.clear()
     }
 
 }

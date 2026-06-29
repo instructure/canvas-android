@@ -78,12 +78,15 @@ import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseS
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
+import com.instructure.horizon.features.dashboard.widget.syncinprogress.DashboardSyncInProgressWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
@@ -91,10 +94,10 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.zeroScreenInsets
-import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -145,18 +148,17 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         CollapsableHeaderScreen(
+            contentExtendsBehindStatusBar = true,
             statusBarColor = HorizonColors.Surface.pagePrimary(),
             modifier = Modifier.padding(innerPadding),
             headerContent = { paddingValues ->
                 Column(
                     modifier = Modifier
                         .padding(paddingValues)
-                        .conditional(scrollState.canScrollBackward) {
-                            shadow(
-                                elevation = HorizonElevation.level3,
-                                spotColor = Color.Transparent,
-                            )
-                        }
+                        .horizonTopBarShadow(
+                            scrollState = scrollState,
+                            backgroundColor = HorizonColors.Surface.pagePrimary(),
+                        )
                 ) {
                     DashboardTopBar(
                         uiState,
@@ -187,6 +189,10 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                         )
                     }
                 ) {
+                    OfflineScreenWrapper(
+                        isOffline = uiState.isOffline,
+                        lastSyncedAtMs = uiState.lastSyncedAtMs,
+                    ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
@@ -194,28 +200,44 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                             .verticalScroll(scrollState)
                     ) {
                         HorizonSpace(SpaceSize.SPACE_12)
+                        if (uiState.showSyncWidget) {
+                            DashboardSyncInProgressWidget(
+                                syncProgress = uiState.syncProgress,
+                                syncProgressLabel = uiState.syncProgressLabel,
+                                progressState = uiState.syncProgressState,
+                                onDismiss = uiState.onSyncWidgetDismiss,
+                                navController = navController,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
+                                    .padding(bottom = 16.dp),
+                            )
+                        }
                         DashboardAnnouncementBannerWidget(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
                         )
                         DashboardCourseSection(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
                         NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
-                            navController
+                            navController,
+                            isOffline = uiState.isOffline,
                         )
                         DashboardSkillHighlightsWidget(
                             navController,
                             shouldRefresh,
-                            refreshStateFlow
+                            refreshStateFlow,
+                            isOffline = uiState.isOffline,
                         )
                         HorizonSpace(SpaceSize.SPACE_24)
+                    }
                     }
                 }
             }
@@ -266,7 +288,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
                         type = BadgeType.Inverse
                     )
                 }
-            } else null
+            } else null,
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
@@ -275,6 +297,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
             onClick = { navController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
+            enabled = !uiState.isOffline,
             badge = if (uiState.unreadCountState.unreadConversations > 0) {
                 {
                     Badge(
@@ -282,7 +305,8 @@ private fun DashboardTopBar(uiState: DashboardUiState, navController: NavControl
                         type = BadgeType.Inverse
                     )
                 }
-            } else null
+            } else null,
+            modifier = Modifier.offlineDisabled(uiState.isOffline)
         )
     }
 }
@@ -292,6 +316,7 @@ private fun NumericWidgetRow(
     shouldRefresh: Boolean,
     refreshStateFlow: MutableStateFlow<List<Boolean>>,
     navController: NavHostController,
+    isOffline: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
@@ -313,20 +338,23 @@ private fun NumericWidgetRow(
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardTimeSpentWidget(
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardSkillOverviewWidget(
                     navController,
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
-                    Modifier.width(IntrinsicSize.Max)
+                    isOffline = isOffline,
+                    modifier = Modifier.width(IntrinsicSize.Max)
                 )
             }
         } else {
@@ -344,7 +372,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )
@@ -355,7 +384,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )
@@ -367,7 +397,8 @@ private fun NumericWidgetRow(
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
-                            modifier
+                            isOffline = isOffline,
+                            modifier = modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
                         )

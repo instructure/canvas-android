@@ -39,7 +39,8 @@ data class ProgramProgressState(
 fun ProgramProgress(
     state: ProgramProgressState,
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOffline: Boolean = false,
 ) {
     Column {
         if (state.headerString != null) {
@@ -50,7 +51,8 @@ fun ProgramProgress(
             ProgramProgressItem(
                 state = course,
                 navController = navController,
-                modifier = modifier.semantics(mergeDescendants = true) {}
+                modifier = modifier.semantics(mergeDescendants = true) {},
+                isOffline = isOffline,
             )
         }
     }

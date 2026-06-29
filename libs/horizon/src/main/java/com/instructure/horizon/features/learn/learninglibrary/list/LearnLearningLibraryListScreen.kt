@@ -57,7 +57,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonTopBarShadow
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.BadgeType
@@ -70,7 +70,6 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -365,9 +364,11 @@ private fun LearnLearningLibraryListFilterRow(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .conditional(scrollState.canScrollBackward) {
-                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
-            }
+            .horizonTopBarShadow(
+                scrollState = scrollState,
+                backgroundColor = HorizonColors.Surface.pagePrimary(),
+                color = HorizonColors.LineAndBorder.lineStroke(),
+            )
             .background(HorizonColors.Surface.pagePrimary())
             .padding(24.dp)
     ) {

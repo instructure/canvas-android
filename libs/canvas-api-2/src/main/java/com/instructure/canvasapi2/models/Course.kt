@@ -407,7 +407,11 @@ data class Course(
         HOME_ASSIGNMENTS("assignments"),
 
         @SerializedName("syllabus")
-        HOME_SYLLABUS("syllabus")
+        HOME_SYLLABUS("syllabus");
+
+        companion object {
+            fun fromApiString(value: String?): HomePage? = entries.firstOrNull { it.apiString == value }
+        }
     }
 
     enum class License(val apiString: String, val prettyString: String) {

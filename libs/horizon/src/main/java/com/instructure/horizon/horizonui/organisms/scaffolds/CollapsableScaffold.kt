@@ -16,46 +16,58 @@
  */
 package com.instructure.horizon.horizonui.organisms.scaffolds
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import androidx.compose.ui.zIndex
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.util.DefaultBarAlpha
 import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.minus
+import com.instructure.horizon.util.horizontalSafeDrawing
 import com.instructure.horizon.util.plus
-import com.instructure.horizon.util.zeroScreenInsets
 
+private val FabMargin = 16.dp
+
+/**
+ * Edge-to-edge scaffold with a single collapsing header that hides on scroll.
+ *
+ * The header is laid out at the top with a vertical offset driven by a nested-scroll connection.
+ * Body content is rendered behind it, padded down by the header's currently visible height (so it
+ * sits below the header at rest and follows the header as it collapses).
+ *
+ * Set [contentExtendsBehindStatusBar] to `true` to let body content scroll all the way under the
+ * translucent status-bar overlay; otherwise content stops at the status-bar inset (the bar still
+ * collapses fully — scroll handoff to the inner scrollable happens at the floor).
+ */
 @Composable
 fun CollapsableHeaderScreen(
     headerContent: @Composable (contentPadding: PaddingValues) -> Unit,
@@ -63,89 +75,85 @@ fun CollapsableHeaderScreen(
     modifier: Modifier = Modifier,
     statusBarColor: Color? = null,
     navigationBarColor: Color? = null,
-    statusBarAlpha: Float = 0.8f,
-    navigationBarAlpha: Float = 0.8f
+    statusBarAlpha: Float = DefaultBarAlpha,
+    navigationBarAlpha: Float = DefaultBarAlpha,
+    contentExtendsBehindStatusBar: Boolean = false,
 ) {
-    if (statusBarColor != null) {
-        HorizonEdgeToEdgeSystemBars(
-            statusBarColor = statusBarColor,
-            navigationBarColor = navigationBarColor,
-            statusBarAlpha = statusBarAlpha,
-            navigationBarAlpha = navigationBarAlpha
-        ) { statusBarWindowInsets, navigationBarWindowInsets ->
-            CollapsableHeaderScreenContent(
-                headerContent = headerContent,
-                bodyContent = bodyContent,
-                statusBarWindowInsets = statusBarWindowInsets,
-                navigationBarWindowInsets = navigationBarWindowInsets,
-                modifier = modifier
-            )
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = statusBarColor,
+        navigationBarColor = navigationBarColor,
+        statusBarAlpha = statusBarAlpha,
+        navigationBarAlpha = navigationBarAlpha,
+    ) { statusBarInsets, navigationBarInsets ->
+        val density = LocalDensity.current
+        val connection = rememberSaveable(saver = CollapsingBarsNestedScrollConnection.Saver) {
+            CollapsingBarsNestedScrollConnection()
         }
-    } else {
-        CollapsableHeaderScreenContent(
-            headerContent = headerContent,
-            bodyContent = bodyContent,
+        val statusBarPx = with(density) { statusBarInsets.getTop(density) }
+
+        // When the body shouldn't extend behind the status bar, floor its effective top at
+        // statusBars.top. Setting `topBodyFloorCollapsePx` tells the connection to stop claiming
+        // scroll once the bar has collapsed past that floor — the rest of the gesture forwards to
+        // the inner scrollable, so the handoff is seamless.
+        connection.topBodyFloorCollapsePx = if (contentExtendsBehindStatusBar) {
+            connection.topBarMaxHeight
+        } else {
+            (connection.topBarMaxHeight - statusBarPx).coerceAtLeast(0)
+        }
+
+        val topFloor = with(density) { if (contentExtendsBehindStatusBar) 0.dp else statusBarPx.toDp() }
+        val visibleHeaderHeight = max(
+            topFloor,
+            with(density) { (connection.topBarMaxHeight + connection.topBarOffset).coerceAtLeast(0).toDp() }
+        )
+
+        Box(
             modifier = modifier
-        )
-    }
-}
-
-@Composable
-private fun CollapsableHeaderScreenContent(
-    headerContent: @Composable (contentPadding: PaddingValues) -> Unit,
-    bodyContent: @Composable (contentPadding: PaddingValues) -> Unit,
-    modifier: Modifier = Modifier,
-    statusBarWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets,
-    navigationBarWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets
-) {
-    val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
-        save = { it.value.appBarMaxHeight to it.value.appBarOffset },
-        restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
-    )
-    val density = LocalDensity.current
-    var headerHeight by rememberSaveable { mutableIntStateOf(0) }
-    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) { mutableStateOf(CollapsingAppBarNestedScrollConnection(headerHeight)) }
-
-    Box(
-        modifier = modifier
-            .nestedScroll(nestedScrollConnection)
-            .clipToBounds()
-    ) {
-        Box(
-            modifier = Modifier
-                .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
-                .onGloballyPositioned { coordinates ->
-                    if (coordinates.size.height != headerHeight) {
-                        headerHeight = coordinates.size.height
-                        val temp = nestedScrollConnection.appBarOffset
-                        nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(headerHeight).apply {
-                                appBarOffset = temp
-                            }
-                    }
-                }
+                .fillMaxSize()
+                .nestedScroll(connection)
+                .clipToBounds()
         ) {
-            headerContent(statusBarWindowInsets.add(navigationBarWindowInsets.only(WindowInsetsSides.Horizontal)).asPaddingValues())
-        }
-        val headerHeight = max(
-            with(density) { statusBarWindowInsets.getTop(density).toDp() },
-            with(density) { headerHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() }
-        )
-
-        Box(
-            modifier = Modifier
-                .padding(top = headerHeight)
-        ) {
-            bodyContent(navigationBarWindowInsets.asPaddingValues())
+            // Body — fills the whole area, with horizontal cutout padding applied via modifier so
+            // nested scaffolds see it as consumed. Horizontal nav-bar insets are handled by the
+            // wrapper, so the PaddingValues passed to bodyContent only carries the bottom part —
+            // callers applying `.padding(contentPadding)` would otherwise double-pad in landscape.
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+            ) {
+                bodyContent(
+                    PaddingValues(top = visibleHeaderHeight) +
+                            navigationBarInsets.only(WindowInsetsSides.Bottom).asPaddingValues()
+                )
+            }
+            // Header overlay — collapses upward as the user scrolls.
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .zIndex(1f)
+                    .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                    .offset { IntOffset(0, connection.topBarOffset) }
+                    .onGloballyPositioned { connection.topBarMaxHeight = it.size.height }
+            ) {
+                headerContent(statusBarInsets.asPaddingValues())
+            }
         }
     }
 }
 
+/**
+ * Edge-to-edge scaffold with a collapsing top bar and a collapsing bottom bar.
+ *
+ * Both bars hide on scroll via the same nested-scroll connection. The bottom bar slot stays at the
+ * screen bottom (it is *not* IME-padded), so when the keyboard opens it is hidden behind it; body
+ * content is pushed above the keyboard via `Modifier.imePadding()` on the body wrapper.
+ */
 @Composable
 fun CollapsableScaffold(
     modifier: Modifier = Modifier,
     topBar: @Composable (contentPadding: PaddingValues) -> Unit = {},
-    bottomBar: @Composable () -> Unit = {},
+    bottomBar: @Composable (contentPadding: PaddingValues) -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
@@ -153,201 +161,104 @@ fun CollapsableScaffold(
     contentColor: Color = contentColorFor(containerColor),
     statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
     navigationBarColor: Color? = null,
-    statusBarAlpha: Float = 0.8f,
-    navigationBarAlpha: Float = 0.8f,
+    statusBarAlpha: Float = DefaultBarAlpha,
+    navigationBarAlpha: Float = DefaultBarAlpha,
     content: @Composable (paddingValues: PaddingValues) -> Unit,
 ) {
-    if (statusBarColor != null) {
-        HorizonEdgeToEdgeSystemBars(
-            statusBarColor = statusBarColor,
-            navigationBarColor = navigationBarColor,
-            statusBarAlpha = statusBarAlpha,
-            navigationBarAlpha = navigationBarAlpha
-        ) { statusBarWindowInsets, navigationBarWindowInsets ->
-            CollapsableScaffoldContent(
-                modifier = modifier,
-                topBar = topBar,
-                bottomBar = bottomBar,
-                snackbarHost = snackbarHost,
-                floatingActionButton = floatingActionButton,
-                floatingActionButtonPosition = floatingActionButtonPosition,
-                containerColor = containerColor,
-                contentColor = contentColor,
-                statusBarWindowInsets = statusBarWindowInsets,
-                navigationBarWindowInsets = navigationBarWindowInsets,
-                content = content
-            )
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = statusBarColor,
+        navigationBarColor = navigationBarColor,
+        statusBarAlpha = statusBarAlpha,
+        navigationBarAlpha = navigationBarAlpha,
+    ) { statusBarInsets, navigationBarInsets ->
+        val density = LocalDensity.current
+        val connection = rememberSaveable(saver = CollapsingBarsNestedScrollConnection.Saver) {
+            CollapsingBarsNestedScrollConnection()
         }
-    } else {
-        CollapsableScaffoldContent(
-            modifier = modifier,
-            topBar = topBar,
-            bottomBar = bottomBar,
-            snackbarHost = snackbarHost,
-            floatingActionButton = floatingActionButton,
-            floatingActionButtonPosition = floatingActionButtonPosition,
-            containerColor = containerColor,
-            contentColor = contentColor,
-            content = content
-        )
-    }
-}
 
-@Composable
-private fun CollapsableScaffoldContent(
-    modifier: Modifier = Modifier,
-    topBar: @Composable (contentPadding: PaddingValues) -> Unit = {},
-    bottomBar: @Composable () -> Unit = {},
-    snackbarHost: @Composable () -> Unit = {},
-    floatingActionButton: @Composable () -> Unit = {},
-    floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = MaterialTheme.colorScheme.background,
-    contentColor: Color = contentColorFor(containerColor),
-    statusBarWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets,
-    navigationBarWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets,
-    content: @Composable (paddingValues: PaddingValues) -> Unit,
-) {
-    val scrollConnectionSaver =
-        Saver<MutableState<CollapsingBarsNestedScrollConnection>, Pair<Pair<Int, Int>, Pair<Int, Int>>>(
-            save = {
-                (it.value.topBarMaxHeight to it.value.topBarOffset) to
-                (it.value.bottomBarMaxHeight to it.value.bottomBarOffset)
-            },
-            restore = {
-                (mutableStateOf(CollapsingBarsNestedScrollConnection(it.first.first, it.second.first).apply {
-                    topBarOffset = it.first.second
-                    bottomBarOffset = it.second.second
-                }))
-            }
-        )
-    val density = LocalDensity.current
+        // No clamped floor — body padding tracks the bars' full motion, so the connection should
+        // consume scroll across the entire collapse range. Without this the bars mutate their
+        // offsets (driving the visual collapse + body padding shrink) but return 0 consumed,
+        // letting any inner nested-scroll connection claim the same gesture and double the effect.
+        connection.topBodyFloorCollapsePx = connection.topBarMaxHeight
+        connection.bottomBodyFloorCollapsePx = connection.bottomBarMaxHeight
 
-    var topBarHeight by rememberSaveable { mutableIntStateOf(0) }
-    var bottomBarHeight by rememberSaveable { mutableIntStateOf(0) }
+        val visibleTopBarHeight = with(density) {
+            (connection.topBarMaxHeight + connection.topBarOffset).coerceAtLeast(0).toDp()
+        }
+        val visibleBottomBarHeight = with(density) {
+            (connection.bottomBarMaxHeight - connection.bottomBarOffset).coerceAtLeast(0).toDp()
+        }
+        val bodyPadding = PaddingValues(top = visibleTopBarHeight, bottom = visibleBottomBarHeight)
 
-    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) {
-        mutableStateOf(CollapsingBarsNestedScrollConnection(topBarHeight, bottomBarHeight))
-    }
+        val fabAlignment = when (floatingActionButtonPosition) {
+            FabPosition.Start -> Alignment.BottomStart
+            FabPosition.Center -> Alignment.BottomCenter
+            else -> Alignment.BottomEnd
+        }
 
-    val collapsedTopBarPadding = max(
-        with(density) { statusBarWindowInsets.getTop(density).toDp() },
-        with(density) { topBarHeight.toDp() } + with(density) { nestedScrollConnection.topBarOffset.toDp() })
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .background(containerColor)
+                .nestedScroll(connection)
+                .clipToBounds()
+        ) {
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                // Body — fills the whole area; `imePadding()` pushes it above the keyboard; the
+                // bottom-bar height is `consumeWindowInsets`'d so `imePadding` only adds the
+                // *remaining* keyboard height past the bar (no bar+ime double-padding).
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .consumeWindowInsets(PaddingValues(bottom = visibleBottomBarHeight))
+                        .imePadding()
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                        .testTag("collapsableContent")
+                ) {
+                    content(bodyPadding)
+                }
 
-    val collapsedBottomBarPadding = max(
-        with(density) { navigationBarWindowInsets.getBottom(density).toDp() },
-        with(density) { bottomBarHeight.toDp() } - with(density) { nestedScrollConnection.bottomBarOffset.toDp() })
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .zIndex(1f)
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                        .offset { IntOffset(0, connection.topBarOffset) }
+                        .onGloballyPositioned { connection.topBarMaxHeight = it.size.height }
+                ) {
+                    topBar(statusBarInsets.asPaddingValues())
+                }
 
-    Scaffold(
-        modifier = modifier
-            .nestedScroll(nestedScrollConnection)
-            .clipToBounds(),
-        contentWindowInsets = WindowInsets.ime,
-        topBar = {
-            Box(
-                Modifier
-                    .offset { IntOffset(0, nestedScrollConnection.topBarOffset) }
-                    .onGloballyPositioned { coordinates ->
-                        if (coordinates.size.height != topBarHeight) {
-                            topBarHeight = coordinates.size.height
-                            val tempTop = nestedScrollConnection.topBarOffset
-                            val tempBottom = nestedScrollConnection.bottomBarOffset
-                            nestedScrollConnection =
-                                CollapsingBarsNestedScrollConnection(
-                                    topBarHeight,
-                                    bottomBarHeight
-                                ).apply {
-                                    topBarOffset = tempTop
-                                    bottomBarOffset = tempBottom
-                                }
-                        }
-                    }
-            ) {
-                topBar(statusBarWindowInsets.add(navigationBarWindowInsets.only(WindowInsetsSides.Horizontal)).asPaddingValues())
-            }
-        },
-        bottomBar = {
-            Box(
-                Modifier
-                    .offset { IntOffset(0, nestedScrollConnection.bottomBarOffset) }
-                    .onGloballyPositioned { coordinates ->
-                        if (coordinates.size.height != bottomBarHeight) {
-                            bottomBarHeight = coordinates.size.height
-                            val tempTop = nestedScrollConnection.topBarOffset
-                            val tempBottom = nestedScrollConnection.bottomBarOffset
-                            nestedScrollConnection =
-                                CollapsingBarsNestedScrollConnection(
-                                    topBarHeight,
-                                    bottomBarHeight
-                                ).apply {
-                                    topBarOffset = tempTop
-                                    bottomBarOffset = tempBottom
-                                }
-                        }
-                    }
-            ) {
-                bottomBar()
-            }
-        },
-        snackbarHost = snackbarHost,
-        floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = floatingActionButtonPosition,
-        containerColor = containerColor,
-        contentColor = contentColor,
-        content = { paddingValues ->
-            val density = LocalDensity.current
-            val innerPadding = paddingValues - PaddingValues(
-                top = with(density) { nestedScrollConnection.topBarMaxHeight.toDp() },
-                bottom = with(density) { nestedScrollConnection.bottomBarMaxHeight.toDp() }
-            )
-            val padding = innerPadding + PaddingValues(top = collapsedTopBarPadding, bottom = collapsedBottomBarPadding)
-            Box(
-                modifier = Modifier
-                    .testTag("collapsableContent")
-            ) {
-                content(padding)
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                        .offset { IntOffset(0, connection.bottomBarOffset) }
+                        .onGloballyPositioned { connection.bottomBarMaxHeight = it.size.height }
+                ) {
+                    bottomBar(navigationBarInsets.only(WindowInsetsSides.Bottom).asPaddingValues())
+                }
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                        .padding(bottom = visibleBottomBarHeight)
+                ) {
+                    snackbarHost()
+                }
+
+                Box(
+                    modifier = Modifier
+                        .align(fabAlignment)
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                        .padding(bottom = visibleBottomBarHeight + FabMargin, start = FabMargin, end = FabMargin)
+                ) {
+                    floatingActionButton()
+                }
             }
         }
-    )
-}
-
-private class CollapsingAppBarNestedScrollConnection(
-    val appBarMaxHeight: Int
-) : NestedScrollConnection {
-
-    var appBarOffset: Int by mutableIntStateOf(0)
-
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.y.toInt()
-        val newOffset = appBarOffset + delta
-        val previousOffset = appBarOffset
-        appBarOffset = newOffset.coerceIn(-appBarMaxHeight, 0)
-        val consumed = appBarOffset - previousOffset
-        return Offset(0f, consumed.toFloat())
     }
 }
 
-private class CollapsingBarsNestedScrollConnection(
-    val topBarMaxHeight: Int,
-    val bottomBarMaxHeight: Int
-) : NestedScrollConnection {
-
-    var topBarOffset: Int by mutableIntStateOf(0)
-    var bottomBarOffset: Int by mutableIntStateOf(0)
-
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.y.toInt()
-
-        val topNewOffset = topBarOffset + delta
-        val topPreviousOffset = topBarOffset
-        topBarOffset = topNewOffset.coerceIn(-topBarMaxHeight, 0)
-        val topConsumed = topBarOffset - topPreviousOffset
-
-        val bottomNewOffset = bottomBarOffset - delta
-        val bottomPreviousOffset = bottomBarOffset
-        bottomBarOffset = bottomNewOffset.coerceIn(0, bottomBarMaxHeight)
-        val bottomConsumed = bottomBarOffset - bottomPreviousOffset
-
-        val totalConsumed = topConsumed + bottomConsumed
-        return Offset(0f, totalConsumed.toFloat())
-    }
-}

@@ -26,6 +26,7 @@ query DashboardSingleCourseQuery($courseId: ID!, $userId: ID!) {
                 position
                 color
                 image
+                defaultView
             }
             enrollmentsConnection(
                 first: 1

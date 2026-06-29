@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.ApiPrefs
 
+private const val ANNOUNCEMENT_FETCH_CAP = 100
+
 class DashboardCoursesManagerImpl(
     private val apolloClient: ApolloClient
 ) : DashboardCoursesManager {
@@ -33,7 +35,6 @@ class DashboardCoursesManagerImpl(
         forceNetwork: Boolean
     ): DashboardCoursesQuery.Data {
         val query = DashboardCoursesQuery(
-            pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE,
             userId = currentUserId()
         )
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
@@ -54,15 +55,12 @@ class DashboardCoursesManagerImpl(
 
     override suspend fun getCourseAnnouncements(
         courseId: Long,
-        cursor: String?,
         forceNetwork: Boolean
     ): CourseAnnouncementsQuery.Data {
         val pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE
-        val initialCursor = if (cursor != null) Optional.present(cursor) else Optional.absent()
         val query = CourseAnnouncementsQuery(
             courseId = courseId.toString(),
-            pageSize = pageSize,
-            cursor = initialCursor
+            pageSize = pageSize
         )
         val initialData = apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
 
@@ -71,7 +69,7 @@ class DashboardCoursesManagerImpl(
         var hasNextPage = course.announcements?.pageInfo?.hasNextPage == true
         var nextCursor = course.announcements?.pageInfo?.endCursor
 
-        while (hasNextPage) {
+        while (hasNextPage && allNodes.size < ANNOUNCEMENT_FETCH_CAP) {
             val paginatedQuery = CourseAnnouncementsQuery(
                 courseId = courseId.toString(),
                 pageSize = pageSize,
@@ -89,7 +87,7 @@ class DashboardCoursesManagerImpl(
             course = CourseAnnouncementsQuery.Course(
                 __typename = "Course",
                 onCourse = course.copy(
-                    announcements = course.announcements?.copy(nodes = allNodes)
+                    announcements = course.announcements?.copy(nodes = allNodes.take(ANNOUNCEMENT_FETCH_CAP))
                 )
             )
         )

@@ -17,20 +17,32 @@
 
 package com.instructure.pandautils.compose.features.grades
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.test.assertContentDescriptionEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.composetest.hasDrawable
 import com.instructure.espresso.assertTextColor
+import com.instructure.instui.compose.InstUITheme
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
+import com.instructure.pandautils.designsystem.DesignSystem
+import com.instructure.pandautils.designsystem.LocalDesignSystem
 import com.instructure.pandautils.features.grades.AssignmentUiState
+import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.features.grades.components.GradesAssignmentItem
 import com.instructure.pandautils.utils.DisplayGrade
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -327,6 +339,131 @@ class GradesAssignmentItemTest {
         composeTestRule.onNodeWithText("What-if: 15/15", useUnmergedTree = true)
             .assertIsDisplayed()
     }
+
+    @Test
+    fun assertInstUICheckpointsDisplayedWhenExpanded() {
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getCheckpointUiState(expanded = true),
+                    actionHandler = {},
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Reply to topic", useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Due Jul 6, 2025 12:00", useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("-/5", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertInstUICheckpointsHiddenWhenCollapsed() {
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getCheckpointUiState(expanded = false),
+                    actionHandler = {},
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Reply to topic", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun assertInstUICheckpointRowClickTriggersAssignmentClick() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getCheckpointUiState(expanded = true),
+                    actionHandler = { action = it },
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithText("Reply to topic", useUnmergedTree = true)
+            .performClick()
+
+        assertEquals(GradesAction.AssignmentClick(1L), action)
+    }
+
+    @Test
+    fun assertInstUICheckpointAccordionWithCommentsTogglesExpand() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getCheckpointUiState(expanded = false).copy(commentCount = 3),
+                    actionHandler = { action = it },
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag("expandDiscussionCheckpoints", useUnmergedTree = true)
+            .performClick()
+
+        assertEquals(GradesAction.ToggleCheckpointsExpanded(1L), action)
+    }
+
+    @Test
+    fun assertInstUICheckpointAccordionWithoutCommentsTogglesExpand() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getCheckpointUiState(expanded = false),
+                    actionHandler = { action = it },
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val expandDescription = context.getString(
+            com.instructure.pandautils.R.string.content_description_expand_content_with_param,
+            context.getString(com.instructure.pandautils.R.string.a11y_discussion_checkpoints)
+        )
+        composeTestRule.onNodeWithContentDescription(expandDescription, useUnmergedTree = true)
+            .performClick()
+
+        assertEquals(GradesAction.ToggleCheckpointsExpanded(1L), action)
+    }
+
+    @Composable
+    private fun InstUIContent(content: @Composable () -> Unit) {
+        InstUITheme(courseColor = Color.Blue) {
+            CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+                content()
+            }
+        }
+    }
+
+    private fun getCheckpointUiState(expanded: Boolean) = getUiState().copy(
+        checkpointsExpanded = expanded,
+        checkpoints = listOf(
+            DiscussionCheckpointUiState(
+                name = "Reply to topic",
+                dueDate = "Due Jul 6, 2025 12:00",
+                submissionStateLabel = SubmissionStateLabel.NotSubmitted,
+                displayGrade = DisplayGrade("-/5", "-/5"),
+                pointsPossible = 5
+            )
+        )
+    )
 
     private fun getUiState() = AssignmentUiState(
         id = 1,

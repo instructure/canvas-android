@@ -23,14 +23,25 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.account.AccountScreen
+import com.instructure.horizon.offline.sync.HorizonSyncRouter
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
 import com.instructure.horizon.features.account.advanced.AccountAdvancedViewModel
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedScreen
 import com.instructure.horizon.features.account.calendarfeed.AccountCalendarFeedViewModel
+import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentScreen
+import com.instructure.horizon.features.account.manageofflinecontent.ManageOfflineContentViewModel
+import com.instructure.horizon.features.account.manageofflinecontent.deletecontent.DeleteContentScreen
+import com.instructure.horizon.features.account.manageofflinecontent.syncconfirmation.SyncConfirmationScreen
+import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressScreen
+import com.instructure.horizon.features.account.manageofflinecontent.syncinprogress.SyncInProgressViewModel
 import com.instructure.horizon.features.account.notifications.AccountNotificationsScreen
 import com.instructure.horizon.features.account.notifications.AccountNotificationsViewModel
+import com.instructure.horizon.features.account.offlinesettings.OfflineSettingsScreen
+import com.instructure.horizon.features.account.offlinesettings.OfflineSettingsViewModel
 import com.instructure.horizon.features.account.password.AccountPasswordScreen
 import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
@@ -94,6 +105,61 @@ fun NavGraphBuilder.accountNavigation(
             val viewModel = hiltViewModel<ReportABugViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             ReportABugScreen(uiState, navController)
+        }
+
+        composable(AccountRoute.OfflineSettings.route) {
+            val viewModel = hiltViewModel<OfflineSettingsViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            OfflineSettingsScreen(
+                uiState = uiState.copy(onManageOfflineContentClick = {
+                    navController.navigate(AccountRoute.ManageOfflineContent.route) {
+                        launchSingleTop = true
+                    }
+                }),
+                navController = navController,
+            )
+        }
+
+        composable(AccountRoute.ManageOfflineContent.route) {
+            val viewModel = hiltViewModel<ManageOfflineContentViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            ManageOfflineContentScreen(
+                uiState = uiState,
+                navController = navController,
+            )
+        }
+
+        composable(AccountRoute.RemoveSyncedContentConfirmation.route) {
+            DeleteContentScreen(navController = navController)
+        }
+
+        composable(AccountRoute.SyncConfirmation.route) {
+            SyncConfirmationScreen(navController = navController)
+        }
+
+        composable(
+            route = AccountRoute.SyncingContent.route,
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}${HorizonSyncRouter.SYNC_PROGRESS_PATH}"
+                },
+            ),
+        ) {
+            val viewModel = hiltViewModel<SyncInProgressViewModel>()
+            val syncingUiState by viewModel.uiState.collectAsState()
+            SyncInProgressScreen(
+                uiState = syncingUiState.copy(
+                    onCancelSyncClick = {
+                        syncingUiState.onCancelSyncClick()
+                        navController.popBackStack()
+                    },
+                    onDismissClick = {
+                        syncingUiState.onDismissClick()
+                        navController.popBackStack()
+                    },
+                ),
+                navController = navController,
+            )
         }
     }
 }

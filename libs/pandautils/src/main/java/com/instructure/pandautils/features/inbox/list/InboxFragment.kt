@@ -379,10 +379,10 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
             is InboxAction.ItemSelectionChanged -> animateAvatar(action.view, action.selected)
             is InboxAction.ShowConfirmationSnackbar -> showConfirmation(action)
             InboxAction.CreateNewMessage -> inboxRouter.routeToNewMessage(requireActivity())
-            InboxAction.FailedToLoadNextPage -> Snackbar.make(requireView(), R.string.failedToLoadNextPage, Snackbar.LENGTH_LONG).show()
+            InboxAction.FailedToLoadNextPage -> makeSnackbar(getString(R.string.failedToLoadNextPage)).show()
             InboxAction.UpdateUnreadCount -> onUnreadCountInvalidated?.invalidateUnreadCount()
             is InboxAction.OpenContextFilterSelector -> openContextFilterSelector(action.canvasContexts)
-            InboxAction.RefreshFailed -> Snackbar.make(requireView(), R.string.conversationsRefreshFailed, Snackbar.LENGTH_LONG).show()
+            InboxAction.RefreshFailed -> makeSnackbar(getString(R.string.conversationsRefreshFailed)).show()
             is InboxAction.ConfirmDelete -> deleteSelected(action.count)
             is InboxAction.AvatarClickedCallback -> inboxRouter.avatarClicked(action.conversation, action.scope)
             InboxAction.DismissSnackbar -> confirmationSnackbar?.dismiss()
@@ -391,7 +391,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
     }
 
     private fun showConfirmation(action: InboxAction.ShowConfirmationSnackbar) {
-        confirmationSnackbar = Snackbar.make(requireView(), action.text, Snackbar.LENGTH_LONG)
+        confirmationSnackbar = makeSnackbar(action.text)
 
         if (action.undoAction != null) {
             confirmationSnackbar
@@ -402,6 +402,12 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         }
 
         confirmationSnackbar?.show()
+    }
+
+    private fun makeSnackbar(text: CharSequence): Snackbar {
+        return Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG).also {
+            inboxRouter.adjustSnackbarForInsets(it)
+        }
     }
 
     private fun animateAvatar(view: View, selected: Boolean) {
