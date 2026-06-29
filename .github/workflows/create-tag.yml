@@ -96,5 +96,5 @@ jobs:
         if: steps.create-tag.outputs.tag-exists != 'true' && env.JIRA_USERNAME != ''
         run: |
           cd scripts
-          npm install jira-client@4.0.1
+          npm install jira-client@4.2.0
           node update-jira-issues.js "${{ steps.app-info.outputs.tag }}"
