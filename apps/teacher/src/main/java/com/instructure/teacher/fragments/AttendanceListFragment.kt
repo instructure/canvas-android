@@ -51,6 +51,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -143,6 +144,7 @@ class AttendanceListFragment : BaseSyncFragment<
         toolbar.setupBackButton(this@AttendanceListFragment)
 
         markRestButton.setBackgroundColor(ThemePrefs.buttonColor)
+        markRestButton.applyBottomSystemBarInsets()
         markRestButtonText.setTextColor(ThemePrefs.buttonTextColor)
         markRestButton.onClickWithRequireNetwork {
             hideMarkRestButton()

@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">아직 공지가 없습니다.</string>
     <string name="noCourses">과목 없음</string>
     <string name="noCoursesSubtext">이 계정과 연결된 과목이 없는 것 같습니다. 지금 웹에서 방문하여 과목을 만듭니다.</string>
+    <string name="coursesWidgetEmptyTitle">Canvas에 오신 것을 환영합니다!</string>
+    <string name="coursesWidgetEmptyMessage">아직 활성 과목이 없어서 여기에 표시할 내용이 없습니다. 과목에 등록하면 대시보는 새 활동으로 채워지기 시작합니다.</string>
     <string name="noAssignments">과제 없음</string>
     <string name="noAssignmentsSubtext">이 공간에는 과제를 만들지 않은 것 같습니다. 다른 곳에서 둘러볼 시간입니다.</string>
     <string name="noAssignmentsTeacher">아직 과제가 게시되지 않은 것 같습니다.</string>
@@ -501,4 +503,15 @@
     <string name="gradePointsAccessibility">성적: %s점</string>
     <string name="gradePercentTextFieldAccessibility">성적: %d퍼센트, %s </string>
     <string name="gradePointsTextFieldAccessibility">성적: %s점, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">더 나은 앱을 만들도록 돕기</string>
+    <string name="cookieConsentDescription">익명 애플리케이션 데이터를 수집하여 저희 팀에서 기술 문제를 식별하고 앱 기능을 최적화하도록 합니다.</string>
+    <string name="cookieConsentNoProfiles">개인 프로필 없음: ID를 추적하거나 광고를 표시하지 않습니다.</string>
+    <string name="cookieConsentNoSelling">데이터 판매 금지: 고객 정보를 절대로 타사에게 판매하지 않습니다.</string>
+    <string name="cookieConsentFullControl">전체 제어: 언제든지 설정을 조정할 수 있습니다.</string>
+    <string name="cookieConsentAllow">허용</string>
+    <string name="cookieConsentDecline">거절</string>
+    <string name="privacySettingsTitle">개인 정보 보호 설정</string>
+    <string name="privacySettingsToggleLabel">익명 애플리케이션 분석</string>
+    <string name="privacySettingsDescription">앱 성능 및 기능 사용에 대해 익명 데이터를 공유합니다. 이것은 버그를 수정하고 전반적 애플리케이션 경험을 개선하도록 지원합니다. 개인 식별자를 수집하지 않습니다.</string>
 </resources>

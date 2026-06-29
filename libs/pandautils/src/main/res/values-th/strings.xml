@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">ไม่มีประกาศใด ๆ ในตอนนี้</string>
     <string name="noCourses">ไม่มีบทเรียน</string>
     <string name="noCoursesSubtext">ดูเหมือนจะยังไม่ได้เชื่อมโยงบทเรียนใด ๆ กับบัญชีนี้ เยี่ยมชมเว็บเพื่อจัดทำบทเรียนในวันนี้</string>
+    <string name="coursesWidgetEmptyTitle">ยินดีต้อนรับสู่ Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">คุณยังไม่มีบทเรียนใด ๆ ที่จัดไว้ในปัจจุบัน - ทุกอย่างยังนิ่งอยู่ หลังจากลงทะเบียนในชั้นเรียนแล้ว แผงข้อมูลของคุณจะเริ่มแจ้งกิจกรรมใหม่</string>
     <string name="noAssignments">ไม่มีภารกิจ</string>
     <string name="noAssignmentsSubtext">ดูเหมือนจะยังไม่ได้จัดทำภารกิจในพื้นที่นี้ ถึงเวลาออกไปสำรวจโลกภายนอกแล้ว</string>
     <string name="noAssignmentsTeacher">ดูเหมือนจะไม่มีภารกิจที่เผยแพร่ในตอนนี้</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">เกรด: %s คะแนน</string>
     <string name="gradePercentTextFieldAccessibility">เกรด: %d เปอร์เซ็นต์, %s</string>
     <string name="gradePointsTextFieldAccessibility">เกรด: %s คะแนน, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">ช่วยเราในการพัฒนาแอพให้ดียิ่งขึ้น</string>
+    <string name="cookieConsentDescription">เราจัดเก็บข้อมูลการใช้งานแบบไม่ระบุตัวบุคคลเพื่อช่วยทีมงานของเราในการพิจารณาปัญหาต่าง ๆ และเพื่อปรับปรุงคุณสมบัติการใช้งานของแอพ</string>
+    <string name="cookieConsentNoProfiles">ไม่มีการจัดเก็บโพรไฟล์ส่วนบุคคล: เราไม่มีการติดตามรายละเอียดบ่งชี้เกี่ยวกับคุณหรือจัดแสดงข้อมูลโฆษณาใด ๆ</string>
+    <string name="cookieConsentNoSelling">ไม่มีการจำหน่ายข้อมูล: ข้อมูลของคุณจะไม่ถูกจำหน่ายให้แก่บุคคลภายนอก</string>
+    <string name="cookieConsentFullControl">ควบคุมได้แบบครบวงจร: คุณสามารถปรับแต่งค่าเหล่านี้ได้ทุกเมื่อ</string>
+    <string name="cookieConsentAllow">อนุญาต</string>
+    <string name="cookieConsentDecline">ปฏิเสธ</string>
+    <string name="privacySettingsTitle">ค่าปรับตั้งความเป็นส่วนตัว</string>
+    <string name="privacySettingsToggleLabel">ข้อมูลวิเคราะห์การใช้งานแบบไม่ระบุตัวตน</string>
+    <string name="privacySettingsDescription">แชร์ข้อมูลแบบไม่ระบุตัวบุคคลเกี่ยวกับประสิทธิภาพของแอพและการใช้คุณสมบัติใช้งานต่าง ๆ สิ่งนี้จะช่วยเราในการแก้ไขปัญหาและปรับปรุงการใช้งานในภาพรวม เราไม่มีการจัดเก็บข้อมูลระบุตัวตนใด ๆ</string>
 </resources>

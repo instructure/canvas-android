@@ -95,7 +95,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.assertStarred(false)
 
         Log.d(STEP_TAG, "Toggle Starred to mark '${seededConversation.subject}' conversation as favourite.")
-        inboxDetailsPage.pressStarButton(true)
+        inboxDetailsPage.clickStarButton(true)
 
         Log.d(ASSERTION_TAG, "Assert that it has became starred.")
         inboxDetailsPage.assertStarred(true)
@@ -484,6 +484,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)

@@ -69,6 +69,16 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         ValueAnimator.ofFloat(expandPercent).setDuration(500)
     }
 
+    private val masterExpandAnimation: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(expandPercent).setDuration(500)
+    }
+
+    private val masterCollapseAnimation: ValueAnimator by lazy {
+        ValueAnimator.ofFloat(masterCollapsePercent).setDuration(500)
+    }
+
+    private var isMasterPaneExpanded = false
+
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
         EdgeToEdgeHelper.enableEdgeToEdge(this@MasterDetailActivity)
         super.onCreate(savedInstanceState)
@@ -86,6 +96,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         if (savedInstanceState != null) {
             //Handles rotation and resizing of master/detail views
             val isMasterVisible = savedInstanceState.getBoolean(MASTER_VISIBLE, true)
+            val wasMasterExpanded = savedInstanceState.getBoolean(MASTER_EXPANDED, false)
             rootView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
                     rootView.viewTreeObserver.removeOnGlobalLayoutListener(this)
@@ -95,6 +106,10 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
                         detail.requestLayout()
                     }
                     master.setVisible(isMasterVisible)
+                    if (wasMasterExpanded) {
+                        isMasterPaneExpanded = true
+                        applyMasterPaneState(true)
+                    }
                 }
             })
         } else {
@@ -290,10 +305,73 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         collapseAnimation.start()
     }
 
+    override fun setMasterPaneExpanded(expanded: Boolean, animate: Boolean) {
+        if (expanded == isMasterPaneExpanded) return
+        if (masterExpandAnimation.isRunning) masterExpandAnimation.cancel()
+        if (masterCollapseAnimation.isRunning) masterCollapseAnimation.cancel()
+        isMasterPaneExpanded = expanded
+        if (animate) {
+            if (expanded) expandMaster() else collapseMaster()
+        } else {
+            applyMasterPaneState(expanded)
+        }
+    }
+
+    private fun applyMasterPaneState(expanded: Boolean) = with(binding) {
+        val info = (master.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
+        info.widthPercent = if (expanded) expandPercent else masterCollapsePercent
+        master.requestLayout()
+        detail.setVisible(!expanded)
+        if (expanded) master.bringToFront() else middleDividerWrapper.bringToFront()
+    }
+
+    private fun expandMaster() = with(binding) {
+        master.bringToFront()
+
+        masterExpandAnimation.addUpdateListener { animation ->
+            val info = (master.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
+            info.widthPercent = calculateAnimatedValue(info.widthPercent, expandPercent, animation.animatedFraction)
+            master.requestLayout()
+        }
+        masterExpandAnimation.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                detail.setGone()
+            }
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {}
+        })
+
+        masterExpandAnimation.start()
+    }
+
+    private fun collapseMaster() = with(binding) {
+        master.bringToFront()
+
+        masterCollapseAnimation.addUpdateListener { animation ->
+            val info = (master.layoutParams as PercentLayoutHelper.PercentLayoutParams).percentLayoutInfo
+            info.widthPercent = calculateAnimatedValue(info.widthPercent, masterCollapsePercent, animation.animatedFraction)
+            master.requestLayout()
+        }
+        masterCollapseAnimation.addListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator) {}
+            override fun onAnimationEnd(animation: Animator) {
+                middleDividerWrapper.bringToFront()
+            }
+            override fun onAnimationCancel(animation: Animator) {}
+            override fun onAnimationStart(animation: Animator) {
+                detail.setVisible()
+            }
+        })
+
+        masterCollapseAnimation.start()
+    }
+
     //endregion
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putBoolean(MASTER_VISIBLE, binding.master.visibility == View.VISIBLE)
+        outState.putBoolean(MASTER_EXPANDED, isMasterPaneExpanded)
         super.onSaveInstanceState(outState)
     }
 
@@ -304,8 +382,10 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
 
     companion object {
         private val MASTER_VISIBLE = "MASTER_VISIBLE"
+        private val MASTER_EXPANDED = "MASTER_EXPANDED"
         private val collapsePercent = 0.65F
         private val expandPercent = 1.0F
+        private val masterCollapsePercent = 0.35F
 
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, MasterDetailActivity::class.java)

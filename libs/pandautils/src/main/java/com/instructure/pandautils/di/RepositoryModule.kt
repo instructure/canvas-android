@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepository
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepositoryImpl
@@ -49,6 +50,10 @@ import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepositoryImpl
+import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesLocalDataSource
+import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesNetworkDataSource
+import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesRepository
+import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
@@ -117,6 +122,37 @@ class RepositoryModule {
         featureFlagProvider: FeatureFlagProvider
     ): CourseRepository {
         return CourseRepositoryImpl(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider
+        )
+    }
+
+    @Provides
+    fun provideDashboardCoursesNetworkDataSource(
+        dashboardCoursesManager: DashboardCoursesManager
+    ): DashboardCoursesNetworkDataSource {
+        return DashboardCoursesNetworkDataSource(dashboardCoursesManager)
+    }
+
+    @Provides
+    fun provideDashboardCoursesLocalDataSource(
+        courseFacade: CourseFacade,
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+    ): DashboardCoursesLocalDataSource {
+        return DashboardCoursesLocalDataSource(courseFacade, discussionTopicHeaderFacade)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideDashboardCoursesRepository(
+        localDataSource: DashboardCoursesLocalDataSource,
+        networkDataSource: DashboardCoursesNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
+    ): DashboardCoursesRepository {
+        return DashboardCoursesRepositoryImpl(
             localDataSource,
             networkDataSource,
             networkStateProvider,

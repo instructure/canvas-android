@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Пока что ничего не было анонсировано.</string>
     <string name="noCourses">Курсы отсутствуют</string>
     <string name="noCoursesSubtext">Похоже, что к этой учетной записи не привязано ни одного курса. Зайдите в сеть для создания курса сегодня.</string>
+    <string name="coursesWidgetEmptyTitle">Вас приветствует Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">У вас пока нет ни одного курса, поэтому здесь ничего не происходит. Как только вы будете включены в курс, ваша панель управления начнет заполняться новой активностью.</string>
     <string name="noAssignments">Задания отсутствуют</string>
     <string name="noAssignmentsSubtext">Похоже, что в этом разделе не было создано ни одного задания. Время выйти и выяснить причину.</string>
     <string name="noAssignmentsTeacher">Похоже, что пока что не было размещено ни одного задания.</string>
@@ -527,4 +529,15 @@
     <string name="gradePointsAccessibility">Оценка: %s баллов</string>
     <string name="gradePercentTextFieldAccessibility">Оценка: %d процент, %s</string>
     <string name="gradePointsTextFieldAccessibility">Оценка: %s балла(-ов), %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Помогите нам повысить эффективность приложения</string>
+    <string name="cookieConsentDescription">Мы собираем анонимные данные о работе приложения, чтобы помочь нашей команде выявлять технические проблемы и оптимизировать функции приложения.</string>
+    <string name="cookieConsentNoProfiles">Личные профили отсутствуют: Мы не отслеживаем Вашу активность и не показываем рекламу.</string>
+    <string name="cookieConsentNoSelling">Нет продажи данных: Ваша информация никогда не передается третьим лицам.</string>
+    <string name="cookieConsentFullControl">Полный контроль: Вы можете изменить эти настройки в любое время.</string>
+    <string name="cookieConsentAllow">Разрешить</string>
+    <string name="cookieConsentDecline">Отклонить</string>
+    <string name="privacySettingsTitle">Параметры конфиденциальности</string>
+    <string name="privacySettingsToggleLabel">Аналитика анонимных заявок</string>
+    <string name="privacySettingsDescription">Предоставлять анонимные данные о производительности приложения и использовании его функций. Это помогает нам исправлять ошибки и улучшать общий пользовательский опыт работы с приложением. Мы не собираем персональные данные.</string>
 </resources>

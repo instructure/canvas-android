@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Objavljenega ni še nobenega obvestila.</string>
     <string name="noCourses">Ni predmetov.</string>
     <string name="noCoursesSubtext">Zdi se, da s tem računom ni povezan noben predmet. Da ustvarite predmet še danes, obiščite splet.</string>
+    <string name="coursesWidgetEmptyTitle">Dobrodošli v sistem Canvas.</string>
+    <string name="coursesWidgetEmptyMessage">Zaenkrat še nimate nobenega aktivnega predmeta – zato je tu še malo tiho. Ko se boste vpisali v predmet, se bo vaša nadzorna plošča začela polniti z novimi aktivnostmi.</string>
     <string name="noAssignments">Ni nalog.</string>
     <string name="noAssignmentsSubtext">Zdi se, da v tem prostoru naloge še niso ustvarjene. Čas je, da odidete ven in raziskujete.</string>
     <string name="noAssignmentsTeacher">Zdi se, da ni objavljenih še nobenih nalog.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Ocena: %s točk</string>
     <string name="gradePercentTextFieldAccessibility">Ocena: %d odstotkov, %s</string>
     <string name="gradePointsTextFieldAccessibility">Ocena: %s točk, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Pomagajte nam izboljšati aplikacijo</string>
+    <string name="cookieConsentDescription">Anonimne podatke o aplikacijah zbiramo, da bi naši ekipi pomagali prepoznati tehnične težave in optimizirati funkcije aplikacije.</string>
+    <string name="cookieConsentNoProfiles">Brez osebnih profilov: Ne sledimo vaši identiteti in ne prikazujemo oglasov.</string>
+    <string name="cookieConsentNoSelling">Brez prodaje podatkov: Vaši podatki se nikoli ne prodajo tretjim osebam.</string>
+    <string name="cookieConsentFullControl">Popoln nadzor: Te nastavitve lahko kadarkoli spremenite.</string>
+    <string name="cookieConsentAllow">Dovoli</string>
+    <string name="cookieConsentDecline">Zavrni</string>
+    <string name="privacySettingsTitle">Nastavitve zasebnosti</string>
+    <string name="privacySettingsToggleLabel">Anonimna analitika aplikacije</string>
+    <string name="privacySettingsDescription">Delite anonimne podatke o delovanju aplikacije in uporabi funkcij. To nam pomaga odpraviti napake in izboljšati celotno uporabniško izkušnjo. Ne zbiramo osebnih identifikatorjev.</string>
 </resources>

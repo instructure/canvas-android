@@ -18,6 +18,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: parent
+      record_video: true
     secrets: inherit
 
   parent-slack-notification:
@@ -43,6 +44,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: student
+      record_video: true
     secrets: inherit
 
   student-slack-notification:
@@ -68,6 +70,7 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: teacher
+      record_video: true
     secrets: inherit
 
   teacher-slack-notification:

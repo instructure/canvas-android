@@ -23,6 +23,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
@@ -76,12 +77,31 @@ class PeopleListPage(val searchable: Searchable) : BasePage(R.id.peopleListPage)
      * @param role The role of the person (optional).
      */
     fun assertPersonListed(person: CanvasUserApiModel, role: String? = null) {
-        var matcher: Matcher<View>? = null
-        if (role == null) {
-            matcher = Matchers.allOf(ViewMatchers.withText(person.name), withId(R.id.userName))
+        assertPersonListed(person.name, role)
+    }
+
+    /**
+     * Asserts that a person is listed in the people list.
+     *
+     * @param person The user representing the person to assert.
+     * @param role The role of the person (optional).
+     */
+    fun assertPersonListed(person: User, role: String? = null) {
+        assertPersonListed(person.name.orEmpty(), role)
+    }
+
+    /**
+     * Asserts that a person with the given name is listed in the people list.
+     *
+     * @param personName The name of the person to assert.
+     * @param role The role of the person (optional).
+     */
+    fun assertPersonListed(personName: String, role: String? = null) {
+        val matcher: Matcher<View> = if (role == null) {
+            Matchers.allOf(ViewMatchers.withText(personName), withId(R.id.userName))
         } else {
-            matcher = Matchers.allOf(
-                ViewMatchers.withText(person.name),
+            Matchers.allOf(
+                ViewMatchers.withText(personName),
                 withId(R.id.userName),
                 ViewMatchers.hasSibling(
                     Matchers.allOf(

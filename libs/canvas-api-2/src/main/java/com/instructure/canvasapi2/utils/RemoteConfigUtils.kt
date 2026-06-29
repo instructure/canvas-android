@@ -41,8 +41,17 @@ object RemoteConfigUtils {
         initialize(FirebaseRemoteConfig.getInstance(), RemoteConfigPrefs)
     }
 
+    /**
+     * Initializer for tests. Pass [fetchRemoteValues] = false to skip fetching from Firebase, so
+     * that [prefs] becomes the sole source of truth. This makes feature flags deterministic in
+     * interaction/E2E tests, where values can be seeded directly into [prefs] before launch.
+     */
+    fun initialize(fetchRemoteValues: Boolean) {
+        initialize(FirebaseRemoteConfig.getInstance(), RemoteConfigPrefs, fetchRemoteValues)
+    }
+
     // Test initializer
-    fun initialize(config: FirebaseRemoteConfig, prefs: PrefRepoInterface) {
+    fun initialize(config: FirebaseRemoteConfig, prefs: PrefRepoInterface, fetchRemoteValues: Boolean = true) {
         // Don't allow multiple initializations
         if(initialized) {
             throw IllegalStateException("RemoteConfigUtils initialized twice")
@@ -57,6 +66,8 @@ object RemoteConfigUtils {
         remoteConfig.setConfigSettingsAsync(configSettings)
 
         initialized = true
+
+        if (!fetchRemoteValues) return
 
         remoteConfig.fetchAndActivate().addOnCompleteListener() { task ->
             //println("rc: listener called.  successful=${task.isSuccessful}, updated=${task.result}")

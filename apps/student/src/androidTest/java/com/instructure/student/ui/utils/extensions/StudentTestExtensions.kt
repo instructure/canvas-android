@@ -198,6 +198,15 @@ fun StudentTest.tokenLogin(domain: String, token: String, user: User) {
     dashboardPage.assertPageObjects()
 }
 
+// Logs in with a token but does NOT wait for the classic dashboard view. Use for tests that expect
+// a different home screen (e.g. the Compose dashboard behind DASHBOARD_REDESIGN); the caller is
+// responsible for waiting for its own screen afterwards.
+fun StudentTest.tokenLoginWithoutDashboardWait(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (originalActivity as LoginActivity).loginWithToken(token, domain, user)
+    }
+}
+
 fun CanvasTest.tokenLogin(domain: String, token: String, user: User) {
     activityRule.runOnUiThread {
         (originalActivity as LoginActivity).loginWithToken(

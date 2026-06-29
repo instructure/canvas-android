@@ -1,0 +1,140 @@
+#
+# Copyright (C) 2026 - present Instructure, Inc.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+
+# Lean Grades-screen query. Assignment groups (metadata) and assignments are two sibling connections,
+# each paginated with $pageSize and fully depaginated by the manager (no progressive render). The
+# viewer's submission is fetched inline via submissionsConnection(first: 1) — a student only ever has
+# their own submission; includeUnsubmitted keeps submissions that were never submitted but carry a
+# teacher-applied custom grade status.
+#
+# The assignmentsConnection is filtered by userId (the viewing student). With no $gradingPeriodId it
+# returns every assignment — including ones with no grading period (e.g. future/undated) — and, unlike
+# a grading-period-only filter or no filter at all, it does not come back empty in multiple-grading-
+# periods courses. When $gradingPeriodId is supplied it scopes the assignments to that period (the
+# "filter by grading period" view); when absent, Apollo omits the field so the userId-only behavior
+# above applies.
+query GradesAssignmentGroupsQuery($courseId: ID!, $userId: ID!, $gradingPeriodId: ID, $groupCursor: String, $assignmentCursor: String, $pageSize: Int!) {
+    course(id: $courseId) {
+        assignmentGroupsConnection(first: $pageSize, after: $groupCursor) {
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+            nodes {
+                _id
+                name
+                position
+                groupWeight
+                rules {
+                    dropLowest
+                    dropHighest
+                    neverDrop {
+                        _id
+                    }
+                }
+            }
+        }
+        assignmentsConnection(first: $pageSize, after: $assignmentCursor, filter: { userId: $userId, gradingPeriodId: $gradingPeriodId }) {
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+            nodes {
+                _id
+                name
+                position
+                pointsPossible
+                gradingType
+                submissionTypes
+                isNewQuiz
+                published
+                omitFromFinalGrade
+                assignmentGroupId
+                dueAt(applyOverrides: true)
+                lockInfo {
+                    isLocked
+                }
+                checkpoints {
+                    tag
+                    name
+                    pointsPossible
+                    dueAt(applyOverrides: true)
+                }
+                discussion {
+                    replyToEntryRequiredCount
+                }
+                mySubAssignmentSubmissionsConnection {
+                    nodes {
+                        subAssignmentTag
+                        score
+                        grade
+                        late
+                        missing
+                        excused
+                        customGradeStatusId
+                        submittedAt
+                    }
+                }
+                assignmentOverrides {
+                    nodes {
+                        _id
+                        dueAt
+                        lockAt
+                        unlockAt
+                        set {
+                            __typename
+                            ... on Section {
+                                _id
+                            }
+                        }
+                    }
+                }
+                submissionsConnection(first: 1, filter: { includeUnsubmitted: true }) {
+                    nodes {
+                        _id
+                        score
+                        grade
+                        state
+                        submissionType
+                        attempt
+                        late
+                        missing
+                        excused
+                        submittedAt
+                        postedAt
+                        gradingPeriodId
+                        customGradeStatusId
+                        unreadCommentCount
+                        commentsConnection(first: $pageSize) {
+                            pageInfo {
+                                hasNextPage
+                                endCursor
+                            }
+                            nodes {
+                                _id
+                                attempt
+                                createdAt
+                                author {
+                                    _id
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

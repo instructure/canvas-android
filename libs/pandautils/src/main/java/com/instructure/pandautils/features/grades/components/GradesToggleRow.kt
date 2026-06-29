@@ -75,6 +75,7 @@ fun GradesToggleRow(
             label = label,
             checked = checked,
             onCheckedChange = onCheckedChange,
+            contextColor = contextColor,
         )
     }
 }
@@ -131,6 +132,7 @@ private fun InstUIToggleRow(
     label: String,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    contextColor: Color,
 ) {
     Row(
         modifier = Modifier
@@ -148,6 +150,7 @@ private fun InstUIToggleRow(
         Switch(
             checked = checked,
             onCheckedChange = onCheckedChange,
+            activeColor = contextColor,
         )
     }
 }

@@ -252,7 +252,7 @@ private fun SubmissionListItem(
                     .padding(end = 16.dp)
                     .size(36.dp)
                     .testTag("userAvatar")
-                    .clickable { avatarClick(submissionListUiState.assigneeId) },
+                    .clickable(enabled = !anonymousGrading) { avatarClick(submissionListUiState.assigneeId) },
                 anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,

@@ -21,8 +21,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.parse
 import com.instructure.canvasapi2.utils.toScheduleItem
-import org.junit.Assert
 import org.intellij.lang.annotations.Language
+import org.junit.Assert
 import org.junit.Test
 
 class ScheduleItemUnitTest : Assert() {
@@ -511,7 +511,7 @@ class ScheduleItemUnitTest : Assert() {
                             "hidden": false,
                             "lock_at": null,
                             "hidden_for_user": false,
-                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/64091912/139353068671_thumb_thumb.jpg?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1427139511&Signature=aOGcUEarHCnoTTv2oDifOVZ%2F0yk%3D",
+                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/64091912/139353068671_thumb_thumb.jpg?AWSAccessKeyId=AKIA...REDACTED&Expires=1427139511&Signature=aOGcUEarHCnoTTv2oDifOVZ%2F0yk%3D",
                             "locked_for_user": false,
                             "preview_url": null
                         }
@@ -677,7 +677,7 @@ class ScheduleItemUnitTest : Assert() {
                             "hidden": false,
                             "lock_at": null,
                             "hidden_for_user": false,
-                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/60660403/websnappr20141124-15069-6q2fmi_thumb.png?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1427139512&Signature=7oWv1Wx25ly2AhD7EivOqLgZ%2FD8%3D",
+                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/60660403/websnappr20141124-15069-6q2fmi_thumb.png?AWSAccessKeyId=AKIA...REDACTED&Expires=1427139512&Signature=7oWv1Wx25ly2AhD7EivOqLgZ%2FD8%3D",
                             "locked_for_user": false,
                             "preview_url": null
                         }
@@ -1305,7 +1305,7 @@ class ScheduleItemUnitTest : Assert() {
                             "hidden": false,
                             "lock_at": null,
                             "hidden_for_user": false,
-                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/60760541/1416940985760_thumb.jpg?AWSAccessKeyId=AKIAJFNFXH2V2O7RPCAA&Expires=1427139513&Signature=5CNmo1I0SYxLbFUFwHaD%2BBp954s%3D",
+                            "thumbnail_url": "https://instructure-uploads.s3.amazonaws.com/account_99298/thumbnails/60760541/1416940985760_thumb.jpg?AWSAccessKeyId=AKIA...REDACTED&Expires=1427139513&Signature=5CNmo1I0SYxLbFUFwHaD%2BBp954s%3D",
                             "locked_for_user": false,
                             "preview_url": null
                         }

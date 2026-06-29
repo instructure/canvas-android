@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.pandautils.utils.setCourseImage
@@ -337,16 +338,20 @@ class CourseBrowserFragment : BaseSyncFragment<
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
-                        val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
-                        if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
-                            val args = AttendanceListFragment.makeBundle(tab)
-                            RouteMatcher.route(
-                                requireActivity(),
-                                Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
-                            )
+                        if (tab.isExternalNavMenuLink) {
+                            openCustomLink(tab)
                         } else {
-                            val route = LtiLaunchFragment.makeRoute(presenter.canvasContext, tab)
-                            RouteMatcher.route(requireActivity(), route)
+                            val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
+                            if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
+                                val args = AttendanceListFragment.makeBundle(tab)
+                                RouteMatcher.route(
+                                    requireActivity(),
+                                    Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
+                                )
+                            } else {
+                                val route = LtiLaunchFragment.makeRoute(presenter.canvasContext, tab)
+                                RouteMatcher.route(requireActivity(), route)
+                            }
                         }
                     }
                 }
@@ -429,6 +434,13 @@ class CourseBrowserFragment : BaseSyncFragment<
         }
 
         return studentInstalled
+    }
+
+    private fun openCustomLink(tab: Tab) {
+        val url = tab.externalUrl?.takeIf { it.isNotBlank() } ?: tab.htmlUrl?.takeIf { it.isNotBlank() } ?: return
+        if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true)) {
+            requireActivity().launchCustomTab(url, presenter.canvasContext.color)
+        }
     }
 
     override

@@ -95,7 +95,8 @@ internal fun FrontPageContent(
                 onRefresh = { actionHandler(FrontPageAction.Refresh) },
                 applyOnWebView = applyOnWebView,
                 onLtiButtonPressed = onLtiButtonPressed,
-                baseUrl = uiState.baseUrl
+                baseUrl = uiState.baseUrl,
+                webViewStateKey = "frontPage"
             )
         }
     }

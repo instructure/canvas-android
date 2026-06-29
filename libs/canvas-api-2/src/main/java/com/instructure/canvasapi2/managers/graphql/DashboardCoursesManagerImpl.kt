@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.DashboardSingleCourseQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.utils.ApiPrefs
 
 class DashboardCoursesManagerImpl(
     private val apolloClient: ApolloClient
@@ -31,7 +32,10 @@ class DashboardCoursesManagerImpl(
     override suspend fun getDashboardCourses(
         forceNetwork: Boolean
     ): DashboardCoursesQuery.Data {
-        val query = DashboardCoursesQuery(pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE)
+        val query = DashboardCoursesQuery(
+            pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE,
+            userId = currentUserId()
+        )
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
     }
 
@@ -39,9 +43,14 @@ class DashboardCoursesManagerImpl(
         courseId: Long,
         forceNetwork: Boolean
     ): DashboardSingleCourseQuery.Data {
-        val query = DashboardSingleCourseQuery(courseId = courseId.toString())
+        val query = DashboardSingleCourseQuery(
+            courseId = courseId.toString(),
+            userId = currentUserId()
+        )
         return apolloClient.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
     }
+
+    private fun currentUserId(): String = ApiPrefs.user?.id?.toString().orEmpty()
 
     override suspend fun getCourseAnnouncements(
         courseId: Long,

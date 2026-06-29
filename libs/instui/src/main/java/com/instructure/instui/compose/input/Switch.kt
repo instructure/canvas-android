@@ -50,8 +50,9 @@ fun Switch(
     enabled: Boolean = true,
     readOnly: Boolean = false,
     isError: Boolean = false,
+    activeColor: Color? = null,
 ) {
-    val iconColor = knobIconColor(checked, enabled, readOnly, isError)
+    val iconColor = knobIconColor(checked, enabled, readOnly, isError, activeColor)
     val thumb: @Composable () -> Unit = {
         Icon(
             imageVector = if (checked) InstUIIcons.check else InstUIIcons.x,
@@ -61,6 +62,13 @@ fun Switch(
         )
     }
 
+    val checkedTrack = when {
+        readOnly -> InstUIToggle.checkedBackgroundReadonlyColor
+        activeColor != null -> activeColor
+        else -> InstUIToggle.checkedBackgroundColor
+    }
+    val disabledCheckedTrack = activeColor?.copy(alpha = 0.5f) ?: InstUIToggle.checkedBackgroundDisabledColor
+
     M3Switch(
         checked = checked,
         onCheckedChange = if (readOnly) null else onCheckedChange,
@@ -69,7 +77,7 @@ fun Switch(
         modifier = modifier,
         colors = SwitchDefaults.colors(
             checkedThumbColor = InstUIToggle.toggleBackground,
-            checkedTrackColor = if (readOnly) InstUIToggle.checkedBackgroundReadonlyColor else InstUIToggle.checkedBackgroundColor,
+            checkedTrackColor = checkedTrack,
             checkedBorderColor = if (readOnly) InstUIToggle.checkedBorderReadonlyColor else Color.Transparent,
             checkedIconColor = iconColor,
             uncheckedThumbColor = InstUIToggle.toggleBackground,
@@ -81,7 +89,7 @@ fun Switch(
             uncheckedBorderColor = if (readOnly) InstUIToggle.borderReadonlyColor else Color.Transparent,
             uncheckedIconColor = iconColor,
             disabledCheckedThumbColor = InstUIToggle.toggleBackground,
-            disabledCheckedTrackColor = InstUIToggle.checkedBackgroundDisabledColor,
+            disabledCheckedTrackColor = disabledCheckedTrack,
             disabledCheckedBorderColor = Color.Transparent,
             disabledCheckedIconColor = iconColor,
             disabledUncheckedThumbColor = InstUIToggle.toggleBackground,
@@ -98,10 +106,15 @@ private fun knobIconColor(
     enabled: Boolean,
     readOnly: Boolean,
     isError: Boolean,
+    activeColor: Color? = null,
 ): Color = when {
-    !enabled -> if (checked) InstUIToggle.checkedBackgroundDisabledColor else InstUIToggle.backgroundDisabledColor
+    !enabled -> if (checked) {
+        activeColor?.copy(alpha = 0.5f) ?: InstUIToggle.checkedBackgroundDisabledColor
+    } else {
+        InstUIToggle.backgroundDisabledColor
+    }
     readOnly -> if (checked) InstUIToggle.checkedBorderReadonlyColor else InstUIToggle.uncheckedIconBorderReadonlyColor
-    checked -> InstUIToggle.checkedBackgroundColor
+    checked -> activeColor ?: InstUIToggle.checkedBackgroundColor
     isError -> InstUIToggle.errorBorderColor
     else -> InstUIToggle.uncheckedIconBorderColor
 }
@@ -131,6 +144,11 @@ private fun SwitchPreview() {
             Row(horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd)) {
                 Switch(checked = true, onCheckedChange = null, readOnly = true)
                 Switch(checked = false, onCheckedChange = null, readOnly = true)
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd)) {
+                Switch(checked = true, onCheckedChange = {}, activeColor = Color(0xFF9C27B0))
+                Switch(checked = false, onCheckedChange = {}, activeColor = Color(0xFF9C27B0))
+                Switch(checked = true, onCheckedChange = {}, enabled = false, activeColor = Color(0xFF9C27B0))
             }
         }
     }
