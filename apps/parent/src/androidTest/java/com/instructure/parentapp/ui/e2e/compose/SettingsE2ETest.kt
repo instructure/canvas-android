@@ -514,7 +514,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SYLLABUS' tab.")
         courseDetailsPage.selectTab("SYLLABUS")
@@ -526,7 +526,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SUMMARY' tab.")
         courseDetailsPage.selectTab("SUMMARY")
@@ -538,7 +538,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'GRADES' tab.")
         courseDetailsPage.selectTab("GRADES")
@@ -553,7 +553,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Navigate back to Dashboard.")
         pressBackButton(2)
@@ -641,7 +641,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SYLLABUS' tab.")
         courseDetailsPage.selectTab("SYLLABUS")
@@ -653,7 +653,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SUMMARY' tab.")
         courseDetailsPage.selectTab("SUMMARY")
@@ -665,7 +665,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'GRADES' tab.")
         courseDetailsPage.selectTab("GRADES")

@@ -6,6 +6,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.CanvasTest
@@ -73,10 +74,17 @@ class LeftSideNavigationDrawerPage : BasePage() {
         waitForViewWithId(menuId).scrollTo().click()
     }
 
+    // Open the navigation drawer via DrawerActions rather than clicking the hamburger: it drives the
+    // DrawerLayout open programmatically and blocks until the open animation fully settles, avoiding the
+    // half-open races a bare click can leave behind (which made the drawer content never appear).
+    private fun openNavigationDrawer() {
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
+    }
+
     fun logout() {
-        onView(hamburgerButtonMatcher).click()
+        openNavigationDrawer()
         onView(withId(R.id.navigationDrawer)).swipeUp() // Swipe up to ensure the logout button is visible (since edge-to-edge the android navigation bar overlaps with Logout button).
-        logoutButton.click()
+        waitForView(CoreMatchers.allOf(withId(R.id.navigationDrawerItem_logout), ViewMatchers.isDisplayed())).click()
         onViewWithText(android.R.string.ok).click()
         // It can potentially take a long time for the sign-out to take effect, especially on
         // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
@@ -129,8 +137,7 @@ class LeftSideNavigationDrawerPage : BasePage() {
     }
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
-        onView(hamburgerButtonMatcher).click()
-        sleep(2000)
+        openNavigationDrawer()
         waitForViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }

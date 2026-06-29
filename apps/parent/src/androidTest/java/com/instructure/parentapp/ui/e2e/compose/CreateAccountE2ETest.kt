@@ -30,6 +30,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.dataseeding.api.UserApi
 import com.instructure.espresso.randomString
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -49,6 +50,7 @@ class CreateAccountE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
+    @Stub("Self registration disabled temporary due to security reasons. When it will be enabled, remove stub from the test.")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ACCOUNT_CREATION, TestCategory.E2E)
     fun testAccountCreationE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
