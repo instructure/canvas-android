@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
@@ -141,7 +142,7 @@ class GradesViewModelTest {
                 )
             )
         )
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
         coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns "100% A"
 
@@ -200,7 +201,7 @@ class GradesViewModelTest {
     fun `Load grades empty`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
 
         createViewModel()
@@ -361,7 +362,7 @@ class GradesViewModelTest {
                 )
             )
         )
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
 
         createViewModel()
@@ -628,7 +629,7 @@ class GradesViewModelTest {
                 )
             )
         )
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
 
         createViewModel()
@@ -753,7 +754,7 @@ class GradesViewModelTest {
     fun `Format grade when no current grade`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
         coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns "N/A"
 
@@ -776,7 +777,7 @@ class GradesViewModelTest {
     fun `Show lock when grade is locked`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade(isLocked = true)
 
@@ -803,7 +804,7 @@ class GradesViewModelTest {
 
         coVerify { gradesRepository.loadCourse(1, true) }
         coVerify { gradesRepository.loadGradingPeriods(1, true) }
-        coVerify { gradesRepository.loadAssignmentGroups(1, any(), true) }
+        coVerify { gradesRepository.loadAssignmentGroups(1, any(), true, any()) }
         coVerify { gradesRepository.loadEnrollments(1, any(), true) }
     }
 
@@ -811,7 +812,7 @@ class GradesViewModelTest {
     fun `Group header click closes group`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
@@ -923,7 +924,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
@@ -984,7 +985,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
@@ -1058,7 +1059,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
@@ -1147,7 +1148,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 85.0
 
         createViewModel()
@@ -1191,7 +1192,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
 
         createViewModel()
@@ -1218,7 +1219,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
@@ -1271,7 +1272,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
         coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns "85% B"
 
@@ -1328,7 +1329,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
         every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 85.0
 
         createViewModel()
@@ -1365,7 +1366,7 @@ class GradesViewModelTest {
         val endDate = OffsetDateTime.now().plusDays(20).withNano(0)
         val gradingPeriods = listOf(GradingPeriod(id = 1, startDate = startDate.toString(), endDate = endDate.toString()))
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns gradingPeriods
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1381,7 +1382,7 @@ class GradesViewModelTest {
         every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.Academic.name
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1396,7 +1397,7 @@ class GradesViewModelTest {
         val period1 = GradingPeriod(id = 1, title = "Q1")
         val period2 = GradingPeriod(id = 2, title = "Q2")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns listOf(period1, period2)
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1404,7 +1405,7 @@ class GradesViewModelTest {
 
         viewModel.onFilterUpdated(initialFilter.copy(selectedGradingPeriodFilter = period2))
 
-        coVerify(atLeast = 2) { gradesRepository.loadAssignmentGroups(1, any(), any()) }
+        coVerify(atLeast = 2) { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) }
         Assert.assertEquals(period2, viewModel.uiState.value.gradePreferencesUiState.selectedGradingPeriod)
     }
 
@@ -1414,7 +1415,7 @@ class GradesViewModelTest {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         val period = GradingPeriod(id = 1, title = "Q1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns listOf(period)
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1424,7 +1425,7 @@ class GradesViewModelTest {
             initialFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
         )
 
-        coVerify(exactly = 1) { gradesRepository.loadAssignmentGroups(1, any(), any()) }
+        coVerify(exactly = 1) { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) }
     }
 
     @Test
@@ -1432,7 +1433,7 @@ class GradesViewModelTest {
         every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1450,7 +1451,7 @@ class GradesViewModelTest {
         every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
-        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
         coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
 
         createViewModel()
@@ -1462,10 +1463,634 @@ class GradesViewModelTest {
         Assert.assertEquals(false, viewModel.uiState.value.filter?.isFilterScreenOpen)
     }
 
+    @Test
+    fun `NGC populates per-group gradeText on initial load when sorted by group`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+
+        val group = viewModel.uiState.value.items.first()
+        Assert.assertNotNull(group.gradeText)
+        Assert.assertTrue(group.gradeText!!.contains("90"))
+    }
+
+    @Test
+    fun `NGC does not populate per-group gradeText when sorted by due date`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.items.all { it.gradeText == null })
+    }
+
+    @Test
+    fun `Academic experience leaves per-group gradeText null`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        Assert.assertTrue(viewModel.uiState.value.items.all { it.gradeText == null })
+    }
+
+    @Test
+    fun `NGC hides no-weight groups when course applies assignment group weights`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 1",
+            isApplyAssignmentGroupWeights = true,
+        )
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Weighted",
+                groupWeight = 50.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            ),
+            AssignmentGroup(
+                id = 2,
+                name = "No weight",
+                groupWeight = 0.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 2,
+                        name = "A2",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+
+        val items = viewModel.uiState.value.items
+        Assert.assertEquals(1, items.size)
+        Assert.assertEquals(1L, items.first().id)
+    }
+
+    @Test
+    fun `NGC keeps no-weight groups when course does not apply group weights`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 1",
+            isApplyAssignmentGroupWeights = false,
+        )
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 2,
+                name = "No weight",
+                groupWeight = 0.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 2,
+                        name = "A2",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 8.0)
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
+
+        createViewModel()
+
+        val items = viewModel.uiState.value.items
+        Assert.assertEquals(1, items.size)
+        Assert.assertEquals(2L, items.first().id)
+    }
+
+    @Test
+    fun `NGC recomputes per-group gradeText when graded-only toggle changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 9.0)
+                    )
+                )
+            )
+        )
+        every {
+            gradeCalculator.calculateGrade(any(), any(), any(), onlyGraded = true)
+        } returns 90.0
+        every {
+            gradeCalculator.calculateGrade(any(), any(), any(), onlyGraded = false)
+        } returns 45.0
+
+        createViewModel()
+        val beforeText = viewModel.uiState.value.items.first().gradeText
+
+        viewModel.handleAction(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(false))
+
+        val afterText = viewModel.uiState.value.items.first().gradeText
+        Assert.assertNotEquals(beforeText, afterText)
+        Assert.assertTrue(afterText!!.contains("45"))
+    }
+
+    @Test
+    fun `NGC recomputes per-group gradeText when what-if toggle changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(score = 5.0)
+                    )
+                )
+            )
+        )
+        every { gradesViewModelBehavior.isWhatIfGradingEnabled(any()) } returns true
+        // Stub before what-if and after what-if results
+        every {
+            gradeCalculator.calculateGrade(any(), whatIfScores = emptyMap(), any(), any())
+        } returns 50.0
+        every {
+            gradeCalculator.calculateGrade(any(), whatIfScores = mapOf(1L to 9.0), any(), any())
+        } returns 90.0
+
+        createViewModel()
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1L, 9.0))
+
+        val beforeText = viewModel.uiState.value.items.first().gradeText
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        val afterText = viewModel.uiState.value.items.first().gradeText
+        Assert.assertNotEquals(beforeText, afterText)
+        Assert.assertTrue(afterText!!.contains("90"))
+    }
+
+    @Test
+    fun `NGC initial sortBy syncs with strategy's selectedGroupByOption when no saved pref`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        // NGCGradesStrategy.initialFilterState defaults selectedGroupByOption to AssignmentGroup,
+        // so sortBy must also land on GROUP to keep the filter chip and the actual sort aligned.
+        Assert.assertEquals(SortBy.GROUP, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `Academic initial sortBy stays at DUE_DATE when no saved pref`() {
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        Assert.assertEquals(SortBy.DUE_DATE, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `Saved sortBy preference wins over strategy filter default`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        Assert.assertEquals(SortBy.DUE_DATE, viewModel.uiState.value.gradePreferencesUiState.sortBy)
+    }
+
+    @Test
+    fun `NGC filter's selectedGroupByOption is rewritten to match saved sortBy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        val filter = viewModel.uiState.value.filter
+        Assert.assertNotNull(filter)
+        Assert.assertEquals(
+            AssignmentGroupByOption.DueDate,
+            filter!!.selectedFilters.selectedGroupByOption
+        )
+    }
+
+    @Test
+    fun `onFilterUpdated persists newSortBy when it changes`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
+        )
+
+        verify { gradesRepository.setSortBy(SortBy.GROUP) }
+    }
+
+    @Test
+    fun `Non-grading-period filter change re-decorates group items with gradeText`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.GROUP
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                groupWeight = 40.0,
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "A1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue),
+                        submission = Submission(
+                            score = 9.0,
+                            grade = "A",
+                            postedAt = java.util.Date(),
+                            workflowState = "graded",
+                        ),
+                    )
+                )
+            )
+        )
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        // Trigger a non-grading-period filter change to exercise recomputeAfterFilterChange.
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        )
+
+        // After a non-grading-period filter change, recomputeAfterFilterChange should still run
+        // strategy.decorateGroupItems so the group's gradeText survives.
+        val items = viewModel.uiState.value.items
+        Assert.assertTrue(items.isNotEmpty())
+        Assert.assertNotNull(items.first().gradeText)
+    }
+
+    @Test
+    fun `onFilterUpdated does not persist sortBy when unchanged`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns SortBy.DUE_DATE
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+        val initialFilters = viewModel.uiState.value.filter!!.selectedFilters
+
+        viewModel.onFilterUpdated(
+            initialFilters.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        )
+
+        verify(exactly = 0) { gradesRepository.setSortBy(any()) }
+    }
+
+    @Test
+    fun `NGC filter's selectedGroupByOption stays AssignmentGroup when no saved sortBy`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        every { gradesRepository.getSortBy() } returns null
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+
+        createViewModel()
+
+        val filter = viewModel.uiState.value.filter
+        Assert.assertNotNull(filter)
+        Assert.assertEquals(
+            AssignmentGroupByOption.AssignmentGroup,
+            filter!!.selectedFilters.selectedGroupByOption
+        )
+    }
+
+    @Test
+    fun `Maps comment count and unread state for NGC experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns ""
+
+        // Relaxed gradesRepository.studentId returns 0, so authorId = 0 represents the student's own
+        // comment and a non-zero authorId represents teacher feedback.
+        val teacherId = 999L
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 10,
+                        name = "Unread feedback",
+                        submission = Submission(
+                            id = 100,
+                            unreadCommentCount = 2,
+                            submissionComments = listOf(
+                                SubmissionComment(authorId = teacherId),
+                                SubmissionComment(authorId = teacherId),
+                                SubmissionComment(authorId = teacherId)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 20,
+                        name = "Read feedback",
+                        submission = Submission(
+                            id = 200,
+                            submissionComments = listOf(SubmissionComment(authorId = teacherId))
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 30,
+                        name = "No comments",
+                        submission = Submission(id = 300),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    Assignment(
+                        id = 40,
+                        name = "Hidden feedback (only student's own comment visible)",
+                        submission = Submission(
+                            id = 400,
+                            unreadCommentCount = 2,
+                            submissionComments = listOf(SubmissionComment(authorId = 0))
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    )
+                )
+            )
+        )
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
+
+        createViewModel()
+
+        val assignments = viewModel.uiState.value.items.flatMap { it.assignments }
+        val unread = assignments.first { it.id == 10L }
+        val read = assignments.first { it.id == 20L }
+        val none = assignments.first { it.id == 30L }
+        val hiddenFeedback = assignments.first { it.id == 40L }
+
+        Assert.assertEquals(3, unread.commentCount)
+        Assert.assertTrue(unread.hasUnreadComments)
+        Assert.assertEquals(1, read.commentCount)
+        Assert.assertFalse(read.hasUnreadComments)
+        Assert.assertEquals(0, none.commentCount)
+        Assert.assertFalse(none.hasUnreadComments)
+        // unreadCommentCount > 0 but the only visible comment is the student's own → no dot.
+        Assert.assertEquals(1, hiddenFeedback.commentCount)
+        Assert.assertFalse(hiddenFeedback.hasUnreadComments)
+    }
+
+    @Test
+    fun `Does not map comment count or unread state for Academic experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.Academic.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns ""
+
+        // The submission carries unread teacher feedback, but the comment pill is NGC-only: in the
+        // Academic experience the comment list is never read, so no count and no unread dot are shown.
+        val teacherId = 999L
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 10,
+                        name = "Unread feedback",
+                        submission = Submission(
+                            id = 100,
+                            unreadCommentCount = 2,
+                            submissionComments = listOf(
+                                SubmissionComment(authorId = teacherId),
+                                SubmissionComment(authorId = teacherId)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    )
+                )
+            )
+        )
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
+
+        createViewModel()
+
+        val assignment = viewModel.uiState.value.items.flatMap { it.assignments }.first { it.id == 10L }
+        Assert.assertEquals(0, assignment.commentCount)
+        Assert.assertFalse(assignment.hasUnreadComments)
+    }
+
+    @Test
+    fun `Comment count only includes the latest attempt`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns ""
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    // Latest attempt is 2 → only the two attempt-2 comments count, older/null ones are excluded.
+                    Assignment(
+                        id = 10,
+                        name = "Multiple attempts",
+                        submission = Submission(
+                            id = 100,
+                            attempt = 2,
+                            submissionComments = listOf(
+                                SubmissionComment(id = 1, attempt = 2),
+                                SubmissionComment(id = 2, attempt = 2),
+                                SubmissionComment(id = 3, attempt = 1),
+                                SubmissionComment(id = 4, attempt = null)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    ),
+                    // Latest attempt <= 1 → attempts null/0/1 are grouped together, attempt 2 excluded.
+                    Assignment(
+                        id = 20,
+                        name = "First attempt grouping",
+                        submission = Submission(
+                            id = 200,
+                            attempt = 1,
+                            submissionComments = listOf(
+                                SubmissionComment(id = 5, attempt = null),
+                                SubmissionComment(id = 6, attempt = 0),
+                                SubmissionComment(id = 7, attempt = 1),
+                                SubmissionComment(id = 8, attempt = 2)
+                            )
+                        ),
+                        submissionTypesRaw = listOf(SubmissionType.online_text_entry.rawValue)
+                    )
+                )
+            )
+        )
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns assignmentGroups
+
+        createViewModel()
+
+        val assignments = viewModel.uiState.value.items.flatMap { it.assignments }
+        Assert.assertEquals(2, assignments.first { it.id == 10L }.commentCount)
+        Assert.assertEquals(3, assignments.first { it.id == 20L }.commentCount)
+    }
+
+    @Test
+    fun `Does not paginate comments for Academic experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.Academic.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+
+        createViewModel()
+
+        coVerify { gradesRepository.loadAssignmentGroups(1, any(), any(), paginateComments = false) }
+    }
+
+    @Test
+    fun `Paginates comments for NGC experience`() {
+        every { savedStateHandle.get<String>(EXPERIENCE_KEY) } returns Experience.NGC.name
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any(), any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+
+        createViewModel()
+
+        coVerify { gradesRepository.loadAssignmentGroups(1, any(), any(), paginateComments = true) }
+    }
+
     private fun createViewModel() {
         val strategies = mapOf(
             Experience.Academic to AcademicGradesStrategy(),
-            Experience.NGC to NGCGradesStrategy(),
+            Experience.NGC to NGCGradesStrategy(gradeCalculator),
         )
         viewModel = GradesViewModel(
             context,
@@ -1473,6 +2098,7 @@ class GradesViewModelTest {
             gradeFormatter, gradeCalculator,
             gradesViewModelBehavior,
             strategies,
+            testDispatcher,
             savedStateHandle
         )
     }

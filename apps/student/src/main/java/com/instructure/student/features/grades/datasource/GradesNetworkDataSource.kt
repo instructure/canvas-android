@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -34,31 +35,14 @@ class GradesNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
-    private val customGradeStatusesManager: CustomGradeStatusesManager
+    private val customGradeStatusesManager: CustomGradeStatusesManager,
+    private val gradesGraphQlManager: GradesGraphQlManager
 ) : GradesDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         return courseApi.getCourseWithGrade(courseId, params).dataOrThrow
-    }
-
-    override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
-        courseId: Long,
-        gradingPeriodId: Long,
-        scopeToStudent: Boolean,
-        forceNetwork: Boolean
-    ): List<AssignmentGroup> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        return assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
-            courseId = courseId,
-            gradingPeriodId = gradingPeriodId,
-            scopeToStudent = scopeToStudent,
-            restParams = params
-        ).depaginate {
-            assignmentApi.getNextPageAssignmentGroupListWithAssignmentsForGradingPeriod(it, params)
-        }.dataOrThrow
     }
 
     override suspend fun getSubmissionsForMultipleAssignments(
@@ -93,12 +77,13 @@ class GradesNetworkDataSource(
         return courseApi.getUserEnrollmentsForGradingPeriod(courseId, userId, gradingPeriodId, params).dataOrThrow
     }
 
-    override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
-            assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)
-        }.dataOrThrow
+    override suspend fun getAssignmentGroupsWithAssignments(
+        courseId: Long,
+        gradingPeriodId: Long?,
+        forceNetwork: Boolean,
+        paginateComments: Boolean
+    ): List<AssignmentGroup> {
+        return gradesGraphQlManager.getAssignmentGroupsWithAssignments(courseId, gradingPeriodId, forceNetwork, paginateComments)
     }
 
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {

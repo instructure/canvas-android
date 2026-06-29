@@ -198,8 +198,10 @@ abstract class CanvasTest : InstructureTestingContract {
         eventObject.put("sourcetype", "mobile-android-qa-testresult")
         // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
         // they contain a view hierarchy, and there is typically not much useful info after the
-        // first few lines.
-        eventObject.put("message", error.toString().take(4096))
+        // first few lines. Also strip auth/cookie headers in case an OkHttp exception message
+        // embedded the offending Request — we don't want bearer tokens shipped off-CI.
+        val safeMessage = redactSensitiveHeaders(error.message.orEmpty())
+        eventObject.put("message", "${error.javaClass.name}: $safeMessage".take(4096))
 
         val payloadObject = JSONObject()
 
@@ -251,6 +253,14 @@ abstract class CanvasTest : InstructureTestingContract {
             if (inputStream != null) inputStream.close()
             if (conn != null) conn.disconnect()
         }
+    }
+
+    private fun redactSensitiveHeaders(text: String): String {
+        if (text.isEmpty()) return text
+        return text
+            .replace(Regex("(?i)(authorization\\s*[:=]\\s*)(bearer|basic|digest|token)\\s+\\S+"), "$1$2 <redacted>")
+            .replace(Regex("(?i)(set-cookie|cookie)\\s*:\\s*[^\\r\\n]+", RegexOption.MULTILINE), "$1: <redacted>")
+            .replace(Regex("(?i)(x-api-key|x-auth-token|api[_-]?key)\\s*[:=]\\s*\\S+"), "$1: <redacted>")
     }
 
     // Creates an /sdcard/coverage folder if it does not already exist.

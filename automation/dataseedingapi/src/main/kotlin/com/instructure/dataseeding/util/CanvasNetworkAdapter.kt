@@ -35,16 +35,23 @@ object CanvasNetworkAdapter {
     val clientId = DATA_SEEDING_CLIENT_ID
     val clientSecret = DATA_SEEDING_CLIENT_SECRET
 
-    private var log = true
+    // Body-level HTTP logging would dump the admin bearer token and every seeded user's
+    // loginID/password to logcat on every test run. Default to off; a developer can opt in
+    // for a local debugging session via either:
+    //   -Dcanvas.dataseeding.http.log=true        (e.g. gradle test arg, IDE run config)
+    //   CANVAS_DATASEEDING_HTTP_LOG=true          (environment variable)
+    private val log: Boolean =
+        System.getProperty("canvas.dataseeding.http.log")?.toBoolean() == true
+            || System.getenv("CANVAS_DATASEEDING_HTTP_LOG")?.toBoolean() == true
     private val TIMEOUT_IN_SECONDS = 60L
 
     private fun getLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = HttpLoggingInterceptor.Level.NONE
-        if (log) {
-            loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        loggingInterceptor.level = if (log) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
         }
-
         return loggingInterceptor
     }
 

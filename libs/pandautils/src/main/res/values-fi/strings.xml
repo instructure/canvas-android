@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Mitään ei ole vielä ilmoitettu.</string>
     <string name="noCourses">Ei kursseja</string>
     <string name="noCoursesSubtext">Näyttää siltä kuin tähän tiliin ei olisi liitetty yhtään kurssia. Käy verkossa luodaksesi kurssi tänään</string>
+    <string name="coursesWidgetEmptyTitle">Tervetuloa Canvasiin!</string>
+    <string name="coursesWidgetEmptyMessage">Sinulla ei ole vielä aktiivisia kursseja, joten täällä on vielä hieman hiljaista. Kun ilmoittaudut kurssille, koontinäyttösi alkaa täyttyä uusilla aktiviteeteilla.</string>
     <string name="noAssignments">Ei tehtäviä</string>
     <string name="noAssignmentsSubtext">Näyttää siltä kuin tehtäviä ei olisi luotu tässä tilassa. Aika lähteä ulos tutustumaan.</string>
     <string name="noAssignmentsTeacher">Näyttäisi siltä, että tehtäviä ei ole vielä julkaistu.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Arvosana: %s pistettä</string>
     <string name="gradePercentTextFieldAccessibility">Arvosana: %d prosenttia, %s</string>
     <string name="gradePointsTextFieldAccessibility">Arvosana: %s  pisteet, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Auta meitä parantamaan sovellusta</string>
+    <string name="cookieConsentDescription">Keräämme nimettömiä sovellustietoja, jotta tiimimme voi tunnistaa teknisiä ongelmia ja optimoida sovelluksen ominaisuuksia.</string>
+    <string name="cookieConsentNoProfiles">Ei henkilökohtaisia profiileja: Emme seuraa henkilöllisyyttäsi tai näytä mainoksia.</string>
+    <string name="cookieConsentNoSelling">Ei tietojen myyntiä: Tietojasi ei myydä koskaan kolmansille osapuolille.</string>
+    <string name="cookieConsentFullControl">Täysi hallinta: Voit muuttaa näitä asetuksia milloin tahansa.</string>
+    <string name="cookieConsentAllow">Salli</string>
+    <string name="cookieConsentDecline">Hylkää</string>
+    <string name="privacySettingsTitle">Tietosuoja-asetukset</string>
+    <string name="privacySettingsToggleLabel">Anonyymi sovellusanalytiikka</string>
+    <string name="privacySettingsDescription">Jaa nimettömiä tietoja sovelluksen suorituskyvystä ja ominaisuuksien käytöstä. Tämä auttaa meitä korjaamaan virheitä ja parantamaan sovelluksen yleistä käyttökokemusta. Emme kerää henkilötunnisteita.</string>
 </resources>

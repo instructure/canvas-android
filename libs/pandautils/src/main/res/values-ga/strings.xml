@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Níl aon rud fógartha go fóill.</string>
     <string name="noCourses">Níl aon Chúrsaí</string>
     <string name="noCoursesSubtext">Tá an chuma ar an scéal nach bhfuil aon chúrsaí bainteach leis an gcuntas seo. Tabhair cuairt ar an ngréasán inniu chun cúrsa a chruthú.</string>
+    <string name="coursesWidgetEmptyTitle">Fáilte go Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Níl aon chúrsaí gníomhacha agat go fóill — mar sin tá rudaí beagáinín ciúin anseo. Nuair a rollaíonn tú i rang, tosóidh do dheais ag líonadh le gníomhaíocht nua.</string>
     <string name="noAssignments">Níl aon Tascanna</string>
     <string name="noAssignmentsSubtext">Tá an chuma ar an scéal nár cruthaíodh tascanna sa spás seo. Am le dul amach agus iniúchadh a dhéanamh.</string>
     <string name="noAssignmentsTeacher">Is cosúil nach bhfuil aon tascanna foilsithe fós.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Marc: %s pointe</string>
     <string name="gradePercentTextFieldAccessibility">Marc: %d faoin gcéad, %s</string>
     <string name="gradePointsTextFieldAccessibility">Marc: %s pointe, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Cabhraigh linn aip níos fearr a thógáil</string>
+    <string name="cookieConsentDescription">Bailímid sonraí aipe gan ainm chun cabhrú lenár bhfoireann fadhbanna teicniúla a aithint agus gnéithe na haipe a bharrfheabhsú.</string>
+    <string name="cookieConsentNoProfiles">Gan Próifílí Pearsanta: Ní dhéanaimid rianú ar d’aitheantas ná ní thaispeánaimid fógraí.</string>
+    <string name="cookieConsentNoSelling">Gan Díol Sonraí: Ní dhíoltar do chuid faisnéise le tríú páirtithe choíche.</string>
+    <string name="cookieConsentFullControl">Rialú Iomlán: Is féidir leat na socruithe seo a choigeartú am ar bith.</string>
+    <string name="cookieConsentAllow">Ceadaigh</string>
+    <string name="cookieConsentDecline">Diúltaigh</string>
+    <string name="privacySettingsTitle">Socruithe Príobháideachais</string>
+    <string name="privacySettingsToggleLabel">Anailísíocht Feidhmchláir Gan Ainm</string>
+    <string name="privacySettingsDescription">Comhroinn sonraí gan ainm faoi fheidhmíocht na haipe agus úsáid gnéithe. Cuidíonn sé seo linn fabhtanna a shocrú agus an t-eispéireas foriomlán ar an aip a fheabhsú. Ní bhailimid aitheantóirí pearsanta.</string>
 </resources>

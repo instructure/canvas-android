@@ -21,14 +21,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -46,6 +47,7 @@ import com.instructure.pandautils.features.discussion.router.DiscussionRouter
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -83,6 +85,9 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
 
     @Inject
     lateinit var localBroadcastManager: LocalBroadcastManager
+
+    @Inject
+    lateinit var fileDownloader: FileDownloader
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -143,8 +148,18 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
             }
 
             override fun routeInternallyCallback(url: String) {
-                if (url.contains("discussion_topics") || url.contains("announcements")) {
-                    binding.discussionWebView.loadUrl(url)
+                if (isCanvasFileDownloadUrl(url)) {
+                    fileDownloader.downloadFileToDevice(url, URLUtil.guessFileName(url, null, null), null)
+                } else if (url.contains("discussion_topics") || url.contains("announcements")) {
+                    val listType = discussionListRedirectType(url)
+                    when {
+                        listType != null -> handleDeletedFromWebView(listType)
+                        // Same-instance links open the native screen (MBL-20102).
+                        webViewRouter.canRouteInternally(url) -> webViewRouter.routeInternally(url)
+                        // Cross-instance (trusted) links can't route natively (MBL-17753), so load
+                        // them in the WebView with embed=true to keep the web toolbar hidden.
+                        else -> binding.discussionWebView.loadUrl(url.withEmbedParam())
+                    }
                 } else if (url.contains("speed_grader")) {
                     val uri = url.toUri()
                     val assignmentId = uri.getQueryParameter("assignment_id")?.toLongOrNull() ?: 0
@@ -164,9 +179,29 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean {
+                if (isCanvasFileDownloadUrl(url)) return true
                 return viewModel.data.value?.url?.substringBefore("?") != url.substringBefore("?")
             }
         }
+    }
+
+    private fun isCanvasFileDownloadUrl(url: String): Boolean {
+        return url.contains("/files/") && url.contains("download_frd=1") && url.contains("verifier=")
+    }
+
+    // Appends embed=true so the loaded page hides the web toolbar, handling URLs that already
+    // contain a query string (uses & instead of a second ?).
+    private fun String.withEmbedParam() = toUri().buildUpon().appendQueryParameter("embed", "true").build().toString()
+
+    // The topic was deleted inside the WebView and Canvas redirected to the list index. Confirm with
+    // a toast and pop back to the native list, which refreshes itself in onStop().
+    private fun handleDeletedFromWebView(listType: DiscussionListType) {
+        val messageRes = when (listType) {
+            DiscussionListType.ANNOUNCEMENT -> R.string.utils_announcementDeleted
+            DiscussionListType.DISCUSSION -> R.string.utils_discussionDeleted
+        }
+        Toast.makeText(requireContext(), messageRes, Toast.LENGTH_SHORT).show()
+        activity?.onBackPressed()
     }
 
     private fun setupImeInsets() {

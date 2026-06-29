@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -111,6 +112,10 @@ fun SpeedGraderScreen(
 
     CanvasScaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
+        // This screen uses SOFT_INPUT_ADJUST_PAN to keep the focused field visible, so the
+        // content must not also consume the IME inset - doing both shifts the content up twice
+        // and leaves a white gap above the keyboard (MBL-20070).
+        contentWindowInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom),
         snackbarHost = {
             SnackbarHost(snackbarHostState) { data ->
                 Snackbar(

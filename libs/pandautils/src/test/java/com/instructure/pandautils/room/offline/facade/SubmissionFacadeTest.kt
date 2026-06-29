@@ -20,6 +20,7 @@ package com.instructure.pandautils.room.offline.facade
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
@@ -32,6 +33,7 @@ import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
 import com.instructure.pandautils.room.offline.entities.GroupEntity
 import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
+import com.instructure.pandautils.room.offline.entities.SubmissionCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
 import io.mockk.Runs
@@ -86,6 +88,33 @@ class SubmissionFacadeTest {
         coVerify { userDao.insertOrUpdate(UserEntity(user)) }
         coVerify { submissionDao.insertOrUpdate(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
         coVerify { subAssignmentSubmissionDao.insertAll(emptyList()) }
+    }
+
+    @Test
+    fun `insertSubmission stores the comment's own attempt while keeping the submission attempt as the foreign key`() = runTest {
+        val comment = SubmissionComment(id = 10L, comment = "From attempt 1", attempt = 1L)
+        val submission = Submission(
+            id = 1L,
+            attempt = 3L,
+            submissionComments = arrayListOf(comment)
+        )
+
+        coEvery { submissionDao.insert(any()) } returns 1L
+        coEvery { subAssignmentSubmissionDao.insertAll(any()) } just Runs
+
+        facade.insertSubmission(submission)
+
+        coVerify {
+            submissionCommentDao.insert(
+                SubmissionCommentEntity(
+                    id = 10L,
+                    comment = "From attempt 1",
+                    attemptId = 3L,
+                    submissionId = 1L,
+                    commentAttempt = 1L
+                )
+            )
+        }
     }
 
     @Test

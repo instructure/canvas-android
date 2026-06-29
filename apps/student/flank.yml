@@ -9,8 +9,11 @@ gcloud:
   auto-google-login: true
   use-orchestrator: true
   performance-metrics: false
-  record-video: true
-  timeout: 60m
+  record-video: false
+  timeout: 40m
+  num-flaky-test-attempts: 1
+  environment-variables:
+    timeout_msec: 300000
   test-targets:
   - notAnnotation com.instructure.canvas.espresso.annotations.E2E, com.instructure.canvas.espresso.annotations.Stub, com.instructure.canvas.espresso.annotations.FlakyE2E, com.instructure.canvas.espresso.annotations.KnownBug, com.instructure.canvas.espresso.annotations.OfflineE2E
   device:

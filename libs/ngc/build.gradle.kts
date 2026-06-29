@@ -83,6 +83,8 @@ dependencies {
     implementation(project(":instui"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
+    implementation(Libs.COMPOSE_ADAPTIVE)
+    implementation(Libs.COMPOSE_ADAPTIVE_NAVIGATION)
     implementation(Libs.HILT)
     ksp(Libs.HILT_COMPILER)
     implementation(Libs.HILT_ANDROIDX_WORK)

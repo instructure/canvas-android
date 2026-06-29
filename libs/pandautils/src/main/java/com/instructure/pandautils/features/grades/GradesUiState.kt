@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.grades
 
+import androidx.compose.runtime.Immutable
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
@@ -35,6 +36,7 @@ data class AppBarUiState(
     val addBookmarkClick: () -> Unit
 )
 
+@Immutable
 data class GradesUiState(
     val isLoading: Boolean = true,
     val isError: Boolean = false,
@@ -68,13 +70,16 @@ data class WhatIfScoreDialogData(
     val maxScore: Double?
 )
 
+@Immutable
 data class AssignmentGroupUiState(
     val id: Long,
     val name: String,
     val assignments: List<AssignmentUiState>,
-    val expanded: Boolean
+    val expanded: Boolean,
+    val gradeText: String? = null
 )
 
+@Immutable
 data class AssignmentUiState(
     val id: Long,
     val iconRes: Int,
@@ -85,6 +90,8 @@ data class AssignmentUiState(
     val score: Double?,
     val maxScore: Double?,
     val whatIfScore: Double?,
+    val commentCount: Int = 0,
+    val hasUnreadComments: Boolean = false,
     val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
     val checkpointsExpanded: Boolean = false
 )

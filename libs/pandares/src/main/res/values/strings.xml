@@ -1515,6 +1515,8 @@
     <string name="aboutLoginTitle">Login ID</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="aboutOpenSourceTitle">Open Source &amp; Licenses</string>
+    <string name="aboutOpenSourceSubtitle">View the source code and open source licenses.</string>
     <string name="assignmentRefreshError">There was a problem reloading this assignment. Please check your connection and try again.</string>
     <string name="instructure_logo">Instructure logo</string>
     <string name="preferences">Preferences</string>
@@ -1969,6 +1971,9 @@
     <string name="gradePreferencesHeaderSortBy">Sort By</string>
     <string name="gradesEmptyTitle">No Assignments</string>
     <string name="gradesEmptyMessage">It looks like assignments haven\'t been created in this space yet.</string>
+    <string name="gradesEmptyMessageForPeriod">There are no assignments in %s.</string>
+    <string name="gradesCommentsContentDescription">%d comments</string>
+    <string name="gradesUnreadCommentsContentDescription">%d unread comments</string>
     <string name="noMatchingAssignments">No Matching Assignments</string>
     <string name="noMatchingAssignmentsDescription">No assignments match your search. Try a different search term.</string>
     <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>

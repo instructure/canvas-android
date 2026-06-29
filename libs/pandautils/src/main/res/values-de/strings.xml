@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Bisher wurde noch nichts angekündigt.</string>
     <string name="noCourses">Keine Kurse</string>
     <string name="noCoursesSubtext">Wie es aussieht, sind mit diesem Konto keine Kurse verknüpft. Besuchen Sie das Internet, um heute einen Kurs zu erstellen.</string>
+    <string name="coursesWidgetEmptyTitle">Willkommen bei Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Sie haben noch keine aktiven Kurse – hier ist es also noch etwas ruhig. Sobald Sie sich für einen Kurs angemeldet haben, wird sich Ihr Dashboard mit neuen Aktivitäten füllen.</string>
     <string name="noAssignments">Keine Aufgaben</string>
     <string name="noAssignmentsSubtext">Wie es aussieht, wurden in diesem Raum keine Aufgaben erstellt. Zeit zum Erkunden</string>
     <string name="noAssignmentsTeacher">Es wurden scheinbar noch keine Aufgaben veröffentlicht.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Klasse: %s Punkte</string>
     <string name="gradePercentTextFieldAccessibility">Klasse: %d Prozent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Klasse: %s Punkte, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Helfen Sie uns, eine bessere App zu entwickeln</string>
+    <string name="cookieConsentDescription">Wir erfassen anonyme Anwendungsdaten, um unserem Team dabei zu helfen, technische Probleme zu identifizieren und App-Funktionen zu optimieren.</string>
+    <string name="cookieConsentNoProfiles">Keine persönlichen Profile: Wir verfolgen Ihre Identität nicht und zeigen keine Werbung an.</string>
+    <string name="cookieConsentNoSelling">Kein Verkauf von Daten: Ihre Daten werden niemals an Dritte verkauft.</string>
+    <string name="cookieConsentFullControl">Volle Kontrolle: Sie können diese Einstellungen jederzeit anpassen.</string>
+    <string name="cookieConsentAllow">Zulassen</string>
+    <string name="cookieConsentDecline">Ablehnen</string>
+    <string name="privacySettingsTitle">Datenschutzeinstellungen</string>
+    <string name="privacySettingsToggleLabel">Anonyme Anwendungsanalyse</string>
+    <string name="privacySettingsDescription">Teilen Sie anonyme Daten zur App-Leistung und zur Nutzung von Funktionen. Dies hilft uns, Fehler zu beheben und das allgemeine App-Erlebnis zu verbessern. Wir erfassen keine personenbezogenen Daten.</string>
 </resources>

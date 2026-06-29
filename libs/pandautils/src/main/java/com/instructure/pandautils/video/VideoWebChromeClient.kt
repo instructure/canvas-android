@@ -6,6 +6,8 @@ import android.media.MediaPlayer
 import android.view.*
 import android.webkit.WebChromeClient
 import android.widget.FrameLayout
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.instructure.pandautils.R
 import com.instructure.pandautils.views.CanvasWebView
 import java.lang.ref.WeakReference
@@ -96,7 +98,10 @@ abstract class VideoWebChromeClient : WebChromeClient, MediaPlayer.OnPreparedLis
 
             val window = activityRef?.get()?.window
             if(window != null) {
-                window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                WindowInsetsControllerCompat(window, window.decorView).apply {
+                    hide(WindowInsetsCompat.Type.systemBars())
+                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
                 window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 window.addContentView(videoViewContainer, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER))
             }
@@ -148,7 +153,8 @@ abstract class VideoWebChromeClient : WebChromeClient, MediaPlayer.OnPreparedLis
         if (isVideoFullscreen) {
             val window = activityRef?.get()?.window
             if(window != null) {
-                window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+                WindowInsetsControllerCompat(window, window.decorView)
+                    .show(WindowInsetsCompat.Type.systemBars())
                 window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
                 window.decorView.let {
                     if (it.findViewById<View>(R.id.videoFullScreenView) != null) {

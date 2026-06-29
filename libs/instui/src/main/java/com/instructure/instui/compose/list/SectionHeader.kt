@@ -68,6 +68,7 @@ fun SectionHeader(
     expanded: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    trailing: String? = null,
 ) {
     Row(
         modifier = modifier
@@ -87,6 +88,13 @@ fun SectionHeader(
             color = InstUIToggleDetails.textColor,
             modifier = Modifier.weight(1f),
         )
+        if (trailing != null) {
+            Text(
+                text = trailing,
+                style = SectionHeaderTextStyle,
+                color = InstUIToggleDetails.textColor,
+            )
+        }
         Icon(
             imageVector = InstUIIcons.chevronDown,
             size = IconSize.Medium,
@@ -106,6 +114,8 @@ private fun SectionHeaderPreview() {
             SectionHeader(label = "Overdue Assignments", expanded = true, onClick = {})
             Separator()
             SectionHeader(label = "Upcoming Assignments", expanded = false, onClick = {})
+            Separator()
+            SectionHeader(label = "Homework", expanded = true, onClick = {}, trailing = "92.5%")
         }
     }
 }

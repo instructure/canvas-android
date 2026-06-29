@@ -336,7 +336,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
+            val visible = isBottomNavigationBarVisible(it)
             binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
             // Request insets reapplication when bottom bar visibility changes
@@ -668,7 +668,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         currentFragment?.let {
-            val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
+            val visible = isBottomNavigationBarVisible(it)
             binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
             ViewCompat.requestApplyInsets(binding.bottomBarContainer)
@@ -1408,6 +1408,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
     private fun isBottomNavFragment(fragment: Fragment?) = fragment?.arguments?.getBoolean(BOTTOM_NAV_SCREEN) == true
+
+    /**
+     * Whether the bottom navigation bar is shown for the given fragment. Fragments can use this to
+     * decide whether they still need to apply the system navigation bar inset themselves (bottom bar
+     * hidden) or whether the bottom bar already clears it (bottom bar visible). Mirrors the condition
+     * used to toggle the bottom bar's visibility on back stack changes.
+     */
+    fun isBottomNavigationBarVisible(fragment: Fragment?): Boolean =
+        isBottomNavFragment(fragment) || supportFragmentManager.backStackEntryCount <= 1
 
     private fun getBottomNavFragmentNames() = navigationBehavior.bottomNavBarFragments.map { it.name }
 

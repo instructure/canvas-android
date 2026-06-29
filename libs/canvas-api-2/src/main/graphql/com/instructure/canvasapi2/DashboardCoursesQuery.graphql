@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query DashboardCoursesQuery($pageSize: Int!) {
+query DashboardCoursesQuery($pageSize: Int!, $userId: ID!) {
     allCourses {
         _id
         name
@@ -25,8 +25,12 @@ query DashboardCoursesQuery($pageSize: Int!) {
             position
             color
             image
+            defaultView
         }
-        enrollmentsConnection(first: 1) {
+        enrollmentsConnection(
+            first: 1
+            filter: { userIds: [$userId], types: [StudentEnrollment, ObserverEnrollment] }
+        ) {
             nodes {
                 _id
                 type

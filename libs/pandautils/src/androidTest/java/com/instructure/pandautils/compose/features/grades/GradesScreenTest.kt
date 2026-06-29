@@ -146,7 +146,7 @@ class GradesScreenTest {
                             expanded = true
                         ),
                         AssignmentGroupUiState(
-                            id = 1,
+                            id = 2,
                             name = "Group 2",
                             assignments = listOf(
                                 AssignmentUiState(

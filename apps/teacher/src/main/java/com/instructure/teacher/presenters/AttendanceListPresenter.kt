@@ -56,6 +56,10 @@ class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private
         if(data.size() == 0) {
             mForceNetwork = forceNetwork
             viewCallback?.launchLTI(mTab)
+        } else {
+            viewCallback?.addSectionMenu(mSelectedSection, mAvailableSections)
+            viewCallback?.updateSectionPicked(mSelectedSection)
+            checkMarkAllVisibility()
         }
     }
 

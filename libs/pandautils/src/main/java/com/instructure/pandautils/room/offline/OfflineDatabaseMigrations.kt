@@ -212,5 +212,11 @@ val offlineDatabaseMigrations = arrayOf(
     },
     createMigration(8, 9) { database ->
         database.execSQL("ALTER TABLE `ScheduleItemEntity` ADD COLUMN `subAssignmentId` INTEGER")
+    },
+    createMigration(9, 10) { database ->
+        database.execSQL("ALTER TABLE `SubmissionCommentEntity` ADD COLUMN `commentAttempt` INTEGER")
+        // Backfill with the existing submission-attempt value so already-cached comments keep their
+        // previous behavior until the next sync replaces them with the comment's own attempt.
+        database.execSQL("UPDATE `SubmissionCommentEntity` SET `commentAttempt` = `attemptId`")
     }
 )

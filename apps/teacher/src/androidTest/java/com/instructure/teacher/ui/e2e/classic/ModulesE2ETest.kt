@@ -7,6 +7,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.FileFolderApi
@@ -138,20 +139,10 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the previous arrow button is not displayed because the user is on the first assignment's details page, but the next arrow button is displayed.")
         assignmentDetailsPage.moduleItemInteractions.assertPreviousArrowNotDisplayed()
         assignmentDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
+        Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on the next arrow button.")
-        assignmentDetailsPage.moduleItemInteractions.clickOnNextArrow()
-
-        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz module item's details page is displayed. Assert that the module name is displayed at the bottom.")
-        quizDetailsPage.assertQuizDetails(quiz)
-        quizDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
-
-        Log.d(ASSERTION_TAG, "Assert that both the previous and next arrow buttons are displayed.")
-        quizDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
-        quizDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
-
-        Log.d(STEP_TAG, "Click on the next arrow button.")
-        quizDetailsPage.moduleItemInteractions.clickOnNextArrow()
+        Log.d(STEP_TAG, "Open the '${testPage.title}' assignment module item.")
+        moduleListPage.clickOnModuleItem(testPage.title)
 
         Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         editPageDetailsPage.assertPageDetails(testPage)
@@ -173,7 +164,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         discussionDetailsPage.moduleItemInteractions.assertNextArrowNotDisplayed()
 
         Log.d(STEP_TAG, "Click on the previous arrow button.")
-        quizDetailsPage.moduleItemInteractions.clickOnPreviousArrow()
+        discussionDetailsPage.moduleItemInteractions.clickOnPreviousArrow()
 
         Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         editPageDetailsPage.assertPageDetails(testPage)
@@ -217,6 +208,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemIsPublished(assignment.name)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.E2E)

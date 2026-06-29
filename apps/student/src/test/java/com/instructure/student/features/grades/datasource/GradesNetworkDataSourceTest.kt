@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -42,8 +43,9 @@ class GradesNetworkDataSourceTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val submissionApi: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
     private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
+    private val gradesGraphQlManager: GradesGraphQlManager = mockk(relaxed = true)
 
-    private val dataSource = GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager)
+    private val dataSource = GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager, gradesGraphQlManager)
 
     @Test
     fun `Get course with grade successfully returns data`() = runTest {
@@ -68,20 +70,14 @@ class GradesNetworkDataSourceTest {
         val expected = listOf(AssignmentGroup(1L), AssignmentGroup(2L))
 
         coEvery {
-            assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns DataResult.Success(expected)
+            gradesGraphQlManager.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
+        } returns expected
 
-        val result = dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+        val result = dataSource.getAssignmentGroupsWithAssignments(
             courseId = 1,
             gradingPeriodId = 1,
-            scopeToStudent = true,
-            forceNetwork = true
+            forceNetwork = true,
+            paginateComments = false
         )
 
         assertEquals(expected, result)
@@ -90,16 +86,10 @@ class GradesNetworkDataSourceTest {
     @Test(expected = IllegalStateException::class)
     fun `Get assignment groups with assignments for grading period failure throws exception`() = runTest {
         coEvery {
-            assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns DataResult.Fail()
+            gradesGraphQlManager.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
+        } throws IllegalStateException()
 
-        dataSource.getAssignmentGroupsWithAssignmentsForGradingPeriod(1, 1, scopeToStudent = true, forceNetwork = true)
+        dataSource.getAssignmentGroupsWithAssignments(1, gradingPeriodId = 1, forceNetwork = true, paginateComments = false)
     }
 
     @Test
@@ -163,19 +153,19 @@ class GradesNetworkDataSourceTest {
         val expected = listOf(AssignmentGroup(1))
 
         coEvery {
-            assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any())
-        } returns DataResult.Success(expected)
+            gradesGraphQlManager.getAssignmentGroupsWithAssignments(any(), any(), any(), any())
+        } returns expected
 
-        val result = dataSource.getAssignmentGroupsWithAssignments(1, true)
+        val result = dataSource.getAssignmentGroupsWithAssignments(1, gradingPeriodId = null, forceNetwork = true, paginateComments = false)
 
         assertEquals(expected, result)
     }
 
     @Test(expected = IllegalStateException::class)
     fun `Get assignment groups with assignments failure throws exception`() = runTest {
-        coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any()) } returns DataResult.Fail()
+        coEvery { gradesGraphQlManager.getAssignmentGroupsWithAssignments(any(), any(), any(), any()) } throws IllegalStateException()
 
-        dataSource.getAssignmentGroupsWithAssignments(1, true)
+        dataSource.getAssignmentGroupsWithAssignments(1, gradingPeriodId = null, forceNetwork = true, paginateComments = false)
     }
 
     @Test

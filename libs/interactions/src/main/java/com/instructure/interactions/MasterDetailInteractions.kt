@@ -22,6 +22,7 @@ import com.instructure.interactions.router.Route
 interface MasterDetailInteractions {
     val isMasterVisible: Boolean
     fun toggleExpandCollapse()
+    fun setMasterPaneExpanded(expanded: Boolean, animate: Boolean) = Unit
     fun addFragment(route: Route)
     fun popFragment(canvasContext: CanvasContext)
 }

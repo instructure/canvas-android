@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">暂时没有公告。</string>
     <string name="noCourses">没有课程</string>
     <string name="noCoursesSubtext">此帐户似乎没有关联任何课程。立即访问网页以创建课程。</string>
+    <string name="coursesWidgetEmptyTitle">欢迎使用 Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">您还没有任何活跃课程，因此暂无消息。注册班级后，您的控制面板将开始出现新活动。</string>
     <string name="noAssignments">无作业</string>
     <string name="noAssignmentsSubtext">该区域似乎没有创建作业。是时候走出户外进行探索了。</string>
     <string name="noAssignmentsTeacher">似乎尚未发布任何作业。</string>
@@ -501,4 +503,15 @@
     <string name="gradePointsAccessibility">等级：%s 分</string>
     <string name="gradePercentTextFieldAccessibility">等级：%d%，%s</string>
     <string name="gradePointsTextFieldAccessibility">等级：%s 分，%s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">帮助我们改进应用</string>
+    <string name="cookieConsentDescription">我们会收集匿名的应用程序数据，以帮助我们的团队发现技术问题并优化应用功能。</string>
+    <string name="cookieConsentNoProfiles">不建立个人档案：我们不会追踪您的身份或展示广告。</string>
+    <string name="cookieConsentNoSelling">不出售数据：您的信息绝不会出售给第三方。</string>
+    <string name="cookieConsentFullControl">全面控制：您可以随时调整设置。</string>
+    <string name="cookieConsentAllow">允许</string>
+    <string name="cookieConsentDecline">拒绝</string>
+    <string name="privacySettingsTitle">隐私设置</string>
+    <string name="privacySettingsToggleLabel">匿名应用程序分析</string>
+    <string name="privacySettingsDescription">分享有关应用性能和功能使用情况的匿名数据。这有助于我们修复漏洞并改进应用程序的整体体验。我们不会收集个人身份信息。</string>
 </resources>

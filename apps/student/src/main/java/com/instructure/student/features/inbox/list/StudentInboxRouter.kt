@@ -16,9 +16,13 @@
  */
 package com.instructure.student.features.inbox.list
 
+import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Conversation
@@ -28,6 +32,7 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteMatcher.openMedia
@@ -69,5 +74,26 @@ class StudentInboxRouter(private val activity: FragmentActivity, private val fra
 
     override fun popDetailsScreen(activity: FragmentActivity?) {
         activity?.onBackPressed()
+    }
+
+    override fun adjustSnackbarForInsets(snackbar: Snackbar) {
+        if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
+        ViewCompat.setOnApplyWindowInsetsListener(snackbar.view) { view, insets ->
+            // The Snackbar resolves its parent to NavigationActivity's fullScreenCoordinatorLayout,
+            // which already sits above the bottom bar, so the bottom inset is consumed (returning
+            // CONSUMED) to avoid an extra bottom margin that would push it too far up. That parent
+            // spans the full width (the horizontal inset is applied to its child instead), so the side
+            // insets are applied here as margins to keep the Snackbar clear of the navigation bar /
+            // display cutout in landscape.
+            val sideInsets = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            (view.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
+                it.leftMargin = sideInsets.left
+                it.rightMargin = sideInsets.right
+                view.layoutParams = it
+            }
+            WindowInsetsCompat.CONSUMED
+        }
     }
 }

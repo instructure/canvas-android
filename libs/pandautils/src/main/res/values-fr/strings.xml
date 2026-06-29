@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Rien n\'a encore été annoncé.</string>
     <string name="noCourses">Aucun cours</string>
     <string name="noCoursesSubtext">Il semblerait qu\'il n\'y ait aucun cours associé à ce compte. Connectez-vous sur le Web pour créer un cours dès aujourd\'hui.</string>
+    <string name="coursesWidgetEmptyTitle">Bienvenue dans Canvas !</string>
+    <string name="coursesWidgetEmptyMessage">Vous n’avez pas de cours actifs pour le moment. C’est pourquoi il ne se passe grand-chose ici. Après votre inscription à un cours, votre tableau de bord commencera à se remplir d’informations concernant vos nouvelles activités.</string>
     <string name="noAssignments">Aucun travail</string>
     <string name="noAssignmentsSubtext">Il semblerait qu\'aucun travail n\'ait été créé dans cet espace. Il est temps de sortir et d\'explorer.</string>
     <string name="noAssignmentsTeacher">Il semble qu\'aucun travail n\'ait encore été publié.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Note : %s points</string>
     <string name="gradePercentTextFieldAccessibility">Note : %d pour cent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Note : %s points, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Aidez-nous à construire une application plus performante</string>
+    <string name="cookieConsentDescription">Nous collectons des données d’application anonymes pour aider notre équipe à identifier les problèmes techniques et optimiser les fonctionnalités des applications.</string>
+    <string name="cookieConsentNoProfiles">Pas de profil personnel : Nous ne collectons pas d’informations permettant de vous identifier et ne diffusons pas de publicités.</string>
+    <string name="cookieConsentNoSelling">Pas de vente de données : Nous ne vendons jamais vos informations à des tiers.</string>
+    <string name="cookieConsentFullControl">Contrôle complet : Vous pouvez régler ces paramètres à tout moment.</string>
+    <string name="cookieConsentAllow">Autoriser</string>
+    <string name="cookieConsentDecline">Refuser</string>
+    <string name="privacySettingsTitle">Paramètres de confidentialité</string>
+    <string name="privacySettingsToggleLabel">Analyses d’application anonymes</string>
+    <string name="privacySettingsDescription">Partagez des données anonymes sur la performance des applications et l’utilisation des fonctionnalités. Cela nous permet de corriger des bogues et d’améliorer l’expérience d’utilisation globale des applications. Nous ne collectons pas d’identifiants personnels.</string>
 </resources>

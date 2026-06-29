@@ -20,6 +20,12 @@ import com.instructure.canvas.espresso.mockcanvas.endpoint
 import com.instructure.canvas.espresso.mockcanvas.utils.Segment
 import com.instructure.canvas.espresso.mockcanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockcanvas.utils.unauthorizedResponse
+import com.instructure.canvasapi2.models.Recipient
+
+private fun List<Recipient>.filterBySearch(search: String?): List<Recipient> {
+    if (search.isNullOrBlank()) return this
+    return filter { it.name?.contains(search, ignoreCase = true) == true }
+}
 
 /**
  * Base endpoint for searches
@@ -32,6 +38,7 @@ object SearchEndpoint : Endpoint(
         configure = {
             GET {
                 val contexts = request.url.queryParameter("context")
+                val search = request.url.queryParameter("search")
                 if(contexts != null) {
                     var courseId = contexts.substringAfter("course_")
 
@@ -39,7 +46,7 @@ object SearchEndpoint : Endpoint(
                         courseId = courseId.substringBefore("_students")
                         if(data.studentRecipients.containsKey(courseId.toLong())) {
                             if(data.coursePermissions[courseId.toLong()]!!.send_messages) {
-                                request.successResponse(data.studentRecipients[courseId.toLong()]!!)
+                                request.successResponse(data.studentRecipients[courseId.toLong()]!!.filterBySearch(search))
                             } else {
                                 // To emulate the recipient end point returning just the author, we'll return the first element
                                 request.successResponse(listOf(data.studentRecipients[courseId.toLong()]!!.first()))
@@ -50,13 +57,13 @@ object SearchEndpoint : Endpoint(
                     } else if (contexts.contains("teachers")) {
                         courseId = courseId.substringBefore("_teachers")
                         if(data.teacherRecipients.containsKey(courseId.toLong())) {
-                            request.successResponse(data.teacherRecipients[courseId.toLong()]!!)
+                            request.successResponse(data.teacherRecipients[courseId.toLong()]!!.filterBySearch(search))
                         } else {
                             request.unauthorizedResponse()
                         }
                     } else {
                         if(data.recipientGroups.containsKey(courseId.toLong())) {
-                            request.successResponse(data.recipientGroups[courseId.toLong()]!!)
+                            request.successResponse(data.recipientGroups[courseId.toLong()]!!.filterBySearch(search))
                         } else {
                             request.unauthorizedResponse()
                         }

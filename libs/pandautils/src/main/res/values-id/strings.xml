@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Belum ada yang diumumkan.</string>
     <string name="noCourses">Tidak Ada Kursus</string>
     <string name="noCoursesSubtext">Sepertinya tidak ada kursus yang diasosiasikan dengan akun ini. Kunjungi web untuk membuat kursus hari ini.</string>
+    <string name="coursesWidgetEmptyTitle">Selamat Datang di Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Anda belum memiliki kursus aktif apa pun — jadi suasana agak sepi di sini. Setelah Anda mendaftar di kelas, dasbor Anda akan mulai terisi dengan aktivitas baru.</string>
     <string name="noAssignments">Tidak Ada Tugas</string>
     <string name="noAssignmentsSubtext">Sepertinya tugas belum dibuat di ruang ini. Saatnya keluar dan menjelajah.</string>
     <string name="noAssignmentsTeacher">Sepertinya belum ada tugas yang diterbitkan.</string>
@@ -510,4 +512,15 @@
     <string name="gradePointsAccessibility">Nilai: %s poin</string>
     <string name="gradePercentTextFieldAccessibility">Nilai: %d persen, %s</string>
     <string name="gradePointsTextFieldAccessibility">Nilai: %s poin, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Bantu kami membangun aplikasi yang lebih baik</string>
+    <string name="cookieConsentDescription">Kami mengumpulkan data aplikasi anonim untuk membantu tim kami mengidentifikasi masalah teknis dan mengoptimalkan fitur aplikasi.</string>
+    <string name="cookieConsentNoProfiles">Tidak Ada Profil Pribadi: Kami tidak melacak identitas Anda atau menampilkan iklan.</string>
+    <string name="cookieConsentNoSelling">Tidak Ada Penjualan Data: Informasi Anda tidak pernah dijual kepada pihak ketiga.</string>
+    <string name="cookieConsentFullControl">Kontrol Penuh: Anda dapat menyesuaikan pengaturan ini kapan saja.</string>
+    <string name="cookieConsentAllow">Izinkan</string>
+    <string name="cookieConsentDecline">Tolak</string>
+    <string name="privacySettingsTitle">Pengaturan Privasi</string>
+    <string name="privacySettingsToggleLabel">Analisis Aplikasi Anonim</string>
+    <string name="privacySettingsDescription">Bagikan data anonim tentang kinerja aplikasi dan penggunaan fitur. Ini membantu kami memperbaiki bug dan meningkatkan pengalaman aplikasi secara keseluruhan. Kami tidak mengumpulkan identitas pribadi.</string>
 </resources>

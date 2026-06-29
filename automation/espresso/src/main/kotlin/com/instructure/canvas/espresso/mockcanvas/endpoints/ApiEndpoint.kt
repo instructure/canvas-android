@@ -339,7 +339,12 @@ object ApiEndpoint : Endpoint(
         Segment("environment") to object : Endpoint(
             response = {
                 GET {
-                    request.successResponse(mapOf("mobile_offline_mode" to data.offlineModeEnabled))
+                    request.successResponse(
+                        mapOf(
+                            "mobile_offline_mode" to data.offlineModeEnabled,
+                            "widget_dashboard" to data.widgetDashboardEnabled
+                        )
+                    )
                 }
             }
         ) {

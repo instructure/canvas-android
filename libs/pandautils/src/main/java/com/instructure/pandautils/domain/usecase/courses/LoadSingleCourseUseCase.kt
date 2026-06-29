@@ -68,7 +68,8 @@ class LoadSingleCourseUseCase @Inject constructor(
             imageUrl = courseNode.imageUrl,
             courseColor = courseNode.dashboardCard?.color,
             isFavorite = courseNode.dashboardCard?.isFavorited == true,
-            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf()
+            enrollments = enrollment?.let { mutableListOf(it) } ?: mutableListOf(),
+            homePage = Course.HomePage.fromApiString(courseNode.dashboardCard?.defaultView)
         )
     }
 

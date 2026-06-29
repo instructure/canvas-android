@@ -250,6 +250,11 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        exoAgent.pause()
+    }
+
     override fun onDetach() {
         exoAgent.release()
         super.onDetach()

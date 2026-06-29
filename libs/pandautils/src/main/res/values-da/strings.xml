@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">Intet er blevet annonceret endnu.</string>
     <string name="noCourses">Ingen kurser</string>
     <string name="noCoursesSubtext">Det ser ud til, at der ikke er nogen fag, der er forbundet med denne konto. Gå på internettet for at oprette et fag i dag.</string>
+    <string name="coursesWidgetEmptyTitle">Velkommen til Canvas!</string>
+    <string name="coursesWidgetEmptyMessage">Du har ingen aktive fag endnu – så her er lidt stille. Når du tilmelder dig et fag, vil din oversigt begynde at fyldes med ny aktivitet.</string>
     <string name="noAssignments">Ingen opgaver</string>
     <string name="noAssignmentsSubtext">Det ser ud til, at opgaver ikke er blevet oprettet i dette rum. Tid til at gå ud og udforske.</string>
     <string name="noAssignmentsTeacher">Det ser ud til, at der ikke er offentliggjort nogen opgaver endnu.</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">Karakter: %s point</string>
     <string name="gradePercentTextFieldAccessibility">Karakter: %d procent, %s</string>
     <string name="gradePointsTextFieldAccessibility">Karakter: %s point, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">Hjælp os med at bygge en bedre app</string>
+    <string name="cookieConsentDescription">Vi indsamler anonyme applikationsdata for at hjælpe vores team med at identificere tekniske problemer og optimere appens funktioner.</string>
+    <string name="cookieConsentNoProfiles">Ingen personlige profiler: Vi sporer ikke din identitet og viser ingen reklamer.</string>
+    <string name="cookieConsentNoSelling">Ingen salg af data: Dine oplysninger sælges aldrig til tredjeparter.</string>
+    <string name="cookieConsentFullControl">Fuld kontrol: Du kan justere disse indstillinger når som helst.</string>
+    <string name="cookieConsentAllow">Tillad</string>
+    <string name="cookieConsentDecline">Afvis</string>
+    <string name="privacySettingsTitle">Privatlivsindstillinger</string>
+    <string name="privacySettingsToggleLabel">Anonym applikationsanalyse</string>
+    <string name="privacySettingsDescription">Del anonyme data om appens ydeevne og brug af funktioner. Dette hjælper os med at rette fejl og forbedre den samlede brugeroplevelse. Vi indsamler ikke personlige identifikatorer.</string>
 </resources>

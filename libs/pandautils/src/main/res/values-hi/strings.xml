@@ -158,6 +158,8 @@
     <string name="noAnnouncementsSubtext">अभी तक कुछ भी घोषित नहीं किया गया है।</string>
     <string name="noCourses">कोई पाठ्यक्रम नहीं</string>
     <string name="noCoursesSubtext">ऐसा लगता है कि इस खाते से जुड़े कोई पाठ्यक्रम नहीं हैं। आज ही पाठ्यक्रम बनाने के लिए वेब पर जाएं।</string>
+    <string name="coursesWidgetEmptyTitle">Canvas में आपका स्वागत है!</string>
+    <string name="coursesWidgetEmptyMessage">अभी आपके पास कोई सक्रिय कोर्स नहीं है, इसलिए यहां थोड़ा सन्नाटा है। एक बार जब आप किसी कक्षा में नामांकन कर ले लेते हैं, तो आपका डैशबोर्ड नई गतिविधियों से भरना शुरू हो जाएगा।</string>
     <string name="noAssignments">कोई असाइनमेंट नहीं</string>
     <string name="noAssignmentsSubtext">ऐसा लगता है कि इस स्थान पर असाइनमेंट नहीं बनाई गई हैं। बाहर जाने और तलाशने का समय आ गया है।</string>
     <string name="noAssignmentsTeacher">ऐसा लगता है कि अभी तक कोई असाइनमेंट प्रकाशित नहीं की गई है।</string>
@@ -509,4 +511,15 @@
     <string name="gradePointsAccessibility">ग्रेड: %s पॉइंट्स</string>
     <string name="gradePercentTextFieldAccessibility">ग्रेड: %d प्रतिशत, %s</string>
     <string name="gradePointsTextFieldAccessibility">ग्रेड: %s पॉइंट्स, %s</string>
+    <!-- Cookie Consent -->
+    <string name="cookieConsentTitle">एक बेहतर ऐप बनाने में हमारी मदद करें</string>
+    <string name="cookieConsentDescription">हम अपनी टीम को तकनीकी मुद्दों की पहचान करने और ऐप फ़ीचर्स को अनुकूलित करने में मदद करने के लिए अनाम ऐप्लिकेशन डेटा एकत्र करते हैं।</string>
+    <string name="cookieConsentNoProfiles">कोई व्यक्तिगत प्रोफ़ाइल नहीं: हम आपकी पहचान को ट्रैक नहीं करते हैं या विज्ञापन नहीं दिखाते हैं।</string>
+    <string name="cookieConsentNoSelling">डेटा बेचना मना है: आपकी जानकारी कभी भी तीसरे पक्ष को नहीं बेची जाती है।</string>
+    <string name="cookieConsentFullControl">पूर्ण नियंत्रण: आप इन सेटिंग्स को किसी भी समय समायोजित कर सकते हैं।</string>
+    <string name="cookieConsentAllow">अनुमति दें</string>
+    <string name="cookieConsentDecline">अस्वीकार करें</string>
+    <string name="privacySettingsTitle">गोपनीयता सेटिंग्स</string>
+    <string name="privacySettingsToggleLabel">अनाम ऐप्लिकेशन एनालिटिक्स</string>
+    <string name="privacySettingsDescription">ऐप प्रदर्शन और फ़ीचर उपयोग के बारे में अनाम डेटा साझा करें। इससे हमें बग्स ठीक करने और ऐप्लिकेशन के समग्र अनुभव को बेहतर बनाने में मदद मिलती है। हम व्यक्तिगत पहचानकर्ता एकत्र नहीं करते हैं।</string>
 </resources>

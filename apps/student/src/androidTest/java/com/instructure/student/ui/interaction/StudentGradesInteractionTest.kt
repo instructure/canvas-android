@@ -20,9 +20,12 @@ import com.instructure.canvas.espresso.common.interaction.GradesInteractionTest
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGradesGraphQlManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.di.graphql.GradesGraphQlModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.GradesGraphQlManager
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
@@ -36,12 +39,16 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(CustomGradeStatusModule::class)
+@UninstallModules(CustomGradeStatusModule::class, GradesGraphQlModule::class)
 class StudentGradesInteractionTest : GradesInteractionTest() {
 
     @BindValue
     @JvmField
     val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
+    @BindValue
+    @JvmField
+    val gradesGraphQlManager: GradesGraphQlManager = FakeGradesGraphQlManager()
 
     private val dashboardPage = DashboardPage()
     private val courseBrowserPage = CourseBrowserPage()
