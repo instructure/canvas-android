@@ -102,18 +102,8 @@ fun convertIso8601ToCanvasFormat(iso8601Date: String): String {
 
 
 fun getDateInCanvasCalendarFormat(dateString: String? = getCurrentDateInIso8601()): String {
-    val calendar = Calendar.getInstance()
-
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-    if(dateString != null) {
-        return if (day in 1..9) formatIso8601ToCustom(dateString, SimpleDateFormat("MMM d", Locale.getDefault()))
-        else formatIso8601ToCustom(dateString, SimpleDateFormat("MMM dd", Locale.getDefault()))
-    }
-
-    var dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
-    if (day in 1..9) dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
-    return dateFormat.format(Date())
+    val dateFormat = SimpleDateFormat("MMM d", Locale.getDefault())
+    return if (dateString != null) formatIso8601ToCustom(dateString, dateFormat) else dateFormat.format(Date())
 }
 
 fun getCurrentDateInIso8601(): String {

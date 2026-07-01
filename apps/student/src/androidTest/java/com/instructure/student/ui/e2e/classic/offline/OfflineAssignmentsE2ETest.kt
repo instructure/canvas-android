@@ -190,7 +190,7 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the assignment '${gradedAssignment.name}' is displayed, " +
                 "while '${notSubmittedAssignment.name}', '${submittedAssignment.name}', and '${otherTypeAssignment.name}' are not displayed on the assignment list.")
 
-        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry block here because the grading status might not be updated to 'Graded' immediately as grading sometimes slow on beta.
+        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { assignmentListPage.refreshAssignmentList() }) { // We need this retry block here because the grading status might not be updated to 'Graded' immediately as grading sometimes slow on beta.
             assignmentListPage.assertHasAssignment(gradedAssignment)
         }
         assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
@@ -266,7 +266,7 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         assignmentDetailsPage.assertStatusGraded()
 
         Log.d(STEP_TAG, "Refresh the page. Assert that the assignment '${submittedAssignment.name}' has been graded with 13 points out of 20 points.")
-        refresh()
+        assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertAssignmentGraded("13")
         assignmentDetailsPage.assertOutOfTextDisplayed("Out of 20 pts")
     }

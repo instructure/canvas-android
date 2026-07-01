@@ -46,7 +46,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.RubricCriterion
 import com.instructure.dataseeding.model.RubricCriterionRating
-import com.instructure.espresso.OnViewWithStringTextIgnoreCase
+import com.instructure.espresso.WaitForViewWithStringTextIgnoreCase
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -69,7 +69,7 @@ import org.hamcrest.Matchers.not
 import java.lang.Thread.sleep
 
 open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
-    private val commentsButton by OnViewWithStringTextIgnoreCase("comments")
+    private val commentsButton by WaitForViewWithStringTextIgnoreCase("comments")
 
     private val submissionCommentsRenderPage = SubmissionCommentsRenderPage()
 

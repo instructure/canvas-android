@@ -164,7 +164,7 @@ class OfflineModulesE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that '${testAssignment1.name}' module item is displayed and open it.")
         modulesPage.assertAndClickModuleItem(testModule1.name, testAssignment1.name, true)
-        assignmentDetailsPage.assertDisplayToolbarTitle(testAssignment1.name)
+        assignmentDetailsPage.assertModulesToolbarTitle(testAssignment1.name)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Not Available Offline' content is displayed.")
         assignmentDetailsPage.assertDetailsNotAvailableOffline()
@@ -202,7 +202,7 @@ class OfflineModulesE2ETest : StudentComposeTest() {
         goToQuizPage.moduleItemInteractions.clickOnNextArrow()
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the corresponding assignment name: '${testAssignment2.name}'.")
-        assignmentDetailsPage.assertDisplayToolbarTitle(testAssignment2.name)
+        assignmentDetailsPage.assertModulesToolbarTitle(testAssignment2.name)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Not Available Offline' content is displayed.")
         assignmentDetailsPage.assertDetailsNotAvailableOffline()

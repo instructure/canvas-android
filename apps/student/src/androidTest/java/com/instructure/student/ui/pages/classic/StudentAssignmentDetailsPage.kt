@@ -95,6 +95,11 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
     }
 
     //OfflineMethod
+    fun assertModulesToolbarTitle(title: String) {
+        onView(withText(title) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
+    }
+
+    //OfflineMethod
     fun assertDetailsNotAvailableOffline() {
         onView(withId(R.id.notAvailableIcon) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
         onView(withId(R.id.title) + withText(R.string.notAvailableOfflineScreenTitle) + withParent(
