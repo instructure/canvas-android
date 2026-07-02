@@ -99,6 +99,15 @@ class AnnouncementsListPage(val searchable: Searchable) : BasePage() {
     }
 
     /**
+     * Assert that there is no announcement with the given name displayed in the list.
+     *
+     * @param announcementName: The announcement name string parameter.
+     */
+    fun assertAnnouncementNotDisplayed(announcementName: String) {
+        onView(withId(R.id.discussionTitle) + withText(announcementName)).check(ViewAssertions.doesNotExist())
+    }
+
+    /**
      * Assert FAB is displayed.
      *
      */

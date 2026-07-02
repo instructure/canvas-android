@@ -22,6 +22,8 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.utils.checkToastText
+import com.instructure.pandautils.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -98,5 +100,15 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Send To...")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
+
+        Log.d(STEP_TAG, "Click on 'Delete' in the more menu and confirm the deletion in the (WebView) confirmation dialog.")
+        announcementDetailsPage.clickOnDeleteMenuButtonAndConfirm()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Announcement deleted.' confirmation toast is displayed.")
+        checkToastText(R.string.utils_announcementDeleted, activityRule.activity)
+
+        Log.d(ASSERTION_TAG, "Assert that we returned to the native Announcement list, the deleted '${announcement.title}' announcement is not displayed any more, but '${announcement2.title}' still is.")
+        announcementsListPage.assertHasAnnouncement(announcement2)
+        announcementsListPage.assertAnnouncementNotDisplayed(announcement.title)
     }
 }
