@@ -18,6 +18,8 @@ package com.instructure.pandautils.navigation
 
 import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
 
 interface WebViewRouter {
 
@@ -32,4 +34,24 @@ interface WebViewRouter {
     fun openLtiScreen(canvasContext: CanvasContext?, url: String)
 
     fun launchInternalWebViewFragment(url: String, canvasContext: CanvasContext?)
+
+    /**
+     * Launches an assignment-based LTI tool (e.g. a New Quiz). Unlike [openLtiScreen]'s sessionless
+     * launch, this uses the pre-fetched [ltiTool] and the assignment-LTI launch flow, which is
+     * required for tools that can collide on URL. Defaults to a sessionless launch for routers that
+     * don't support the richer flow.
+     */
+    fun launchAssignmentLtiTool(
+        canvasContext: CanvasContext?,
+        url: String,
+        title: String?,
+        ltiTool: LTITool?,
+        openInternally: Boolean,
+    ) = openLtiScreen(canvasContext, url)
+
+    /**
+     * Opens a (classic) quiz. Defaults to routing the URL internally; routers that host their own
+     * fragments (e.g. NGC) can override to show the dedicated quiz screen.
+     */
+    fun launchInternalQuiz(canvasContext: CanvasContext?, quiz: Quiz, url: String) = routeInternally(url)
 }

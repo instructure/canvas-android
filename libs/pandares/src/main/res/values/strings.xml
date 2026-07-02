@@ -1472,6 +1472,8 @@
     <string name="quizTimeLimit">Time limit: %s</string>
     <string name="allowedAttempts">Allowed attempts: %s</string>
     <string name="usedAttempts">Attempts used: %d</string>
+    <string name="assignmentAttemptsUnlimited">Unlimited attempts</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d out of %2$d attempts</string>
     <string name="generalUnexpectedError">An unexpected error occurred.</string>
 
     <string name="deleteSelected">Delete</string>

@@ -180,10 +180,13 @@ class StudentAssignmentDetailsSubmissionHandler(
                 lastSubmissionIsDraft = submission?.isDraft ?: false
                 lastSubmissionEntry = submission?.submissionEntry
 
+                // Always reflect the current draft state, including when the last submission/draft
+                // was removed (empty list) — otherwise a deleted draft leaves hasDraft stale at true.
+                setHasDraft(submission?.isDraft ?: false)
+
                 val attempts = getAttempts()
                 submission?.let { dbSubmission ->
                     val isDraft = dbSubmission.isDraft
-                    setHasDraft(isDraft)
 
                     val isActivelyUploading = !isDraft && dbSubmission.submissionState.isActive
                     val hasFailedSubmission = dbSubmission.submissionState == SubmissionState.FAILED || dbSubmission.errorFlag

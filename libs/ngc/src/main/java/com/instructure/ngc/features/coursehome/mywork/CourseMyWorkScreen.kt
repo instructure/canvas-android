@@ -37,8 +37,8 @@ import com.instructure.pandautils.utils.ColorKeeper
 @Composable
 fun CourseMyWorkScreen(
     courseId: Long,
-    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier,
+    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
 ) {
     val gradesViewModel: GradesViewModel = hiltViewModel()
     val uiState by gradesViewModel.uiState.collectAsState()
@@ -51,6 +51,14 @@ fun CourseMyWorkScreen(
                 is GradesViewModelAction.NavigateToAssignmentDetails -> {
                     onAssignmentClick(event.courseId, event.assignmentId)
                 }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        gradesViewModel.events.collect { event ->
+            if (event is GradesViewModelAction.NavigateToAssignmentDetails) {
+                onAssignmentClick(event.courseId, event.assignmentId)
             }
         }
     }

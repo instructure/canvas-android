@@ -24,11 +24,13 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.reminder.ReminderViewState
 import com.instructure.pandautils.utils.ThemedColor
+import java.util.Date
 
 data class AssignmentDetailsUiState(
     val screenState: AssignmentDetailsScreenState = AssignmentDetailsScreenState.Loading,
@@ -42,6 +44,7 @@ data class AssignmentDetailsUiState(
     @DrawableRes val submissionStatusIcon: Int = 0,
     @ColorRes val submissionStatusTint: Int = 0,
     val submissionStatusVisible: Boolean = false,
+    val submissionStateLabel: SubmissionStateLabel? = null,
     val hasDraft: Boolean = false,
     val attempts: List<AssignmentDetailsAttemptViewData> = emptyList(),
     val selectedAttemptPosition: Int = 0,
@@ -53,7 +56,11 @@ data class AssignmentDetailsUiState(
     val submissionTypes: String = "",
     val allowedFileTypes: String = "",
     val quizDetails: QuizViewViewData? = null,
+    // Lock date ("available until") — non-null only when the assignment locks on a specific date.
+    val availableUntilDate: Date? = null,
     val attemptsViewData: AttemptsViewData? = null,
+    // "N out of M attempts" / "Unlimited attempts" for the NGC header.
+    val attemptsText: String = "",
     val descriptionLabelText: String = "",
     val description: String = "",
     val noDescriptionVisible: Boolean = false,
@@ -62,6 +69,10 @@ data class AssignmentDetailsUiState(
     val submitButtonText: String = "",
     val submitEnabled: Boolean = false,
     val submitVisible: Boolean = false,
+    // Attempts-only check (false = used all allowed attempts), independent of online status.
+    val hasRemainingAttempts: Boolean = true,
+    // True for quizzes (classic ONLINE_QUIZ or New Quizzes LTI); these open instead of resubmitting.
+    val isQuiz: Boolean = false,
     val actions: AssignmentDetailsActions = AssignmentDetailsActions(),
     // Navigation — one destination at a time.
     val navigation: AssignmentDetailsNavigation? = null,

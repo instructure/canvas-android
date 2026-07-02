@@ -36,6 +36,14 @@ import com.instructure.pandautils.utils.Const.REPLY_TO_TOPIC
 
 private const val NO_GRADE_INDICATOR = "-"
 
+private const val SECONDS_IN_DAY = 60 * 60 * 24
+
+/**
+ * Number of days a submission is late, derived from its `secondsLate`. Returns null when not late.
+ * Shared so the value is calculated consistently (e.g. SpeedGrader and the assignment grade card).
+ */
+fun getDaysLate(secondsLate: Double?): Float? = secondsLate?.let { (it / SECONDS_IN_DAY).toFloat() }
+
 fun Assignment.getAssignmentIcon() = when {
     Assignment.SubmissionType.ONLINE_QUIZ.apiString in submissionTypesRaw -> R.drawable.ic_quiz
     Assignment.SubmissionType.DISCUSSION_TOPIC.apiString in submissionTypesRaw -> R.drawable.ic_discussion

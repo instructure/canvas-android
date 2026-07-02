@@ -63,6 +63,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -643,16 +644,12 @@ class CanvasWebView @JvmOverloads constructor(
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", HtmlSanitizer.escapeForHtmlContext(title))
-            .replace("{\$BACKGROUND$}", colorResToHexString(colors.backgroundColorRes))
-            .replace("{\$COLOR$}", colorResToHexString(colors.textColor))
-            .replace("{\$LINK_COLOR$}", colorResToHexString(colors.linkColor))
-            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(colors.visitedLinkColor))
+            .replace("{\$BACKGROUND$}", colors.backgroundHex(context))
+            .replace("{\$COLOR$}", colors.textHex(context))
+            .replace("{\$LINK_COLOR$}", colors.linkHex(context))
+            .replace("{\$VISITED_LINK_COLOR\$}", colors.visitedLinkHex(context))
             .replace("{\$FONT_NAME$}", fontName)
             .replace("{\$FONT_PATH$}", fontPath)
-    }
-
-    private fun colorResToHexString(@ColorRes colorRes: Int): String {
-        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
     }
 
     /**
@@ -1075,12 +1072,32 @@ class CanvasWebView @JvmOverloads constructor(
     }
 }
 
+/**
+ * Colors applied to WebView HTML content. By default they resolve from color resources, but each can
+ * be overridden with a resolved [ColorInt] (e.g. a Compose/design-system color) — when an int is
+ * provided it takes precedence over the matching resource, otherwise the resource is used. This lets
+ * callers pass dynamic colors without static resources while leaving resource-based call sites unchanged.
+ */
 data class HtmlFormatColors(
     @ColorRes val backgroundColorRes: Int = R.color.backgroundLightest,
     @ColorRes val textColor: Int = R.color.textDarkest,
     @ColorRes val linkColor: Int = R.color.textInfo,
-    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade
-)
+    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade,
+    @ColorInt val backgroundColorInt: Int? = null,
+    @ColorInt val textColorInt: Int? = null,
+    @ColorInt val linkColorInt: Int? = null,
+    @ColorInt val visitedLinkColorInt: Int? = null,
+) {
+    fun backgroundHex(context: Context): String = hex(context, backgroundColorInt, backgroundColorRes)
+    fun textHex(context: Context): String = hex(context, textColorInt, textColor)
+    fun linkHex(context: Context): String = hex(context, linkColorInt, linkColor)
+    fun visitedLinkHex(context: Context): String = hex(context, visitedLinkColorInt, visitedLinkColor)
+
+    private fun hex(context: Context, @ColorInt colorInt: Int?, @ColorRes colorRes: Int): String {
+        val color = colorInt ?: context.getColor(colorRes)
+        return String.format("#%06X", 0xFFFFFF and color)
+    }
+}
 
 class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
 

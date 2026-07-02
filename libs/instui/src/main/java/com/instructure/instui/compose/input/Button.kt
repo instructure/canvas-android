@@ -19,41 +19,79 @@ package com.instructure.instui.compose.input
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.indicator.Icon
+import com.instructure.instui.compose.indicator.IconSize
+import com.instructure.instui.compose.indicator.Spinner
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIBaseButton
+import com.instructure.instui.token.component.InstUISpinner
 import com.instructure.instui.token.component.InstUIText
-import com.instructure.instui.token.primitives.InstUISizes
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import androidx.compose.material3.Button as M3Button
 
 /**
- * InstUI filled primary button component.
- *
- * Renders a filled primary button using InstUI design system tokens.
- * Width is controlled by the caller via [modifier]; use `Modifier.fillMaxWidth()`
- * for full-width or leave unset for wrap-content.
- *
- * When [loading] is true, a centered circular progress indicator replaces the
- * label and clicks are disabled.
+ * Color set for a [Button] variant, resolved from InstUI tokens.
+ */
+data class ButtonColors(
+    val container: Color,
+    val content: Color,
+    val disabledContainer: Color,
+    val disabledContent: Color,
+)
+
+/**
+ * InstUI button variant. Each variant resolves its colors from [InstUIBaseButton] tokens.
+ */
+enum class ButtonVariant(val colors: @Composable () -> ButtonColors) {
+    Primary(colors = {
+        ButtonColors(
+            container = InstUIBaseButton.primaryBackground,
+            content = InstUIBaseButton.primaryColor,
+            disabledContainer = InstUIBaseButton.primaryDisabledBackgroundColor,
+            disabledContent = InstUIBaseButton.primaryDisabledTextColor,
+        )
+    }),
+    Secondary(colors = {
+        ButtonColors(
+            container = InstUIBaseButton.secondaryBackground,
+            content = InstUIBaseButton.secondaryColor,
+            disabledContainer = InstUIBaseButton.secondaryDisabledBackgroundColor,
+            disabledContent = InstUIBaseButton.secondaryDisabledTextColor,
+        )
+    }),
+    Success(colors = {
+        ButtonColors(
+            container = InstUIBaseButton.successBackground,
+            content = InstUIBaseButton.successColor,
+            disabledContainer = InstUIBaseButton.successDisabledBackgroundColor,
+            disabledContent = InstUIBaseButton.successDisabledTextColor,
+        )
+    }),
+}
+
+/**
+ * InstUI filled button.
  *
  * Usage:
  * ```
- * Button(text = "Submit", onClick = { submit() })
- * Button(text = "Submit", onClick = { submit() }, modifier = Modifier.fillMaxWidth())
- * Button(text = "Submit", onClick = { submit() }, enabled = false)
- * Button(text = "Submit", onClick = { submit() }, loading = true)
+ * Button(text = "Submit assignment", onClick = { ... })
+ * Button(text = "Resubmit", onClick = { ... }, variant = ButtonVariant.Secondary)
+ * Button(text = "Submitting", onClick = { ... }, loading = true)
  * ```
  */
 @Composable
@@ -63,35 +101,42 @@ fun Button(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
+    variant: ButtonVariant = ButtonVariant.Primary,
+    icon: ImageVector? = null,
+    elevation: Dp = 0.dp,
 ) {
-    val contentColor = InstUIBaseButton.primaryColor
-
+    val colors = variant.colors()
     M3Button(
         onClick = onClick,
         enabled = enabled && !loading,
-        modifier = modifier.height(InstUIBaseButton.mediumHeight),
+        modifier = modifier.heightIn(min = InstUIBaseButton.mediumHeight),
         shape = RoundedCornerShape(InstUIBaseButton.borderRadius),
         colors = ButtonDefaults.buttonColors(
-            containerColor = InstUIBaseButton.primaryBackground,
-            contentColor = contentColor,
-            disabledContainerColor = InstUIBaseButton.primaryDisabledBackgroundColor,
-            disabledContentColor = InstUIBaseButton.primaryDisabledTextColor,
+            containerColor = colors.container,
+            contentColor = colors.content,
+            disabledContainerColor = colors.disabledContainer,
+            disabledContentColor = colors.disabledContent,
+        ),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = elevation,
+            pressedElevation = elevation,
+            focusedElevation = elevation,
+            hoveredElevation = elevation,
         ),
     ) {
-        if (loading) {
-            CircularProgressIndicator(
-                color = contentColor,
-                // InstUISizes.size20 = 20.dp (interactive xxs icon size)
-                modifier = Modifier.size(InstUISizes.size20),
-                // No stroke token available; keeping 2.dp as a thin-ring convention for
-                // spinner-in-button. Matches InstUILayoutSizes.BorderWidth.Interactive.focus
-                strokeWidth = InstUILayoutSizes.BorderWidth.Interactive.focus,
-            )
-        } else {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(InstUIBaseButton.gapButtonContentMd),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (loading) {
+                Spinner(size = IconSize.Small.dp, strokeWidth = InstUISpinner.strokeWidthXs, color = colors.content)
+            } else if (icon != null) {
+                Icon(imageVector = icon, tint = colors.content, size = IconSize.Small)
+            }
             Text(
                 text = text,
                 style = InstUIText.contentImportant,
-                color = contentColor,
+                color = if (enabled) colors.content else colors.disabledContent,
             )
         }
     }
@@ -102,15 +147,15 @@ fun Button(
 @Composable
 private fun ButtonPreview() {
     InstUITheme {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
             modifier = Modifier
                 .background(InstUISemanticColors.Background.base())
                 .padding(InstUILayoutSizes.Spacing.SpaceLg.spaceLg),
         ) {
             Button(text = "Submit", onClick = {})
-            Button(text = "Submit", onClick = {}, enabled = false)
-            Button(text = "Submit", onClick = {}, loading = true)
+            Button(text = "Disabled", onClick = {}, enabled = false)
+            Button(text = "Loading", onClick = {}, loading = true)
         }
     }
 }

@@ -107,4 +107,9 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+
+    /* Instrumentation (Compose UI) Test Dependencies */
+    androidTestImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    androidTestImplementation(Libs.COMPOSE_UI_TEST)
+    debugImplementation(Libs.COMPOSE_UI_TEST_MANIFEST)
 }

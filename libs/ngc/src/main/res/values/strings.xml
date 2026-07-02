@@ -25,6 +25,35 @@
     <string name="ngc_courseHomeTabMyWork">My Work</string>
     <string name="ngc_courseHomeTabMore">More</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Available until</string>
+    <string name="ngc_quizSettings">Quiz settings</string>
+    <string name="ngc_submission">Submission</string>
+    <string name="ngc_continueDraft">Continue draft</string>
+    <string name="ngc_assignmentReminder">Assignment Reminder</string>
+    <string name="ngc_classPerformance">Class Performance</string>
+    <string name="ngc_newAttempt">New attempt</string>
+    <string name="ngc_submitAssignment">Submit assignment</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Allowed file types</string>
+    <string name="ngc_noDueDate">No due date</string>
+    <string name="ngc_noAssignmentDescription">No assignment description</string>
+    <string name="ngc_retry">Retry</string>
+    <string name="ngc_finalGrade">Final Grade</string>
+    <string name="ngc_notYetGraded">Not yet graded</string>
+    <string name="ngc_uploadingSubmission">Uploading submission…</string>
+    <string name="ngc_submissionFailed">Submission failed</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Extra Credit</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d day late</item>
+        <item quantity="other">%d days late</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Lowest: %s</string>
+    <string name="ngc_classPerformanceAverage">Avg: %s</string>
+    <string name="ngc_classPerformanceHighest">Highest: %s</string>
+
     <!-- Submission supporting pane -->
     <string name="ngc_submissionSupportingPaneTitle">Additional info</string>
     <string name="ngc_submissionSegmentInstructions">Instructions</string>

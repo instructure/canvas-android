@@ -436,6 +436,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionStatusIcon = submittedStatusIcon,
                 submissionStatusTint = submissionStatusTint,
                 submissionStatusVisible = submissionStatusVisible,
+                submissionStateLabel = submissionStateLabel,
                 fullLocked = true,
                 lockedMessage = lockedMessage,
                 gradeCell = GradeCellViewData(
@@ -533,6 +534,17 @@ class AssignmentDetailsViewModel @Inject constructor(
             resources.getString(R.string.usedAttempts, assignment.submission?.attempt.orDefault())
         ) else null
 
+        // "N out of M attempts" (N = attempts made) or "Unlimited attempts" for the NGC header.
+        val attemptsText = if (assignment.allowedAttempts > 0) {
+            resources.getString(
+                R.string.assignmentAttemptsUsedOfAllowed,
+                assignment.submission?.attempt.orDefault().toInt(),
+                assignment.allowedAttempts.toInt()
+            )
+        } else {
+            resources.getString(R.string.assignmentAttemptsUnlimited)
+        }
+
         val discussionText = assignment.discussionTopicHeader?.message ?: assignment.discussionTopicHeader?.title
         val description = if (assignment.turnInType == Assignment.TurnInType.DISCUSSION && discussionText?.isNotBlank().orDefault()) {
             discussionText
@@ -586,10 +598,13 @@ class AssignmentDetailsViewModel @Inject constructor(
             submissionStatusIcon = submittedStatusIcon,
             submissionStatusTint = submissionStatusTint,
             submissionStatusVisible = submissionStatusVisible,
+            submissionStateLabel = submissionStateLabel,
             lockedMessage = partialLockedMessage,
             submitButtonText = submitButtonText,
             submitEnabled = (submitEnabled && assignmentDetailsRepository.isOnline()) || (submitEnabled && assignment.turnInType == Assignment.TurnInType.DISCUSSION),
             submitVisible = submitVisible,
+            hasRemainingAttempts = submitEnabled,
+            isQuiz = assignment.isQuiz(),
             attempts = attempts,
             selectedAttemptPosition = 0,
             gradeCell = gradeCell,
@@ -600,7 +615,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             noDescriptionVisible = formattedDescription.isEmpty(),
             discussionHeader = discussionHeaderUiState,
             quizDetails = quizViewViewData,
+            availableUntilDate = assignment.lockDate,
             attemptsViewData = attemptsViewData,
+            attemptsText = attemptsText,
             hasDraft = hasDraft,
             baseUrl = assignment.htmlUrl
         )
