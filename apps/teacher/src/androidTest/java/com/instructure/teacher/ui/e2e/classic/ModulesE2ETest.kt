@@ -7,6 +7,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
@@ -209,6 +210,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemIsPublished(assignment.name)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.E2E)
