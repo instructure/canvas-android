@@ -257,8 +257,8 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
         gradesPage.refresh()
         gradesPage.scrollDownScreen()
 
-        Log.d(ASSERTION_TAG, "Assert the 'Card' label is 'Based on graded assignments'.")
-        gradesPage.assertCardText("Based on graded assignments")
+        Log.d(ASSERTION_TAG, "Assert the 'Card' label is 'Total'.")
+        gradesPage.assertCardText("Total")
     }
 
     @E2E
