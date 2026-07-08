@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
@@ -124,10 +125,7 @@ class HorizonActivity : BaseCanvasActivity() {
                     .fromUri(uri)
                     .build()
 
-                navController.navigate(
-                    request,
-                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
-                )
+                navController.navigate(request, navOptions = deepLinkNavOptions())
             }
         }
     }
@@ -156,13 +154,16 @@ class HorizonActivity : BaseCanvasActivity() {
                     .fromUri(htmlUrl)
                     .build()
 
-                navController.navigate(
-                    request,
-                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
-                )
+                navController.navigate(request, navOptions = deepLinkNavOptions())
             }
         }
     }
+
+    private fun deepLinkNavOptions(): NavOptions = NavOptions.Builder()
+        .setLaunchSingleTop(true)
+        .setPopUpTo(navController.graph.findStartDestination().id, false, true)
+        .setRestoreState(true)
+        .build()
 
     private fun hasUnreadPushNotification(extras: Bundle?): Boolean {
         return (extras != null && extras.containsKey(PushExternalReceiver.NEW_PUSH_NOTIFICATION)

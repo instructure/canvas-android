@@ -83,7 +83,6 @@ private fun ConfirmationDialogView(
         onConfirm = onConfirm,
         confirmColor = ButtonColor.Danger,
         dismissLabel = stringResource(R.string.offline_removeSyncedContentCancel),
-        navigationBarColor = null,
         statusBarColor = HorizonColors.Surface.pageSecondary(),
         onDismiss = { navController.popBackStack() },
     ) { contentPadding ->
@@ -106,6 +105,7 @@ private fun DeletingContentView() {
     HorizonScaffold(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = {},
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
