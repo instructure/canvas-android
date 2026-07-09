@@ -23,6 +23,7 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.view.isVisible
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -44,6 +45,30 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     private var html: String? = null
     private var title: String? = null
     private var baseUrl: String? = null
+
+    // A consumer-provided color override (e.g. NGC's design-system colors) is the default appearance.
+    // Captured once so the light/dark switch can temporarily bypass it — otherwise the override would
+    // always win and switching to light would leave the content unchanged.
+    private var defaultHtmlFormatColors: HtmlFormatColors? = null
+    private var defaultColorsCaptured = false
+
+    // Optional consumer overrides for the theme-switch control's colors, so it can match a
+    // design-system surface (e.g. NGC's semantic colors) instead of the default app colors. Null keeps
+    // the default appearance. Two states are needed because the button flips between the dark content
+    // (not switched) and the light content (switched to light). Setting a value re-themes immediately
+    // if the button is already visible.
+    var themeSwitchButtonColors: ThemeSwitchButtonColors? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            reapplyButtonThemeIfVisible()
+        }
+    var themeSwitchButtonColorsSwitched: ThemeSwitchButtonColors? = null
+        set(value) {
+            if (field == value) return
+            field = value
+            reapplyButtonThemeIfVisible()
+        }
 
     var themeSwitched = false
         private set
@@ -76,18 +101,31 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     }
 
     private fun changeButtonTheme() {
-        val background = if (themeSwitched) R.color.white else R.color.backgroundLightest
-        val textColor = if (themeSwitched) R.color.licorice else R.color.textDarkest
+        val override = if (themeSwitched) themeSwitchButtonColorsSwitched else themeSwitchButtonColors
+        val background = override?.surface
+            ?: context.getColor(if (themeSwitched) R.color.white else R.color.backgroundLightest)
+        val foreground = override?.foreground
+            ?: context.getColor(if (themeSwitched) R.color.licorice else R.color.textDarkest)
 
-        setBackgroundColor(context.getColor(background))
-        binding.themeSwitchButton.background = ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchButton.background)
-        ColorUtils.colorIt(context.getColor(textColor), binding.themeSwitchIcon)
+        setBackgroundColor(background)
+        binding.themeSwitchButton.background = ColorUtils.colorIt(foreground, binding.themeSwitchButton.background)
+        ColorUtils.colorIt(foreground, binding.themeSwitchIcon)
 
-        binding.themeSwitchText.setTextColor(context.getColor(textColor))
+        binding.themeSwitchText.setTextColor(foreground)
         binding.themeSwitchText.setText(if (themeSwitched) R.string.switchToDarkMode else R.string.switchToLightMode)
     }
 
+    private fun reapplyButtonThemeIfVisible() {
+        if (binding.themeSwitchButton.isVisible) changeButtonTheme()
+    }
+
     private fun changeContentTheme(html: String, extraFormatting: ((String) -> String)? = null) {
+        // Capture the consumer's override once (before we start toggling it for theme switches).
+        if (!defaultColorsCaptured) {
+            defaultHtmlFormatColors = binding.contentWebView.overrideHtmlFormatColors
+            defaultColorsCaptured = true
+        }
+
         val background = if (themeSwitched) R.color.white else R.color.backgroundLightest
         val textColor = if (themeSwitched) R.color.licorice else R.color.textDarkest
         val htmlFormatColors = HtmlFormatColors(
@@ -97,6 +135,14 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
             visitedLinkColor = if (themeSwitched) R.color.barney else R.color.textMasquerade,
         )
 
+        // When switched to light, use the consumer's light override if it provided one (so the content
+        // matches the consumer's light theme); otherwise fall back to the generic light colors below.
+        // When not switched, keep the consumer's default appearance.
+        binding.contentWebView.overrideHtmlFormatColors = if (themeSwitched) {
+            binding.contentWebView.overrideHtmlFormatColorsSwitched
+        } else {
+            defaultHtmlFormatColors
+        }
         binding.contentWebView.setBackgroundColor(context.getColor(background))
         binding.contentWebView.loadHtml(html, title, baseUrl, htmlFormatColors, extraFormatting)
         postDelayed({
@@ -258,4 +304,11 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     private fun getUserFilesPath(): String {
         return "file://${File(context.filesDir, ApiPrefs.user?.id.toString()).absolutePath}"
     }
+
+    /**
+     * Colors for the theme-switch control: [surface] is the wrapper background the button sits on
+     * (so it can match the WebView content background), [foreground] tints the button's border, icon
+     * and text.
+     */
+    data class ThemeSwitchButtonColors(@ColorInt val surface: Int, @ColorInt val foreground: Int)
 }

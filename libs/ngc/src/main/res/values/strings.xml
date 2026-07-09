@@ -30,6 +30,11 @@
     <string name="ngc_quizSettings">Quiz settings</string>
     <string name="ngc_submission">Submission</string>
     <string name="ngc_continueDraft">Continue draft</string>
+    <string name="ngc_rubric">Rubric</string>
+    <string name="ngc_rubricScore">Score</string>
+    <string name="ngc_instructions">Instructions</string>
+    <!-- Rubric criterion score, e.g. "6 / 6 pts" (assessed / max) -->
+    <string name="ngc_rubricScoreValue">%1$s / %2$s pts</string>
     <string name="ngc_assignmentReminder">Assignment Reminder</string>
     <string name="ngc_classPerformance">Class Performance</string>
     <string name="ngc_newAttempt">New attempt</string>

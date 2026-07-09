@@ -83,6 +83,13 @@ fun NGCAssignmentDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     var showSubmitSheet by remember { mutableStateOf(false) }
+    var showRubricSheet by remember { mutableStateOf(false) }
+    // Rubric is read straight off the loaded assignment + the course's restrict-quantitative-data setting,
+    // so it's keyed on those inputs (not uiState) to recompute exactly when they change.
+    val restrictQuantitativeData = viewModel.currentCourse?.settings?.restrictQuantitativeData == true
+    val rubric = remember(viewModel.assignment, restrictQuantitativeData) {
+        buildNgcRubric(viewModel.assignment, restrictQuantitativeData)
+    }
 
     // Links in the instructions WebView must never load in-place: route internal Canvas URLs to
     // native screens, and open external URLs in a separate WebView fragment (same as Academic).
@@ -171,7 +178,13 @@ fun NGCAssignmentDetailsScreen(
         },
         webViewCallbacks = webViewCallbacks,
         embeddedWebViewCallbacks = embeddedWebViewCallbacks,
+        rubric = rubric,
+        onRubricClick = { showRubricSheet = true },
     )
+
+    if (showRubricSheet && rubric != null) {
+        RubricBottomSheet(rubric = rubric, onDismiss = { showRubricSheet = false })
+    }
 
     if (showSubmitSheet) {
         val assignment = viewModel.assignment

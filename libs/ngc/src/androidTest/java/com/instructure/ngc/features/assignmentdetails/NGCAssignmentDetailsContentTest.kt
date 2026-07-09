@@ -21,6 +21,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Assignment
@@ -33,6 +34,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsUiState
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.utils.ThemedColor
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,7 +49,11 @@ class NGCAssignmentDetailsContentTest {
 
     private val courseColor = ComposeColor(0xFF2573DF)
 
-    private fun setContent(uiState: AssignmentDetailsUiState) {
+    private fun setContent(
+        uiState: AssignmentDetailsUiState,
+        rubric: NgcRubricUiState? = null,
+        onRubricClick: () -> Unit = {},
+    ) {
         composeTestRule.setContent {
             InstUITheme(courseColor = courseColor) {
                 NGCAssignmentDetailsContent(
@@ -57,6 +63,8 @@ class NGCAssignmentDetailsContentTest {
                     onSubmitClick = {},
                     webViewCallbacks = ComposeWebViewCallbacks(),
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(),
+                    rubric = rubric,
+                    onRubricClick = onRubricClick,
                 )
             }
         }
@@ -165,5 +173,36 @@ class NGCAssignmentDetailsContentTest {
         setContent(contentState(gradeCell = gradeCell))
 
         composeTestRule.onNodeWithTag("ngcAssignmentDetails_gradeCard").assertIsDisplayed()
+    }
+
+    @Test
+    fun contentShowsRubricRowAndInvokesClickWhenRubricPresent() {
+        var clicked = false
+        val rubric = NgcRubricUiState(
+            criteria = listOf(
+                NgcRubricCriterion(
+                    title = "Criteria 1",
+                    description = "Use of space",
+                    ratings = listOf(
+                        NgcRubricRating(pointsLabel = "6", title = "Excellent", detail = "Great", isAssessed = true),
+                    ),
+                    assessedScore = "6",
+                    maxScore = "6",
+                    comment = null,
+                ),
+            ),
+        )
+        setContent(contentState(), rubric = rubric, onRubricClick = { clicked = true })
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_rubricRow").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_rubricRow").performClick()
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun contentHidesRubricRowWhenNoRubric() {
+        setContent(contentState(), rubric = null)
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_rubricRow").assertDoesNotExist()
     }
 }
