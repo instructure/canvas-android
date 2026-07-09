@@ -17,20 +17,19 @@
 package com.instructure.student.ui.e2e.compose
 
 import android.util.Log
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.RemoteConfigOverrides
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.dataseeding.api.FeatureFlagsApi
-import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.FEATURE_FLAG_WIDGET_DASHBOARD
 import com.instructure.student.ui.utils.StudentComposeTest
+import com.instructure.student.ui.utils.di.FakeTimeProvider
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLoginWithoutDashboardWait
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -70,40 +69,51 @@ class NewDashboardE2ETest : StudentComposeTest() {
         // both flags are torn down in one place.)
         FeatureFlagsApi.setAccountFeatureFlag(feature = FEATURE_FLAG_WIDGET_DASHBOARD, state = "off")
         RemoteConfigOverrides.clear()
+        FakeTimeProvider.reset()
     }
 
     @E2E
     @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    fun testNewDashboardE2E() {
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    fun testWelcomeWidgetE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
+        FakeTimeProvider.fakeHourOfDay = 12
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        login(student)
+        tokenLoginWithoutDashboardWait(student)
 
         Log.d(ASSERTION_TAG, "Assert that the redesigned (Compose) dashboard is displayed.")
-        composeTestRule.waitUntil(timeoutMillis = 20000) {
-            composeTestRule.onAllNodesWithTag("dashboardPullRefreshIndicator").fetchSemanticsNodes().isNotEmpty()
-        }
-        composeTestRule.onNodeWithTag("dashboardPullRefreshIndicator").assertExists()
-    }
+        newDashboardPage.assertDashboardDisplayed()
 
-    // The standard tokenLogin waits for the classic dashboard view, so skip that wait and let the
-    // assertion wait for the Compose dashboard instead.
-    private fun login(user: CanvasUserApiModel) {
-        tokenLoginWithoutDashboardWait(
-            user.domain,
-            user.token,
-            User(
-                id = user.id,
-                name = user.name,
-                shortName = user.shortName,
-                avatarUrl = user.avatarUrl,
-                effective_locale = "en" // Avoid a locale-driven restart that kills the test process.
-            )
+        Log.d(ASSERTION_TAG, "Assert that the Welcome widget shows an encouragement message.")
+        newDashboardPage.assertWelcomeMessageDisplayed()
+
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        Log.d(ASSERTION_TAG, "Assert that the initial (login-time) greeting matches the afternoon bucket, i.e. no refresh needed.")
+        val initialGreeting = context.getString(R.string.welcomeGreetingAfternoonWithName, student.shortName)
+        newDashboardPage.assertWelcomeGreetingDisplayed(initialGreeting)
+
+        val greetingScenarios = listOf(
+            9 to R.string.welcomeGreetingMorningWithName,
+            19 to R.string.welcomeGreetingEveningWithName,
+            23 to R.string.welcomeGreetingNightWithName
         )
+
+        greetingScenarios.forEach { (hourOfDay, expectedGreetingRes) ->
+            Log.d(STEP_TAG, "Force the device hour-of-day to $hourOfDay and refresh the dashboard.")
+            FakeTimeProvider.fakeHourOfDay = hourOfDay
+            newDashboardPage.refreshDashboard()
+
+            Log.d(ASSERTION_TAG, "Assert that the Welcome widget shows the greeting for hour $hourOfDay.")
+            val expectedGreeting = context.getString(expectedGreetingRes, student.shortName)
+            newDashboardPage.assertWelcomeGreetingDisplayed(expectedGreeting)
+
+            Log.d(ASSERTION_TAG, "Assert that the Welcome widget shows an encouragement message.")
+            newDashboardPage.assertWelcomeMessageDisplayed()
+        }
     }
 }
