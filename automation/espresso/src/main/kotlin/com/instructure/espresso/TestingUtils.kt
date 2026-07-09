@@ -357,19 +357,26 @@ fun getVideoPosition(viewId: Int): String {
 }
 
 /**
- * Notifies React components in a WebView of an input change by dispatching 'input' and 'change' events.
+ * Sets a React-controlled input's value in a WebView and notifies React of the change.
+ * Writes the value through the native prototype setter so React's per-instance value
+ * tracker (used to decide whether to fire onChange) is left stale, guaranteeing a
+ * mismatch is detected regardless of the old/new value (including clearing to "").
+ * Setting `el.value` directly would go through React's own wrapped setter, which keeps
+ * the tracker in sync and would suppress onChange entirely.
  * E.g. Using this on New Login UI page.
  */
-fun notifyReactOfInputChange(cssSelector: String) {
+fun setReactInputValue(cssSelector: String, value: String) {
     onView(withId(R.id.webView)).perform(object : ViewAction {
         override fun getConstraints() = isDisplayed()
-        override fun getDescription() = "Notify React of input change"
+        override fun getDescription() = "Set React input value"
         override fun perform(uiController: UiController, view: View) {
+            val escapedValue = value.replace("\\", "\\\\").replace("'", "\\'")
             (view as WebView).evaluateJavascript("""
                     (function() {
                         var el = document.querySelector('$cssSelector');
                         if (!el) return;
-                        if (el._valueTracker) { el._valueTracker.setValue(''); }
+                        var nativeSetter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el), 'value').set;
+                        nativeSetter.call(el, '$escapedValue');
                         el.dispatchEvent(new Event('input', { bubbles: true }));
                         el.dispatchEvent(new Event('change', { bubbles: true }));
                     })();

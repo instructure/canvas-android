@@ -20,21 +20,19 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.sugar.Web.onWebView
-import androidx.test.espresso.web.webdriver.DriverAtoms.clearElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
-import androidx.test.espresso.web.webdriver.DriverAtoms.webKeys
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.notifyReactOfInputChange
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.setReactInputValue
 import com.instructure.espresso.waitForWebElement
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
@@ -46,8 +44,8 @@ class LoginSignInPage: BasePage() {
     private val PASSWORD_FIELD_CSS = "input[data-testid=\"password-input\"], input[name=\"pseudonym_session[password]\"]"
     private val LOGIN_BUTTON_CSS = "button[data-testid=\"login-button\"], #login_form button[type=\"submit\"]"
     private val FORGOT_PASSWORD_BUTTON_CSS = "a[data-testid=\"forgot-password-link\"]"
-    private val EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___0\"] span[class\$='formFieldMessage']"
-    private val PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___1\"] span[class\$='formFieldMessage']"
+    private val EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_XPATH = "//label[@for='username']//span[contains(@class, 'formFieldMessage')]"
+    private val PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_XPATH = "//label[@for='password']//span[contains(@class, 'formFieldMessage')]"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
@@ -71,11 +69,11 @@ class LoginSignInPage: BasePage() {
     }
 
     private fun emailLoginErrorMessageHolder(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
+        return onWebView().withElement(findElement(Locator.XPATH, EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_XPATH))
     }
 
     private fun passwordLoginErrorMessageHolder(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
+        return onWebView().withElement(findElement(Locator.XPATH, PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_XPATH))
     }
 
     //endregion
@@ -106,16 +104,12 @@ class LoginSignInPage: BasePage() {
 
     private fun enterEmail(email: String) {
         waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, EMAIL_FIELD_CSS, timeoutMillis = 10000)
-        emailField().perform(clearElement())
-        emailField().perform(webKeys(email))
-        notifyReactOfInputChange(EMAIL_FIELD_CSS)
+        setReactInputValue(EMAIL_FIELD_CSS, email)
     }
 
     private fun enterPassword(password: String) {
         waitForWebElement(withId(R.id.webView), Locator.CSS_SELECTOR, PASSWORD_FIELD_CSS, timeoutMillis = 10000)
-        passwordField().perform(clearElement())
-        passwordField().perform(webKeys(password))
-        notifyReactOfInputChange(PASSWORD_FIELD_CSS)
+        setReactInputValue(PASSWORD_FIELD_CSS, password)
     }
 
     private fun clickLoginButton() {
@@ -127,10 +121,12 @@ class LoginSignInPage: BasePage() {
     }
 
     fun assertLoginEmailErrorMessage(emailErrorMessage: String) {
+        waitForWebElement(withId(R.id.webView), Locator.XPATH, EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_XPATH, timeoutMillis = 10000)
         emailLoginErrorMessageHolder().check(webMatches(getText(), containsString(emailErrorMessage)))
     }
 
     fun assertLoginPasswordErrorMessage(passwordErrorMessage: String) {
+        waitForWebElement(withId(R.id.webView), Locator.XPATH, PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_XPATH, timeoutMillis = 10000)
         passwordLoginErrorMessageHolder().check(webMatches(getText(), containsString(passwordErrorMessage)))
     }
 
