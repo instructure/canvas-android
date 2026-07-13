@@ -69,7 +69,17 @@ class JourneyAdapter @Inject constructor(
     journeyRequestInterceptor: JourneyRequestInterceptor,
     journeyAuthenticator: JourneyAuthenticator
 ) : DomainServicesAdapter(
-    File(context.cacheDir, "journey_cache"),
+    File(context.cacheDir, CACHE_DIR_NAME),
     journeyAuthenticator,
     journeyRequestInterceptor
-)
+) {
+    companion object {
+        const val CACHE_DIR_NAME = "journey_cache"
+
+        fun clearCacheDirectory(context: Context) {
+            try {
+                File(context.cacheDir, CACHE_DIR_NAME).deleteRecursively()
+            } catch (_: Exception) { }
+        }
+    }
+}

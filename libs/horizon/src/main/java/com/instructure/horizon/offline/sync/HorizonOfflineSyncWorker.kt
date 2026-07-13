@@ -26,6 +26,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.managers.graphql.horizon.JourneyAuthenticationManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
@@ -47,6 +48,7 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
     private val syncRouter: HorizonSyncRouter,
     private val apiPrefs: ApiPrefs,
     private val crashlytics: FirebaseCrashlytics,
+    private val journeyAuthenticationManager: JourneyAuthenticationManager,
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -74,6 +76,13 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
         }
 
         if (plans.isEmpty()) return Result.success()
+
+        if (journeyAuthenticationManager.getAuthenticationToken(forceRefresh = true) == null) {
+            if (runAttemptCount < MAX_RETRY_ATTEMPTS) return Result.retry()
+            plans.forEach { plan -> courseSyncPlanDao.updateState(plan.courseId, HorizonProgressState.ERROR) }
+            if (!isStopped) showCompletionNotification(plans.size, isSuccess = false)
+            return Result.success()
+        }
 
         return try {
             setForeground(createForegroundInfo(0))
