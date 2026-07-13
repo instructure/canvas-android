@@ -35,12 +35,10 @@ import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Date
 import javax.inject.Inject
 
@@ -89,13 +87,11 @@ class AddSubmissionViewModel @Inject constructor(
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 if (it != Assignment.SubmissionType.ONLINE_UPLOAD && it != Assignment.SubmissionType.ONLINE_TEXT_ENTRY) return@mapNotNull null
 
-                val draft = withContext(Dispatchers.IO) {
-                    createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
-                        assignmentId,
-                        apiPrefs.user?.id.orDefault(),
-                        it.apiString
-                    )
-                }
+                val draft = createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
+                    assignmentId,
+                    apiPrefs.user?.id.orDefault(),
+                    it.apiString
+                )
 
                 val draftDate = getDraftDateString(draft?.lastActivityDate)
                 val draftUiState = DraftUiState(

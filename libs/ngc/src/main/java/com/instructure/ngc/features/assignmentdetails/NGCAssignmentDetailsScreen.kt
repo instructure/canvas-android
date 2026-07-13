@@ -71,16 +71,19 @@ private const val DEFAULT_REMINDER_COLOR = android.graphics.Color.GRAY
  * NGC host for Assignment Details. Reuses the shared [AssignmentDetailsViewModel] (selected via the
  * NGC nav route's SavedStateHandle args) and renders the InstUI [NGCAssignmentDetailsContent].
  *
- * Phase 1: submit opens a bottom sheet that only logs the chosen submission type; outward navigation
- * is logged rather than routed. Reminders reuse the ViewModel's existing dialogs.
+ * Submit opens a bottom sheet of the assignment's submission types; NGC-implemented types (Text Entry,
+ * File Upload) route to the submission screen with that type preselected, others are logged until built.
+ * Reminders reuse the ViewModel's existing dialogs.
  */
 @Composable
 fun NGCAssignmentDetailsScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToTextSubmission: () -> Unit,
+    onNavigateToSubmission: (Assignment.SubmissionType) -> Unit,
     viewModel: AssignmentDetailsViewModel = hiltViewModel(),
+    draftHintsViewModel: NGCSubmitDraftHintsViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val draftHintsUiState by draftHintsViewModel.uiState.collectAsState()
     val context = LocalContext.current
     var showSubmitSheet by remember { mutableStateOf(false) }
     var showRubricSheet by remember { mutableStateOf(false) }
@@ -173,7 +176,10 @@ fun NGCAssignmentDetailsScreen(
                 // Quizzes (and new-quiz LTIs) open the quiz instead of the submit chooser. The
                 // ViewModel decides between a quiz route and an LTI launch, mirroring Academic.
                 assignment?.isQuiz() == true -> uiState.actions.onSubmitClick()
-                else -> showSubmitSheet = true
+                else -> {
+                    draftHintsViewModel.refresh()
+                    showSubmitSheet = true
+                }
             }
         },
         webViewCallbacks = webViewCallbacks,
@@ -196,8 +202,11 @@ fun NGCAssignmentDetailsScreen(
                     SubmitOption(
                         submissionType = type,
                         label = Assignment.submissionTypeToPrettyPrintString(type, context, assignment.ltiToolType()).orEmpty(),
-                        // A saved text draft is offered as "Continue draft" on the Text Entry row.
-                        showDraftHint = type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY && uiState.hasDraft,
+                        showDraftHint = when (type) {
+                            Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> draftHintsUiState.hasTextDraft
+                            Assignment.SubmissionType.ONLINE_UPLOAD -> draftHintsUiState.hasFileDraft
+                            else -> false
+                        },
                     )
                 )
             }
@@ -209,9 +218,11 @@ fun NGCAssignmentDetailsScreen(
             options = options,
             onSelect = { option ->
                 showSubmitSheet = false
-                when (option.submissionType) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> onNavigateToTextSubmission()
-                    else -> Log.d(TAG, "Submission type selected (Phase 1, not routed): ${option.label}")
+                when (val type = option.submissionType) {
+                    // NGC-implemented submission types route to the submission screen with that type preselected.
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    Assignment.SubmissionType.ONLINE_UPLOAD -> onNavigateToSubmission(type)
+                    else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
                 }
             },
             onDismiss = { showSubmitSheet = false },

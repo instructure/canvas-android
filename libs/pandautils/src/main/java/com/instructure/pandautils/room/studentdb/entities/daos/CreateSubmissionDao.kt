@@ -78,7 +78,7 @@ interface CreateSubmissionDao {
     ): LiveData<List<CreateSubmissionEntity>>
 
     @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1 AND submissionType = :submissionType LIMIT 1")
-    fun findDraftSubmissionByAssignmentIdAndType(
+    suspend fun findDraftSubmissionByAssignmentIdAndType(
         assignmentId: Long,
         userId: Long,
         submissionType: String

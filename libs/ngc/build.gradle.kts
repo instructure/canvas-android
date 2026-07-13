@@ -96,6 +96,7 @@ dependencies {
     implementation(Libs.VIEW_MODEL)
     implementation(Libs.HILT_COMPOSE_NAVIGATION)
     implementation(Libs.KOTLIN_SERIALIZABLE)
+    implementation(Libs.GLIDE_COMPOSE)
 
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true

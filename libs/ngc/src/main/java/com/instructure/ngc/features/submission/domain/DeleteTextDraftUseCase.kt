@@ -17,6 +17,7 @@ package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,12 +26,15 @@ import javax.inject.Inject
 class DeleteTextDraftUseCase @Inject constructor(
     private val createSubmissionDao: CreateSubmissionDao,
     private val apiPrefs: ApiPrefs
-) {
-    suspend operator fun invoke(assignmentId: Long) {
+) : BaseUseCase<DeleteTextDraftUseCase.Params, Unit>() {
+
+    data class Params(val assignmentId: Long)
+
+    override suspend fun execute(params: Params) {
         val userId = apiPrefs.user?.id ?: return
         withContext(Dispatchers.IO) {
             createSubmissionDao.deleteDraftByAssignmentIdAndType(
-                assignmentId,
+                params.assignmentId,
                 userId,
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
             )

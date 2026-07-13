@@ -15,6 +15,24 @@
  */
 package com.instructure.ngc.features.submission
 
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+
+data class TextSubmissionUiState(
+    val draftHtml: String = "",
+    // Incremented only on external resets (load, delete-draft, submit success) — not on every
+    // keystroke — so SubmissionTextEntryField can re-seed the RCE without resetting the caret.
+    val contentResetKey: Int = 0,
+)
+
+data class FileSubmissionUiState(
+    val files: List<SubmissionFileUiState> = emptyList(),
+    val allowedExtensions: List<String> = emptyList(),
+    val onFilesPicked: (List<FileSubmitObject>) -> Unit = {},
+    val onFileRemoved: (id: Long) -> Unit = {},
+    val onRetryFile: (id: Long) -> Unit = {},
+)
+
 data class NGCSubmissionUiState(
     val loading: Boolean = true,
     val loadError: String? = null,
@@ -22,15 +40,15 @@ data class NGCSubmissionUiState(
     val courseName: String = "",
     val assignmentName: String = "",
     val dueDateText: String = "",
-    val submissionTypeLabel: String = "",
-    // Authoritative HTML for the RCE editor. Updated on every keystroke so it survives
-    // rotation (the ViewModel is retained). Bumping contentResetKey re-seeds the RCE
-    // on external resets (initial load, delete, submit success) without re-applying html
-    // on every keystroke, which would reset the caret.
-    val draftHtml: String = "",
-    // Incremented ONLY on external resets: initial successful load, onDeleteDraft, and
-    // submit success. Pass-C's SubmissionTextEntryField keys its RCE seed off this value.
-    val contentResetKey: Int = 0,
+
+    // Assignment-allowed ∩ NGC-implemented types. Single-entry = non-interactive type row.
+    val availableTypes: List<Assignment.SubmissionType> = emptyList(),
+    val selectedType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+    val onSubmissionTypeSelected: (Assignment.SubmissionType) -> Unit = {},
+
+    val textState: TextSubmissionUiState = TextSubmissionUiState(),
+    val fileState: FileSubmissionUiState = FileSubmissionUiState(),
+
     val savedAtText: String = "",
     val submitting: Boolean = false,
     val submitEnabled: Boolean = false,

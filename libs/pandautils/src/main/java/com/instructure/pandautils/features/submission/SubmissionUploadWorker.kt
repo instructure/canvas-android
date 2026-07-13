@@ -22,17 +22,26 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -43,7 +52,8 @@ import java.net.URLEncoder
  * Design goals:
  * - No EventBus, no notifications, no Mobius callbacks.
  * - Results are surfaced purely through Room state (CreateSubmissionDao).
- * - Text entry is implemented now; FILE/URL/MEDIA are clear extension points below.
+ * - Text and file entry are both implemented; URL/MEDIA/STUDIO/ANNOTATION are clear
+ *   extension points below.
  *
  * This class is intentionally named [SubmissionUploadWorker] to avoid clashing with
  * the legacy student-app `SubmissionWorker`.
@@ -53,8 +63,10 @@ class SubmissionUploadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val createSubmissionDao: CreateSubmissionDao,
+    private val createFileSubmissionDao: CreateFileSubmissionDao,
     private val apiPrefs: ApiPrefs,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val fileUploadManager: FileUploadManager
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -73,7 +85,8 @@ class SubmissionUploadWorker @AssistedInject constructor(
 
             return when (SubmissionWorkerAction.valueOf(action)) {
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
-                // TODO: add FILE_ENTRY, URL_ENTRY, MEDIA_ENTRY, STUDIO_ENTRY, STUDENT_ANNOTATION
+                SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
+                // TODO: add URL_ENTRY, MEDIA_ENTRY, STUDIO_ENTRY, STUDENT_ANNOTATION
                 //  when those submission types are supported in the NGC experience.
                 else -> Result.failure()
             }
@@ -106,6 +119,129 @@ class SubmissionUploadWorker @AssistedInject constructor(
         )
 
         return handleSubmissionResult(result, submission)
+    }
+
+    internal suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
+        val (completed, pending) = createFileSubmissionDao
+            .findFilesForSubmissionId(submission.id)
+            .partition { it.attachmentId != null }
+
+        val uploadedAttachmentIds = uploadFiles(submission, pending)
+            ?: return failFileSubmission(submission) // Individual file upload failed
+
+        val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
+        val params = RestParams(
+            canvasContext = submission.canvasContext,
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
+        )
+        val result = submissionApi.postSubmissionAttachments(
+            submission.canvasContext.id,
+            submission.assignmentId,
+            Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+            attachmentIds,
+            params
+        )
+
+        return result.dataOrNull?.let {
+            createSubmissionDao.updateProgress(100.0, submission.id)
+            delay(1000)
+            // Clean up temp copies from internal cache before deleting the DB row
+            val allFiles = createFileSubmissionDao.findFilesForSubmissionId(submission.id)
+            allFiles.forEach { file -> file.fullPath?.let { path -> FileUploadUtils.deleteTempFile(path) } }
+            createSubmissionDao.deleteSubmissionById(submission.id)
+            Result.success()
+        } ?: run {
+            failFileSubmission(submission)
+        }
+    }
+
+    private suspend fun uploadFiles(
+        submission: CreateSubmissionEntity,
+        attachments: List<CreateFileSubmissionEntity>
+    ): List<Long>? {
+        val attachmentIds = ArrayList<Long>(attachments.size)
+        val totalFileCount = attachments.size
+        var lastReportedPercent = -1
+
+        attachments.forEachIndexed { index, pendingAttachment ->
+            if (pendingAttachment.name == null || pendingAttachment.size == null ||
+                pendingAttachment.contentType == null || pendingAttachment.fullPath == null
+            ) {
+                handleFileError(submission, index, attachments, null)
+                return null
+            }
+
+            val fso = FileSubmitObject(
+                pendingAttachment.name.orEmpty(),
+                pendingAttachment.size.orDefault(),
+                pendingAttachment.contentType.orEmpty(),
+                pendingAttachment.fullPath.orEmpty()
+            )
+            val config = FileUploadConfig.forSubmission(
+                fso,
+                submission.canvasContext.id,
+                submission.assignmentId
+            )
+
+            fileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
+                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                    // Write aggregated whole-submission progress, throttled to integer-percent changes.
+                    val overall = ((index + progressPercent / 100f) / totalFileCount) * 100f
+                    val overallInt = overall.toInt().coerceIn(1, 99)
+                    if (overallInt > lastReportedPercent) {
+                        // Check cancellation and write progress together, once per percent change.
+                        runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
+                            ?: return false
+                        lastReportedPercent = overallInt
+                        runBlocking { createSubmissionDao.updateProgress(overallInt.toDouble(), submission.id) }
+                    }
+                    return true
+                }
+            }, RestParams(shouldIgnoreToken = true, disableFileVerifiers = false))
+                .onSuccess { attachment ->
+                    createFileSubmissionDao.setFileAttachmentIdAndError(
+                        attachment.id,
+                        false,
+                        null,
+                        pendingAttachment.id
+                    )
+                    attachmentIds.add(attachment.id)
+                }
+                .onFailure {
+                    handleFileError(submission, index, attachments, it?.message)
+                    return null
+                }
+        }
+        return attachmentIds
+    }
+
+    private suspend fun handleFileError(
+        submission: CreateSubmissionEntity,
+        completedCount: Int,
+        attachments: List<CreateFileSubmissionEntity>,
+        errorMessage: String?
+    ) {
+        if (createSubmissionDao.findSubmissionById(submission.id) == null) {
+            return // Not an error if the submission was deleted (cancelled)
+        }
+
+        createSubmissionDao.setSubmissionError(true, submission.id)
+
+        attachments.forEachIndexed { index, file ->
+            if (index >= completedCount) {
+                createFileSubmissionDao.setFileError(true, errorMessage, file.id)
+            }
+        }
+    }
+
+    private suspend fun failFileSubmission(submission: CreateSubmissionEntity): Result {
+        createSubmissionDao.updateProgress(0.0, submission.id)
+        createSubmissionDao.setSubmissionError(true, submission.id)
+        // Restore the draft flag so loadDraft(ONLINE_UPLOAD) can find this submission
+        // after a failed upload, even across process death.
+        createSubmissionDao.setDraft(submission.id, true)
+        return Result.failure()
     }
 
     private suspend fun handleSubmissionResult(

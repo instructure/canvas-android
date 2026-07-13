@@ -17,6 +17,7 @@ package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import kotlinx.coroutines.flow.Flow
@@ -25,13 +26,19 @@ import javax.inject.Inject
 class ObserveSubmissionProgressUseCase @Inject constructor(
     private val createSubmissionDao: CreateSubmissionDao,
     private val apiPrefs: ApiPrefs
-) {
-    operator fun invoke(assignmentId: Long): Flow<CreateSubmissionEntity?> {
+) : BaseFlowUseCase<ObserveSubmissionProgressUseCase.Params, CreateSubmissionEntity?>() {
+
+    data class Params(
+        val assignmentId: Long,
+        val submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+    )
+
+    override fun execute(params: Params): Flow<CreateSubmissionEntity?> {
         val userId = apiPrefs.user?.id ?: 0L
         return createSubmissionDao.findSubmissionByAssignmentIdAndTypeFlow(
-            assignmentId,
+            params.assignmentId,
             userId,
-            Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+            params.submissionType.apiString
         )
     }
 }

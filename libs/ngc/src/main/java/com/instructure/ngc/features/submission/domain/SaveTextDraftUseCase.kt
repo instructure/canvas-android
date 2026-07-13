@@ -16,18 +16,22 @@
 package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.submission.SubmissionUploadHelper
 import javax.inject.Inject
 
 class SaveTextDraftUseCase @Inject constructor(
     private val submissionUploadHelper: SubmissionUploadHelper
-) {
-    suspend operator fun invoke(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        assignmentName: String?,
-        html: String
-    ) {
-        submissionUploadHelper.saveDraft(canvasContext, assignmentId, assignmentName, html)
+) : BaseUseCase<SaveTextDraftUseCase.Params, Unit>() {
+
+    data class Params(
+        val canvasContext: CanvasContext,
+        val assignmentId: Long,
+        val assignmentName: String?,
+        val html: String,
+    )
+
+    override suspend fun execute(params: Params) {
+        submissionUploadHelper.saveDraft(params.canvasContext, params.assignmentId, params.assignmentName, params.html)
     }
 }
