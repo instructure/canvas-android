@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ */
+package com.instructure.horizon.offline
+
+import android.content.ContentResolver
+import android.content.Context
+import android.net.Uri
+import io.mockk.every
+import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TemporaryFolder
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.IOException
+
+class HorizonPendingFileStagingTest {
+
+    @get:Rule
+    val tempFolder = TemporaryFolder()
+
+    private val context: Context = mockk(relaxed = true)
+    private val contentResolver: ContentResolver = mockk(relaxed = true)
+    private val uri: Uri = mockk(relaxed = true)
+
+    private lateinit var staging: HorizonPendingFileStaging
+
+    @Before
+    fun setUp() {
+        every { context.filesDir } returns tempFolder.root
+        every { context.contentResolver } returns contentResolver
+        staging = HorizonPendingFileStaging(context)
+    }
+
+    @Test
+    fun `stage copies uri content into the action directory`() {
+        every { contentResolver.openInputStream(uri) } returns ByteArrayInputStream("hello".toByteArray())
+
+        val file = staging.stage(actionId = 7L, uri = uri, fileName = "doc.txt")
+
+        assertTrue(file.exists())
+        assertEquals("hello", file.readText())
+        assertEquals(pendingRoot().resolve("7/doc.txt").absolutePath, file.absolutePath)
+    }
+
+    @Test(expected = IOException::class)
+    fun `stage throws when the content provider stream cannot be opened`() {
+        every { contentResolver.openInputStream(uri) } returns null
+
+        staging.stage(actionId = 7L, uri = uri, fileName = "doc.txt")
+    }
+
+    @Test
+    fun `filesFor enumerates staged files and is empty when nothing staged`() {
+        every { contentResolver.openInputStream(uri) } returns ByteArrayInputStream("a".toByteArray())
+        staging.stage(actionId = 7L, uri = uri, fileName = "doc.txt")
+
+        assertEquals(listOf("doc.txt"), staging.filesFor(7L).map { it.name })
+        assertTrue(staging.filesFor(99L).isEmpty())
+    }
+
+    @Test
+    fun `delete removes only the target action directory`() {
+        every { contentResolver.openInputStream(uri) } returns ByteArrayInputStream("a".toByteArray()) andThen ByteArrayInputStream("b".toByteArray())
+        staging.stage(actionId = 7L, uri = uri, fileName = "a.txt")
+        staging.stage(actionId = 8L, uri = uri, fileName = "b.txt")
+
+        staging.delete(7L)
+
+        assertFalse(pendingRoot().resolve("7").exists())
+        assertTrue(pendingRoot().resolve("8").exists())
+    }
+
+    @Test
+    fun `deleteOrphans drops directories whose action is not active`() {
+        every { contentResolver.openInputStream(uri) } returns ByteArrayInputStream("a".toByteArray()) andThen ByteArrayInputStream("b".toByteArray())
+        staging.stage(actionId = 7L, uri = uri, fileName = "a.txt")
+        staging.stage(actionId = 8L, uri = uri, fileName = "b.txt")
+        File(pendingRoot(), "junk").mkdirs()
+
+        staging.deleteOrphans(activeActionIds = setOf(7L))
+
+        assertTrue(pendingRoot().resolve("7").exists())
+        assertFalse(pendingRoot().resolve("8").exists())
+        assertFalse(pendingRoot().resolve("junk").exists())
+    }
+
+    private fun pendingRoot() = File(tempFolder.root, "horizon-pending")
+}

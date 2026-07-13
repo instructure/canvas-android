@@ -26,6 +26,7 @@ import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonNotificationStreamItemDao
+import com.instructure.horizon.database.dao.PendingActionDao
 import com.instructure.horizon.database.dao.HorizonSubmissionDao
 import com.instructure.horizon.database.dao.HorizonCourseDao
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
@@ -67,6 +68,7 @@ import com.instructure.horizon.database.entity.HorizonFileSyncPlanEntity
 import com.instructure.horizon.database.entity.HorizonLocalImageEntity
 import com.instructure.horizon.database.entity.HorizonNoteEntity
 import com.instructure.horizon.database.entity.HorizonNotificationStreamItemEntity
+import com.instructure.horizon.database.entity.PendingActionEntity
 import com.instructure.horizon.database.entity.HorizonUserEntity
 import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.entity.HorizonSyncMetadataEntity
@@ -105,8 +107,9 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonNotificationStreamItemEntity::class,
         HorizonAnnouncementEntity::class,
         HorizonAnnouncementCommentEntity::class,
+        PendingActionEntity::class,
     ],
-    version = 1,
+    version = 2,
 )
 abstract class HorizonDatabase : RoomDatabase() {
 
@@ -133,4 +136,5 @@ abstract class HorizonDatabase : RoomDatabase() {
     abstract fun noteDao(): HorizonNoteDao
     abstract fun notificationStreamItemDao(): HorizonNotificationStreamItemDao
     abstract fun announcementDao(): HorizonAnnouncementDao
+    abstract fun pendingActionDao(): PendingActionDao
 }
