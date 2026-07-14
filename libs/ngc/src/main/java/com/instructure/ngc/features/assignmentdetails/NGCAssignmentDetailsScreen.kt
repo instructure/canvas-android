@@ -212,18 +212,25 @@ fun NGCAssignmentDetailsScreen(
                 )
             }
             if (viewModel.isStudioAccepted()) {
-                add(SubmitOption(submissionType = null, label = stringResource(R.string.ngc_studio), showDraftHint = false))
+                // Studio isn't a real assignment submission type; it launches the academic Studio
+                // WebView full-screen over NGC (not the generic submission screen).
+                add(SubmitOption(submissionType = null, label = stringResource(R.string.ngc_studio), showDraftHint = false, isStudio = true))
             }
         }
         SubmitTypeBottomSheet(
             options = options,
             onSelect = { option ->
                 showSubmitSheet = false
-                when (val type = option.submissionType) {
+                val type = option.submissionType
+                when {
+                    // Studio: launch the academic Studio WebView full-screen over NGC (no bottom bar).
+                    option.isStudio -> viewModel.assignment?.let { assignment ->
+                        webViewRouter.launchStudio(viewModel.currentCourse, assignment, viewModel.getStudioLTITool())
+                    }
                     // NGC-implemented submission types route to the submission screen with that type preselected.
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                    Assignment.SubmissionType.ONLINE_UPLOAD,
-                    Assignment.SubmissionType.ONLINE_URL -> onNavigateToSubmission(type)
+                    type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY ||
+                        type == Assignment.SubmissionType.ONLINE_UPLOAD ||
+                        type == Assignment.SubmissionType.ONLINE_URL -> type?.let { onNavigateToSubmission(it) }
                     else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
                 }
             },
@@ -236,6 +243,7 @@ private data class SubmitOption(
     val submissionType: Assignment.SubmissionType?,
     val label: String,
     val showDraftHint: Boolean,
+    val isStudio: Boolean = false,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

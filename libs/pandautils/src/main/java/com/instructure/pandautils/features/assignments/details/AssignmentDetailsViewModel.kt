@@ -830,6 +830,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(showAudioRecording = false) }
     }
 
+    fun getStudioLTITool(): LTITool? = studioLTITool
+
     fun isStudioAccepted(): Boolean {
         if (assignment?.isStudioEnabled == false) return false
 

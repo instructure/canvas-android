@@ -17,6 +17,7 @@
 package com.instructure.pandautils.navigation
 
 import android.os.Bundle
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
@@ -54,4 +55,11 @@ interface WebViewRouter {
      * fragments (e.g. NGC) can override to show the dedicated quiz screen.
      */
     fun launchInternalQuiz(canvasContext: CanvasContext?, quiz: Quiz, url: String) = routeInternally(url)
+
+    /**
+     * Launches the Studio submission flow (external tool WebView). Reuses the academic Studio
+     * implementation. Routers that host their own fragments (e.g. NGC) override this to show the
+     * Studio screen over their content; the default is a no-op for routers that don't support it.
+     */
+    fun launchStudio(canvasContext: CanvasContext?, assignment: Assignment, studioLTITool: LTITool?) {}
 }
