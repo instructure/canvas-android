@@ -205,6 +205,7 @@ fun NGCAssignmentDetailsScreen(
                         showDraftHint = when (type) {
                             Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> draftHintsUiState.hasTextDraft
                             Assignment.SubmissionType.ONLINE_UPLOAD -> draftHintsUiState.hasFileDraft
+                            Assignment.SubmissionType.ONLINE_URL -> draftHintsUiState.hasUrlDraft
                             else -> false
                         },
                     )
@@ -221,7 +222,8 @@ fun NGCAssignmentDetailsScreen(
                 when (val type = option.submissionType) {
                     // NGC-implemented submission types route to the submission screen with that type preselected.
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                    Assignment.SubmissionType.ONLINE_UPLOAD -> onNavigateToSubmission(type)
+                    Assignment.SubmissionType.ONLINE_UPLOAD,
+                    Assignment.SubmissionType.ONLINE_URL -> onNavigateToSubmission(type)
                     else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
                 }
             },

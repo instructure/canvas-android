@@ -19,25 +19,35 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import java.util.Date
 import javax.inject.Inject
 
-class DeleteTextDraftUseCase @Inject constructor(
+/**
+ * Room-only use case: loads the URL-entry draft for an assignment without any network call.
+ * Returns [UrlDraftData] with the url and its real [Date] from the DB, or null if no draft exists.
+ */
+class GetUrlDraftUseCase @Inject constructor(
     private val createSubmissionDao: CreateSubmissionDao,
-    private val apiPrefs: ApiPrefs
-) : BaseUseCase<DeleteTextDraftUseCase.Params, Unit>() {
+    private val apiPrefs: ApiPrefs,
+) : BaseUseCase<GetUrlDraftUseCase.Params, UrlDraftData?>() {
 
     data class Params(val assignmentId: Long)
 
-    override suspend fun execute(params: Params) {
-        val userId = apiPrefs.user?.id ?: return
-        withContext(Dispatchers.IO) {
-            createSubmissionDao.deleteDraftByAssignmentIdAndType(
-                params.assignmentId,
-                userId,
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
-            )
-        }
+    override suspend fun execute(params: Params): UrlDraftData? {
+        val userId = apiPrefs.user?.id ?: return null
+        val draft = createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
+            params.assignmentId,
+            userId,
+            Assignment.SubmissionType.ONLINE_URL.apiString,
+        ) ?: return null
+        return UrlDraftData(
+            url = draft.submissionEntry.orEmpty(),
+            savedAt = draft.lastActivityDate,
+        )
     }
 }
+
+data class UrlDraftData(
+    val url: String,
+    val savedAt: Date?,
+)

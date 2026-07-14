@@ -93,6 +93,7 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
 import com.instructure.ngc.features.submission.file.FileSubmissionContent
 import com.instructure.ngc.features.submission.file.rememberFilePicker
+import com.instructure.ngc.features.submission.url.UrlSubmissionContent
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPane
 import kotlinx.coroutines.launch
 
@@ -143,6 +144,7 @@ fun NGCSubmissionScreen(
                         MainPaneContent(
                             uiState = uiState,
                             onTextChanged = viewModel::onTextChanged,
+                            onUrlChanged = viewModel::onUrlChanged,
                             onDeleteDraft = viewModel::onDeleteDraft,
                             onSubmit = viewModel::onSubmit,
                         )
@@ -198,6 +200,7 @@ fun NGCSubmissionScreen(
                     MainPaneContent(
                         uiState = uiState,
                         onTextChanged = viewModel::onTextChanged,
+                        onUrlChanged = viewModel::onUrlChanged,
                         onDeleteDraft = viewModel::onDeleteDraft,
                         onSubmit = viewModel::onSubmit,
                     )
@@ -211,6 +214,7 @@ fun NGCSubmissionScreen(
 private fun MainPaneContent(
     uiState: NGCSubmissionUiState,
     onTextChanged: (String) -> Unit,
+    onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -258,6 +262,7 @@ private fun MainPaneContent(
                 SubmissionFormContent(
                     uiState = uiState,
                     onTextChanged = onTextChanged,
+                    onUrlChanged = onUrlChanged,
                     onDeleteDraft = onDeleteDraft,
                     onSubmit = onSubmit,
                     modifier = Modifier.fillMaxSize(),
@@ -271,6 +276,7 @@ private fun MainPaneContent(
 private fun SubmissionFormContent(
     uiState: NGCSubmissionUiState,
     onTextChanged: (String) -> Unit,
+    onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -361,6 +367,16 @@ private fun SubmissionFormContent(
                         onRetryFile = uiState.fileState.onRetryFile,
                         allowedExtensions = uiState.fileState.allowedExtensions,
                         enabled = !uiState.submitting,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                Assignment.SubmissionType.ONLINE_URL -> {
+                    UrlSubmissionContent(
+                        url = uiState.urlState.draftUrl,
+                        contentResetKey = uiState.urlState.contentResetKey,
+                        previewUrl = uiState.urlState.previewUrl,
+                        urlError = uiState.urlState.urlError,
+                        onUrlChanged = onUrlChanged,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -498,6 +514,7 @@ private fun SubmissionTypeRow(
 private fun submissionTypeLabel(type: Assignment.SubmissionType): String = when (type) {
     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> stringResource(R.string.ngc_submission_textEntry)
     Assignment.SubmissionType.ONLINE_UPLOAD -> stringResource(R.string.ngc_submission_fileUpload)
+    Assignment.SubmissionType.ONLINE_URL -> stringResource(R.string.websiteUrl)
     else -> type.apiString
 }
 
@@ -510,6 +527,7 @@ private fun MainPaneLoadingPreview() {
         MainPaneContent(
             uiState = NGCSubmissionUiState(loading = true),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -531,6 +549,7 @@ private fun MainPaneLoadedPreview() {
                 submitEnabled = true,
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -547,6 +566,7 @@ private fun MainPaneErrorPreview() {
                 loadError = "Failed to load assignment",
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -572,6 +592,7 @@ private fun MainPaneLoadedDarkPreview() {
                 submitEnabled = false,
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )

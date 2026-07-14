@@ -221,7 +221,7 @@ class GetSubmissionDataUseCaseTest {
         val assignment = Assignment(
             id = assignmentId,
             name = "Multi-type Assignment",
-            // online_quiz and online_url are NOT NGC-implemented, so they must be filtered out
+            // online_quiz is NOT NGC-implemented, so it must be filtered out
             submissionTypesRaw = listOf("online_text_entry", "online_upload", "online_url", "online_quiz"),
             submission = null
         )
@@ -234,7 +234,11 @@ class GetSubmissionDataUseCaseTest {
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         assertEquals(
-            listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.ONLINE_UPLOAD),
+            listOf(
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.ONLINE_UPLOAD,
+                Assignment.SubmissionType.ONLINE_URL,
+            ),
             result.availableTypes
         )
     }
@@ -275,7 +279,7 @@ class GetSubmissionDataUseCaseTest {
         val assignment = Assignment(
             id = assignmentId,
             name = "Non-NGC Assignment",
-            submissionTypesRaw = listOf("online_url", "media_recording"),
+            submissionTypesRaw = listOf("online_quiz", "media_recording"),
             submission = null
         )
         val course = Course(id = courseId, name = "Test Course")

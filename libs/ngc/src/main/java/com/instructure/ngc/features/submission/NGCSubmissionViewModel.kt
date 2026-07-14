@@ -16,6 +16,7 @@
 package com.instructure.ngc.features.submission
 
 import android.content.Context
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,21 +25,23 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.ngc.R
-import com.instructure.ngc.features.submission.domain.DeleteFileDraftUseCase
-import com.instructure.ngc.features.submission.domain.DeleteTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionDataUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionFileStatesUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.ObserveSubmissionProgressUseCase
 import com.instructure.ngc.features.submission.domain.ResumeInFlightSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.RetryFileSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.SaveFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
+import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.isHtmlBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,16 +70,18 @@ class NGCSubmissionViewModel @Inject constructor(
     private val getTextDraftUseCase: GetTextDraftUseCase,
     private val getFileDraftUseCase: GetFileDraftUseCase,
     private val saveTextDraftUseCase: SaveTextDraftUseCase,
-    private val deleteTextDraftUseCase: DeleteTextDraftUseCase,
     private val submitTextUseCase: SubmitTextUseCase,
     private val observeSubmissionProgressUseCase: ObserveSubmissionProgressUseCase,
     private val saveFileDraftUseCase: SaveFileDraftUseCase,
-    private val deleteFileDraftUseCase: DeleteFileDraftUseCase,
     private val submitFilesUseCase: SubmitFilesUseCase,
     private val getSubmissionFileStatesUseCase: GetSubmissionFileStatesUseCase,
     private val getDraftFilesUseCase: GetDraftFilesUseCase,
     private val retryFileSubmissionUseCase: RetryFileSubmissionUseCase,
     private val resumeInFlightSubmissionUseCase: ResumeInFlightSubmissionUseCase,
+    private val getUrlDraftUseCase: GetUrlDraftUseCase,
+    private val saveUrlDraftUseCase: SaveUrlDraftUseCase,
+    private val deleteDraftUseCase: DeleteDraftUseCase,
+    private val submitUrlUseCase: SubmitUrlUseCase,
     private val dateFormatter: SubmissionDateFormatter,
 ) : ViewModel() {
 
@@ -90,15 +95,18 @@ class NGCSubmissionViewModel @Inject constructor(
     // Each submission type keeps its own draft timestamp so switching types shows the right "Saved" time.
     private var textSavedAtText: String = ""
     private var fileSavedAtText: String = ""
+    private var urlSavedAtText: String = ""
 
     private val _uiState = MutableStateFlow(NGCSubmissionUiState())
     val uiState: StateFlow<NGCSubmissionUiState> = _uiState.asStateFlow()
 
     private val pendingTextFlow = MutableStateFlow<String?>(null)
+    private val pendingUrlFlow = MutableStateFlow<String?>(null)
 
     init {
         loadData()
         collectDebouncedTextChanges()
+        collectDebouncedUrlChanges()
     }
 
     private fun loadData() {
@@ -165,9 +173,16 @@ class NGCSubmissionViewModel @Inject constructor(
                 } else {
                     ""
                 }
+                val urlDraft = finalData.draftUrl ?: ""
+                urlSavedAtText = if (defaultType == Assignment.SubmissionType.ONLINE_URL) {
+                    finalData.urlDraftSavedAt?.let { formatSavedAt(it) } ?: ""
+                } else {
+                    ""
+                }
 
                 val initialSavedAtText = when (defaultType) {
                     Assignment.SubmissionType.ONLINE_UPLOAD -> fileSavedAtText
+                    Assignment.SubmissionType.ONLINE_URL -> urlSavedAtText
                     else -> textSavedAtText
                 }
 
@@ -192,8 +207,14 @@ class NGCSubmissionViewModel @Inject constructor(
                             onFileRemoved = ::onFileRemoved,
                             onRetryFile = ::onRetryFile,
                         ),
+                        urlState = state.urlState.copy(
+                            draftUrl = urlDraft,
+                            previewUrl = previewUrlFor(urlDraft),
+                            urlError = urlErrorFor(urlDraft),
+                            contentResetKey = state.urlState.contentResetKey + 1,
+                        ),
                         savedAtText = initialSavedAtText,
-                        submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles),
+                        submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles, urlDraft),
                         onRetry = {},
                     )
                 }
@@ -251,7 +272,7 @@ class NGCSubmissionViewModel @Inject constructor(
                         textSavedAtText = formatSavedAt(Date())
                         _uiState.update { it.copy(savedAtText = textSavedAtText) }
                     } else {
-                        deleteTextDraftUseCase(DeleteTextDraftUseCase.Params(assignmentId))
+                        deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
                         textSavedAtText = ""
                         _uiState.update { it.copy(savedAtText = "") }
                     }
@@ -263,10 +284,64 @@ class NGCSubmissionViewModel @Inject constructor(
         _uiState.update { state ->
             state.copy(
                 textState = state.textState.copy(draftHtml = html),
-                submitEnabled = computeSubmitEnabled(state.selectedType, html, state.fileState.files),
+                submitEnabled = computeSubmitEnabled(state.selectedType, html, state.fileState.files, state.urlState.draftUrl),
             )
         }
         pendingTextFlow.value = html
+    }
+
+    private fun collectDebouncedUrlChanges() {
+        viewModelScope.launch {
+            pendingUrlFlow
+                .filterNotNull()
+                .debounce(400)
+                .distinctUntilChanged()
+                .collectLatest { url ->
+                    // Skip a stale debounced write/preview if a submit or delete already reset the
+                    // field within the 400ms window — otherwise it would re-save the draft and snap
+                    // the preview back to the previously-typed URL.
+                    if (_uiState.value.submitting || url != _uiState.value.urlState.draftUrl) return@collectLatest
+                    // Recompute the preview here (not on every keystroke) so the WebView only
+                    // (re)loads once typing settles, avoiding reload thrash while the user types.
+                    val preview = previewUrlFor(url)
+                    if (url.isNotBlank()) {
+                        saveUrlDraftUseCase(
+                            SaveUrlDraftUseCase.Params(
+                                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                                assignmentId = assignmentId,
+                                assignmentName = assignmentName,
+                                url = url,
+                            )
+                        )
+                        urlSavedAtText = formatSavedAt(Date())
+                        _uiState.update {
+                            it.copy(
+                                savedAtText = urlSavedAtText,
+                                urlState = it.urlState.copy(previewUrl = preview),
+                            )
+                        }
+                    } else {
+                        deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_URL))
+                        urlSavedAtText = ""
+                        _uiState.update {
+                            it.copy(
+                                savedAtText = "",
+                                urlState = it.urlState.copy(previewUrl = ""),
+                            )
+                        }
+                    }
+                }
+        }
+    }
+
+    fun onUrlChanged(url: String) {
+        _uiState.update { state ->
+            state.copy(
+                urlState = state.urlState.copy(draftUrl = url, urlError = urlErrorFor(url)),
+                submitEnabled = computeSubmitEnabled(state.selectedType, state.textState.draftHtml, state.fileState.files, url),
+            )
+        }
+        pendingUrlFlow.value = url
     }
 
     fun onDeleteDraft() {
@@ -275,7 +350,7 @@ class NGCSubmissionViewModel @Inject constructor(
             when (_uiState.value.selectedType) {
                 Assignment.SubmissionType.ONLINE_UPLOAD -> {
                     val filesToDelete = _uiState.value.fileState.files.map { it.fullPath }
-                    deleteFileDraftUseCase(DeleteFileDraftUseCase.Params(assignmentId))
+                    deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))
                     filesToDelete.forEach { path -> path?.let { FileUploadUtils.deleteTempFile(it) } }
                     fileSavedAtText = ""
                     _uiState.update { state ->
@@ -286,8 +361,24 @@ class NGCSubmissionViewModel @Inject constructor(
                         )
                     }
                 }
+                Assignment.SubmissionType.ONLINE_URL -> {
+                    deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_URL))
+                    urlSavedAtText = ""
+                    _uiState.update { state ->
+                        state.copy(
+                            urlState = state.urlState.copy(
+                                draftUrl = "",
+                                previewUrl = "",
+                                urlError = null,
+                                contentResetKey = state.urlState.contentResetKey + 1,
+                            ),
+                            savedAtText = "",
+                            submitEnabled = false,
+                        )
+                    }
+                }
                 else -> {
-                    deleteTextDraftUseCase(DeleteTextDraftUseCase.Params(assignmentId))
+                    deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
                     textSavedAtText = ""
                     _uiState.update { state ->
                         state.copy(
@@ -309,6 +400,7 @@ class NGCSubmissionViewModel @Inject constructor(
         _uiState.update { it.copy(submitting = true, errorMessage = null) }
         when (_uiState.value.selectedType) {
             Assignment.SubmissionType.ONLINE_UPLOAD -> submitFiles()
+            Assignment.SubmissionType.ONLINE_URL -> submitUrl()
             else -> submitText()
         }
     }
@@ -357,6 +449,71 @@ class NGCSubmissionViewModel @Inject constructor(
                             textState = state.textState.copy(
                                 draftHtml = "",
                                 contentResetKey = state.textState.contentResetKey + 1,
+                            ),
+                            savedAtText = "",
+                            submitEnabled = false,
+                            submissionSuccess = true,
+                            onSubmissionSuccessHandled = {
+                                _uiState.update { s -> s.copy(submissionSuccess = false) }
+                            },
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                setSubmissionError()
+            }
+        }
+    }
+
+    private fun submitUrl() {
+        val currentUrl = normalizeUrlForSubmit(_uiState.value.urlState.draftUrl)
+        viewModelScope.launch {
+            try {
+                submitUrlUseCase(
+                    SubmitUrlUseCase.Params(
+                        canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                        assignmentId = assignmentId,
+                        assignmentName = assignmentName,
+                        url = currentUrl,
+                        attempt = lastAttempt,
+                    )
+                )
+
+                var seenNonNull = false
+                var terminalIsSuccess = false
+                observeSubmissionProgressUseCase(
+                    ObserveSubmissionProgressUseCase.Params(
+                        assignmentId = assignmentId,
+                        submissionType = Assignment.SubmissionType.ONLINE_URL,
+                    )
+                )
+                    .first { entity ->
+                        when {
+                            entity == null && seenNonNull -> { terminalIsSuccess = true; true }
+                            entity != null -> {
+                                seenNonNull = true
+                                when {
+                                    entity.errorFlag -> true
+                                    (entity.progress ?: 0f) == 100.0f -> { terminalIsSuccess = true; true }
+                                    else -> false
+                                }
+                            }
+                            else -> false
+                        }
+                    }
+
+                if (!terminalIsSuccess) {
+                    setSubmissionError()
+                } else {
+                    urlSavedAtText = ""
+                    _uiState.update { state ->
+                        state.copy(
+                            submitting = false,
+                            urlState = state.urlState.copy(
+                                draftUrl = "",
+                                previewUrl = "",
+                                urlError = null,
+                                contentResetKey = state.urlState.contentResetKey + 1,
                             ),
                             savedAtText = "",
                             submitEnabled = false,
@@ -497,7 +654,26 @@ class NGCSubmissionViewModel @Inject constructor(
                             selectedType = type,
                             fileState = state.fileState.copy(files = files),
                             savedAtText = fileSavedAtText,
-                            submitEnabled = computeSubmitEnabled(type, state.textState.draftHtml, files),
+                            submitEnabled = computeSubmitEnabled(type, state.textState.draftHtml, files, state.urlState.draftUrl),
+                        )
+                    }
+                }
+                Assignment.SubmissionType.ONLINE_URL -> {
+                    // Load the URL draft on demand (Room-only, no network).
+                    val urlDraft = getUrlDraftUseCase(GetUrlDraftUseCase.Params(assignmentId))
+                    val url = urlDraft?.url ?: ""
+                    urlSavedAtText = urlDraft?.savedAt?.let { formatSavedAt(it) } ?: ""
+                    _uiState.update { state ->
+                        state.copy(
+                            selectedType = type,
+                            urlState = state.urlState.copy(
+                                draftUrl = url,
+                                previewUrl = previewUrlFor(url),
+                                urlError = urlErrorFor(url),
+                                contentResetKey = state.urlState.contentResetKey + 1,
+                            ),
+                            savedAtText = urlSavedAtText,
+                            submitEnabled = computeSubmitEnabled(type, state.textState.draftHtml, state.fileState.files, url),
                         )
                     }
                 }
@@ -516,7 +692,7 @@ class NGCSubmissionViewModel @Inject constructor(
                                 contentResetKey = state.textState.contentResetKey + 1,
                             ),
                             savedAtText = textSavedAtText,
-                            submitEnabled = computeSubmitEnabled(type, html, state.fileState.files),
+                            submitEnabled = computeSubmitEnabled(type, html, state.fileState.files, state.urlState.draftUrl),
                         )
                     }
                 }
@@ -563,7 +739,7 @@ class NGCSubmissionViewModel @Inject constructor(
                 if (remaining.none { it.fullPath == path }) FileUploadUtils.deleteTempFile(path)
             }
             if (snapshot.isEmpty()) {
-                deleteFileDraftUseCase(DeleteFileDraftUseCase.Params(assignmentId))
+                deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))
                 fileSavedAtText = ""
                 _uiState.update { state ->
                     state.copy(
@@ -588,7 +764,7 @@ class NGCSubmissionViewModel @Inject constructor(
                     state.copy(
                         fileState = state.fileState.copy(files = updatedFiles),
                         savedAtText = fileSavedAtText,
-                        submitEnabled = computeSubmitEnabled(state.selectedType, state.textState.draftHtml, updatedFiles),
+                        submitEnabled = computeSubmitEnabled(state.selectedType, state.textState.draftHtml, updatedFiles, state.urlState.draftUrl),
                     )
                 }
             }
@@ -644,10 +820,46 @@ class NGCSubmissionViewModel @Inject constructor(
     private fun computeSubmitEnabled(
         type: Assignment.SubmissionType,
         html: String,
-        files: List<SubmissionFileUiState>
+        files: List<SubmissionFileUiState>,
+        url: String = "",
     ): Boolean = when (type) {
         Assignment.SubmissionType.ONLINE_UPLOAD -> files.isNotEmpty()
+        Assignment.SubmissionType.ONLINE_URL -> url.isNotBlank() && urlErrorFor(url) == null
         else -> !isHtmlBlank(html)
+    }
+
+    /**
+     * Returns an inline error message for [url], or null when the field is blank or a valid web URL.
+     * A scheme-less host (e.g. "example.com") is accepted; the scheme is added on submit.
+     */
+    private fun urlErrorFor(url: String): String? {
+        val trimmed = url.trim()
+        if (trimmed.isBlank()) return null
+        return if (PatternsCompat.WEB_URL.matcher(trimmed).matches()) {
+            null
+        } else {
+            context.getString(R.string.submissionUrlNotAUrlError)
+        }
+    }
+
+    /** Prepends `https://` when the URL has no scheme, matching the legacy submit behavior. */
+    private fun normalizeUrlForSubmit(raw: String): String {
+        val trimmed = raw.trim()
+        if (trimmed.isEmpty()) return trimmed
+        val hasScheme = trimmed.startsWith("http://", ignoreCase = true) ||
+            trimmed.startsWith("https://", ignoreCase = true)
+        return if (hasScheme) trimmed else "https://$trimmed"
+    }
+
+    /**
+     * The https-normalized URL to render in the preview WebView, or blank when there is nothing to
+     * preview: empty/invalid input, or a cleartext `http://` URL (which a WebView cannot load).
+     */
+    private fun previewUrlFor(url: String): String {
+        val trimmed = url.trim()
+        if (trimmed.isBlank() || urlErrorFor(trimmed) != null) return ""
+        val normalized = normalizeUrlForSubmit(trimmed)
+        return if (normalized.startsWith("http://", ignoreCase = true)) "" else normalized
     }
 
     private fun formatSavedAt(date: Date): String {

@@ -34,13 +34,13 @@ import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class DeleteFileDraftUseCaseTest {
+class DeleteDraftUseCaseTest {
 
     private val createSubmissionDao: CreateSubmissionDao = mockk()
     private val apiPrefs: ApiPrefs = mockk()
     private val testDispatcher = UnconfinedTestDispatcher()
 
-    private val useCase = DeleteFileDraftUseCase(createSubmissionDao, apiPrefs)
+    private val useCase = DeleteDraftUseCase(createSubmissionDao, apiPrefs)
 
     private val userId = 7L
     private val assignmentId = 42L
@@ -60,15 +60,23 @@ class DeleteFileDraftUseCaseTest {
     }
 
     @Test
-    fun `invoke - calls deleteDraftByAssignmentIdAndType with ONLINE_UPLOAD type`() = runTest {
-        useCase(DeleteFileDraftUseCase.Params(assignmentId))
+    fun `invoke - deletes the draft for the requested submission type`() = runTest {
+        val types = listOf(
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            Assignment.SubmissionType.ONLINE_URL,
+            Assignment.SubmissionType.ONLINE_UPLOAD,
+        )
 
-        coVerify {
-            createSubmissionDao.deleteDraftByAssignmentIdAndType(
-                assignmentId,
-                userId,
-                Assignment.SubmissionType.ONLINE_UPLOAD.apiString
-            )
+        types.forEach { type ->
+            useCase(DeleteDraftUseCase.Params(assignmentId, type))
+
+            coVerify {
+                createSubmissionDao.deleteDraftByAssignmentIdAndType(
+                    assignmentId,
+                    userId,
+                    type.apiString
+                )
+            }
         }
     }
 
@@ -76,7 +84,7 @@ class DeleteFileDraftUseCaseTest {
     fun `invoke - does nothing when user is null`() = runTest {
         every { apiPrefs.user } returns null
 
-        useCase(DeleteFileDraftUseCase.Params(assignmentId))
+        useCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_URL))
 
         coVerify(exactly = 0) { createSubmissionDao.deleteDraftByAssignmentIdAndType(any(), any(), any()) }
     }

@@ -15,25 +15,30 @@
  */
 package com.instructure.ngc.features.submission.domain
 
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.domain.usecase.BaseUseCase
-import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.features.submission.SubmissionUploadHelper
 import javax.inject.Inject
 
-class DeleteFileDraftUseCase @Inject constructor(
-    private val createSubmissionDao: CreateSubmissionDao,
-    private val apiPrefs: ApiPrefs
-) : BaseUseCase<DeleteFileDraftUseCase.Params, Unit>() {
+class SubmitUrlUseCase @Inject constructor(
+    private val submissionUploadHelper: SubmissionUploadHelper
+) : BaseUseCase<SubmitUrlUseCase.Params, Unit>() {
 
-    data class Params(val assignmentId: Long)
+    data class Params(
+        val canvasContext: CanvasContext,
+        val assignmentId: Long,
+        val assignmentName: String?,
+        val url: String,
+        val attempt: Long?,
+    )
 
     override suspend fun execute(params: Params) {
-        val userId = apiPrefs.user?.id ?: return
-        createSubmissionDao.deleteDraftByAssignmentIdAndType(
-            params.assignmentId,
-            userId,
-            Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+        submissionUploadHelper.startUrlSubmission(
+            canvasContext = params.canvasContext,
+            assignmentId = params.assignmentId,
+            assignmentName = params.assignmentName,
+            url = params.url,
+            attempt = params.attempt ?: 1L,
         )
     }
 }

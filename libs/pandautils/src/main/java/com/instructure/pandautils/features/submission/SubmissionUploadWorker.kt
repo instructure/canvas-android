@@ -86,7 +86,8 @@ class SubmissionUploadWorker @AssistedInject constructor(
             return when (SubmissionWorkerAction.valueOf(action)) {
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
                 SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
-                // TODO: add URL_ENTRY, MEDIA_ENTRY, STUDIO_ENTRY, STUDENT_ANNOTATION
+                SubmissionWorkerAction.URL_ENTRY -> uploadUrl(submission)
+                // TODO: add MEDIA_ENTRY, STUDIO_ENTRY, STUDENT_ANNOTATION
                 //  when those submission types are supported in the NGC experience.
                 else -> Result.failure()
             }
@@ -115,6 +116,24 @@ class SubmissionUploadWorker @AssistedInject constructor(
             submission.assignmentId,
             Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
             textToSubmit,
+            params
+        )
+
+        return handleSubmissionResult(result, submission)
+    }
+
+    internal suspend fun uploadUrl(submission: CreateSubmissionEntity): Result {
+        val params = RestParams(
+            canvasContext = submission.canvasContext,
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
+        )
+
+        val result = submissionApi.postUrlSubmission(
+            submission.canvasContext.id,
+            submission.assignmentId,
+            Assignment.SubmissionType.ONLINE_URL.apiString,
+            submission.submissionEntry.orEmpty(),
             params
         )
 

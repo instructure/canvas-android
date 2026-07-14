@@ -20,14 +20,14 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
-import com.instructure.ngc.features.submission.domain.DeleteFileDraftUseCase
-import com.instructure.ngc.features.submission.domain.DeleteTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.FileDraftData
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionDataUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionFileStatesUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.ObserveSubmissionProgressUseCase
 import com.instructure.ngc.features.submission.domain.ResumeInFlightSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.RetryFileSubmissionUseCase
@@ -35,9 +35,12 @@ import com.instructure.ngc.features.submission.domain.SaveFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmissionData
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
+import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
+import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
 import com.instructure.ngc.features.submission.domain.TextDraftData
+import com.instructure.ngc.features.submission.domain.UrlDraftData
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.utils.FileUploadUtils
 import io.mockk.coEvery
@@ -76,16 +79,18 @@ class NGCSubmissionViewModelTest {
     private val getTextDraftUseCase: GetTextDraftUseCase = mockk()
     private val getFileDraftUseCase: GetFileDraftUseCase = mockk()
     private val saveTextDraftUseCase: SaveTextDraftUseCase = mockk()
-    private val deleteTextDraftUseCase: DeleteTextDraftUseCase = mockk()
     private val submitTextUseCase: SubmitTextUseCase = mockk()
     private val observeSubmissionProgressUseCase: ObserveSubmissionProgressUseCase = mockk()
     private val saveFileDraftUseCase: SaveFileDraftUseCase = mockk()
-    private val deleteFileDraftUseCase: DeleteFileDraftUseCase = mockk()
     private val submitFilesUseCase: SubmitFilesUseCase = mockk()
     private val getSubmissionFileStatesUseCase: GetSubmissionFileStatesUseCase = mockk()
     private val getDraftFilesUseCase: GetDraftFilesUseCase = mockk()
     private val retryFileSubmissionUseCase: RetryFileSubmissionUseCase = mockk()
     private val resumeInFlightSubmissionUseCase: ResumeInFlightSubmissionUseCase = mockk()
+    private val getUrlDraftUseCase: GetUrlDraftUseCase = mockk()
+    private val saveUrlDraftUseCase: SaveUrlDraftUseCase = mockk()
+    private val deleteDraftUseCase: DeleteDraftUseCase = mockk()
+    private val submitUrlUseCase: SubmitUrlUseCase = mockk()
 
     private val stubDateFormatter = object : SubmissionDateFormatter {
         override fun formatDateTime(context: Context, date: Date) = "Jun 19, 10:00 AM"
@@ -105,6 +110,7 @@ class NGCSubmissionViewModelTest {
         // Safe defaults so tests that don't exercise type-switching don't fail on unmatched calls
         coEvery { getTextDraftUseCase(any()) } returns null
         coEvery { getFileDraftUseCase(any()) } returns FileDraftData(emptyList(), null)
+        coEvery { getUrlDraftUseCase(any()) } returns null
     }
 
     @After
@@ -232,7 +238,7 @@ class NGCSubmissionViewModelTest {
     fun `onTextChanged blank html - clears submitEnabled immediately`() = runTest {
         val data = minimalSubmissionData(draftHtml = "<p>Old draft</p>", draftSavedAt = Date())
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteTextDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -271,7 +277,7 @@ class NGCSubmissionViewModelTest {
     fun `onTextChanged blank html - deletes draft and clears savedAtText after debounce`() = runTest {
         val data = minimalSubmissionData(draftHtml = "<p>Old draft</p>", draftSavedAt = Date())
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteTextDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -283,14 +289,14 @@ class NGCSubmissionViewModelTest {
 
         assertTrue(vm.uiState.value.savedAtText.isEmpty())
         assertFalse(vm.uiState.value.submitEnabled)
-        coVerify { deleteTextDraftUseCase(DeleteTextDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY)) }
     }
 
     @Test
     fun `onTextChanged empty string - deletes draft after debounce`() = runTest {
         val data = minimalSubmissionData()
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteTextDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
 
         val vm = createViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -299,7 +305,7 @@ class NGCSubmissionViewModelTest {
         advanceTimeBy(500)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { deleteTextDraftUseCase(DeleteTextDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY)) }
         assertFalse(vm.uiState.value.submitEnabled)
     }
 
@@ -330,7 +336,7 @@ class NGCSubmissionViewModelTest {
     fun `onDeleteDraft - clears draftHtml, savedAtText, submitEnabled, and bumps contentResetKey`() = runTest {
         val data = minimalSubmissionData(draftHtml = "<p>Draft</p>", draftSavedAt = Date())
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteTextDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -346,7 +352,7 @@ class NGCSubmissionViewModelTest {
         assertTrue(state.savedAtText.isEmpty())
         assertFalse(state.submitEnabled)
         assertEquals(keyBefore + 1, state.textState.contentResetKey)
-        coVerify { deleteTextDraftUseCase(DeleteTextDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY)) }
     }
 
     // -------------------------------------------------------------------------
@@ -661,16 +667,18 @@ class NGCSubmissionViewModelTest {
             getTextDraftUseCase = getTextDraftUseCase,
             getFileDraftUseCase = getFileDraftUseCase,
             saveTextDraftUseCase = saveTextDraftUseCase,
-            deleteTextDraftUseCase = deleteTextDraftUseCase,
             submitTextUseCase = submitTextUseCase,
             observeSubmissionProgressUseCase = observeSubmissionProgressUseCase,
             saveFileDraftUseCase = saveFileDraftUseCase,
-            deleteFileDraftUseCase = deleteFileDraftUseCase,
             submitFilesUseCase = submitFilesUseCase,
             getSubmissionFileStatesUseCase = getSubmissionFileStatesUseCase,
             getDraftFilesUseCase = getDraftFilesUseCase,
             retryFileSubmissionUseCase = retryFileSubmissionUseCase,
             resumeInFlightSubmissionUseCase = resumeInFlightSubmissionUseCase,
+            getUrlDraftUseCase = getUrlDraftUseCase,
+            saveUrlDraftUseCase = saveUrlDraftUseCase,
+            deleteDraftUseCase = deleteDraftUseCase,
+            submitUrlUseCase = submitUrlUseCase,
             dateFormatter = formatter,
         )
         testDispatcher.scheduler.advanceUntilIdle()
@@ -852,7 +860,7 @@ class NGCSubmissionViewModelTest {
             fileDraftSavedAt = Date(),
         )
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteFileDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -862,7 +870,7 @@ class NGCSubmissionViewModelTest {
         vm.uiState.value.fileState.onFileRemoved(fileId)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { deleteFileDraftUseCase(DeleteFileDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD)) }
         assertTrue(vm.uiState.value.fileState.files.isEmpty())
         assertFalse(vm.uiState.value.submitEnabled)
     }
@@ -876,7 +884,7 @@ class NGCSubmissionViewModelTest {
             fileDraftSavedAt = Date(),
         )
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteFileDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -885,7 +893,7 @@ class NGCSubmissionViewModelTest {
         vm.uiState.value.fileState.onFileRemoved(fileId)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { deleteFileDraftUseCase(DeleteFileDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD)) }
         assertTrue(vm.uiState.value.fileState.files.isEmpty())
         assertFalse(vm.uiState.value.submitEnabled)
         assertTrue(vm.uiState.value.savedAtText.isEmpty())
@@ -1198,7 +1206,7 @@ class NGCSubmissionViewModelTest {
     // -------------------------------------------------------------------------
 
     @Test
-    fun `onDeleteDraft for ONLINE_UPLOAD - calls deleteFileDraftUseCase and clears file state`() = runTest {
+    fun `onDeleteDraft for ONLINE_UPLOAD - calls deleteDraftUseCase and clears file state`() = runTest {
         val fileId = 50L
         val data = minimalSubmissionData(
             availableTypes = listOf(Assignment.SubmissionType.ONLINE_UPLOAD),
@@ -1206,7 +1214,7 @@ class NGCSubmissionViewModelTest {
             fileDraftSavedAt = Date(),
         )
         coEvery { getSubmissionDataUseCase(any()) } returns data
-        coJustRun { deleteFileDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
         every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
 
         val vm = createViewModel()
@@ -1215,7 +1223,7 @@ class NGCSubmissionViewModelTest {
         vm.onDeleteDraft()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { deleteFileDraftUseCase(DeleteFileDraftUseCase.Params(assignmentId)) }
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD)) }
         assertTrue(vm.uiState.value.fileState.files.isEmpty())
         assertFalse(vm.uiState.value.submitEnabled)
     }
@@ -1281,7 +1289,7 @@ class NGCSubmissionViewModelTest {
         vm.uiState.value.fileState.onFileRemoved(file.id)
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify(exactly = 0) { deleteFileDraftUseCase(any()) }
+        coVerify(exactly = 0) { deleteDraftUseCase(any()) }
         coVerify(exactly = 0) { saveFileDraftUseCase(any()) }
     }
 
@@ -1585,6 +1593,208 @@ class NGCSubmissionViewModelTest {
     // Helpers
     // -------------------------------------------------------------------------
 
+    // -------------------------------------------------------------------------
+    // Website URL submission
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `onUrlChanged valid url - enables submit, no error, saves url draft after debounce`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onUrlChanged("https://example.com")
+
+        assertTrue(vm.uiState.value.submitEnabled)
+        assertNull(vm.uiState.value.urlState.urlError)
+
+        advanceTimeBy(500)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { saveUrlDraftUseCase(match { it.url == "https://example.com" && it.assignmentId == assignmentId }) }
+        // Preview URL is computed on the debounce, not per keystroke.
+        assertEquals("https://example.com", vm.uiState.value.urlState.previewUrl)
+    }
+
+    @Test
+    fun `onUrlChanged scheme-less url - preview is https-normalized after debounce`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onUrlChanged("example.com")
+        advanceTimeBy(500)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals("https://example.com", vm.uiState.value.urlState.previewUrl)
+    }
+
+    @Test
+    fun `onUrlChanged cleartext http url - no preview`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onUrlChanged("http://example.com")
+        advanceTimeBy(500)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // A WebView cannot load cleartext http://, so no preview is shown (submit is still allowed).
+        assertTrue(vm.uiState.value.urlState.previewUrl.isEmpty())
+        assertTrue(vm.uiState.value.submitEnabled)
+    }
+
+    @Test
+    fun `onUrlChanged invalid url - disables submit and sets urlError`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        every { context.getString(any()) } returns "Please enter a valid URL"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onUrlChanged("not a url")
+
+        assertFalse(vm.uiState.value.submitEnabled)
+        assertNotNull(vm.uiState.value.urlState.urlError)
+    }
+
+    @Test
+    fun `onSubmit url success - sets submissionSuccess, clears url, bumps contentResetKey`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL),
+            draftUrl = "https://mysite.com",
+            urlDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { submitUrlUseCase(any()) }
+        val successEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "online_url",
+            userId = 1L,
+            progress = 100.0f,
+            errorFlag = false,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_URL)
+            )
+        } returns flowOf(successEntity)
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val keyBefore = vm.uiState.value.urlState.contentResetKey
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertTrue(state.submissionSuccess)
+        assertFalse(state.submitting)
+        assertTrue(state.urlState.draftUrl.isEmpty())
+        assertEquals(keyBefore + 1, state.urlState.contentResetKey)
+    }
+
+    @Test
+    fun `onSubmit url - submits normalized https url from scheme-less host`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        coJustRun { submitUrlUseCase(any()) }
+        val successEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "online_url",
+            userId = 1L,
+            progress = 100.0f,
+            errorFlag = false,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_URL)
+            )
+        } returns flowOf(successEntity)
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onUrlChanged("example.com")
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { submitUrlUseCase(match { it.url == "https://example.com" }) }
+    }
+
+    @Test
+    fun `onSubmissionTypeSelected url - loads url draft and shows saved timestamp`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.ONLINE_URL,
+            ),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getUrlDraftUseCase(any()) } returns UrlDraftData(url = "https://saved.com", savedAt = Date())
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.ONLINE_URL)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertEquals(Assignment.SubmissionType.ONLINE_URL, state.selectedType)
+        assertEquals("https://saved.com", state.urlState.draftUrl)
+        assertTrue(state.savedAtText.isNotEmpty())
+        assertTrue(state.submitEnabled)
+    }
+
+    @Test
+    fun `onDeleteDraft within debounce window - stale debounce does not re-save or restore preview`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.ONLINE_URL),
+            draftUrl = "https://old.com",
+            urlDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { saveUrlDraftUseCase(any()) }
+        coJustRun { deleteDraftUseCase(any()) }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "online_url")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Edit (schedules a debounced save + preview), then delete before the debounce fires.
+        vm.onUrlChanged("https://new.com")
+        vm.onDeleteDraft()
+        advanceTimeBy(500)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // The stale debounce must be skipped: no re-save, and the preview stays cleared.
+        coVerify(exactly = 0) { saveUrlDraftUseCase(any()) }
+        assertTrue(vm.uiState.value.urlState.previewUrl.isEmpty())
+        assertTrue(vm.uiState.value.urlState.draftUrl.isEmpty())
+    }
+
     private fun createViewModel(submissionType: String? = null): NGCSubmissionViewModel {
         val args = mutableMapOf<String, Any?>(
             NGCSubmissionViewModel.ARG_COURSE_ID to courseId,
@@ -1599,16 +1809,18 @@ class NGCSubmissionViewModelTest {
             getTextDraftUseCase = getTextDraftUseCase,
             getFileDraftUseCase = getFileDraftUseCase,
             saveTextDraftUseCase = saveTextDraftUseCase,
-            deleteTextDraftUseCase = deleteTextDraftUseCase,
             submitTextUseCase = submitTextUseCase,
             observeSubmissionProgressUseCase = observeSubmissionProgressUseCase,
             saveFileDraftUseCase = saveFileDraftUseCase,
-            deleteFileDraftUseCase = deleteFileDraftUseCase,
             submitFilesUseCase = submitFilesUseCase,
             getSubmissionFileStatesUseCase = getSubmissionFileStatesUseCase,
             getDraftFilesUseCase = getDraftFilesUseCase,
             retryFileSubmissionUseCase = retryFileSubmissionUseCase,
             resumeInFlightSubmissionUseCase = resumeInFlightSubmissionUseCase,
+            getUrlDraftUseCase = getUrlDraftUseCase,
+            saveUrlDraftUseCase = saveUrlDraftUseCase,
+            deleteDraftUseCase = deleteDraftUseCase,
+            submitUrlUseCase = submitUrlUseCase,
             dateFormatter = stubDateFormatter,
         )
     }
@@ -1622,6 +1834,8 @@ class NGCSubmissionViewModelTest {
         draftFiles: List<SubmissionFileData> = emptyList(),
         fileDraftSavedAt: Date? = null,
         allowedExtensions: List<String> = emptyList(),
+        draftUrl: String? = null,
+        urlDraftSavedAt: Date? = null,
     ) = SubmissionData(
         assignmentName = assignmentName,
         courseName = courseName,
@@ -1634,6 +1848,8 @@ class NGCSubmissionViewModelTest {
         draftFiles = draftFiles,
         fileDraftSavedAt = fileDraftSavedAt,
         allowedExtensions = allowedExtensions,
+        draftUrl = draftUrl,
+        urlDraftSavedAt = urlDraftSavedAt,
     )
 
     private fun sampleFileData(

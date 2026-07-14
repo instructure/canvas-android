@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,6 +33,7 @@ import javax.inject.Inject
 data class NGCSubmitDraftHintsUiState(
     val hasTextDraft: Boolean = false,
     val hasFileDraft: Boolean = false,
+    val hasUrlDraft: Boolean = false,
 )
 
 /**
@@ -47,6 +49,7 @@ class NGCSubmitDraftHintsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getTextDraftUseCase: GetTextDraftUseCase,
     private val getFileDraftUseCase: GetFileDraftUseCase,
+    private val getUrlDraftUseCase: GetUrlDraftUseCase,
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) ?: 0L
@@ -74,9 +77,15 @@ class NGCSubmitDraftHintsViewModel @Inject constructor(
             }.getOrNull()
             val hasFileDraft = fileDraft != null && fileDraft.files.isNotEmpty()
 
+            val urlDraft = runCatching {
+                getUrlDraftUseCase(GetUrlDraftUseCase.Params(assignmentId))
+            }.getOrNull()
+            val hasUrlDraft = urlDraft != null
+
             _uiState.value = NGCSubmitDraftHintsUiState(
                 hasTextDraft = hasTextDraft,
                 hasFileDraft = hasFileDraft,
+                hasUrlDraft = hasUrlDraft,
             )
         }
     }

@@ -19,8 +19,10 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.ngc.features.submission.domain.FileDraftData
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.TextDraftData
+import com.instructure.ngc.features.submission.domain.UrlDraftData
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -43,6 +45,7 @@ class NGCSubmitDraftHintsViewModelTest {
 
     private val getTextDraftUseCase: GetTextDraftUseCase = mockk()
     private val getFileDraftUseCase: GetFileDraftUseCase = mockk()
+    private val getUrlDraftUseCase: GetUrlDraftUseCase = mockk()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val assignmentId = 99L
@@ -50,6 +53,7 @@ class NGCSubmitDraftHintsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        coEvery { getUrlDraftUseCase(any()) } returns null
     }
 
     @After
@@ -61,6 +65,7 @@ class NGCSubmitDraftHintsViewModelTest {
         savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to assignmentId)),
         getTextDraftUseCase = getTextDraftUseCase,
         getFileDraftUseCase = getFileDraftUseCase,
+        getUrlDraftUseCase = getUrlDraftUseCase,
     )
 
     @Test
@@ -107,6 +112,20 @@ class NGCSubmitDraftHintsViewModelTest {
 
         assertFalse(vm.uiState.value.hasTextDraft)
         assertTrue(vm.uiState.value.hasFileDraft)
+    }
+
+    @Test
+    fun `uiState reflects url draft when one exists`() = runTest {
+        coEvery { getTextDraftUseCase(any()) } returns null
+        coEvery { getFileDraftUseCase(any()) } returns FileDraftData(emptyList(), null)
+        coEvery { getUrlDraftUseCase(any()) } returns UrlDraftData(url = "https://example.com", savedAt = Date())
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.hasUrlDraft)
+        assertFalse(vm.uiState.value.hasTextDraft)
+        assertFalse(vm.uiState.value.hasFileDraft)
     }
 
     @Test

@@ -33,6 +33,18 @@ data class FileSubmissionUiState(
     val onRetryFile: (id: Long) -> Unit = {},
 )
 
+data class UrlSubmissionUiState(
+    val draftUrl: String = "",
+    // https-normalized URL rendered in the preview WebView; blank while typing settles, for invalid
+    // input, and for cleartext http:// URLs (which a WebView cannot load). Updated by the debounce.
+    val previewUrl: String = "",
+    // Inline error message shown under the field (e.g. "not a valid URL"); null when valid/blank.
+    val urlError: String? = null,
+    // Incremented only on external resets (load, delete-draft, submit success, type switch) — not on
+    // every keystroke — so UrlSubmissionContent can re-seed the field without resetting the caret.
+    val contentResetKey: Int = 0,
+)
+
 data class NGCSubmissionUiState(
     val loading: Boolean = true,
     val loadError: String? = null,
@@ -48,6 +60,7 @@ data class NGCSubmissionUiState(
 
     val textState: TextSubmissionUiState = TextSubmissionUiState(),
     val fileState: FileSubmissionUiState = FileSubmissionUiState(),
+    val urlState: UrlSubmissionUiState = UrlSubmissionUiState(),
 
     val savedAtText: String = "",
     val submitting: Boolean = false,

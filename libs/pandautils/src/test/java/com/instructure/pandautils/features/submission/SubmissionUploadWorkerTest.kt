@@ -78,6 +78,14 @@ class SubmissionUploadWorkerTest {
         submissionType = "online_upload",
         userId = 7L,
     )
+    private val urlSubmission = CreateSubmissionEntity(
+        id = 3L,
+        assignmentId = 99L,
+        canvasContext = course,
+        submissionType = "online_url",
+        userId = 7L,
+        submissionEntry = "https://www.instructure.com"
+    )
 
     @Before
     fun setUp() {
@@ -163,6 +171,54 @@ class SubmissionUploadWorkerTest {
                 assignmentId = textSubmission.assignmentId,
                 submissionType = "online_text_entry",
                 text = any(),
+                restParams = any<RestParams>()
+            )
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // uploadUrl
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `uploadUrl success calls updateProgress(100) and deleteSubmissionById, returns Result_success`() = runTest {
+        coEvery {
+            submissionApi.postUrlSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Success(Submission(id = 1L))
+
+        val result = worker.uploadUrl(urlSubmission)
+
+        coVerify { createSubmissionDao.updateProgress(100.0, urlSubmission.id) }
+        coVerify { createSubmissionDao.deleteSubmissionById(urlSubmission.id) }
+        assertEquals(Result.success(), result)
+    }
+
+    @Test
+    fun `uploadUrl API failure calls setSubmissionError(true) and returns Result_failure`() = runTest {
+        coEvery {
+            submissionApi.postUrlSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Fail()
+
+        val result = worker.uploadUrl(urlSubmission)
+
+        coVerify { createSubmissionDao.setSubmissionError(true, urlSubmission.id) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadUrl posts the raw url with correct ids and online_url type`() = runTest {
+        coEvery {
+            submissionApi.postUrlSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Success(Submission(id = 1L))
+
+        worker.uploadUrl(urlSubmission)
+
+        coVerify {
+            submissionApi.postUrlSubmission(
+                contextId = course.id,
+                assignmentId = urlSubmission.assignmentId,
+                submissionType = "online_url",
+                url = "https://www.instructure.com",
                 restParams = any<RestParams>()
             )
         }
