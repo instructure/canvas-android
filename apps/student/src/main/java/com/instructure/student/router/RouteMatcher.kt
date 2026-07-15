@@ -833,7 +833,7 @@ object RouteMatcher : BaseRouteMatcher() {
             } else {
                 // This is either a group file (which have no permissions), or a file that is accessible by the user
                 if (networkStateProvider?.isOnline() == true) {
-                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
+                    openMedia(activity, fileFolder.contentType!!, forwardLocationParam(fileFolder.url!!, route), fileFolder.displayName!!, route, fileID)
                 } else {
                     openLocalMedia(activity, fileFolder.contentType, fileFolder.url, fileFolder.displayName, fileID, route.canvasContext!!)
                 }

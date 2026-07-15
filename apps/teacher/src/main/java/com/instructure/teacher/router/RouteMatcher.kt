@@ -845,7 +845,7 @@ object RouteMatcher : BaseRouteMatcher() {
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
+                    openMedia(activity, fileFolder.contentType!!, forwardLocationParam(fileFolder.url!!, route), fileFolder.displayName!!, route, fileID)
                 }
             }
         }
