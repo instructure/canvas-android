@@ -9,6 +9,7 @@ Operational commands are available as skills in `.claude/skills/`:
 - `/test` - Unit and instrumentation test commands
 - `/deploy` - Device deployment and ADB commands
 - `/pr` - Pull request creation guidelines
+- `/release` - Start a release or hotfix (branch, version bump, release PR)
 
 Use these skills when you need specific command references.
 
