@@ -20,6 +20,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,7 +35,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -64,6 +64,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -86,9 +87,6 @@ import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
 import com.instructure.instui.compose.indicator.ProgressCircle
 import com.instructure.instui.compose.input.Button
-import com.instructure.instui.compose.list.ListItem
-import com.instructure.instui.compose.list.ListItemLeading
-import com.instructure.instui.compose.list.ListItemTrailing
 import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.compose.navigation.TopBar
 import com.instructure.instui.compose.text.Heading
@@ -101,9 +99,11 @@ import com.instructure.instui.token.icon.check
 import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.icon.chevronLeft
 import com.instructure.instui.token.icon.chevronRight
+import com.instructure.instui.token.icon.circleCheck
 import com.instructure.instui.token.icon.clipboardPenLine
 import com.instructure.instui.token.icon.hourglass
 import com.instructure.instui.token.icon.lock
+import com.instructure.instui.token.icon.messageCircle
 import com.instructure.instui.token.icon.paperclip
 import com.instructure.instui.token.icon.plus
 import com.instructure.instui.token.icon.star
@@ -151,6 +151,10 @@ fun NGCAssignmentDetailsContent(
     modifier: Modifier = Modifier,
     rubric: NgcRubricUiState? = null,
     onRubricClick: () -> Unit = {},
+    previewState: NgcSubmissionPreviewUiState = NgcSubmissionPreviewUiState.NoPreview,
+    onShowMore: () -> Unit = {},
+    onCommentsClick: () -> Unit = {},
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit = { _, _, _, _ -> },
 ) {
     val courseColor = LocalCourseColor.current
     val onColor = InstUISemanticColors.Text.onColor()
@@ -233,6 +237,10 @@ fun NGCAssignmentDetailsContent(
                         embeddedWebViewCallbacks = embeddedWebViewCallbacks,
                         rubric = rubric,
                         onRubricClick = onRubricClick,
+                        previewState = previewState,
+                        onShowMore = onShowMore,
+                        onCommentsClick = onCommentsClick,
+                        onFullScreenMedia = onFullScreenMedia,
                         contentBottomPadding = if (showSubmitButton) submitBarHeight else 0.dp,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -281,6 +289,10 @@ private fun ContentBody(
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks,
     rubric: NgcRubricUiState?,
     onRubricClick: () -> Unit,
+    previewState: NgcSubmissionPreviewUiState,
+    onShowMore: () -> Unit,
+    onCommentsClick: () -> Unit,
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit,
     modifier: Modifier = Modifier,
     contentBottomPadding: Dp = 0.dp,
 ) {
@@ -339,10 +351,24 @@ private fun ContentBody(
                         )
                     }
                 }
-                // Submission section (with the attempt selector). Only shown once submitted; the
-                // submission preview will be added here later.
+                // Submission section: attempt selector + inline preview of the selected attempt,
+                // with the rubric/comments cells. Before a submission exists there's nothing to
+                // preview, so the rubric row stands alone here (same position as the submission
+                // section) rather than mid-screen.
                 if (uiState.attempts.isNotEmpty()) {
-                    add { SubmissionSection(uiState) }
+                    add {
+                        SubmissionSection(
+                            uiState = uiState,
+                            previewState = previewState,
+                            rubric = rubric,
+                            onShowMore = onShowMore,
+                            onRubricClick = onRubricClick,
+                            onCommentsClick = onCommentsClick,
+                            onFullScreenMedia = onFullScreenMedia,
+                        )
+                    }
+                } else if (rubric != null) {
+                    add { RubricRow(onRubricClick) }
                 }
             }
             sections.forEachIndexed { index, section ->
@@ -665,14 +691,135 @@ private fun QuizSettingsSection(quiz: QuizViewViewData) {
 }
 
 @Composable
-private fun SubmissionSection(uiState: AssignmentDetailsUiState) {
-    Column(verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceSm.spaceSm)) {
+private fun SubmissionSection(
+    uiState: AssignmentDetailsUiState,
+    previewState: NgcSubmissionPreviewUiState,
+    rubric: NgcRubricUiState?,
+    onShowMore: () -> Unit,
+    onRubricClick: () -> Unit,
+    onCommentsClick: () -> Unit,
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit,
+) {
+    val commentCount = uiState.attempts.getOrNull(uiState.selectedAttemptPosition)
+        ?.submission?.submissionComments?.size ?: 0
+    val commentsTitle = if (commentCount > 0) {
+        stringResource(R.string.ngc_commentsWithCount, commentCount)
+    } else {
+        stringResource(R.string.ngc_comments)
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd)) {
         Heading(text = stringResource(R.string.ngc_submission), level = HeadingLevel.H4)
         AttemptSelector(
             attempts = uiState.attempts,
             selectedIndex = uiState.selectedAttemptPosition,
             onSelect = uiState.actions.onAttemptSelected,
         )
+        // A single white card holds the preview, "Show more", and — via the footer — the grade
+        // and the Rubric/Comments list cells, separated by dividers like a list (per design).
+        NGCSubmissionPreview(
+            state = previewState,
+            onShowMore = onShowMore,
+            onFullScreenMedia = onFullScreenMedia,
+        ) {
+            val rows = buildList<@Composable () -> Unit> {
+                if (uiState.gradeCell != null) {
+                    add { AttemptGradeRow(uiState) }
+                }
+                if (rubric != null) {
+                    add {
+                        SubmissionListCell(
+                            title = stringResource(R.string.ngc_rubric),
+                            icon = InstUIIcons.clipboardPenLine,
+                            onClick = onRubricClick,
+                            modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
+                        )
+                    }
+                }
+                add {
+                    SubmissionListCell(
+                        title = commentsTitle,
+                        icon = InstUIIcons.messageCircle,
+                        onClick = onCommentsClick,
+                        modifier = Modifier.testTag("ngcAssignmentDetails_commentsRow"),
+                    )
+                }
+            }
+            rows.forEachIndexed { index, row ->
+                if (index > 0) Separator()
+                row()
+            }
+        }
+    }
+}
+
+/**
+ * Grade + status of the selected attempt, shown inside the submission card under "Show more" (the
+ * shared ViewModel keeps [AssignmentDetailsUiState.gradeCell] in sync with the chosen attempt).
+ * Renders "score/points" in the course color plus the status pill. Renders nothing when there is no
+ * grade cell yet.
+ */
+@Composable
+private fun AttemptGradeRow(uiState: AssignmentDetailsUiState) {
+    val gradeCell = uiState.gradeCell ?: return
+    val courseColor = LocalCourseColor.current
+    val gradeText = gradeCell.score.takeIf { it.isNotEmpty() }?.let { score ->
+        if (uiState.points.isNotEmpty()) "$score/${uiState.points}" else score
+    }
+    val statusPill = uiState.submissionStateLabel
+        ?.takeIf { uiState.submissionStatusVisible }
+        ?.let { mapSubmissionStateToPill(it) }
+    if (gradeText == null && statusPill == null) return
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
+                vertical = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+            )
+            .testTag("ngcAssignmentDetails_attemptGrade"),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
+        gradeText?.let {
+            Text(text = it, style = InstUIText.contentImportant, color = courseColor)
+        }
+        statusPill?.let { pill ->
+            Pill(
+                text = pill.text,
+                variant = pill.variant,
+                icon = if (pill.variant == PillVariant.Success) InstUIIcons.circleCheck else null,
+            )
+        }
+    }
+}
+
+/**
+ * A submission list cell (rubric / comments), matching the design's list-cell component: a
+ * course-colored leading icon, a semibold title, and a trailing chevron. Rendered as a flat row
+ * (separators are drawn by the caller), unlike the standalone card-wrapped [RubricRow].
+ */
+@Composable
+private fun SubmissionListCell(
+    title: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // A plain center-aligned row rather than InstUI's ListItem: ListItem top-aligns its leading /
+    // title / trailing (for multi-line items), which leaves this single-line cell's icon, text and
+    // chevron looking uncentered.
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
+        Icon(imageVector = icon, color = IconColor.CourseColor, size = IconSize.Large)
+        Text(text = title, style = InstUIText.contentImportant, modifier = Modifier.weight(1f))
+        Icon(imageVector = InstUIIcons.chevronRight, color = IconColor.Muted, size = IconSize.Small)
     }
 }
 
@@ -886,24 +1033,16 @@ private fun LockedCard(message: String) {
 
 @Composable
 private fun RubricRow(onClick: () -> Unit) {
-    val courseColor = LocalCourseColor.current
-    // The row(s) live in a card (like the grade card, but without elevation), per design.
-    // contentPadding = 0 so the ListItem's own padding is the only inset (not doubled by the card).
+    // The row lives in a card (like the grade card, but without elevation), per design.
+    // contentPadding = 0 so the cell's own padding is the only inset (not doubled by the card).
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = Elevation.None,
         contentPadding = 0.dp,
     ) {
-        ListItem(
+        SubmissionListCell(
             title = stringResource(R.string.ngc_rubric),
-            // ListItemLeading.Icon only accepts an IconColor enum, so the course-colored rubric icon is
-            // rendered through the Avatar slot (a free-form leading composable).
-            leading = ListItemLeading.Avatar {
-                Icon(imageVector = InstUIIcons.clipboardPenLine, tint = courseColor, size = IconSize.Medium)
-            },
-            trailing = ListItemTrailing.Custom {
-                Icon(imageVector = InstUIIcons.chevronRight, color = IconColor.Muted, size = IconSize.Small)
-            },
+            icon = InstUIIcons.clipboardPenLine,
             onClick = onClick,
             modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
         )

@@ -81,6 +81,7 @@ android {
 dependencies {
     implementation(project(":pandautils"))
     implementation(project(":instui"))
+    implementation(project(":annotations"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.COMPOSE_ADAPTIVE)

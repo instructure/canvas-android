@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
+import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -32,6 +33,7 @@ import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepository
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepositoryImpl
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
@@ -54,6 +56,8 @@ import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCour
 import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesNetworkDataSource
 import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesRepository
 import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesRepositoryImpl
+import com.instructure.pandautils.data.repository.canvadocs.CanvaDocsRepository
+import com.instructure.pandautils.data.repository.canvadocs.CanvaDocsRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
@@ -96,6 +100,15 @@ class RepositoryModule {
         enrollmentApi: EnrollmentAPI.EnrollmentInterface
     ): EnrollmentRepository {
         return EnrollmentRepositoryImpl(enrollmentApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideCanvaDocsRepository(
+        canvaDocsApi: CanvaDocsAPI.CanvaDocsInterFace,
+        apiPrefs: ApiPrefs
+    ): CanvaDocsRepository {
+        return CanvaDocsRepositoryImpl(canvaDocsApi, apiPrefs)
     }
 
     @Provides

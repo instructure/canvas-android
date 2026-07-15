@@ -22,6 +22,8 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Assignment
@@ -53,6 +55,9 @@ class NGCAssignmentDetailsContentTest {
         uiState: AssignmentDetailsUiState,
         rubric: NgcRubricUiState? = null,
         onRubricClick: () -> Unit = {},
+        previewState: NgcSubmissionPreviewUiState = NgcSubmissionPreviewUiState.NoPreview,
+        onShowMore: () -> Unit = {},
+        onCommentsClick: () -> Unit = {},
     ) {
         composeTestRule.setContent {
             InstUITheme(courseColor = courseColor) {
@@ -65,10 +70,17 @@ class NGCAssignmentDetailsContentTest {
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(),
                     rubric = rubric,
                     onRubricClick = onRubricClick,
+                    previewState = previewState,
+                    onShowMore = onShowMore,
+                    onCommentsClick = onCommentsClick,
                 )
             }
         }
     }
+
+    private fun attemptState() = contentState(
+        attempts = listOf(AssignmentDetailsAttemptViewData(title = "Attempt 1", date = "Jan 1")),
+    )
 
     // Base Content-state ui state with no WebView (noDescriptionVisible) so the screen renders
     // without inflating a WebView during tests.
@@ -204,5 +216,70 @@ class NGCAssignmentDetailsContentTest {
         setContent(contentState(), rubric = null)
 
         composeTestRule.onNodeWithTag("ngcAssignmentDetails_rubricRow").assertDoesNotExist()
+    }
+
+    @Test
+    fun submissionPreviewShowsNoPreviewPlaceholder() {
+        setContent(attemptState(), previewState = NgcSubmissionPreviewUiState.NoPreview)
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_submissionPreview").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithText("No preview available").assertIsDisplayed()
+    }
+
+    @Test
+    fun submissionPreviewListsFileNamesWhenNoFilePreview() {
+        setContent(
+            attemptState(),
+            previewState = NgcSubmissionPreviewUiState.NoFilePreview(listOf("archive.zip")),
+        )
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_submissionPreview").performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithText("archive.zip").assertIsDisplayed()
+    }
+
+    @Test
+    fun submissionPreviewShowMoreInvokesCallback() {
+        var clicked = false
+        setContent(attemptState(), onShowMore = { clicked = true })
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_showMore").performScrollTo().performClick()
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun commentsRowInvokesCallback() {
+        var clicked = false
+        setContent(attemptState(), onCommentsClick = { clicked = true })
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_commentsRow").performScrollTo().performClick()
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun submissionPreviewHiddenWhenNoAttempts() {
+        setContent(contentState(attempts = emptyList()))
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_submissionPreview").assertDoesNotExist()
+    }
+
+    @Test
+    fun submissionSectionShowsAttemptGradeWhenGraded() {
+        val resources = InstrumentationRegistry.getInstrumentation().targetContext.resources
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            ThemedColor(Color.BLUE),
+            Color.BLUE,
+            Assignment(pointsPossible = 10.0, gradingType = Assignment.POINTS_TYPE),
+            Submission(submittedAt = Date(), grade = "8", score = 8.0, workflowState = "graded"),
+        )
+
+        setContent(
+            contentState(
+                attempts = listOf(AssignmentDetailsAttemptViewData(title = "Attempt 1", date = "Jan 1")),
+                gradeCell = gradeCell,
+            )
+        )
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_attemptGrade").performScrollTo().assertIsDisplayed()
     }
 }

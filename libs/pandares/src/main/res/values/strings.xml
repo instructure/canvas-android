@@ -2577,4 +2577,14 @@
     <string name="ngc_rubricScore">Score</string>
     <string name="ngc_instructions">Instructions</string>
     <string name="ngc_rubricScoreValue">%1$s / %2$s pts</string>
+
+    <string name="ngc_submissionNoPreview">No preview available</string>
+    <string name="ngc_showMore">Show more</string>
+    <string name="ngc_comments">Comments</string>
+    <string name="ngc_commentsWithCount">Comments (%1$d)</string>
+
+    <plurals name="ngc_additionalFiles">
+        <item quantity="one">%d additional file</item>
+        <item quantity="other">%d additional files</item>
+    </plurals>
 </resources>

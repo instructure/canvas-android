@@ -81,8 +81,10 @@ fun NGCAssignmentDetailsScreen(
     onNavigateToSubmission: (Assignment.SubmissionType) -> Unit,
     viewModel: AssignmentDetailsViewModel = hiltViewModel(),
     draftHintsViewModel: NGCSubmitDraftHintsViewModel = hiltViewModel(),
+    previewViewModel: NgcSubmissionPreviewViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val previewState by previewViewModel.uiState.collectAsState()
     val draftHintsUiState by draftHintsViewModel.uiState.collectAsState()
     val context = LocalContext.current
     var showSubmitSheet by remember { mutableStateOf(false) }
@@ -116,6 +118,12 @@ fun NGCAssignmentDetailsScreen(
 
     LaunchedEffect(uiState.courseColor) {
         uiState.courseColor?.let { viewModel.updateReminderColor(it.color()) }
+    }
+
+    // Resolve the inline submission preview whenever the selected attempt changes.
+    LaunchedEffect(uiState.attempts, uiState.selectedAttemptPosition) {
+        val submission = uiState.attempts.getOrNull(uiState.selectedAttemptPosition)?.submission
+        previewViewModel.load(submission, uiState.baseUrl, viewModel.currentCourse?.id ?: 0L)
     }
 
     LaunchedEffect(uiState.navigation) {
@@ -186,6 +194,14 @@ fun NGCAssignmentDetailsScreen(
         embeddedWebViewCallbacks = embeddedWebViewCallbacks,
         rubric = rubric,
         onRubricClick = { showRubricSheet = true },
+        previewState = previewState,
+        // "Show more" reuses the Grade Card's navigation (both open the submission screen).
+        // Outward routing is still Phase 1 (logged, not routed).
+        onShowMore = uiState.actions.onGradeCellClick,
+        onCommentsClick = { Log.d(TAG, "View comments requested (Phase 1, not routed)") },
+        onFullScreenMedia = { url, contentType, displayName, thumbnailUrl ->
+            webViewRouter.openMediaFullScreen(url, contentType, displayName, thumbnailUrl)
+        },
     )
 
     if (showRubricSheet && rubric != null) {
