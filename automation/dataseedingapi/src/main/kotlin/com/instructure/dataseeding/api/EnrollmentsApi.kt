@@ -53,6 +53,9 @@ object EnrollmentsApi {
     fun enrollUserAsStudent(courseId: Long, userId: Long): EnrollmentApiModel
             = enrollUser(courseId, userId, STUDENT_ENROLLMENT)
 
+    fun enrollUserAsPendingStudent(courseId: Long, userId: Long): EnrollmentApiModel
+            = enrollUser(courseId, userId, STUDENT_ENROLLMENT, enrollmentState = "invited")
+
     fun enrollUserAsTA(courseId: Long, userId: Long): EnrollmentApiModel
             = enrollUser(courseId, userId, TA_ENROLLMENT)
 
@@ -67,9 +70,10 @@ object EnrollmentsApi {
             userId: Long,
             enrollmentType: String,
             enrollmentService: EnrollmentsService = enrollmentsService,
-            associatedUserId: Long? = null
+            associatedUserId: Long? = null,
+            enrollmentState: String = "active"
     ): EnrollmentApiModel {
-        val enrollment = EnrollmentApiRequestModel(userId, enrollmentType, enrollmentType, associatedUserId = associatedUserId)
+        val enrollment = EnrollmentApiRequestModel(userId, enrollmentType, enrollmentType, enrollmentState = enrollmentState, associatedUserId = associatedUserId)
         return enrollmentService
                 .enrollUser(courseId, CreateEnrollmentApiRequestModel(enrollment))
                 .execute()

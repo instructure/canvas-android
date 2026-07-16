@@ -26,7 +26,7 @@ import dagger.hilt.testing.TestInstallIn
 
 @Module
 @TestInstallIn(components = [ViewModelComponent::class], replaces = [WelcomeWidgetModule::class])
-class TestTimeProviderModule {
+class TestWelcomeWidgetModule {
 
     @Provides
     fun provideTimeProvider(): TimeProvider = FakeTimeProvider
