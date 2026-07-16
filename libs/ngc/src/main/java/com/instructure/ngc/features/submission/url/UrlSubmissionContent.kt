@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.input.TextInput
+import com.instructure.instui.compose.input.TextInputValidation
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIText
 import com.instructure.instui.token.component.InstUITextInput
@@ -95,7 +96,7 @@ fun UrlSubmissionContent(
                 onUrlChanged(it)
             },
             modifier = Modifier.fillMaxWidth(),
-            isError = urlError != null,
+            validation = if (urlError != null) TextInputValidation.Error(urlError) else TextInputValidation.None,
             placeholder = stringResource(R.string.enterAUrlHereForYourSubmission),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
         )
