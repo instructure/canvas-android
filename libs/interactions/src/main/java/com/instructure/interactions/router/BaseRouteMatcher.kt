@@ -102,4 +102,18 @@ open class BaseRouteMatcher {
         }
         return url
     }
+
+    /**
+     * When a file link is tapped in HTML content (e.g. Syllabus/RCE) it is resolved by fetching the
+     * file by id from the API, whose returned url carries a `verifier` but not the `location` tag
+     * that authorizes the access. Forward the `location` from the originally tapped link ([route])
+     * onto the resolved binary [url] so the download/preview is authorized by location.
+     */
+    fun forwardLocationParam(url: String, route: Route): String {
+        val location = route.queryParamsHash[RouterParams.LOCATION]
+            ?: route.uri?.getQueryParameter(RouterParams.LOCATION)
+        if (location.isNullOrEmpty()) return url
+        if (Uri.parse(url).getQueryParameter(RouterParams.LOCATION) != null) return url
+        return Uri.parse(url).buildUpon().appendQueryParameter(RouterParams.LOCATION, location).build().toString()
+    }
 }
