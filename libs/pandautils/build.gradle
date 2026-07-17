@@ -166,6 +166,7 @@ dependencies {
     api Libs.MEDIA3_SMOOTH_STREAMING
     api Libs.MEDIA3_HLS
     api Libs.MEDIA3_DASH
+    api Libs.MEDIA3_DATASOURCE_OKHTTP
 
     api (Libs.SCALE_IMAGE_VIEW) {
         exclude group: "androidx.exifinterface"

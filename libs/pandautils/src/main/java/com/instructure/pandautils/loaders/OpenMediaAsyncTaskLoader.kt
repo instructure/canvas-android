@@ -277,7 +277,9 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
     @Suppress("BooleanLiteralArgument")
     private fun downloadWithHeaders(context: Context, url: String, targetFile: File?): DownloadResult {
         val client = okHttpClient.newBuilder().cache(null).build()
-        val params = RestParams(null, null, "/api/v1/", false, true, false, false, null)
+        // Authenticate with the Bearer token so files can be accessed without a URL verifier
+        // (e.g. Inbox attachments, which are now authorized by the authenticated user).
+        val params = RestParams(shouldIgnoreToken = false)
         val requestBuilder = Request.Builder().url(url).tag(params)
         val cookie: String? = CookieManager.getInstance().getCookie(url)
         if (cookie.isValid()) requestBuilder.addHeader("Cookie", cookie)
