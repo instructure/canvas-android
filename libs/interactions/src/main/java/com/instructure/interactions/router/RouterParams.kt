@@ -18,6 +18,7 @@ object RouterParams {
     const val SLIDING_TAB_TYPE = "sliding_tab_type"
     const val SUBMISSION_ID = "submission_id"
     const val VERIFIER = "verifier"
+    const val LOCATION = "location"
     const val DOWNLOAD_FRD = "download_frd"
     const val MODULE_TYPE_SLASH_ID = "module_type_slash_id"
     const val ANNOUNCEMENT_ID = "announcement_id"

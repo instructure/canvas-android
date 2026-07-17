@@ -142,6 +142,7 @@ object Libs {
     const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
     const val MEDIA3_DASH = "androidx.media3:media3-exoplayer-dash:${Versions.MEDIA3}"
     const val MEDIA3_SMOOTH_STREAMING = "androidx.media3:media3-exoplayer-smoothstreaming:${Versions.MEDIA3}"
+    const val MEDIA3_DATASOURCE_OKHTTP = "androidx.media3:media3-datasource-okhttp:${Versions.MEDIA3}"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"
