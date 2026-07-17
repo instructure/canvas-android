@@ -136,9 +136,46 @@ jobs:
         env:
           GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
+      # Uploading Artifacts to GitHub
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandautils-test.apk
+          path: libs/pandautils/pandautils-test.apk
+
+      - name: Upload app APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandautils-app.apk
+          path: libs/pandautils/pandautils-app.apk
+
+  submodule-unit-tests:
+    name: submodule-unit-tests
+    runs-on: ubuntu-latest-16core
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Run submodule unit tests
         run: |
-          ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test
+          ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test -x :ngc:testDebugUnitTest -x :instui:testDebugUnitTest
         env:
           GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
@@ -152,19 +189,6 @@ jobs:
             libs/*/build/test-results/testDebugUnitTest/
           retention-days: 1
 
-      # Uploading Artifacts to GitHub
-      - name: Upload test APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: pandautils-test.apk
-          path: libs/pandautils/pandautils-test.apk
-
-      - name: Upload app APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: pandautils-app.apk
-          path: libs/pandautils/pandautils-app.apk
- 
   parent-unit-tests:
     name: parent-unit-tests
     runs-on: ubuntu-latest-16core
@@ -366,6 +390,122 @@ jobs:
           path: |
             libs/horizon/build/reports/tests/testDebugUnitTest/
             libs/horizon/build/test-results/testDebugUnitTest/
+          retention-days: 1
+
+  ngc-unit-tests:
+    name: ngc-unit-tests
+    runs-on: ubuntu-latest-16core
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+            .gradle
+          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-build-cache-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :ngc:testDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Upload ngc test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ngc-test-results
+          path: |
+            libs/ngc/build/reports/tests/testDebugUnitTest/
+            libs/ngc/build/test-results/testDebugUnitTest/
+          retention-days: 1
+
+  instui-unit-tests:
+    name: instui-unit-tests
+    runs-on: ubuntu-latest-16core
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+            .gradle
+          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-build-cache-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :instui:testDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Upload instui test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instui-test-results
+          path: |
+            libs/instui/build/reports/tests/testDebugUnitTest/
+            libs/instui/build/test-results/testDebugUnitTest/
           retention-days: 1
 
   horizon-test-build:
@@ -1790,7 +1930,7 @@ jobs:
     name: unit-test-report
     runs-on: ubuntu-latest-16core
     if: always()
-    needs: [parent-unit-tests, student-unit-tests, teacher-unit-tests, horizon-unit-tests, submodule-build-and-test]
+    needs: [parent-unit-tests, student-unit-tests, teacher-unit-tests, horizon-unit-tests, ngc-unit-tests, instui-unit-tests, submodule-unit-tests]
     permissions:
       pull-requests: write
     steps:
@@ -1899,6 +2039,8 @@ jobs:
               'student-test-results': '📱 Student App',
               'teacher-test-results': '📱 Teacher App',
               'horizon-test-results': '🌅 Horizon',
+              'ngc-test-results': '🧩 NGC',
+              'instui-test-results': '🎨 InstUI',
               'submodule-test-results': '📦 Submodules'
           }
 
