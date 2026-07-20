@@ -282,6 +282,7 @@
 
         <activity
             android:name="com.instructure.ngc.NGCActivity"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:label="@string/student_app_name"

@@ -20,16 +20,19 @@ import com.instructure.canvasapi2.BuildConfig
 import com.instructure.canvasapi2.utils.ApiPrefs
 
 enum class DomainService(
-    private val baseUrlTemplate: String,
     val workflows: List<String>,
 ) {
     JOURNEY(
-        baseUrlTemplate = BuildConfig.JOURNEY_BASE_URL,
         workflows = listOf("journey", "pine", "cedar", "redwood"),
     );
 
     fun getBaseUrl(): String {
-        return resolveRegion(baseUrlTemplate)
+        val template = if (isHorizonCdEnvironment()) BuildConfig.JOURNEY_CD_BASE_URL else BuildConfig.JOURNEY_PROD_BASE_URL
+        return resolveRegion(template)
+    }
+
+    private fun isHorizonCdEnvironment(): Boolean {
+        return ApiPrefs.domain.contains(CD_DOMAIN_MARKER)
     }
 
     private fun resolveRegion(urlTemplate: String): String {
@@ -38,5 +41,9 @@ enum class DomainService(
         }
         val region = ApiPrefs.canvasRegion?.takeIf { it.isNotEmpty() } ?: "us-east-1"
         return urlTemplate.replace("{region}", region)
+    }
+
+    companion object {
+        private const val CD_DOMAIN_MARKER = "horizon.cd.instructure.com"
     }
 }

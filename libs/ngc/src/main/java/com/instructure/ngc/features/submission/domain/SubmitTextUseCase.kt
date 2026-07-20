@@ -16,25 +16,29 @@
 package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.submission.SubmissionUploadHelper
 import javax.inject.Inject
 
 class SubmitTextUseCase @Inject constructor(
     private val submissionUploadHelper: SubmissionUploadHelper
-) {
-    suspend operator fun invoke(
-        canvasContext: CanvasContext,
-        assignmentId: Long,
-        assignmentName: String?,
-        html: String,
-        attempt: Long?
-    ) {
+) : BaseUseCase<SubmitTextUseCase.Params, Unit>() {
+
+    data class Params(
+        val canvasContext: CanvasContext,
+        val assignmentId: Long,
+        val assignmentName: String?,
+        val html: String,
+        val attempt: Long?,
+    )
+
+    override suspend fun execute(params: Params) {
         submissionUploadHelper.startTextSubmission(
-            canvasContext = canvasContext,
-            assignmentId = assignmentId,
-            assignmentName = assignmentName,
-            text = html,
-            attempt = attempt ?: 1L
+            canvasContext = params.canvasContext,
+            assignmentId = params.assignmentId,
+            assignmentName = params.assignmentName,
+            text = params.html,
+            attempt = params.attempt ?: 1L
         )
     }
 }

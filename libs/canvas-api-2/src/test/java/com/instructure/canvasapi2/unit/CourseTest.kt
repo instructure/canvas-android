@@ -31,10 +31,21 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class CourseTest {
 
     private val baseCourse = Course(accessRestrictedByDate = false, workflowState = Course.WorkflowState.AVAILABLE)
+
+    // Canvas API date format: UTC, seconds always present (e.g. "2037-07-28T19:38:31Z"). This is what
+    // Course.toDate() expects. OffsetDateTime.toString() must not be used here: it omits the seconds
+    // field whenever the current second is 0, producing a string toDate() can't parse (it returns
+    // null), which flips the date-range assertions and makes these tests fail ~1/60 of runs.
+    private val apiDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+    private fun OffsetDateTime.toApiString(): String =
+        withOffsetSameInstant(ZoneOffset.UTC).format(apiDateFormatter)
 
     @Before
     fun setup() {
@@ -494,30 +505,30 @@ class CourseTest {
 
     @Test
     fun courseIsBetweenValidDateRange_restrictedToCourseDatesWithInValidDates() {
-        val startDate = OffsetDateTime.now().minusDays(30).withNano(0)
-        val endDate = OffsetDateTime.now().minusDays(20).withNano(0)
+        val startDate = OffsetDateTime.now().minusDays(30)
+        val endDate = OffsetDateTime.now().minusDays(20)
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
-                startAt = startDate.toString(), endAt = endDate.toString())
+                startAt = startDate.toApiString(), endAt = endDate.toApiString())
 
         assertFalse(course.isBetweenValidDateRange())
     }
 
     @Test
     fun `Is between valid date range when enrollment is restricted to course dates and is between course dates`() {
-        val startDate = OffsetDateTime.now().minusDays(30).withNano(0)
-        val endDate = OffsetDateTime.now().plusDays(20).withNano(0)
+        val startDate = OffsetDateTime.now().minusDays(30)
+        val endDate = OffsetDateTime.now().plusDays(20)
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
-            startAt = startDate.toString(), endAt = endDate.toString())
+            startAt = startDate.toApiString(), endAt = endDate.toApiString())
 
         assertTrue(course.isBetweenValidDateRange())
     }
 
     @Test
     fun courseIsBetweenValidDateRange_invalidTermDates() {
-        val badStartDate = OffsetDateTime.now().minusDays(30).withNano(0)
-        val badEndDate = OffsetDateTime.now().minusDays(20).withNano(0)
+        val badStartDate = OffsetDateTime.now().minusDays(30)
+        val badEndDate = OffsetDateTime.now().minusDays(20)
 
-        val term = Term(startAt = badStartDate.toString(), endAt = badEndDate.toString())
+        val term = Term(startAt = badStartDate.toApiString(), endAt = badEndDate.toApiString())
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false, term = term)
 
         assertFalse(course.isBetweenValidDateRange())
@@ -525,45 +536,45 @@ class CourseTest {
 
     @Test
     fun courseIsBetweenValidDateRange_invalidSectionDates() {
-        val badStartDate = OffsetDateTime.now().minusDays(30).withNano(0)
-        val badEndDate = OffsetDateTime.now().minusDays(20).withNano(0)
+        val badStartDate = OffsetDateTime.now().minusDays(30)
+        val badEndDate = OffsetDateTime.now().minusDays(20)
 
-        val startDate = OffsetDateTime.now().minusDays(50).withNano(0)
-        val endDate = OffsetDateTime.now().plusDays(50).withNano(0)
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
 
-        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
-        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString(), restrictEnrollmentsToSectionDates = true)
+        val term = Term(startAt = startDate.toApiString(), endAt = endDate.toApiString())
+        val section = Section(startAt = badStartDate.toApiString(), endAt = badEndDate.toApiString(), restrictEnrollmentsToSectionDates = true)
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false,
-                startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+                startAt = startDate.toApiString(), endAt = endDate.toApiString(), term = term, sections = listOf(section))
 
         assertFalse(course.isBetweenValidDateRange())
     }
 
     @Test
     fun `Is between valid date range when section dates are invalid but enrollment is not restricted between section dates`() {
-        val badStartDate = OffsetDateTime.now().minusDays(30).withNano(0)
-        val badEndDate = OffsetDateTime.now().minusDays(20).withNano(0)
+        val badStartDate = OffsetDateTime.now().minusDays(30)
+        val badEndDate = OffsetDateTime.now().minusDays(20)
 
-        val startDate = OffsetDateTime.now().minusDays(50).withNano(0)
-        val endDate = OffsetDateTime.now().plusDays(50).withNano(0)
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
 
-        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
-        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString(), restrictEnrollmentsToSectionDates = false)
+        val term = Term(startAt = startDate.toApiString(), endAt = endDate.toApiString())
+        val section = Section(startAt = badStartDate.toApiString(), endAt = badEndDate.toApiString(), restrictEnrollmentsToSectionDates = false)
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false,
-            startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+            startAt = startDate.toApiString(), endAt = endDate.toApiString(), term = term, sections = listOf(section))
 
         assertTrue(course.isBetweenValidDateRange())
     }
 
     @Test
     fun courseIsBetweenValidDateRange_validDatesAllTheWayDown() {
-        val startDate = OffsetDateTime.now().minusDays(50).withNano(0)
-        val endDate = OffsetDateTime.now().plusDays(50).withNano(0)
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
 
-        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
-        val section = Section(startAt = startDate.toString(), endAt = endDate.toString())
+        val term = Term(startAt = startDate.toApiString(), endAt = endDate.toApiString())
+        val section = Section(startAt = startDate.toApiString(), endAt = endDate.toApiString())
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = false,
-                startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+                startAt = startDate.toApiString(), endAt = endDate.toApiString(), term = term, sections = listOf(section))
 
         assertTrue(course.isBetweenValidDateRange())
     }

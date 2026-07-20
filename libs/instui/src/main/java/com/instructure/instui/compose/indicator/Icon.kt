@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.token.component.InstUIIcon
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.check
@@ -60,6 +61,9 @@ enum class IconColor(val color: @Composable () -> Color) {
     Info({ InstUIIcon.infoColor }),
     OnColor({ InstUIIcon.onColor }),
     Inverse({ InstUIIcon.inverseColor }),
+
+    /** The active course's color ([LocalCourseColor]); falls back to unspecified outside a themed course context. */
+    CourseColor({ LocalCourseColor.current }),
 }
 
 /**

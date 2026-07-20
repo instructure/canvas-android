@@ -48,6 +48,10 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableSupportingPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -62,15 +66,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.indicator.Icon
 import com.instructure.instui.compose.indicator.IconColor
 import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.input.Button
+import com.instructure.instui.compose.input.Select
 import com.instructure.instui.compose.input.TextButton
 import com.instructure.instui.compose.navigation.TopBar
 import com.instructure.instui.compose.text.Heading
@@ -78,6 +83,7 @@ import com.instructure.instui.compose.text.HeadingLevel
 import com.instructure.instui.compose.text.Text
 import com.instructure.instui.token.component.InstUIText
 import com.instructure.instui.token.icon.InstUIIcons
+import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.icon.arrowLeft
 import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.icon.chevronUp
@@ -85,6 +91,9 @@ import com.instructure.instui.token.icon.trash2
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
+import com.instructure.ngc.features.submission.file.FileSubmissionContent
+import com.instructure.ngc.features.submission.file.rememberFilePicker
+import com.instructure.ngc.features.submission.url.UrlSubmissionContent
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPane
 import kotlinx.coroutines.launch
 
@@ -135,6 +144,7 @@ fun NGCSubmissionScreen(
                         MainPaneContent(
                             uiState = uiState,
                             onTextChanged = viewModel::onTextChanged,
+                            onUrlChanged = viewModel::onUrlChanged,
                             onDeleteDraft = viewModel::onDeleteDraft,
                             onSubmit = viewModel::onSubmit,
                         )
@@ -190,6 +200,7 @@ fun NGCSubmissionScreen(
                     MainPaneContent(
                         uiState = uiState,
                         onTextChanged = viewModel::onTextChanged,
+                        onUrlChanged = viewModel::onUrlChanged,
                         onDeleteDraft = viewModel::onDeleteDraft,
                         onSubmit = viewModel::onSubmit,
                     )
@@ -203,6 +214,7 @@ fun NGCSubmissionScreen(
 private fun MainPaneContent(
     uiState: NGCSubmissionUiState,
     onTextChanged: (String) -> Unit,
+    onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -250,6 +262,7 @@ private fun MainPaneContent(
                 SubmissionFormContent(
                     uiState = uiState,
                     onTextChanged = onTextChanged,
+                    onUrlChanged = onUrlChanged,
                     onDeleteDraft = onDeleteDraft,
                     onSubmit = onSubmit,
                     modifier = Modifier.fillMaxSize(),
@@ -263,11 +276,14 @@ private fun MainPaneContent(
 private fun SubmissionFormContent(
     uiState: NGCSubmissionUiState,
     onTextChanged: (String) -> Unit,
+    onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+    val filePicker = rememberFilePicker(onFilesPicked = uiState.fileState.onFilesPicked)
 
     if (showDeleteConfirmDialog) {
         AlertDialog(
@@ -328,40 +344,52 @@ private fun SubmissionFormContent(
             )
         }
 
-        // "New Submission" label + type selector row (non-interactive)
-        Row(
+        // "New Submission" label + type selector row
+        SubmissionTypeRow(uiState = uiState)
+
+        // Main-pane content swaps based on the selected submission type.
+        // AnimatedContent cross-fades the two subtrees to avoid a hard visual flash when the
+        // type selector changes (the WebView reload is still necessary for draft restore, but
+        // the fade softens it). The key is the selectedType so the animation fires only on
+        // an actual type change, not on every other UiState update.
+        AnimatedContent(
+            targetState = uiState.selectedType,
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "SubmissionTypeTransition",
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = stringResource(R.string.ngc_submission_newSubmission),
-                style = InstUIText.contentImportant,
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceXs.spaceXs),
-            ) {
-                Text(
-                    text = uiState.submissionTypeLabel,
-                    style = InstUIText.content,
-                )
-                Icon(
-                    imageVector = InstUIIcons.chevronDown,
-                    contentDescription = null,
-                    size = IconSize.Small,
-                    color = IconColor.Muted,
-                )
+        ) { selectedType ->
+            when (selectedType) {
+                Assignment.SubmissionType.ONLINE_UPLOAD -> {
+                    FileSubmissionContent(
+                        files = uiState.fileState.files,
+                        onAddFile = { filePicker.launch() },
+                        onFileRemoved = uiState.fileState.onFileRemoved,
+                        onRetryFile = uiState.fileState.onRetryFile,
+                        allowedExtensions = uiState.fileState.allowedExtensions,
+                        enabled = !uiState.submitting,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                Assignment.SubmissionType.ONLINE_URL -> {
+                    UrlSubmissionContent(
+                        url = uiState.urlState.draftUrl,
+                        contentResetKey = uiState.urlState.contentResetKey,
+                        previewUrl = uiState.urlState.previewUrl,
+                        urlError = uiState.urlState.urlError,
+                        onUrlChanged = onUrlChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                else -> {
+                    SubmissionTextEntryField(
+                        html = uiState.textState.draftHtml,
+                        contentResetKey = uiState.textState.contentResetKey,
+                        onTextChanged = onTextChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
             }
         }
-
-        // Bordered RCE text entry field
-        SubmissionTextEntryField(
-            html = uiState.draftHtml,
-            contentResetKey = uiState.contentResetKey,
-            onTextChanged = onTextChanged,
-            modifier = Modifier.fillMaxWidth(),
-        )
 
         // Saved-at + Delete draft row — only shown when a draft exists
         if (uiState.savedAtText.isNotBlank()) {
@@ -376,23 +404,33 @@ private fun SubmissionFormContent(
                     color = InstUISemanticColors.Text.muted(),
                 )
                 // Icon + label act as a single clickable button.
+                val deleteDraftEnabled = !uiState.submitting
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceXs.spaceXs),
-                    modifier = Modifier
-                        .clickable(role = Role.Button) { showDeleteConfirmDialog = true }
-                        .padding(InstUILayoutSizes.Spacing.SpaceXs.spaceXs),
+                    modifier = if (deleteDraftEnabled) {
+                        Modifier
+                            .clickable(role = Role.Button) { showDeleteConfirmDialog = true }
+                            .padding(InstUILayoutSizes.Spacing.SpaceXs.spaceXs)
+                    } else {
+                        Modifier.padding(InstUILayoutSizes.Spacing.SpaceXs.spaceXs)
+                    },
                 ) {
+                    val deleteDraftColor = if (deleteDraftEnabled) {
+                        InstUISemanticColors.Text.error()
+                    } else {
+                        InstUISemanticColors.Text.muted()
+                    }
                     Icon(
                         imageVector = InstUIIcons.trash2,
-                        tint = InstUISemanticColors.Text.error(),
+                        tint = deleteDraftColor,
                         size = IconSize.Small,
                         contentDescription = null,
                     )
                     Text(
                         text = stringResource(R.string.ngc_submission_deleteDraft),
                         style = InstUIText.content,
-                        color = InstUISemanticColors.Text.error(),
+                        color = deleteDraftColor,
                     )
                 }
             }
@@ -418,6 +456,68 @@ private fun SubmissionFormContent(
     }
 }
 
+/**
+ * Renders the "New Submission" label row with an interactive [Select] type-selector
+ * when [NGCSubmissionUiState.availableTypes] has more than one entry, or a plain
+ * non-interactive label when there is only one (or no) available type.
+ */
+@Composable
+private fun SubmissionTypeRow(
+    uiState: NGCSubmissionUiState,
+    modifier: Modifier = Modifier,
+) {
+    val isInteractive = uiState.availableTypes.size > 1
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.ngc_submission_newSubmission),
+            style = InstUIText.contentImportant,
+            modifier = Modifier.weight(1f),
+        )
+
+        if (isInteractive) {
+            val options = uiState.availableTypes.map { submissionTypeLabel(it) }
+            val selectedIndex = uiState.availableTypes.indexOf(uiState.selectedType).coerceAtLeast(0)
+            Select(
+                options = options,
+                selectedIndex = selectedIndex,
+                onSelect = { index -> uiState.onSubmissionTypeSelected(uiState.availableTypes[index]) },
+                enabled = !uiState.submitting,
+                modifier = Modifier.weight(1f),
+            )
+        } else {
+            val typeLabel = submissionTypeLabel(uiState.selectedType)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceXs.spaceXs),
+            ) {
+                Text(
+                    text = typeLabel,
+                    style = InstUIText.content,
+                )
+                Icon(
+                    imageVector = InstUIIcons.chevronDown,
+                    contentDescription = null,
+                    size = IconSize.Small,
+                    color = IconColor.Muted,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun submissionTypeLabel(type: Assignment.SubmissionType): String = when (type) {
+    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> stringResource(R.string.ngc_submission_textEntry)
+    Assignment.SubmissionType.ONLINE_UPLOAD -> stringResource(R.string.ngc_submission_fileUpload)
+    Assignment.SubmissionType.ONLINE_URL -> stringResource(R.string.websiteUrl)
+    else -> type.apiString
+}
+
 // region Previews
 
 @Preview(name = "Submission Main Pane — Loading", showBackground = true)
@@ -427,6 +527,7 @@ private fun MainPaneLoadingPreview() {
         MainPaneContent(
             uiState = NGCSubmissionUiState(loading = true),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -443,12 +544,12 @@ private fun MainPaneLoadedPreview() {
                 courseName = "Intro to Space Stations",
                 assignmentName = "Write an essay about the International Space Station",
                 dueDateText = "Due 06/25, 11:59 PM",
-                submissionTypeLabel = "Text Entry",
-                draftHtml = "<p>The ISS is a marvel of modern engineering...</p>",
+                textState = TextSubmissionUiState(draftHtml = "<p>The ISS is a marvel of modern engineering...</p>"),
                 savedAtText = "Saved 06/19, 10:30 AM",
                 submitEnabled = true,
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -465,6 +566,7 @@ private fun MainPaneErrorPreview() {
                 loadError = "Failed to load assignment",
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )
@@ -485,12 +587,12 @@ private fun MainPaneLoadedDarkPreview() {
                 courseName = "Intro to Space Stations",
                 assignmentName = "Write an essay about the ISS",
                 dueDateText = "Due 06/25, 11:59 PM",
-                submissionTypeLabel = "Text Entry",
-                draftHtml = "",
+                textState = TextSubmissionUiState(draftHtml = ""),
                 savedAtText = "",
                 submitEnabled = false,
             ),
             onTextChanged = {},
+            onUrlChanged = {},
             onDeleteDraft = {},
             onSubmit = {},
         )

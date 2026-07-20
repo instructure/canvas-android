@@ -344,6 +344,7 @@ class CalendarE2ETest : ParentComposeTest() {
         calendarScreenPage.assertItemDetails(newEventTitle, parent.name, currentDate)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)

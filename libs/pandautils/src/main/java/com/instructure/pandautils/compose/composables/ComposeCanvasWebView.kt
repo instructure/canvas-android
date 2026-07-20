@@ -45,9 +45,14 @@ fun ComposeCanvasWebView(
     modifier: Modifier = Modifier,
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(),
+    webViewStateKey: String? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null
 ) {
-    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel()
+    // Key the state holder so each distinct key gets its own saved WebView state (mirrors
+    // [ComposeCanvasWebViewWrapper]). Pass the loaded url for transient content like a live preview:
+    // a different url resolves a fresh (empty) state and loads that url, instead of restoring the
+    // previously-shown page on remount. Default null keeps the single shared holder per scope.
+    val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel(key = webViewStateKey)
     val webViewState = stateViewModel.webViewState
 
     if (LocalInspectionMode.current) {

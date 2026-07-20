@@ -55,9 +55,13 @@ sealed class NGCNavigationRoute(val route: String) {
         fun createRoute(courseId: Long) = "courses/$courseId"
     }
     data object Submission : NGCNavigationRoute(
-        "courses/{${NGCSubmissionViewModel.ARG_COURSE_ID}}/assignments/{${NGCSubmissionViewModel.ARG_ASSIGNMENT_ID}}/submission"
+        "courses/{${NGCSubmissionViewModel.ARG_COURSE_ID}}/assignments/{${NGCSubmissionViewModel.ARG_ASSIGNMENT_ID}}/submission" +
+            "?${NGCSubmissionViewModel.ARG_SUBMISSION_TYPE}={${NGCSubmissionViewModel.ARG_SUBMISSION_TYPE}}"
     ) {
-        fun createRoute(courseId: Long, assignmentId: Long) = "courses/$courseId/assignments/$assignmentId/submission"
+        fun createRoute(courseId: Long, assignmentId: Long, submissionType: String? = null): String {
+            val base = "courses/$courseId/assignments/$assignmentId/submission"
+            return if (submissionType != null) "$base?${NGCSubmissionViewModel.ARG_SUBMISSION_TYPE}=$submissionType" else base
+        }
     }
     data object AssignmentDetails : NGCNavigationRoute(
         "courses/{${Const.COURSE_ID}}/assignments/{${Const.ASSIGNMENT_ID}}"
@@ -151,8 +155,10 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             InstUITheme(courseColor = courseColor) {
                 NGCAssignmentDetailsScreen(
                     onNavigateBack = { navController.popBackStack() },
-                    onNavigateToTextSubmission = {
-                        navController.navigate(NGCNavigationRoute.Submission.createRoute(courseId, assignmentId))
+                    onNavigateToSubmission = { submissionType ->
+                        navController.navigate(
+                            NGCNavigationRoute.Submission.createRoute(courseId, assignmentId, submissionType.apiString)
+                        )
                     },
                 )
             }
@@ -163,6 +169,11 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             arguments = listOf(
                 navArgument(NGCSubmissionViewModel.ARG_COURSE_ID) { type = NavType.LongType },
                 navArgument(NGCSubmissionViewModel.ARG_ASSIGNMENT_ID) { type = NavType.LongType },
+                navArgument(NGCSubmissionViewModel.ARG_SUBMISSION_TYPE) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                },
             ),
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(NGCSubmissionViewModel.ARG_COURSE_ID) ?: 0L

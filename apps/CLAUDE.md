@@ -9,6 +9,7 @@ Operational commands are available as skills in `.claude/skills/`:
 - `/test` - Unit and instrumentation test commands
 - `/deploy` - Device deployment and ADB commands
 - `/pr` - Pull request creation guidelines
+- `/release` - Start a release or hotfix (branch, version bump, release PR)
 
 Use these skills when you need specific command references.
 
@@ -94,6 +95,11 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Use descriptive variable and function names
 - **Companion objects**: Place companion objects at the bottom of the class, following Kotlin style guides. For simple private constants used only within a file, consider using top-level constants instead
 - Always use imports instead of fully qualified names in code
+- **No reflexive module-name prefixes** on classes (e.g. avoid an `NGC`-prefixed class name inside the `ngc` module); rely on package namespacing and only prefix a name to resolve an actual cross-module collision
+- **Don't adopt already-deprecated libraries/APIs for new work**, even if still functional; propose an actively-maintained alternative and flag the deprecation up front
+
+### Git Workflow
+- **Branch naming**: `MBL-<number>-<short-kebab-case-slug>` derived from the Jira summary, e.g. `MBL-20020-video-keeps-playing-in-background`
 
 ### Component Patterns
 - Use existing utility functions and shared components from `pandautils`
@@ -102,6 +108,10 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Use Hilt for dependency injection
 - New UI features should use Jetpack Compose
 - Legacy features may use XML + Data Binding
+- **ViewModels depend on UseCases only** — never inject Managers or Repositories directly into a ViewModel; add or extend a UseCase for new data paths. New UseCases extend `BaseUseCase<Params, Result>` (`com.instructure.pandautils.domain.usecase.BaseUseCase`) with a nested `Params` data class and an overridden `suspend fun execute(params: Params): Result`, rather than a hand-rolled `operator fun invoke`
+- **GraphQL (Apollo) access belongs in a Manager**, not wrapped directly by a Repository; build reusable REST repositories in `:pandautils` rather than one-off, per-screen repositories
+- **REST data access uses Repositories, not Manager objects** — Manager singletons wrapping APIs with `StatusCallback`/`awaitApi` are obsolete for new REST work. Define an `XRepository` interface + `XRepositoryImpl(api)` under `com.instructure.pandautils.data.repository.<feature>` that wraps the API interface's `suspend` functions and returns `DataResult<T>`; provide it `@ActivityRetainedScoped` in `com.instructure.pandautils.di.RepositoryModule` (mirror `EnrollmentRepository`/`SubmissionRepository`)
+- **One-shot UI events live in `UiState`** — model as a nullable field plus a consume lambda (see Horizon's `AddSubmissionUiState` idiom), not a `Channel`/`SharedFlow`/`collectOneOffEvents`
 
 ### Testing Patterns
 - Write unit tests in the same manner as existing tests (e.g., check `student/src/test/`)
@@ -116,6 +126,8 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Shared libraries are in `../libs/` relative to `apps/`
 - Canvas API models and endpoints are in `:canvas-api-2`
 - Common utilities, dialogs, and base classes are in `:pandautils`
+- **Never hardcode user-facing strings** — always use string resources (`stringResource(R.string.x)` in Compose, `resources.getString(...)` elsewhere) so copy stays localizable. Exempt: logs, exceptions, API/enum value comparisons, HTML wrappers, delimiters, empty defaults, and KDoc/`@Preview` sample text
+- **New user-facing strings go in `pandares`** (`libs/pandares/src/main/res/values/strings.xml`, non-translatable strings in the not-translatable file); import the `R` class of the module the string belongs to in code, never a fully-qualified reference
 
 ### Router Pattern
 The project uses a Router pattern for navigation between features:
@@ -132,6 +144,11 @@ The project uses a Router pattern for navigation between features:
   These modules are: student, parent, teacher. Exceptions are UI and unit tests in those modules. Those should use Apache License Version 2.0.
 - Code in other modules should use the Apache License Version 2.0.
 - Always add the correct year information into the header of the license based on the current day.
+
+### InstUI / NGC Conventions
+- Use **InstUI components directly** (`com.instructure.instui.compose.*`) in NGC screens rather than the `ngc`/`designsystem` `DS*` wrappers
+- **No Material Icons in `instui`** — don't use `Libs.COMPOSE_MATERIAL_ICONS` or `Icons.Filled.*`/`Icons.Default.*`; use an icon slot or defer icon-bearing work until the InstUI icon system exists
+- When **no Android design exists** for a component, build it from InstUI design tokens (typography, `InstUISemanticColors`, `InstUILayoutSizes.Spacing`) rather than stalling; lean iOS-faithful when an iOS reference implementation exists
 
 ## Additional Context
 
@@ -151,3 +168,9 @@ The project uses `PrivateData.merge()` to inject private configuration (API keys
 
 ### Localization
 Apps support multiple languages. Translation tags are scanned at build time via `LocaleScanner.getAvailableLanguageTags()`.
+
+### InstUI Design System (in progress, as of 2026-04)
+This is a snapshot of an evolving effort, not a permanent spec — check for updates before relying on specifics long-term.
+- **Architecture direction ("Option B")**: a standalone design-token repo plus separate Android/iOS design-system repos, with no web dependency. `libs/horizon` and `libs/ngc` are the current home for this work; the plan is to move it into a separate repo, consumed first as a git submodule and later via Maven.
+- **Token generation status**: in `libs/instui`, the primitive and semantic token layers are generated; the component-token layer is still pending, so new components currently follow a dummy-component strategy until that layer lands.
+- **Icons**: the InstUI icon system has not been designed yet — components that need icons should wait for it or use a placeholder slot (see InstUI / NGC Conventions above).

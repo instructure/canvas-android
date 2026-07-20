@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
@@ -55,8 +56,12 @@ fun AccountCalendarFeedScreen(
     HorizonScaffold(
         title = stringResource(R.string.accountCalendarFeedTitle),
         onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
-        LoadingStateWrapper(state.screenState) {
+        LoadingStateWrapper(
+            loadingState = state.screenState,
+            containerColor = HorizonColors.Surface.pageSecondary(),
+        ) {
             AccountCalendarFeedContent(state, modifier)
         }
     }

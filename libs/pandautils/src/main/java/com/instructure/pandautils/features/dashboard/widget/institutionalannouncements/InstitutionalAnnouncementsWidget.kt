@@ -47,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -123,7 +124,8 @@ fun InstitutionalAnnouncementsContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 12.dp),
+                .padding(bottom = 12.dp)
+                .testTag("institutionalAnnouncementsWidget_header"),
             text = stringResource(R.string.institutionalAnnouncementsTitle, uiState.announcements.size),
             fontSize = 14.sp,
             lineHeight = 19.sp,
@@ -135,7 +137,9 @@ fun InstitutionalAnnouncementsContent(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("institutionalAnnouncementsWidget_pager"),
             pageSpacing = 8.dp,
             contentPadding = PaddingValues(start = 16.dp, end = 24.dp),
             beyondViewportPageCount = 1
@@ -196,6 +200,7 @@ private fun AnnouncementCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .pendoTag("institutionalAnnouncementsWidget_announcementCard", true)
+                .testTag("institutionalAnnouncementsWidget_announcementCard_${announcement.id}")
                 .clickable(onClick = onClick)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -273,7 +278,9 @@ private fun AnnouncementCard(
                 }
 
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .testTag("institutionalAnnouncementsWidget_announcementSubject_${announcement.id}"),
                     text = announcement.subject,
                     fontSize = 16.sp,
                     lineHeight = 22.sp,
@@ -290,6 +297,7 @@ private fun AnnouncementCard(
                 modifier = Modifier
                     .size(24.dp)
                     .pendoTag("institutionalAnnouncementsWidget_dismissAnnouncement", true)
+                    .testTag("institutionalAnnouncementsWidget_dismissAnnouncement_${announcement.id}")
                     .clickable(onClick = onDismiss),
                 tint = colorResource(R.color.textDark)
             )

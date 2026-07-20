@@ -16,7 +16,11 @@
 
 package com.instructure.ngc.features.assignmentdetails
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +35,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -46,6 +49,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,8 +62,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
@@ -93,8 +98,12 @@ import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.check
 import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.icon.chevronLeft
+import com.instructure.instui.token.icon.chevronRight
+import com.instructure.instui.token.icon.circleCheck
+import com.instructure.instui.token.icon.clipboardPenLine
 import com.instructure.instui.token.icon.hourglass
 import com.instructure.instui.token.icon.lock
+import com.instructure.instui.token.icon.messageCircle
 import com.instructure.instui.token.icon.paperclip
 import com.instructure.instui.token.icon.plus
 import com.instructure.instui.token.icon.star
@@ -102,6 +111,10 @@ import com.instructure.instui.token.icon.x
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
+import com.instructure.ngc.ngcHtmlFormatColors
+import com.instructure.ngc.ngcHtmlFormatColorsLight
+import com.instructure.ngc.ngcThemeSwitchButtonColors
+import com.instructure.ngc.ngcThemeSwitchButtonColorsLight
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
@@ -117,19 +130,9 @@ import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.
 import com.instructure.pandautils.features.grades.components.mapSubmissionStateToPill
 import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.getActivityOrNull
-import com.instructure.pandautils.views.HtmlFormatColors
 import java.text.DateFormat
 
 const val NGC_ASSIGNMENT_DETAILS_TAG = "ngcAssignmentDetailsPage"
-
-/** WebView (instructions) colors resolved from the InstUI semantic tokens (theme-aware, no static resources). */
-@Composable
-private fun ngcHtmlFormatColors(): HtmlFormatColors = HtmlFormatColors(
-    backgroundColorInt = InstUISemanticColors.Background.page().toArgb(),
-    textColorInt = InstUISemanticColors.Text.base().toArgb(),
-    linkColorInt = InstUISemanticColors.Text.info().toArgb(),
-    visitedLinkColorInt = InstUISemanticColors.Text.info().toArgb(),
-)
 
 /**
  * Stateless NGC Assignment Details content. Renders the shared [AssignmentDetailsUiState]
@@ -146,6 +149,12 @@ fun NGCAssignmentDetailsContent(
     webViewCallbacks: ComposeWebViewCallbacks,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks,
     modifier: Modifier = Modifier,
+    rubric: NgcRubricUiState? = null,
+    onRubricClick: () -> Unit = {},
+    previewState: NgcSubmissionPreviewUiState = NgcSubmissionPreviewUiState.NoPreview,
+    onShowMore: () -> Unit = {},
+    onCommentsClick: () -> Unit = {},
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit = { _, _, _, _ -> },
 ) {
     val courseColor = LocalCourseColor.current
     val onColor = InstUISemanticColors.Text.onColor()
@@ -226,6 +235,12 @@ fun NGCAssignmentDetailsContent(
                         scrollState = scrollState,
                         webViewCallbacks = webViewCallbacks,
                         embeddedWebViewCallbacks = embeddedWebViewCallbacks,
+                        rubric = rubric,
+                        onRubricClick = onRubricClick,
+                        previewState = previewState,
+                        onShowMore = onShowMore,
+                        onCommentsClick = onCommentsClick,
+                        onFullScreenMedia = onFullScreenMedia,
                         contentBottomPadding = if (showSubmitButton) submitBarHeight else 0.dp,
                         modifier = Modifier.fillMaxSize(),
                     )
@@ -272,6 +287,12 @@ private fun ContentBody(
     scrollState: ScrollState,
     webViewCallbacks: ComposeWebViewCallbacks,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks,
+    rubric: NgcRubricUiState?,
+    onRubricClick: () -> Unit,
+    previewState: NgcSubmissionPreviewUiState,
+    onShowMore: () -> Unit,
+    onCommentsClick: () -> Unit,
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit,
     modifier: Modifier = Modifier,
     contentBottomPadding: Dp = 0.dp,
 ) {
@@ -304,6 +325,10 @@ private fun ContentBody(
                 if (!uiState.fullLocked) {
                     add { DescriptionSection(uiState, webViewCallbacks, embeddedWebViewCallbacks) }
                 }
+                // Rubric row (opens the rubric bottom sheet); only when the assignment has a rubric.
+                if (rubric != null) {
+                    add { RubricRow(onRubricClick) }
+                }
                 // Quiz settings (classic quizzes only — present when the quiz details loaded).
                 uiState.quizDetails?.let { quiz ->
                     add { QuizSettingsSection(quiz) }
@@ -326,10 +351,24 @@ private fun ContentBody(
                         )
                     }
                 }
-                // Submission section (with the attempt selector). Only shown once submitted; the
-                // submission preview will be added here later.
+                // Submission section: attempt selector + inline preview of the selected attempt,
+                // with the rubric/comments cells. Before a submission exists there's nothing to
+                // preview, so the rubric row stands alone here (same position as the submission
+                // section) rather than mid-screen.
                 if (uiState.attempts.isNotEmpty()) {
-                    add { SubmissionSection(uiState) }
+                    add {
+                        SubmissionSection(
+                            uiState = uiState,
+                            previewState = previewState,
+                            rubric = rubric,
+                            onShowMore = onShowMore,
+                            onRubricClick = onRubricClick,
+                            onCommentsClick = onCommentsClick,
+                            onFullScreenMedia = onFullScreenMedia,
+                        )
+                    }
+                } else if (rubric != null) {
+                    add { RubricRow(onRubricClick) }
                 }
             }
             sections.forEachIndexed { index, section ->
@@ -410,9 +449,20 @@ private fun TopInfoBlock(
 }
 
 @Composable
-private fun NGCGradeCard(gradeCell: GradeCellViewData, pointsPossible: String, onClick: () -> Unit) {
+private fun NGCGradeCard(
+    gradeCell: GradeCellViewData,
+    pointsPossible: String,
+    onClick: () -> Unit,
+) {
     // In the design the grade meter/markers use the "plum" accent, which maps to the course color.
     val courseColor = LocalCourseColor.current
+    // Sweep the meter from 0 to its value on open. Guard against NaN (0-points assignments give 0/0)
+    // since Animatable.animateTo(NaN) crashes.
+    val targetProgress = gradeCell.chartPercent.let { if (it.isNaN()) 0f else it.coerceIn(0f, 1f) }
+    val animatedProgress = remember { Animatable(0f) }
+    LaunchedEffect(targetProgress) {
+        animatedProgress.animateTo(targetProgress, tween(durationMillis = 900, easing = FastOutSlowInEasing))
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -433,8 +483,9 @@ private fun NGCGradeCard(gradeCell: GradeCellViewData, pointsPossible: String, o
                         horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
                     ) {
                         ProgressCircle(
-                            progress = gradeCell.chartPercent,
+                            progress = animatedProgress.value,
                             meterColor = courseColor,
+                            trackColor = InstUISemanticColors.Stroke.muted(),
                         ) {
                             when {
                                 gradeCell.showCompleteIcon -> Icon(InstUIIcons.check, color = IconColor.Base, size = IconSize.Small)
@@ -527,7 +578,7 @@ private fun NGCGradeCard(gradeCell: GradeCellViewData, pointsPossible: String, o
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
                     ) {
-                        ProgressCircle(progress = 0f, meterColor = courseColor) {
+                        ProgressCircle(progress = 0f, meterColor = courseColor, trackColor = InstUISemanticColors.Stroke.muted()) {
                             Text(text = "-", style = InstUIText.contentImportant)
                         }
                         Column(
@@ -537,7 +588,7 @@ private fun NGCGradeCard(gradeCell: GradeCellViewData, pointsPossible: String, o
                             if (pointsPossible.isNotEmpty()) {
                                 Text(text = "/ $pointsPossible", style = InstUIText.contentImportant)
                             }
-                            Pill(text = stringResource(R.string.ngc_notYetGraded), variant = PillVariant.Info)
+                            Pill(text = stringResource(R.string.ngc_notYetGraded), variant = PillVariant.Info, icon = InstUIIcons.hourglass)
                         }
                     }
                 }
@@ -559,6 +610,11 @@ private fun ClassPerformance(stats: GradeCellViewState.GradeStats) {
     val courseColor = LocalCourseColor.current
     val trackColor = InstUISemanticColors.Background.Divider.base()
     val markerColor = InstUISemanticColors.Text.base()
+    // Reveal the graph left-to-right on open (in step with the meter sweep).
+    val reveal = remember { Animatable(0f) }
+    LaunchedEffect(Unit) {
+        reveal.animateTo(1f, tween(durationMillis = 900, easing = FastOutSlowInEasing))
+    }
     Column(verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceSm.spaceSm)) {
         Text(text = stringResource(R.string.ngc_classPerformance), style = InstUIText.contentImportant)
         Canvas(
@@ -586,15 +642,17 @@ private fun ClassPerformance(stats: GradeCellViewState.GradeStats) {
             val tickHeight = 12.dp.toPx()
             val circleRadius = 7.dp.toPx()
 
-            // Full-width track (0..outOf).
-            drawLine(trackColor, Offset(sidePadding, centerY), Offset(size.width - sidePadding, centerY), lineStroke, cap = StrokeCap.Round)
-            // Class min..max range, in the course color.
-            drawLine(courseColor, Offset(positionFor(minScore), centerY), Offset(positionFor(maxScore), centerY), lineStroke, cap = StrokeCap.Round)
-            // Class mean tick.
-            val meanX = positionFor(meanScore)
-            drawLine(markerColor, Offset(meanX, centerY - tickHeight / 2f), Offset(meanX, centerY + tickHeight / 2f), 2.dp.toPx())
-            // Your score.
-            drawCircle(markerColor, radius = circleRadius, center = Offset(positionFor(youScore), centerY))
+            clipRect(right = size.width * reveal.value) {
+                // Full-width track (0..outOf).
+                drawLine(trackColor, Offset(sidePadding, centerY), Offset(size.width - sidePadding, centerY), lineStroke, cap = StrokeCap.Round)
+                // Class min..max range, in the course color.
+                drawLine(courseColor, Offset(positionFor(minScore), centerY), Offset(positionFor(maxScore), centerY), lineStroke, cap = StrokeCap.Round)
+                // Class mean tick.
+                val meanX = positionFor(meanScore)
+                drawLine(markerColor, Offset(meanX, centerY - tickHeight / 2f), Offset(meanX, centerY + tickHeight / 2f), 2.dp.toPx())
+                // Your score.
+                drawCircle(markerColor, radius = circleRadius, center = Offset(positionFor(youScore), centerY))
+            }
         }
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -633,14 +691,135 @@ private fun QuizSettingsSection(quiz: QuizViewViewData) {
 }
 
 @Composable
-private fun SubmissionSection(uiState: AssignmentDetailsUiState) {
-    Column(verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceSm.spaceSm)) {
+private fun SubmissionSection(
+    uiState: AssignmentDetailsUiState,
+    previewState: NgcSubmissionPreviewUiState,
+    rubric: NgcRubricUiState?,
+    onShowMore: () -> Unit,
+    onRubricClick: () -> Unit,
+    onCommentsClick: () -> Unit,
+    onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit,
+) {
+    val commentCount = uiState.attempts.getOrNull(uiState.selectedAttemptPosition)
+        ?.submission?.submissionComments?.size ?: 0
+    val commentsTitle = if (commentCount > 0) {
+        stringResource(R.string.ngc_commentsWithCount, commentCount)
+    } else {
+        stringResource(R.string.ngc_comments)
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd)) {
         Heading(text = stringResource(R.string.ngc_submission), level = HeadingLevel.H4)
         AttemptSelector(
             attempts = uiState.attempts,
             selectedIndex = uiState.selectedAttemptPosition,
             onSelect = uiState.actions.onAttemptSelected,
         )
+        // A single white card holds the preview, "Show more", and — via the footer — the grade
+        // and the Rubric/Comments list cells, separated by dividers like a list (per design).
+        NGCSubmissionPreview(
+            state = previewState,
+            onShowMore = onShowMore,
+            onFullScreenMedia = onFullScreenMedia,
+        ) {
+            val rows = buildList<@Composable () -> Unit> {
+                if (uiState.gradeCell != null) {
+                    add { AttemptGradeRow(uiState) }
+                }
+                if (rubric != null) {
+                    add {
+                        SubmissionListCell(
+                            title = stringResource(R.string.ngc_rubric),
+                            icon = InstUIIcons.clipboardPenLine,
+                            onClick = onRubricClick,
+                            modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
+                        )
+                    }
+                }
+                add {
+                    SubmissionListCell(
+                        title = commentsTitle,
+                        icon = InstUIIcons.messageCircle,
+                        onClick = onCommentsClick,
+                        modifier = Modifier.testTag("ngcAssignmentDetails_commentsRow"),
+                    )
+                }
+            }
+            rows.forEachIndexed { index, row ->
+                if (index > 0) Separator()
+                row()
+            }
+        }
+    }
+}
+
+/**
+ * Grade + status of the selected attempt, shown inside the submission card under "Show more" (the
+ * shared ViewModel keeps [AssignmentDetailsUiState.gradeCell] in sync with the chosen attempt).
+ * Renders "score/points" in the course color plus the status pill. Renders nothing when there is no
+ * grade cell yet.
+ */
+@Composable
+private fun AttemptGradeRow(uiState: AssignmentDetailsUiState) {
+    val gradeCell = uiState.gradeCell ?: return
+    val courseColor = LocalCourseColor.current
+    val gradeText = gradeCell.score.takeIf { it.isNotEmpty() }?.let { score ->
+        if (uiState.points.isNotEmpty()) "$score/${uiState.points}" else score
+    }
+    val statusPill = uiState.submissionStateLabel
+        ?.takeIf { uiState.submissionStatusVisible }
+        ?.let { mapSubmissionStateToPill(it) }
+    if (gradeText == null && statusPill == null) return
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                horizontal = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
+                vertical = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+            )
+            .testTag("ngcAssignmentDetails_attemptGrade"),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
+        gradeText?.let {
+            Text(text = it, style = InstUIText.contentImportant, color = courseColor)
+        }
+        statusPill?.let { pill ->
+            Pill(
+                text = pill.text,
+                variant = pill.variant,
+                icon = if (pill.variant == PillVariant.Success) InstUIIcons.circleCheck else null,
+            )
+        }
+    }
+}
+
+/**
+ * A submission list cell (rubric / comments), matching the design's list-cell component: a
+ * course-colored leading icon, a semibold title, and a trailing chevron. Rendered as a flat row
+ * (separators are drawn by the caller), unlike the standalone card-wrapped [RubricRow].
+ */
+@Composable
+private fun SubmissionListCell(
+    title: String,
+    icon: ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    // A plain center-aligned row rather than InstUI's ListItem: ListItem top-aligns its leading /
+    // title / trailing (for multi-line items), which leaves this single-line cell's icon, text and
+    // chevron looking uncentered.
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
+        Icon(imageVector = icon, color = IconColor.CourseColor, size = IconSize.Large)
+        Text(text = title, style = InstUIText.contentImportant, modifier = Modifier.weight(1f))
+        Icon(imageVector = InstUIIcons.chevronRight, color = IconColor.Muted, size = IconSize.Small)
     }
 }
 
@@ -789,8 +968,9 @@ private fun DescriptionSection(
     if (uiState.fullLocked) return
     var expanded by rememberSaveable { mutableStateOf(true) }
     val htmlColors = ngcHtmlFormatColors()
+    val buttonColors = ngcThemeSwitchButtonColors()
     ToggleDetails(
-        title = uiState.descriptionLabelText,
+        title = stringResource(R.string.ngc_instructions),
         expanded = expanded,
         onExpandToggle = { expanded = !expanded },
         modifier = Modifier.testTag("ngcAssignmentDetails_instructionsAccordion"),
@@ -815,7 +995,14 @@ private fun DescriptionSection(
                     onLtiButtonPressed = uiState.actions.onLtiButtonPressed,
                     webViewCallbacks = webViewCallbacks,
                     embeddedWebViewCallbacks = embeddedWebViewCallbacks,
-                    applyOnWebView = { overrideHtmlFormatColors = htmlColors },
+                    applyOnWebView = {
+                        overrideHtmlFormatColors = htmlColors
+                        overrideHtmlFormatColorsSwitched = ngcHtmlFormatColorsLight()
+                    },
+                    applyOnUpdate = {
+                        themeSwitchButtonColors = buttonColors
+                        themeSwitchButtonColorsSwitched = ngcThemeSwitchButtonColorsLight()
+                    },
                     modifier = Modifier
                         // The HTML wrapper adds its own horizontal padding; cancel it so the
                         // instructions text lines up with the rest of the screen content.
@@ -841,6 +1028,24 @@ private fun LockedCard(message: String) {
             Icon(imageVector = InstUIIcons.lock, color = IconColor.Muted, size = IconSize.Small)
             Text(text = message, style = InstUIText.content)
         }
+    }
+}
+
+@Composable
+private fun RubricRow(onClick: () -> Unit) {
+    // The row lives in a card (like the grade card, but without elevation), per design.
+    // contentPadding = 0 so the cell's own padding is the only inset (not doubled by the card).
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = Elevation.None,
+        contentPadding = 0.dp,
+    ) {
+        SubmissionListCell(
+            title = stringResource(R.string.ngc_rubric),
+            icon = InstUIIcons.clipboardPenLine,
+            onClick = onClick,
+            modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
+        )
     }
 }
 

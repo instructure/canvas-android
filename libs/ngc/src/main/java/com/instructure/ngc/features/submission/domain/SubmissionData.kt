@@ -15,6 +15,7 @@
  */
 package com.instructure.ngc.features.submission.domain
 
+import com.instructure.canvasapi2.models.Assignment
 import java.util.Date
 
 data class SubmissionData(
@@ -24,5 +25,11 @@ data class SubmissionData(
     val allowsTextEntry: Boolean,
     val lastAttempt: Long?,
     val draftHtml: String?,
-    val draftSavedAt: Date?
+    val draftSavedAt: Date?,
+    val availableTypes: List<Assignment.SubmissionType> = emptyList(),
+    val draftFiles: List<SubmissionFileData> = emptyList(),
+    val fileDraftSavedAt: Date? = null,
+    val allowedExtensions: List<String> = emptyList(),
+    val draftUrl: String? = null,
+    val urlDraftSavedAt: Date? = null,
 )

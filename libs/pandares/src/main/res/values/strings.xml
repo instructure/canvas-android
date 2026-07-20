@@ -2483,4 +2483,108 @@
     <string name="widgetSettings_widgetsColor">Dashboard Main Color</string>
     <string name="dashboard_globalAnnouncement">Global Announcement</string>
     <string name="forecastWidget_currentWeek">Current week</string>
+
+    <!-- NGC strings -->
+    <string name="ngc_app_name">NGC</string>
+    <string name="ngc_dashboardTitle">Dashboard</string>
+
+    <!-- NGC Course Home -->
+    <string name="ngc_courseHomeTabHome">Home</string>
+    <string name="ngc_courseHomeTabModules">Modules</string>
+    <string name="ngc_courseHomeTabMyWork">My Work</string>
+    <string name="ngc_courseHomeTabMore">More</string>
+
+    <!-- NGC Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Additional info</string>
+    <string name="ngc_submissionSegmentInstructions">Instructions</string>
+    <string name="ngc_submissionSegmentRubric">Rubric</string>
+    <string name="ngc_submissionSegmentComments">Comments</string>
+
+    <!-- NGC Accessibility -->
+    <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>
+    <string name="a11y_dashboardCustomizeDashboardContentDescription">Customize dashboard</string>
+    <string name="a11y_submissionSupportingPaneExpand">Expand additional info</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Collapse additional info</string>
+
+    <!-- NGC Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Submit Assignment</string>
+    <string name="ngc_submission_newSubmission">New Submission</string>
+    <string name="ngc_submission_textEntry">Text Entry</string>
+    <string name="ngc_submission_submit">Submit</string>
+    <string name="ngc_submission_deleteDraft">Delete draft</string>
+    <string name="ngc_submission_draftSaved">Saved %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Enter your submission text here</string>
+    <string name="ngc_submission_submissionError">Error submitting assignment</string>
+    <string name="ngc_submission_loadError">Failed to load assignment</string>
+    <string name="ngc_submission_dueDate">Due %1$s</string>
+    <string name="ngc_submission_retry">Retry</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Delete draft?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Your draft will be permanently deleted and cannot be recovered.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Delete</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cancel</string>
+    <string name="ngc_back">Back</string>
+
+    <!-- NGC File submission -->
+    <string name="ngc_submission_fileUpload">File Upload</string>
+    <string name="ngc_submission_addFile">Add file</string>
+    <string name="ngc_submission_addAnotherFile">Add another file</string>
+    <string name="ngc_submission_allowedFileTypes">Allowed: %1$s</string>
+    <string name="ngc_submission_addFileSheetTitle">Add file from</string>
+    <string name="ngc_submission_sourceDeviceFiles">Device files</string>
+    <string name="ngc_submission_sourceTakePhoto">Take a photo</string>
+    <string name="ngc_submission_sourceRecordVideo">Record a video</string>
+    <string name="ngc_submission_sourceChooseFromGallery">Choose from gallery</string>
+    <string name="ngc_submission_fileUploadFailed">One or more files could not be uploaded</string>
+
+    <!-- NGC Submission type dropdown accessibility -->
+    <string name="a11y_submission_typeDropdownTrigger">Change submission type, currently %1$s</string>
+    <string name="a11y_submission_typeSelected">%1$s, selected</string>
+
+    <!-- NGC File submission accessibility -->
+    <string name="a11y_submission_fileDelete">Delete file</string>
+    <string name="a11y_submission_fileRetry">Retry upload</string>
+    <string name="a11y_submission_fileCancel">Cancel upload</string>
+    <string name="a11y_submission_sourceDeviceFiles">Browse device files</string>
+    <string name="a11y_submission_sourceTakePhoto">Open camera to take a photo</string>
+    <string name="a11y_submission_sourceRecordVideo">Open camera to record a video</string>
+    <string name="a11y_submission_sourceChooseFromGallery">Choose a photo from gallery</string>
+    <string name="ngc_availableUntil">Available until</string>
+    <string name="ngc_quizSettings">Quiz settings</string>
+    <string name="ngc_submission">Submission</string>
+    <string name="ngc_continueDraft">Continue draft</string>
+    <string name="ngc_assignmentReminder">Assignment Reminder</string>
+    <string name="ngc_classPerformance">Class Performance</string>
+    <string name="ngc_newAttempt">New attempt</string>
+    <string name="ngc_submitAssignment">Submit assignment</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Allowed file types</string>
+    <string name="ngc_noDueDate">No due date</string>
+    <string name="ngc_noAssignmentDescription">No assignment description</string>
+    <string name="ngc_retry">Retry</string>
+    <string name="ngc_finalGrade">Final Grade</string>
+    <string name="ngc_notYetGraded">Not yet graded</string>
+    <string name="ngc_uploadingSubmission">Uploading submission…</string>
+    <string name="ngc_submissionFailed">Submission failed</string>
+    <string name="ngc_extraCredit">Extra Credit</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d day late</item>
+        <item quantity="other">%d days late</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Lowest: %s</string>
+    <string name="ngc_classPerformanceAverage">Avg: %s</string>
+    <string name="ngc_classPerformanceHighest">Highest: %s</string>
+    <string name="ngc_rubric">Rubric</string>
+    <string name="ngc_rubricScore">Score</string>
+    <string name="ngc_instructions">Instructions</string>
+    <string name="ngc_rubricScoreValue">%1$s / %2$s pts</string>
+
+    <string name="ngc_submissionNoPreview">No preview available</string>
+    <string name="ngc_showMore">Show more</string>
+    <string name="ngc_comments">Comments</string>
+    <string name="ngc_commentsWithCount">Comments (%1$d)</string>
+
+    <plurals name="ngc_additionalFiles">
+        <item quantity="one">%d additional file</item>
+        <item quantity="other">%d additional files</item>
+    </plurals>
 </resources>

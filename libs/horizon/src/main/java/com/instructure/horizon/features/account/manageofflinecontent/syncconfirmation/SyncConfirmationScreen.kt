@@ -66,7 +66,7 @@ fun SyncConfirmationScreen(
         },
         dismissLabel = stringResource(R.string.offline_startSyncConfirmationCancel),
         onDismiss = { navController.popBackStack() },
-        navigationBarColor = null,
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
         statusBarColor = HorizonColors.Surface.pageSecondary()
     ) { contentPadding ->
         Column(

@@ -66,6 +66,7 @@ fun OfflineSettingsScreen(
     HorizonScaffold(
         title = stringResource(R.string.offline_settingsTitle),
         onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
         Column(
             verticalArrangement = Arrangement.spacedBy(32.dp),
@@ -153,7 +154,6 @@ private fun WifiOnlyDisableConfirmationDialog(
         onConfirm = onConfirm,
         dismissLabel = stringResource(R.string.offline_wifiOnlyDisableConfirmationCancel),
         onDismiss = onDismiss,
-        navigationBarColor = null,
         statusBarColor = HorizonColors.Surface.pageSecondary()
     ) { contentPadding ->
         Text(

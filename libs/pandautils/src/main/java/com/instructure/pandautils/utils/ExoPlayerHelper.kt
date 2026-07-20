@@ -30,7 +30,7 @@ import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
 import androidx.media3.datasource.DefaultDataSource
-import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
 import androidx.media3.exoplayer.dash.DefaultDashChunkSource
@@ -46,6 +46,7 @@ import androidx.media3.exoplayer.trackselection.TrackSelector
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.ui.PlayerView
+import com.instructure.canvasapi2.CanvasRestAdapter.Companion.okHttpClient
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 
@@ -202,9 +203,13 @@ class ExoAgent private constructor(val uri: Uri) {
                 currentState = when (playbackState) {
                     Player.STATE_BUFFERING -> ExoAgentState.BUFFERING
                     Player.STATE_ENDED -> {
+                        // Rewind and pause instead of releasing the player. Clients that swap back to
+                        // a thumbnail on ENDED (the legacy fullscreen views) release it themselves via
+                        // reset(); clients that keep the PlayerView visible (the Compose inline
+                        // preview) need a live player so the controls stay responsive and playback can
+                        // be restarted.
                         player?.seekToDefaultPosition()
-                        player?.stop()
-                        player?.release()
+                        player?.playWhenReady = false
                         ExoAgentState.ENDED
                     }
 
@@ -257,21 +262,19 @@ class ExoAgent private constructor(val uri: Uri) {
 
     companion object {
 
-        private const val CONNECT_TIMEOUT = 8000
-
-        private const val READ_TIMEOUT = 8000
-
         private val BANDWIDTH_METER by lazy {
             DefaultBandwidthMeter.Builder(ContextKeeper.appContext).build()
         }
 
         private val DATA_SOURCE_FACTORY by lazy {
-            val httpSourceFactory = DefaultHttpDataSource.Factory()
+            // Route playback through the app's OkHttp client so RequestInterceptor attaches the
+            // auth token to Canvas requests (files are no longer accessible via a URL verifier).
+            // OkHttp strips the Authorization header on cross-host redirects, so the token is not
+            // leaked to the inst-fs/S3/Kaltura storage host the file endpoint redirects to.
+            val mediaClient = okHttpClient.newBuilder().cache(null).build()
+            val httpSourceFactory = OkHttpDataSource.Factory(mediaClient)
                 .setUserAgent(ApiPrefs.userAgent)
                 .setTransferListener(BANDWIDTH_METER)
-                .setConnectTimeoutMs(CONNECT_TIMEOUT)
-                .setReadTimeoutMs(READ_TIMEOUT)
-                .setAllowCrossProtocolRedirects(true)
             DefaultDataSource.Factory(ContextKeeper.appContext, httpSourceFactory)
                 .setTransferListener(BANDWIDTH_METER)
         }

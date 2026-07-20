@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.annotations.compose.PdfPreview
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.moduleitemsequence.content.file.ViewMediaActivity
 import com.instructure.horizon.horizonui.molecules.Spinner

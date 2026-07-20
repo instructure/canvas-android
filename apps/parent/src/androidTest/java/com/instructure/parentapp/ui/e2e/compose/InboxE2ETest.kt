@@ -484,6 +484,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)

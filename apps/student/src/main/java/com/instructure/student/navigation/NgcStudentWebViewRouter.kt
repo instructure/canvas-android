@@ -20,16 +20,22 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.interactions.FragmentInteractions
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.fragment.BasicQuizViewFragment
+import com.instructure.student.fragment.StudioWebViewFragment
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.getResourceSelectorUrl
 
 /**
  * [WebViewRouter] for the NGC experience. NGC runs in its own Activity (not inside the main
@@ -47,6 +53,14 @@ class NgcStudentWebViewRouter(private val activity: FragmentActivity) : WebViewR
 
     override fun openMedia(url: String, mime: String, filename: String, canvasContext: CanvasContext?) {
         RouteMatcher.openMedia(activity, url)
+    }
+
+    // The submission preview already knows it's playable media, so route straight to the media
+    // viewer. RouteMatcher.openMedia would re-classify the URL and, for extension-less media URLs,
+    // fall back to downloading / opening externally.
+    override fun openMediaFullScreen(url: String, contentType: String, displayName: String?, thumbnailUrl: String?) {
+        val bundle = BaseViewMediaActivity.makeBundle(url, thumbnailUrl, contentType, displayName, false)
+        RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
     }
 
     override fun routeExternally(url: String) = openInWebView(url)
@@ -84,6 +98,22 @@ class NgcStudentWebViewRouter(private val activity: FragmentActivity) : WebViewR
     override fun launchInternalQuiz(canvasContext: CanvasContext?, quiz: Quiz, url: String) {
         val route = BasicQuizViewFragment.makeRoute(canvasContext ?: CanvasContext.emptyCourseContext(), quiz, url)
         BasicQuizViewFragment.newInstance(route)?.let { showFragmentOverNgc(it) }
+    }
+
+    // Studio: reuse the academic flow (StudioWebViewFragment with the resource-selector URL and next
+    // attempt), hosted over the NGC content so there's no bottom bar and back returns to NGC.
+    override fun launchStudio(canvasContext: CanvasContext?, assignment: Assignment, studioLTITool: LTITool?) {
+        val context = canvasContext ?: CanvasContext.emptyCourseContext()
+        val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
+        val route = StudioWebViewFragment.makeRoute(
+            context,
+            studioLTITool?.getResourceSelectorUrl(context, assignment).orEmpty(),
+            studioLTITool?.name.orEmpty(),
+            true,
+            assignment,
+            nextAttempt.toLong(),
+        )
+        StudioWebViewFragment.newInstance(route)?.let { showFragmentOverNgc(it) }
     }
 
     // NGC runs its UI via Compose in its own Activity; hosting these fragments over its content

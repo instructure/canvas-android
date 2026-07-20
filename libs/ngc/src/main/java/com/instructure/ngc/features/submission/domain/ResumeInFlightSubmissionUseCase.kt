@@ -17,23 +17,28 @@ package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class DeleteTextDraftUseCase @Inject constructor(
+/**
+ * Returns the in-flight (non-draft, non-error) ONLINE_UPLOAD submission for the current user,
+ * or null if none exists. Used by the VM to re-attach after process death.
+ */
+class ResumeInFlightSubmissionUseCase @Inject constructor(
     private val createSubmissionDao: CreateSubmissionDao,
-    private val apiPrefs: ApiPrefs
-) {
-    suspend operator fun invoke(assignmentId: Long) {
-        val userId = apiPrefs.user?.id ?: return
-        withContext(Dispatchers.IO) {
-            createSubmissionDao.deleteDraftByAssignmentIdAndType(
-                assignmentId,
-                userId,
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
-            )
-        }
+    private val apiPrefs: ApiPrefs,
+) : BaseUseCase<ResumeInFlightSubmissionUseCase.Params, CreateSubmissionEntity?>() {
+
+    data class Params(val assignmentId: Long)
+
+    override suspend fun execute(params: Params): CreateSubmissionEntity? {
+        val userId = apiPrefs.user?.id ?: return null
+        return createSubmissionDao.findSubmissionsByAssignmentIdAndType(
+            params.assignmentId,
+            userId,
+            Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+        ).firstOrNull { !it.isDraft && !it.errorFlag }
     }
 }

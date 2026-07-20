@@ -141,7 +141,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/login.*", RouteContext.DO_NOT_ROUTE))//FIXME: we know about this
 
         routes.add(Route("/conversations", InboxFragment::class.java))
-        routes.add(Route("/conversations/:conversation_id", InboxFragment::class.java, InboxDetailsFragment::class.java))
+        routes.add(Route("/conversations/:${InboxDetailsFragment.CONVERSATION_ID}", InboxDetailsFragment::class.java))
 
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
@@ -845,7 +845,7 @@ object RouteMatcher : BaseRouteMatcher() {
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
-                    openMedia(activity, fileFolder.contentType!!, fileFolder.url!!, fileFolder.displayName!!, route, fileID)
+                    openMedia(activity, fileFolder.contentType!!, forwardLocationParam(fileFolder.url!!, route), fileFolder.displayName!!, route, fileID)
                 }
             }
         }

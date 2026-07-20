@@ -154,6 +154,10 @@ class CanvasWebView @JvmOverloads constructor(
 
     var overrideHtmlFormatColors: HtmlFormatColors? = null
 
+    // Colors to use when the user switches the content to light appearance (see CanvasWebViewWrapper's
+    // theme switch). Lets a consumer provide its own light theme instead of the generic defaults.
+    var overrideHtmlFormatColorsSwitched: HtmlFormatColors? = null
+
     inner class JavascriptInterface {
         @android.webkit.JavascriptInterface  // Must match Javascript interface method of VideoWebChromeClient
         fun notifyVideoEnd() {

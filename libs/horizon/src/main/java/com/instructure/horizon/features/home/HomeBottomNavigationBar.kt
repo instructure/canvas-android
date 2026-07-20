@@ -39,6 +39,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.instructure.horizon.R
+import com.instructure.horizon.features.account.navigation.AccountRoute
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.offlineDisabled
@@ -49,19 +51,27 @@ data class BottomNavItem(
     @StringRes val label: Int,
     @DrawableRes val icon: Int,
     @DrawableRes val selectedIcon: Int,
-    val containsSubPages: Boolean = false
+    val containsSubPages: Boolean = false,
+    val startRoute: String = route,
 )
 
 private val bottomNavItems = listOf(
     BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottomNav_home, R.drawable.home, R.drawable.home_filled),
-    BottomNavItem(HomeNavigationRoute.Learn.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled, true),
+    BottomNavItem(
+        HomeNavigationRoute.Learn.route,
+        R.string.bottomNav_learn,
+        R.drawable.book_2,
+        R.drawable.book_2_filled,
+        containsSubPages = true,
+        startRoute = LearnRoute.LearnScreen.route,
+    ),
     BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottomNav_skillspace, R.drawable.hub, R.drawable.hub_filled),
     BottomNavItem(
         HomeNavigationRoute.Account.route,
         R.string.bottomNav_account,
         R.drawable.account_circle,
         R.drawable.account_circle_filled,
-        true
+        startRoute = AccountRoute.Account.route,
     )
 )
 
@@ -69,9 +79,10 @@ private val bottomNavItems = listOf(
 fun isBottomBarVisible(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val currentRoute = currentDestination?.route
 
     val subPageRoutes = bottomNavItems.filter { it.containsSubPages }.map { it.route }.toSet()
-    return bottomNavItems.map { it.route }.contains(currentDestination?.route)
+    return bottomNavItems.any { it.startRoute == currentRoute }
             || currentDestination?.hierarchy?.drop(1)?.any { it.route in subPageRoutes } == true
 }
 
@@ -115,16 +126,21 @@ fun HomeBottomNavigationBar(
                         selected,
                         itemEnabled,
                         onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
+                            val alreadyInTab = currentDestination?.hierarchy?.any { it.route == item.route } == true
+                            if (alreadyInTab && currentDestination.route != item.startRoute) {
+                                navController.popBackStack(item.startRoute, inclusive = false)
+                            } else {
+                                navController.navigate(item.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
 
-                                // Do not restore screen state when navigating to Dashboard screen
-                                // Restore when navigating between other screens
-                                restoreState = item.route != HomeNavigationRoute.Dashboard.route ||
-                                        (item.route == HomeNavigationRoute.Dashboard.route && currentDestination?.route == HomeNavigationRoute.Dashboard.route)
+                                    // Do not restore screen state when navigating to Dashboard screen
+                                    // Restore when navigating between other screens
+                                    restoreState = item.route != HomeNavigationRoute.Dashboard.route ||
+                                            (item.route == HomeNavigationRoute.Dashboard.route && currentDestination?.route == HomeNavigationRoute.Dashboard.route)
+                                }
                             }
                         },
                         modifier = Modifier.offlineDisabled(isDisabledOffline)

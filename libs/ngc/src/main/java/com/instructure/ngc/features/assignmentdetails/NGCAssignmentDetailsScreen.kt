@@ -71,18 +71,30 @@ private const val DEFAULT_REMINDER_COLOR = android.graphics.Color.GRAY
  * NGC host for Assignment Details. Reuses the shared [AssignmentDetailsViewModel] (selected via the
  * NGC nav route's SavedStateHandle args) and renders the InstUI [NGCAssignmentDetailsContent].
  *
- * Phase 1: submit opens a bottom sheet that only logs the chosen submission type; outward navigation
- * is logged rather than routed. Reminders reuse the ViewModel's existing dialogs.
+ * Submit opens a bottom sheet of the assignment's submission types; NGC-implemented types (Text Entry,
+ * File Upload) route to the submission screen with that type preselected, others are logged until built.
+ * Reminders reuse the ViewModel's existing dialogs.
  */
 @Composable
 fun NGCAssignmentDetailsScreen(
     onNavigateBack: () -> Unit,
-    onNavigateToTextSubmission: () -> Unit,
+    onNavigateToSubmission: (Assignment.SubmissionType) -> Unit,
     viewModel: AssignmentDetailsViewModel = hiltViewModel(),
+    draftHintsViewModel: NGCSubmitDraftHintsViewModel = hiltViewModel(),
+    previewViewModel: NgcSubmissionPreviewViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val previewState by previewViewModel.uiState.collectAsState()
+    val draftHintsUiState by draftHintsViewModel.uiState.collectAsState()
     val context = LocalContext.current
     var showSubmitSheet by remember { mutableStateOf(false) }
+    var showRubricSheet by remember { mutableStateOf(false) }
+    // Rubric is read straight off the loaded assignment + the course's restrict-quantitative-data setting,
+    // so it's keyed on those inputs (not uiState) to recompute exactly when they change.
+    val restrictQuantitativeData = viewModel.currentCourse?.settings?.restrictQuantitativeData == true
+    val rubric = remember(viewModel.assignment, restrictQuantitativeData) {
+        buildNgcRubric(viewModel.assignment, restrictQuantitativeData)
+    }
 
     // Links in the instructions WebView must never load in-place: route internal Canvas URLs to
     // native screens, and open external URLs in a separate WebView fragment (same as Academic).
@@ -106,6 +118,12 @@ fun NGCAssignmentDetailsScreen(
 
     LaunchedEffect(uiState.courseColor) {
         uiState.courseColor?.let { viewModel.updateReminderColor(it.color()) }
+    }
+
+    // Resolve the inline submission preview whenever the selected attempt changes.
+    LaunchedEffect(uiState.attempts, uiState.selectedAttemptPosition) {
+        val submission = uiState.attempts.getOrNull(uiState.selectedAttemptPosition)?.submission
+        previewViewModel.load(submission, uiState.baseUrl, viewModel.currentCourse?.id ?: 0L)
     }
 
     LaunchedEffect(uiState.navigation) {
@@ -166,12 +184,29 @@ fun NGCAssignmentDetailsScreen(
                 // Quizzes (and new-quiz LTIs) open the quiz instead of the submit chooser. The
                 // ViewModel decides between a quiz route and an LTI launch, mirroring Academic.
                 assignment?.isQuiz() == true -> uiState.actions.onSubmitClick()
-                else -> showSubmitSheet = true
+                else -> {
+                    draftHintsViewModel.refresh()
+                    showSubmitSheet = true
+                }
             }
         },
         webViewCallbacks = webViewCallbacks,
         embeddedWebViewCallbacks = embeddedWebViewCallbacks,
+        rubric = rubric,
+        onRubricClick = { showRubricSheet = true },
+        previewState = previewState,
+        // "Show more" reuses the Grade Card's navigation (both open the submission screen).
+        // Outward routing is still Phase 1 (logged, not routed).
+        onShowMore = uiState.actions.onGradeCellClick,
+        onCommentsClick = { Log.d(TAG, "View comments requested (Phase 1, not routed)") },
+        onFullScreenMedia = { url, contentType, displayName, thumbnailUrl ->
+            webViewRouter.openMediaFullScreen(url, contentType, displayName, thumbnailUrl)
+        },
     )
+
+    if (showRubricSheet && rubric != null) {
+        RubricBottomSheet(rubric = rubric, onDismiss = { showRubricSheet = false })
+    }
 
     if (showSubmitSheet) {
         val assignment = viewModel.assignment
@@ -183,22 +218,36 @@ fun NGCAssignmentDetailsScreen(
                     SubmitOption(
                         submissionType = type,
                         label = Assignment.submissionTypeToPrettyPrintString(type, context, assignment.ltiToolType()).orEmpty(),
-                        // A saved text draft is offered as "Continue draft" on the Text Entry row.
-                        showDraftHint = type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY && uiState.hasDraft,
+                        showDraftHint = when (type) {
+                            Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> draftHintsUiState.hasTextDraft
+                            Assignment.SubmissionType.ONLINE_UPLOAD -> draftHintsUiState.hasFileDraft
+                            Assignment.SubmissionType.ONLINE_URL -> draftHintsUiState.hasUrlDraft
+                            else -> false
+                        },
                     )
                 )
             }
             if (viewModel.isStudioAccepted()) {
-                add(SubmitOption(submissionType = null, label = stringResource(R.string.ngc_studio), showDraftHint = false))
+                // Studio isn't a real assignment submission type; it launches the academic Studio
+                // WebView full-screen over NGC (not the generic submission screen).
+                add(SubmitOption(submissionType = null, label = stringResource(R.string.ngc_studio), showDraftHint = false, isStudio = true))
             }
         }
         SubmitTypeBottomSheet(
             options = options,
             onSelect = { option ->
                 showSubmitSheet = false
-                when (option.submissionType) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> onNavigateToTextSubmission()
-                    else -> Log.d(TAG, "Submission type selected (Phase 1, not routed): ${option.label}")
+                val type = option.submissionType
+                when {
+                    // Studio: launch the academic Studio WebView full-screen over NGC (no bottom bar).
+                    option.isStudio -> viewModel.assignment?.let { assignment ->
+                        webViewRouter.launchStudio(viewModel.currentCourse, assignment, viewModel.getStudioLTITool())
+                    }
+                    // NGC-implemented submission types route to the submission screen with that type preselected.
+                    type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY ||
+                        type == Assignment.SubmissionType.ONLINE_UPLOAD ||
+                        type == Assignment.SubmissionType.ONLINE_URL -> type?.let { onNavigateToSubmission(it) }
+                    else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
                 }
             },
             onDismiss = { showSubmitSheet = false },
@@ -210,6 +259,7 @@ private data class SubmitOption(
     val submissionType: Assignment.SubmissionType?,
     val label: String,
     val showDraftHint: Boolean,
+    val isStudio: Boolean = false,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)

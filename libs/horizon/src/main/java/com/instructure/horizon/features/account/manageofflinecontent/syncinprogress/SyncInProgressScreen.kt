@@ -67,6 +67,7 @@ fun SyncInProgressScreen(
     HorizonScaffold(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
         Column(modifier = modifier.fillMaxSize()) {
             Column(
