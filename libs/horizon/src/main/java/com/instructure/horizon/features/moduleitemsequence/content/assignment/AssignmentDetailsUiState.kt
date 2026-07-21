@@ -43,6 +43,7 @@ data class AssignmentDetailsUiState(
 data class SubmissionDetailsUiState(
     val submissions: List<SubmissionUiState> = emptyList(),
     val currentSubmissionAttempt: Long = -1L,
+    val newAttemptEnabled: Boolean = true,
     val onNewAttemptClick: () -> Unit = {},
 )
 

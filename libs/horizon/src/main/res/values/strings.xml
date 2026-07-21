@@ -266,6 +266,10 @@
     <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
     <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
     <string name="assignmentDetails_submissionConfirmationConfirm">Submit attempt</string>
+    <string name="assignmentDetails_offlineSubmissionWarningTitle">You’re offline</string>
+    <string name="assignmentDetails_offlineSubmissionWarningMessage">You can submit now, but your attempt will be uploaded once you’re back online. Keep the app installed and don’t remove the selected files until it syncs.</string>
+    <string name="assignmentDetails_offlineSubmissionWarningCancel">Cancel</string>
+    <string name="assignmentDetails_offlineSubmissionWarningConfirm">Submit when online</string>
     <string name="notebookTypeUnclear">Unclear</string>
     <string name="notebookTypeImportant">Important</string>
     <string name="notebookTypeAllNotes">All notes</string>

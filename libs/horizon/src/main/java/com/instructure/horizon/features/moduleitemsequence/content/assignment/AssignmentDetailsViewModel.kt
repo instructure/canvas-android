@@ -129,10 +129,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                     ltiUrl = assignment.externalToolAttributes?.url.orEmpty(),
                     submissionDetailsUiState = it.submissionDetailsUiState.copy(
                         submissions = submissions,
-                        currentSubmissionAttempt = initialAttempt
+                        currentSubmissionAttempt = initialAttempt,
+                        newAttemptEnabled = isNewAttemptAllowed(assignment, initialAttempt)
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
-                    showAddSubmission = lastActualSubmission == null && !isOffline,
+                    showAddSubmission = lastActualSubmission == null,
                     onSubmissionSuccess = ::updateAssignment,
                     attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
                     toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments),
@@ -247,6 +248,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(urlToOpen = null) }
     }
 
+    private fun isNewAttemptAllowed(assignment: Assignment, currentAttempt: Long): Boolean {
+        return assignment.allowedAttempts <= 0L || currentAttempt < assignment.allowedAttempts
+    }
+
     private fun onNewAttemptClick() {
         _uiState.update {
             it.copy(
@@ -281,7 +286,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             it.copy(
                 submissionDetailsUiState = it.submissionDetailsUiState.copy(
                     submissions = submissions,
-                    currentSubmissionAttempt = initialAttempt
+                    currentSubmissionAttempt = initialAttempt,
+                    newAttemptEnabled = isNewAttemptAllowed(assignment, initialAttempt)
                 ),
                 showSubmissionDetails = lastActualSubmission != null,
                 showAddSubmission = lastActualSubmission == null,

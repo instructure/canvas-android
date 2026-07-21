@@ -15,11 +15,13 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission
 
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
+import java.util.concurrent.TimeUnit
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.submission.BaseSubmissionHelper
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
@@ -45,6 +47,7 @@ class HorizonSubmissionHelper(
         val submissionWork = OneTimeWorkRequest.Builder(HorizonSubmissionWorker::class.java)
             .setInputData(data.build())
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .build()
         workManager.enqueue(submissionWork)
     }

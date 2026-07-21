@@ -17,7 +17,9 @@ package com.instructure.horizon.offline.sync
 
 import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.Failure
+import com.instructure.canvasapi2.utils.errorMessage
+import com.instructure.canvasapi2.utils.httpStatusCode
+import com.instructure.canvasapi2.utils.isTransientFailure
 import com.instructure.horizon.database.dao.PendingActionDao
 import com.instructure.horizon.database.entity.PendingActionEntity
 
@@ -50,13 +52,12 @@ abstract class PendingActionSyncer(
         var hadTransientFailure = false
         for (action in actions) {
             val result = replay(action)
-            val code = result.httpStatusCode()
             when {
                 // Success, or Canvas already reflects the desired state (idempotent).
-                result.isSuccess || code == HTTP_CONFLICT -> pendingActionDao.delete(action.id)
+                result.isSuccess || result.httpStatusCode() == HTTP_CONFLICT -> pendingActionDao.delete(action.id)
 
                 // Transient: retry later. 401 already went through the token refresh path.
-                code == null || code == HTTP_UNAUTHORIZED || code >= HTTP_SERVER_ERROR -> {
+                result.isTransientFailure() -> {
                     pendingActionDao.updateRetry(action.id, action.retryCount + 1, result.errorMessage())
                     hadTransientFailure = true
                 }
@@ -69,24 +70,9 @@ abstract class PendingActionSyncer(
         if (hadTransientFailure) throw OfflineActionRetryException(actionType)
     }
 
-    private fun DataResult<*>.httpStatusCode(): Int? {
-        val fail = this as? DataResult.Fail ?: return null
-        return when (val failure = fail.failure) {
-            is Failure.Authorization -> HTTP_UNAUTHORIZED
-            is Failure.Network -> failure.errorCode ?: fail.response?.code
-            else -> fail.response?.code
-        }
-    }
-
-    private fun DataResult<*>.errorMessage(): String? {
-        return (this as? DataResult.Fail)?.failure?.message
-    }
-
     companion object {
         const val MAX_RETRIES = 5
-        private const val HTTP_UNAUTHORIZED = 401
         private const val HTTP_CONFLICT = 409
-        private const val HTTP_SERVER_ERROR = 500
     }
 }
 

@@ -139,6 +139,20 @@ fun AddSubmissionContent(
             )
         }
 
+        if (uiState.showOfflineSubmissionWarning) {
+            Modal(
+                dialogState = ModalDialogState(
+                    title = stringResource(R.string.assignmentDetails_offlineSubmissionWarningTitle),
+                    message = stringResource(R.string.assignmentDetails_offlineSubmissionWarningMessage),
+                    primaryButtonTitle = stringResource(R.string.assignmentDetails_offlineSubmissionWarningConfirm),
+                    secondaryButtonTitle = stringResource(R.string.assignmentDetails_offlineSubmissionWarningCancel),
+                    primaryButtonClick = uiState.onSubmitAssignment,
+                    secondaryButtonClick = uiState.onDismissOfflineSubmissionWarning
+                ),
+                onDismiss = uiState.onDismissOfflineSubmissionWarning
+            )
+        }
+
         Column(modifier = modifier) {
             if (uiState.submissionTypes.size > 1) {
                 Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)

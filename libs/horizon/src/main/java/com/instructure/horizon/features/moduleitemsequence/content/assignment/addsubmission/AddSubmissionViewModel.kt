@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
@@ -49,7 +50,8 @@ class AddSubmissionViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val createSubmissionDao: CreateSubmissionDao,
     private val createFileSubmissionDao: CreateFileSubmissionDao,
-    private val fileUploadUtilsHelper: FileUploadUtilsHelper
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper,
+    private val horizonOfflineState: HorizonOfflineState
 ) : ViewModel() {
 
     private var files: MutableList<FileSubmitObject> = mutableListOf()
@@ -65,6 +67,7 @@ class AddSubmissionViewModel @Inject constructor(
                 onSubmissionTypeSelected = ::submissionTypeSelected,
                 onSubmissionButtonClicked = ::showSubmissionConfirmation,
                 onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
+                onDismissOfflineSubmissionWarning = ::offlineSubmissionWarningDismissed,
                 onSubmitAssignment = ::sendSubmission,
                 onAssignmentUpdated = ::updateAssignment
             )
@@ -205,10 +208,18 @@ class AddSubmissionViewModel @Inject constructor(
     }
 
     private fun showSubmissionConfirmation() {
-        _uiState.update {
-            it.copy(
-                showSubmissionConfirmation = true
-            )
+        if (horizonOfflineState.isOffline.value) {
+            _uiState.update {
+                it.copy(
+                    showOfflineSubmissionWarning = true
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    showSubmissionConfirmation = true
+                )
+            }
         }
     }
 
@@ -220,10 +231,19 @@ class AddSubmissionViewModel @Inject constructor(
         }
     }
 
+    private fun offlineSubmissionWarningDismissed() {
+        _uiState.update {
+            it.copy(
+                showOfflineSubmissionWarning = false
+            )
+        }
+    }
+
     private fun sendSubmission() {
         _uiState.update {
             it.copy(
                 showSubmissionConfirmation = false,
+                showOfflineSubmissionWarning = false,
                 errorMessage = null
             )
         }

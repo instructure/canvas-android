@@ -30,4 +30,9 @@ val horizonDatabaseMigrations = arrayOf(
                 "`createdAt` INTEGER NOT NULL)"
         )
     },
+    createMigration(2, 3) { database ->
+        database.execSQL(
+            "ALTER TABLE `horizon_assignment_details` ADD COLUMN `allowedExtensions` TEXT NOT NULL DEFAULT ''"
+        )
+    },
 )

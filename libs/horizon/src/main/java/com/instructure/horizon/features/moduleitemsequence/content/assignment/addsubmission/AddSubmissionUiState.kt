@@ -27,6 +27,8 @@ data class AddSubmissionUiState(
     val onSubmissionButtonClicked: () -> Unit = {},
     val showSubmissionConfirmation: Boolean = false,
     val onDismissSubmissionConfirmation: () -> Unit = {},
+    val showOfflineSubmissionWarning: Boolean = false,
+    val onDismissOfflineSubmissionWarning: () -> Unit = {},
     val onSubmitAssignment: () -> Unit = {},
     val submissionInProgress: Boolean = false,
     val errorMessage: String? = null,

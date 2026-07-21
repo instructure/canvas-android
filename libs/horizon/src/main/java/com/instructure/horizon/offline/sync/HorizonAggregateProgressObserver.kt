@@ -102,12 +102,13 @@ class HorizonAggregateProgressObserver @Inject constructor(
         val anyInProgress = allStates.any { it == HorizonProgressState.IN_PROGRESS }
         val anyRunning = allStates.any { it.isRunning() }
         val anyError = allStates.any { it == HorizonProgressState.ERROR }
+        val anyPartial = allStates.any { it == HorizonProgressState.PARTIAL }
 
         val progressState = when {
-            allFinished && anyError -> HorizonProgressState.ERROR
-            allFinished -> HorizonProgressState.COMPLETED
-            anyRunning -> HorizonProgressState.IN_PROGRESS
-            else -> HorizonProgressState.PENDING
+            !allFinished && anyRunning -> HorizonProgressState.IN_PROGRESS
+            !allFinished -> HorizonProgressState.PENDING
+            anyError || anyPartial -> HorizonProgressState.ERROR
+            else -> HorizonProgressState.COMPLETED
         }
 
         val progressLabel = when {
