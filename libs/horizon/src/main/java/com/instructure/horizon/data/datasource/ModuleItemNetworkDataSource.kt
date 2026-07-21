@@ -98,32 +98,55 @@ class ModuleItemNetworkDataSource @Inject constructor(
     }
 
     suspend fun markAsDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return moduleApi.markModuleItemAsDone(
-            CanvasContext.Type.COURSE.apiString,
-            courseId,
-            moduleItem.moduleId,
-            moduleItem.id,
-            RestParams(),
-        )
+        return markAsDone(courseId, moduleItem.moduleId, moduleItem.id)
     }
 
     suspend fun markAsNotDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return moduleApi.markModuleItemAsNotDone(
-            CanvasContext.Type.COURSE.apiString,
-            courseId,
-            moduleItem.moduleId,
-            moduleItem.id,
-            RestParams(),
-        )
+        return markAsNotDone(courseId, moduleItem.moduleId, moduleItem.id)
     }
 
-    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long) {
-        moduleApi.markModuleItemRead(
+    suspend fun markAsDone(
+        courseId: Long,
+        moduleId: Long,
+        itemId: Long,
+        params: RestParams = RestParams(),
+    ): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsDone(
             CanvasContext.Type.COURSE.apiString,
             courseId,
             moduleId,
             itemId,
-            RestParams(isForceReadFromNetwork = true),
+            params,
+        )
+    }
+
+    suspend fun markAsNotDone(
+        courseId: Long,
+        moduleId: Long,
+        itemId: Long,
+        params: RestParams = RestParams(),
+    ): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemAsNotDone(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            itemId,
+            params,
+        )
+    }
+
+    suspend fun markAsRead(
+        courseId: Long,
+        moduleId: Long,
+        itemId: Long,
+        params: RestParams = RestParams(isForceReadFromNetwork = true),
+    ): DataResult<ResponseBody> {
+        return moduleApi.markModuleItemRead(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleId,
+            itemId,
+            params,
         )
     }
 }

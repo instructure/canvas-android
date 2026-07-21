@@ -107,7 +107,6 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
-import com.instructure.horizon.horizonui.foundation.offlineDisabled
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
@@ -196,7 +195,6 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
                 MarkAsDoneButton(
                     markAsDoneState = markAsDoneState,
-                    isOffline = uiState.isOffline,
                 )
             }
         }
@@ -206,7 +204,6 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
 @Composable
 private fun BoxScope.MarkAsDoneButton(
     markAsDoneState: MarkAsDoneUiState,
-    isOffline: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -241,12 +238,10 @@ private fun BoxScope.MarkAsDoneButton(
             Button(
                 label = stringResource(id = if (markAsDoneState.isDone) R.string.modulePager_done else R.string.modulePager_markAsDone),
                 color = ButtonColor.Ghost,
-                enabled = !isOffline,
                 onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
                 iconPosition = ButtonIconPosition.Start(
                     iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
                 ),
-                modifier = Modifier.offlineDisabled(isOffline),
             )
         }
     }

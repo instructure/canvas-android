@@ -15,10 +15,14 @@
  */
 package com.instructure.horizon.di
 
+import com.instructure.horizon.offline.sync.MarkAsDoneActionSyncer
+import com.instructure.horizon.offline.sync.MarkAsReadActionSyncer
 import com.instructure.horizon.offline.sync.OfflineActionSyncer
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.IntoSet
 import dagger.multibindings.Multibinds
 
 @Module
@@ -27,4 +31,12 @@ abstract class HorizonOfflineActionModule {
 
     @Multibinds
     abstract fun bindOfflineActionSyncers(): Set<OfflineActionSyncer>
+
+    @Binds
+    @IntoSet
+    abstract fun bindMarkAsDoneSyncer(syncer: MarkAsDoneActionSyncer): OfflineActionSyncer
+
+    @Binds
+    @IntoSet
+    abstract fun bindMarkAsReadSyncer(syncer: MarkAsReadActionSyncer): OfflineActionSyncer
 }

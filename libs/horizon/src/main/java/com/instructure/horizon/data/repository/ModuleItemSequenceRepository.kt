@@ -21,17 +21,24 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleItemWrapper
 import com.instructure.canvasapi2.models.ModuleObject
+import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.data.datasource.ModuleItemNetworkDataSource
 import com.instructure.horizon.database.dao.HorizonCourseModuleDao
 import com.instructure.horizon.database.entity.HorizonCourseModuleItemEntity
 import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
+import com.instructure.horizon.offline.HorizonOfflineActionQueue
 import com.instructure.horizon.offline.OfflineSyncRepository
+import com.instructure.horizon.offline.sync.MARK_AS_DONE_ACTION
+import com.instructure.horizon.offline.sync.MARK_AS_READ_ACTION
+import com.instructure.horizon.offline.sync.MarkAsDonePayload
+import com.instructure.horizon.offline.sync.MarkAsReadPayload
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.orDefault
 import okhttp3.ResponseBody
+import okhttp3.ResponseBody.Companion.toResponseBody
 import javax.inject.Inject
 
 class ModuleItemSequenceRepository @Inject constructor(
@@ -40,9 +47,12 @@ class ModuleItemSequenceRepository @Inject constructor(
     private val courseModuleDao: HorizonCourseModuleDao,
     private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase,
     private val apiPrefs: ApiPrefs,
+    private val offlineActionQueue: HorizonOfflineActionQueue,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
 ) : OfflineSyncRepository(networkStateProvider, featureFlagProvider) {
+
+    private val gson = Gson()
 
     suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
         return if (shouldFetchFromNetwork()) {
@@ -81,15 +91,43 @@ class ModuleItemSequenceRepository @Inject constructor(
     }
 
     suspend fun markAsNotDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return networkDataSource.markAsNotDone(courseId, moduleItem)
+        return setDone(courseId, moduleItem, done = false)
     }
 
     suspend fun markAsDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return networkDataSource.markAsDone(courseId, moduleItem)
+        return setDone(courseId, moduleItem, done = true)
+    }
+
+    private suspend fun setDone(courseId: Long, moduleItem: ModuleItem, done: Boolean): DataResult<ResponseBody> {
+        if (shouldFetchFromNetwork()) {
+            return if (done) {
+                networkDataSource.markAsDone(courseId, moduleItem)
+            } else {
+                networkDataSource.markAsNotDone(courseId, moduleItem)
+            }
+        }
+
+        courseModuleDao.updateItemCompletion(moduleItem.id, done)
+        offlineActionQueue.enqueue(
+            actionType = MARK_AS_DONE_ACTION,
+            payload = gson.toJson(MarkAsDonePayload(courseId, moduleItem.moduleId, moduleItem.id, done)),
+            courseId = courseId,
+        )
+        return DataResult.Success("".toResponseBody(null))
     }
 
     suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long) {
-        networkDataSource.markAsRead(courseId, moduleId, itemId)
+        if (shouldFetchFromNetwork()) {
+            networkDataSource.markAsRead(courseId, moduleId, itemId)
+            return
+        }
+
+        courseModuleDao.updateItemCompletion(itemId, done = true)
+        offlineActionQueue.enqueue(
+            actionType = MARK_AS_READ_ACTION,
+            payload = gson.toJson(MarkAsReadPayload(courseId, moduleId, itemId)),
+            courseId = courseId,
+        )
     }
 
     suspend fun hasUnreadComments(assignmentId: Long?, forceNetwork: Boolean = false): Boolean {

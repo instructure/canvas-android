@@ -31,6 +31,7 @@ import com.instructure.horizon.database.dao.HorizonLearnItemDao
 import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
+import com.instructure.horizon.database.dao.PendingActionDao
 import com.instructure.horizon.database.dao.HorizonEntitySyncMetadataDao
 import com.instructure.horizon.database.dao.HorizonCourseSyncPlanDao
 import com.instructure.horizon.database.dao.HorizonFileSyncPlanDao
@@ -83,6 +84,9 @@ object HorizonOfflineTestModule {
 
     @Provides
     fun provideHorizonCourseModuleDao(db: HorizonDatabase): HorizonCourseModuleDao = db.courseModuleDao()
+
+    @Provides
+    fun providePendingActionDao(db: HorizonDatabase): PendingActionDao = db.pendingActionDao()
 
     @Provides
     fun provideHorizonCourseScoreDao(db: HorizonDatabase): HorizonCourseScoreDao = db.courseScoreDao()
