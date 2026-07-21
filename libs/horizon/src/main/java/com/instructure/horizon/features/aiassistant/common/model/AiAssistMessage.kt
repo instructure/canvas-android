@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.aiassistant.common.model
 
+import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistChipOption
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistCitation
@@ -24,6 +25,7 @@ import com.instructure.canvasapi2.models.journey.assist.JourneyAssistFlashCard
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistQuizItem
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.R
 
 data class AiAssistMessage(
     val text: String = "",
@@ -53,6 +55,20 @@ fun List<AiAssistMessage>.toJourneyAssistChatMessages(): List<JourneyAssistChatM
     }
 }
 
+fun JourneyAssistChipOption.toChipLabel(resources: Resources): String {
+    val chipLabel = this.chipKey ?: this.chip
+    return when (chipLabel) {
+        ChipKey.SUMMARIZE.key -> resources.getString(R.string.ai_summarizeLabel)
+        ChipKey.FLASHCARDS.key -> resources.getString(R.string.ai_generateFlashcardsLabel)
+        ChipKey.QUIZ_ME.key -> resources.getString(R.string.ai_QuizMeLabel)
+        ChipKey.GIVE_ME_KEY_TAKEAWAYS.key -> resources.getString(R.string.ai_giveMeKeyTakeawaysLabel)
+        ChipKey.TELL_ME_MORE.key, ChipKey.TELL_ME_MORE_ABOUT_THIS_TOPIC.key -> resources.getString(R.string.ai_tellMeMoreLabel)
+        ChipKey.COURSE_SELECTION.key -> resources.getString(R.string.ai_courseSelectionLabel)
+        ChipKey.REPHRASE_THIS_SELECTION.key, ChipKey.REPHRASE_THIS_PAGE.key, ChipKey.REPHRASE_THIS_FILE.key -> resources.getString(R.string.ai_rephraseLabel)
+        else -> chipLabel ?: this.prompt
+    }
+}
+
 fun JourneyAssistCitation.toDeepLink(baseUrl: String = ApiPrefs.fullDomain): String {
     val objectType = when (this.sourceType) {
         JourneyAssistCitationType.WIKI_PAGE -> "pages"
@@ -61,4 +77,18 @@ fun JourneyAssistCitation.toDeepLink(baseUrl: String = ApiPrefs.fullDomain): Str
     }
 
     return "$baseUrl/courses/${this.courseID}/${objectType}/${this.sourceID}"
+}
+
+private enum class ChipKey(val key: String) {
+    SUMMARIZE("summarize"),
+    FLASHCARDS("flashcards"),
+    QUIZ_ME("quizMe"),
+    GIVE_ME_KEY_TAKEAWAYS("giveMeKeyTakeaways"),
+    TELL_ME_MORE("tellMeMore"),
+    TELL_ME_MORE_ABOUT_THIS_TOPIC("tellMeMoreAboutThisTopic"),
+    COURSE_SELECTION("courseSelection"),
+    REPHRASE_THIS_SELECTION("rephraseThisSelection"),
+    REPHRASE_THIS_PAGE("rephraseThisPage"),
+    REPHRASE_THIS_FILE("rephraseThisFile"),
+
 }

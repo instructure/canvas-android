@@ -25,9 +25,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.semantics.semantics
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+import com.instructure.horizon.features.aiassistant.common.model.toChipLabel
 import com.instructure.horizon.features.aiassistant.common.model.toDeepLink
 
 @Composable
@@ -65,7 +67,7 @@ fun AiAssistMessage(
             ),
             chips = message.chipOptions.map {
                 AiAssistResponseTextBlockChipState(
-                    label = it.chip,
+                    label = it.toChipLabel(resources = LocalResources.current),
                     onClick = {
                         onSendPrompt(it.prompt)
                     }
