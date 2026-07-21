@@ -17,6 +17,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment.a
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -27,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.builders.RestParams
@@ -34,7 +36,15 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Pill
+import com.instructure.horizon.horizonui.molecules.PillCase
+import com.instructure.horizon.horizonui.molecules.PillSize
+import com.instructure.horizon.horizonui.molecules.PillStyle
+import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.horizon.offline.InlineRceMedia
 import com.instructure.pandautils.compose.composables.rce.ComposeOfflineRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs
@@ -47,6 +57,8 @@ fun AddTextSubmissionContent(
 ) {
     var isFocused by remember { mutableStateOf(false) }
     val seedHtml = remember(uiState.contentResetKey) { uiState.text }
+    val pendingInlineMediaCount = remember(uiState.text) { InlineRceMedia.findLocalImageSrcs(uiState.text).size }
+    Column {
     Box(
         contentAlignment = Alignment.CenterStart
     ) {
@@ -82,5 +94,21 @@ fun AddTextSubmissionContent(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
+    }
+    if (pendingInlineMediaCount > 0) {
+        HorizonSpace(SpaceSize.SPACE_8)
+        Pill(
+            label = pluralStringResource(
+                R.plurals.assignmentDetails_pendingInlineMedia,
+                pendingInlineMediaCount,
+                pendingInlineMediaCount
+            ),
+            style = PillStyle.OUTLINE,
+            type = PillType.DEFAULT,
+            case = PillCase.TITLE,
+            size = PillSize.SMALL,
+            iconRes = R.drawable.cloud_upload,
+        )
+    }
     }
 }

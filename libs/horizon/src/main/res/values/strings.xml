@@ -799,4 +799,22 @@
         <item quantity="one">%1$d course synced</item>
         <item quantity="other">%1$d courses synced</item>
     </plurals>
+    <string name="queuedSubmission_pillQueued">Scheduled — will submit when online</string>
+    <string name="queuedSubmission_pillSubmitting">Submitting…</string>
+    <string name="queuedSubmission_pillFailed">Submission failed</string>
+    <string name="queuedSubmissions_title">Scheduled submissions</string>
+    <string name="queuedSubmissions_statusQueued">Scheduled</string>
+    <string name="queuedSubmissions_statusSubmitting">Submitting…</string>
+    <string name="queuedSubmissions_statusFailed">Failed</string>
+    <string name="queuedSubmissions_failureMessage">We couldn\'t send this submission. Check your connection and try again.</string>
+    <string name="queuedSubmissions_retry">Retry</string>
+    <string name="queuedSubmissions_cancel">Cancel</string>
+    <string name="queuedSubmissions_submit">Submit</string>
+    <string name="queuedSubmissions_viewAll">View all</string>
+    <string name="queuedSubmissions_empty">No submissions are scheduled.</string>
+    <string name="queuedSubmissions_a11yCancel">Cancel scheduled submission for %1$s</string>
+    <plurals name="assignmentDetails_pendingInlineMedia">
+        <item quantity="one">%1$d image will upload when online</item>
+        <item quantity="other">%1$d images will upload when online</item>
+    </plurals>
 </resources>

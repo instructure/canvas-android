@@ -48,7 +48,9 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -70,28 +72,36 @@ class HorizonSubmissionWorker @AssistedInject constructor(
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
-        try {
-            val action = inputData.getString(Const.ACTION) ?: ""
+        val action = inputData.getString(Const.ACTION) ?: return Result.failure()
 
-            lateinit var submission: CreateSubmissionEntity
+        if (!inputData.hasKeyWithValueOfType<Long>(Const.SUBMISSION_ID)) return Result.failure()
+        val dbSubmissionId = inputData.getLong(Const.SUBMISSION_ID, 0)
+        val submission = createSubmissionDao.findSubmissionById(dbSubmissionId)
+            ?: return Result.failure() // Return early if deleted, means it was canceled
 
-            if (inputData.hasKeyWithValueOfType<Long>(Const.SUBMISSION_ID)) {
-                val dbSubmissionId = inputData.getLong(Const.SUBMISSION_ID, 0)
-                submission = createSubmissionDao.findSubmissionById(dbSubmissionId)
-                    ?: return Result.failure()// Return early if deleted, means it was canceled
-            }
-
+        return try {
             createSubmissionDao.updateProgress(1.0, submission.id)
 
-            return when (SubmissionWorkerAction.valueOf(action)) {
+            when (SubmissionWorkerAction.valueOf(action)) {
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
                 SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
-                else -> {
-                    Result.failure()
+                else -> onSubmissionFailed(null, submission)
+            }
+        } catch (e: CancellationException) {
+            // The worker was stopped (e.g. constraint lost or the submission was cancelled). Revert any in-flight
+            // state back to QUEUED so the UI shows "Scheduled" (waiting) rather than a stuck "Submitting…", then
+            // let WorkManager reschedule it if appropriate.
+            withContext(NonCancellable) {
+                val current = createSubmissionDao.findSubmissionById(submission.id)
+                if (current != null && current.submissionState.isActive && current.submissionState != SubmissionState.QUEUED) {
+                    createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.QUEUED)
+                    createSubmissionDao.updateProgress(0.0, submission.id)
                 }
             }
-        } catch (e: IllegalArgumentException) {
-            return Result.failure()
+            throw e
+        } catch (e: Exception) {
+            // Never leave the row stranded in a non-terminal "Submitting…" state on an unexpected error.
+            onSubmissionFailed(null, submission, assumeTransient = true)
         }
     }
 
@@ -208,10 +218,14 @@ class HorizonSubmissionWorker @AssistedInject constructor(
         } ?: onSubmissionFailed(result, submission)
     }
 
-    private suspend fun onSubmissionFailed(result: DataResult<*>?, submission: CreateSubmissionEntity): Result {
+    private suspend fun onSubmissionFailed(
+        result: DataResult<*>?,
+        submission: CreateSubmissionEntity,
+        assumeTransient: Boolean = false
+    ): Result {
         createSubmissionDao.updateProgress(0.0, submission.id)
 
-        return if (result.isTransientFailure() && runAttemptCount < MAX_ATTEMPTS) {
+        return if ((assumeTransient || result.isTransientFailure()) && runAttemptCount < MAX_ATTEMPTS) {
             createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.RETRYING)
             createSubmissionDao.incrementRetryCount(submission.id, result.errorMessage())
             Result.retry()

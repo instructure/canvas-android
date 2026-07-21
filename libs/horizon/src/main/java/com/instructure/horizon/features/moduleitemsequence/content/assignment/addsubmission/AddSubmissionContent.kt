@@ -140,15 +140,8 @@ fun AddSubmissionContent(
         }
 
         if (uiState.showOfflineSubmissionWarning) {
-            Modal(
-                dialogState = ModalDialogState(
-                    title = stringResource(R.string.assignmentDetails_offlineSubmissionWarningTitle),
-                    message = stringResource(R.string.assignmentDetails_offlineSubmissionWarningMessage),
-                    primaryButtonTitle = stringResource(R.string.assignmentDetails_offlineSubmissionWarningConfirm),
-                    secondaryButtonTitle = stringResource(R.string.assignmentDetails_offlineSubmissionWarningCancel),
-                    primaryButtonClick = uiState.onSubmitAssignment,
-                    secondaryButtonClick = uiState.onDismissOfflineSubmissionWarning
-                ),
+            OfflineSubmissionWarningModal(
+                onConfirm = uiState.onSubmitAssignment,
                 onDismiss = uiState.onDismissOfflineSubmissionWarning
             )
         }

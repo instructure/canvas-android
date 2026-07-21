@@ -122,4 +122,18 @@ interface CreateSubmissionDao {
 
     @Query("SELECT * FROM CreateSubmissionEntity WHERE submission_state IN (:states)")
     suspend fun findSubmissionsByState(states: List<SubmissionState>): List<CreateSubmissionEntity>
+
+    /**
+     * Submissions that have actually been submitted and are still being processed offline, plus any that
+     * failed. Drafts (never submitted) stay QUEUED with isDraft = 1, so they are intentionally excluded.
+     * A permanently failed submission is reverted to a draft by the worker, so FAILED is matched regardless
+     * of the draft flag.
+     */
+    @Query(
+        "SELECT * FROM CreateSubmissionEntity WHERE userId = :userId AND (" +
+            "submission_state = 'FAILED' OR " +
+            "(isDraft = 0 AND submission_state IN ('QUEUED', 'UPLOADING_FILES', 'SUBMITTING', 'RETRYING'))" +
+            ")"
+    )
+    fun findScheduledSubmissionsFlow(userId: Long): Flow<List<CreateSubmissionEntity>>
 }

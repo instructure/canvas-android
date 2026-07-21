@@ -46,9 +46,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.features.queuedsubmissions.QueuedSubmissionPill
 import com.instructure.horizon.horizonui.selectable
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 
@@ -62,6 +64,7 @@ data class ModuleItemCardState(
     val dueDate: Date? = null,
     val pastDue: Boolean = false,
     val points: String? = null,
+    val queuedSubmissionState: SubmissionState? = null,
     val onClick: (() -> Unit)? = null
 )
 
@@ -114,6 +117,12 @@ fun ModuleItemCard(state: ModuleItemCardState, modifier: Modifier = Modifier) {
                         )
                     }
                     if (state.points != null) ModuleItemText(text = state.points, modifier = Modifier.align(Alignment.CenterVertically))
+                    if (state.queuedSubmissionState != null) {
+                        QueuedSubmissionPill(
+                            state = state.queuedSubmissionState,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                    }
                 }
             }
             ModuleItemCardIcon(state = state, modifier = Modifier.padding(16.dp))

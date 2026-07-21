@@ -27,10 +27,13 @@ import com.instructure.horizon.domain.usecase.GetCanvasThemeUseCase
 import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
 import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -55,6 +58,8 @@ class DashboardViewModel @Inject constructor(
     private val aggregateProgressObserver: HorizonAggregateProgressObserver,
     private val offlineState: HorizonOfflineState,
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
+    private val createSubmissionDao: CreateSubmissionDao,
+    private val submissionHelper: HorizonSubmissionHelper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -105,6 +110,27 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
+        }
+
+        viewModelScope.launch {
+            createSubmissionDao.findScheduledSubmissionsFlow(apiPrefs.user?.id.orDefault())
+                .collect { rows ->
+                    val items = rows.map { row ->
+                        DashboardScheduledSubmissionUiState(
+                            id = row.id,
+                            name = row.assignmentName.orEmpty(),
+                            courseId = row.canvasContext.id,
+                            assignmentId = row.assignmentId,
+                            onCancel = { submissionHelper.cancelSubmission(row) },
+                        )
+                    }
+                    _uiState.update {
+                        it.copy(
+                            showScheduledSubmissionsWidget = items.isNotEmpty(),
+                            scheduledSubmissions = items,
+                        )
+                    }
+                }
         }
 
         viewModelScope.launch {

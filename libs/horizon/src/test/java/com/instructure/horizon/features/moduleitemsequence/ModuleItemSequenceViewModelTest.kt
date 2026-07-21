@@ -46,7 +46,10 @@ import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.offline.HorizonOfflineState
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -86,6 +89,9 @@ class ModuleItemSequenceViewModelTest {
     private val getCourseDetailsUseCase: GetCourseDetailsUseCase = mockk(relaxed = true)
     private val syncCourseProgressUseCase: SyncCourseProgressUseCase = mockk(relaxed = true)
     private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val createSubmissionDao: CreateSubmissionDao = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val queuedSubmissionsFlow = MutableStateFlow<List<CreateSubmissionEntity>>(emptyList())
     private val isOfflineFlow = MutableStateFlow(false)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val learnEventHandler: LearnEventHandler = LearnEventHandler()
@@ -142,6 +148,7 @@ class ModuleItemSequenceViewModelTest {
         coEvery { hasUnreadCommentsUseCase(any()) } returns false
         coEvery { moduleItemCardStateMapper.mapModuleItemToCardState(any(), any()) } returns mockk(relaxed = true)
         every { offlineState.isOffline } returns isOfflineFlow
+        every { createSubmissionDao.findScheduledSubmissionsFlow(any()) } returns queuedSubmissionsFlow
     }
 
     @After
@@ -376,7 +383,9 @@ class ModuleItemSequenceViewModelTest {
             getCourseDetailsUseCase,
             syncCourseProgressUseCase,
             savedStateHandle,
-            offlineState
+            offlineState,
+            createSubmissionDao,
+            apiPrefs
         )
     }
 }

@@ -54,7 +54,10 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.offline.HorizonOfflineState
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import androidx.lifecycle.ViewModel
 import com.instructure.horizon.util.formatScore
 import com.instructure.pandautils.utils.formatIsoDuration
@@ -91,6 +94,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val syncCourseProgressUseCase: SyncCourseProgressUseCase,
     savedStateHandle: SavedStateHandle,
     private val offlineState: HorizonOfflineState,
+    private val createSubmissionDao: CreateSubmissionDao,
+    private val apiPrefs: ApiPrefs,
 ) : ViewModel() {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
@@ -131,7 +136,22 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private var currentModuleItem: ModuleItem? = null
 
+    private var queuedStateByAssignmentId: Map<Long, SubmissionState> = emptyMap()
+
     init {
+        viewModelScope.launch {
+            createSubmissionDao.findScheduledSubmissionsFlow(apiPrefs.user?.id.orDefault())
+                .collect { rows ->
+                    queuedStateByAssignmentId = rows
+                        .groupBy { it.assignmentId }
+                        .mapValues { (_, submissions) ->
+                            submissions.firstOrNull { it.submissionState.isActive }?.submissionState
+                                ?: submissions.first().submissionState
+                        }
+                    refreshProgressPagesQueuedState()
+                }
+        }
+
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
@@ -248,8 +268,22 @@ class ModuleItemSequenceViewModel @Inject constructor(
         } else {
             val moduleItemCardState = moduleItemCardStateMapper.mapModuleItemToCardState(moduleItem, ::moduleItemSelected)
             moduleItemCardState?.let {
-                ProgressPageItem.ModuleItem(moduleItemId = moduleItem.id, moduleItemCardState = it)
+                val queuedState = if (moduleItem.type == Type.Assignment.name) {
+                    queuedStateByAssignmentId[moduleItem.contentId]
+                } else null
+                ProgressPageItem.ModuleItem(
+                    moduleItemId = moduleItem.id,
+                    moduleItemCardState = it.copy(queuedSubmissionState = queuedState)
+                )
             }
+        }
+    }
+
+    private fun refreshProgressPagesQueuedState() {
+        if (modules.isEmpty()) return
+        val progressPages = modules.map { createProgressPage(it) }
+        _uiState.update {
+            it.copy(progressScreenState = it.progressScreenState.copy(pages = progressPages))
         }
     }
 
