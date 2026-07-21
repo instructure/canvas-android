@@ -63,7 +63,41 @@ class HorizonPendingFileStaging @Inject constructor(
         }
     }
 
+    private fun inlineRootDir(): File = File(context.filesDir, INLINE_ROOT_DIR_NAME)
+
+    private fun inlineDir(key: String): File = File(inlineRootDir(), key.replace("/", "_"))
+
+    fun stageInline(key: String, uri: Uri, fileName: String): File {
+        val dir = inlineDir(key).apply { mkdirs() }
+        val destFile = File(dir, fileName.replace("/", "_"))
+        val input = context.contentResolver.openInputStream(uri)
+            ?: throw IOException("Unable to open input stream for staged inline file: $uri")
+        input.copyTo(destFile)
+        return destFile
+    }
+
+    fun inlineFilesFor(key: String): List<File> {
+        val dir = inlineDir(key)
+        if (!dir.isDirectory) return emptyList()
+        return dir.listFiles()?.toList().orEmpty()
+    }
+
+    fun deleteInline(key: String) {
+        inlineDir(key).deleteRecursively()
+    }
+
+    fun deleteInlineOrphans(activeKeys: Set<String>) {
+        val root = inlineRootDir()
+        if (!root.isDirectory) return
+        root.listFiles()?.forEach { dir ->
+            if (dir.name !in activeKeys) {
+                dir.deleteRecursively()
+            }
+        }
+    }
+
     companion object {
         private const val ROOT_DIR_NAME = "horizon-pending"
+        private const val INLINE_ROOT_DIR_NAME = "horizon-pending-inline"
     }
 }

@@ -19,6 +19,7 @@ import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.horizon.offline.HorizonOfflineState
+import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
@@ -38,6 +39,7 @@ class AddSubmissionViewModelTest {
     private val createFileSubmissionDao: CreateFileSubmissionDao = mockk(relaxed = true)
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val horizonOfflineState: HorizonOfflineState = mockk(relaxed = true)
+    private val pendingFileStaging: HorizonPendingFileStaging = mockk(relaxed = true)
 
     private fun createViewModel(offline: Boolean): AddSubmissionViewModel {
         every { horizonOfflineState.isOffline } returns MutableStateFlow(offline)
@@ -48,7 +50,8 @@ class AddSubmissionViewModelTest {
             createSubmissionDao,
             createFileSubmissionDao,
             fileUploadUtilsHelper,
-            horizonOfflineState
+            horizonOfflineState,
+            pendingFileStaging
         )
     }
 

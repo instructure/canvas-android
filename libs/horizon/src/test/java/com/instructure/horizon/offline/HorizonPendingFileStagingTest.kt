@@ -102,5 +102,56 @@ class HorizonPendingFileStagingTest {
         assertFalse(pendingRoot().resolve("junk").exists())
     }
 
+    @Test
+    fun `inline staging uses a separate root, isolated from the pending-action root`() {
+        every { contentResolver.openInputStream(uri) } returns
+            ByteArrayInputStream("action".toByteArray()) andThen ByteArrayInputStream("inline".toByteArray())
+        staging.stage(actionId = 7L, uri = uri, fileName = "a.txt")
+        val inlineFile = staging.stageInline(key = "1_10", uri = uri, fileName = "img.jpg")
+
+        assertEquals("inline", inlineFile.readText())
+        assertEquals(inlineRoot().resolve("1_10/img.jpg").absolutePath, inlineFile.absolutePath)
+        assertEquals(listOf("img.jpg"), staging.inlineFilesFor("1_10").map { it.name })
+        assertTrue(staging.inlineFilesFor("2_20").isEmpty())
+    }
+
+    @Test
+    fun `deleteOrphans for pending actions does not touch the inline root`() {
+        every { contentResolver.openInputStream(uri) } returns ByteArrayInputStream("x".toByteArray())
+        staging.stageInline(key = "1_10", uri = uri, fileName = "img.jpg")
+
+        staging.deleteOrphans(activeActionIds = emptySet())
+
+        assertTrue(inlineRoot().resolve("1_10").exists())
+    }
+
+    @Test
+    fun `deleteInline removes only the target inline key`() {
+        every { contentResolver.openInputStream(uri) } returns
+            ByteArrayInputStream("a".toByteArray()) andThen ByteArrayInputStream("b".toByteArray())
+        staging.stageInline(key = "1_10", uri = uri, fileName = "a.jpg")
+        staging.stageInline(key = "1_20", uri = uri, fileName = "b.jpg")
+
+        staging.deleteInline("1_10")
+
+        assertFalse(inlineRoot().resolve("1_10").exists())
+        assertTrue(inlineRoot().resolve("1_20").exists())
+    }
+
+    @Test
+    fun `deleteInlineOrphans keeps active keys and drops the rest`() {
+        every { contentResolver.openInputStream(uri) } returns
+            ByteArrayInputStream("a".toByteArray()) andThen ByteArrayInputStream("b".toByteArray())
+        staging.stageInline(key = "1_10", uri = uri, fileName = "a.jpg")
+        staging.stageInline(key = "1_20", uri = uri, fileName = "b.jpg")
+
+        staging.deleteInlineOrphans(activeKeys = setOf("1_10"))
+
+        assertTrue(inlineRoot().resolve("1_10").exists())
+        assertFalse(inlineRoot().resolve("1_20").exists())
+    }
+
     private fun pendingRoot() = File(tempFolder.root, "horizon-pending")
+
+    private fun inlineRoot() = File(tempFolder.root, "horizon-pending-inline")
 }

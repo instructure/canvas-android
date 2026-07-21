@@ -46,6 +46,13 @@ class HtmlSanitizerTest {
     }
 
     @Test
+    fun `sanitize strips local file scheme image srcs`() {
+        val input = "<img src=\"file:///data/user/0/app/files/pending.jpg\" alt=\"pending\" />"
+        val output = HtmlSanitizer.sanitize(input)
+        assertFalse(output.contains("file://"))
+    }
+
+    @Test
     fun `sanitize preserves iframe with https src for LTI embeds`() {
         val input = "<iframe src=\"https://tool.example.com/launch\" width=\"640\" height=\"480\"></iframe>"
         val output = HtmlSanitizer.sanitize(input)

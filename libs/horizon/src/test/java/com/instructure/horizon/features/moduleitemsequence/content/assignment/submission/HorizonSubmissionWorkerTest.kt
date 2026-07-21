@@ -24,16 +24,19 @@ import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
@@ -50,23 +53,32 @@ import io.mockk.mockkObject
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.unmockkObject
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
+import java.io.File
 
 @RunWith(AndroidJUnit4::class)
 class HorizonSubmissionWorkerTest {
+
+    @get:Rule
+    val tempFolder = TemporaryFolder()
 
     private val createSubmissionDao: CreateSubmissionDao = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val submissionApi: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
     private val createFileSubmissionDao: CreateFileSubmissionDao = mockk(relaxed = true)
     private val fileUploadManager: FileUploadManager = mockk(relaxed = true)
+    private val pendingFileStaging: HorizonPendingFileStaging = mockk(relaxed = true)
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
 
     private val canvasContext = CanvasContext.emptyCourseContext(id = 1L)
 
@@ -196,13 +208,84 @@ class HorizonSubmissionWorkerTest {
         coVerify { createSubmissionDao.updateSubmissionState(SUBMISSION_ID, SubmissionState.FAILED, any()) }
     }
 
-    private fun submissionEntity() = CreateSubmissionEntity(
+    @Test
+    fun `text submission with inline image uploads it, rewrites html, and posts`() = runTest {
+        val staged = tempFolder.newFile("img.jpg").apply { writeText("data") }
+        stubTextSubmission("""<p>hi</p><img src="file://${staged.absolutePath}">""")
+        every { fileUploadManager.uploadFile(any(), any(), any()) } returns DataResult.Success(Attachment(id = 7L))
+        coEvery { fileFolderApi.getUserFile(any(), any()) } returns DataResult.Success(FileFolder(url = "https://canvas/files/7"))
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Success(Submission(id = 99L))
+
+        val result = buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        assertEquals(ListenableWorker.Result.success(), result)
+        val savedEntry = slot<String>()
+        coVerify { createSubmissionDao.updateSubmissionEntry(SUBMISSION_ID, capture(savedEntry)) }
+        assertEquals("""<p>hi</p><img src="https://canvas/files/7">""", savedEntry.captured)
+        coVerify { createSubmissionDao.updateSubmissionState(SUBMISSION_ID, SubmissionState.UPLOADING_FILES, any()) }
+        coVerify { pendingFileStaging.deleteInline("1_10") }
+        coVerify { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
+        assertFalse(staged.exists())
+    }
+
+    @Test
+    fun `text submission uploads both inline images before posting once`() = runTest {
+        val a = tempFolder.newFile("a.jpg").apply { writeText("a") }
+        val b = tempFolder.newFile("b.jpg").apply { writeText("b") }
+        stubTextSubmission("""<img src="file://${a.absolutePath}"><img src="file://${b.absolutePath}">""")
+        every { fileUploadManager.uploadFile(any(), any(), any()) } returns DataResult.Success(Attachment(id = 7L))
+        coEvery { fileFolderApi.getUserFile(any(), any()) } returns DataResult.Success(FileFolder(url = "https://canvas/files/7"))
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Success(Submission(id = 99L))
+
+        val result = buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        assertEquals(ListenableWorker.Result.success(), result)
+        verify(exactly = 2) { fileUploadManager.uploadFile(any(), any(), any()) }
+        coVerify(exactly = 1) { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
+        assertFalse(a.exists())
+        assertFalse(b.exists())
+    }
+
+    @Test
+    fun `inline image transient failure retries and does not post`() = runTest {
+        val staged = tempFolder.newFile("img.jpg").apply { writeText("data") }
+        stubTextSubmission("""<img src="file://${staged.absolutePath}">""")
+        every { fileUploadManager.uploadFile(any(), any(), any()) } returns
+            DataResult.Fail(Failure.Network("boom", errorCode = 500))
+
+        val result = buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        assertEquals(ListenableWorker.Result.retry(), result)
+        coVerify(exactly = 0) { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
+        coVerify(exactly = 0) { pendingFileStaging.deleteInline(any()) }
+        assertTrue(staged.exists())
+    }
+
+    @Test
+    fun `missing staged inline file fails permanently without uploading or posting`() = runTest {
+        stubTextSubmission("""<img src="file:///does/not/exist.jpg">""")
+
+        val result = buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        assertEquals(ListenableWorker.Result.failure(), result)
+        coVerify { createSubmissionDao.updateSubmissionState(SUBMISSION_ID, SubmissionState.FAILED, any()) }
+        verify(exactly = 0) { fileUploadManager.uploadFile(any(), any(), any()) }
+        coVerify(exactly = 0) { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
+    }
+
+    private fun stubTextSubmission(entry: String) {
+        coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(entry)
+    }
+
+    private fun submissionEntity(entry: String = "text") = CreateSubmissionEntity(
         id = SUBMISSION_ID,
         assignmentId = 10L,
         canvasContext = canvasContext,
         submissionType = "online_upload",
         userId = 1L,
-        submissionEntry = "text"
+        submissionEntry = entry
     )
 
     private fun fileEntity(fullPath: String? = "/tmp/file.pdf") = CreateFileSubmissionEntity(
@@ -238,7 +321,9 @@ class HorizonSubmissionWorkerTest {
                     apiPrefs,
                     submissionApi,
                     createFileSubmissionDao,
-                    fileUploadManager
+                    fileUploadManager,
+                    pendingFileStaging,
+                    fileFolderApi
                 )
             })
             .build()

@@ -21,6 +21,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FileUploadConfig
@@ -30,7 +31,10 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.horizon.offline.HorizonPendingFileStaging
+import com.instructure.horizon.offline.InlineRceMedia
 import com.instructure.canvasapi2.utils.errorMessage
 import com.instructure.canvasapi2.utils.isTransientFailure
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
@@ -48,6 +52,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -59,7 +64,9 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     private val apiPrefs: ApiPrefs,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
     private val createFileSubmissionDao: CreateFileSubmissionDao,
-    private val fileUploadManager: FileUploadManager
+    private val fileUploadManager: FileUploadManager,
+    private val pendingFileStaging: HorizonPendingFileStaging,
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -89,14 +96,19 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     }
 
     private suspend fun uploadText(submission: CreateSubmissionEntity): Result {
+        val entryToSubmit = when (val mediaResult = uploadInlineMedia(submission)) {
+            is InlineMediaResult.ShortCircuit -> return mediaResult.result
+            is InlineMediaResult.Ready -> mediaResult.entry
+        }
+
         createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
 
         val textToSubmit = try {
             withContext(Dispatchers.IO) {
-                URLEncoder.encode(submission.submissionEntry, "UTF-8")
+                URLEncoder.encode(entryToSubmit, "UTF-8")
             }
         } catch (e: UnsupportedEncodingException) {
-            submission.submissionEntry!!
+            entryToSubmit!!
         }
         val result = submissionApi.postTextSubmission(
             submission.canvasContext.id,
@@ -107,6 +119,51 @@ class HorizonSubmissionWorker @AssistedInject constructor(
         )
 
         return handleSubmissionResult(result, submission)
+    }
+
+    private suspend fun uploadInlineMedia(submission: CreateSubmissionEntity): InlineMediaResult {
+        var entry = submission.submissionEntry ?: return InlineMediaResult.Ready(null)
+        val localSrcs = InlineRceMedia.findLocalImageSrcs(entry)
+        if (localSrcs.isEmpty()) return InlineMediaResult.Ready(entry)
+
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.UPLOADING_FILES)
+
+        for (localSrc in localSrcs) {
+            val file = File(localSrc.removePrefix("file://"))
+            if (!file.exists()) {
+                return InlineMediaResult.ShortCircuit(onSubmissionFailed(null, submission))
+            }
+
+            val fso = FileSubmitObject(file.name, file.length(), FileUtils.getMimeType(file.path), file.absolutePath)
+
+            val uploadResult = fileUploadManager.uploadFile(
+                FileUploadConfig.forUser(fso),
+                fileUploadRestParams = fileUploadParams()
+            )
+            val attachment = uploadResult.dataOrNull
+                ?: return InlineMediaResult.ShortCircuit(onSubmissionFailed(uploadResult, submission))
+
+            val urlResult = fileFolderApi.getUserFile(attachment.id, fileUploadParams())
+            val url = urlResult.dataOrNull?.url ?: attachment.url
+            if (url.isNullOrEmpty()) {
+                return InlineMediaResult.ShortCircuit(onSubmissionFailed(urlResult, submission))
+            }
+
+            entry = InlineRceMedia.rewriteLocalImageSrc(entry, localSrc, url)
+            createSubmissionDao.updateSubmissionEntry(submission.id, entry)
+            file.delete()
+        }
+
+        pendingFileStaging.deleteInline(inlineStagingKey(submission))
+        return InlineMediaResult.Ready(entry)
+    }
+
+    private fun inlineStagingKey(submission: CreateSubmissionEntity) =
+        "${submission.userId}_${submission.assignmentId}"
+
+    private sealed class InlineMediaResult {
+        data class Ready(val entry: String?) : InlineMediaResult()
+        data class ShortCircuit(val result: Result) : InlineMediaResult()
     }
 
     private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {

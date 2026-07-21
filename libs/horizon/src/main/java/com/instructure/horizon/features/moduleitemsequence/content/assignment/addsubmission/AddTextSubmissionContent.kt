@@ -35,7 +35,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.pandautils.compose.composables.rce.ComposeRCE
+import com.instructure.pandautils.compose.composables.rce.ComposeOfflineRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs
 
@@ -46,11 +46,13 @@ fun AddTextSubmissionContent(
     onCursorYCoordinateChanged: (Float) -> Unit = {},
 ) {
     var isFocused by remember { mutableStateOf(false) }
+    val seedHtml = remember(uiState.contentResetKey) { uiState.text }
     Box(
         contentAlignment = Alignment.CenterStart
     ) {
-        ComposeRCE(
-            html = uiState.text,
+        ComposeOfflineRCE(
+            html = seedHtml,
+            onStageImage = uiState.onStageImage,
             modifier = modifier
                 .fillMaxWidth()
                 .border(

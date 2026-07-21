@@ -47,6 +47,9 @@ interface HorizonCourseSyncPlanDao {
     @Query("UPDATE horizon_course_sync_plan SET state = :state WHERE courseId = :courseId")
     suspend fun updateState(courseId: Long, state: HorizonProgressState)
 
+    @Query("UPDATE horizon_course_sync_plan SET state = 'PENDING' WHERE state = 'IN_PROGRESS' AND courseId IN (:courseIds)")
+    suspend fun resetInterruptedCourses(courseIds: List<Long>)
+
     @Query("UPDATE horizon_course_sync_plan SET modulesState = :state WHERE courseId = :courseId")
     suspend fun updateModulesState(courseId: Long, state: HorizonProgressState)
 

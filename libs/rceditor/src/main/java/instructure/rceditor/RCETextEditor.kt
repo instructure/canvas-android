@@ -51,6 +51,12 @@ class RCETextEditor @JvmOverloads constructor(
         loadCSS("rce_style.css")
     }
 
+    fun setLocalImagePreviewEnabled(enabled: Boolean) {
+        settings.allowFileAccess = enabled
+        @Suppress("DEPRECATION")
+        settings.allowFileAccessFromFileURLs = enabled
+    }
+
     private fun formatHTML(html: String, title: String): String {
         var contents = html
         if (0 != context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
