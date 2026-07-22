@@ -20,15 +20,6 @@ data class CourseHomeUiState(
     val courseId: Long = 0L,
     val courseName: String = "",
     val courseImageUrl: String? = null,
-    val selectedTab: CourseHomeTab = CourseHomeTab.HOME,
     val isLoading: Boolean = true,
     val isError: Boolean = false,
-    val availableTabs: List<CourseHomeTab> = CourseHomeTab.entries,
 )
-
-enum class CourseHomeTab {
-    HOME,
-    MODULES,
-    MY_WORK,
-    MORE;
-}

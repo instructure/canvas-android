@@ -28,27 +28,21 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
-import com.instructure.pandautils.features.grades.GradeCalculator
 import com.instructure.pandautils.features.grades.GradesFilterUiState
 import com.instructure.pandautils.features.grades.GradesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.DisplayGrade
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class NGCGradesStrategyTest {
 
-    private val gradeCalculator = mockk<GradeCalculator>(relaxed = true)
-    private val strategy = NGCGradesStrategy(gradeCalculator)
+    private val strategy = NGCGradesStrategy()
 
     @Test
     fun `initialFilterState returns multi-choice defaults`() {
@@ -157,25 +151,6 @@ class NGCGradesStrategyTest {
     }
 
     @Test
-    fun `decorateGroupItems populates gradeText from GradeCalculator when sortBy is GROUP`() {
-        val items = listOf(uiGroup(id = 1L))
-        val domain = listOf(domainGroup(id = 1L, weight = 50.0))
-        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 87.5
-
-        val result = strategy.decorateGroupItems(
-            items = items,
-            course = Course(id = 1L),
-            domainGroups = domain,
-            sortBy = SortBy.GROUP,
-            onlyGraded = true,
-            showWhatIfScore = false,
-        )
-
-        assertNotNull(result.first().gradeText)
-        assertTrue(result.first().gradeText!!.contains("87"))
-    }
-
-    @Test
     fun `decorateGroupItems hides no-weight groups when course applies group weights`() {
         val items = listOf(uiGroup(id = 1L), uiGroup(id = 2L))
         val domain = listOf(
@@ -214,79 +189,6 @@ class NGCGradesStrategyTest {
         )
 
         assertEquals(2, result.size)
-    }
-
-    @Test
-    fun `decorateGroupItems sets gradeText to null when no matching domain group`() {
-        val items = listOf(uiGroup(id = 99L))
-        val domain = listOf(domainGroup(id = 1L, weight = 50.0))
-
-        val result = strategy.decorateGroupItems(
-            items = items,
-            course = Course(id = 1L),
-            domainGroups = domain,
-            sortBy = SortBy.GROUP,
-            onlyGraded = true,
-            showWhatIfScore = false,
-        )
-
-        assertNull(result.first().gradeText)
-    }
-
-    @Test
-    fun `decorateGroupItems passes whatIfScores to GradeCalculator only when showWhatIfScore is true`() {
-        val itemWithWhatIf = AssignmentGroupUiState(
-            id = 1L,
-            name = "Group 1",
-            assignments = listOf(
-                AssignmentUiState(
-                    id = 10L,
-                    iconRes = 0,
-                    name = "A",
-                    dueDate = "",
-                    submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                    displayGrade = DisplayGrade(""),
-                    score = null,
-                    maxScore = 10.0,
-                    whatIfScore = 9.0,
-                )
-            ),
-            expanded = true,
-        )
-        val domain = listOf(domainGroup(id = 1L, weight = 50.0))
-        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 90.0
-
-        strategy.decorateGroupItems(
-            items = listOf(itemWithWhatIf),
-            course = Course(id = 1L),
-            domainGroups = domain,
-            sortBy = SortBy.GROUP,
-            onlyGraded = true,
-            showWhatIfScore = true,
-        )
-        strategy.decorateGroupItems(
-            items = listOf(itemWithWhatIf),
-            course = Course(id = 1L),
-            domainGroups = domain,
-            sortBy = SortBy.GROUP,
-            onlyGraded = true,
-            showWhatIfScore = false,
-        )
-
-        verify {
-            gradeCalculator.calculateGrade(
-                groups = any(),
-                whatIfScores = mapOf(10L to 9.0),
-                applyGroupWeights = false,
-                onlyGraded = true,
-            )
-            gradeCalculator.calculateGrade(
-                groups = any(),
-                whatIfScores = emptyMap(),
-                applyGroupWeights = false,
-                onlyGraded = true,
-            )
-        }
     }
 
     private fun uiGroup(id: Long): AssignmentGroupUiState = AssignmentGroupUiState(
