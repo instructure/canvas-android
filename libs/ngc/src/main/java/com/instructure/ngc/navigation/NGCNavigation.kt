@@ -36,6 +36,7 @@ import com.instructure.instui.compose.InstUITheme
 import com.instructure.ngc.features.assignmentdetails.NGCAssignmentDetailsScreen
 import com.instructure.ngc.features.coursehome.CourseHomeScreen
 import com.instructure.ngc.features.coursehome.CourseHomeViewModel
+import com.instructure.ngc.features.coursehome.mywork.CourseMyWorkScreen
 import com.instructure.ngc.features.dashboard.NGCDashboardScreen
 import com.instructure.ngc.features.splash.SplashScreen
 import com.instructure.ngc.features.splash.SplashViewModel
@@ -53,6 +54,9 @@ sealed class NGCNavigationRoute(val route: String) {
     data object Dashboard : NGCNavigationRoute("dashboard")
     data object CourseHome : NGCNavigationRoute("courses/{${CourseHomeViewModel.ARG_COURSE_ID}}") {
         fun createRoute(courseId: Long) = "courses/$courseId"
+    }
+    data object Grades : NGCNavigationRoute("courses/{${CourseHomeViewModel.ARG_COURSE_ID}}/grades") {
+        fun createRoute(courseId: Long) = "courses/$courseId/grades"
     }
     data object Submission : NGCNavigationRoute(
         "courses/{${NGCSubmissionViewModel.ARG_COURSE_ID}}/assignments/{${NGCSubmissionViewModel.ARG_ASSIGNMENT_ID}}/submission" +
@@ -124,9 +128,38 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             InstUITheme(courseColor = courseColor) {
                 CourseHomeScreen(
                     onNavigateBack = { navController.popBackStack() },
-                    onAssignmentClick = { courseId, assignmentId ->
-                        navController.navigate(NGCNavigationRoute.AssignmentDetails.createRoute(courseId, assignmentId))
+                    onGradesClick = {
+                        navController.navigate(NGCNavigationRoute.Grades.createRoute(courseId))
                     },
+                )
+            }
+        }
+
+        composable(
+            route = NGCNavigationRoute.Grades.route,
+            arguments = listOf(
+                navArgument(CourseHomeViewModel.ARG_COURSE_ID) { type = NavType.LongType },
+                navArgument(EXPERIENCE_KEY) {
+                    type = NavType.StringType
+                    defaultValue = Experience.NGC.name
+                },
+            ),
+        ) { backStackEntry ->
+            val courseId = backStackEntry.arguments?.getLong(CourseHomeViewModel.ARG_COURSE_ID) ?: 0L
+            val isDark = isSystemInDarkTheme()
+            val themedColor = remember(courseId) {
+                ColorKeeper.getOrGenerateColor(Course(id = courseId))
+            }
+            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+
+            InstUITheme(courseColor = courseColor) {
+                CourseMyWorkScreen(
+                    courseId = courseId,
+                    onNavigateBack = { navController.popBackStack() },
+                    onAssignmentClick = { cId, aId ->
+                        navController.navigate(NGCNavigationRoute.AssignmentDetails.createRoute(cId, aId))
+                    },
+                    modifier = Modifier.fillMaxSize(),
                 )
             }
         }

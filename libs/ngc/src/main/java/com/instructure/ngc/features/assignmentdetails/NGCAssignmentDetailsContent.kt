@@ -99,7 +99,6 @@ import com.instructure.instui.token.icon.check
 import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.icon.chevronLeft
 import com.instructure.instui.token.icon.chevronRight
-import com.instructure.instui.token.icon.circleCheck
 import com.instructure.instui.token.icon.clipboardPenLine
 import com.instructure.instui.token.icon.hourglass
 import com.instructure.instui.token.icon.lock
@@ -440,6 +439,7 @@ private fun TopInfoBlock(
                     Pill(
                         text = pill.text,
                         variant = pill.variant,
+                        icon = pill.icon,
                         modifier = Modifier.testTag("ngcAssignmentDetails_submissionStatus"),
                     )
                 }
@@ -788,7 +788,7 @@ private fun AttemptGradeRow(uiState: AssignmentDetailsUiState) {
             Pill(
                 text = pill.text,
                 variant = pill.variant,
-                icon = if (pill.variant == PillVariant.Success) InstUIIcons.circleCheck else null,
+                icon = pill.icon,
             )
         }
     }
@@ -943,7 +943,7 @@ private fun CheckpointSection(uiState: AssignmentDetailsUiState) {
                     ) {
                         Text(text = checkpoint.name, style = InstUIText.content)
                         mapSubmissionStateToPill(checkpoint.stateLabel)?.let { pill ->
-                            Pill(text = pill.text, variant = pill.variant)
+                            Pill(text = pill.text, variant = pill.variant, icon = pill.icon)
                         }
                     }
                     if (checkpoint.grade.isNotEmpty()) {

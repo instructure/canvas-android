@@ -49,8 +49,8 @@ class AiAssistRepositoryTest {
     )
 
     private val testChips = listOf(
-        JourneyAssistChipOption("Summarize", "Please summarize this"),
-        JourneyAssistChipOption("Explain", "Explain this concept")
+        JourneyAssistChipOption("Summarize", null, "Please summarize this"),
+        JourneyAssistChipOption("Explain", null, "Explain this concept")
     )
 
     private val testFlashCards = listOf(

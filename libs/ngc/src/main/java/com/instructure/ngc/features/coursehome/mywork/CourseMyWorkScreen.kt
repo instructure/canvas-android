@@ -22,13 +22,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import com.instructure.canvasapi2.models.Course
+import com.instructure.ngc.R
 import com.instructure.pandautils.designsystem.DesignSystem
 import com.instructure.pandautils.designsystem.LocalDesignSystem
+import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
@@ -37,6 +40,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 @Composable
 fun CourseMyWorkScreen(
     courseId: Long,
+    onNavigateBack: () -> Unit = {},
     modifier: Modifier = Modifier,
     onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
 ) {
@@ -55,20 +59,21 @@ fun CourseMyWorkScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        gradesViewModel.events.collect { event ->
-            if (event is GradesViewModelAction.NavigateToAssignmentDetails) {
-                onAssignmentClick(event.courseId, event.assignmentId)
-            }
-        }
-    }
+    val appBarUiState = AppBarUiState(
+        title = stringResource(R.string.grades),
+        subtitle = uiState.filter?.courseName.orEmpty(),
+        navigationActionClick = onNavigateBack,
+        bookmarkable = false,
+        addBookmarkClick = {},
+        onNotebookClick = null,
+    )
 
     CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
         GradesScreen(
             uiState = uiState,
             actionHandler = gradesViewModel::handleAction,
             canvasContextColor = courseColor,
-            appBarUiState = null,
+            appBarUiState = appBarUiState,
             applyInsets = true,
             onFilterUpdated = gradesViewModel::onFilterUpdated,
         )

@@ -443,6 +443,68 @@ class GradesAssignmentItemTest {
         assertEquals(GradesAction.ToggleCheckpointsExpanded(1L), action)
     }
 
+    @Test
+    fun assertInstUIWhatIfPencilShownAndOpensDialog() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getUiState().copy(whatIfScore = 12.0),
+                    actionHandler = { action = it },
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = true
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag("editWhatIfScore", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .performClick()
+
+        assertEquals(GradesAction.ShowWhatIfScoreDialog(1L), action)
+    }
+
+    @Test
+    fun assertInstUIWhatIfPencilHiddenWhenDisabled() {
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getUiState().copy(whatIfScore = 12.0),
+                    actionHandler = {},
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = false
+                )
+            }
+        }
+
+        composeTestRule.onNodeWithTag("editWhatIfScore", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun assertInstUIWhatIfScoreReplacesGradeOnScoredRow() {
+        composeTestRule.setContent {
+            InstUIContent {
+                GradesAssignmentItem(
+                    uiState = getUiState().copy(
+                        score = 10.0,
+                        displayGrade = DisplayGrade("10/15", "10 out of 15"),
+                        whatIfScore = 14.0
+                    ),
+                    actionHandler = {},
+                    contextColor = android.graphics.Color.RED,
+                    showWhatIfScore = true
+                )
+            }
+        }
+
+        // In What-If mode only the what-if score is shown; the real grade is replaced.
+        composeTestRule.onNodeWithText("14/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("10/15", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
     @Composable
     private fun InstUIContent(content: @Composable () -> Unit) {
         InstUITheme(courseColor = Color.Blue) {
