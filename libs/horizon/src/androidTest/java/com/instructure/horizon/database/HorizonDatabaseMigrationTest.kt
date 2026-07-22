@@ -44,6 +44,10 @@ class HorizonDatabaseMigrationTest {
                     "CREATE TABLE IF NOT EXISTS `horizon_notification_stream_item` (" +
                         "`id` INTEGER PRIMARY KEY NOT NULL, `title` TEXT NOT NULL)"
                 )
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `horizon_assignment_details` (" +
+                        "`assignmentId` INTEGER PRIMARY KEY NOT NULL, `courseId` INTEGER NOT NULL)"
+                )
             }
 
             override fun onUpgrade(db: SupportSQLiteDatabase, oldVersion: Int, newVersion: Int) = Unit
@@ -62,13 +66,21 @@ class HorizonDatabaseMigrationTest {
     }
 
     @Test
-    fun migration1To2AddsPendingActionsWithoutDataLoss() {
+    fun migration1To2AddsPendingActionsAndAllowedExtensionsWithoutDataLoss() {
         db.insert(
             "horizon_notification_stream_item",
             android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE,
             ContentValues().apply {
                 put("id", 42L)
                 put("title", "Synced notification")
+            },
+        )
+        db.insert(
+            "horizon_assignment_details",
+            android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE,
+            ContentValues().apply {
+                put("assignmentId", 7L)
+                put("courseId", 3L)
             },
         )
 
@@ -92,6 +104,11 @@ class HorizonDatabaseMigrationTest {
         db.query("SELECT COUNT(*) FROM pending_actions").use { cursor ->
             assertTrue(cursor.moveToFirst())
             assertEquals(1, cursor.getInt(0))
+        }
+
+        db.query("SELECT allowedExtensions FROM horizon_assignment_details WHERE assignmentId = 7").use { cursor ->
+            assertTrue(cursor.moveToFirst())
+            assertEquals("", cursor.getString(0))
         }
     }
 }

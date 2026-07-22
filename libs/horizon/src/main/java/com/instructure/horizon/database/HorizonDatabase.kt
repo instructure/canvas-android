@@ -109,7 +109,7 @@ import com.instructure.horizon.database.entity.HorizonSyncSettingsEntity
         HorizonAnnouncementCommentEntity::class,
         PendingActionEntity::class,
     ],
-    version = 3,
+    version = 2,
 )
 abstract class HorizonDatabase : RoomDatabase() {
 
