@@ -219,6 +219,7 @@ fun AssignmentDetailsScreen(
                 )
                 ComposeCanvasWebViewWrapper(
                     content = uiState.instructions,
+                    webViewStateKey = "assignment-instructions",
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
@@ -336,7 +337,10 @@ private fun PendingSubmissionContent(uiState: PendingSubmissionUiState, modifier
         QueuedSubmissionPill(state = uiState.state)
         HorizonSpace(SpaceSize.SPACE_16)
         when (uiState.submissionType) {
-            Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> TextSubmissionContent(text = uiState.text.orEmpty())
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> TextSubmissionContent(
+                text = uiState.text.orEmpty(),
+                webViewStateKey = "pending-submission"
+            )
             else -> Column {
                 uiState.fileNames.forEach { fileName ->
                     Text(
@@ -385,7 +389,11 @@ private fun PendingSubmissionContent(uiState: PendingSubmissionUiState, modifier
 @Composable
 fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier) {
     when (uiState.submissionContent) {
-        is SubmissionContent.TextSubmission -> TextSubmissionContent(text = uiState.submissionContent.text, modifier = modifier)
+        is SubmissionContent.TextSubmission -> TextSubmissionContent(
+            text = uiState.submissionContent.text,
+            modifier = modifier,
+            webViewStateKey = "submission-${uiState.submissionAttempt}"
+        )
         is SubmissionContent.FileSubmission -> {
             NavHost(
                 rememberNavController(),

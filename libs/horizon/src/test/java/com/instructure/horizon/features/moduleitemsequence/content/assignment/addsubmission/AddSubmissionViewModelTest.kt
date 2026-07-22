@@ -18,6 +18,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment.a
 import android.content.Context
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotificationScheduler
 import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
@@ -40,6 +41,7 @@ class AddSubmissionViewModelTest {
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val horizonOfflineState: HorizonOfflineState = mockk(relaxed = true)
     private val pendingFileStaging: HorizonPendingFileStaging = mockk(relaxed = true)
+    private val notificationScheduler: HorizonSubmissionNotificationScheduler = mockk(relaxed = true)
 
     private fun createViewModel(offline: Boolean): AddSubmissionViewModel {
         every { horizonOfflineState.isOffline } returns MutableStateFlow(offline)
@@ -51,7 +53,8 @@ class AddSubmissionViewModelTest {
             createFileSubmissionDao,
             fileUploadUtilsHelper,
             horizonOfflineState,
-            pendingFileStaging
+            pendingFileStaging,
+            notificationScheduler
         )
     }
 

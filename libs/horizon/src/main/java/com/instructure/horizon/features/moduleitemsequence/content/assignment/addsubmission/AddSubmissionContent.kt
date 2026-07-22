@@ -15,6 +15,11 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -38,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -67,6 +74,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.pandautils.utils.toPx
 
 @Composable
@@ -140,6 +148,7 @@ fun AddSubmissionContent(
         }
 
         if (uiState.showOfflineSubmissionWarning) {
+            RequestNotificationPermissionOnce()
             OfflineSubmissionWarningModal(
                 onConfirm = uiState.onSubmitAssignment,
                 onDismiss = uiState.onDismissOfflineSubmissionWarning
@@ -171,15 +180,24 @@ fun AddSubmissionContent(
                 )
 
                 is AddSubmissionTypeUiState.Text ->
-                    AddTextSubmissionContent(
-                        uiState = selectedSubmissionType,
-                        onCursorYCoordinateChanged = {
-                            cursorYPosition = it.toInt().toPx
-                        },
-                        modifier = Modifier.onGloballyPositioned { coordinates ->
-                            rceYPositionInRoot = coordinates.positionInRoot().y.toInt()
-                        }
-                    )
+                    if (uiState.submissionInProgress) {
+                        // Show the read-only content while uploading so the RCE editor doesn't
+                        // re-seed and jump during the in-progress recompositions.
+                        TextSubmissionContent(
+                            text = selectedSubmissionType.text,
+                            webViewStateKey = "add-submission-in-progress"
+                        )
+                    } else {
+                        AddTextSubmissionContent(
+                            uiState = selectedSubmissionType,
+                            onCursorYCoordinateChanged = {
+                                cursorYPosition = it.toInt().toPx
+                            },
+                            modifier = Modifier.onGloballyPositioned { coordinates ->
+                                rceYPositionInRoot = coordinates.positionInRoot().y.toInt()
+                            }
+                        )
+                    }
             }
             HorizonSpace(SpaceSize.SPACE_24)
             AnimatedVisibility(visible = uiState.errorMessage != null) {
@@ -261,6 +279,28 @@ fun AddSubmissionContent(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun RequestNotificationPermissionOnce() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+    val context = LocalContext.current
+    var isRequested by rememberSaveable { mutableStateOf(false) }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) {}
+
+    LaunchedEffect(Unit) {
+        val granted = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!granted && !isRequested) {
+            isRequested = true
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 }

@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotificationScheduler
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotifier
 import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.horizon.offline.InlineRceMedia
 import com.instructure.canvasapi2.utils.errorMessage
@@ -68,7 +70,9 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     private val createFileSubmissionDao: CreateFileSubmissionDao,
     private val fileUploadManager: FileUploadManager,
     private val pendingFileStaging: HorizonPendingFileStaging,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val notifier: HorizonSubmissionNotifier,
+    private val notificationScheduler: HorizonSubmissionNotificationScheduler
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -213,6 +217,15 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             CanvasRestAdapter.clearCacheUrls("courses/${submission.canvasContext.id}/assignments/${submission.assignmentId}")
             delay(1000)
             deleteStagedFiles(submission.id)
+            if (submission.notifyOnResult) {
+                notificationScheduler.cancelDeadlineReminders(submission.id)
+                notifier.postSuccess(
+                    submissionId = submission.id,
+                    assignmentName = submission.assignmentName,
+                    assignmentId = submission.assignmentId,
+                    courseId = submission.canvasContext.id
+                )
+            }
             createSubmissionDao.deleteSubmissionById(submission.id)
             Result.success()
         } ?: onSubmissionFailed(result, submission)
@@ -233,6 +246,16 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.FAILED)
             createSubmissionDao.setSubmissionError(true, submission.id)
             createSubmissionDao.setDraft(submission.id, true)
+            if (submission.notifyOnResult) {
+                notificationScheduler.cancelDeadlineReminders(submission.id)
+                notifier.postFailure(
+                    submissionId = submission.id,
+                    assignmentName = submission.assignmentName,
+                    assignmentId = submission.assignmentId,
+                    courseId = submission.canvasContext.id,
+                    reason = result.errorMessage()
+                )
+            }
             Result.failure()
         }
     }

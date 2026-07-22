@@ -117,6 +117,9 @@ interface CreateSubmissionDao {
     @Query("UPDATE CreateSubmissionEntity SET canvas_submission_id = :submissionId WHERE id = :id")
     suspend fun setCanvasSubmissionId(id: Long, submissionId: Long)
 
+    @Query("UPDATE CreateSubmissionEntity SET notify_on_result = :notify WHERE id = :id")
+    suspend fun setNotifyOnResult(id: Long, notify: Boolean)
+
     @Query("UPDATE CreateSubmissionEntity SET submissionEntry = :submissionEntry WHERE id = :id")
     suspend fun updateSubmissionEntry(id: Long, submissionEntry: String)
 

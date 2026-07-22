@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotificationScheduler
 import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.horizon.offline.InlineRceMedia
@@ -57,7 +58,8 @@ class AddSubmissionViewModel @Inject constructor(
     private val createFileSubmissionDao: CreateFileSubmissionDao,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     private val horizonOfflineState: HorizonOfflineState,
-    private val pendingFileStaging: HorizonPendingFileStaging
+    private val pendingFileStaging: HorizonPendingFileStaging,
+    private val notificationScheduler: HorizonSubmissionNotificationScheduler
 ) : ViewModel() {
 
     private var files: MutableList<FileSubmitObject> = mutableListOf()
@@ -266,7 +268,8 @@ class AddSubmissionViewModel @Inject constructor(
         }
         val selectedSubmissionType =
             uiState.value.submissionTypes[uiState.value.selectedSubmissionTypeIndex]
-        if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
+        val wasOffline = horizonOfflineState.isOffline.value
+        val submissionId = if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
             submissionHelper.startTextSubmission(
                 canvasContext = CanvasContext.emptyCourseContext(id = courseId),
                 assignmentId = assignmentId,
@@ -282,6 +285,12 @@ class AddSubmissionViewModel @Inject constructor(
                 files = ArrayList(files),
                 deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_UPLOAD
             )
+        } else null
+
+        if (wasOffline && submissionId != null && submissionId != -1L) {
+            viewModelScope.launch {
+                notificationScheduler.onOfflineSubmissionQueued(submissionId, assignment)
+            }
         }
 
         viewModelScope.launch {

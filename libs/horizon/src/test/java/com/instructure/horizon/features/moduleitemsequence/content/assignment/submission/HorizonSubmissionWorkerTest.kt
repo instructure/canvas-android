@@ -36,6 +36,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotificationScheduler
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotifier
 import com.instructure.horizon.offline.HorizonPendingFileStaging
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
@@ -79,6 +81,8 @@ class HorizonSubmissionWorkerTest {
     private val fileUploadManager: FileUploadManager = mockk(relaxed = true)
     private val pendingFileStaging: HorizonPendingFileStaging = mockk(relaxed = true)
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface = mockk(relaxed = true)
+    private val notifier: HorizonSubmissionNotifier = mockk(relaxed = true)
+    private val notificationScheduler: HorizonSubmissionNotificationScheduler = mockk(relaxed = true)
 
     private val canvasContext = CanvasContext.emptyCourseContext(id = 1L)
 
@@ -275,17 +279,66 @@ class HorizonSubmissionWorkerTest {
         coVerify(exactly = 0) { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
     }
 
+    @Test
+    fun `success posts result notification and cancels reminders when notify flag set`() = runTest {
+        coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(notifyOnResult = true)
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Success(Submission(id = 99L))
+
+        buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        verify { notifier.postSuccess(SUBMISSION_ID, any(), 10L, canvasContext.id) }
+        verify { notificationScheduler.cancelDeadlineReminders(SUBMISSION_ID) }
+    }
+
+    @Test
+    fun `success posts no notification when notify flag not set`() = runTest {
+        coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(notifyOnResult = false)
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Success(Submission(id = 99L))
+
+        buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        verify(exactly = 0) { notifier.postSuccess(any(), any(), any(), any()) }
+        verify(exactly = 0) { notificationScheduler.cancelDeadlineReminders(any()) }
+    }
+
+    @Test
+    fun `permanent failure posts failure notification and cancels reminders when notify flag set`() = runTest {
+        coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(notifyOnResult = true)
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Fail(Failure.Network("bad request", errorCode = 400))
+
+        buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        verify { notifier.postFailure(SUBMISSION_ID, any(), 10L, canvasContext.id, any()) }
+        verify { notificationScheduler.cancelDeadlineReminders(SUBMISSION_ID) }
+    }
+
+    @Test
+    fun `transient retry posts no notification`() = runTest {
+        coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(notifyOnResult = true)
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) } returns
+            DataResult.Fail(Failure.Network("boom", errorCode = 500))
+
+        buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        verify(exactly = 0) { notifier.postSuccess(any(), any(), any(), any()) }
+        verify(exactly = 0) { notifier.postFailure(any(), any(), any(), any(), any()) }
+    }
+
     private fun stubTextSubmission(entry: String) {
         coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(entry)
     }
 
-    private fun submissionEntity(entry: String = "text") = CreateSubmissionEntity(
+    private fun submissionEntity(entry: String = "text", notifyOnResult: Boolean = false) = CreateSubmissionEntity(
         id = SUBMISSION_ID,
         assignmentId = 10L,
         canvasContext = canvasContext,
         submissionType = "online_upload",
         userId = 1L,
-        submissionEntry = entry
+        submissionEntry = entry,
+        notifyOnResult = notifyOnResult
     )
 
     private fun fileEntity(fullPath: String? = "/tmp/file.pdf") = CreateFileSubmissionEntity(
@@ -323,7 +376,9 @@ class HorizonSubmissionWorkerTest {
                     createFileSubmissionDao,
                     fileUploadManager,
                     pendingFileStaging,
-                    fileFolderApi
+                    fileFolderApi,
+                    notifier,
+                    notificationScheduler
                 )
             })
             .build()

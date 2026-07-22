@@ -48,6 +48,7 @@ import com.instructure.pandautils.utils.launchCustomTab
 fun TextSubmissionContent(
     text: String,
     modifier: Modifier = Modifier,
+    webViewStateKey: String? = null,
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     Column(modifier = modifier) {
@@ -62,6 +63,7 @@ fun TextSubmissionContent(
             HorizonSpace(SpaceSize.SPACE_4)
             ComposeCanvasWebViewWrapper(
                 content = text,
+                webViewStateKey = webViewStateKey,
                 applyOnWebView = {
                     activity?.let { addVideoClient(it) }
                     overrideHtmlFormatColors = HorizonColors.htmlFormatColors
