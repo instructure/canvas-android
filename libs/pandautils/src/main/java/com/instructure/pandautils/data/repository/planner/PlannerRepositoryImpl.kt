@@ -32,7 +32,11 @@ class PlannerRepositoryImpl(
         contextCodes: List<String>,
         forceRefresh: Boolean
     ): DataResult<List<PlannerItem>> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
+        val params = RestParams(
+            isForceReadFromNetwork = forceRefresh,
+            usePerPageQueryParam = true,
+            shouldLoginOnTokenError = false
+        )
         return plannerApi.getPlannerItems(startDate, endDate, contextCodes, null, params).depaginate { nextUrl ->
             plannerApi.nextPagePlannerItems(nextUrl, params)
         }

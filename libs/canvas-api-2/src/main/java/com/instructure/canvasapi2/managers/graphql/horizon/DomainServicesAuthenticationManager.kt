@@ -30,7 +30,7 @@ abstract class DomainServicesAuthenticationManager(
     @OptIn(ExperimentalEncodingApi::class)
     private suspend fun requestAuthenticationToken(domainService: DomainService): String? {
         val workflows = domainService.workflows
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val encoded = domainServicesAuthenticationAPI
             .getDomainServiceAuthentication(null, false,
                 DomainServicesWorkflow(workflows), params)

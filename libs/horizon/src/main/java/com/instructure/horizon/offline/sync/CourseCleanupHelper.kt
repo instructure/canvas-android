@@ -36,6 +36,7 @@ import com.instructure.horizon.database.entity.EntitySyncType
 import com.instructure.horizon.offline.FileSyncPaths
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 import java.io.File
 import javax.inject.Inject
@@ -59,25 +60,27 @@ class CourseCleanupHelper @Inject constructor(
     private val noteDao: HorizonNoteDao,
 ) {
     suspend fun cleanupCourseContent(courseId: Long) {
-        database.withTransaction {
-            assignmentCommentDao.deleteAttachmentsByCourseId(courseId)
-            assignmentCommentDao.deleteByCourseId(courseId)
-            submissionDao.deleteAttachmentsByCourseId(courseId)
-            submissionDao.deleteByCourseId(courseId)
+        withContext(NonCancellable) {
+            database.withTransaction {
+                assignmentCommentDao.deleteAttachmentsByCourseId(courseId)
+                assignmentCommentDao.deleteByCourseId(courseId)
+                submissionDao.deleteAttachmentsByCourseId(courseId)
+                submissionDao.deleteByCourseId(courseId)
 
-            assignmentDetailsDao.deleteByCourseId(courseId)
-            pageDao.deleteByCourseId(courseId)
-            courseModuleDao.deleteItemsForCourse(courseId)
-            courseModuleDao.deleteModulesForCourse(courseId)
-            courseScoreDao.deleteAssignmentsForCourse(courseId)
-            courseScoreDao.deleteGroupsForCourse(courseId)
-            courseScoreDao.deleteGradeForCourse(courseId)
-            dashboardModuleItemDao.deleteForCourse(courseId)
-            noteDao.deleteByCourseId(courseId)
+                assignmentDetailsDao.deleteByCourseId(courseId)
+                pageDao.deleteByCourseId(courseId)
+                courseModuleDao.deleteItemsForCourse(courseId)
+                courseModuleDao.deleteModulesForCourse(courseId)
+                courseScoreDao.deleteAssignmentsForCourse(courseId)
+                courseScoreDao.deleteGroupsForCourse(courseId)
+                courseScoreDao.deleteGradeForCourse(courseId)
+                dashboardModuleItemDao.deleteForCourse(courseId)
+                noteDao.deleteByCourseId(courseId)
 
-            courseDao.deleteByCourseId(courseId)
+                courseDao.deleteByCourseId(courseId)
 
-            entitySyncMetadataDao.delete(EntitySyncType.COURSE, courseId)
+                entitySyncMetadataDao.delete(EntitySyncType.COURSE, courseId)
+            }
         }
 
         cleanupCourseFiles(courseId)
