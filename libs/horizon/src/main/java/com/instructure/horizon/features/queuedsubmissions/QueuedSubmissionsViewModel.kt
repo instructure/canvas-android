@@ -56,13 +56,16 @@ class QueuedSubmissionsViewModel @Inject constructor(
         }
     }
 
-    private fun CreateSubmissionEntity.toItemUiState() = QueuedSubmissionItemUiState(
-        submissionId = id,
-        assignmentName = assignmentName.orEmpty(),
-        state = submissionState,
-        courseId = canvasContext.id,
-        assignmentId = assignmentId,
-        onRetry = { submissionHelper.retrySubmission(this) },
-        onCancel = { submissionHelper.cancelSubmission(this) }
-    )
+    private fun CreateSubmissionEntity.toItemUiState(): QueuedSubmissionItemUiState {
+        val submission = this
+        return QueuedSubmissionItemUiState(
+            submissionId = id,
+            assignmentName = assignmentName.orEmpty(),
+            state = submissionState,
+            courseId = canvasContext.id,
+            assignmentId = assignmentId,
+            onRetry = { viewModelScope.launch { submissionHelper.retrySubmission(submission) } },
+            onCancel = { viewModelScope.launch { submissionHelper.cancelSubmission(submission) } }
+        )
+    }
 }

@@ -270,9 +270,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             text = entity.submissionEntry.takeIf { type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY },
             fileNames = fileNames,
             showSubmitButton = showSubmit,
-            onSubmit = { submissionHelper.submitScheduledSubmission(entity) },
-            onRetry = { submissionHelper.retrySubmission(entity) },
-            onCancel = { submissionHelper.cancelSubmission(entity) },
+            onSubmit = { viewModelScope.launch { submissionHelper.submitScheduledSubmission(entity) } },
+            onRetry = { viewModelScope.launch { submissionHelper.retrySubmission(entity) } },
+            onCancel = { viewModelScope.launch { submissionHelper.cancelSubmission(entity) } },
         )
     }
 

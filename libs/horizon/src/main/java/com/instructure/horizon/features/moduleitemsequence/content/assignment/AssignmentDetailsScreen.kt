@@ -38,7 +38,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,6 +62,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.CancelScheduledSubmissionModal
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsDialog
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsViewModel
@@ -333,6 +337,16 @@ private fun SubmissionDetailsContent(
 
 @Composable
 private fun PendingSubmissionContent(uiState: PendingSubmissionUiState, modifier: Modifier = Modifier) {
+    var showCancelConfirmation by rememberSaveable { mutableStateOf(false) }
+    if (showCancelConfirmation) {
+        CancelScheduledSubmissionModal(
+            onConfirm = {
+                showCancelConfirmation = false
+                uiState.onCancel()
+            },
+            onDismiss = { showCancelConfirmation = false }
+        )
+    }
     Column(modifier = modifier) {
         QueuedSubmissionPill(state = uiState.state)
         HorizonSpace(SpaceSize.SPACE_16)
@@ -365,7 +379,7 @@ private fun PendingSubmissionContent(uiState: PendingSubmissionUiState, modifier
             Button(
                 label = stringResource(R.string.queuedSubmissions_cancel),
                 color = ButtonColor.Black,
-                onClick = uiState.onCancel
+                onClick = { showCancelConfirmation = true }
             )
             if (uiState.state == SubmissionState.FAILED) {
                 HorizonSpace(SpaceSize.SPACE_8)

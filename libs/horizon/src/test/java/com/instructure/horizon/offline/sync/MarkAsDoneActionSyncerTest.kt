@@ -127,6 +127,20 @@ class MarkAsDoneActionSyncerTest {
     }
 
     @Test
+    fun `bumps retry and rethrows when replay throws instead of returning a result`() = runTest {
+        coEvery { pendingActionDao.getReadyToDrain(any()) } returns listOf(action(id = 1L, done = true, retryCount = 1))
+        coEvery { networkDataSource.markAsDone(10L, 20L, 30L, any()) } throws IllegalStateException("boom")
+
+        val threw = drainThrows()
+
+        // The raw exception must not escape (that would retry forever); it is treated as transient so the
+        // row's retry count is bumped and eventually exhausts.
+        assertTrue(threw)
+        coVerify(exactly = 1) { pendingActionDao.updateRetry(1L, 2, "boom") }
+        coVerify(exactly = 0) { pendingActionDao.delete(any()) }
+    }
+
+    @Test
     fun `replays with token-safe rest params`() = runTest {
         coEvery { pendingActionDao.getReadyToDrain(any()) } returns listOf(action(id = 1L, done = true))
         val paramsSlot = slot<RestParams>()

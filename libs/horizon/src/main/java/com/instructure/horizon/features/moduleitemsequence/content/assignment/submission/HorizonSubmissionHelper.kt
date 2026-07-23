@@ -32,7 +32,6 @@ import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.pandautils.utils.Const
-import kotlinx.coroutines.runBlocking
 
 class HorizonSubmissionHelper(
     private val studentDb: StudentDb,
@@ -40,13 +39,11 @@ class HorizonSubmissionHelper(
     private val workManager: WorkManager
 ) : BaseSubmissionHelper(studentDb, apiPrefs) {
 
-    fun retrySubmission(submission: CreateSubmissionEntity) {
+    suspend fun retrySubmission(submission: CreateSubmissionEntity) {
         val action = submission.workerAction() ?: return
-        runBlocking {
-            studentDb.submissionDao().setSubmissionError(false, submission.id)
-            studentDb.submissionDao().setDraft(submission.id, false)
-            studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
-        }
+        studentDb.submissionDao().setSubmissionError(false, submission.id)
+        studentDb.submissionDao().setDraft(submission.id, false)
+        studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
         startSubmissionWorker(action, submissionId = submission.id)
     }
 
@@ -54,26 +51,22 @@ class HorizonSubmissionHelper(
      * Force a scheduled submission to upload immediately (used when the learner is back online and the worker
      * hasn't started yet). Re-enqueues the same submission as an expedited job.
      */
-    fun submitScheduledSubmission(submission: CreateSubmissionEntity) {
+    suspend fun submitScheduledSubmission(submission: CreateSubmissionEntity) {
         val action = submission.workerAction() ?: return
-        runBlocking {
-            studentDb.submissionDao().setSubmissionError(false, submission.id)
-            studentDb.submissionDao().setDraft(submission.id, false)
-            studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
-        }
+        studentDb.submissionDao().setSubmissionError(false, submission.id)
+        studentDb.submissionDao().setDraft(submission.id, false)
+        studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
         enqueueSubmissionWork(action, submissionId = submission.id, expedited = true)
     }
 
     /**
      * Cancel a scheduled submission and keep its content as an editable draft.
      */
-    fun cancelSubmission(submission: CreateSubmissionEntity) {
+    suspend fun cancelSubmission(submission: CreateSubmissionEntity) {
         workManager.cancelUniqueWork(workName(submission.id))
-        runBlocking {
-            studentDb.submissionDao().setSubmissionError(false, submission.id)
-            studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
-            studentDb.submissionDao().setDraft(submission.id, true)
-        }
+        studentDb.submissionDao().setSubmissionError(false, submission.id)
+        studentDb.submissionDao().updateSubmissionState(submission.id, SubmissionState.QUEUED)
+        studentDb.submissionDao().setDraft(submission.id, true)
     }
 
     override fun startSubmissionWorker(action: SubmissionWorkerAction, submissionId: Long?, commentId: Long?) {

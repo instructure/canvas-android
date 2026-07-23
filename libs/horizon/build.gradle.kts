@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":pandautils"))
     implementation(project(":login-api-2"))
     implementation(project(":annotations"))
+    implementation(project(":rceditor"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)

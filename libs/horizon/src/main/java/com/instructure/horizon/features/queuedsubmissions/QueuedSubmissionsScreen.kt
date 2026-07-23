@@ -27,6 +27,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -48,6 +52,7 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.CancelScheduledSubmissionModal
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 
@@ -108,6 +113,16 @@ private fun QueuedSubmissionRow(
     item: QueuedSubmissionItemUiState,
     onOpen: () -> Unit,
 ) {
+    var showCancelConfirmation by rememberSaveable { mutableStateOf(false) }
+    if (showCancelConfirmation) {
+        CancelScheduledSubmissionModal(
+            onConfirm = {
+                showCancelConfirmation = false
+                item.onCancel()
+            },
+            onDismiss = { showCancelConfirmation = false }
+        )
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -155,7 +170,7 @@ private fun QueuedSubmissionRow(
             label = stringResource(R.string.queuedSubmissions_cancel),
             color = ButtonColor.Black,
             height = ButtonHeight.SMALL,
-            onClick = item.onCancel,
+            onClick = { showCancelConfirmation = true },
         )
     }
 }

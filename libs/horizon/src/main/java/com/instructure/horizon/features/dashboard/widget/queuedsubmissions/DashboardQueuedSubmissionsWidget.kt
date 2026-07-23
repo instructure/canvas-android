@@ -24,6 +24,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -39,6 +43,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardScheduledSubmissionUiState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.CancelScheduledSubmissionModal
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.queuedsubmissions.QUEUED_SUBMISSIONS_PATH
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -92,6 +97,16 @@ private fun ScheduledSubmissionRow(
     submission: DashboardScheduledSubmissionUiState,
     onOpen: () -> Unit,
 ) {
+    var showCancelConfirmation by rememberSaveable { mutableStateOf(false) }
+    if (showCancelConfirmation) {
+        CancelScheduledSubmissionModal(
+            onConfirm = {
+                showCancelConfirmation = false
+                submission.onCancel()
+            },
+            onDismiss = { showCancelConfirmation = false }
+        )
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -110,7 +125,7 @@ private fun ScheduledSubmissionRow(
             label = stringResource(R.string.queuedSubmissions_cancel),
             color = ButtonColor.Black,
             height = ButtonHeight.SMALL,
-            onClick = submission.onCancel,
+            onClick = { showCancelConfirmation = true },
         )
     }
 }

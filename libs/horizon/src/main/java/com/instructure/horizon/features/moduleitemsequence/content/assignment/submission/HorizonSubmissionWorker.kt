@@ -50,6 +50,7 @@ import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import instructure.rceditor.HtmlSanitizer
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -78,6 +79,10 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         val action = inputData.getString(Const.ACTION) ?: return Result.failure()
 
+        // Resolve the action up front so an unknown name fails fast instead of being caught below and
+        // retried as a (falsely) transient failure.
+        val workerAction = SubmissionWorkerAction.entries.find { it.name == action } ?: return Result.failure()
+
         if (!inputData.hasKeyWithValueOfType<Long>(Const.SUBMISSION_ID)) return Result.failure()
         val dbSubmissionId = inputData.getLong(Const.SUBMISSION_ID, 0)
         val submission = createSubmissionDao.findSubmissionById(dbSubmissionId)
@@ -86,7 +91,7 @@ class HorizonSubmissionWorker @AssistedInject constructor(
         return try {
             createSubmissionDao.updateProgress(1.0, submission.id)
 
-            when (SubmissionWorkerAction.valueOf(action)) {
+            when (workerAction) {
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
                 SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
                 else -> onSubmissionFailed(null, submission)
@@ -117,12 +122,13 @@ class HorizonSubmissionWorker @AssistedInject constructor(
 
         createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
 
+        val sanitizedEntry = entryToSubmit?.let { HtmlSanitizer.sanitize(it) } ?: entryToSubmit
         val textToSubmit = try {
             withContext(Dispatchers.IO) {
-                URLEncoder.encode(entryToSubmit, "UTF-8")
+                URLEncoder.encode(sanitizedEntry, "UTF-8")
             }
         } catch (e: UnsupportedEncodingException) {
-            entryToSubmit!!
+            sanitizedEntry!!
         }
         val result = submissionApi.postTextSubmission(
             submission.canvasContext.id,

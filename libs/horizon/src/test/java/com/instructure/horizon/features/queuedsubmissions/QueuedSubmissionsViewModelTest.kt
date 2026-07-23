@@ -22,6 +22,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.assignment.su
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -94,8 +95,9 @@ class QueuedSubmissionsViewModelTest {
         testScheduler.advanceUntilIdle()
 
         viewModel.uiState.value.items.first().onRetry()
+        testScheduler.advanceUntilIdle()
 
-        verify { submissionHelper.retrySubmission(match { it.id == 5L }) }
+        coVerify { submissionHelper.retrySubmission(match { it.id == 5L }) }
     }
 
     @Test
@@ -106,8 +108,9 @@ class QueuedSubmissionsViewModelTest {
         testScheduler.advanceUntilIdle()
 
         viewModel.uiState.value.items.first().onCancel()
+        testScheduler.advanceUntilIdle()
 
-        verify { submissionHelper.cancelSubmission(match { it.id == 7L }) }
+        coVerify { submissionHelper.cancelSubmission(match { it.id == 7L }) }
     }
 
     @Test

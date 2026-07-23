@@ -30,6 +30,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -65,7 +66,7 @@ class HorizonSubmissionHelperTest {
     )
 
     @Test
-    fun `retrySubmission resets flags and re-enqueues a text submission`() {
+    fun `retrySubmission resets flags and re-enqueues a text submission`() = runTest {
         helper.retrySubmission(entity(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         coVerify { submissionDao.setSubmissionError(false, 42L) }
@@ -75,7 +76,7 @@ class HorizonSubmissionHelperTest {
     }
 
     @Test
-    fun `retrySubmission re-enqueues a file submission`() {
+    fun `retrySubmission re-enqueues a file submission`() = runTest {
         helper.retrySubmission(entity(Assignment.SubmissionType.ONLINE_UPLOAD))
 
         coVerify { submissionDao.updateSubmissionState(42L, SubmissionState.QUEUED, any()) }
@@ -83,7 +84,7 @@ class HorizonSubmissionHelperTest {
     }
 
     @Test
-    fun `retrySubmission ignores unsupported submission types`() {
+    fun `retrySubmission ignores unsupported submission types`() = runTest {
         helper.retrySubmission(entity(Assignment.SubmissionType.ONLINE_URL))
 
         coVerify(exactly = 0) { submissionDao.updateSubmissionState(any(), any(), any()) }
@@ -91,7 +92,7 @@ class HorizonSubmissionHelperTest {
     }
 
     @Test
-    fun `cancelSubmission cancels the work and reverts to a draft`() {
+    fun `cancelSubmission cancels the work and reverts to a draft`() = runTest {
         helper.cancelSubmission(entity(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         verify { workManager.cancelUniqueWork(HorizonSubmissionHelper.workName(42L)) }
@@ -100,7 +101,7 @@ class HorizonSubmissionHelperTest {
     }
 
     @Test
-    fun `submitScheduledSubmission re-enqueues the submission`() {
+    fun `submitScheduledSubmission re-enqueues the submission`() = runTest {
         helper.submitScheduledSubmission(entity(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         coVerify { submissionDao.setDraft(42L, false) }

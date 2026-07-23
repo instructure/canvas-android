@@ -69,6 +69,16 @@ class InlineRceMediaTest {
     }
 
     @Test
+    fun `rewriteLocalImageSrc rewrites a src with whitespace around the equals sign`() {
+        val html = """<img src = "file:///data/a.jpg" alt="a">"""
+
+        val result = InlineRceMedia.rewriteLocalImageSrc(html, "file:///data/a.jpg", "https://canvas/files/7")
+
+        assertEquals("""<img src="https://canvas/files/7" alt="a">""", result)
+        assertTrue(InlineRceMedia.findLocalImageSrcs(result).isEmpty())
+    }
+
+    @Test
     fun `rewriteLocalImageSrc is a no-op when the src is already rewritten`() {
         val html = """<img src="https://canvas/files/7" alt="a">"""
 

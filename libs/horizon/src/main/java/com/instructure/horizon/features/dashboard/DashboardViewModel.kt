@@ -121,7 +121,7 @@ class DashboardViewModel @Inject constructor(
                             name = row.assignmentName.orEmpty(),
                             courseId = row.canvasContext.id,
                             assignmentId = row.assignmentId,
-                            onCancel = { submissionHelper.cancelSubmission(row) },
+                            onCancel = { viewModelScope.launch { submissionHelper.cancelSubmission(row) } },
                         )
                     }
                     _uiState.update {

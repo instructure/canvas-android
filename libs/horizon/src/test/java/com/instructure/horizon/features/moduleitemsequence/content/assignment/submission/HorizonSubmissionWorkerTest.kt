@@ -67,6 +67,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
 import java.io.File
+import java.net.URLDecoder
 
 @RunWith(AndroidJUnit4::class)
 class HorizonSubmissionWorkerTest {
@@ -234,6 +235,22 @@ class HorizonSubmissionWorkerTest {
     }
 
     @Test
+    fun `text submission sanitizes the posted html for parity with the online path`() = runTest {
+        stubTextSubmission("""<p>hi</p><script>alert('xss')</script>""")
+        val posted = slot<String>()
+        coEvery { submissionApi.postTextSubmission(any(), any(), any(), capture(posted), any()) } returns
+            DataResult.Success(Submission(id = 99L))
+
+        val result = buildWorker(SubmissionWorkerAction.TEXT_ENTRY).doWork()
+
+        assertEquals(ListenableWorker.Result.success(), result)
+        val decoded = URLDecoder.decode(posted.captured, "UTF-8")
+        assertFalse(decoded.contains("<script"))
+        assertFalse(decoded.contains("alert"))
+        assertTrue(decoded.contains("<p>hi</p>"))
+    }
+
+    @Test
     fun `text submission uploads both inline images before posting once`() = runTest {
         val a = tempFolder.newFile("a.jpg").apply { writeText("a") }
         val b = tempFolder.newFile("b.jpg").apply { writeText("b") }
@@ -327,6 +344,14 @@ class HorizonSubmissionWorkerTest {
         verify(exactly = 0) { notifier.postFailure(any(), any(), any(), any(), any()) }
     }
 
+    @Test
+    fun `unknown action fails fast without retrying`() = runTest {
+        val result = buildWorker(actionName = "NOT_A_REAL_ACTION").doWork()
+
+        assertEquals(ListenableWorker.Result.failure(), result)
+        coVerify(exactly = 0) { submissionApi.postTextSubmission(any(), any(), any(), any(), any()) }
+    }
+
     private fun stubTextSubmission(entry: String) {
         coEvery { createSubmissionDao.findSubmissionById(SUBMISSION_ID) } returns submissionEntity(entry)
     }
@@ -353,10 +378,15 @@ class HorizonSubmissionWorkerTest {
     private fun buildWorker(
         action: SubmissionWorkerAction,
         runAttemptCount: Int = 0,
+    ): HorizonSubmissionWorker = buildWorker(actionName = action.name, runAttemptCount = runAttemptCount)
+
+    private fun buildWorker(
+        actionName: String,
+        runAttemptCount: Int = 0,
     ): HorizonSubmissionWorker {
         val context = ApplicationProvider.getApplicationContext<Context>()
         val data = Data.Builder()
-            .putString(Const.ACTION, action.name)
+            .putString(Const.ACTION, actionName)
             .putLong(Const.SUBMISSION_ID, SUBMISSION_ID)
             .build()
         return TestListenableWorkerBuilder<HorizonSubmissionWorker>(context)

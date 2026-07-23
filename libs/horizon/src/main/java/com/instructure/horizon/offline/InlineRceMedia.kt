@@ -30,6 +30,7 @@ object InlineRceMedia {
     }
 
     fun rewriteLocalImageSrc(html: String, localSrc: String, realUrl: String): String {
-        return html.replace("src=\"$localSrc\"", "src=\"$realUrl\"")
+        val pattern = Regex("""src\s*=\s*"${Regex.escape(localSrc)}"""")
+        return pattern.replace(html) { "src=\"$realUrl\"" }
     }
 }

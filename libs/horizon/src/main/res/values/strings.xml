@@ -820,6 +820,10 @@
     <string name="queuedSubmissions_viewAll">View all</string>
     <string name="queuedSubmissions_empty">No submissions are scheduled.</string>
     <string name="queuedSubmissions_a11yCancel">Cancel scheduled submission for %1$s</string>
+    <string name="queuedSubmissions_cancelConfirmationTitle">Cancel scheduled submission?</string>
+    <string name="queuedSubmissions_cancelConfirmationMessage">Your work will be saved as a draft, but it won\'t be submitted or synced when you\'re back online.</string>
+    <string name="queuedSubmissions_cancelConfirmationConfirm">Save as draft</string>
+    <string name="queuedSubmissions_cancelConfirmationDismiss">Keep scheduled</string>
     <string name="submissionNotificationChannel">Scheduled submissions</string>
     <string name="submissionNotificationChannelDescription">Reminders and results for submissions queued while offline.</string>
     <string name="submissionNotificationDeadline24hTitle">Submission due tomorrow</string>

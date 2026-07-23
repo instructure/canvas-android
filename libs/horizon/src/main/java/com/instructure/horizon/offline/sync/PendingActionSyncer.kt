@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.utils.httpStatusCode
 import com.instructure.canvasapi2.utils.isTransientFailure
 import com.instructure.horizon.database.dao.PendingActionDao
 import com.instructure.horizon.database.entity.PendingActionEntity
+import kotlinx.coroutines.CancellationException
 
 /**
  * Base class for syncers that replay a single category of pending offline actions.
@@ -51,19 +52,26 @@ abstract class PendingActionSyncer(
 
         var hadTransientFailure = false
         for (action in actions) {
-            val result = replay(action)
-            when {
-                // Success, or Canvas already reflects the desired state (idempotent).
-                result.isSuccess || result.httpStatusCode() == HTTP_CONFLICT -> pendingActionDao.delete(action.id)
+            try {
+                val result = replay(action)
+                when {
+                    // Success, or Canvas already reflects the desired state (idempotent).
+                    result.isSuccess || result.httpStatusCode() == HTTP_CONFLICT -> pendingActionDao.delete(action.id)
 
-                // Transient: retry later. 401 already went through the token refresh path.
-                result.isTransientFailure() -> {
-                    pendingActionDao.updateRetry(action.id, action.retryCount + 1, result.errorMessage())
-                    hadTransientFailure = true
+                    // Transient: retry later. 401 already went through the token refresh path.
+                    result.isTransientFailure() -> {
+                        pendingActionDao.updateRetry(action.id, action.retryCount + 1, result.errorMessage())
+                        hadTransientFailure = true
+                    }
+
+                    // Permanent (non-recoverable 4xx): stop auto-draining but keep the row for the UI.
+                    else -> pendingActionDao.updateRetry(action.id, MAX_RETRIES, result.errorMessage())
                 }
-
-                // Permanent (non-recoverable 4xx): stop auto-draining but keep the row for the UI.
-                else -> pendingActionDao.updateRetry(action.id, MAX_RETRIES, result.errorMessage())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                pendingActionDao.updateRetry(action.id, action.retryCount + 1, e.message)
+                hadTransientFailure = true
             }
         }
 

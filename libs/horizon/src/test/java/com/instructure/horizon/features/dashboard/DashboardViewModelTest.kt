@@ -392,7 +392,8 @@ class DashboardViewModelTest {
         testScheduler.advanceUntilIdle()
 
         viewModel.uiState.value.scheduledSubmissions.first().onCancel()
+        testScheduler.advanceUntilIdle()
 
-        io.mockk.verify { submissionHelper.cancelSubmission(any()) }
+        coVerify { submissionHelper.cancelSubmission(any()) }
     }
 }
