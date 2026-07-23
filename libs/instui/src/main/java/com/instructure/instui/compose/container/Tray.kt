@@ -17,6 +17,8 @@
 package com.instructure.instui.compose.container
 
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
@@ -46,6 +48,7 @@ fun Tray(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
+    contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
@@ -53,6 +56,7 @@ fun Tray(
         modifier = modifier,
         sheetState = sheetState,
         containerColor = InstUITray.backgroundColor,
+        contentWindowInsets = contentWindowInsets,
         content = content,
     )
 }

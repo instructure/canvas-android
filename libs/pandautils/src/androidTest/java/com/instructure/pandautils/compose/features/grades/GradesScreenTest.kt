@@ -22,6 +22,7 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -707,8 +708,10 @@ class GradesScreenTest {
             WhatIfSheetContent(actionHandler = {})
         }
 
-        composeTestRule.onNodeWithTag("whatIfScoreInput", useUnmergedTree = true)
-            .performTextInput("150")
+        composeTestRule.onNode(
+            hasSetTextAction() and hasAnyAncestor(hasTestTag("whatIfScoreInput")),
+            useUnmergedTree = true,
+        ).performTextInput("150")
         composeTestRule.onNodeWithText("Score exceeds maximum points", useUnmergedTree = true)
             .assertIsDisplayed()
     }

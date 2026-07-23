@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepository
 import com.instructure.pandautils.data.repository.accountdomain.AccountDomainRepositoryImpl
@@ -76,6 +78,8 @@ import com.instructure.pandautils.data.repository.planner.PlannerRepository
 import com.instructure.pandautils.data.repository.planner.PlannerRepositoryImpl
 import com.instructure.pandautils.data.repository.submission.SubmissionRepository
 import com.instructure.pandautils.data.repository.submission.SubmissionRepositoryImpl
+import com.instructure.pandautils.data.repository.submissioncomments.SubmissionCommentsRepository
+import com.instructure.pandautils.data.repository.submissioncomments.SubmissionCommentsRepositoryImpl
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.data.repository.user.UserRepositoryImpl
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
@@ -308,6 +312,15 @@ class RepositoryModule {
         recentGradedSubmissionsManager: RecentGradedSubmissionsManager
     ): SubmissionRepository {
         return SubmissionRepositoryImpl(recentGradedSubmissionsManager)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideSubmissionCommentsRepository(
+        submissionCommentsManager: SubmissionCommentsManager,
+        submissionApi: SubmissionAPI.SubmissionInterface
+    ): SubmissionCommentsRepository {
+        return SubmissionCommentsRepositoryImpl(submissionCommentsManager, submissionApi)
     }
 
     @Provides

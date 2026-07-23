@@ -16,9 +16,11 @@
 package com.instructure.ngc.features.assignmentdetails
 
 import android.graphics.Color
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -219,6 +221,50 @@ class NGCAssignmentDetailsContentTest {
     }
 
     @Test
+    fun rubricRowNotDuplicated() {
+        val rubric = NgcRubricUiState(
+            criteria = listOf(
+                NgcRubricCriterion(
+                    title = "Criteria 1",
+                    description = "Use of space",
+                    ratings = listOf(
+                        NgcRubricRating(pointsLabel = "6", title = "Excellent", detail = "Great", isAssessed = true),
+                    ),
+                    assessedScore = "6",
+                    maxScore = "6",
+                    comment = null,
+                ),
+            ),
+        )
+        // Attempts present: the rubric used to render twice (mid-screen row + submission-section
+        // cell). Guard that it now renders exactly once through the submission section.
+        setContent(attemptState(), rubric = rubric)
+
+        composeTestRule.onAllNodesWithTag("ngcAssignmentDetails_rubricRow").assertCountEquals(1)
+    }
+
+    @Test
+    fun rubricRowShownWhenNoAttempts() {
+        val rubric = NgcRubricUiState(
+            criteria = listOf(
+                NgcRubricCriterion(
+                    title = "Criteria 1",
+                    description = "Use of space",
+                    ratings = listOf(
+                        NgcRubricRating(pointsLabel = "6", title = "Excellent", detail = "Great", isAssessed = true),
+                    ),
+                    assessedScore = "6",
+                    maxScore = "6",
+                    comment = null,
+                ),
+            ),
+        )
+        setContent(contentState(attempts = emptyList()), rubric = rubric)
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_rubricRow").performScrollTo().assertIsDisplayed()
+    }
+
+    @Test
     fun submissionPreviewShowsNoPreviewPlaceholder() {
         setContent(attemptState(), previewState = NgcSubmissionPreviewUiState.NoPreview)
 
@@ -251,6 +297,16 @@ class NGCAssignmentDetailsContentTest {
         var clicked = false
         setContent(attemptState(), onCommentsClick = { clicked = true })
 
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_commentsRow").performScrollTo().performClick()
+        assertTrue(clicked)
+    }
+
+    @Test
+    fun commentsRowShownWhenNoAttempts() {
+        var clicked = false
+        setContent(contentState(attempts = emptyList()), onCommentsClick = { clicked = true })
+
+        composeTestRule.onNodeWithTag("ngcAssignmentDetails_commentsRow").performScrollTo().assertIsDisplayed()
         composeTestRule.onNodeWithTag("ngcAssignmentDetails_commentsRow").performScrollTo().performClick()
         assertTrue(clicked)
     }

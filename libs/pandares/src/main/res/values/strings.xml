@@ -2586,6 +2586,17 @@
     <string name="ngc_showMore">Show more</string>
     <string name="ngc_comments">Comments</string>
     <string name="ngc_commentsWithCount">Comments (%1$d)</string>
+    <string name="ngc_commentsEmpty">There are no comments yet.</string>
+    <string name="ngc_commentHint">Comment</string>
+    <string name="ngc_sendComment">Send comment</string>
+    <string name="ngc_addAttachment">Add attachment</string>
+    <string name="ngc_commentSendError">Failed to send. Tap to retry.</string>
+    <string name="ngc_selectAttachmentType">Select attachment type</string>
+    <string name="ngc_recordAudio">Record Audio</string>
+    <string name="ngc_recordVideo">Record Video</string>
+    <string name="ngc_chooseFiles">Choose Files</string>
+    <string name="ngc_audioComment">Audio comment</string>
+    <string name="ngc_videoComment">Video comment</string>
 
     <plurals name="ngc_additionalFiles">
         <item quantity="one">%d additional file</item>

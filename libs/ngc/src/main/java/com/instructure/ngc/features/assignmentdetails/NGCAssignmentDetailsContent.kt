@@ -324,10 +324,6 @@ private fun ContentBody(
                 if (!uiState.fullLocked) {
                     add { DescriptionSection(uiState, webViewCallbacks, embeddedWebViewCallbacks) }
                 }
-                // Rubric row (opens the rubric bottom sheet); only when the assignment has a rubric.
-                if (rubric != null) {
-                    add { RubricRow(onRubricClick) }
-                }
                 // Quiz settings (classic quizzes only — present when the quiz details loaded).
                 uiState.quizDetails?.let { quiz ->
                     add { QuizSettingsSection(quiz) }
@@ -352,8 +348,8 @@ private fun ContentBody(
                 }
                 // Submission section: attempt selector + inline preview of the selected attempt,
                 // with the rubric/comments cells. Before a submission exists there's nothing to
-                // preview, so the rubric row stands alone here (same position as the submission
-                // section) rather than mid-screen.
+                // preview, so the rubric and comments rows stand alone here (same position as the
+                // submission section) rather than mid-screen.
                 if (uiState.attempts.isNotEmpty()) {
                     add {
                         SubmissionSection(
@@ -366,8 +362,11 @@ private fun ContentBody(
                             onFullScreenMedia = onFullScreenMedia,
                         )
                     }
-                } else if (rubric != null) {
-                    add { RubricRow(onRubricClick) }
+                } else {
+                    // No attempts yet (e.g. discussion checkpoints): nothing to preview, but the
+                    // rubric and comments are still available. The comments sheet loads all
+                    // comments since there is no specific attempt to scope them to.
+                    add { NoAttemptActionsCard(rubric = rubric, onRubricClick = onRubricClick, onCommentsClick = onCommentsClick) }
                 }
             }
             sections.forEachIndexed { index, section ->
@@ -796,8 +795,8 @@ private fun AttemptGradeRow(uiState: AssignmentDetailsUiState) {
 
 /**
  * A submission list cell (rubric / comments), matching the design's list-cell component: a
- * course-colored leading icon, a semibold title, and a trailing chevron. Rendered as a flat row
- * (separators are drawn by the caller), unlike the standalone card-wrapped [RubricRow].
+ * course-colored leading icon, a semibold title, and a trailing chevron. Rendered as a flat row;
+ * separators are drawn by the caller (see [SubmissionSection] and [NoAttemptActionsCard]).
  */
 @Composable
 private fun SubmissionListCell(
@@ -1031,21 +1030,47 @@ private fun LockedCard(message: String) {
     }
 }
 
+/**
+ * Standalone rubric/comments list cells shown at the submission-section position when the
+ * assignment has no attempts yet (e.g. discussion checkpoints) — there is nothing to preview, but
+ * the rubric (if any) and comments are still available. Mirrors [SubmissionSection]'s footer:
+ * cells in a flat, non-elevated card, separated by dividers like a list.
+ */
 @Composable
-private fun RubricRow(onClick: () -> Unit) {
-    // The row lives in a card (like the grade card, but without elevation), per design.
-    // contentPadding = 0 so the cell's own padding is the only inset (not doubled by the card).
+private fun NoAttemptActionsCard(
+    rubric: NgcRubricUiState?,
+    onRubricClick: () -> Unit,
+    onCommentsClick: () -> Unit,
+) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = Elevation.None,
         contentPadding = 0.dp,
     ) {
-        SubmissionListCell(
-            title = stringResource(R.string.ngc_rubric),
-            icon = InstUIIcons.clipboardPenLine,
-            onClick = onClick,
-            modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
-        )
+        val rows = buildList<@Composable () -> Unit> {
+            if (rubric != null) {
+                add {
+                    SubmissionListCell(
+                        title = stringResource(R.string.ngc_rubric),
+                        icon = InstUIIcons.clipboardPenLine,
+                        onClick = onRubricClick,
+                        modifier = Modifier.testTag("ngcAssignmentDetails_rubricRow"),
+                    )
+                }
+            }
+            add {
+                SubmissionListCell(
+                    title = stringResource(R.string.ngc_comments),
+                    icon = InstUIIcons.messageCircle,
+                    onClick = onCommentsClick,
+                    modifier = Modifier.testTag("ngcAssignmentDetails_commentsRow"),
+                )
+            }
+        }
+        rows.forEachIndexed { index, row ->
+            if (index > 0) Separator()
+            row()
+        }
     }
 }
 

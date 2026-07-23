@@ -62,6 +62,16 @@ features/
 - **Repositories** abstract data sources (API, local database, etc.)
 - **UI Layer** - Jetpack Compose for new features, XML + Data Binding for legacy
 - **Dependency Injection** - Dagger Hilt modules in `di/` directories
+- **UI actions = callbacks in the UiState, NOT an Action sealed class.** Expose user actions as lambda
+  properties nested in an `actions` sub-object on the UiState (e.g. `data class FeatureActions(val onRefresh: () -> Unit = {}, ...)`
+  with a `val actions: FeatureActions = FeatureActions()` field on the UiState). Wire them in the
+  ViewModel via a private `withCallbacks()` extension that `copy(actions = FeatureActions(onRefresh = ::refresh, ...))`
+  using `::method` references, and initialize `MutableStateFlow(FeatureUiState().withCallbacks())`.
+  Composables invoke `uiState.actions.onX(...)` directly. Do **NOT** use a `sealed class FeatureAction` +
+  `handleAction(action)` dispatch — that is the obsolete pattern. Canonical example:
+  `AssignmentDetailsUiState` / `AssignmentDetailsViewModel` (`libs/pandautils/.../features/assignments/details/`).
+  For one-off events (toast/navigation), use a nullable state field + a consumption callback
+  (`val toastMessage: String? = null`, `val onToastShown: () -> Unit = {}`), consumed in a `LaunchedEffect`.
 
 ### Key Technologies
 

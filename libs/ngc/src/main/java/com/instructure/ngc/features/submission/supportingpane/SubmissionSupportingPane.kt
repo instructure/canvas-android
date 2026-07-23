@@ -54,11 +54,17 @@ fun SubmissionSupportingPane(
     uiState: SubmissionSupportingPaneUiState,
     selectedIndex: Int,
     onSegmentSelected: (Int) -> Unit,
+    courseId: Long,
+    assignmentId: Long,
+    studentId: Long,
     modifier: Modifier = Modifier,
     expanded: Boolean = false,
     onToggleExpand: (() -> Unit)? = null,
     toggleContentDescription: String? = null,
     onPeekHeightChanged: ((Int) -> Unit)? = null,
+    attemptId: Long? = null,
+    onOpenFile: (url: String, contentType: String, fileName: String) -> Unit = { _, _, _ -> },
+    onOpenMedia: (url: String, contentType: String, fileName: String, thumbnailUrl: String?) -> Unit = { _, _, _, _ -> }
 ) {
     Column(
         modifier = modifier
@@ -96,7 +102,15 @@ fun SubmissionSupportingPane(
                     modifier = Modifier.fillMaxSize(),
                 )
                 RUBRIC -> SubmissionRubricScreen(modifier = Modifier.fillMaxSize())
-                COMMENTS -> SubmissionCommentsScreen(modifier = Modifier.fillMaxSize())
+                COMMENTS -> SubmissionCommentsScreen(
+                    courseId = courseId,
+                    assignmentId = assignmentId,
+                    studentId = studentId,
+                    attemptId = attemptId,
+                    modifier = Modifier.fillMaxSize(),
+                    onOpenFile = onOpenFile,
+                    onOpenMedia = onOpenMedia,
+                )
             }
         }
     }

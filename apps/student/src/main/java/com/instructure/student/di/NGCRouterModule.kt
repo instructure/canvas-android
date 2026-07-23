@@ -18,8 +18,10 @@ package com.instructure.student.di
 
 import android.app.Activity
 import androidx.fragment.app.FragmentActivity
+import com.instructure.ngc.navigation.NgcAttachmentRouter
 import com.instructure.ngc.navigation.NgcWebViewRouter
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.student.navigation.NgcStudentAttachmentRouter
 import com.instructure.student.navigation.NgcStudentWebViewRouter
 import dagger.Module
 import dagger.Provides
@@ -39,5 +41,10 @@ class NGCRouterModule {
     @NgcWebViewRouter
     fun provideWebViewRouter(activity: Activity): WebViewRouter {
         return NgcStudentWebViewRouter(activity as FragmentActivity)
+    }
+
+    @Provides
+    fun provideNgcAttachmentRouter(activity: Activity): NgcAttachmentRouter {
+        return NgcStudentAttachmentRouter(activity as FragmentActivity)
     }
 }

@@ -30,20 +30,6 @@ interface WebViewRouter {
 
     fun openMedia(url: String, mime: String = "", filename: String = "", canvasContext: CanvasContext? = null)
 
-    /**
-     * Opens a video/audio file in the app's full-screen media player. Unlike [openMedia] (which
-     * classifies the URL and may download or hand off to an external app), this is used when the
-     * type is already known to be playable media — e.g. a submission media preview's full-screen
-     * button — where an extension-less media URL would otherwise fail [openMedia]'s classification.
-     * Defaults to [openMedia] for routers without a dedicated player.
-     */
-    fun openMediaFullScreen(
-        url: String,
-        contentType: String,
-        displayName: String? = null,
-        thumbnailUrl: String? = null,
-    ) = openMedia(url, contentType, displayName.orEmpty())
-
     fun routeExternally(url: String)
 
     fun openLtiScreen(canvasContext: CanvasContext?, url: String)

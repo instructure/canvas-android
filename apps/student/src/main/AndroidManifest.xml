@@ -138,6 +138,11 @@
             android:configChanges="orientation|screenSize"/>
 
         <activity
+            android:name=".activity.NgcFileViewerActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
             android:name=".activity.ViewMediaActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>

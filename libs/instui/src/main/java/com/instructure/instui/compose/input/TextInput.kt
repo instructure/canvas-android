@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -62,7 +63,9 @@ import com.instructure.instui.token.component.InstUIText
 import com.instructure.instui.token.component.InstUITextInput
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.alertCircle
+import com.instructure.instui.token.icon.circleArrowUp
 import com.instructure.instui.token.icon.circleCheck
+import com.instructure.instui.token.icon.paperclip
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 
@@ -113,6 +116,9 @@ enum class TextInputSize(
  * leading and trailing icons, and three validation states (none / error / success)
  * that change the border color and show a helper message with an icon below the field.
  *
+ * [actionsContent] renders an extra row (e.g. attach/send icons) below the text field, still inside
+ * the same bordered box — used by the message-compose variant (see the comments input row).
+ *
  * Usage:
  * ```
  * TextInput(
@@ -145,6 +151,7 @@ fun TextInput(
     trailingIcon: ImageVector? = null,
     validation: TextInputValidation = TextInputValidation.None,
     hint: String? = null,
+    actionsContent: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val height = size.height()
     val fontSize = size.fontSize()
@@ -188,10 +195,9 @@ fun TextInput(
             Spacer(modifier = Modifier.padding(bottom = InstUILayoutSizes.Spacing.SpaceXs.spaceXs))
         }
 
-        // Input row: border + background + icons + BasicTextField
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
+        // Field box: border + background, wraps the BasicTextField and the optional actions row
+        // below it, so both share the same bordered container.
+        Column(
             modifier = modifier
                 .heightIn(min = height)
                 .clip(fieldShape)
@@ -201,104 +207,125 @@ fun TextInput(
                     color = borderColor,
                     shape = fieldShape,
                 ),
-            enabled = enabled,
-            readOnly = readOnly,
-            textStyle = textStyle,
-            singleLine = singleLine,
-            visualTransformation = visualTransformation,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = keyboardActions,
-            cursorBrush = SolidColor(textColor),
-            interactionSource = interactionSource,
-            decorationBox = { innerTextField ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .defaultMinSize(minHeight = height)
-                        .padding(horizontal = horizontalPadding),
-                ) {
-                    // Leading icon
-                    if (leadingIcon != null) {
-                        if (enabled) {
-                            Icon(
-                                imageVector = leadingIcon,
-                                size = IconSize.Small,
-                                color = IconColor.Muted,
-                                modifier = Modifier.padding(end = iconGap),
-                            )
-                        } else {
-                            Icon(
-                                imageVector = leadingIcon,
-                                tint = disabledIconTint,
-                                size = IconSize.Small,
-                                modifier = Modifier.padding(end = iconGap),
-                            )
-                        }
-                    }
-
-                    // Text content area (inline label + placeholder + field)
-                    Box(
-                        modifier = Modifier.weight(1f),
-                        contentAlignment = when (textAlign) {
-                            TextAlign.End -> Alignment.CenterEnd
-                            TextAlign.Center -> Alignment.Center
-                            else -> Alignment.CenterStart
-                        },
+        ) {
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier.fillMaxWidth(),
+                enabled = enabled,
+                readOnly = readOnly,
+                textStyle = textStyle,
+                singleLine = singleLine,
+                visualTransformation = visualTransformation,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                cursorBrush = SolidColor(textColor),
+                interactionSource = interactionSource,
+                decorationBox = { innerTextField ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .defaultMinSize(minHeight = height)
+                            .padding(horizontal = horizontalPadding),
                     ) {
-                        // Inline label shown when value is empty and label is set
-                        if (label != null && inlineLabel && value.isEmpty()) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = label,
-                                    style = InstUIText.content.copy(
-                                        color = InstUIFormFieldLayout.textColor,
-                                        fontSize = fontSize,
-                                    ),
+                        // Leading icon
+                        if (leadingIcon != null) {
+                            if (enabled) {
+                                Icon(
+                                    imageVector = leadingIcon,
+                                    size = IconSize.Small,
+                                    color = IconColor.Muted,
+                                    modifier = Modifier.padding(end = iconGap),
                                 )
-                                if (isRequired) {
+                            } else {
+                                Icon(
+                                    imageVector = leadingIcon,
+                                    tint = disabledIconTint,
+                                    size = IconSize.Small,
+                                    modifier = Modifier.padding(end = iconGap),
+                                )
+                            }
+                        }
+
+                        // Text content area (inline label + placeholder + field)
+                        Box(
+                            modifier = Modifier.weight(1f),
+                            contentAlignment = when (textAlign) {
+                                TextAlign.End -> Alignment.CenterEnd
+                                TextAlign.Center -> Alignment.Center
+                                else -> Alignment.CenterStart
+                            },
+                        ) {
+                            // Inline label shown when value is empty and label is set
+                            if (label != null && inlineLabel && value.isEmpty()) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
-                                        text = " *",
+                                        text = label,
                                         style = InstUIText.content.copy(
-                                            color = InstUIFormFieldLayout.asteriskColor,
+                                            color = InstUIFormFieldLayout.textColor,
                                             fontSize = fontSize,
                                         ),
                                     )
+                                    if (isRequired) {
+                                        Text(
+                                            text = " *",
+                                            style = InstUIText.content.copy(
+                                                color = InstUIFormFieldLayout.asteriskColor,
+                                                fontSize = fontSize,
+                                            ),
+                                        )
+                                    }
                                 }
+                            } else if (value.isEmpty() && placeholder != null) {
+                                Text(
+                                    text = placeholder,
+                                    style = InstUIText.content.copy(
+                                        color = InstUITextInput.placeholderColor,
+                                        fontSize = fontSize,
+                                        textAlign = textAlign,
+                                    ),
+                                )
                             }
-                        } else if (value.isEmpty() && placeholder != null) {
-                            Text(
-                                text = placeholder,
-                                style = InstUIText.content.copy(
-                                    color = InstUITextInput.placeholderColor,
-                                    fontSize = fontSize,
-                                    textAlign = textAlign,
-                                ),
-                            )
+                            innerTextField()
                         }
-                        innerTextField()
-                    }
 
-                    // Trailing icon
-                    if (trailingIcon != null) {
-                        if (enabled) {
-                            Icon(
-                                imageVector = trailingIcon,
-                                size = IconSize.Small,
-                                color = IconColor.Muted,
-                                modifier = Modifier.padding(start = iconGap),
-                            )
-                        } else {
-                            Icon(
-                                imageVector = trailingIcon,
-                                tint = disabledIconTint,
-                                size = IconSize.Small,
-                                modifier = Modifier.padding(start = iconGap),
-                            )
+                        // Trailing icon
+                        if (trailingIcon != null) {
+                            if (enabled) {
+                                Icon(
+                                    imageVector = trailingIcon,
+                                    size = IconSize.Small,
+                                    color = IconColor.Muted,
+                                    modifier = Modifier.padding(start = iconGap),
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = trailingIcon,
+                                    tint = disabledIconTint,
+                                    size = IconSize.Small,
+                                    modifier = Modifier.padding(start = iconGap),
+                                )
+                            }
                         }
                     }
-                }
-            },
-        )
+                },
+            )
+
+            // Actions row: extra content (e.g. attach/send icons) below the field, inside the border
+            if (actionsContent != null) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
+                            end = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+                            bottom = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+                        ),
+                    content = actionsContent,
+                )
+            }
+        }
 
         // Message row: hint or validation message with icon
         val messageText: String? = when (validation) {
@@ -599,6 +626,38 @@ private fun TextInputIconsPreview() {
                 leadingIcon = InstUIIcons.alertCircle,
                 trailingIcon = InstUIIcons.circleCheck,
                 modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview(name = "TextInput Actions Row — Light", showBackground = true)
+@Preview(name = "TextInput Actions Row — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun TextInputActionsRowPreview() {
+    InstUITheme {
+        var value by remember { mutableStateOf("") }
+        Column(
+            modifier = Modifier
+                .background(InstUISemanticColors.Background.base())
+                .padding(16.dp),
+        ) {
+            // Message-compose variant: attach + send icons live inside the field, below the text
+            TextInput(
+                value = value,
+                onValueChange = { value = it },
+                placeholder = "Comment",
+                singleLine = false,
+                modifier = Modifier.fillMaxWidth(),
+                actionsContent = {
+                    Icon(imageVector = InstUIIcons.paperclip, size = IconSize.Medium, color = IconColor.Base)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Icon(
+                        imageVector = InstUIIcons.circleArrowUp,
+                        size = IconSize.Large,
+                        color = if (value.isNotBlank()) IconColor.CourseColor else IconColor.Muted,
+                    )
+                },
             )
         }
     }

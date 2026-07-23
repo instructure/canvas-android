@@ -67,12 +67,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.indicator.Icon
@@ -98,6 +100,9 @@ import com.instructure.ngc.features.submission.file.FileSubmissionContent
 import com.instructure.ngc.features.submission.file.rememberFilePicker
 import com.instructure.ngc.features.submission.url.UrlSubmissionContent
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPane
+import com.instructure.ngc.navigation.NGCAttachmentRouterEntryPoint
+import com.instructure.pandautils.utils.getFragmentActivity
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
 
 // Height of the default Material3 bottom sheet drag handle (22.dp vertical padding x2 + 4.dp handle),
@@ -119,6 +124,19 @@ fun NGCSubmissionScreen(
     // the supporting pane with no way to reach it, so fall back to the bottom sheet there.
     val twoPane = widthSizeClass == WindowWidthSizeClass.EXPANDED
     var selectedSegment by rememberSaveable { mutableIntStateOf(0) }
+
+    // NGC runs in its own Activity; route comment attachments/media through the NGC-scoped router so
+    // they open without the main navigation shell's bottom bar (same as the assignment-details sheet).
+    val activity = LocalContext.current.getFragmentActivity()
+    val attachmentRouter = remember(activity) {
+        EntryPointAccessors.fromActivity(activity, NGCAttachmentRouterEntryPoint::class.java).attachmentRouter()
+    }
+    val onOpenFile: (String, String, String) -> Unit = { url, contentType, fileName ->
+        attachmentRouter.openFileAttachment(url, contentType, fileName)
+    }
+    val onOpenMedia: (String, String, String, String?) -> Unit = { url, contentType, fileName, thumbnailUrl ->
+        attachmentRouter.openMediaFullScreen(url, contentType, fileName, thumbnailUrl)
+    }
 
     // Navigate back on successful submission
     LaunchedEffect(uiState.submissionSuccess) {
@@ -180,6 +198,11 @@ fun NGCSubmissionScreen(
                             modifier = Modifier.windowInsetsPadding(
                                 WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
                             ),
+                            courseId = viewModel.courseId,
+                            assignmentId = viewModel.assignmentId,
+                            studentId = ApiPrefs.user?.id ?: 0L,
+                            onOpenFile = onOpenFile,
+                            onOpenMedia = onOpenMedia
                         )
                     }
                 },
@@ -215,6 +238,11 @@ fun NGCSubmissionScreen(
                         selectedIndex = selectedSegment,
                         onSegmentSelected = { selectedSegment = it },
                         expanded = isExpanded,
+                        courseId = viewModel.courseId,
+                        assignmentId = viewModel.assignmentId,
+                        studentId = ApiPrefs.user?.id ?: 0L,
+                        onOpenFile = onOpenFile,
+                        onOpenMedia = onOpenMedia,
                         onToggleExpand = {
                             scope.launch {
                                 if (isExpanded) {

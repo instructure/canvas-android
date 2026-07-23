@@ -43,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.instui.compose.container.Tray
 import com.instructure.instui.compose.indicator.Icon
 import com.instructure.instui.compose.indicator.IconColor
@@ -57,6 +58,7 @@ import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.chevronRight
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.ngc.R
+import com.instructure.ngc.navigation.NGCAttachmentRouterEntryPoint
 import com.instructure.ngc.navigation.NGCWebViewRouterEntryPoint
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
@@ -89,6 +91,7 @@ fun NGCAssignmentDetailsScreen(
     val context = LocalContext.current
     var showSubmitSheet by remember { mutableStateOf(false) }
     var showRubricSheet by remember { mutableStateOf(false) }
+    var showCommentsSheet by remember { mutableStateOf(false) }
     // Rubric is read straight off the loaded assignment + the course's restrict-quantitative-data setting,
     // so it's keyed on those inputs (not uiState) to recompute exactly when they change.
     val restrictQuantitativeData = viewModel.currentCourse?.settings?.restrictQuantitativeData == true
@@ -101,6 +104,9 @@ fun NGCAssignmentDetailsScreen(
     val activity = remember(context) { context.findActivity() }
     val webViewRouter = remember(activity) {
         EntryPointAccessors.fromActivity(activity, NGCWebViewRouterEntryPoint::class.java).webViewRouter()
+    }
+    val attachmentRouter = remember(activity) {
+        EntryPointAccessors.fromActivity(activity, NGCAttachmentRouterEntryPoint::class.java).attachmentRouter()
     }
     val webViewCallbacks = remember(webViewRouter) {
         ComposeWebViewCallbacks(
@@ -198,14 +204,32 @@ fun NGCAssignmentDetailsScreen(
         // "Show more" reuses the Grade Card's navigation (both open the submission screen).
         // Outward routing is still Phase 1 (logged, not routed).
         onShowMore = uiState.actions.onGradeCellClick,
-        onCommentsClick = { Log.d(TAG, "View comments requested (Phase 1, not routed)") },
+        onCommentsClick = { showCommentsSheet = true },
         onFullScreenMedia = { url, contentType, displayName, thumbnailUrl ->
-            webViewRouter.openMediaFullScreen(url, contentType, displayName, thumbnailUrl)
+            attachmentRouter.openMediaFullScreen(url, contentType, displayName, thumbnailUrl)
         },
     )
 
     if (showRubricSheet && rubric != null) {
         RubricBottomSheet(rubric = rubric, onDismiss = { showRubricSheet = false })
+    }
+
+    if (showCommentsSheet) {
+        val selectedSubmission = uiState.attempts.getOrNull(uiState.selectedAttemptPosition)?.submission
+        SubmissionCommentsBottomSheet(
+            courseId = viewModel.currentCourse?.id ?: 0L,
+            assignmentId = viewModel.assignment?.id ?: 0L,
+            studentId = selectedSubmission?.userId ?: ApiPrefs.user?.id ?: 0L,
+            attemptId = selectedSubmission?.attempt,
+            // Files open by their content type (image/pdf/doc/...); audio/video use the media player.
+            onOpenFile = { url, contentType, fileName ->
+                attachmentRouter.openFileAttachment(url, contentType, fileName)
+            },
+            onOpenMedia = { url, contentType, fileName, thumbnailUrl ->
+                attachmentRouter.openMediaFullScreen(url, contentType, fileName, thumbnailUrl)
+            },
+            onDismiss = { showCommentsSheet = false },
+        )
     }
 
     if (showSubmitSheet) {
