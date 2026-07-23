@@ -94,6 +94,7 @@ class GetSubmissionDataUseCase @Inject constructor(
             draftFiles = payload.draftFiles,
             fileDraftSavedAt = payload.fileDraftSavedAt,
             allowedExtensions = assignment.allowedExtensions,
+            instructionsHtml = assignment.description,
             draftUrl = payload.draftUrl,
             urlDraftSavedAt = payload.urlDraftSavedAt,
         )

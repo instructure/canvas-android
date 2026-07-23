@@ -80,6 +80,7 @@ class GetSubmissionDataUseCaseTest {
         val assignment = Assignment(
             id = assignmentId,
             name = "Essay Assignment",
+            description = "<p>Write a 500-word essay.</p>",
             dueAt = "2024-03-10T00:00:00Z",
             submissionTypesRaw = listOf("online_text_entry"),
             submission = submission
@@ -109,6 +110,29 @@ class GetSubmissionDataUseCaseTest {
         assertEquals(3L, result.lastAttempt)
         assertEquals("<p>My draft text</p>", result.draftHtml)
         assertEquals(draftDate, result.draftSavedAt)
+        assertEquals("<p>Write a 500-word essay.</p>", result.instructionsHtml)
+    }
+
+    @Test
+    fun `Instructions html is null when assignment has no description`() = runTest {
+        val courseId = 1L
+        val assignmentId = 42L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Essay Assignment",
+            description = null,
+            submissionTypesRaw = listOf("online_text_entry"),
+        )
+        val course = Course(id = courseId, name = "Biology 101")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertNull(result.instructionsHtml)
     }
 
     @Test

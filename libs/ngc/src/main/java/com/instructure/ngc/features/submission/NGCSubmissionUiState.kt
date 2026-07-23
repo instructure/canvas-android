@@ -17,6 +17,7 @@ package com.instructure.ngc.features.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneUiState
 
 data class TextSubmissionUiState(
     val draftHtml: String = "",
@@ -68,4 +69,5 @@ data class NGCSubmissionUiState(
     val errorMessage: String? = null,
     val submissionSuccess: Boolean = false,
     val onSubmissionSuccessHandled: () -> Unit = {},
+    val supportingPane: SubmissionSupportingPaneUiState = SubmissionSupportingPaneUiState(),
 )

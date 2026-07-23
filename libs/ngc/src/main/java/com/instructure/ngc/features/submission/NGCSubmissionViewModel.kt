@@ -42,6 +42,7 @@ import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
+import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneUiState
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.isHtmlBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -216,6 +217,10 @@ class NGCSubmissionViewModel @Inject constructor(
                         savedAtText = initialSavedAtText,
                         submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles, urlDraft),
                         onRetry = {},
+                        supportingPane = SubmissionSupportingPaneUiState(
+                            loading = false,
+                            instructionsHtml = finalData.instructionsHtml.orEmpty(),
+                        ),
                     )
                 }
 
@@ -247,6 +252,7 @@ class NGCSubmissionViewModel @Inject constructor(
                         loading = false,
                         loadError = errorMessage,
                         onRetry = { loadData() },
+                        supportingPane = it.supportingPane.copy(loading = false),
                     )
                 }
             }

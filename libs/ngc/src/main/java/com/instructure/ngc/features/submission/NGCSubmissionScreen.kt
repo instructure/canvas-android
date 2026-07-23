@@ -31,8 +31,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -63,6 +66,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,7 +90,6 @@ import com.instructure.instui.token.icon.InstUIIcons
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.token.icon.arrowLeft
 import com.instructure.instui.token.icon.chevronDown
-import com.instructure.instui.token.icon.chevronUp
 import com.instructure.instui.token.icon.trash2
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
@@ -96,6 +99,10 @@ import com.instructure.ngc.features.submission.file.rememberFilePicker
 import com.instructure.ngc.features.submission.url.UrlSubmissionContent
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPane
 import kotlinx.coroutines.launch
+
+// Height of the default Material3 bottom sheet drag handle (22.dp vertical padding x2 + 4.dp handle),
+// added to the measured peek content so the handle is accounted for in the collapsed peek height.
+private val SupportingPaneDragHandleHeight = 48.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -107,7 +114,10 @@ fun NGCSubmissionScreen(
     val uiState by viewModel.uiState.collectAsState()
     val courseColor = LocalCourseColor.current
     val widthSizeClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    val twoPane = widthSizeClass != WindowWidthSizeClass.COMPACT
+    // Only use the side-by-side layout when there is genuinely room for two panes (EXPANDED).
+    // At MEDIUM width (e.g. most phones in landscape) NavigableSupportingPaneScaffold would hide
+    // the supporting pane with no way to reach it, so fall back to the bottom sheet there.
+    val twoPane = widthSizeClass == WindowWidthSizeClass.EXPANDED
     var selectedSegment by rememberSaveable { mutableIntStateOf(0) }
 
     // Navigate back on successful submission
@@ -118,11 +128,20 @@ fun NGCSubmissionScreen(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(InstUISemanticColors.Background.base()),
+    ) {
         TopBar(
             title = stringResource(R.string.ngc_submission_submitAssignment),
             subtitle = uiState.courseName.ifBlank { null },
             containerColor = courseColor,
+            // Draw the brand background behind the status bar, but inset the bar's content below
+            // the status bar and clear of the landscape display cutout.
+            windowInsets = WindowInsets.systemBars
+                .union(WindowInsets.displayCutout)
+                .only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal),
             navigationIcon = {
                 Icon(
                     imageVector = InstUIIcons.arrowLeft,
@@ -153,8 +172,14 @@ fun NGCSubmissionScreen(
                 supportingPane = {
                     AnimatedPane {
                         SubmissionSupportingPane(
+                            uiState = uiState.supportingPane,
                             selectedIndex = selectedSegment,
                             onSegmentSelected = { selectedSegment = it },
+                            // The supporting pane sits at the window's trailing edge in landscape;
+                            // keep its content clear of the display cutout.
+                            modifier = Modifier.windowInsetsPadding(
+                                WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal)
+                            ),
                         )
                     }
                 },
@@ -164,34 +189,53 @@ fun NGCSubmissionScreen(
             // Compact width (e.g. portrait phone): surface the supporting content as a bottom sheet.
             val scaffoldState = rememberBottomSheetScaffoldState()
             val scope = rememberCoroutineScope()
+            val density = LocalDensity.current
+            var peekContentHeightPx by remember { mutableIntStateOf(0) }
+            val navigationBarBottom = WindowInsets.navigationBars.getBottom(density)
+            // Reveal the header AND the segmented-control tabs in the collapsed peek, lifted clear of
+            // the navigation bar. Falls back to a sane default until the content is first measured.
+            val sheetPeekHeight = if (peekContentHeightPx == 0) {
+                96.dp
+            } else {
+                with(density) { (peekContentHeightPx + navigationBarBottom).toDp() } + SupportingPaneDragHandleHeight
+            }
             BottomSheetScaffold(
                 scaffoldState = scaffoldState,
-                sheetPeekHeight = 96.dp,
+                containerColor = InstUISemanticColors.Background.base(),
+                sheetContainerColor = InstUISemanticColors.Background.base(),
+                // Tonal elevation tints the surface (a pink cast over the brand theme); keep it
+                // flat and use shadow elevation to lift the sheet off the content instead.
+                sheetTonalElevation = 0.dp,
+                sheetShadowElevation = 8.dp,
+                sheetPeekHeight = sheetPeekHeight,
                 sheetContent = {
+                    val isExpanded = scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
                     SubmissionSupportingPane(
+                        uiState = uiState.supportingPane,
                         selectedIndex = selectedSegment,
                         onSegmentSelected = { selectedSegment = it },
-                        headerTrailing = {
-                            val isExpanded = scaffoldState.bottomSheetState.currentValue == SheetValue.Expanded
-                            val chevronIcon = if (isExpanded) InstUIIcons.chevronDown else InstUIIcons.chevronUp
-                            val chevronContentDescription = stringResource(
-                                if (isExpanded) R.string.a11y_submissionSupportingPaneCollapse
-                                else R.string.a11y_submissionSupportingPaneExpand
-                            )
-                            Icon(
-                                imageVector = chevronIcon,
-                                contentDescription = chevronContentDescription,
-                                modifier = Modifier.clickable {
-                                    scope.launch {
-                                        if (isExpanded) {
-                                            scaffoldState.bottomSheetState.partialExpand()
-                                        } else {
-                                            scaffoldState.bottomSheetState.expand()
-                                        }
-                                    }
-                                },
-                            )
+                        expanded = isExpanded,
+                        onToggleExpand = {
+                            scope.launch {
+                                if (isExpanded) {
+                                    scaffoldState.bottomSheetState.partialExpand()
+                                } else {
+                                    scaffoldState.bottomSheetState.expand()
+                                }
+                            }
                         },
+                        toggleContentDescription = stringResource(
+                            if (isExpanded) R.string.a11y_submissionSupportingPaneCollapse
+                            else R.string.a11y_submissionSupportingPaneExpand
+                        ),
+                        // Keep sheet content above the navigation bar / side cutout; the sheet
+                        // background still bleeds to the window edge behind it.
+                        modifier = Modifier.windowInsetsPadding(
+                            WindowInsets.navigationBars
+                                .union(WindowInsets.displayCutout)
+                                .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)
+                        ),
+                        onPeekHeightChanged = { peekContentHeightPx = it },
                     )
                 },
                 modifier = Modifier.weight(1f),

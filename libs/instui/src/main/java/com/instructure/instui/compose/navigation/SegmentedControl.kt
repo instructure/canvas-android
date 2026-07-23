@@ -26,6 +26,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
@@ -83,6 +84,10 @@ fun SegmentedControl(
                         text = title,
                         style = if (selected) InstUIHeading.titleCardMini else InstUITextTokens.content,
                         color = if (selected) accentColor else InstUISemanticColors.Text.base(),
+                        // Keep labels on a single line; wrapping in a fixed-height tab clips the
+                        // last characters (e.g. "Instructions"). Ellipsize if genuinely too narrow.
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
                 },
             )

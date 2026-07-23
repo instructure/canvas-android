@@ -215,6 +215,30 @@ class NGCSubmissionViewModelTest {
         assertNotNull(state.onRetry)
     }
 
+    @Test
+    fun `Initial load - populates supporting pane with instructions and clears its loading`() = runTest {
+        val data = minimalSubmissionData(instructionsHtml = "<p>Read chapter 3.</p>")
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val supportingPane = vm.uiState.value.supportingPane
+        assertFalse(supportingPane.loading)
+        assertEquals("<p>Read chapter 3.</p>", supportingPane.instructionsHtml)
+    }
+
+    @Test
+    fun `Initial load - supporting pane loading is cleared on failure`() = runTest {
+        coEvery { getSubmissionDataUseCase(any()) } throws RuntimeException("network error")
+        every { context.getString(any()) } returns "Failed to load assignment"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(vm.uiState.value.supportingPane.loading)
+    }
+
     // -------------------------------------------------------------------------
     // onTextChanged — immediate UiState update
     // -------------------------------------------------------------------------
@@ -1830,6 +1854,7 @@ class NGCSubmissionViewModelTest {
         courseName: String = "Test Course",
         draftHtml: String? = null,
         draftSavedAt: Date? = null,
+        instructionsHtml: String? = null,
         availableTypes: List<Assignment.SubmissionType> = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
         draftFiles: List<SubmissionFileData> = emptyList(),
         fileDraftSavedAt: Date? = null,
@@ -1848,6 +1873,7 @@ class NGCSubmissionViewModelTest {
         draftFiles = draftFiles,
         fileDraftSavedAt = fileDraftSavedAt,
         allowedExtensions = allowedExtensions,
+        instructionsHtml = instructionsHtml,
         draftUrl = draftUrl,
         urlDraftSavedAt = urlDraftSavedAt,
     )

@@ -2500,6 +2500,9 @@
     <string name="ngc_submissionSegmentInstructions">Instructions</string>
     <string name="ngc_submissionSegmentRubric">Rubric</string>
     <string name="ngc_submissionSegmentComments">Comments</string>
+    <!-- Section header shown above the rendered instructions body (distinct from the segment tab label). -->
+    <string name="ngc_submissionInstructionsLabel">Instructions</string>
+    <string name="ngc_submissionNoInstructions">There are no instructions for this assignment.</string>
 
     <!-- NGC Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>

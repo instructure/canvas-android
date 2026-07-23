@@ -30,6 +30,7 @@ data class SubmissionData(
     val draftFiles: List<SubmissionFileData> = emptyList(),
     val fileDraftSavedAt: Date? = null,
     val allowedExtensions: List<String> = emptyList(),
+    val instructionsHtml: String? = null,
     val draftUrl: String? = null,
     val urlDraftSavedAt: Date? = null,
 )
