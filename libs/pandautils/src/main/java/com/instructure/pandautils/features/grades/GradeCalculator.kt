@@ -156,8 +156,10 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Combines grading period grades using their weights.
-     * Formula: sum(periodGrade * periodWeight) * 100 / totalWeight
+     * Combines grading period grades into the overall course grade as a weight-normalized average.
+     * Each period grade is already a percentage (0-100), so the result is sum(periodGrade * periodWeight)
+     * divided by the total weight of the periods that contributed - no extra scaling. Dividing by the
+     * actual total weight (rather than a fixed 100) renormalizes correctly when some periods are excluded.
      */
     private fun combinePeriodGrades(periodGrades: List<PeriodGrade>): Double {
         if (periodGrades.isEmpty()) return 0.0
@@ -166,7 +168,7 @@ class GradeCalculator @Inject constructor() {
         val totalWeight = periodGrades.sumOf { it.weight }
 
         return if (totalWeight > 0) {
-            (weightedSum * 100.0 / min(totalWeight, 100.0))
+            weightedSum / totalWeight
         } else {
             0.0
         }

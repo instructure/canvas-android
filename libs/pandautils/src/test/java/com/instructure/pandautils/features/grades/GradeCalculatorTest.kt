@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.grades
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingRule
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.toDate
@@ -836,6 +837,97 @@ class GradeCalculatorTest {
 
     // Helper methods
 
+    // Weighted grading period tests
+
+    @Test
+    fun calculateGradeWithPeriods_weightedPeriods_returnsWeightedAverageNotScaled() {
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                assignments = listOf(
+                    createAssignment(1, "Period 744 assignment", 100.0, submission = createSubmission(40.0, posted = true, gradingPeriodId = 744)),
+                    createAssignment(2, "Period 743 assignment", 100.0, submission = createSubmission(100.0, posted = true, gradingPeriodId = 743))
+                )
+            )
+        )
+        val gradingPeriods = listOf(
+            GradingPeriod(id = 744, weight = 80.0),
+            GradingPeriod(id = 743, weight = 20.0)
+        )
+
+        val result = calculator.calculateGradeWithPeriods(
+            groups = groups,
+            whatIfScores = emptyMap(),
+            applyGroupWeights = false,
+            onlyGraded = true,
+            gradingPeriods = gradingPeriods,
+            weightGradingPeriods = true
+        )
+
+        // (40*80 + 100*20) / 100 = 52.0. The pre-fix formula produced 5200.0 (100x too high).
+        assertEquals(52.0, result, 0.01)
+    }
+
+    @Test
+    fun calculateGradeWithPeriods_onlyOnePeriodHasGrades_renormalizesToThatPeriod() {
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                assignments = listOf(
+                    createAssignment(1, "Period 744 assignment", 100.0, submission = createSubmission(50.0, posted = true, gradingPeriodId = 744))
+                )
+            )
+        )
+        val gradingPeriods = listOf(
+            GradingPeriod(id = 744, weight = 80.0),
+            GradingPeriod(id = 743, weight = 20.0)
+        )
+
+        val result = calculator.calculateGradeWithPeriods(
+            groups = groups,
+            whatIfScores = emptyMap(),
+            applyGroupWeights = false,
+            onlyGraded = true,
+            gradingPeriods = gradingPeriods,
+            weightGradingPeriods = true
+        )
+
+        // Only period 744 has gradeable work, so the grade renormalizes to it (50%) rather than 50*80/100 = 40%.
+        assertEquals(50.0, result, 0.01)
+    }
+
+    @Test
+    fun calculateGradeWithPeriods_whatIfScore_appliesWithinWeightedPeriods() {
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                assignments = listOf(
+                    createAssignment(1, "Period 744 assignment", 100.0, submission = createSubmission(40.0, posted = true, gradingPeriodId = 744)),
+                    createAssignment(2, "Period 743 assignment", 100.0, submission = createSubmission(100.0, posted = true, gradingPeriodId = 743))
+                )
+            )
+        )
+        val gradingPeriods = listOf(
+            GradingPeriod(id = 744, weight = 80.0),
+            GradingPeriod(id = 743, weight = 20.0)
+        )
+
+        val result = calculator.calculateGradeWithPeriods(
+            groups = groups,
+            whatIfScores = mapOf(1L to 80.0),
+            applyGroupWeights = false,
+            onlyGraded = true,
+            gradingPeriods = gradingPeriods,
+            weightGradingPeriods = true
+        )
+
+        // Period 744 becomes 80%, so (80*80 + 100*20) / 100 = 84.0.
+        assertEquals(84.0, result, 0.01)
+    }
+
     private fun createAssignmentGroup(
         id: Long,
         name: String,
@@ -871,13 +963,15 @@ class GradeCalculatorTest {
     private fun createSubmission(
         score: Double,
         posted: Boolean,
-        excused: Boolean = false
+        excused: Boolean = false,
+        gradingPeriodId: Long? = null
     ): Submission {
         return Submission(
             score = score,
             grade = score.toString(),
             postedAt = if (posted) "2024-01-01T00:00:00Z".toDate() else null,
-            excused = excused
+            excused = excused,
+            gradingPeriodId = gradingPeriodId
         )
     }
 
