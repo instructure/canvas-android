@@ -82,6 +82,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.requestWebPermissions
@@ -914,10 +915,17 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     /**
-     * Checks if the HTML content contains Studio LTI embed iframes
+     * Checks if the HTML content contains Studio LTI embed iframes.
+     *
+     * We key off the `studio_embed` marker class that [HtmlContentFormatter.iframeWithStudioEmbed]
+     * injects for every Studio embed, rather than matching the encoded immersive-view launch type.
+     * The launch type lives inside an already URL-encoded url= parameter that gets encoded a second
+     * time when it is spliced into the div's onClick JS context, so matching on its encoded form is
+     * brittle: an encoding change (e.g. the XSS hardening in MBL-20032) silently breaks detection,
+     * the post-message bridge script is never injected, and Studio videos become unplayable.
      */
     private fun containsStudioContent(html: String): Boolean {
-        return html.contains(URLEncoder.encode("custom_arc_launch_type=immersive_view", "UTF-8"), ignoreCase = true)
+        return html.contains(STUDIO_EMBED_MARKER, ignoreCase = true)
     }
 
     /**
@@ -1001,6 +1009,7 @@ class CanvasWebView @JvmOverloads constructor(
         private const val VIDEO_PICKER_RESULT_CODE = 1202
         private const val COPY_LINK_ID = 9357
         private const val SHARE_LINK_ID = 9358
+        private const val STUDIO_EMBED_MARKER = "class=\"" + HtmlContentFormatter.STUDIO_EMBED_CLASS + "\""
 
         fun getReferrer(shouldIncludeProtocol: Boolean = false): String {
             return if (shouldIncludeProtocol) ApiPrefs.fullDomain else ApiPrefs.domain
