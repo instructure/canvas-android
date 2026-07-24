@@ -928,6 +928,11 @@
         <item quantity="other">\/ %.0f pts</item>
     </plurals>
 
+    <plurals name="pointsPossibleDecimal">
+        <item quantity="one">\/ %s pt</item>
+        <item quantity="other">\/ %s pts</item>
+    </plurals>
+
     <string name="timeLimit">Time Limit</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>

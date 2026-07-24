@@ -360,13 +360,48 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
+    @Test
+    fun correctDecimalRubricRatingDisplay() {
+        val criterionId = "fractional-criterion"
+        val fractionalCriterion = RubricCriterion(
+            id = criterionId,
+            description = "Fractional criterion",
+            longDescription = "0, 1.25 or 3.75 points",
+            points = 3.75,
+            ratings = listOf(
+                RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
+                RubricCriterionRating(id = "2", points = 1.25, description = "Meets", longDescription = "Meets expectations"),
+                RubricCriterionRating(id = "3", points = 3.75, description = "Full", longDescription = "Way to go!")
+            )
+        )
+        goToSpeedGraderGradePage(GradingType.points, hasRubric = true, rubricCriterion = fractionalCriterion)
+
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertRubricsLabelDisplayed()
+        speedGraderGradePage.assertRubricCriterionDisplayed("Fractional criterion")
+
+        // Phase 2 regression guard: the rating buttons must show the real fractional points, not roundToInt().
+        speedGraderGradePage.assertRubricRatingPointBoxDisplayed("1.25")
+        speedGraderGradePage.assertRubricRatingPointBoxDisplayed("3.75")
+        speedGraderGradePage.assertRubricRatingPointBoxNotDisplayed("1")
+        speedGraderGradePage.assertRubricRatingPointBoxNotDisplayed("4")
+
+        // Phase 1 regression guard: tapping the 1.25 rating must not truncate to 1.2 (banker's rounding).
+        speedGraderGradePage.clickRubricRatingPointBox("1.25")
+        speedGraderGradePage.assertRubricScore(criterionId, "1.25")
+
+        // Phase 2 regression guard: the points-possible label must show the fractional total, not %.0f.
+        speedGraderGradePage.assertRubricPointsPossibleDisplayed("/ 3.75 pts")
+    }
+
     private fun goToSpeedGraderGradePage(
         gradingType: GradingType = GradingType.points,
         hasRubric: Boolean = false,
         pointsPossible: Int = 20,
         score: Double = 12.0,
         grade: String = "60%",
-        submission: Submission? = null
+        submission: Submission? = null,
+        rubricCriterion: RubricCriterion? = null
     ): MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
@@ -387,7 +422,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         )
 
         if (hasRubric) {
-            val rubricCriterion = RubricCriterion(
+            val criterionToSeed = rubricCriterion ?: RubricCriterion(
                 id = data.newItemId().toString(),
                 description = "Description of criterion",
                 longDescription = "0, 3, 7 or 10 points",
@@ -404,7 +439,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
                     RubricCriterionRating(id = "4", points = 10.0, description = "Full Marks", longDescription = "Way to go!")
                 )
             )
-            data.addRubricToAssignment(assignment.id, listOf(rubricCriterion))
+            data.addRubricToAssignment(assignment.id, listOf(criterionToSeed))
         }
 
         data.addSubmissionForAssignment(
