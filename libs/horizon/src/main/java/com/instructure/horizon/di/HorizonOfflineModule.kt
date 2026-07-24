@@ -38,6 +38,7 @@ import com.instructure.horizon.database.dao.HorizonLocalFileDao
 import com.instructure.horizon.database.dao.HorizonLocalImageDao
 import com.instructure.horizon.database.dao.HorizonNoteDao
 import com.instructure.horizon.database.dao.HorizonNotificationStreamItemDao
+import com.instructure.horizon.database.dao.PendingActionDao
 import com.instructure.horizon.database.dao.HorizonUserDao
 import com.instructure.horizon.database.dao.HorizonPageDao
 import com.instructure.horizon.database.dao.HorizonProgramDao
@@ -175,6 +176,11 @@ class HorizonOfflineModule {
     @Provides
     fun provideHorizonAnnouncementDao(db: HorizonDatabase): HorizonAnnouncementDao {
         return db.announcementDao()
+    }
+
+    @Provides
+    fun providePendingActionDao(db: HorizonDatabase): PendingActionDao {
+        return db.pendingActionDao()
     }
 
     @Provides

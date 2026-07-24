@@ -21,6 +21,7 @@ import com.instructure.horizon.util.sanitizeAsFilename
 import com.instructure.pandautils.features.offline.sync.HtmlParsingResult
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.retryWithBackoff
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +30,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.IOException
 import java.io.RandomAccessFile
 import java.util.Date
 import java.util.UUID
@@ -236,44 +238,46 @@ class HorizonFileSyncRepository @Inject constructor(
         onTotalBytesKnown: suspend (Long) -> Unit = {},
         onSuccess: suspend () -> Unit,
     ) {
-        val body = fileDownloadApi.downloadFile(
-            url,
-            RestParams(shouldIgnoreToken = shouldIgnoreToken, shouldLoginOnTokenError = false)
-        ).dataOrNull ?: return
+        retryWithBackoff(maxAttempts = DOWNLOAD_MAX_ATTEMPTS, initialDelay = DOWNLOAD_RETRY_INITIAL_DELAY_MS) {
+            val body = fileDownloadApi.downloadFile(
+                url,
+                RestParams(shouldIgnoreToken = shouldIgnoreToken, shouldLoginOnTokenError = false)
+            ).dataOrNull ?: throw IOException("Download request failed for $url")
 
-        val tmpFile = File(destFile.parentFile, "${destFile.name}.tmp")
-        if (tmpFile.exists()) tmpFile.delete()
+            val tmpFile = File(destFile.parentFile, "${destFile.name}.tmp")
+            if (tmpFile.exists()) tmpFile.delete()
 
-        var succeeded = false
-        var totalBytesReported = false
-        try {
-            body.saveFile(tmpFile).collect { state ->
-                when (state) {
-                    is DownloadState.Success -> {
-                        if (expectedSize != null && expectedSize > 0 && tmpFile.length() != expectedSize) {
-                            tmpFile.delete()
-                            throw SizeMismatchException(expectedSize, tmpFile.length())
+            var succeeded = false
+            var totalBytesReported = false
+            try {
+                body.saveFile(tmpFile).collect { state ->
+                    when (state) {
+                        is DownloadState.Success -> {
+                            if (expectedSize != null && expectedSize > 0 && tmpFile.length() != expectedSize) {
+                                tmpFile.delete()
+                                throw SizeMismatchException(expectedSize, tmpFile.length())
+                            }
+                            fsync(tmpFile)
+                            if (!tmpFile.renameTo(destFile)) {
+                                tmpFile.copyTo(destFile, overwrite = true)
+                                tmpFile.delete()
+                            }
+                            succeeded = true
+                            onSuccess()
                         }
-                        fsync(tmpFile)
-                        if (!tmpFile.renameTo(destFile)) {
-                            tmpFile.copyTo(destFile, overwrite = true)
-                            tmpFile.delete()
+                        is DownloadState.Failure -> throw state.throwable
+                        is DownloadState.InProgress -> {
+                            if (!totalBytesReported && state.totalBytes > 0) {
+                                totalBytesReported = true
+                                onTotalBytesKnown(state.totalBytes)
+                            }
+                            onProgress(state.progress)
                         }
-                        succeeded = true
-                        onSuccess()
-                    }
-                    is DownloadState.Failure -> tmpFile.delete()
-                    is DownloadState.InProgress -> {
-                        if (!totalBytesReported && state.totalBytes > 0) {
-                            totalBytesReported = true
-                            onTotalBytesKnown(state.totalBytes)
-                        }
-                        onProgress(state.progress)
                     }
                 }
+            } finally {
+                if (!succeeded && tmpFile.exists()) tmpFile.delete()
             }
-        } finally {
-            if (!succeeded && tmpFile.exists()) tmpFile.delete()
         }
     }
 
@@ -283,6 +287,11 @@ class HorizonFileSyncRepository @Inject constructor(
         } catch (_: Exception) {
             // Best-effort flush; rename below still happens.
         }
+    }
+
+    companion object {
+        private const val DOWNLOAD_MAX_ATTEMPTS = 3
+        private const val DOWNLOAD_RETRY_INITIAL_DELAY_MS = 500L
     }
 }
 

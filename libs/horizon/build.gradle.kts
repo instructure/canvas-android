@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":pandautils"))
     implementation(project(":login-api-2"))
     implementation(project(":annotations"))
+    implementation(project(":rceditor"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
@@ -112,6 +113,7 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    testImplementation(Libs.ANDROIDX_WORK_TEST)
     androidTestImplementation(Libs.HILT_TESTING)
 
     /* Pandautils dependencies to provide fake implementations for testing */

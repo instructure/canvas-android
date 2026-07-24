@@ -39,6 +39,7 @@ class HorizonDatabaseProvider @Inject constructor(
         }
         return dbMap.getOrPut(userId) {
             Room.databaseBuilder(context, HorizonDatabase::class.java, "$HORIZON_DB_PREFIX$userId")
+                .addMigrations(*horizonDatabaseMigrations)
                 .build()
         }
     }

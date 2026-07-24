@@ -127,7 +127,7 @@ fun <T> TabRow(
                             sizes = sizes
                                 .toMutableList()
                                 .apply {
-                                    this[index] = width
+                                    if (index in indices) this[index] = width
                                 }
                         }
                         .clickable(enabled = isTabEnabled(tabItem)) {
@@ -140,7 +140,7 @@ fun <T> TabRow(
             }
         }
         val width by animateDpAsState(
-            with(localDensity) { sizes[selectedIndex].toDp() },
+            with(localDensity) { sizes.getOrElse(selectedIndex) { 0 }.toDp() },
             label = "IndicatorWidthAnimation"
         )
         selectedIndicator(

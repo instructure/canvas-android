@@ -51,6 +51,37 @@ suspend fun <T>DataResult<List<T>>.depaginate(nextPageCall: suspend (nextUrl: St
     return DataResult.Success(depaginatedList, apiType = apiType)
 }
 
+/**
+ * The HTTP status code behind a failed [DataResult], or null when the result is a success or the
+ * failure carries no code (e.g. a parsing error or a network exception without a response).
+ */
+fun DataResult<*>?.httpStatusCode(): Int? {
+    val fail = this as? DataResult.Fail ?: return null
+    return when (val failure = fail.failure) {
+        is Failure.Authorization -> HTTP_UNAUTHORIZED
+        is Failure.Network -> failure.errorCode ?: fail.response?.code
+        else -> fail.response?.code
+    }
+}
+
+/** The failure message behind a failed [DataResult], or null when it is a success. */
+fun DataResult<*>?.errorMessage(): String? {
+    return (this as? DataResult.Fail)?.failure?.message
+}
+
+/**
+ * Whether a failed [DataResult] is worth retrying: an unknown code, a 401 (which the token-refresh
+ * path handles), or any 5xx. A null result (missing/invalid input) is treated as non-transient.
+ */
+fun DataResult<*>?.isTransientFailure(): Boolean {
+    if (this == null) return false
+    val code = httpStatusCode()
+    return code == null || code == HTTP_UNAUTHORIZED || code >= HTTP_SERVER_ERROR
+}
+
+private const val HTTP_UNAUTHORIZED = 401
+private const val HTTP_SERVER_ERROR = 500
+
 fun Request.restParams(): RestParams? {
     return when {
         this.tag(RestParams::class.java) != null -> {

@@ -34,8 +34,10 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltWorker
 class HorizonOfflineSyncWorker @AssistedInject constructor(
@@ -134,6 +136,11 @@ class HorizonOfflineSyncWorker @AssistedInject constructor(
                 Result.success()
             }
         } finally {
+            if (isStopped) {
+                withContext(NonCancellable) {
+                    horizonCourseSync.cleanupInterrupted(plans)
+                }
+            }
             notificationManager.cancel(foregroundNotificationId)
         }
     }

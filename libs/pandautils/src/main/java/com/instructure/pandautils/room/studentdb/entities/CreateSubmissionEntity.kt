@@ -51,5 +51,7 @@ data class CreateSubmissionEntity(
     @ColumnInfo(name = "last_error_message")
     val lastErrorMessage: String? = null,
     @ColumnInfo(name = "canvas_submission_id")
-    val canvasSubmissionId: Long? = null
+    val canvasSubmissionId: Long? = null,
+    @ColumnInfo(name = "notify_on_result", defaultValue = "0")
+    val notifyOnResult: Boolean = false
 )

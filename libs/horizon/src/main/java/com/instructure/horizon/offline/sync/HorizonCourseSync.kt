@@ -63,6 +63,13 @@ class HorizonCourseSync @Inject constructor(
         }
     }
 
+    suspend fun cleanupInterrupted(plans: List<HorizonCourseSyncPlanEntity>) {
+        val courseIds = plans.map { it.courseId }
+        if (courseIds.isEmpty()) return
+        courseSyncPlanDao.resetInterruptedCourses(courseIds)
+        fileSyncPlanDao.resetInterruptedFiles(courseIds)
+    }
+
     private suspend fun runHeadSync(block: suspend () -> Unit) {
         coroutineContext.ensureActive()
         try {

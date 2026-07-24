@@ -51,6 +51,21 @@ class HorizonOfflineSyncHelper @Inject constructor(
 
     private var lastAppliedFingerprint: String? = null
 
+    suspend fun requestOneTimeSync() {
+        val courseIds = courseSyncPlanDao.findAll().map { it.courseId }
+        syncCoursesNow(courseIds)
+    }
+
+    suspend fun enqueueActionDrain() {
+        if (!featureFlagProvider.offlineEnabled()) return
+        val userId = apiPrefs.user?.id ?: return
+        workManager.enqueueUniqueWork(
+            uniqueActionDrainName(userId),
+            ExistingWorkPolicy.KEEP,
+            buildActionDrainRequest(userId),
+        )
+    }
+
     suspend fun syncCoursesNow(courseIds: List<Long>) {
         if (!featureFlagProvider.offlineEnabled()) return
         val userId = apiPrefs.user?.id ?: return
@@ -135,6 +150,7 @@ class HorizonOfflineSyncHelper @Inject constructor(
 
     private fun uniqueOneTimeName(userId: Long) = "HorizonOfflineSyncOneTime-$userId"
     private fun uniquePeriodicName(userId: Long) = "HorizonOfflinePeriodicSync-$userId"
+    private fun uniqueActionDrainName(userId: Long) = "HorizonOfflineActionDrain-$userId"
     private fun oneTimeTag(userId: Long) = "${HorizonOfflineSyncWorker.ONE_TIME_TAG}-$userId"
     private fun periodicTag(userId: Long) = "${HorizonOfflineSyncWorker.PERIODIC_TAG}-$userId"
 
@@ -153,6 +169,22 @@ class HorizonOfflineSyncHelper @Inject constructor(
             .setConstraints(networkConstraints(settings))
             .addTag(HorizonOfflineSyncWorker.ONE_TIME_TAG)
             .addTag(oneTimeTag(userId))
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 15, TimeUnit.MINUTES)
+            .build()
+
+    private fun buildActionDrainRequest(userId: Long) =
+        OneTimeWorkRequestBuilder<OfflineActionDrainWorker>()
+            .setInputData(
+                Data.Builder()
+                    .putLong(OfflineActionDrainWorker.USER_ID_KEY, userId)
+                    .build()
+            )
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
+            )
+            .addTag(OfflineActionDrainWorker.TAG)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 15, TimeUnit.MINUTES)
             .build()
 

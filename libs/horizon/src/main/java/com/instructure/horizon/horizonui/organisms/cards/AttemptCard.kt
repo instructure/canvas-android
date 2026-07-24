@@ -50,8 +50,19 @@ data class AttemptCardState(
     val score: String? = null,
     val onClick: (() -> Unit)? = null,
     val selected: Boolean = false,
-    val pillText: String? = null
+    val pillText: String? = null,
+    val pillType: AttemptPillType = AttemptPillType.DANGER
 )
+
+/**
+ * Plain (non-Compose) pill styling for [AttemptCardState] so state can be built off the Compose
+ * thread (e.g. in ViewModels/unit tests). Mapped to a [PillType] inside [AttemptCard].
+ */
+enum class AttemptPillType {
+    DANGER,
+    INSTITUTION,
+    DEFAULT
+}
 
 @Composable
 fun AttemptCard(state: AttemptCardState, modifier: Modifier = Modifier) {
@@ -84,7 +95,12 @@ fun AttemptCard(state: AttemptCardState, modifier: Modifier = Modifier) {
             }
             state.pillText?.let {
                 HorizonSpace(SpaceSize.SPACE_12)
-                Pill(label = it, type = PillType.DANGER, size = PillSize.SMALL, case = PillCase.TITLE)
+                val pillType = when (state.pillType) {
+                    AttemptPillType.DANGER -> PillType.DANGER
+                    AttemptPillType.INSTITUTION -> PillType.INSTITUTION
+                    AttemptPillType.DEFAULT -> PillType.DEFAULT
+                }
+                Pill(label = it, type = pillType, size = PillSize.SMALL, case = PillCase.TITLE)
             }
         }
     }

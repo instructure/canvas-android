@@ -40,6 +40,7 @@ class AssignmentDetailsLocalDataSource @Inject constructor(
                 allowedAttempts = assignment.allowedAttempts,
                 dueAt = assignment.dueAt,
                 submissionTypes = assignment.submissionTypesRaw.joinToString(","),
+                allowedExtensions = assignment.allowedExtensions.joinToString(","),
                 gradingType = assignment.gradingType,
                 lockedForUser = assignment.lockedForUser,
                 lockExplanation = assignment.lockExplanation,
@@ -53,12 +54,14 @@ class AssignmentDetailsLocalDataSource @Inject constructor(
     private fun HorizonAssignmentDetailsEntity.toAssignment(): Assignment {
         return Assignment(
             id = assignmentId,
+            courseId = courseId,
             name = name,
             description = description,
             pointsPossible = pointsPossible,
             allowedAttempts = allowedAttempts,
             dueAt = dueAt,
             submissionTypesRaw = submissionTypes.split(",").filter { it.isNotEmpty() },
+            allowedExtensions = allowedExtensions.split(",").filter { it.isNotEmpty() },
             gradingType = gradingType,
             lockedForUser = lockedForUser,
             lockExplanation = lockExplanation,

@@ -23,6 +23,8 @@ import androidx.room.PrimaryKey
  * Stores assignment/quiz content for offline access.
  * [description] contains the parsed HTML with local file references replacing remote URLs.
  * [submissionTypes] is a comma-separated list of submission type API strings.
+ * [allowedExtensions] is a comma-separated list of file extensions accepted for file-upload
+ * submissions; empty means any type is allowed. Used to validate offline file submissions.
  * [url] is the assignment URL (used by quizzes/assessments to launch the quiz).
  * [ltiToolUrl] is from [com.instructure.canvasapi2.models.ExternalToolAttributes.url], used for LTI button.
  * Submission history is not stored; offline view shows description only.
@@ -40,6 +42,7 @@ data class HorizonAssignmentDetailsEntity(
     val allowedAttempts: Long,
     val dueAt: String?,
     val submissionTypes: String,
+    val allowedExtensions: String = "",
     val gradingType: String?,
     val lockedForUser: Boolean,
     val lockExplanation: String?,

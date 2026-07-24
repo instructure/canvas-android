@@ -20,8 +20,10 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 import android.view.ViewGroup
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +38,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,17 +56,20 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.CancelScheduledSubmissionModal
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsDialog
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
+import com.instructure.horizon.features.queuedsubmissions.QueuedSubmissionPill
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -81,6 +89,7 @@ import com.instructure.horizon.horizonui.organisms.cards.AttemptCard
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -214,6 +223,7 @@ fun AssignmentDetailsScreen(
                 )
                 ComposeCanvasWebViewWrapper(
                     content = uiState.instructions,
+                    webViewStateKey = "assignment-instructions",
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
@@ -252,9 +262,22 @@ fun AssignmentDetailsScreen(
                 }
                 HorizonSpace(SpaceSize.SPACE_40)
                 if (uiState.showSubmissionDetails) {
-                    SubmissionDetailsContent(uiState.submissionDetailsUiState, isOffline = uiState.isOffline, modifier = Modifier.padding(24.dp))
+                    SubmissionDetailsContent(
+                        uiState.submissionDetailsUiState,
+                        pendingSubmission = uiState.pendingSubmission,
+                        showNewAttempt = uiState.pendingSubmission == null,
+                        modifier = Modifier.padding(24.dp)
+                    )
                 }
-                if (uiState.showAddSubmission) {
+                // A queued (offline) submission is rendered inline as the selected attempt above; only
+                // an online in-flight submission (no queued attempt) uses the standalone pending block.
+                val onlinePending = uiState.pendingSubmission != null && uiState.submissionDetailsUiState.pendingAttemptNumber < 0L
+                if (onlinePending) {
+                    PendingSubmissionContent(
+                        uiState = uiState.pendingSubmission!!,
+                        modifier = Modifier.padding(24.dp)
+                    )
+                } else if (uiState.showAddSubmission) {
                     val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
                     val addSubmissionUiState by addSubmissionViewModel.uiState.collectAsState()
                     addSubmissionViewModel.setOnSubmissionSuccessListener {
@@ -284,17 +307,95 @@ fun AssignmentDetailsScreen(
 }
 
 @Composable
-private fun SubmissionDetailsContent(uiState: SubmissionDetailsUiState, isOffline: Boolean = false, modifier: Modifier = Modifier) {
+private fun SubmissionDetailsContent(
+    uiState: SubmissionDetailsUiState,
+    pendingSubmission: PendingSubmissionUiState? = null,
+    showNewAttempt: Boolean = true,
+    modifier: Modifier = Modifier
+) {
     Column(modifier = modifier) {
-        SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
-            ?: uiState.submissions.first())
-        HorizonSpace(SpaceSize.SPACE_40)
-        Box(modifier = Modifier.fillMaxWidth().offlineDisabled(isOffline), contentAlignment = Alignment.CenterEnd) {
-            Button(
-                label = stringResource(R.string.assignmentDetails_newAttempt),
-                color = ButtonColor.Institution,
-                onClick = uiState.onNewAttemptClick
+        if (pendingSubmission != null && uiState.currentSubmissionAttempt == uiState.pendingAttemptNumber) {
+            PendingSubmissionContent(uiState = pendingSubmission)
+        } else {
+            val submission = uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
+                ?: uiState.submissions.firstOrNull()
+            submission?.let { SubmissionContent(it) }
+        }
+        if (showNewAttempt) {
+            HorizonSpace(SpaceSize.SPACE_40)
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                Button(
+                    label = stringResource(R.string.assignmentDetails_newAttempt),
+                    color = ButtonColor.Institution,
+                    enabled = uiState.newAttemptEnabled,
+                    onClick = uiState.onNewAttemptClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PendingSubmissionContent(uiState: PendingSubmissionUiState, modifier: Modifier = Modifier) {
+    var showCancelConfirmation by rememberSaveable { mutableStateOf(false) }
+    if (showCancelConfirmation) {
+        CancelScheduledSubmissionModal(
+            onConfirm = {
+                showCancelConfirmation = false
+                uiState.onCancel()
+            },
+            onDismiss = { showCancelConfirmation = false }
+        )
+    }
+    Column(modifier = modifier) {
+        QueuedSubmissionPill(state = uiState.state)
+        HorizonSpace(SpaceSize.SPACE_16)
+        when (uiState.submissionType) {
+            Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> TextSubmissionContent(
+                text = uiState.text.orEmpty(),
+                webViewStateKey = "pending-submission"
             )
+            else -> Column {
+                uiState.fileNames.forEach { fileName ->
+                    Text(
+                        text = fileName,
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+            }
+        }
+        if (uiState.state == SubmissionState.FAILED) {
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(
+                text = stringResource(R.string.queuedSubmissions_failureMessage),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.error()
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Button(
+                label = stringResource(R.string.queuedSubmissions_cancel),
+                color = ButtonColor.Black,
+                onClick = { showCancelConfirmation = true }
+            )
+            if (uiState.state == SubmissionState.FAILED) {
+                HorizonSpace(SpaceSize.SPACE_8)
+                Button(
+                    label = stringResource(R.string.queuedSubmissions_retry),
+                    color = ButtonColor.Institution,
+                    onClick = uiState.onRetry
+                )
+            } else if (uiState.showSubmitButton) {
+                HorizonSpace(SpaceSize.SPACE_8)
+                Button(
+                    label = stringResource(R.string.queuedSubmissions_submit),
+                    color = ButtonColor.Institution,
+                    onClick = uiState.onSubmit
+                )
+            }
         }
     }
 }
@@ -302,7 +403,11 @@ private fun SubmissionDetailsContent(uiState: SubmissionDetailsUiState, isOfflin
 @Composable
 fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier) {
     when (uiState.submissionContent) {
-        is SubmissionContent.TextSubmission -> TextSubmissionContent(text = uiState.submissionContent.text, modifier = modifier)
+        is SubmissionContent.TextSubmission -> TextSubmissionContent(
+            text = uiState.submissionContent.text,
+            modifier = modifier,
+            webViewStateKey = "submission-${uiState.submissionAttempt}"
+        )
         is SubmissionContent.FileSubmission -> {
             NavHost(
                 rememberNavController(),
