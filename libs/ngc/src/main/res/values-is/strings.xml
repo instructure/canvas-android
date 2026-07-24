@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Vinnan mín</string>
     <string name="ngc_courseHomeTabMore">Meira</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Tiltækt til</string>
+    <string name="ngc_quizSettings">Prófstillingar</string>
+    <string name="ngc_submission">Skil</string>
+    <string name="ngc_continueDraft">Halda áfram með drög</string>
+    <string name="ngc_assignmentReminder">Áminning um verkefni</string>
+    <string name="ngc_classPerformance">Árangur bekkjarins</string>
+    <string name="ngc_newAttempt">Ný tilraun</string>
+    <string name="ngc_submitAssignment">Skila verkefni</string>
+    <string name="ngc_studio">Stúdíó</string>
+    <string name="ngc_allowedFileTypes">Leyfilegar skráargerðir</string>
+    <string name="ngc_noDueDate">Enginn skiladagur</string>
+    <string name="ngc_noAssignmentDescription">Engin lýsing verkefnis</string>
+    <string name="ngc_retry">Reyna aftur</string>
+    <string name="ngc_finalGrade">Lokaeinkunn:</string>
+    <string name="ngc_notYetGraded">Ekki metið enn</string>
+    <string name="ngc_uploadingSubmission">Hlaða upp skilum...</string>
+    <string name="ngc_submissionFailed">Mistókst að skila</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Aukaeining</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d degi of seint</item>
+        <item quantity="other">%d dögum of seint</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Lægst: %s</string>
+    <string name="ngc_classPerformanceAverage">Meðal: %s</string>
+    <string name="ngc_classPerformanceHighest">Hæst: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Viðbótarupplýsingar</string>
+    <string name="ngc_submissionSegmentInstructions">Fyrirmæli</string>
+    <string name="ngc_submissionSegmentRubric">Matskvarði</string>
+    <string name="ngc_submissionSegmentComments">Athugasemdir</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Stjórna efni án nettengingar</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Sérsníða stjórnborð</string>
+    <string name="a11y_submissionSupportingPaneExpand">Stækka viðbótarupplýsingar</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Minnka viðbótarupplýsingar</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Skila verkefni</string>
+    <string name="ngc_submission_newSubmission">Ný skil</string>
+    <string name="ngc_submission_textEntry">Textafærsla</string>
+    <string name="ngc_submission_submit">Senda</string>
+    <string name="ngc_submission_deleteDraft">Eyða drögum</string>
+    <string name="ngc_submission_draftSaved">Vistað %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Sláðu inn skilatextann þinn hér</string>
+    <string name="ngc_submission_submissionError">Villa við skil verkefnis</string>
+    <string name="ngc_submission_loadError">Tókst ekki að hlaða inn verkefni</string>
+    <string name="ngc_submission_dueDate">Skiladagur %1$s</string>
+    <string name="ngc_submission_retry">Reyna aftur</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Eyða drögum?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Drögum þínum verður varanlega eytt og ekki er hægt að endurheimta þau.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Eyða</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Hætta við</string>
+    <string name="ngc_back">Til baka</string>
 </resources>

@@ -26,7 +26,65 @@
     <string name="ngc_courseHomeTabMyWork">العمل الخاص بي</string>
     <string name="ngc_courseHomeTabMore">المزيد</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">متوفر حتى</string>
+    <string name="ngc_quizSettings">إعدادات الاختبار الموجز</string>
+    <string name="ngc_submission">الإرسال</string>
+    <string name="ngc_continueDraft">متابعة المسودة</string>
+    <string name="ngc_assignmentReminder">تذكير بالمهمة</string>
+    <string name="ngc_classPerformance">مستوى الفصل الدراسي</string>
+    <string name="ngc_newAttempt">محاولة جديدة</string>
+    <string name="ngc_submitAssignment">إرسال المهمة</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">أنواع الملفات المسموح بها</string>
+    <string name="ngc_noDueDate">بلا تاريخ استحقاق</string>
+    <string name="ngc_noAssignmentDescription">لا يوجد وصف للمهمة</string>
+    <string name="ngc_retry">إعادة المحاولة</string>
+    <string name="ngc_finalGrade">الدرجة النهائية</string>
+    <string name="ngc_notYetGraded">لم يتم التقييم بعد</string>
+    <string name="ngc_uploadingSubmission">جارٍ تحميل الإرسال...</string>
+    <string name="ngc_submissionFailed">فشل الإرسال</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">رصيد إضافي</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="zero">%d أيام تأخير</item>
+        <item quantity="one">%d يوم تأخير</item>
+        <item quantity="two">%d أيام تأخير</item>
+        <item quantity="few">%d أيام تأخير</item>
+        <item quantity="many">%d أيام تأخير</item>
+        <item quantity="other">%d أيام تأخير</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">الأقل: %s</string>
+    <string name="ngc_classPerformanceAverage">المتوسط: %s</string>
+    <string name="ngc_classPerformanceHighest">الأعلى: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">معلومات إضافية</string>
+    <string name="ngc_submissionSegmentInstructions">الإرشادات</string>
+    <string name="ngc_submissionSegmentRubric">مقياس التقييم</string>
+    <string name="ngc_submissionSegmentComments">التعليقات</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">إدارة المحتوى دون اتصال</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">تخصيص لوحة المعلومات</string>
+    <string name="a11y_submissionSupportingPaneExpand">توسعة المعلومات الإضافية</string>
+    <string name="a11y_submissionSupportingPaneCollapse">طي المعلومات الإضافية</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">إرسال المهمة</string>
+    <string name="ngc_submission_newSubmission">إرسال جديد</string>
+    <string name="ngc_submission_textEntry">إدخال النص</string>
+    <string name="ngc_submission_submit">إرسال</string>
+    <string name="ngc_submission_deleteDraft">حذف المسودة</string>
+    <string name="ngc_submission_draftSaved">تم حفظ %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">أدخل هنا نص الإرسال الخاص بك</string>
+    <string name="ngc_submission_submissionError">حدث خطأ أثناء إرسال المهمة</string>
+    <string name="ngc_submission_loadError">فشل تحميل المهمة</string>
+    <string name="ngc_submission_dueDate">تاريخ الاستحقاق %1$s</string>
+    <string name="ngc_submission_retry">إعادة المحاولة</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">هل تريد حذف المسودة؟</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">سيتم حذف المسودة الخاصة بك بشكل نهائي ولن يمكن استعادتها.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">حذف</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">إلغاء</string>
+    <string name="ngc_back">عودة</string>
 </resources>

@@ -1435,6 +1435,8 @@
     <string name="quizTimeLimit">次数限制：%s</string>
     <string name="allowedAttempts">允许的尝试次数%s</string>
     <string name="usedAttempts">已使用的尝试次数：%d</string>
+    <string name="assignmentAttemptsUnlimited">尝试次数不受限制</string>
+    <string name="assignmentAttemptsUsedOfAllowed">尝试 %1$d/%2$d次</string>
     <string name="generalUnexpectedError">发生意外错误。</string>
 
     <string name="deleteSelected">删除</string>
@@ -1477,6 +1479,8 @@
     <string name="aboutLoginTitle">登录 ID</string>
     <string name="aboutEmailTitle">电子邮件</string>
     <string name="aboutVersionTitle">版本</string>
+    <string name="aboutOpenSourceTitle">开源和许可证</string>
+    <string name="aboutOpenSourceSubtitle">查看源代码和开源许可证。</string>
     <string name="assignmentRefreshError">重新加载此作业时出错。请检查连接，然后重试。</string>
     <string name="instructure_logo">Instructure 徽标</string>
     <string name="preferences">首选项</string>
@@ -1917,6 +1921,9 @@
     <string name="gradePreferencesHeaderSortBy">排序</string>
     <string name="gradesEmptyTitle">无作业</string>
     <string name="gradesEmptyMessage">似乎尚未在该空间创建作业。</string>
+    <string name="gradesEmptyMessageForPeriod">%s 中没有作业。</string>
+    <string name="gradesCommentsContentDescription">%d 条评论</string>
+    <string name="gradesUnreadCommentsContentDescription">%d 条未读评论</string>
     <string name="noMatchingAssignments">没有符合条件的作业</string>
     <string name="noMatchingAssignmentsDescription">没有找到符合搜索条件的作业。请尝试使用其他搜索词。</string>
     <string name="errorLoadingGrades">加载您学生的评分时遇到问题。请尝试重新加载页面或稍后回来检查。</string>

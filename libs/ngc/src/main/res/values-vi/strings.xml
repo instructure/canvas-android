@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Công Việc Của Tôi</string>
     <string name="ngc_courseHomeTabMore">Thêm</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Khả dụng đến</string>
+    <string name="ngc_quizSettings">Các cài đặt câu hỏi kiểm tra</string>
+    <string name="ngc_submission">Bài Nộp</string>
+    <string name="ngc_continueDraft">Tiếp tục phác thảo</string>
+    <string name="ngc_assignmentReminder">Lời Nhắc Nhở Bài Tập</string>
+    <string name="ngc_classPerformance">Hiệu Suất của Lớp</string>
+    <string name="ngc_newAttempt">Lần làm lại mới</string>
+    <string name="ngc_submitAssignment">Nộp bài tập</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Loại tập tin được phép</string>
+    <string name="ngc_noDueDate">Không có ngày đến hạn</string>
+    <string name="ngc_noAssignmentDescription">Không có mô tả bài tập</string>
+    <string name="ngc_retry">Thử Lại</string>
+    <string name="ngc_finalGrade">Điểm Cuối Cùng</string>
+    <string name="ngc_notYetGraded">Chưa được chấm điểm</string>
+    <string name="ngc_uploadingSubmission">Đang tải lên bài nộp&#8230;</string>
+    <string name="ngc_submissionFailed">Nộp thất bại</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Tín Chỉ Bổ Sung</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d ngày trễ</item>
+        <item quantity="other">%d ngày trễ</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Thấp Nhất: %s</string>
+    <string name="ngc_classPerformanceAverage">Trung Bình: %s</string>
+    <string name="ngc_classPerformanceHighest">Cao Nhất: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Thông tin bổ sung</string>
+    <string name="ngc_submissionSegmentInstructions">Chỉ Dẫn</string>
+    <string name="ngc_submissionSegmentRubric">Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="ngc_submissionSegmentComments">Bình Luận</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Quản lý nội dung ngoại tuyến</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Tùy chỉnh bảng điều khiển</string>
+    <string name="a11y_submissionSupportingPaneExpand">Mở rộng thông tin bổ sung</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Thu gọn thông tin bổ sung</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Nộp Bài Tập</string>
+    <string name="ngc_submission_newSubmission">Bài Nộp Mới</string>
+    <string name="ngc_submission_textEntry">Mục Nhập Văn Bản</string>
+    <string name="ngc_submission_submit">Nộp</string>
+    <string name="ngc_submission_deleteDraft">Xóa bản nháp</string>
+    <string name="ngc_submission_draftSaved">%1$s Đã Lưu</string>
+    <string name="ngc_submission_textEntryPlaceholder">Nhập văn bản nộp của bạn tại đây</string>
+    <string name="ngc_submission_submissionError">Xảy ra lỗi khi nộp bài tập</string>
+    <string name="ngc_submission_loadError">Không thể tải bài tập</string>
+    <string name="ngc_submission_dueDate">%1$s Đến Hạn</string>
+    <string name="ngc_submission_retry">Thử Lại</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Xóa bản nháp?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Bản nháp của bạn sẽ bị xóa vĩnh viễn và không thể khôi phục.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Xóa</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Hủy</string>
+    <string name="ngc_back">Quay lại</string>
 </resources>

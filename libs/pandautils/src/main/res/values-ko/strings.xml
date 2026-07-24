@@ -260,6 +260,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">이 답변을 삭제함 %s</string>
+    <string name="utils_announcementDeleted">공지가 삭제되었습니다.</string>
+    <string name="utils_discussionDeleted">토론이 삭제되었습니다.</string>
     <string name="utils_discussionsUnknownAuthor">알 수 없는 작성자</string>
     <string name="utils_discussionsReply">회신</string>
     <string name="utils_discussionsEdit">편집</string>

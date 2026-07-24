@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">My Work</string>
     <string name="ngc_courseHomeTabMore">More</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Available until</string>
+    <string name="ngc_quizSettings">Quiz settings</string>
+    <string name="ngc_submission">Submission</string>
+    <string name="ngc_continueDraft">Continue draft</string>
+    <string name="ngc_assignmentReminder">Assignment Reminder</string>
+    <string name="ngc_classPerformance">Class Performance</string>
+    <string name="ngc_newAttempt">New attempt</string>
+    <string name="ngc_submitAssignment">Submit assignment</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Allowed file types</string>
+    <string name="ngc_noDueDate">No due date</string>
+    <string name="ngc_noAssignmentDescription">No assignment description</string>
+    <string name="ngc_retry">Retry</string>
+    <string name="ngc_finalGrade">Final Grade</string>
+    <string name="ngc_notYetGraded">Not yet Graded</string>
+    <string name="ngc_uploadingSubmission">Uploading submission&#8230;</string>
+    <string name="ngc_submissionFailed">Submission failed</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Extra Credit</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d day late</item>
+        <item quantity="other">%d days late</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Lowest: %s</string>
+    <string name="ngc_classPerformanceAverage">Avg: %s</string>
+    <string name="ngc_classPerformanceHighest">Highest: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Additional info</string>
+    <string name="ngc_submissionSegmentInstructions">Instructions</string>
+    <string name="ngc_submissionSegmentRubric">Rubric</string>
+    <string name="ngc_submissionSegmentComments">Comments</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Manage offline content</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Customise dashboard</string>
+    <string name="a11y_submissionSupportingPaneExpand">Expand additional info</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Collapse additional info</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Submit Assignment</string>
+    <string name="ngc_submission_newSubmission">New Submission</string>
+    <string name="ngc_submission_textEntry">Text Entry</string>
+    <string name="ngc_submission_submit">Submit</string>
+    <string name="ngc_submission_deleteDraft">Delete draft</string>
+    <string name="ngc_submission_draftSaved">Saved %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Enter your submission text here</string>
+    <string name="ngc_submission_submissionError">Error submitting assignment</string>
+    <string name="ngc_submission_loadError">Failed to load assignment</string>
+    <string name="ngc_submission_dueDate">Due %1$s</string>
+    <string name="ngc_submission_retry">Retry</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Delete draft?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Your draft will be permanently deleted and cannot be recovered.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Delete</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cancel</string>
+    <string name="ngc_back">Back</string>
 </resources>

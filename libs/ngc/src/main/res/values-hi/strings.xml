@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">मेरा काम</string>
     <string name="ngc_courseHomeTabMore">अधिक</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">इस तिथि तक उपलब्ध:</string>
+    <string name="ngc_quizSettings">प्रश्नोत्तरी सेटिंग्स</string>
+    <string name="ngc_submission">सबमिशन</string>
+    <string name="ngc_continueDraft">ड्राफ़्ट पर जारी रहें</string>
+    <string name="ngc_assignmentReminder">असाइनमेंट अनुस्मारक</string>
+    <string name="ngc_classPerformance">कक्षा प्रदर्शन</string>
+    <string name="ngc_newAttempt">नया प्रयास</string>
+    <string name="ngc_submitAssignment">असाइनमेंट सबमिट करें</string>
+    <string name="ngc_studio">स्टूडियो</string>
+    <string name="ngc_allowedFileTypes">अनुमत फ़ाइल प्रकार</string>
+    <string name="ngc_noDueDate">कोई नियत तिथि नहीं</string>
+    <string name="ngc_noAssignmentDescription">कोई असाइनमेंट विवरण नहीं</string>
+    <string name="ngc_retry">फिर से कोशिश करें</string>
+    <string name="ngc_finalGrade">अंतिम ग्रेड</string>
+    <string name="ngc_notYetGraded">अभी तक ग्रेड नहीं किया गया है</string>
+    <string name="ngc_uploadingSubmission">सबमिशन अपलोड हो रहा है...</string>
+    <string name="ngc_submissionFailed">सबमिशन विफल हुआ</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">अतिरिक्त क्रेडिट</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d दिन देरी से</item>
+        <item quantity="other">%d दिन देरी से</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">निम्नतम: %s</string>
+    <string name="ngc_classPerformanceAverage">औसत: %s</string>
+    <string name="ngc_classPerformanceHighest">उच्चतम: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">अतिरिक्त जानकारी</string>
+    <string name="ngc_submissionSegmentInstructions">निर्देश</string>
+    <string name="ngc_submissionSegmentRubric">रुब्रिक</string>
+    <string name="ngc_submissionSegmentComments">टिप्पणियां</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">ऑफ़लाइन सामग्री प्रबंधित करें</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">डैशबोर्ड कस्टमाइज़ करें</string>
+    <string name="a11y_submissionSupportingPaneExpand">अतिरिक्त जानकारी का विस्तार करें</string>
+    <string name="a11y_submissionSupportingPaneCollapse">अतिरिक्त जानकारी संक्षिप्त करें</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">असाइनमेंट सबमिट करें</string>
+    <string name="ngc_submission_newSubmission">नया सबमिशन</string>
+    <string name="ngc_submission_textEntry">पाठ प्रवेश</string>
+    <string name="ngc_submission_submit">सबमिट करें</string>
+    <string name="ngc_submission_deleteDraft">ड्राफ़्ट मिटाएं</string>
+    <string name="ngc_submission_draftSaved">%1$s को सहेजा गया</string>
+    <string name="ngc_submission_textEntryPlaceholder">अपना सबमिशन पाठ यहाँ डालें</string>
+    <string name="ngc_submission_submissionError">असाइनमेंट सबमिट करने में त्रुटि हुई</string>
+    <string name="ngc_submission_loadError">असाइनमेंट लोड करने में विफल</string>
+    <string name="ngc_submission_dueDate">%1$s को नियत</string>
+    <string name="ngc_submission_retry">फिर से कोशिश करें</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">क्या ड्राफ़्ट मिटाना है?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">आपका ड्राफ़्ट हमेशा के लिए मिट जाएगा और उसे वापस नहीं लाया जा सकेगा।</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">मिटाएं</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">रद्द करें</string>
+    <string name="ngc_back">वापस जाएं</string>
 </resources>

@@ -26,7 +26,63 @@
     <string name="ngc_courseHomeTabMyWork">Moja praca</string>
     <string name="ngc_courseHomeTabMore">Więcej</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Dostępny do</string>
+    <string name="ngc_quizSettings">Ustawienia testów</string>
+    <string name="ngc_submission">Podanie</string>
+    <string name="ngc_continueDraft">Kontynuuj wersję roboczą</string>
+    <string name="ngc_assignmentReminder">Przypomnienie o zadaniu</string>
+    <string name="ngc_classPerformance">Wynik w klasie</string>
+    <string name="ngc_newAttempt">Nowa próba</string>
+    <string name="ngc_submitAssignment">Prześlij zadanie</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Dozwolone typy plików</string>
+    <string name="ngc_noDueDate">Brak terminu</string>
+    <string name="ngc_noAssignmentDescription">Brak opisu zadania</string>
+    <string name="ngc_retry">Ponów próbę</string>
+    <string name="ngc_finalGrade">Ocena końcowa</string>
+    <string name="ngc_notYetGraded">Jeszcze nie oceniono</string>
+    <string name="ngc_uploadingSubmission">Przesyłanie materiałów...</string>
+    <string name="ngc_submissionFailed">Przesyłanie materiałów nie powiodło się.</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Dodatkowe punkty</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dzień po terminie</item>
+        <item quantity="few">%d dni po terminie</item>
+        <item quantity="many">%d dni po terminie</item>
+        <item quantity="other">%d dni po terminie</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Najniższa: %s</string>
+    <string name="ngc_classPerformanceAverage">Śr.: %s</string>
+    <string name="ngc_classPerformanceHighest">Najwyższa: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Dodatkowe informacje</string>
+    <string name="ngc_submissionSegmentInstructions">Instrukcje</string>
+    <string name="ngc_submissionSegmentRubric">Rubryka</string>
+    <string name="ngc_submissionSegmentComments">Komentarze</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Zarządzaj zawartością offline</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Personalizuj pulpit nawigacyjny</string>
+    <string name="a11y_submissionSupportingPaneExpand">Rozwiń dodatkowe informacje</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Zwiń dodatkowe informacje</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Prześlij zadanie</string>
+    <string name="ngc_submission_newSubmission">Nowa przesyłka</string>
+    <string name="ngc_submission_textEntry">Zapis tekstu</string>
+    <string name="ngc_submission_submit">Prześlij</string>
+    <string name="ngc_submission_deleteDraft">Usuń wersję roboczą</string>
+    <string name="ngc_submission_draftSaved">Zapisano %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Wprowadź treść przesyłki tutaj</string>
+    <string name="ngc_submission_submissionError">Błąd podczas przesyłania zadania</string>
+    <string name="ngc_submission_loadError">Nie udało się wczytać zadania.</string>
+    <string name="ngc_submission_dueDate">Termin %1$s</string>
+    <string name="ngc_submission_retry">Ponów próbę</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Usunąć wersję roboczą?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Twoja wersja robocza zostanie trwale usunięta i nie można jej będzie przywrócić.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Usuń</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Anuluj</string>
+    <string name="ngc_back">Wstecz</string>
 </resources>

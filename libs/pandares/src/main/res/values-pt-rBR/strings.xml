@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Limite de tempo: %s</string>
     <string name="allowedAttempts">Tentativas permitidas: %s</string>
     <string name="usedAttempts">Tentativas usadas: %d</string>
+    <string name="assignmentAttemptsUnlimited">Tentativas ilimitadas</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d de %2$d tentativas</string>
     <string name="generalUnexpectedError">Ocorreu um erro inesperado.</string>
 
     <string name="deleteSelected">Excluir</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID de Login</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versão</string>
+    <string name="aboutOpenSourceTitle">Código aberto e licenças</string>
+    <string name="aboutOpenSourceSubtitle">Veja o código-fonte e as licenças de código aberto.</string>
     <string name="assignmentRefreshError">Houve um problema ao recarregar esta tarefa. Verifique a sua conexão e tente novamente.</string>
     <string name="instructure_logo">Logotipo Instructure</string>
     <string name="preferences">Preferências</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Ordenar por</string>
     <string name="gradesEmptyTitle">Sem tarefas</string>
     <string name="gradesEmptyMessage">Parece que as tarefas ainda não foram criadas nesse espaço.</string>
+    <string name="gradesEmptyMessageForPeriod">Não há tarefas em %s.</string>
+    <string name="gradesCommentsContentDescription">%d comentários</string>
+    <string name="gradesUnreadCommentsContentDescription">%d comentários não lidos</string>
     <string name="noMatchingAssignments">Nenhuma atribuição correspondente</string>
     <string name="noMatchingAssignmentsDescription">Nenhuma tarefa corresponde à sua pesquisa. Tente usar um termo de pesquisa diferente.</string>
     <string name="errorLoadingGrades">Estamos tendo problemas para carregar as notas de seu aluno. Tente recarregar a página ou volte mais tarde.</string>

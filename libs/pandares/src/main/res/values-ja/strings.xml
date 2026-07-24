@@ -1435,6 +1435,8 @@
     <string name="quizTimeLimit">時間制限:%s</string>
     <string name="allowedAttempts">試行許可回数：%s</string>
     <string name="usedAttempts">試行した回数：%d</string>
+    <string name="assignmentAttemptsUnlimited">無制限の試行</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d / %2$d の試行</string>
     <string name="generalUnexpectedError">予期しないエラーが発生しました。</string>
 
     <string name="deleteSelected">削除</string>
@@ -1477,6 +1479,8 @@
     <string name="aboutLoginTitle">ログイン ID</string>
     <string name="aboutEmailTitle">E メール</string>
     <string name="aboutVersionTitle">バージョン</string>
+    <string name="aboutOpenSourceTitle">オープンソースとライセンス</string>
+    <string name="aboutOpenSourceSubtitle">ソースコードとオープンソースライセンスをご覧ください。</string>
     <string name="assignmentRefreshError">この課題のリロード中、問題がありました。接続を確認して、もう一度お試しください。</string>
     <string name="instructure_logo">Instructure ロゴ</string>
     <string name="preferences">優先設定</string>
@@ -1917,6 +1921,9 @@
     <string name="gradePreferencesHeaderSortBy">並び変え</string>
     <string name="gradesEmptyTitle">課題はありません</string>
     <string name="gradesEmptyMessage">このスペースにはまだ課題が作成されていないようです。</string>
+    <string name="gradesEmptyMessageForPeriod">%sには課題はありません。</string>
+    <string name="gradesCommentsContentDescription">コメント%d</string>
+    <string name="gradesUnreadCommentsContentDescription">未読のコメント%d</string>
     <string name="noMatchingAssignments">一致する課題はありません</string>
     <string name="noMatchingAssignmentsDescription">検索条件に一致する課題はありません。別の検索語をお試しください。</string>
     <string name="errorLoadingGrades">受講者の成績を読み込む際に問題が発生しています。ページを再読み込みするか、後でもう一度お試しください。</string>

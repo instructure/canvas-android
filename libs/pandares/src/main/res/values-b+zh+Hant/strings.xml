@@ -1435,6 +1435,8 @@
     <string name="quizTimeLimit">時間限制：%s</string>
     <string name="allowedAttempts">允許的嘗試次數：%s</string>
     <string name="usedAttempts">已使用的嘗試次數：%d</string>
+    <string name="assignmentAttemptsUnlimited">無限的嘗試</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d 次嘗試，共 %2$d 次</string>
     <string name="generalUnexpectedError">出現意外錯誤。</string>
 
     <string name="deleteSelected">刪除</string>
@@ -1477,6 +1479,8 @@
     <string name="aboutLoginTitle">登入 ID</string>
     <string name="aboutEmailTitle">電郵</string>
     <string name="aboutVersionTitle">版本</string>
+    <string name="aboutOpenSourceTitle">開源和授權</string>
+    <string name="aboutOpenSourceSubtitle">檢視來源代碼和開源授權。</string>
     <string name="assignmentRefreshError">重新載入此作業時發生問題。請檢查您的連接然後重試。</string>
     <string name="instructure_logo">Instructure 標誌</string>
     <string name="preferences">偏好設定</string>
@@ -1917,6 +1921,9 @@
     <string name="gradePreferencesHeaderSortBy">排序依據</string>
     <string name="gradesEmptyTitle">無作業</string>
     <string name="gradesEmptyMessage">似乎尚未在此空間中建立任何作業。</string>
+    <string name="gradesEmptyMessageForPeriod">%s 中沒有作業。</string>
+    <string name="gradesCommentsContentDescription">%d 個評論</string>
+    <string name="gradesUnreadCommentsContentDescription">%d 個未讀評論</string>
     <string name="noMatchingAssignments">沒有符合的作業</string>
     <string name="noMatchingAssignmentsDescription">沒有符合您的搜尋的作業。請嘗試其他搜尋字詞。</string>
     <string name="errorLoadingGrades">我們在載入您學生的成績時遇到問題。請嘗試重新載入頁面或稍後回來查看。</string>

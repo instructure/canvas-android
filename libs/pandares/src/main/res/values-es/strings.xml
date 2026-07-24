@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Límite de tiempo: %s</string>
     <string name="allowedAttempts">Intentos permitidos: %s</string>
     <string name="usedAttempts">Intentos realizados: %d</string>
+    <string name="assignmentAttemptsUnlimited">Intentos ilimitados</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d de %2$d intentos</string>
     <string name="generalUnexpectedError">Ha ocurrido un error inesperado.</string>
 
     <string name="deleteSelected">Eliminar</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID de inicio de sesión</string>
     <string name="aboutEmailTitle">Correo electrónico</string>
     <string name="aboutVersionTitle">Versión</string>
+    <string name="aboutOpenSourceTitle">Fuente abierta y licencias</string>
+    <string name="aboutOpenSourceSubtitle">Ver el código fuente y licencias de fuente abierta.</string>
     <string name="assignmentRefreshError">Se produjo un problema al volver a cargar esta tarea. Compruebe su conexión y vuelva a intentarlo.</string>
     <string name="instructure_logo">Logotipo de Instructure</string>
     <string name="preferences">Preferencias</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Ordenar por</string>
     <string name="gradesEmptyTitle">No hay tareas</string>
     <string name="gradesEmptyMessage">Parece que aún no se han creado tareas en este espacio.</string>
+    <string name="gradesEmptyMessageForPeriod">No hay tareas en %s.</string>
+    <string name="gradesCommentsContentDescription">%d comentarios</string>
+    <string name="gradesUnreadCommentsContentDescription">%d comentarios no leídos</string>
     <string name="noMatchingAssignments">No hay tareas asignadas</string>
     <string name="noMatchingAssignmentsDescription">No hay tareas que coincidan con su búsqueda. Pruebe con otro término de búsqueda.</string>
     <string name="errorLoadingGrades">Estamos teniendo problemas para cargar las calificaciones de su estudiante. Intente volver a cargar la página o vuelva a intentarlo más tarde.</string>

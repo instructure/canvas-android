@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Mijn werk</string>
     <string name="ngc_courseHomeTabMore">Meer</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Beschikbaar tot</string>
+    <string name="ngc_quizSettings">Toetsinstellingen</string>
+    <string name="ngc_submission">Inlevering</string>
+    <string name="ngc_continueDraft">Doorgaan met concept</string>
+    <string name="ngc_assignmentReminder">Opdracht herinnering</string>
+    <string name="ngc_classPerformance">Prestatie van de klas</string>
+    <string name="ngc_newAttempt">Nieuwe poging</string>
+    <string name="ngc_submitAssignment">Opdracht inleveren</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Toegestane bestandstypen</string>
+    <string name="ngc_noDueDate">Geen inleverdatum</string>
+    <string name="ngc_noAssignmentDescription">Geen opdrachtbeschrijving</string>
+    <string name="ngc_retry">Opnieuw proberen</string>
+    <string name="ngc_finalGrade">Eindcijfer</string>
+    <string name="ngc_notYetGraded">Nog niet beoordeeld</string>
+    <string name="ngc_uploadingSubmission">Inlevering wordt geüpload...</string>
+    <string name="ngc_submissionFailed">Kan niet inleveren</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Extra studiepunten</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dag te laat</item>
+        <item quantity="other">%d dagen te laat</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Laagste: %s</string>
+    <string name="ngc_classPerformanceAverage">Gem.: %s</string>
+    <string name="ngc_classPerformanceHighest">Hoogste: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Aanvullende informatie</string>
+    <string name="ngc_submissionSegmentInstructions">Instructies</string>
+    <string name="ngc_submissionSegmentRubric">Rubriek</string>
+    <string name="ngc_submissionSegmentComments">Opmerkingen</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Offline inhoud beheren</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Dashboard aanpassen</string>
+    <string name="a11y_submissionSupportingPaneExpand">Aanvullende informatie uitvouwen</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Aanvullende informatie samenvouwen</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Opdracht inleveren</string>
+    <string name="ngc_submission_newSubmission">Nieuwe inlevering</string>
+    <string name="ngc_submission_textEntry">Tekstinvoer</string>
+    <string name="ngc_submission_submit">Inleveren</string>
+    <string name="ngc_submission_deleteDraft">Concept verwijderen</string>
+    <string name="ngc_submission_draftSaved">Opgeslagen %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Voer de tekst van je inlevering hier in</string>
+    <string name="ngc_submission_submissionError">Fout bij het inleveren van de opdracht</string>
+    <string name="ngc_submission_loadError">Kan opdracht niet laden</string>
+    <string name="ngc_submission_dueDate">Inleverdatum %1$s</string>
+    <string name="ngc_submission_retry">Opnieuw proberen</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Concept verwijderen?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Je concept wordt permanent verwijderd en kan niet worden hersteld.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Verwijderen</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Annuleren</string>
+    <string name="ngc_back">Terug</string>
 </resources>

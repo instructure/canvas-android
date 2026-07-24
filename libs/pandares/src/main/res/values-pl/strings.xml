@@ -1513,6 +1513,8 @@
     <string name="quizTimeLimit">Limit czasu: %s</string>
     <string name="allowedAttempts">Dozwolone próby: %s</string>
     <string name="usedAttempts">Wykorzystane próby: %d</string>
+    <string name="assignmentAttemptsUnlimited">Nieograniczona liczba prób</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d z %2$d prób</string>
     <string name="generalUnexpectedError">Wystąpił nieoczekiwany błąd.</string>
 
     <string name="deleteSelected">Usuń</string>
@@ -1558,6 +1560,8 @@
     <string name="aboutLoginTitle">Nazwa użytkownika</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Wersja</string>
+    <string name="aboutOpenSourceTitle">Oprogramowanie i licencje open source</string>
+    <string name="aboutOpenSourceSubtitle">Wyświetl kod źródłowy i licencje open source.</string>
     <string name="assignmentRefreshError">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Preferencje</string>
@@ -2022,6 +2026,9 @@
     <string name="gradePreferencesHeaderSortBy">Sortuj wg</string>
     <string name="gradesEmptyTitle">Brak zadań</string>
     <string name="gradesEmptyMessage">Wygląda na to, że w tej przestrzeni nie utworzono zadań.</string>
+    <string name="gradesEmptyMessageForPeriod">Brak zadań w %s.</string>
+    <string name="gradesCommentsContentDescription">Komentarze: %d</string>
+    <string name="gradesUnreadCommentsContentDescription">Nieprzeczytane komentarze: %d</string>
     <string name="noMatchingAssignments">Brak pasujących zadań</string>
     <string name="noMatchingAssignmentsDescription">Żadne zadanie nie spełnia kryteriów wyszukiwania. Wypróbuj inne wyrażenie.</string>
     <string name="errorLoadingGrades">Wystąpił problem z wczytaniem ocen uczestnika. Spróbuj ponownie załadować stronę lub ponów próbę później.</string>

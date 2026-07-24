@@ -261,6 +261,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Kua mukua tēnei whakautu %s</string>
+    <string name="utils_announcementDeleted">Kua mukua te pānuitanga</string>
+    <string name="utils_discussionDeleted">Kua mukua te kōrero.</string>
     <string name="utils_discussionsUnknownAuthor">Kaituhi Kaore e Mōhiotia</string>
     <string name="utils_discussionsReply">Whakautu</string>
     <string name="utils_discussionsEdit">Whakatika</string>
