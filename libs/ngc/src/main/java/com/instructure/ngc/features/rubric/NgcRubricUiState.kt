@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.ngc.features.assignmentdetails
+package com.instructure.ngc.features.rubric
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
@@ -22,11 +22,12 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.utils.NumberHelper
 
 /**
- * Read-only rubric view data for the NGC Assignment Details bottom sheet. One [NgcRubricCriterion]
- * per rubric criterion; the rating the student was assessed at (if any) is flagged so the UI can
- * highlight it. Built by [buildNgcRubric] from the assignment's rubric + the submission's assessment,
- * mirroring the Academic `SubmissionRubricPresenter` mapping (assessed rating matched by rating id,
- * `hidePoints`, free-form, and custom-score handling).
+ * Read-only rubric view data shared by the NGC Assignment Details [RubricBottomSheet] and the
+ * submission screen's rubric supporting-pane tab. One [NgcRubricCriterion] per rubric criterion; the
+ * rating the student was assessed at (if any) is flagged so the UI can highlight it. Built by
+ * [buildNgcRubric] from the assignment's rubric + the submission's assessment, mirroring the Academic
+ * `SubmissionRubricPresenter` mapping (assessed rating matched by rating id, `hidePoints`, free-form,
+ * and custom-score handling).
  */
 data class NgcRubricUiState(
     val criteria: List<NgcRubricCriterion>,
@@ -91,7 +92,7 @@ private fun mapCriterion(
             assessment = assessment.copy(ratingId = CUSTOM_RATING_ID)
             ratings = ratings + RubricCriterionRating(id = CUSTOM_RATING_ID, points = assessment.points ?: 0.0)
         } else if (criterion.criterionUseRange) {
-            val assessed = ratings.firstOrNull { it.id == assessment!!.ratingId }
+            val assessed = ratings.firstOrNull { it.id == assessment.ratingId }
             if (assessed != null && assessment.points != assessed.points) {
                 assessment = assessment.copy(ratingId = CUSTOM_RATING_ID)
                 ratings = ratings + RubricCriterionRating(

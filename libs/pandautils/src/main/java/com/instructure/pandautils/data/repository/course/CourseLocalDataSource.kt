@@ -32,6 +32,11 @@ class CourseLocalDataSource(
         return if (course != null) DataResult.Success(course) else DataResult.Fail()
     }
 
+    override suspend fun getCourseWithGrade(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
+        val course = courseFacade.getCourseById(courseId)
+        return if (course != null) DataResult.Success(course) else DataResult.Fail()
+    }
+
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         return DataResult.Success(courseFacade.getAllCourses())
     }

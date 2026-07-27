@@ -38,7 +38,6 @@ import com.instructure.ngc.features.submission.domain.RetryFileSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.SaveFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
-import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
@@ -197,6 +196,7 @@ class NGCSubmissionViewModel @Inject constructor(
                         availableTypes = finalData.availableTypes,
                         selectedType = defaultType,
                         onSubmissionTypeSelected = ::onSubmissionTypeSelected,
+                        rubricUiState = finalData.rubricUiState,
                         textState = state.textState.copy(
                             draftHtml = textDraftHtml,
                             contentResetKey = state.textState.contentResetKey + 1,

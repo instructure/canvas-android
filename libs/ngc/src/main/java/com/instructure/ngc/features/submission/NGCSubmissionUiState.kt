@@ -17,6 +17,7 @@ package com.instructure.ngc.features.submission
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneUiState
 
 data class TextSubmissionUiState(
@@ -58,6 +59,9 @@ data class NGCSubmissionUiState(
     val availableTypes: List<Assignment.SubmissionType> = emptyList(),
     val selectedType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
     val onSubmissionTypeSelected: (Assignment.SubmissionType) -> Unit = {},
+
+    // Read-only rubric shown on the supporting pane's Rubric tab; null when the assignment has no rubric.
+    val rubricUiState: NgcRubricUiState? = null,
 
     val textState: TextSubmissionUiState = TextSubmissionUiState(),
     val fileState: FileSubmissionUiState = FileSubmissionUiState(),

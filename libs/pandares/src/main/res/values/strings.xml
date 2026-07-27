@@ -2586,6 +2586,7 @@
     <string name="ngc_rubricScore">Score</string>
     <string name="ngc_instructions">Instructions</string>
     <string name="ngc_rubricScoreValue">%1$s / %2$s pts</string>
+    <string name="ngc_rubricEmptyMessage">There is no rubric for this assignment</string>
 
     <string name="ngc_submissionNoPreview">No preview available</string>
     <string name="ngc_showMore">Show more</string>

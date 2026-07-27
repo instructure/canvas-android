@@ -16,6 +16,7 @@
 package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import java.util.Date
 
 data class SubmissionData(
@@ -33,4 +34,7 @@ data class SubmissionData(
     val instructionsHtml: String? = null,
     val draftUrl: String? = null,
     val urlDraftSavedAt: Date? = null,
+    // Read-only rubric built from the assignment + course restrict-quantitative-data setting; null when
+    // the assignment has no rubric. Rendered on the submission supporting pane's Rubric tab.
+    val rubricUiState: NgcRubricUiState? = null,
 )

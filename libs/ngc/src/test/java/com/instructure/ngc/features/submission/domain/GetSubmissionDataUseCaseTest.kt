@@ -18,6 +18,10 @@ package com.instructure.ngc.features.submission.domain
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
@@ -99,7 +103,7 @@ class GetSubmissionDataUseCaseTest {
         )
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns draftEntity
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -127,7 +131,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Biology 101")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -150,7 +154,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "History 202")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -178,7 +182,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Art 101")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))
@@ -202,7 +206,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Math 303")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -225,7 +229,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Physics 404")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -252,7 +256,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Test Course")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -282,7 +286,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Test Course")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -309,7 +313,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Test Course")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
@@ -354,7 +358,7 @@ class GetSubmissionDataUseCaseTest {
         )
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString) } returns null
         coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD.apiString) } returns fileDraftEntity
         coEvery { createFileSubmissionDao.findFilesForSubmissionId(55L) } returns listOf(fileEntity)
@@ -386,7 +390,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "English 101")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))
@@ -408,12 +412,119 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Art 202")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))
 
         assertTrue(result.allowedExtensions.isEmpty())
+    }
+
+    // -------------------------------------------------------------------------
+    // rubric
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `rubric - built and assessed rating resolved when assignment has a rubric`() = runTest {
+        val courseId = 13L
+        val assignmentId = 107L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Rubric Assignment",
+            submissionTypesRaw = listOf("online_text_entry"),
+            rubric = listOf(
+                RubricCriterion(
+                    id = "c1",
+                    description = "Criteria 1",
+                    points = 6.0,
+                    ratings = mutableListOf(
+                        RubricCriterionRating(id = "r1", description = "Excellent", points = 6.0),
+                        RubricCriterionRating(id = "r2", description = "Good", points = 3.0),
+                    ),
+                ),
+            ),
+            submission = Submission(
+                rubricAssessment = hashMapOf("c1" to RubricCriterionAssessment(ratingId = "r1", points = 6.0)),
+            ),
+        )
+        val course = Course(id = courseId, name = "Rubric Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        val rubric = result.rubricUiState
+        assertNotNull(rubric)
+        val criterion = rubric!!.criteria.single()
+        assertEquals("Criteria 1", criterion.title)
+        assertEquals("6", criterion.assessedScore)
+        assertTrue(criterion.ratings.any { it.isAssessed })
+    }
+
+    @Test
+    fun `rubric - null when assignment has no rubric`() = runTest {
+        val courseId = 14L
+        val assignmentId = 108L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "No Rubric Assignment",
+            submissionTypesRaw = listOf("online_text_entry"),
+            rubric = emptyList(),
+            submission = null,
+        )
+        val course = Course(id = courseId, name = "No Rubric Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertNull(result.rubricUiState)
+    }
+
+    @Test
+    fun `rubric - hides points when course restricts quantitative data`() = runTest {
+        val courseId = 15L
+        val assignmentId = 109L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Restricted Rubric Assignment",
+            submissionTypesRaw = listOf("online_text_entry"),
+            rubric = listOf(
+                RubricCriterion(
+                    id = "c1",
+                    description = "Criteria 1",
+                    points = 6.0,
+                    ratings = mutableListOf(
+                        RubricCriterionRating(id = "r1", description = "Excellent", points = 6.0),
+                    ),
+                ),
+            ),
+            submission = Submission(
+                rubricAssessment = hashMapOf("c1" to RubricCriterionAssessment(ratingId = "r1", points = 6.0)),
+            ),
+        )
+        val course = Course(
+            id = courseId,
+            name = "Restricted Course",
+            settings = CourseSettings(restrictQuantitativeData = true),
+        )
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        val criterion = result.rubricUiState!!.criteria.single()
+        assertNull(criterion.assessedScore)
+        assertTrue(criterion.ratings.all { it.pointsLabel == null })
     }
 
     @Test
@@ -430,7 +541,7 @@ class GetSubmissionDataUseCaseTest {
         val course = Course(id = courseId, name = "Music 101")
 
         coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
-        coEvery { courseRepository.getCourse(courseId, false) } returns DataResult.Success(course)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
         coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
 
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_UPLOAD))

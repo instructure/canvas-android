@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.ngc.features.assignmentdetails
+package com.instructure.ngc.features.rubric
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion

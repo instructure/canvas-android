@@ -58,6 +58,7 @@ import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.chevronRight
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.ngc.R
+import com.instructure.ngc.features.rubric.buildNgcRubric
 import com.instructure.ngc.navigation.NGCAttachmentRouterEntryPoint
 import com.instructure.ngc.navigation.NGCWebViewRouterEntryPoint
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
@@ -211,7 +212,7 @@ fun NGCAssignmentDetailsScreen(
     )
 
     if (showRubricSheet && rubric != null) {
-        RubricBottomSheet(rubric = rubric, onDismiss = { showRubricSheet = false })
+        RubricBottomSheet(rubricUiState = rubric, onDismiss = { showRubricSheet = false })
     }
 
     if (showCommentsSheet) {

@@ -35,6 +35,10 @@ class CourseRepositoryImpl(
         return dataSource().getCourse(courseId, forceRefresh)
     }
 
+    override suspend fun getCourseWithGrade(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
+        return dataSource().getCourseWithGrade(courseId, forceRefresh)
+    }
+
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         return dataSource().getCourses(forceRefresh)
     }

@@ -32,6 +32,11 @@ class CourseNetworkDataSource(
         return courseApi.getCourse(courseId, params)
     }
 
+    override suspend fun getCourseWithGrade(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return courseApi.getCourseWithGrade(courseId, params)
+    }
+
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return courseApi.getFirstPageCourses(params).depaginate { nextUrl ->

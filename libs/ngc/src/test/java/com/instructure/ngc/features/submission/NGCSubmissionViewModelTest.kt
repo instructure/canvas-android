@@ -20,6 +20,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.ngc.features.rubric.NgcRubricCriterion
+import com.instructure.ngc.features.rubric.NgcRubricRating
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.FileDraftData
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
@@ -187,6 +190,29 @@ class NGCSubmissionViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         assertEquals(extensions, vm.uiState.value.fileState.allowedExtensions)
+    }
+
+    @Test
+    fun `Initial load - rubric is plumbed into uiState`() = runTest {
+        val rubric = sampleRubric()
+        val data = minimalSubmissionData(rubric = rubric)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(rubric, vm.uiState.value.rubricUiState)
+    }
+
+    @Test
+    fun `Initial load - rubric is null when data has no rubric`() = runTest {
+        val data = minimalSubmissionData(rubric = null)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertNull(vm.uiState.value.rubricUiState)
     }
 
     @Test
@@ -1861,6 +1887,7 @@ class NGCSubmissionViewModelTest {
         allowedExtensions: List<String> = emptyList(),
         draftUrl: String? = null,
         urlDraftSavedAt: Date? = null,
+        rubric: NgcRubricUiState? = null,
     ) = SubmissionData(
         assignmentName = assignmentName,
         courseName = courseName,
@@ -1876,6 +1903,22 @@ class NGCSubmissionViewModelTest {
         instructionsHtml = instructionsHtml,
         draftUrl = draftUrl,
         urlDraftSavedAt = urlDraftSavedAt,
+        rubricUiState = rubric,
+    )
+
+    private fun sampleRubric() = NgcRubricUiState(
+        criteria = listOf(
+            NgcRubricCriterion(
+                title = "Criteria 1",
+                description = "Use of space",
+                ratings = listOf(
+                    NgcRubricRating(pointsLabel = "6", title = "Excellent", detail = "Great", isAssessed = true),
+                ),
+                assessedScore = "6",
+                maxScore = "6",
+                comment = null,
+            ),
+        ),
     )
 
     private fun sampleFileData(

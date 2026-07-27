@@ -45,6 +45,7 @@ import com.instructure.instui.token.icon.chevronDown
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneSegment.COMMENTS
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneSegment.INSTRUCTIONS
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneSegment.RUBRIC
@@ -64,8 +65,18 @@ fun SubmissionSupportingPane(
     onPeekHeightChanged: ((Int) -> Unit)? = null,
     attemptId: Long? = null,
     onOpenFile: (url: String, contentType: String, fileName: String) -> Unit = { _, _, _ -> },
-    onOpenMedia: (url: String, contentType: String, fileName: String, thumbnailUrl: String?) -> Unit = { _, _, _, _ -> }
+    onOpenMedia: (url: String, contentType: String, fileName: String, thumbnailUrl: String?) -> Unit = { _, _, _, _ -> },
+    rubricUiState: NgcRubricUiState? = null
 ) {
+    val visibleSegments = SubmissionSupportingPaneSegment.entries.filter { segment ->
+        when (segment) {
+            INSTRUCTIONS -> uiState.instructionsHtml.isNotBlank()
+            RUBRIC -> rubricUiState != null
+            COMMENTS -> true
+        }
+    }
+    val safeSelectedIndex = selectedIndex.coerceIn(visibleSegments.indices)
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -87,21 +98,21 @@ fun SubmissionSupportingPane(
             )
 
             SegmentedControl(
-                tabs = SubmissionSupportingPaneSegment.entries.map { stringResource(it.labelRes) },
-                selectedIndex = selectedIndex,
+                tabs = visibleSegments.map { stringResource(it.labelRes) },
+                selectedIndex = safeSelectedIndex,
                 onTabSelected = onSegmentSelected,
                 modifier = Modifier.fillMaxWidth(),
             )
         }
 
         Box(modifier = Modifier.weight(1f)) {
-            when (SubmissionSupportingPaneSegment.entries[selectedIndex]) {
+            when (visibleSegments[safeSelectedIndex]) {
                 INSTRUCTIONS -> SubmissionInstructionsScreen(
                     loading = uiState.loading,
                     html = uiState.instructionsHtml,
                     modifier = Modifier.fillMaxSize(),
                 )
-                RUBRIC -> SubmissionRubricScreen(modifier = Modifier.fillMaxSize())
+                RUBRIC -> SubmissionRubricScreen(rubric = rubricUiState, modifier = Modifier.fillMaxSize())
                 COMMENTS -> SubmissionCommentsScreen(
                     courseId = courseId,
                     assignmentId = assignmentId,

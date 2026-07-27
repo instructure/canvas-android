@@ -31,6 +31,9 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.ngc.features.rubric.NgcRubricCriterion
+import com.instructure.ngc.features.rubric.NgcRubricRating
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData

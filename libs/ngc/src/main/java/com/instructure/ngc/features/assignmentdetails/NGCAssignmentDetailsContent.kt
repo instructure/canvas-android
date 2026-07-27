@@ -110,6 +110,7 @@ import com.instructure.instui.token.icon.x
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
+import com.instructure.ngc.features.rubric.NgcRubricUiState
 import com.instructure.ngc.ngcHtmlFormatColors
 import com.instructure.ngc.ngcHtmlFormatColorsLight
 import com.instructure.ngc.ngcThemeSwitchButtonColors

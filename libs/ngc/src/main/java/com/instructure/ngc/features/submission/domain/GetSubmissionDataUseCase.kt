@@ -17,6 +17,7 @@ package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.ngc.features.rubric.buildNgcRubric
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
@@ -48,7 +49,9 @@ class GetSubmissionDataUseCase @Inject constructor(
         val (courseId, assignmentId, submissionType) = params
         val canvasContext = CanvasContext.emptyCourseContext(id = courseId)
         val assignment = assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false).dataOrThrow
-        val courseName = courseRepository.getCourse(courseId, false).dataOrThrow.name.orEmpty()
+        val course = courseRepository.getCourseWithGrade(courseId, false).dataOrThrow
+        val courseName = course.name.orEmpty()
+        val rubric = buildNgcRubric(assignment, course.settings?.restrictQuantitativeData == true)
 
         val assignmentTypes = assignment.getSubmissionTypes()
         val availableTypes = assignmentTypes.filter { it in ngcImplementedTypes }
@@ -97,6 +100,7 @@ class GetSubmissionDataUseCase @Inject constructor(
             instructionsHtml = assignment.description,
             draftUrl = payload.draftUrl,
             urlDraftSavedAt = payload.urlDraftSavedAt,
+            rubricUiState = rubric,
         )
     }
 

@@ -202,7 +202,8 @@ fun NGCSubmissionScreen(
                             assignmentId = viewModel.assignmentId,
                             studentId = ApiPrefs.user?.id ?: 0L,
                             onOpenFile = onOpenFile,
-                            onOpenMedia = onOpenMedia
+                            onOpenMedia = onOpenMedia,
+                            rubricUiState = uiState.rubricUiState
                         )
                     }
                 },
@@ -243,6 +244,7 @@ fun NGCSubmissionScreen(
                         studentId = ApiPrefs.user?.id ?: 0L,
                         onOpenFile = onOpenFile,
                         onOpenMedia = onOpenMedia,
+                        rubricUiState = uiState.rubricUiState,
                         onToggleExpand = {
                             scope.launch {
                                 if (isExpanded) {
