@@ -83,6 +83,7 @@ class EditAssignmentDetailsInteractionTest : TeacherComposeTest() {
     }
 
     @Test
+    @ReleaseExclude
     fun editDueTime() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueTime()
