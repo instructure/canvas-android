@@ -63,7 +63,16 @@ data class GradesFilterUiState(
     val isFilterScreenOpen: Boolean = false,
     val selectedFilters: AssignmentListSelectedFilters = AssignmentListSelectedFilters(),
     val filterOptions: AssignmentListFilterOptions? = null,
-)
+) {
+    val isFilterApplied: Boolean
+        get() {
+            val allOptions = filterOptions?.assignmentFilters?.assignmentFilterOptions.orEmpty().toSet()
+            val selected = selectedFilters.selectedAssignmentFilters.toSet()
+            val isAssignmentFilterApplied = selected.isNotEmpty() && selected != allOptions
+            val isGradingPeriodFilterApplied = selectedFilters.selectedGradingPeriodFilter != null
+            return isAssignmentFilterApplied || isGradingPeriodFilterApplied
+        }
+}
 
 data class WhatIfScoreDialogData(
     val assignmentId: Long,

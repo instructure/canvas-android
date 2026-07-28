@@ -50,10 +50,11 @@ private val SectionHeaderTextStyle = TextStyle(
 )
 
 /**
- * InstUI collapsible section header.
+ * InstUI section header.
  *
- * Displays a label with a built-in chevron icon that rotates based on
- * expand state. Maps to the Figma SectionHeader component.
+ * Displays a label and, when [onClick]/[expanded] are provided, a built-in chevron icon that
+ * rotates based on expand state, for use as a collapsible group header. Omit them for a static,
+ * non-collapsible group label. Maps to the Figma SectionHeader component.
  *
  * Usage:
  * ```
@@ -62,25 +63,26 @@ private val SectionHeaderTextStyle = TextStyle(
  *     expanded = isExpanded,
  *     onClick = { isExpanded = !isExpanded },
  * )
+ * SectionHeader(label = "Assignment filter")
  * ```
  */
 @Composable
 fun SectionHeader(
     label: String,
-    expanded: Boolean,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    expanded: Boolean? = null,
+    onClick: (() -> Unit)? = null,
     trailing: String? = null,
 ) {
     val rotation by animateFloatAsState(
-        targetValue = if (expanded) 180f else 0f,
+        targetValue = if (expanded == true) 180f else 0f,
         label = "sectionHeaderChevronRotation",
     )
     Row(
         modifier = modifier
             .background(InstUISemanticColors.Background.base())
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(
                 horizontal = InstUILayoutSizes.Spacing.SpaceMd.spaceMd,
                 vertical = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
@@ -101,11 +103,13 @@ fun SectionHeader(
                 color = InstUIToggleDetails.textColor,
             )
         }
-        Icon(
-            imageVector = InstUIIcons.chevronDown,
-            size = IconSize.Medium,
-            modifier = Modifier.rotate(rotation),
-        )
+        if (expanded != null) {
+            Icon(
+                imageVector = InstUIIcons.chevronDown,
+                size = IconSize.Medium,
+                modifier = Modifier.rotate(rotation),
+            )
+        }
     }
 }
 
@@ -122,6 +126,8 @@ private fun SectionHeaderPreview() {
             SectionHeader(label = "Upcoming Assignments", expanded = false, onClick = {})
             Separator()
             SectionHeader(label = "Homework", expanded = true, onClick = {}, trailing = "92.5%")
+            Separator()
+            SectionHeader(label = "Assignment filter")
         }
     }
 }

@@ -16,7 +16,6 @@ package com.instructure.pandautils.features.grades.components
 
 import android.content.res.Configuration
 import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,16 +34,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.instui.compose.InstUITheme
-import com.instructure.instui.compose.indicator.IconButton
-import com.instructure.instui.compose.indicator.IconButtonColor
 import com.instructure.instui.compose.input.Checkbox
 import com.instructure.instui.compose.input.RadioButton
 import com.instructure.instui.compose.input.TextButton
+import com.instructure.instui.compose.list.SectionHeader
 import com.instructure.instui.compose.list.Separator
 import com.instructure.instui.compose.navigation.TopBar
-import com.instructure.instui.compose.text.Text as InstUIText
-import com.instructure.instui.token.component.InstUIHeading
-import com.instructure.instui.token.semantic.InstUILayoutSizes
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.x
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
@@ -77,10 +74,10 @@ fun NGCGradesFilterScreen(
                 containerColor = contextColor,
                 contentColor = onColor,
                 navigationIcon = {
-                    IconButton(
-                        iconRes = R.drawable.ic_close,
+                    ToolbarIcon(
+                        imageVector = InstUIIcons.x,
                         contentDescription = stringResource(R.string.close),
-                        color = IconButtonColor.Inverse,
+                        tint = onColor,
                         onClick = onBackPressed,
                     )
                 },
@@ -96,7 +93,7 @@ fun NGCGradesFilterScreen(
                 },
             )
         },
-        containerColor = InstUISemanticColors.Background.page(),
+        containerColor = InstUISemanticColors.Background.base(),
     ) { padding ->
         Column(
             modifier = Modifier
@@ -190,20 +187,8 @@ private fun FilterSection(
     @StringRes title: Int,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(
-        modifier = Modifier.background(InstUISemanticColors.Background.container()),
-    ) {
-        InstUIText(
-            text = stringResource(title),
-            style = InstUIHeading.label,
-            color = InstUISemanticColors.Text.muted(),
-            modifier = Modifier.padding(
-                start = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
-                end = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
-                top = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
-                bottom = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
-            ),
-        )
+    Column {
+        SectionHeader(label = stringResource(title))
         content()
     }
 }

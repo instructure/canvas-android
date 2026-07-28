@@ -112,7 +112,6 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -121,7 +120,6 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowInsetsControllerCompat
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.instui.compose.container.Tray
-import com.instructure.instui.compose.indicator.Icon as InstUIIcon
 import com.instructure.instui.compose.input.TextInput
 import com.instructure.instui.compose.input.TextInputValidation
 import com.instructure.instui.compose.list.SectionHeader
@@ -132,6 +130,7 @@ import com.instructure.instui.compose.text.HeadingLevel
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.arrowLeft
 import com.instructure.instui.token.icon.listFilter
+import com.instructure.instui.token.icon.listFilterPlus
 import com.instructure.instui.token.icon.notebook
 import com.instructure.instui.token.icon.search
 import com.instructure.instui.token.semantic.InstUILayoutSizes
@@ -156,6 +155,7 @@ import com.instructure.pandautils.features.grades.components.GradesAssignmentIte
 import com.instructure.pandautils.features.grades.components.GradesCardContent
 import com.instructure.pandautils.features.grades.components.GradesToggleRow
 import com.instructure.pandautils.features.grades.components.NGCGradesFilterScreen
+import com.instructure.pandautils.features.grades.components.ToolbarIcon
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -408,9 +408,16 @@ private fun NGCGradesTopBar(
                             onClick = onNotebookClick,
                         )
                     }
+                    val isFilterApplied = uiState.filter?.isFilterApplied == true
                     ToolbarIcon(
-                        imageVector = InstUIIcons.listFilter,
-                        contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
+                        imageVector = if (isFilterApplied) InstUIIcons.listFilterPlus else InstUIIcons.listFilter,
+                        contentDescription = stringResource(
+                            id = if (isFilterApplied) {
+                                R.string.gradesFilterAppliedContentDescription
+                            } else {
+                                R.string.gradesFilterContentDescription
+                            }
+                        ),
                         tint = contentColor,
                         onClick = { actionHandler(GradesAction.ShowGradePreferences) },
                     )
@@ -430,29 +437,6 @@ private fun NGCGradesTopBar(
             }
         },
     )
-}
-
-@Composable
-private fun ToolbarIcon(
-    imageVector: ImageVector,
-    contentDescription: String,
-    tint: Color,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .size(InstUILayoutSizes.Size.Interactive.height_lg)
-            .clip(CircleShape)
-            .clickable(onClick = onClick)
-            .semantics { role = Role.Button },
-        contentAlignment = Alignment.Center
-    ) {
-        InstUIIcon(
-            imageVector = imageVector,
-            tint = tint,
-            contentDescription = contentDescription,
-        )
-    }
 }
 
 @Composable
