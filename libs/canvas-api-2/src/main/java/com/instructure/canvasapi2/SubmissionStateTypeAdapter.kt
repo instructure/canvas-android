@@ -27,19 +27,28 @@ class SubmissionStateTypeAdapter : JsonDeserializer<SubmissionState?> {
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): SubmissionState? {
         if (json?.isJsonObject == true) {
-            val submitted = json.asJsonObject?.get("submitted")?.asBoolean ?: false
-            val missing = json.asJsonObject?.get("missing")?.asBoolean ?: false
-            val late = json.asJsonObject?.get("late")?.asBoolean ?: false
-            val excused = json.asJsonObject?.get("excused")?.asBoolean ?: false
-            val graded = json.asJsonObject?.get("graded")?.asBoolean ?: false
-            val needsGrading = json.asJsonObject?.get("needs_grading")?.asBoolean ?: false
-            val withFeedback = json.asJsonObject?.get("with_feedback")?.asBoolean ?: false
-            val redoRequest = json.asJsonObject?.get("redo_request")?.asBoolean ?: false
+            val submitted = json.asJsonObject.optBoolean("submitted")
+            val missing = json.asJsonObject.optBoolean("missing")
+            val late = json.asJsonObject.optBoolean("late")
+            val excused = json.asJsonObject.optBoolean("excused")
+            val graded = json.asJsonObject.optBoolean("graded")
+            val needsGrading = json.asJsonObject.optBoolean("needs_grading")
+            val withFeedback = json.asJsonObject.optBoolean("with_feedback")
+            val redoRequest = json.asJsonObject.optBoolean("redo_request")
             val postedAt = json.asJsonObject?.get("posted_at")?.takeIf { !it.isJsonNull }?.asString?.toDate()
             return SubmissionState(submitted, missing, late, excused, graded, needsGrading, withFeedback, redoRequest, postedAt)
         } else {
             return null
         }
     }
+
+    /**
+     * Reads a boolean field from this [JsonObject], treating both an absent key and a
+     * present key whose value is JSON `null` as `false`. Gson's [JsonObject.get] returns a
+     * Kotlin null only when the key is absent; when the key is present with a JSON `null`
+     * value it returns a [JsonNull] instance, whose [JsonElement.getAsBoolean] throws.
+     */
+    private fun JsonObject.optBoolean(key: String): Boolean =
+        get(key)?.takeIf { !it.isJsonNull }?.asBoolean ?: false
 
 }
