@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.dashboard
 
 import android.content.Context
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.UnreadNotificationCount
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.domain.usecase.GetCanvasThemeUseCase
@@ -25,8 +26,12 @@ import com.instructure.horizon.domain.usecase.GetSelfUserUseCase
 import com.instructure.horizon.domain.usecase.GetUnreadCountsUseCase
 import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.horizon.offline.sync.HorizonAggregateProgressObserver
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.horizon.offline.sync.HorizonProgressState
 import com.instructure.horizon.offline.sync.HorizonSyncProgressData
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
@@ -62,6 +67,9 @@ class DashboardViewModelTest {
     private val isOfflineFlow = MutableStateFlow(false)
     private val progressDataFlow = MutableStateFlow(HorizonSyncProgressData())
     private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
+    private val createSubmissionDao: CreateSubmissionDao = mockk(relaxed = true)
+    private val submissionHelper: HorizonSubmissionHelper = mockk(relaxed = true)
+    private val queuedSubmissionsFlow = MutableStateFlow<List<CreateSubmissionEntity>>(emptyList())
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val notificationCounts = listOf(
@@ -90,6 +98,7 @@ class DashboardViewModelTest {
         every { offlineState.isOffline } returns isOfflineFlow
         coEvery { getUnreadCountsUseCase(any()) } returns notificationCounts
         every { ThemePrefs.mobileLogoUrl } returns ""
+        every { createSubmissionDao.findScheduledSubmissionsFlow(any()) } returns queuedSubmissionsFlow
     }
 
     @After
@@ -323,6 +332,68 @@ class DashboardViewModelTest {
             aggregateProgressObserver,
             offlineState,
             getLastSyncedAtUseCase,
+            createSubmissionDao,
+            submissionHelper,
         )
+    }
+
+    private fun submission(state: SubmissionState) = CreateSubmissionEntity(
+        assignmentId = 1L,
+        canvasContext = CanvasContext.emptyCourseContext(1L),
+        userId = 1L,
+        submissionType = "online_text_entry",
+        submissionState = state,
+    )
+
+    @Test
+    fun `Scheduled submissions widget hidden when there are none`() = runTest {
+        val viewModel = getViewModel()
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(false, viewModel.uiState.value.showScheduledSubmissionsWidget)
+        assertEquals(0, viewModel.uiState.value.scheduledSubmissions.size)
+    }
+
+    @Test
+    fun `Scheduled submissions widget lists the scheduled submissions`() = runTest {
+        val viewModel = getViewModel()
+
+        queuedSubmissionsFlow.value = listOf(
+            submission(SubmissionState.QUEUED),
+            submission(SubmissionState.SUBMITTING),
+        )
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(true, state.showScheduledSubmissionsWidget)
+        assertEquals(2, state.scheduledSubmissions.size)
+        assertEquals(1L, state.scheduledSubmissions.first().courseId)
+        assertEquals(1L, state.scheduledSubmissions.first().assignmentId)
+    }
+
+    @Test
+    fun `Scheduled submissions widget collapses when the list empties`() = runTest {
+        val viewModel = getViewModel()
+
+        queuedSubmissionsFlow.value = listOf(submission(SubmissionState.QUEUED))
+        testScheduler.advanceUntilIdle()
+        assertEquals(true, viewModel.uiState.value.showScheduledSubmissionsWidget)
+
+        queuedSubmissionsFlow.value = emptyList()
+        testScheduler.advanceUntilIdle()
+        assertEquals(false, viewModel.uiState.value.showScheduledSubmissionsWidget)
+    }
+
+    @Test
+    fun `Cancelling a scheduled submission from the widget delegates to the helper`() = runTest {
+        val viewModel = getViewModel()
+
+        queuedSubmissionsFlow.value = listOf(submission(SubmissionState.QUEUED))
+        testScheduler.advanceUntilIdle()
+
+        viewModel.uiState.value.scheduledSubmissions.first().onCancel()
+        testScheduler.advanceUntilIdle()
+
+        coVerify { submissionHelper.cancelSubmission(any()) }
     }
 }

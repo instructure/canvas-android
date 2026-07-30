@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Tímamörk: %s</string>
     <string name="allowedAttempts">Heimilaðar tilraunir: %s</string>
     <string name="usedAttempts">Tilraunir notaðar: %d</string>
+    <string name="assignmentAttemptsUnlimited">Ótakmarkaðar tilraunir</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d af %2$d tilraunum</string>
     <string name="generalUnexpectedError">Óvænt villa kom upp.</string>
 
     <string name="deleteSelected">Eyða</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Innskráningarauðkenni</string>
     <string name="aboutEmailTitle">Tölvupóstur</string>
     <string name="aboutVersionTitle">Útgáfa</string>
+    <string name="aboutOpenSourceTitle">Opinn hugbúnaður og leyfi</string>
+    <string name="aboutOpenSourceSubtitle">Skoðaðu frumkóðann og leyfi fyrir opna hugbúnaðinn</string>
     <string name="assignmentRefreshError">Upp kom vandamál við að endurhlaða þetta verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="instructure_logo">Merki Instructure</string>
     <string name="preferences">Kjörstillingar</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Raða eftir</string>
     <string name="gradesEmptyTitle">Engin verkefni</string>
     <string name="gradesEmptyMessage">Það virðast ekki vera nein verkefni búin til í þessu rými enn.</string>
+    <string name="gradesEmptyMessageForPeriod">Það eru engin verkefni í %s.</string>
+    <string name="gradesCommentsContentDescription">%d athugasemdir</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ólesnar athugasemdir</string>
     <string name="noMatchingAssignments">Engin samsvarandi verkefni</string>
     <string name="noMatchingAssignmentsDescription">Engin verkefni pössuðu við leit þína. Prófaðu annað leitarorð.</string>
     <string name="errorLoadingGrades">Við eigum erfitt með að hlaða inn nemendaeinkunnum þínum. Prufaðu að endurhlaða síðunni, eða kíktu aftur við síðar.</string>

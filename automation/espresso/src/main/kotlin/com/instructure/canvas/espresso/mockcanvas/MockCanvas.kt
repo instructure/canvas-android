@@ -58,6 +58,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LaunchDefinition
 import com.instructure.canvasapi2.models.LockInfo
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.ModuleCompletionRequirement
 import com.instructure.canvasapi2.models.ModuleContentDetails
@@ -1258,6 +1259,19 @@ fun MockCanvas.addSubmissionForAssignment(
     val assignmentDueDate = assignment.dueAt?.toDate()
     val isLate = (assignmentDueDate != null) && assignmentDueDate.before(Calendar.getInstance().time)
 
+    // Real media-recording submissions always carry a MediaComment. Mirror that here so views that
+    // render a media submission (e.g. the submission-details comments list via CommentSubmissionView)
+    // don't hit the "media comment is null" invariant.
+    val mediaComment = if (type == Assignment.SubmissionType.MEDIA_RECORDING.apiString) {
+        MediaComment(
+            mediaId = "media-${newItemId()}",
+            displayName = "Media Submission",
+            url = "https://mock-data.instructure.com/media/$assignmentId",
+            mediaType = MediaComment.MediaType.AUDIO,
+            contentType = "audio/mp4"
+        )
+    } else null
+
     // Create the new submission object
     val submission = Submission(
             id = newItemId(),
@@ -1274,6 +1288,7 @@ fun MockCanvas.addSubmissionForAssignment(
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
             submissionComments = if(comment != null) listOf(comment) else listOf(),
             mediaContentType = attachment?.contentType,
+            mediaComment = mediaComment,
             grade = grade,
             score = score ?: 0.0,
             postedAt = Date(),
@@ -1307,6 +1322,7 @@ fun MockCanvas.addSubmissionForAssignment(
                 attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf(),
                 submissionComments = if(comment != null) listOf(comment) else listOf(),
                 mediaContentType = attachment?.contentType,
+                mediaComment = mediaComment,
                 grade = grade,
                 score = score ?: 0.0,
                 postedAt = Date(),

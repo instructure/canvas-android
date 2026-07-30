@@ -33,7 +33,10 @@ data class AppBarUiState(
     val subtitle: String,
     val navigationActionClick: () -> Unit,
     val bookmarkable: Boolean,
-    val addBookmarkClick: () -> Unit
+    val addBookmarkClick: () -> Unit,
+    // When non-null, the NGC toolbar shows a notebook action wired to this callback. Kept separate
+    // from [bookmarkable]/[addBookmarkClick], which drive the legacy "Add bookmark" overflow.
+    val onNotebookClick: (() -> Unit)? = null,
 )
 
 @Immutable
@@ -76,7 +79,6 @@ data class AssignmentGroupUiState(
     val name: String,
     val assignments: List<AssignmentUiState>,
     val expanded: Boolean,
-    val gradeText: String? = null
 )
 
 @Immutable

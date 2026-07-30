@@ -26,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
+import com.instructure.horizon.offline.InlineRceMedia
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -44,12 +46,16 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 
+private const val LOCAL_IMAGE_BASE_URL = "file:///"
+
 @Composable
 fun TextSubmissionContent(
     text: String,
     modifier: Modifier = Modifier,
+    webViewStateKey: String? = null,
 ) {
     val activity = LocalContext.current.getActivityOrNull()
+    val hasLocalImages = remember(text) { InlineRceMedia.findLocalImageSrcs(text).isNotEmpty() }
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(painterResource(R.drawable.check_circle_full), contentDescription = null, tint = HorizonColors.Icon.success())
@@ -62,7 +68,15 @@ fun TextSubmissionContent(
             HorizonSpace(SpaceSize.SPACE_4)
             ComposeCanvasWebViewWrapper(
                 content = text,
+                webViewStateKey = webViewStateKey,
+                baseUrl = if (hasLocalImages) LOCAL_IMAGE_BASE_URL else null,
+                preserveState = !hasLocalImages,
                 applyOnWebView = {
+                    if (hasLocalImages) {
+                        settings.allowFileAccess = true
+                        @Suppress("DEPRECATION")
+                        settings.allowFileAccessFromFileURLs = true
+                    }
                     activity?.let { addVideoClient(it) }
                     overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                     setZoomSettings(false)

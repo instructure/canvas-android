@@ -46,7 +46,7 @@ object FileUploadManager {
         onProgress: ProgressRequestUpdateListener? = null,
         fileUploadRestParams: RestParams = RestParams()
     ): DataResult<Attachment> {
-        return FileUploadAPI.getUploadParams(config)
+        return FileUploadAPI.getUploadParams(config, fileUploadRestParams)
             .then { performUpload(File(config.filePath), it, onProgress, fileUploadRestParams) }
     }
 

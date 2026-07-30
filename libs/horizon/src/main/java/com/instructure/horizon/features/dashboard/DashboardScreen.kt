@@ -78,6 +78,7 @@ import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseS
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
+import com.instructure.horizon.features.dashboard.widget.queuedsubmissions.DashboardQueuedSubmissionsWidget
 import com.instructure.horizon.features.dashboard.widget.syncinprogress.DashboardSyncInProgressWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
@@ -206,6 +207,16 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                                 syncProgressLabel = uiState.syncProgressLabel,
                                 progressState = uiState.syncProgressState,
                                 onDismiss = uiState.onSyncWidgetDismiss,
+                                navController = navController,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 24.dp)
+                                    .padding(bottom = 16.dp),
+                            )
+                        }
+                        if (uiState.showScheduledSubmissionsWidget) {
+                            DashboardQueuedSubmissionsWidget(
+                                submissions = uiState.scheduledSubmissions,
                                 navController = navController,
                                 modifier = Modifier
                                     .fillMaxWidth()

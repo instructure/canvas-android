@@ -147,6 +147,7 @@ class SpeedGraderCommentsViewModelTest {
                         pronouns = "they/them"
                     ),
                     mediaObject = null,
+                    authorVisibleName = null,
                     createdAt = java.util.Date(),
                     canReply = true,
                     draft = false,
@@ -183,6 +184,7 @@ class SpeedGraderCommentsViewModelTest {
                         pronouns = "they/them"
                     ),
                     mediaObject = null,
+                    authorVisibleName = null,
                     createdAt = java.util.Date(),
                     canReply = true,
                     draft = false,
@@ -333,6 +335,7 @@ class SpeedGraderCommentsViewModelTest {
                         pronouns = "they/them"
                     ),
                     mediaObject = null,
+                    authorVisibleName = null,
                     createdAt = java.util.Date(),
                     canReply = true,
                     draft = false,
@@ -369,6 +372,7 @@ class SpeedGraderCommentsViewModelTest {
                         pronouns = "they/them"
                     ),
                     mediaObject = null,
+                    authorVisibleName = null,
                     createdAt = java.util.Date(),
                     canReply = true,
                     draft = false,

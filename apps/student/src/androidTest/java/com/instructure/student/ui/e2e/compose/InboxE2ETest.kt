@@ -16,16 +16,20 @@
  */
 package com.instructure.student.ui.e2e.compose
 
-import android.os.Environment
+import android.content.ContentValues
+import android.net.Uri
 import android.os.SystemClock.sleep
+import android.provider.MediaStore
 import android.util.Log
 import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
+import androidx.test.uiautomator.Until
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -41,6 +45,7 @@ import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Test
 import java.io.File
 
@@ -49,6 +54,18 @@ class InboxE2ETest: StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    // MediaStore Downloads entry seeded by the forward-with-attachment test, removed afterwards so the
+    // device's Downloads doesn't accumulate a new (suffixed) copy on every run.
+    private var seededDownloadsFileUri: Uri? = null
+
+    @After
+    fun deleteSeededDownloadsFile() {
+        seededDownloadsFileUri?.let {
+            InstrumentationRegistry.getInstrumentation().targetContext.contentResolver.delete(it, null, null)
+        }
+        seededDownloadsFileUri = null
+    }
 
     @E2E
     @Test
@@ -707,13 +724,9 @@ class InboxE2ETest: StudentComposeTest() {
         sleep(2000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
-        Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
+        Log.d(ASSERTION_TAG, "Assert that the reply message, attachment, and original message are displayed in the conversation.")
         inboxDetailsPage.assertMessageDisplayed(replyMessage)
-
-        Log.d(ASSERTION_TAG, "Assert that the attachment is displayed in the message.")
         inboxDetailsPage.assertAttachmentDisplayed(videoFileName)
-
-        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
         Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
@@ -742,15 +755,16 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Get the video position again.")
         val secondPositionText = getVideoPosition(R.id.exo_position)
-        Log.d(ASSERTION_TAG, "Second position: $secondPositionText")
 
         Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
         assert(firstPositionText != secondPositionText) {
             "Video position did not change. First: $firstPositionText, Second: $secondPositionText"
         }
 
-        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
+        Log.d(STEP_TAG, "Navigate back to the conversation details.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' is displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
 
         Log.d(STEP_TAG, "Navigate back to inbox.")
@@ -772,16 +786,22 @@ class InboxE2ETest: StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(PREPARATION_TAG, "Copy PDF file to device Downloads folder for attachment.")
+        Log.d(PREPARATION_TAG, "Create the 'samplepdf.pdf' file in Downloads via MediaStore so the file picker can find it.")
         val pdfFileName = "samplepdf.pdf"
-        val context = InstrumentationRegistry.getInstrumentation().context
-        val inputStream = context.assets.open(pdfFileName)
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val pdfFile = File(downloadsDir, pdfFileName)
+        val resolver = InstrumentationRegistry.getInstrumentation().targetContext.contentResolver
+        val pdfUri = resolver.insert(
+            MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+            ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, pdfFileName)
+                put(MediaStore.Downloads.MIME_TYPE, "application/pdf")
+            }
+        ) ?: error("Failed to create Downloads entry for '$pdfFileName'.")
+        seededDownloadsFileUri = pdfUri
 
-        Log.d(PREPARATION_TAG, "Writing file to: ${pdfFile.absolutePath}")
-        pdfFile.outputStream().use { inputStream.copyTo(it) }
-        inputStream.close()
+        Log.d(PREPARATION_TAG, "Write the PDF asset content to '$pdfFileName'.")
+        resolver.openOutputStream(pdfUri)?.use { outputStream ->
+            InstrumentationRegistry.getInstrumentation().context.assets.open(pdfFileName).use { it.copyTo(outputStream) }
+        } ?: error("Failed to open output stream for '$pdfFileName'.")
 
         val conversationSubject = "Project Documentation"
         val conversationBody = "Please review the attached document and share it with the team."
@@ -830,8 +850,9 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
-        Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
+        Log.d(STEP_TAG, "Wait for the PDF file to appear in the file picker, then select it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.wait(Until.findObject(By.textContains(pdfFileName)), 10000)
 
         val pdfFileObject = device.findObject(UiSelector().textContains(pdfFileName))
         if (pdfFileObject.exists()) {
@@ -849,11 +870,13 @@ class InboxE2ETest: StudentComposeTest() {
                 downloadsItem.click()
             }
 
+            device.wait(Until.findObject(By.textContains(pdfFileName)), 10000)
             val pdfFileObject2 = device.findObject(UiSelector().textContains(pdfFileName))
             if (pdfFileObject2.exists()) {
                 pdfFileObject2.click()
             }
         }
+        device.waitForIdle()
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()

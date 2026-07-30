@@ -1467,6 +1467,8 @@
     <string name="quizTimeLimit">Had masa: %s</string>
     <string name="allowedAttempts">Percubaan dibenarkan: %s</string>
     <string name="usedAttempts">Percubaan digunakan: %d</string>
+    <string name="assignmentAttemptsUnlimited">Percubaan tidak terhad</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d daripada %2$d percubaan</string>
     <string name="generalUnexpectedError">Ralat tidak dijangka berlaku.</string>
 
     <string name="deleteSelected">Padam</string>
@@ -1510,6 +1512,8 @@
     <string name="aboutLoginTitle">ID Log Masuk</string>
     <string name="aboutEmailTitle">E-mel</string>
     <string name="aboutVersionTitle">Versi</string>
+    <string name="aboutOpenSourceTitle">Buka Sumber dan Lesen</string>
+    <string name="aboutOpenSourceSubtitle">Lihat kod sumber dan buku lesen sumber.</string>
     <string name="assignmentRefreshError">Terdapat sedikit masalah untuk memuat semula tugasan ini. Sila semak sambungan anda dan cuba semula.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Keutamaan</string>
@@ -1958,6 +1962,9 @@
     <string name="gradePreferencesHeaderSortBy">Isih Mengikut</string>
     <string name="gradesEmptyTitle">Tiada Tugasan</string>
     <string name="gradesEmptyMessage">Nampaknya tugasan belum lagi dicipta dalam ruang ini.</string>
+    <string name="gradesEmptyMessageForPeriod">Tiada tugasan dalam %s.</string>
+    <string name="gradesCommentsContentDescription">%d komen</string>
+    <string name="gradesUnreadCommentsContentDescription">%d komen belum dibaca</string>
     <string name="noMatchingAssignments">Tiada Tugasan Sepadan</string>
     <string name="noMatchingAssignmentsDescription">Tiada tugasan sepadan dengan carian anda. Cuba istilah carian yang lain.</string>
     <string name="errorLoadingGrades">Kami menghadapi masalah memuatkan gred pelajar anda. Sila cuba memuatkan semula halaman atau semak semula kemudian.</string>

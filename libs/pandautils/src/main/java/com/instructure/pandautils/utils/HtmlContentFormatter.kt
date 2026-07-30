@@ -184,7 +184,7 @@ class HtmlContentFormatter(
         if (!isSafeHttpUrl(immersiveUrl)) return iframe
         val encodedUrl = encodeForJsContext(immersiveUrl)
 
-        val htmlButton = "</br><p><div class=\"studio_embed\" onClick=\"location.href=decodeURIComponent('$encodedUrl')\"></div></p>"
+        val htmlButton = "</br><p><div class=\"$STUDIO_EMBED_CLASS\" onClick=\"location.href=decodeURIComponent('$encodedUrl')\"></div></p>"
         return iframe + htmlButton
     }
 
@@ -306,6 +306,12 @@ class HtmlContentFormatter(
     }
 
     companion object {
+        /**
+         * Marker class applied to the injected Studio embed div. [CanvasWebView] keys off this to
+         * decide whether to inject the LTI post-message bridge, so both sides must use this constant.
+         */
+        const val STUDIO_EMBED_CLASS = "studio_embed"
+
         fun hasGoogleDocsUrl(text: String?) = text?.contains("docs.google.com").orDefault()
         fun hasKalturaUrl(text: String?) = text?.contains("kaltura.com").orDefault()
         fun hasExternalTools(text: String?) = text?.contains("external_tools").orDefault()

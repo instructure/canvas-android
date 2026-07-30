@@ -13,7 +13,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.getDaysLate
 import com.instructure.pandautils.utils.orDefault
+import kotlin.math.ceil
 
 data class GradeCellViewData(
     val courseColor: ThemedColor,
@@ -29,7 +31,17 @@ data class GradeCellViewData(
     val outOf: String = "",
     val yourGrade: String = "",
     val latePenalty: String = "",
+    // Whole days the submission is late, derived from secondsLate (same mechanism as SpeedGrader).
+    val daysLate: Int = 0,
+    // Late penalty value without the "Late Penalty:" prefix (e.g. "-30 pts"), for the NGC grade card.
+    val latePenaltyText: String = "",
+    // Extra credit amount (e.g. "5 pts") when the submission is overgraded (score > points possible).
+    val extraCreditText: String = "",
     val finalGrade: String = "",
+    // Display-ready final grade value without the "Final Grade:" prefix (e.g. "A-", "92%", "46 pts").
+    // Derived from the grading type + submission grade, so it stays correct even when a late penalty
+    // clears [grade]. Used by the NGC grade card.
+    val finalGradeText: String = "",
     val stats: GradeCellViewState.GradeStats? = null
 ) {
     val backgroundColorWithAlpha = ColorUtils.setAlphaComponent(courseColor.color(), (.25 * 255).toInt())
@@ -201,6 +213,8 @@ data class GradeCellViewData(
                 var latePenalty = ""
                 var finalGrade = ""
                 var yourGrade = ""
+                var daysLate = 0
+                var latePenaltyText = ""
 
                 // Adjust for late penalty, if any
                 if (submission.pointsDeducted.orDefault() > 0.0) {
@@ -210,6 +224,39 @@ data class GradeCellViewData(
                     yourGrade = resources.getString(R.string.yourGrade, achievedScore)
                     latePenalty = resources.getString(R.string.latePenaltyUpdated, pointsDeducted)
                     finalGrade = resources.getString(R.string.finalGradeFormatted, submission.grade)
+                    // Shared day calculation (also used by SpeedGrader), rounded up to whole days for
+                    // the student-facing "N days late" pill.
+                    daysLate = getDaysLate(submission.secondsLate?.toDouble())?.let { ceil(it).toInt() } ?: 0
+                    latePenaltyText = "-" + resources.getQuantityString(
+                        R.plurals.quantityPointsAbbreviated,
+                        submission.pointsDeducted.orDefault().toInt(),
+                        pointsDeducted
+                    )
+                }
+
+                // Final grade value for display: points types show the score with a "pts" unit,
+                // everything else shows the submission's grade (letter / percentage / GPA). This is
+                // independent of the late-penalty clearing of [grade] above.
+                val finalGradeText = if (assignment.gradingType == Assignment.POINTS_TYPE) {
+                    resources.getQuantityString(
+                        R.plurals.quantityPointsAbbreviated,
+                        submission.score.toInt(),
+                        score
+                    )
+                } else {
+                    submission.grade.orEmpty()
+                }
+
+                // Extra credit: the submission is overgraded when the score exceeds the max points.
+                val extraCreditText = if (assignment.pointsPossible > 0.0 && submission.score > assignment.pointsPossible) {
+                    val extra = submission.score - assignment.pointsPossible
+                    resources.getQuantityString(
+                        R.plurals.quantityPointsAbbreviated,
+                        extra.toInt(),
+                        NumberHelper.formatDecimal(extra, 2, true)
+                    )
+                } else {
+                    ""
                 }
 
                 val stats = assignment.scoreStatistics?.let { stats ->
@@ -246,7 +293,11 @@ data class GradeCellViewData(
                     outOf = outOfText,
                     yourGrade = yourGrade,
                     latePenalty = latePenalty,
+                    daysLate = daysLate,
+                    latePenaltyText = latePenaltyText,
+                    extraCreditText = extraCreditText,
                     finalGrade = finalGrade,
+                    finalGradeText = finalGradeText,
                     stats = stats
                 )
             }

@@ -27,8 +27,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CalendarEventApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.CoursesApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.days
@@ -75,7 +75,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         )
 
         Log.d(PREPARATION_TAG, "Seed a published quiz because it should be displayed on the Summary Page.")
-        val testPublishedQuiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, listOf())
+        val testPublishedQuiz = ClassicQuizzesApi.createAndPublishQuiz(course.id, teacher.token, listOf())
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Summary Tab displayed in the Parent app.")
         CoursesApi.updateCourse(course.id, UpdateCourse(syllabusBody = "Test syllabus body...", homePage = "syllabus", showSummary = 1))

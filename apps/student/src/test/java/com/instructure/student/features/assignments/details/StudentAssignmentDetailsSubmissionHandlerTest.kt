@@ -20,11 +20,8 @@ import android.widget.Toast
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsViewData
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
@@ -81,50 +78,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
     fun `Upload fail`() {
         submissionHandler = StudentAssignmentDetailsSubmissionHandler(submissionHelper, studentDb)
 
-        val data = MutableLiveData<AssignmentDetailsViewData>(AssignmentDetailsViewData(
-            courseColor = ColorKeeper.getOrGenerateColor(Course()),
-            submissionAndRubricLabelColor = ThemePrefs.textButtonColor,
-            assignmentName = "Assignment",
-            points = "0",
-            submissionStatusText = "Status",
-            submissionStatusIcon = 1,
-            submissionStatusTint = 1,
-            submissionStatusVisible = true,
-            fullLocked = true,
-            lockedMessage = ""
-        ))
-
-        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
-        every {
-            studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
-        } returns liveData
-
-        submissionHandler.addAssignmentSubmissionObserver(mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {}, {})
-
-        liveData.postValue(listOf(getDbSubmission()))
-
-        assertTrue(submissionHandler.isUploading)
-
-        liveData.postValue(listOf(getDbSubmission().copy(errorFlag = true)))
-        assertTrue(data.value?.attempts?.first()?.data?.isFailed!!)
-    }
-
-    @Test
-    fun `Upload success`() {
-        submissionHandler = StudentAssignmentDetailsSubmissionHandler(submissionHelper, studentDb)
-
-        val data = MutableLiveData<AssignmentDetailsViewData>(AssignmentDetailsViewData(
-            courseColor = ColorKeeper.getOrGenerateColor(Course()),
-            submissionAndRubricLabelColor = ThemePrefs.textButtonColor,
-            assignmentName = "Assignment",
-            points = "0",
-            submissionStatusText = "Status",
-            submissionStatusIcon = 1,
-            submissionStatusTint = 1,
-            submissionStatusVisible = true,
-            fullLocked = true,
-            lockedMessage = ""
-        ))
+        var attempts = emptyList<AssignmentDetailsAttemptViewData>()
 
         val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
         every {
@@ -132,7 +86,41 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
         } returns liveData
 
         submissionHandler.addAssignmentSubmissionObserver(
-            mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {}, {})
+            mockk(relaxed = true), 0, 0, mockk(relaxed = true),
+            getAttempts = { attempts },
+            setAttempts = { attempts = it },
+            setHasDraft = {},
+            refreshAssignment = {},
+            updateGradeCell = {}
+        )
+
+        liveData.postValue(listOf(getDbSubmission()))
+
+        assertTrue(submissionHandler.isUploading)
+
+        liveData.postValue(listOf(getDbSubmission().copy(errorFlag = true)))
+        assertTrue(attempts.first().isFailed)
+    }
+
+    @Test
+    fun `Upload success`() {
+        submissionHandler = StudentAssignmentDetailsSubmissionHandler(submissionHelper, studentDb)
+
+        var attempts = emptyList<AssignmentDetailsAttemptViewData>()
+
+        val liveData = MutableLiveData<List<CreateSubmissionEntity>>(listOf())
+        every {
+            studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
+        } returns liveData
+
+        submissionHandler.addAssignmentSubmissionObserver(
+            mockk(relaxed = true), 0, 0, mockk(relaxed = true),
+            getAttempts = { attempts },
+            setAttempts = { attempts = it },
+            setHasDraft = {},
+            refreshAssignment = {},
+            updateGradeCell = {}
+        )
 
         liveData.postValue(listOf(getDbSubmission()))
         assertTrue(submissionHandler.isUploading)

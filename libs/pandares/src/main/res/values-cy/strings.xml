@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Terfyn amser: %s</string>
     <string name="allowedAttempts">Ymgeisiau a ganiateir: %s</string>
     <string name="usedAttempts">Ceisiadau wedi’u defnyddio: %d</string>
+    <string name="assignmentAttemptsUnlimited">Nifer ddiderfyn o ymgeisiau</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d o %2$d ymgais</string>
     <string name="generalUnexpectedError">Gwall annisgwyl.</string>
 
     <string name="deleteSelected">Dileu</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID Mewngofnodi</string>
     <string name="aboutEmailTitle">E-bost</string>
     <string name="aboutVersionTitle">Fersiwn</string>
+    <string name="aboutOpenSourceTitle">Trwyddedau a Ffynhonnell Agored</string>
+    <string name="aboutOpenSourceSubtitle">Gwiriwch y cod ffynhonnell ac agorwch trwyddedau ffynhonnell.</string>
     <string name="assignmentRefreshError">Problem wrth ail-lwytho’r aseiniad hwn. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Blaenoriaethau</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Trefnu yn ôl</string>
     <string name="gradesEmptyTitle">Dim Aseiniadau</string>
     <string name="gradesEmptyMessage">Mae’n ymddangos nad oes aseiniadau wedi cael eu creu yn y gofod hwn eto.</string>
+    <string name="gradesEmptyMessageForPeriod">Does dim aseiniadau yn %s.</string>
+    <string name="gradesCommentsContentDescription">%d o sylwadau</string>
+    <string name="gradesUnreadCommentsContentDescription">%d o sylwadau heb eu darllen</string>
     <string name="noMatchingAssignments">Does dim Aseiniadau sy\'n Cyfateb</string>
     <string name="noMatchingAssignmentsDescription">Does dim aseiniadau’n cyfateb i’ch chwiliad. Rhowch gynnig ar derm chwilio gwahanol.</string>
     <string name="errorLoadingGrades">Rydym yn cael trafferth llwytho graddau eich myfyriwr. Ceisiwch ail-lwytho\'r dudalen neu roi cynnig arall arni yn nes ymlaen.</string>

@@ -29,6 +29,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -79,7 +80,9 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickAddReminder() {
-        composeTestRule.onNodeWithContentDescription(reminderAdd).performClick()
+        // Scroll the reminder "+" button into view first — on landscape / small screens the reminder
+        // section is below the fold, so clicking without scrolling misses and the dialog never opens.
+        composeTestRule.onNodeWithContentDescription(reminderAdd).performScrollTo().performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -88,11 +91,14 @@ class AssignmentReminderPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun removeReminderWithText(text: String) {
+        // Scroll the reminder's remove (X) button into view first — on landscape / small screens the
+        // reminder is below the fold, so clicking without scrolling misses and the confirmation
+        // dialog ("Yes") never appears.
         composeTestRule.onNode(
                 hasContentDescription("Remove").and(
                     hasAnySibling(hasText(text))
                 )
-        ).performClick()
+        ).performScrollTo().performClick()
         composeTestRule.waitForIdle()
         Thread.sleep(1000)
         onView(withText(R.string.yes)).scrollTo().click()

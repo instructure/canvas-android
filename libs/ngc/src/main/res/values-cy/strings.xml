@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Fy Ngwaith</string>
     <string name="ngc_courseHomeTabMore">Mwy</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Ar gael tan</string>
+    <string name="ngc_quizSettings">Gosodiadau cwis</string>
+    <string name="ngc_submission">Cyflwyniad</string>
+    <string name="ngc_continueDraft">Parhau â drafft</string>
+    <string name="ngc_assignmentReminder">Nodyn Atgoffa ar gyfer Aseiniad</string>
+    <string name="ngc_classPerformance">Perfformiad Dosbarth</string>
+    <string name="ngc_newAttempt">Ymgais newydd</string>
+    <string name="ngc_submitAssignment">Cyflwyno aseiniad</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Y mathau o ffeiliau a ganiateir</string>
+    <string name="ngc_noDueDate">Dim dyddiad erbyn</string>
+    <string name="ngc_noAssignmentDescription">Dim disgrifiad o’r aseiniad</string>
+    <string name="ngc_retry">Ailgynnig</string>
+    <string name="ngc_finalGrade">Gradd Derfynol</string>
+    <string name="ngc_notYetGraded">Heb eu graddio hyd yma</string>
+    <string name="ngc_uploadingSubmission">Wrthi’n uwchlwytho\'r cyflwyniad...</string>
+    <string name="ngc_submissionFailed">Wedi methu cyflwyno</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Credyd Ychwanegol</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d diwrnod yn hwyr</item>
+        <item quantity="other">%d diwrnod yn hwyr</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Isaf: %s</string>
+    <string name="ngc_classPerformanceAverage">Cyfartaledd: %s</string>
+    <string name="ngc_classPerformanceHighest">Uchaf: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Gwybodaeth ychwanegol</string>
+    <string name="ngc_submissionSegmentInstructions">Cyfarwyddiadau</string>
+    <string name="ngc_submissionSegmentRubric">Cyfarwyddyd sgorio</string>
+    <string name="ngc_submissionSegmentComments">Sylwadau</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Rheoli cnwys al-lein</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Addasu dangosfwrdd</string>
+    <string name="a11y_submissionSupportingPaneExpand">Ehangu gwybodaeth ychwanegol</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Crebachu gwybodaeth ychwanegol</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Cyflwyno Aseiniad</string>
+    <string name="ngc_submission_newSubmission">Cyflwyniad Newydd</string>
+    <string name="ngc_submission_textEntry">Cofnod Testun</string>
+    <string name="ngc_submission_submit">Cyflwyno</string>
+    <string name="ngc_submission_deleteDraft">Dileu drafft</string>
+    <string name="ngc_submission_draftSaved">Wedi cadw %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Nodwch destun eich cyflwyniad yma</string>
+    <string name="ngc_submission_submissionError">Gwall wrth gyflwyno aseiniad</string>
+    <string name="ngc_submission_loadError">Wedi methu llwytho\'r aseiniad</string>
+    <string name="ngc_submission_dueDate">Erbyn %1$s</string>
+    <string name="ngc_submission_retry">Ailgynnig</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Dileu drafft?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Bydd eich drafft yn cael ei ddileu’n barhaol ac ni fydd modd ei adfer.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Dileu</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Canslo</string>
+    <string name="ngc_back">Yn ôl</string>
 </resources>

@@ -85,7 +85,9 @@ class GradesGraphQlManagerImpl(
                 val assignments = course?.assignmentsConnection
                 assignments?.nodes.orEmpty().filterNotNull().forEach { node ->
                     val assignment = mapAssignment(node, paginateComments, forceNetwork)
-                    assignmentsByGroup.getOrPut(assignment.assignmentGroupId) { mutableListOf() }.add(assignment)
+                    if (belongsToGradingPeriod(assignment, gradingPeriodId)) {
+                        assignmentsByGroup.getOrPut(assignment.assignmentGroupId) { mutableListOf() }.add(assignment)
+                    }
                 }
                 hasMoreAssignments = assignments?.pageInfo?.hasNextPage == true
                 assignmentCursor = Optional.presentIfNotNull(assignments?.pageInfo?.endCursor)
@@ -102,6 +104,18 @@ class GradesGraphQlManagerImpl(
                 assignments = assignmentsByGroup[meta.id].orEmpty()
             )
         }
+    }
+
+    // assignmentsConnection filters by the assignment's grading period (its effective due date), but web/REST scope
+    // a period's grades by the student's *submission* grading period ("where the grade counts"). When those diverge
+    // (e.g. an assignment due in one period but graded/submitted in another) the server returns an assignment whose
+    // grade actually belongs to a different period, which would inflate the period total. Match REST by dropping
+    // assignments whose submission is known to belong to another period; keep ones with no/unknown submission period
+    // since the server already scoped those to this period. (MBL-20202)
+    private fun belongsToGradingPeriod(assignment: Assignment, gradingPeriodId: Long?): Boolean {
+        if (gradingPeriodId == null) return true
+        val submissionPeriodId = assignment.submission?.gradingPeriodId
+        return submissionPeriodId == null || submissionPeriodId == gradingPeriodId
     }
 
     private suspend fun fetchAssignmentGroups(

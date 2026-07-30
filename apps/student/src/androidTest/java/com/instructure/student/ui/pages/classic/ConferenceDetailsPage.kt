@@ -17,6 +17,7 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -27,6 +28,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.startsWith
 
 open class ConferenceDetailsPage : BasePage(R.id.conferenceDetailsPage) {
 
@@ -36,6 +38,22 @@ open class ConferenceDetailsPage : BasePage(R.id.conferenceDetailsPage) {
 
     fun assertConferenceStatus(expectedStatus: String) {
         onView(allOf(withId(R.id.status), withText(expectedStatus), withParent(R.id.statusDetails))).assertDisplayed()
+    }
+
+    fun assertConferenceStatusStartsWith(expectedStatusPrefix: String) {
+        onView(allOf(
+            withId(R.id.status),
+            withText(startsWith(expectedStatusPrefix)),
+            withParent(R.id.statusDetails)
+        )).assertDisplayed()
+    }
+
+    fun assertConferenceInProgress() {
+        onView(allOf(withId(R.id.inProgressIndicator), withText(R.string.inProgress), withParent(R.id.statusDetails))).assertDisplayed()
+    }
+
+    fun assertJoinButtonDisplayed() {
+        onView(withId(R.id.joinButton)).assertDisplayed()
     }
 
     fun assertDescription(expectedDescription: String) {

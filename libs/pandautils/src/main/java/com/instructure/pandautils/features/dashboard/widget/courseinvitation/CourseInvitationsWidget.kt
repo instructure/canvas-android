@@ -48,6 +48,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -136,7 +137,9 @@ fun CourseInvitationsContent(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("courseInvitationsPager"),
             pageSpacing = 8.dp,
             contentPadding = PaddingValues(start = 16.dp, end = 24.dp),
             beyondViewportPageCount = 1
@@ -202,7 +205,9 @@ fun CourseInvitationsContent(
                         uiState.onDeclineInvitation(invitation)
                         invitationToDecline = null
                     },
-                    modifier = Modifier.pendoTag("courseInvitationsWidget_confirmDeclineButton", true)
+                    modifier = Modifier
+                        .testTag("courseInvitationConfirmDeclineButton")
+                        .pendoTag("courseInvitationsWidget_confirmDeclineButton", true)
                 ) {
                     Text(
                         text = stringResource(R.string.declineCourseInvitation),
@@ -235,7 +240,8 @@ private fun InvitationCard(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .testTag("courseInvitationCard_${invitation.courseId}"),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
@@ -249,7 +255,8 @@ private fun InvitationCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp, bottom = 24.dp),
+                    .padding(top = 16.dp, bottom = 24.dp)
+                    .testTag("courseInvitationName_${invitation.courseId}"),
                 text = invitation.courseName,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
@@ -270,6 +277,7 @@ private fun InvitationCard(
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp)
+                        .testTag("courseInvitationDeclineButton_${invitation.courseId}")
                         .pendoTag("courseInvitationsWidget_declineButton", true),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -299,6 +307,7 @@ private fun InvitationCard(
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp)
+                        .testTag("courseInvitationAcceptButton_${invitation.courseId}")
                         .pendoTag("courseInvitationsWidget_acceptButton", true),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(

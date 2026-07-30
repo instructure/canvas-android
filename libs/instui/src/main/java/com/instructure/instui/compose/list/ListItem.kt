@@ -23,11 +23,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
@@ -43,6 +48,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.indicator.Icon
 import com.instructure.instui.compose.indicator.IconColor
 import com.instructure.instui.compose.indicator.IconSize
@@ -179,7 +185,7 @@ sealed class ListItemTrailing {
  */
 @Composable
 fun ListItem(
-    title: String,
+    title: String? = null,
     modifier: Modifier = Modifier,
     supportingText: String? = null,
     text: String? = null,
@@ -189,8 +195,13 @@ fun ListItem(
     score: (@Composable () -> Unit)? = null,
     leading: ListItemLeading? = null,
     trailing: ListItemTrailing? = null,
+    isOnColor: Boolean = false,
+    trailingAlignment: Alignment.Vertical = Alignment.Top,
+    content: (@Composable ColumnScope.() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
+    val primaryColor = if (isOnColor) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Text.base()
+    val secondaryColor = if (isOnColor) InstUISemanticColors.Text.onColor() else InstUITextTokens.mutedColor
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -207,51 +218,131 @@ fun ListItem(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.Space2xs.space2xs),
         ) {
-            if (supportingText != null) {
-                Text(
-                    text = supportingText,
-                    style = InstUITextTokens.contentSmall,
-                    color = InstUITextTokens.mutedColor,
-                )
-            }
-            Text(
-                text = title,
-                style = InstUIHeading.titleCardMini,
-                color = InstUISemanticColors.Text.base(),
-            )
-            if (text != null) {
-                Text(
-                    text = text,
-                    style = InstUITextTokens.content,
-                    color = InstUISemanticColors.Text.base(),
-                )
-            }
-            if (subtext1 != null) {
-                Text(
-                    text = subtext1,
-                    style = InstUITextTokens.contentSmall,
-                    color = InstUITextTokens.mutedColor,
-                )
-            }
-            if (subtext2 != null) {
-                Text(
-                    text = subtext2,
-                    style = InstUITextTokens.contentSmall,
-                    color = InstUITextTokens.mutedColor,
-                )
-            }
-            if (pill != null) {
-                pill()
-            }
-            if (score != null) {
-                score()
+            if (content != null) {
+                content()
+            } else {
+                if (supportingText != null) {
+                    Text(
+                        text = supportingText,
+                        style = InstUITextTokens.contentSmall,
+                        color = secondaryColor,
+                    )
+                }
+                if (title != null) {
+                    Text(
+                        text = title,
+                        style = InstUIHeading.titleCardMini,
+                        color = primaryColor,
+                    )
+                }
+                if (text != null) {
+                    Text(
+                        text = text,
+                        style = InstUITextTokens.content,
+                        color = primaryColor,
+                    )
+                }
+                if (subtext1 != null) {
+                    Text(
+                        text = subtext1,
+                        style = InstUITextTokens.contentSmall,
+                        color = secondaryColor,
+                    )
+                }
+                if (subtext2 != null) {
+                    Text(
+                        text = subtext2,
+                        style = InstUITextTokens.contentSmall,
+                        color = secondaryColor,
+                    )
+                }
+                if (pill != null) {
+                    pill()
+                }
+                if (score != null) {
+                    score()
+                }
             }
         }
 
         if (trailing != null) {
-            TrailingContent(trailing)
+            Box(modifier = Modifier.align(trailingAlignment)) {
+                TrailingContent(trailing)
+            }
         }
     }
+}
+
+/**
+ * Style of a single [ListItemContentLine], mapping to the InstUI ListItem content-line variants.
+ */
+enum class ListItemLineStyle { Title, Text, SupportingText, ImportantInfo }
+
+/**
+ * A single content line for [ListItem]'s slot-based content (Figma `listItem.content.line`).
+ *
+ * A line lays out (left to right): an optional 16dp [icon], the [text] styled per [style], and any
+ * [trailing] content (e.g. a separator + pill). Use inside the `content` slot of [ListItem].
+ */
+@Composable
+fun ListItemContentLine(
+    modifier: Modifier = Modifier,
+    text: String? = null,
+    style: ListItemLineStyle = ListItemLineStyle.SupportingText,
+    icon: ImageVector? = null,
+    iconTint: Color? = null,
+    isOnColor: Boolean = false,
+    trailing: (@Composable RowScope.() -> Unit)? = null,
+) {
+    val color = listItemLineColor(style, isOnColor)
+    val textStyle = when (style) {
+        ListItemLineStyle.Title -> InstUIHeading.titleCardMini
+        ListItemLineStyle.Text -> InstUITextTokens.content
+        ListItemLineStyle.SupportingText -> InstUITextTokens.contentSmall
+        ListItemLineStyle.ImportantInfo -> InstUITextTokens.contentImportant
+    }
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceSm.spaceSm),
+    ) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                tint = iconTint ?: color,
+                size = IconSize.Small,
+                contentDescription = null,
+            )
+        }
+        if (text != null) {
+            Text(text = text, style = textStyle, color = color)
+        }
+        trailing?.invoke(this)
+    }
+}
+
+/**
+ * Thin vertical divider used to separate segments within a [ListItemContentLine] (e.g. score | pill).
+ */
+@Composable
+fun ListItemLineSeparator(isOnColor: Boolean = false) {
+    Box(
+        modifier = Modifier
+            .height(InstUILayoutSizes.Spacing.SpaceLg.spaceLg)
+            .width(1.dp)
+            .clip(RoundedCornerShape(1.dp))
+            .background(
+                if (isOnColor) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Stroke.Container.base()
+            )
+    )
+}
+
+@Composable
+private fun listItemLineColor(style: ListItemLineStyle, isOnColor: Boolean): Color = when {
+    isOnColor -> InstUISemanticColors.Text.onColor()
+    style == ListItemLineStyle.SupportingText -> InstUITextTokens.mutedColor
+    style == ListItemLineStyle.ImportantInfo -> LocalCourseColor.current
+    else -> InstUISemanticColors.Text.base()
 }
 
 /**
@@ -265,6 +356,8 @@ fun AccordionIcon(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
+    color: IconColor = IconColor.Base,
+    size: IconSize = IconSize.Small,
 ) {
     val rotation by animateFloatAsState(
         targetValue = if (expanded) 180f else 0f,
@@ -272,7 +365,8 @@ fun AccordionIcon(
     )
     Icon(
         imageVector = InstUIIcons.chevronDown,
-        size = IconSize.Small,
+        size = size,
+        color = color,
         contentDescription = contentDescription,
         modifier = modifier
             .clip(CircleShape)

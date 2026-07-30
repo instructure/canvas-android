@@ -25,9 +25,11 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
@@ -50,6 +52,17 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
     fun assertMoreMenuButtonDisplayed(menuText: String) {
         Web.onWebView()
             .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$menuText']")))
+    }
+
+    fun clickOnDeleteMenuButtonAndConfirm() {
+        try {
+            Web.onWebView()
+                .withElement(DriverAtoms.findElement(Locator.XPATH, "//span[text()='Delete']"))
+                .perform(webClick())
+        } catch (e: Exception) {
+            // Expected: the blocking confirm() dialog interrupts the web interaction.
+        }
+        waitForView(withId(android.R.id.button1)).click()
     }
 
     fun assertToolbarDiscussionTitle(discussionTitle: String) {

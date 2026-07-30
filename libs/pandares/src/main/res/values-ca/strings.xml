@@ -1462,6 +1462,8 @@
     <string name="quizTimeLimit">Límit de temps: %s</string>
     <string name="allowedAttempts">Intents permesos: %s</string>
     <string name="usedAttempts">Intents utilitzats: %d</string>
+    <string name="assignmentAttemptsUnlimited">Sense límit d’intents</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d de %2$d intents</string>
     <string name="generalUnexpectedError">S\'ha produït un error inesperat.</string>
 
     <string name="deleteSelected">Suprimeix</string>
@@ -1505,6 +1507,8 @@
     <string name="aboutLoginTitle">ID d\'inici de sessió</string>
     <string name="aboutEmailTitle">Correu electrònic</string>
     <string name="aboutVersionTitle">Versió</string>
+    <string name="aboutOpenSourceTitle">Codi obert i llicències</string>
+    <string name="aboutOpenSourceSubtitle">Consulteu les llicències amb codi font i codi obert.</string>
     <string name="assignmentRefreshError">Hi ha hagut un problema en tornar a carregar aquesta activitat. Reviseu la connexió i torneu-ho a provar.</string>
     <string name="instructure_logo">Logotip de l’Instructure</string>
     <string name="preferences">Preferències</string>
@@ -1953,6 +1957,9 @@
     <string name="gradePreferencesHeaderSortBy">Ordena per</string>
     <string name="gradesEmptyTitle">No hi ha cap activitat</string>
     <string name="gradesEmptyMessage">Sembla que en aquest espai encara no s\'ha creat cap activitat.</string>
+    <string name="gradesEmptyMessageForPeriod">No hi ha cap activitat a %s.</string>
+    <string name="gradesCommentsContentDescription">%d comentaris</string>
+    <string name="gradesUnreadCommentsContentDescription">%d comentaris sense llegir</string>
     <string name="noMatchingAssignments">No hi ha cap activitat que coincideixi</string>
     <string name="noMatchingAssignmentsDescription">No hi ha cap activitat que coincideixi amb la vostra cerca. Proveu un terme de cerca diferent.</string>
     <string name="errorLoadingGrades">Tenim problemes per carregar les notes de l’estudiant. Proveu de tornar a carregar la pàgina ara mateix o reviseu-la més endavant.</string>

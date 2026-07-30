@@ -115,6 +115,7 @@ fun ManageOfflineContentScreen(
     HorizonScaffold(
         title = stringResource(R.string.offline_manageOfflineContentTitle),
         onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
         LoadingStateWrapper(
             loadingState = uiState.loadingState,

@@ -81,6 +81,7 @@ android {
 dependencies {
     implementation(project(":pandautils"))
     implementation(project(":instui"))
+    implementation(project(":annotations"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.COMPOSE_ADAPTIVE)
@@ -96,6 +97,7 @@ dependencies {
     implementation(Libs.VIEW_MODEL)
     implementation(Libs.HILT_COMPOSE_NAVIGATION)
     implementation(Libs.KOTLIN_SERIALIZABLE)
+    implementation(Libs.GLIDE_COMPOSE)
 
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true
@@ -107,4 +109,9 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+
+    /* Instrumentation (Compose UI) Test Dependencies */
+    androidTestImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    androidTestImplementation(Libs.COMPOSE_UI_TEST)
+    debugImplementation(Libs.COMPOSE_UI_TEST_MANIFEST)
 }

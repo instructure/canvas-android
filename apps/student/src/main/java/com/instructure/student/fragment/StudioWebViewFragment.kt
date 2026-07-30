@@ -118,7 +118,9 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             val webBackForwardList = getCanvasWebView()?.copyBackForwardList()
             val historyUrl = webBackForwardList?.getItemAtIndex(webBackForwardList.currentIndex - 1)?.url
             if (historyUrl != null && historyUrl.contains("external_tools/") && historyUrl.contains("resource_selection")) {
-                navigation?.popCurrentFragment()
+                // When hosted over NGC the activity isn't a Navigation, so fall back to popping the
+                // fragment we added over the NGC content.
+                navigation?.popCurrentFragment() ?: activity?.supportFragmentManager?.popBackStack()
                 return true
             }
         }
@@ -152,8 +154,9 @@ class StudioWebViewFragment : InternalWebviewFragment() {
                 // Upload the url as a submission
                 submissionHelper.startStudioSubmission(canvasContext, assignmentId, assignmentName, url, attempt)
 
-                // Close this page
-                navigation?.popCurrentFragment()
+                // Close this page. When hosted over NGC the activity isn't a Navigation, so fall
+                // back to popping the fragment we added over the NGC content.
+                navigation?.popCurrentFragment() ?: activity?.supportFragmentManager?.popBackStack()
             }
         }
     }

@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -30,6 +31,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.startsWith
 
 open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
 
@@ -41,7 +43,7 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
     }
 
     fun assertConferenceStatus(conferenceTitle: String, expectedStatus: String) {
-        onView(allOf(withId(R.id.statusLabel), withText(expectedStatus), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))))
+        onView(allOf(withId(R.id.statusLabel), withText(expectedStatus), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle))))).assertDisplayed()
     }
 
     fun assertConferenceDisplayed(conferenceTitle: String) {
@@ -53,7 +55,7 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
     }
 
     fun assertConferenceDescription(conferenceTitle: String, expectedDescription: String) {
-        onView(allOf(withId(R.id.subtitle), withText(expectedDescription), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))))
+        onView(allOf(withId(R.id.subtitle), withText(expectedDescription), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle))))).assertDisplayed()
     }
 
     fun clickOnOpenExternallyButton() {
@@ -79,6 +81,18 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
 
     fun assertNewConferencesDisplayed() {
         onView(withId(R.id.title) + withText(R.string.newConferences) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
+    }
+
+    fun assertConferenceStatusStartsWith(conferenceTitle: String, expectedStatusPrefix: String) {
+        onView(allOf(
+            withId(R.id.statusLabel),
+            withText(startsWith(expectedStatusPrefix)),
+            hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))
+        )).assertDisplayed()
+    }
+
+    fun assertConcludedConferencesGroupDisplayed() {
+        onView(withId(R.id.title) + withText(R.string.concludedConferences) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
     }
 
     fun clickExpandCollapseGroup(groupName: String) {

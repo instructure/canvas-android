@@ -33,6 +33,16 @@ data class DashboardUiState(
     val syncProgressLabel: String = "",
     val syncProgressState: HorizonProgressState = HorizonProgressState.PENDING,
     val onSyncWidgetDismiss: () -> Unit = {},
+    val showScheduledSubmissionsWidget: Boolean = false,
+    val scheduledSubmissions: List<DashboardScheduledSubmissionUiState> = emptyList(),
+)
+
+data class DashboardScheduledSubmissionUiState(
+    val id: Long,
+    val name: String,
+    val courseId: Long,
+    val assignmentId: Long,
+    val onCancel: () -> Unit = {},
 )
 
 data class DashboardUnreadState(

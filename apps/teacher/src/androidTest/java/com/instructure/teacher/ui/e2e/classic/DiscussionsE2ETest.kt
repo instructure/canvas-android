@@ -24,9 +24,12 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
+import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.espresso.getCustomDateCalendar
+import com.instructure.pandautils.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -44,19 +47,21 @@ class DiscussionsE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
     fun testDiscussionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 3)
+        val data = seedData(students = 1, teachers = 1, courses = 1, discussions = 4)
         val teacher = data.teachersList[0]
         val student = data.studentsList[0]
         val course = data.coursesList[0]
         val discussion = data.discussionsList[0]
         val discussion2 = data.discussionsList[1]
         val discussion3 = data.discussionsList[2]
+        val discussion4 = data.discussionsList[3]
 
         val discussionEntryMessage = "Discussion entry test message"
         val testDiscussionTopicEntry = DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, discussion.id, discussionEntryMessage)
@@ -165,6 +170,19 @@ class DiscussionsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the previously deleted '${discussion.title}' discussion is not displayed, but the other, '${discussion2.title}' discussion is.")
         sleep(2000) //Allow the deletion to propagate
         discussionsListPage.assertDiscussionDoesNotExist(discussion.title)
+        discussionsListPage.assertHasDiscussion(discussion2)
+
+        Log.d(STEP_TAG, "Open the '${discussion4.title}' discussion detail (web view) and delete it from the more menu, confirming the deletion in the (WebView) confirmation dialog.")
+        discussionsListPage.clickDiscussion(discussion4)
+        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+        discussionDetailsPage.clickOnDeleteMenuButtonAndConfirm()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Discussion deleted.' confirmation toast is displayed.")
+        checkToastText(R.string.utils_discussionDeleted, activityRule.activity)
+
+        Log.d(ASSERTION_TAG, "Assert that after deleting from the web view we returned to the native Discussion list, the deleted '${discussion4.title}' discussion is not displayed any more, but the '${discussion2.title}' discussion still is.")
+        discussionsListPage.assertDiscussionDoesNotExist(discussion4.title)
         discussionsListPage.assertHasDiscussion(discussion2)
 
         Log.d(STEP_TAG, "Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")

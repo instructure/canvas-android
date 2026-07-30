@@ -165,14 +165,7 @@ private fun DashboardCourseSectionContent(
                                 .padding(bottom = 12.dp)
                                 .height(maxCardHeight.toDp.dp)
                         ) {
-                            navController.clearBackStack(HomeNavigationRoute.Learn.route)
-                            navController.navigate(LearnRoute.LearnScreen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = false
-                            }
+                            navController.navigateInLearnTab()
                         }
                     }
                 }
@@ -180,16 +173,7 @@ private fun DashboardCourseSectionContent(
 
             Button(
                 stringResource(R.string.dashboardSeeAllCoursesLabel),
-                onClick = {
-                    navController.clearBackStack(HomeNavigationRoute.Learn.route)
-                    navController.navigate(LearnRoute.LearnScreen.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = false
-                    }
-                },
+                onClick = { navController.navigateInLearnTab() },
                 width = ButtonWidth.FILL,
                 color = ButtonColor.WhiteWithOutline,
                 iconPosition = ButtonIconPosition.End(R.drawable.arrow_forward),
@@ -241,13 +225,7 @@ private fun handleClickAction(
             action.onClick()
         }
         is CardClickAction.NavigateToCourse -> {
-            navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(action.courseId)) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = false
-            }
+            navController.navigateInLearnTab(LearnRoute.LearnCourseDetailsScreen.route(action.courseId))
         }
         is CardClickAction.NavigateToModuleItem -> {
             navController.navigate(
@@ -258,14 +236,22 @@ private fun handleClickAction(
             )
         }
         is CardClickAction.NavigateToProgram -> {
-            navController.navigate(LearnRoute.LearnProgramDetailsScreen.route(action.programId)) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = false
-            }
+            navController.navigateInLearnTab(LearnRoute.LearnProgramDetailsScreen.route(action.programId))
         }
         else -> {}
+    }
+}
+
+private fun NavHostController.navigateInLearnTab(deepRoute: String? = null) {
+    clearBackStack(HomeNavigationRoute.Learn.route)
+    navigate(LearnRoute.LearnScreen.route) {
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = false
+    }
+    if (deepRoute != null) {
+        navigate(deepRoute)
     }
 }

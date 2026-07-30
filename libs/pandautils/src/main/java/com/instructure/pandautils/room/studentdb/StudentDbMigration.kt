@@ -17,6 +17,9 @@
 import com.instructure.pandautils.room.common.createMigration
 
 val studentDbMigrations = arrayOf(
+    createMigration(7, 8) { database ->
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `notify_on_result` INTEGER NOT NULL DEFAULT 0")
+    },
     createMigration(6, 7) { database ->
         database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `submission_state` TEXT NOT NULL DEFAULT 'QUEUED'")
         database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `state_updated_at` INTEGER")

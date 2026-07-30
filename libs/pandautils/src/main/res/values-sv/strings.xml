@@ -261,6 +261,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Detta svar har tagits bort %s</string>
+    <string name="utils_announcementDeleted">Meddelandet raderades.</string>
+    <string name="utils_discussionDeleted">Diskussionen raderades.</string>
     <string name="utils_discussionsUnknownAuthor">Okänd författare</string>
     <string name="utils_discussionsReply">Svara</string>
     <string name="utils_discussionsEdit">Redigera</string>

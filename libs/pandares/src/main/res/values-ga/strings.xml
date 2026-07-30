@@ -1470,6 +1470,8 @@
     <string name="quizTimeLimit">Teorainn ama: %s</string>
     <string name="allowedAttempts">Iarrachtaí ceadaithe: %s</string>
     <string name="usedAttempts">Iarrachtaí a úsáideadh: %d</string>
+    <string name="assignmentAttemptsUnlimited">Iarrachtaí gan teorainn</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d as %2$d (n-)iarracht</string>
     <string name="generalUnexpectedError">Tharla earráid gan choinne.</string>
 
     <string name="deleteSelected">Scrios</string>
@@ -1513,6 +1515,8 @@
     <string name="aboutLoginTitle">ID logála isteach</string>
     <string name="aboutEmailTitle">Ríomhphost</string>
     <string name="aboutVersionTitle">Leagan</string>
+    <string name="aboutOpenSourceTitle">Foinse Oscailte agus Ceadúnais</string>
+    <string name="aboutOpenSourceSubtitle">Féach ar an gcód foinseach agus ar na ceadúnais foinse oscailte.</string>
     <string name="assignmentRefreshError">Tharla fadhb agus an tasc seo á athlódáil. Seiceáil do cheangal agus bain triail eile as.</string>
     <string name="instructure_logo">Lógó Instructure</string>
     <string name="preferences">Roghanna</string>
@@ -1967,6 +1971,9 @@
     <string name="gradePreferencesHeaderSortBy">Sórtáil de réir</string>
     <string name="gradesEmptyTitle">Níl aon Tascanna ann</string>
     <string name="gradesEmptyMessage">Tá an chuma ar an scéal nár cruthaíodh tascanna sa spás seo go fóill.</string>
+    <string name="gradesEmptyMessageForPeriod">Níl aon tascanna in %s.</string>
+    <string name="gradesCommentsContentDescription">%d ráiteas</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ráiteas neamhléite</string>
     <string name="noMatchingAssignments">Gan aon Tascanna ag Meaitseáil</string>
     <string name="noMatchingAssignmentsDescription">Níl aon tascanna a mheaitseálann do do chuardach. Bain triail as téarma cuardaigh difriúil.</string>
     <string name="errorLoadingGrades">Tá deacracht againn marcanna do mhic léinn a lódáil. Bain triail as an leathanach a athlódáil nó seiceáil ar ais ar ball.</string>

@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -249,7 +248,6 @@ class SettingsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesWithDifferentUsersE2E() {
 
@@ -439,7 +437,6 @@ class SettingsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesFABButtonWithDifferentUsersE2E() {
 
@@ -517,7 +514,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SYLLABUS' tab.")
         courseDetailsPage.selectTab("SYLLABUS")
@@ -529,7 +526,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SUMMARY' tab.")
         courseDetailsPage.selectTab("SUMMARY")
@@ -541,7 +538,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'GRADES' tab.")
         courseDetailsPage.selectTab("GRADES")
@@ -556,7 +553,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nBest Regards\nCanvas Parent")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Navigate back to Dashboard.")
         pressBackButton(2)
@@ -644,7 +641,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SYLLABUS' tab.")
         courseDetailsPage.selectTab("SYLLABUS")
@@ -656,7 +653,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'SUMMARY' tab.")
         courseDetailsPage.selectTab("SUMMARY")
@@ -668,7 +665,7 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxComposeMessagePage.assertBodyText("\n\n---\nLoyal member of Instructure")
 
         Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
-        inboxComposePage.clickOnCloseButton()
+        inboxComposeMessagePage.clickOnCloseButton()
 
         Log.d(STEP_TAG, "Select 'GRADES' tab.")
         courseDetailsPage.selectTab("GRADES")

@@ -50,6 +50,9 @@ interface HorizonFileSyncPlanDao {
     @Query("UPDATE horizon_file_sync_plan SET fileSize = :fileSize WHERE fileId = :fileId AND courseId = :courseId")
     suspend fun updateFileSize(fileId: Long, courseId: Long, fileSize: Long)
 
+    @Query("UPDATE horizon_file_sync_plan SET progress = 0, state = 'PENDING' WHERE state = 'IN_PROGRESS' AND courseId IN (:courseIds)")
+    suspend fun resetInterruptedFiles(courseIds: List<Long>)
+
     @Query("DELETE FROM horizon_file_sync_plan")
     suspend fun deleteAll()
 }

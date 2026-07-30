@@ -292,4 +292,34 @@ class GradeCellViewDataTest {
         Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
         Assert.assertEquals("B", gradeCell.grade)
     }
+
+    @Test
+    fun `Final grade text uses the submission grade for non-points grading`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 100.0),
+            Submission(submittedAt = Date(), grade = "A-", score = 92.0),
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A-", gradeCell.finalGradeText)
+    }
+
+    @Test
+    fun `Days late is derived from seconds late and rounded up to whole days`() {
+        // 2.5 days late -> rounded up to 3 whole days for the student-facing pill.
+        val secondsLate = (2.5 * 24 * 60 * 60).toLong()
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.POINTS_TYPE, pointsPossible = 10.0),
+            Submission(submittedAt = Date(), grade = "7", score = 7.0, pointsDeducted = 3.0, secondsLate = secondsLate),
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals(3, gradeCell.daysLate)
+    }
 }

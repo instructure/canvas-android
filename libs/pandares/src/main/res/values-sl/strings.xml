@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Časovna omejitev: %s</string>
     <string name="allowedAttempts">Dovoljeni poskusi: %s</string>
     <string name="usedAttempts">Porabljeni poskusi: %d</string>
+    <string name="assignmentAttemptsUnlimited">Neomejeno poskusov</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d od %2$d poskusov</string>
     <string name="generalUnexpectedError">Prišlo je do nepričakovane napake.</string>
 
     <string name="deleteSelected">Odstrani</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID prijave</string>
     <string name="aboutEmailTitle">E-pošta</string>
     <string name="aboutVersionTitle">Različica</string>
+    <string name="aboutOpenSourceTitle">Odprtokodna programska oprema in licence</string>
+    <string name="aboutOpenSourceSubtitle">Oglejte si izvorno kodo in odprtokodne licence.</string>
     <string name="assignmentRefreshError">Prišlo je do težave z ponovnim nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
     <string name="instructure_logo">Logotip Instructure</string>
     <string name="preferences">Nastavitve</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Razvrsti po</string>
     <string name="gradesEmptyTitle">Ni nalog</string>
     <string name="gradesEmptyMessage">Videti je, da v tem prostoru naloge še niso bile ustvarjene.</string>
+    <string name="gradesEmptyMessageForPeriod">V %s ni nalog.</string>
+    <string name="gradesCommentsContentDescription">%d komentarjev(-a/-i)</string>
+    <string name="gradesUnreadCommentsContentDescription">%d neprebrani(h) komentarji(-ev)</string>
     <string name="noMatchingAssignments">Ni ujemajočih se nalog</string>
     <string name="noMatchingAssignmentsDescription">Vašemu iskanju ne ustreza nobena naloga. Poskusite z drugim iskalnim izrazom.</string>
     <string name="errorLoadingGrades">Imamo težave pri nalaganju ocen vašega študenta. Poskusite znova naložiti stran ali spet obiščite pozneje.</string>

@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Whaiti wā: %s</string>
     <string name="allowedAttempts">Nganatanga whakaaetia: %s</string>
     <string name="usedAttempts">Nganatanga i whakamahia: %d</string>
+    <string name="assignmentAttemptsUnlimited">Ngā nganatanga mutunga kore</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d i waho o %2$d ngā nganatanga</string>
     <string name="generalUnexpectedError">He hapa ohorere i puta.</string>
 
     <string name="deleteSelected">Muku</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Takiuru ID</string>
     <string name="aboutEmailTitle">Īmēra</string>
     <string name="aboutVersionTitle">Putanga</string>
+    <string name="aboutOpenSourceTitle">Pūtake Tuwhera me ngā Raihana</string>
+    <string name="aboutOpenSourceSubtitle">Tirohia te waehere pūtake me ngā raihana pūtake tuwhera.</string>
     <string name="assignmentRefreshError">He raru ki te uta ano i tenei taumahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
     <string name="instructure_logo">Tohu Instructure</string>
     <string name="preferences">Ngā manakohanga</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Wehewehe e</string>
     <string name="gradesEmptyTitle">Kaore ngā whakataunga</string>
     <string name="gradesEmptyMessage">Te ahua nei kaore ano kia hanga taumahi ki tenei waahi.</string>
+    <string name="gradesEmptyMessageForPeriod">Kāore he mahi i roto i %s.</string>
+    <string name="gradesCommentsContentDescription">%d ngā kōrero</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ngā kōrero kāore anō kia pānuihia</string>
     <string name="noMatchingAssignments">Kāore he Taumahi e ōrite ana</string>
     <string name="noMatchingAssignmentsDescription">Kāore he taumahi e ōrite ana ki tāu rapunga. Whakamātauria tētahi atu kupu rapu.</string>
     <string name="errorLoadingGrades">Kei te raru matou ki te uta i nga tohu a to tauira. Tena koa ngana ki te uta ano i te wharangi, tirohia ranei a muri ake nei.</string>

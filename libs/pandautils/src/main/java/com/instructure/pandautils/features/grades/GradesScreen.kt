@@ -28,6 +28,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,6 +40,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
@@ -49,6 +52,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -65,6 +69,9 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
@@ -83,6 +90,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -104,6 +112,7 @@ import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -111,8 +120,21 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowInsetsControllerCompat
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.instui.compose.container.Tray
+import com.instructure.instui.compose.indicator.Icon as InstUIIcon
+import com.instructure.instui.compose.input.TextInput
+import com.instructure.instui.compose.input.TextInputValidation
 import com.instructure.instui.compose.list.SectionHeader
 import com.instructure.instui.compose.list.Separator
+import com.instructure.instui.compose.navigation.TopBar
+import com.instructure.instui.compose.text.Heading
+import com.instructure.instui.compose.text.HeadingLevel
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.arrowLeft
+import com.instructure.instui.token.icon.listFilter
+import com.instructure.instui.token.icon.notebook
+import com.instructure.instui.token.icon.search
+import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -138,12 +160,18 @@ import com.instructure.pandautils.features.grades.gradepreferences.GradePreferen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import com.instructure.instui.compose.text.Text as InstUIText
 import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 
 private val FadeInAnimation = fadeIn(animationSpec = tween(300))
 private val FadeOutAnimation = fadeOut(animationSpec = tween(300))
+
+// Extra pause after the What-If bottom sheet settles open before focusing the input / raising the
+// keyboard, so the keyboard doesn't animate in while the sheet is still visually settling.
+private const val WHAT_IF_KEYBOARD_DELAY_MS = 250L
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -182,6 +210,15 @@ fun GradesScreen(
                 .union(WindowInsets.ime) else WindowInsets(0, 0, 0, 0),
             topBar = {
                 appBarUiState?.let {
+                    if (isInstUI) {
+                        NGCGradesTopBar(
+                            appBar = it,
+                            uiState = uiState,
+                            actionHandler = actionHandler,
+                            canvasContextColor = canvasContextColor,
+                        )
+                        return@let
+                    }
                     CanvasThemedAppBar(
                         title = it.title,
                         subtitle = it.subtitle,
@@ -260,16 +297,25 @@ fun GradesScreen(
             }
 
             uiState.whatIfScoreDialogData?.let { dialogData ->
-                WhatIfScoreDialog(
-                    dialogData = dialogData,
-                    onDismiss = {
-                        actionHandler(GradesAction.HideWhatIfScoreDialog)
-                    },
-                    onConfirm = { score ->
-                        actionHandler(GradesAction.UpdateWhatIfScore(dialogData.assignmentId, score))
-                    },
-                    canvasContextColor = canvasContextColor
-                )
+                val onDismiss = { actionHandler(GradesAction.HideWhatIfScoreDialog) }
+                val onConfirm = { score: Double? ->
+                    actionHandler(GradesAction.UpdateWhatIfScore(dialogData.assignmentId, score))
+                }
+                if (isInstUI) {
+                    WhatIfScoreSheet(
+                        dialogData = dialogData,
+                        onDismiss = onDismiss,
+                        onConfirm = onConfirm,
+                        canvasContextColor = canvasContextColor,
+                    )
+                } else {
+                    WhatIfScoreDialog(
+                        dialogData = dialogData,
+                        onDismiss = onDismiss,
+                        onConfirm = onConfirm,
+                        canvasContextColor = canvasContextColor
+                    )
+                }
             }
 
             val pullRefreshState = rememberPullRefreshState(
@@ -325,6 +371,87 @@ fun GradesScreen(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun NGCGradesTopBar(
+    appBar: AppBarUiState,
+    uiState: GradesUiState,
+    actionHandler: (GradesAction) -> Unit,
+    canvasContextColor: Int,
+) {
+    val contentColor = InstUISemanticColors.Text.onColor()
+    TopBar(
+        title = if (uiState.isLoading) "" else appBar.title,
+        subtitle = if (uiState.isLoading) null else appBar.subtitle,
+        containerColor = Color(color = canvasContextColor),
+        contentColor = contentColor,
+        navigationIcon = {
+            if (!uiState.isSearchExpanded) {
+                ToolbarIcon(
+                    imageVector = InstUIIcons.arrowLeft,
+                    contentDescription = stringResource(id = R.string.back),
+                    tint = contentColor,
+                    onClick = appBar.navigationActionClick,
+                )
+            }
+        },
+        actions = {
+            if (!uiState.isLoading) {
+                if (!uiState.isSearchExpanded) {
+                    appBar.onNotebookClick?.let { onNotebookClick ->
+                        ToolbarIcon(
+                            imageVector = InstUIIcons.notebook,
+                            contentDescription = stringResource(id = R.string.gradesNotebookContentDescription),
+                            tint = contentColor,
+                            onClick = onNotebookClick,
+                        )
+                    }
+                    ToolbarIcon(
+                        imageVector = InstUIIcons.listFilter,
+                        contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
+                        tint = contentColor,
+                        onClick = { actionHandler(GradesAction.ShowGradePreferences) },
+                    )
+                }
+                SearchBarLive(
+                    iconVector = InstUIIcons.search,
+                    tintColor = contentColor,
+                    placeholder = stringResource(R.string.search),
+                    query = uiState.searchQuery,
+                    queryChanged = { actionHandler(GradesAction.SearchQueryChanged(it)) },
+                    expanded = uiState.isSearchExpanded,
+                    onExpand = {
+                        actionHandler(GradesAction.SearchQueryChanged(""))
+                        actionHandler(GradesAction.ToggleSearch)
+                    }
+                )
+            }
+        },
+    )
+}
+
+@Composable
+private fun ToolbarIcon(
+    imageVector: ImageVector,
+    contentDescription: String,
+    tint: Color,
+    onClick: () -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .size(InstUILayoutSizes.Size.Interactive.height_lg)
+            .clip(CircleShape)
+            .clickable(onClick = onClick)
+            .semantics { role = Role.Button },
+        contentAlignment = Alignment.Center
+    ) {
+        InstUIIcon(
+            imageVector = imageVector,
+            tint = tint,
+            contentDescription = contentDescription,
+        )
     }
 }
 
@@ -592,7 +719,15 @@ private fun NGCGradesScreenContent(
         }
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            // Protect content from the display cutout AND the side system navigation bar on
+            // notched/landscape devices. Horizontal only — the top/bottom insets are already
+            // handled by the top bar / scaffold, so including them here would add a gap below
+            // the toolbar. safeDrawing covers both the camera cutout and the nav bar edges.
+            .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+    ) {
         SearchCardTransition(
             uiState = uiState,
             contextColor = contextColor,
@@ -600,9 +735,6 @@ private fun NGCGradesScreenContent(
             actionHandler = actionHandler,
             showActionsOnCard = showActionsOnCard
         )
-        if (uiState.gradePreferencesUiState.gradingPeriods.isNotEmpty()) {
-            NGCGradingPeriodRow(uiState)
-        }
 
         LazyColumn(
             state = lazyListState,
@@ -611,6 +743,12 @@ private fun NGCGradesScreenContent(
                 .imePadding(),
             contentPadding = scaffoldPadding
         ) {
+            if (uiState.gradePreferencesUiState.gradingPeriods.isNotEmpty()) {
+                item {
+                    NGCGradingPeriodRow(uiState)
+                }
+            }
+
             item {
                 GradesToggleRow(
                     label = stringResource(id = R.string.gradesBasedOnGraded),
@@ -656,14 +794,16 @@ private fun NGCGradesScreenContent(
             }
 
             uiState.items.forEach { item ->
-                stickyHeader {
+                // Stable key so the header survives item-count changes on expand/collapse; without
+                // it Compose recreates the header and the chevron's animateFloatAsState rotation
+                // snaps instead of animating (the legacy list keys its header for the same reason).
+                stickyHeader(key = "groupHeader_${item.id}") {
                     SectionHeader(
                         label = item.name,
                         expanded = item.expanded,
                         onClick = {
                             actionHandler(GradesAction.GroupHeaderClick(item.id))
                         },
-                        trailing = item.gradeText,
                     )
                 }
 
@@ -983,6 +1123,242 @@ private fun GradesEmptyContent(
     )
 }
 
+private val whatIfScoreInputRegex = Regex("^\\d*\\.?\\d{0,2}$")
+
+/**
+ * Result of validating a What-If score input change against [whatIfScoreInputRegex] and the
+ * assignment's max score. Returns null when [text] fails the input mask, signalling the caller to
+ * ignore the change and keep the previous field value.
+ */
+internal data class WhatIfScoreInputResult(
+    val text: String,
+    val score: Double?,
+    val isOverMax: Boolean,
+)
+
+/**
+ * Shared What-If input validation logic used by both the InstUI sheet and the Academic dialog, so
+ * the two design-system-specific wrappers apply identical rules while rendering with their own widgets.
+ */
+internal fun validateWhatIfScoreInput(newValue: String, maxScore: Double?): WhatIfScoreInputResult? {
+    if (newValue.isNotEmpty() && !newValue.matches(whatIfScoreInputRegex)) return null
+    val score = newValue.toDoubleOrNull()
+    val isOverMax = score != null && maxScore != null && score > maxScore
+    return WhatIfScoreInputResult(newValue, score, isOverMax)
+}
+
+/**
+ * InstUI What-If score input body (current-score line + validated field + over-max warning).
+ * Uses InstUI text/color/spacing tokens; only the course-colored accents stay app-specific.
+ */
+@Composable
+private fun InstUIWhatIfScoreInput(
+    dialogData: WhatIfScoreDialogData,
+    focusRequester: FocusRequester,
+    onScoreChange: (Double?) -> Unit,
+) {
+    var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
+    var isOverMax by remember { mutableStateOf(false) }
+
+    if (dialogData.currentScoreText.isNotEmpty()) {
+        InstUIText(
+            text = dialogData.currentScoreText,
+            style = InstUITextTokens.contentSmall,
+            color = InstUISemanticColors.Text.muted(),
+            modifier = Modifier.padding(bottom = InstUILayoutSizes.Spacing.SpaceLg.spaceLg),
+        )
+    }
+    // Reuse the shared InstUI TextInput (same component the URL submission uses); the over-max
+    // case surfaces through its Error validation (message + red border) rather than a separate line.
+    TextInput(
+        value = whatIfScoreText,
+        onValueChange = { newValue ->
+            validateWhatIfScoreInput(newValue, dialogData.maxScore)?.let { result ->
+                whatIfScoreText = result.text
+                isOverMax = result.isOverMax
+                onScoreChange(result.score)
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .testTag("whatIfScoreInput"),
+        label = stringResource(id = R.string.whatIfScoreLabel),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        validation = if (isOverMax) {
+            TextInputValidation.Error(stringResource(id = R.string.whatIfScoreExceedsMaximumWarning))
+        } else {
+            TextInputValidation.None
+        },
+    )
+}
+
+/**
+ * Academic What-If score input body (current-score line + validated field + over-max warning).
+ * Keeps the legacy resource-based colors/icon; the Academic look is unchanged by the InstUI split.
+ */
+@Composable
+private fun AcademicWhatIfScoreInput(
+    dialogData: WhatIfScoreDialogData,
+    canvasContextColor: Int,
+    onScoreChange: (Double?) -> Unit,
+) {
+    var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
+    var isOverMax by remember { mutableStateOf(false) }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        awaitFrame()
+        focusRequester.requestFocus()
+    }
+
+    if (dialogData.currentScoreText.isNotEmpty()) {
+        Text(
+            text = dialogData.currentScoreText,
+            color = colorResource(id = R.color.textDark),
+            fontSize = 14.sp,
+            modifier = Modifier.padding(bottom = 16.dp),
+        )
+    }
+    OutlinedTextField(
+        value = whatIfScoreText,
+        onValueChange = { newValue ->
+            validateWhatIfScoreInput(newValue, dialogData.maxScore)?.let { result ->
+                whatIfScoreText = result.text
+                isOverMax = result.isOverMax
+                onScoreChange(result.score)
+            }
+        },
+        label = {
+            Text(
+                text = stringResource(id = R.string.whatIfScoreLabel),
+                color = colorResource(id = R.color.textDark),
+            )
+        },
+        trailingIcon = {
+            if (whatIfScoreText.isNotEmpty()) {
+                IconButton(
+                    onClick = {
+                        whatIfScoreText = ""
+                        isOverMax = false
+                        onScoreChange(null)
+                    },
+                    modifier = Modifier.testTag("clearWhatIfScoreButton"),
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_reply),
+                        contentDescription = stringResource(id = R.string.clearWhatIfScore),
+                        tint = colorResource(id = R.color.textDark),
+                    )
+                }
+            }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        singleLine = true,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = colorResource(id = R.color.textDarkest),
+            focusedBorderColor = Color(canvasContextColor),
+            unfocusedBorderColor = colorResource(id = R.color.borderMedium),
+            cursorColor = Color(canvasContextColor),
+            focusedLabelColor = Color(canvasContextColor),
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+            .testTag("whatIfScoreInput"),
+    )
+    if (isOverMax) {
+        Text(
+            text = stringResource(id = R.string.whatIfScoreExceedsMaximumWarning),
+            color = colorResource(id = R.color.textWarning),
+            fontSize = 12.sp,
+            modifier = Modifier
+                .padding(top = 4.dp)
+                .testTag("whatIfScoreWarning"),
+        )
+    }
+}
+
+/**
+ * InstUI What-If wrapper: an InstUI [Tray] hosting [InstUIWhatIfScoreInput] and InstUI text/tokens.
+ * Replaces the previous raw `ModalBottomSheet`-based sheet.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WhatIfScoreSheet(
+    dialogData: WhatIfScoreDialogData,
+    onDismiss: () -> Unit,
+    onConfirm: (Double?) -> Unit,
+    canvasContextColor: Int
+) {
+    var score by remember { mutableStateOf(dialogData.whatIfScore) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val focusRequester = remember { FocusRequester() }
+
+    // Only focus (and raise the keyboard for) the input once the tray has fully settled open,
+    // instead of immediately on composition — avoids the keyboard racing the sheet's slide-up
+    // animation. Wait for the settled Expanded state, then hold an extra beat so the sheet is
+    // visibly at rest before the keyboard animates in.
+    LaunchedEffect(Unit) {
+        snapshotFlow { sheetState.currentValue }.first { it == SheetValue.Expanded }
+        delay(WHAT_IF_KEYBOARD_DELAY_MS)
+        focusRequester.requestFocus()
+    }
+
+    Tray(
+        onDismiss = onDismiss,
+        sheetState = sheetState,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                // Protect content from the display cutout and side nav bar on notched/landscape devices.
+                .windowInsetsPadding(WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal))
+                .verticalScroll(rememberScrollState())
+                // Keep the Cancel/Done row clear of the keyboard in landscape.
+                .imePadding()
+                .padding(horizontal = InstUILayoutSizes.Spacing.SpaceXl.spaceXl)
+                .padding(bottom = InstUILayoutSizes.Spacing.Space2xl.space2xl),
+        ) {
+            Heading(
+                text = dialogData.assignmentName,
+                level = HeadingLevel.H3,
+                modifier = Modifier
+                    .padding(bottom = InstUILayoutSizes.Spacing.SpaceSm.spaceSm)
+                    .testTag("whatIfSheetAssignmentName"),
+            )
+            InstUIWhatIfScoreInput(
+                dialogData = dialogData,
+                focusRequester = focusRequester,
+                onScoreChange = { score = it },
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = InstUILayoutSizes.Spacing.SpaceLg.spaceLg),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.testTag("cancelButton"),
+                ) {
+                    InstUIText(text = stringResource(id = R.string.cancel), color = Color(canvasContextColor))
+                }
+                TextButton(
+                    onClick = { onConfirm(score) },
+                    modifier = Modifier.testTag("doneButton"),
+                ) {
+                    InstUIText(text = stringResource(id = R.string.done), color = Color(canvasContextColor))
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Academic What-If wrapper: keeps the legacy `AlertDialog` + resource colors, unchanged in look.
+ */
 @Composable
 private fun WhatIfScoreDialog(
     dialogData: WhatIfScoreDialogData,
@@ -990,15 +1366,7 @@ private fun WhatIfScoreDialog(
     onConfirm: (Double?) -> Unit,
     canvasContextColor: Int
 ) {
-    var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
-    var warningMessage by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current
-    val focusRequester = remember { FocusRequester() }
-
-    LaunchedEffect(Unit) {
-        awaitFrame()
-        focusRequester.requestFocus()
-    }
+    var score by remember { mutableStateOf(dialogData.whatIfScore) }
 
     AlertDialog(
         title = {
@@ -1009,82 +1377,17 @@ private fun WhatIfScoreDialog(
         },
         text = {
             Column {
-                if (dialogData.currentScoreText.isNotEmpty()) {
-                    Text(
-                        text = dialogData.currentScoreText,
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                }
-                OutlinedTextField(
-                    value = whatIfScoreText,
-                    onValueChange = {
-                        val newValue = it
-                        if (newValue.isEmpty() || newValue.matches(Regex("^\\d*\\.?\\d{0,2}$"))) {
-                            whatIfScoreText = newValue
-                            val score = newValue.toDoubleOrNull()
-                            warningMessage = if (score != null && dialogData.maxScore != null && score > dialogData.maxScore) {
-                                context.getString(R.string.whatIfScoreExceedsMaximumWarning)
-                            } else {
-                                null
-                            }
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.whatIfScoreLabel),
-                            color = colorResource(id = R.color.textDark)
-                        )
-                    },
-                    trailingIcon = {
-                        if (whatIfScoreText.isNotEmpty()) {
-                            IconButton(
-                                onClick = {
-                                    whatIfScoreText = ""
-                                    warningMessage = null
-                                },
-                                modifier = Modifier.testTag("clearWhatIfScoreButton")
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_reply),
-                                    contentDescription = stringResource(id = R.string.clearWhatIfScore),
-                                    tint = colorResource(id = R.color.textDark)
-                                )
-                            }
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                    singleLine = true,
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = colorResource(id = R.color.textDarkest),
-                        focusedBorderColor = Color(canvasContextColor),
-                        unfocusedBorderColor = colorResource(id = R.color.borderMedium),
-                        cursorColor = Color(canvasContextColor),
-                        focusedLabelColor = Color(canvasContextColor)
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .testTag("whatIfScoreInput")
+                AcademicWhatIfScoreInput(
+                    dialogData = dialogData,
+                    canvasContextColor = canvasContextColor,
+                    onScoreChange = { score = it },
                 )
-                warningMessage?.let { warning ->
-                    Text(
-                        text = warning,
-                        color = colorResource(id = R.color.textWarning),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
-                }
             }
         },
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
-                onClick = {
-                    val score = whatIfScoreText.toDoubleOrNull()
-                    onConfirm(score)
-                },
+                onClick = { onConfirm(score) },
                 modifier = Modifier.testTag("doneButton")
             ) {
                 Text(

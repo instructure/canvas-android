@@ -28,6 +28,7 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.getDaysLate
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.postSticky
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -231,12 +232,6 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun onPercentageChanged(percentage: Float?) {
         val score = percentage?.let { (it / 100) * (_uiState.value.pointsPossible ?: 0.0) }
         onScoreChanged(score?.toFloat())
-    }
-
-    private fun getDaysLate(secondsLate: Double?): Float? {
-        return secondsLate?.let {
-            (it / (60 * 60 * 24)).toFloat()
-        }
     }
 
     private fun onExcuse() {

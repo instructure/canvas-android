@@ -27,6 +27,10 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.notification.HorizonSubmissionNotificationScheduler
+import com.instructure.horizon.offline.HorizonOfflineState
+import com.instructure.horizon.offline.HorizonPendingFileStaging
+import com.instructure.horizon.offline.InlineRceMedia
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
@@ -42,6 +46,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Date
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,7 +56,10 @@ class AddSubmissionViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val createSubmissionDao: CreateSubmissionDao,
     private val createFileSubmissionDao: CreateFileSubmissionDao,
-    private val fileUploadUtilsHelper: FileUploadUtilsHelper
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper,
+    private val horizonOfflineState: HorizonOfflineState,
+    private val pendingFileStaging: HorizonPendingFileStaging,
+    private val notificationScheduler: HorizonSubmissionNotificationScheduler
 ) : ViewModel() {
 
     private var files: MutableList<FileSubmitObject> = mutableListOf()
@@ -61,12 +69,15 @@ class AddSubmissionViewModel @Inject constructor(
     private var courseId: Long = -1L
     private var assignment: Assignment? = null
 
+    private var textContentResetKey = 0
+
     private val _uiState =
         MutableStateFlow(
             AddSubmissionUiState(
                 onSubmissionTypeSelected = ::submissionTypeSelected,
                 onSubmissionButtonClicked = ::showSubmissionConfirmation,
                 onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
+                onDismissOfflineSubmissionWarning = ::offlineSubmissionWarningDismissed,
                 onSubmitAssignment = ::sendSubmission,
                 onAssignmentUpdated = ::updateAssignment
             )
@@ -89,13 +100,11 @@ class AddSubmissionViewModel @Inject constructor(
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 if (it != Assignment.SubmissionType.ONLINE_UPLOAD && it != Assignment.SubmissionType.ONLINE_TEXT_ENTRY) return@mapNotNull null
 
-                val draft = withContext(Dispatchers.IO) {
-                    createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
-                        assignmentId,
-                        apiPrefs.user?.id.orDefault(),
-                        it.apiString
-                    )
-                }
+                val draft = createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
+                    assignmentId,
+                    apiPrefs.user?.id.orDefault(),
+                    it.apiString
+                )
 
                 val draftDate = getDraftDateString(draft?.lastActivityDate)
                 val draftUiState = DraftUiState(
@@ -107,7 +116,15 @@ class AddSubmissionViewModel @Inject constructor(
 
                 if (it == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
                     val text = draft?.submissionEntry.orEmpty()
-                    AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
+                    cleanUpInlineImageOrphans()
+                    AddSubmissionTypeUiState.Text(
+                        text = text,
+                        onTextChanged = ::onTextSubmissionChanged,
+                        draftUiState = draftUiState,
+                        submitEnabled = text.isNotEmpty(),
+                        onStageImage = ::stageOfflineImage,
+                        contentResetKey = ++textContentResetKey
+                    )
                 } else {
                     val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
                     this@AddSubmissionViewModel.files = files.map { file ->
@@ -176,6 +193,7 @@ class AddSubmissionViewModel @Inject constructor(
             updateShowDeleteDraftConfirmation(submissionType, false)
             if (submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
                 onTextSubmissionChanged("")
+                resetTextContent()
             } else if (submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
                 deleteAllFiles()
             }
@@ -209,10 +227,18 @@ class AddSubmissionViewModel @Inject constructor(
     }
 
     private fun showSubmissionConfirmation() {
-        _uiState.update {
-            it.copy(
-                showSubmissionConfirmation = true
-            )
+        if (horizonOfflineState.isOffline.value) {
+            _uiState.update {
+                it.copy(
+                    showOfflineSubmissionWarning = true
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    showSubmissionConfirmation = true
+                )
+            }
         }
     }
 
@@ -224,16 +250,26 @@ class AddSubmissionViewModel @Inject constructor(
         }
     }
 
+    private fun offlineSubmissionWarningDismissed() {
+        _uiState.update {
+            it.copy(
+                showOfflineSubmissionWarning = false
+            )
+        }
+    }
+
     private fun sendSubmission() {
         _uiState.update {
             it.copy(
                 showSubmissionConfirmation = false,
+                showOfflineSubmissionWarning = false,
                 errorMessage = null
             )
         }
         val selectedSubmissionType =
             uiState.value.submissionTypes[uiState.value.selectedSubmissionTypeIndex]
-        if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
+        val wasOffline = horizonOfflineState.isOffline.value
+        val submissionId = if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
             submissionHelper.startTextSubmission(
                 canvasContext = CanvasContext.emptyCourseContext(id = courseId),
                 assignmentId = assignmentId,
@@ -249,6 +285,12 @@ class AddSubmissionViewModel @Inject constructor(
                 files = ArrayList(files),
                 deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_UPLOAD
             )
+        } else null
+
+        if (wasOffline && submissionId != null && submissionId != -1L) {
+            viewModelScope.launch {
+                notificationScheduler.onOfflineSubmissionQueued(submissionId, assignment)
+            }
         }
 
         viewModelScope.launch {
@@ -333,10 +375,22 @@ class AddSubmissionViewModel @Inject constructor(
                         apiPrefs.user?.id.orDefault(),
                         Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
                     )
+                    cleanUpInlineImageOrphans()
                     updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
                     updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, false)
                 }
             }
+        }
+    }
+
+    private fun resetTextContent() {
+        textContentResetKey++
+        _uiState.update { state ->
+            state.copy(
+                submissionTypes = state.submissionTypes.map {
+                    if (it is AddSubmissionTypeUiState.Text) it.copy(contentResetKey = textContentResetKey) else it
+                }
+            )
         }
     }
 
@@ -492,6 +546,32 @@ class AddSubmissionViewModel @Inject constructor(
         }
 
         updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_UPLOAD, false)
+    }
+
+    private fun inlineStagingKey(): String = "${apiPrefs.user?.id.orDefault()}_$assignmentId"
+
+    private suspend fun stageOfflineImage(uri: Uri): String? {
+        if (!horizonOfflineState.isOffline.value) return null
+        val pendingId = UUID.randomUUID().toString()
+        val extension = fileUploadUtilsHelper.getFileExtension(uri).ifBlank { "jpg" }
+        val staged = withContext(Dispatchers.IO) {
+            pendingFileStaging.stageInline(inlineStagingKey(), uri, "$pendingId.$extension")
+        }
+        return "file://${staged.absolutePath}"
+    }
+
+    private suspend fun cleanUpInlineImageOrphans() {
+        val submissions = withContext(Dispatchers.IO) {
+            createSubmissionDao.findSubmissionsByAssignmentIdAndType(
+                assignmentId,
+                apiPrefs.user?.id.orDefault(),
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+            )
+        }
+        val hasPending = submissions.any { InlineRceMedia.findLocalImageSrcs(it.submissionEntry).isNotEmpty() }
+        if (!hasPending) {
+            pendingFileStaging.deleteInline(inlineStagingKey())
+        }
     }
 
     private fun getUriContents(fileUri: Uri): FileSubmitObject? {

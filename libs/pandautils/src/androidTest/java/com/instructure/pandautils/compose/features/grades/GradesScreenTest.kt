@@ -22,25 +22,35 @@ import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.composetest.hasDrawable
+import com.instructure.instui.compose.InstUITheme
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
+import com.instructure.pandautils.designsystem.DesignSystem
+import com.instructure.pandautils.designsystem.LocalDesignSystem
 import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
+import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesUiState
+import com.instructure.pandautils.features.grades.WhatIfScoreDialogData
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.utils.DisplayGrade
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -657,5 +667,74 @@ class GradesScreenTest {
             .assertIsNotDisplayed()
         composeTestRule.onNodeWithTag("searchField")
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertInstUIWhatIfSheetShownAndDoneFiresUpdate() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            WhatIfSheetContent(actionHandler = { action = it })
+        }
+
+        composeTestRule.onNodeWithTag("whatIfSheetAssignmentName", useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Essay Assignment", useUnmergedTree = true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag("whatIfScoreInput", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("doneButton", useUnmergedTree = true)
+            .performClick()
+
+        assertEquals(GradesAction.UpdateWhatIfScore(1L, null), action)
+    }
+
+    @Test
+    fun assertInstUIWhatIfSheetCancelDismisses() {
+        var action: GradesAction? = null
+        composeTestRule.setContent {
+            WhatIfSheetContent(actionHandler = { action = it })
+        }
+
+        composeTestRule.onNodeWithTag("cancelButton", useUnmergedTree = true)
+            .performClick()
+
+        assertEquals(GradesAction.HideWhatIfScoreDialog, action)
+    }
+
+    @Test
+    fun assertInstUIWhatIfSheetShowsOverMaxWarning() {
+        composeTestRule.setContent {
+            WhatIfSheetContent(actionHandler = {})
+        }
+
+        composeTestRule.onNode(
+            hasSetTextAction() and hasAnyAncestor(hasTestTag("whatIfScoreInput")),
+            useUnmergedTree = true,
+        ).performTextInput("150")
+        composeTestRule.onNodeWithText("Score exceeds maximum points", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @androidx.compose.runtime.Composable
+    private fun WhatIfSheetContent(actionHandler: (GradesAction) -> Unit) {
+        InstUITheme(courseColor = androidx.compose.ui.graphics.Color.Blue) {
+            CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+                GradesScreen(
+                    uiState = GradesUiState(
+                        isLoading = false,
+                        whatIfScoreDialogData = WhatIfScoreDialogData(
+                            assignmentId = 1L,
+                            assignmentName = "Essay Assignment",
+                            currentScoreText = "Score 85 out of 100",
+                            whatIfScore = null,
+                            maxScore = 100.0,
+                        ),
+                    ),
+                    actionHandler = actionHandler,
+                    canvasContextColor = Color.RED,
+                )
+            }
+        }
     }
 }

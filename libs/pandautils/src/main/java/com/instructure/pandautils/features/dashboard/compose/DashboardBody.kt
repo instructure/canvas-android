@@ -56,6 +56,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -180,8 +181,12 @@ private fun WidgetList(
             )
         }
 
+        val customizeDashboardClick = rememberWithRequireNetwork {
+            navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard)
+        }
+
         CustomizeDashboardButton(
-            onClick = { navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard) },
+            onClick = customizeDashboardClick,
             color = Color(color.color()),
             modifier = Modifier
                 .fillMaxWidth()

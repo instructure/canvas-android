@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Zeitbeschränkung: %s</string>
     <string name="allowedAttempts">Erlaubte Versuche: %s</string>
     <string name="usedAttempts">Verwendete Versuche: %d</string>
+    <string name="assignmentAttemptsUnlimited">Unbegrenzte Versuche</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d von %2$d Versuchen</string>
     <string name="generalUnexpectedError">Es ist ein unerwarteter Fehler aufgetreten.</string>
 
     <string name="deleteSelected">Löschen</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Anmelde-ID</string>
     <string name="aboutEmailTitle">E-Mail</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="aboutOpenSourceTitle">Open Source und Lizenzen</string>
+    <string name="aboutOpenSourceSubtitle">Sehen Sie sich den Quellcode und die Open-Source-Lizenzen an.</string>
     <string name="assignmentRefreshError">Beim erneuten Laden der Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
     <string name="instructure_logo">Instructure-Logo</string>
     <string name="preferences">Präferenzen</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Sortieren nach</string>
     <string name="gradesEmptyTitle">Keine Aufgaben</string>
     <string name="gradesEmptyMessage">Es sieht so aus, als wären in diesem Bereich noch keine Aufgaben erstellt worden.</string>
+    <string name="gradesEmptyMessageForPeriod">Es gibt keine Aufgaben in %s.</string>
+    <string name="gradesCommentsContentDescription">%d Kommentare</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ungelesene Kommentare</string>
     <string name="noMatchingAssignments">Keine übereinstimmenden Aufgaben</string>
     <string name="noMatchingAssignmentsDescription">Es gibt keine Aufgaben, die mit Ihrer Suche übereinstimmen. Versuchen Sie einen anderen Suchbegriff.</string>
     <string name="errorLoadingGrades">Wir haben Probleme beim Laden der Noten Ihrer Studierenden. Bitte versuchen Sie, die Seite neu zu laden oder versuchen Sie es später noch einmal.</string>

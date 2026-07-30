@@ -73,6 +73,8 @@ fun ComposeRCE(
     rceDialogThemeColor: Int = ThemePrefs.brandColor,
     rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
     fileUploadRestParams: RestParams = RestParams(),
+    enableLocalImagePreview: Boolean = false,
+    resolveImageUrl: ((uri: Uri, onResolved: (String) -> Unit) -> Unit)? = null,
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -82,6 +84,7 @@ fun ComposeRCE(
 
     val context = LocalContext.current
     var rceTextEditor = RCETextEditor(context).apply {
+        setLocalImagePreviewEnabled(enableLocalImagePreview)
         if (fixedHeightInDp != null) {
             setEditorHeight(fixedHeightInDp.dp.value.toInt().toPx)
         } else {
@@ -120,21 +123,21 @@ fun ComposeRCE(
                     const container = range.endContainer;
                     const offset = range.endOffset;
                     const editorDiv = document.getElementById('editor'); // Your contenteditable div
-            
+
                     // Create a temporary span to get the position
                     const tempSpan = document.createElement('span');
-                    tempSpan.textContent = '\u200b'; // Zero-width space character
+                    tempSpan.textContent = '​'; // Zero-width space character
                     tempSpan.style.whiteSpace = 'pre'; // Ensure space is preserved
                     tempSpan.style.lineHeight = '0'; // Don't affect line height by this span
                     tempSpan.style.fontSize = '0'; // Make it invisible visually
-            
+
                     // Insert the temporary span at the caret position
                     range.insertNode(tempSpan);
-            
+
                     // Get its position
                     const spanRect = tempSpan.getBoundingClientRect();
                     y = spanRect.y;
-            
+
                     // Clean up: remove the temporary span and restore the selection
                     tempSpan.parentNode.removeChild(tempSpan);
                 }
@@ -162,51 +165,40 @@ fun ComposeRCE(
         }
     }
 
+    val handlePickedImage: (Uri) -> Unit = { pickedUri ->
+        val onResolved: (String) -> Unit = { imageUrl ->
+            MediaUploadUtils.showAltTextDialog(
+                context.getFragmentActivity(),
+                buttonColor = rceDialogButtonColor,
+                onPositiveClick = { altText ->
+                    rceTextEditor.insertImage(imageUrl, altText)
+                },
+                onNegativeClick = {
+                    rceTextEditor.insertImage(imageUrl, "")
+                })
+        }
+        if (resolveImageUrl != null) {
+            resolveImageUrl(pickedUri, onResolved)
+        } else {
+            MediaUploadUtils.uploadRceImageJob(
+                pickedUri,
+                canvasContext,
+                context.getFragmentActivity(),
+                rceDialogButtonColor,
+                fileUploadRestParams
+            ) { imageUrl -> onResolved(imageUrl) }
+        }
+    }
+
     val imagePickerLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
-            it?.let { imageUri ->
-                MediaUploadUtils.uploadRceImageJob(
-                    imageUri,
-                    canvasContext,
-                    context.getFragmentActivity(),
-                    rceDialogButtonColor,
-                    fileUploadRestParams
-                ) { imageUrl ->
-                    MediaUploadUtils.showAltTextDialog(
-                        context.getFragmentActivity(),
-                        buttonColor = rceDialogButtonColor,
-                        onPositiveClick = { altText ->
-                            rceTextEditor.insertImage(imageUrl, altText)
-                        },
-                        onNegativeClick = {
-                            rceTextEditor.insertImage(imageUrl, "")
-                        })
-                }
-            }
+            it?.let { imageUri -> handlePickedImage(imageUri) }
         }
 
     val photoLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicture()) { success ->
             if (success) {
-                imageUri?.let { imageUri ->
-                    MediaUploadUtils.uploadRceImageJob(
-                        imageUri,
-                        canvasContext,
-                        context.getFragmentActivity(),
-                        rceDialogButtonColor,
-                        fileUploadRestParams
-                    ) { imageUrl ->
-                        MediaUploadUtils.showAltTextDialog(
-                            context.getFragmentActivity(),
-                            buttonColor = rceDialogButtonColor,
-                            onPositiveClick = { altText ->
-                                rceTextEditor.insertImage(imageUrl, altText)
-                            },
-                            onNegativeClick = {
-                                rceTextEditor.insertImage(imageUrl, "")
-                            })
-                    }
-                }
+                imageUri?.let { imageUri -> handlePickedImage(imageUri) }
             }
         }
 

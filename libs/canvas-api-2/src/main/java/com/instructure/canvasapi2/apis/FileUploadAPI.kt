@@ -59,12 +59,12 @@ internal object FileUploadAPI {
     }
 
     @Suppress("LiftReturnOrAssignment")
-    fun getUploadParams(config: FileUploadConfig): DataResult<FileUploadParams> {
+    fun getUploadParams(config: FileUploadConfig, restParams: RestParams = RestParams()): DataResult<FileUploadParams> {
         val response: Response<FileUploadParams>?
         try {
             val renameStrategy = if (config.renameOnDuplicate) "rename" else "overwrite"
             response = RestBuilder()
-                .build(FileUploadInterface::class.java, RestParams())
+                .build(FileUploadInterface::class.java, restParams)
                 .getUploadParams(
                     config.uploadContext,
                     config.fileName,

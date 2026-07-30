@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Tidsgräns: %s</string>
     <string name="allowedAttempts">Tillåtna försök: %s</string>
     <string name="usedAttempts">Genomförda försök: %d</string>
+    <string name="assignmentAttemptsUnlimited">Obegränsat antal försök</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d av %2$d försök</string>
     <string name="generalUnexpectedError">Ett oväntat fel uppstod.</string>
 
     <string name="deleteSelected">Radera</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Inloggnings-ID</string>
     <string name="aboutEmailTitle">E-post</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="aboutOpenSourceTitle">Öppen källa och licenser</string>
+    <string name="aboutOpenSourceSubtitle">Visa källkoden och licenser för öppen källa</string>
     <string name="assignmentRefreshError">Det uppstod ett problem när den här uppgiften skulle laddas om. Kontrollera din anslutning och försök igen.</string>
     <string name="instructure_logo">Instructure-logotyp</string>
     <string name="preferences">Inställningar</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Sortera efter</string>
     <string name="gradesEmptyTitle">Inga uppgifter</string>
     <string name="gradesEmptyMessage">Det verkar som om inga uppgifter har skapats i det här utrymmet än.</string>
+    <string name="gradesEmptyMessageForPeriod">Det finns inga uppgifter i %s.</string>
+    <string name="gradesCommentsContentDescription">%d kommentarer</string>
+    <string name="gradesUnreadCommentsContentDescription">%d olästa kommentarer</string>
     <string name="noMatchingAssignments">Inga matchande uppgifter</string>
     <string name="noMatchingAssignmentsDescription">Inga uppgifter matchar din sökning. Prova en annan sökterm.</string>
     <string name="errorLoadingGrades">Vi har problem med att läsa in din students omdömen. Försök läsa in sidan igen eller försök igen senare.</string>

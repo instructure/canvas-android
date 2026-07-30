@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Pekerjaan Saya</string>
     <string name="ngc_courseHomeTabMore">Lainnya</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Tersedia hingga</string>
+    <string name="ngc_quizSettings">Pengaturan kuis</string>
+    <string name="ngc_submission">Penyerahan</string>
+    <string name="ngc_continueDraft">Lanjutkan rancangan</string>
+    <string name="ngc_assignmentReminder">Pengingat Tugas</string>
+    <string name="ngc_classPerformance">Kinerja Kelas</string>
+    <string name="ngc_newAttempt">Upaya baru</string>
+    <string name="ngc_submitAssignment">Serahkan tugas</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Jenis file yang diizinkan</string>
+    <string name="ngc_noDueDate">Tanpa batas waktu</string>
+    <string name="ngc_noAssignmentDescription">Tidak ada deskripsi tugas</string>
+    <string name="ngc_retry">Coba lagi</string>
+    <string name="ngc_finalGrade">Filter Nilai</string>
+    <string name="ngc_notYetGraded">Belum dinilai</string>
+    <string name="ngc_uploadingSubmission">Mengunggah penyerahan...</string>
+    <string name="ngc_submissionFailed">Penyerahan gagal</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Nilai Tambahan</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d hari terlambat</item>
+        <item quantity="other">%d hari terlambat</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Terendah: %s</string>
+    <string name="ngc_classPerformanceAverage">Rata-rata: %s</string>
+    <string name="ngc_classPerformanceHighest">Tertinggi: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Info tambahan</string>
+    <string name="ngc_submissionSegmentInstructions">Petunjuk</string>
+    <string name="ngc_submissionSegmentRubric">Rubrik</string>
+    <string name="ngc_submissionSegmentComments">Komentar</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Kelola konten offline</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Sesuaikan dasbor</string>
+    <string name="a11y_submissionSupportingPaneExpand">Perluas info tambahan</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Tutup info tambahan</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Serahkan Tugas</string>
+    <string name="ngc_submission_newSubmission">Penyerahan Baru</string>
+    <string name="ngc_submission_textEntry">Entri Teks</string>
+    <string name="ngc_submission_submit">Serahkan</string>
+    <string name="ngc_submission_deleteDraft">Hapus rancangan</string>
+    <string name="ngc_submission_draftSaved">Disimpan %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Masukkan teks penyerahan Anda di sini</string>
+    <string name="ngc_submission_submissionError">Kesalahan saat menyerahkan tugas</string>
+    <string name="ngc_submission_loadError">Gagal memuat tugas.</string>
+    <string name="ngc_submission_dueDate">Batas %1$s</string>
+    <string name="ngc_submission_retry">Coba lagi</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Hapus rancangan?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Rancangan Anda akan dihapus secara permanen dan tidak dapat dipulihkan.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Hapus</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Batal</string>
+    <string name="ngc_back">Kembali</string>
 </resources>

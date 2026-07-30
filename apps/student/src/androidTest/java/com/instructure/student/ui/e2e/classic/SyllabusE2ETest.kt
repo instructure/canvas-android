@@ -17,13 +17,13 @@
 package com.instructure.student.ui.e2e.classic
 
 import android.util.Log
-import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -70,7 +70,7 @@ class SyllabusE2ETest: StudentTest() {
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ON_PAPER), withDescription = true, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course.")
-        val quiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601)
+        val quiz = ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Refresh the page. Navigate to 'Summary' tab.")
         syllabusPage.refresh()

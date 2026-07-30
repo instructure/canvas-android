@@ -57,6 +57,9 @@ interface HorizonCourseModuleDao {
     @Query("SELECT * FROM horizon_course_module_items WHERE itemId = :itemId LIMIT 1")
     suspend fun getItemById(itemId: Long): HorizonCourseModuleItemEntity?
 
+    @Query("UPDATE horizon_course_module_items SET completionRequirementCompleted = :done WHERE itemId = :itemId")
+    suspend fun updateItemCompletion(itemId: Long, done: Boolean)
+
     @Query("SELECT itemId FROM horizon_course_module_items WHERE contentId = :contentId LIMIT 1")
     suspend fun getItemIdByContentId(contentId: Long): Long?
 

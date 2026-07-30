@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Moje delo</string>
     <string name="ngc_courseHomeTabMore">Več</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Na voljo do</string>
+    <string name="ngc_quizSettings">Nastavitve kviza</string>
+    <string name="ngc_submission">Oddaja</string>
+    <string name="ngc_continueDraft">Nadaljuj urejanje osnutka</string>
+    <string name="ngc_assignmentReminder">Opomnik za nalogo</string>
+    <string name="ngc_classPerformance">Uspešnost razreda</string>
+    <string name="ngc_newAttempt">Nov poskus</string>
+    <string name="ngc_submitAssignment">Oddaj nalogo</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Dovoljene vrste datotek</string>
+    <string name="ngc_noDueDate">Ni roka</string>
+    <string name="ngc_noAssignmentDescription">Ni opisa naloge</string>
+    <string name="ngc_retry">Ponovno poskusi</string>
+    <string name="ngc_finalGrade">Končna ocena</string>
+    <string name="ngc_notYetGraded">Ni še ocenjeno</string>
+    <string name="ngc_uploadingSubmission">Nalaganje oddaje ...</string>
+    <string name="ngc_submissionFailed">Oddaja ni uspela</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Dodatne točke</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dan zamude</item>
+        <item quantity="other">%d dni zamude</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Najnižja: %s</string>
+    <string name="ngc_classPerformanceAverage">Pov.: %s</string>
+    <string name="ngc_classPerformanceHighest">Najvišja: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Dodatne informacije</string>
+    <string name="ngc_submissionSegmentInstructions">Navodila</string>
+    <string name="ngc_submissionSegmentRubric">Ocenjevalni vodnik</string>
+    <string name="ngc_submissionSegmentComments">Komentarji</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Upravljaj vsebino brez povezave</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Prilagodi nadzorno ploščo</string>
+    <string name="a11y_submissionSupportingPaneExpand">Razširi dodatne informacije</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Strni dodatne informacije</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Pošlji nalogo</string>
+    <string name="ngc_submission_newSubmission">Nova oddaja</string>
+    <string name="ngc_submission_textEntry">Vnos besedila</string>
+    <string name="ngc_submission_submit">Oddaj</string>
+    <string name="ngc_submission_deleteDraft">Izbriši osnutek</string>
+    <string name="ngc_submission_draftSaved">Shranjeno %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Tukaj vnesite besedilo za svojo oddajo</string>
+    <string name="ngc_submission_submissionError">Napaka pri oddaji naloge</string>
+    <string name="ngc_submission_loadError">Nalaganje nalog ni uspelo</string>
+    <string name="ngc_submission_dueDate">Rok %1$s</string>
+    <string name="ngc_submission_retry">Ponovno poskusi</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Želite osnutek izbrisati?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Osnutek bo trajno izbrisan in ga ne bo mogoče obnoviti.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Izbriši</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Prekliči</string>
+    <string name="ngc_back">Nazaj</string>
 </resources>

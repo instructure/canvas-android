@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.managers.graphql.horizon
 
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.models.JWTTokenResponse
@@ -23,8 +24,11 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.slot
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.io.encoding.Base64
@@ -98,6 +102,21 @@ class DomainServicesAuthenticationManagerTest {
 
         assertEquals(FAR_FUTURE_JWT_2, manager.getAuthenticationToken(forceRefresh = true))
         assertEquals(FAR_FUTURE_JWT_2, pref.token)
+    }
+
+    @Test
+    fun `token request does not force logout on token error`() = runTest {
+        val params = slot<RestParams>()
+        val freshToken = encodeAsServerWouldReturn(FAR_FUTURE_JWT)
+        coEvery {
+            api.getDomainServiceAuthentication(any(), any(), any<DomainServicesWorkflow>(), capture(params))
+        } returns DataResult.Success(JWTTokenResponse(token = freshToken))
+
+        val manager = newManager(newPref())
+        manager.getAuthenticationToken(forceRefresh = true)
+
+        assertFalse(params.captured.shouldLoginOnTokenError)
+        assertTrue(params.captured.isForceReadFromNetwork)
     }
 
     private class TestAuthenticationManager(

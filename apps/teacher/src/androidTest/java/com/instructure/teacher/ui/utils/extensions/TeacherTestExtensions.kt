@@ -29,12 +29,12 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.RubricsApi
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -184,7 +184,7 @@ fun TeacherTest.seedQuizQuestion(
         quizId: Long,
         teacherToken: String
 ) {
-    QuizzesApi.createQuizQuestion(
+    ClassicQuizzesApi.createQuizQuestion(
             courseId = courseId,
             quizId = quizId,
             teacherToken = teacherToken
@@ -194,7 +194,7 @@ fun TeacherTest.seedQuizQuestion(
 fun TeacherTest.publishQuiz(courseId: Long,
                             quizId: Long,
                             teacherToken: String) {
-    QuizzesApi.publishQuiz(
+    ClassicQuizzesApi.publishQuiz(
             courseId = courseId,
             quizId = quizId,
             teacherToken = teacherToken,
@@ -212,8 +212,8 @@ fun TeacherTest.seedQuizzes(
         published: Boolean = true,
         teacherToken: String): QuizListApiModel {
 
-    return QuizzesApi.seedQuizzes(
-            request = QuizzesApi.CreateQuizRequest(
+    return ClassicQuizzesApi.seedQuizzes(
+            request = ClassicQuizzesApi.CreateQuizRequest(
                     courseId = courseId,
                     withDescription = withDescription,
                     published = published,
@@ -233,8 +233,8 @@ fun TeacherTest.seedQuizSubmission(
         studentToken: String,
         complete: Boolean = true): QuizSubmissionApiModel {
 
-    return QuizzesApi.seedQuizSubmission(
-            request = QuizzesApi.CreateQuizSubmissionRequest(
+    return ClassicQuizzesApi.seedQuizSubmission(
+            request = ClassicQuizzesApi.CreateQuizSubmissionRequest(
                     courseId = courseId,
                     quizId = quizId,
                     studentToken = studentToken

@@ -173,6 +173,7 @@ class BookmarksE2ETest : StudentComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude
     @TestMetaData(Priority.COMMON, FeatureCategory.BOOKMARKS, TestCategory.E2E)
     fun testBookmarkAddToHomeScreenE2E() {
 

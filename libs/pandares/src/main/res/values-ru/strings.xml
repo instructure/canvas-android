@@ -1513,6 +1513,8 @@
     <string name="quizTimeLimit">Ограничение по времени: %s</string>
     <string name="allowedAttempts">Разрешенные попытки: %s</string>
     <string name="usedAttempts">Использовано попыток: %d</string>
+    <string name="assignmentAttemptsUnlimited">Неограниченное число попыток</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d из %2$d попыток</string>
     <string name="generalUnexpectedError">Произошла непредвиденная ошибка.</string>
 
     <string name="deleteSelected">Удалить</string>
@@ -1558,6 +1560,8 @@
     <string name="aboutLoginTitle">Имя пользователя</string>
     <string name="aboutEmailTitle">Адрес электронной почты</string>
     <string name="aboutVersionTitle">Версия</string>
+    <string name="aboutOpenSourceTitle">Открытый исходный код и лицензии</string>
+    <string name="aboutOpenSourceSubtitle">Просмотреть исходный код и лицензии на ПО с открытым исходным кодом.</string>
     <string name="assignmentRefreshError">Возникла проблема с перезагрузкой этого задания. Проверьте подключение и попробуйте еще раз.</string>
     <string name="instructure_logo">Логотип Instructure</string>
     <string name="preferences">Предпочтения</string>
@@ -2022,6 +2026,9 @@
     <string name="gradePreferencesHeaderSortBy">Сортировать по</string>
     <string name="gradesEmptyTitle">Задания отсутствуют</string>
     <string name="gradesEmptyMessage">Похоже, что в этом разделе пока что не было создано ни одного задания.</string>
+    <string name="gradesEmptyMessageForPeriod">Нет заданий в %s.</string>
+    <string name="gradesCommentsContentDescription">%d комментария(-ев)</string>
+    <string name="gradesUnreadCommentsContentDescription">%d непрочитанных комментариев</string>
     <string name="noMatchingAssignments">Нет подходящих заданий</string>
     <string name="noMatchingAssignmentsDescription">Ни одно задание не соответствует вашим критериям поиска. Попробуйте другой поисковый термин.</string>
     <string name="errorLoadingGrades">У нас возникли проблемы с загрузкой оценок вашего учащегося. Попробуйте перезагрузить страницу или проверьте еще раз через некоторое время.</string>

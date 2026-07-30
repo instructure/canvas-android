@@ -28,6 +28,7 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
+import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -275,5 +276,44 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     fun assertAllAssignmentItemCount(expectedCount: Int) {
         composeTestRule.onAllNodesWithTag("assignmentItem")
             .assertCountEquals(expectedCount)
+    }
+
+    fun clickSearchButton() {
+        composeTestRule.onNodeWithTag("searchIcon", useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertSearchFieldIsDisplayed() {
+        composeTestRule.onNodeWithTag("searchField")
+            .assertIsDisplayed()
+    }
+
+    fun typeSearchQuery(query: String) {
+        composeTestRule.onNode(hasSetTextAction() and hasAnyAncestor(hasTestTag("searchField")))
+            .performTextInput(query)
+        composeTestRule.waitForIdle()
+    }
+
+    fun clearSearchQuery() {
+        composeTestRule.onNodeWithContentDescription("Clear query")
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun closeSearchBar() {
+        composeTestRule.onNodeWithContentDescription("Close")
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertSearchButtonIsDisplayed() {
+        composeTestRule.onNodeWithTag("searchIcon", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    fun assertNoMatchingAssignmentsDisplayed() {
+        composeTestRule.onNodeWithText("No Matching Assignments")
+            .assertIsDisplayed()
     }
 }

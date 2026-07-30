@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.ui.pages.classic
 
-
 import androidx.annotation.StringRes
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.ViewInteraction
@@ -83,6 +82,7 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     private val gradedDonutWrapper by OnViewWithId(R.id.gradedWrapper, autoAssert = false)
     private val ungradedDonutWrapper by OnViewWithId(R.id.ungradedWrapper, autoAssert = false)
     private val notSubmittedDonutWrapper by OnViewWithId(R.id.notSubmittedWrapper, autoAssert = false)
+    private val submissionTypesArrowIcon by OnViewWithId(R.id.submissionTypesArrowIcon, autoAssert = false)
 
     /**
      * Assert that the description webview is visible within the content web view.
@@ -302,6 +302,18 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
         gradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(actual, outOf))
     }
 
+    /**
+     * Opens the New Quiz build view by scrolling to the submission type row and clicking its arrow icon.
+     * New Quizzes use an LTI-based builder instead of the native quiz editor.
+     */
+    fun openNewQuizBuildView() {
+        scrollToSubmissionType()
+        submissionTypesArrowIcon.click()
+    }
+
+    /**
+     * Scrolls the Assignment Details page to the submission type section.
+     */
     private fun scrollToSubmissionType() {
         scrollTo(R.id.submissionTypesTextView)
     }

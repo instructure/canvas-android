@@ -533,6 +533,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
                 if (intent.hasExtra(TokenRefresher.TOKEN_REFRESH)) {
                     tokenRefresher.refreshState = TokenRefreshState.Success(accessToken)
+                    tokenRefresher.loggedOut = false
                 }
 
                 // We now need to get the cache user

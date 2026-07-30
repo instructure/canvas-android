@@ -1469,6 +1469,8 @@
     <string name="quizTimeLimit">समय सीमा: %s</string>
     <string name="allowedAttempts">अनुमत प्रयास: %s</string>
     <string name="usedAttempts">उपयोग किए गए प्रयास: %d</string>
+    <string name="assignmentAttemptsUnlimited">असीमित प्रयास</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%2$d में से %1$d प्रयास</string>
     <string name="generalUnexpectedError">एक अप्रत्याशित त्रुटि हुई।</string>
 
     <string name="deleteSelected">मिटाएं</string>
@@ -1512,6 +1514,8 @@
     <string name="aboutLoginTitle">लॉगिन आईडी</string>
     <string name="aboutEmailTitle">ईमेल</string>
     <string name="aboutVersionTitle">संस्करण</string>
+    <string name="aboutOpenSourceTitle">ओपन सोर्स और लाइसेंस</string>
+    <string name="aboutOpenSourceSubtitle">सोर्स कोड और ओपन सोर्स लाइसेंस देखें।</string>
     <string name="assignmentRefreshError">यह असाइनमेंट पुनः लोड करने में समस्या आई थी। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
     <string name="instructure_logo">Instructure लोगो</string>
     <string name="preferences">वरीयताएं</string>
@@ -1960,6 +1964,9 @@
     <string name="gradePreferencesHeaderSortBy">इस के आधार पर क्रमबद्ध करें</string>
     <string name="gradesEmptyTitle">कोई असाइनमेंट नहीं</string>
     <string name="gradesEmptyMessage">लगता है की इस खाली स्थान में अभी तक कोई असाइनमेंट नहीं बनाई गई है।</string>
+    <string name="gradesEmptyMessageForPeriod">%s में कोई असाइनमेंट नहीं है।</string>
+    <string name="gradesCommentsContentDescription">%d टिप्पणियां</string>
+    <string name="gradesUnreadCommentsContentDescription">%d अपठित टिप्पणियां</string>
     <string name="noMatchingAssignments">कोई मेल खाता असाइनमेंट नहीं</string>
     <string name="noMatchingAssignmentsDescription">कोई भी असाइनमेंट आपकी खोज से मेल नहीं खाता। कोई दूसरा खोज शब्द आज़माएं।</string>
     <string name="errorLoadingGrades">हमें आपके छात्र के ग्रेड लोड करने में समस्या हो रही है। कृपया पेज को पुनः लोड करने का प्रयास करें या बाद में जांच करें।</string>
