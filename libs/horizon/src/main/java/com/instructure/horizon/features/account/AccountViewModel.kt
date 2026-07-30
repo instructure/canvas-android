@@ -25,10 +25,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetAccountExperiencesUseCase
+import com.instructure.horizon.domain.usecase.GetAccountHelpLinksUseCase
+import com.instructure.horizon.domain.usecase.GetAccountUserDetailsUseCase
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LogoutHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,12 +45,15 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: AccountRepository,
+    private val getAccountUserDetailsUseCase: GetAccountUserDetailsUseCase,
+    private val getAccountExperiencesUseCase: GetAccountExperiencesUseCase,
+    private val getAccountHelpLinksUseCase: GetAccountHelpLinksUseCase,
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
     private val alarmScheduler: AlarmScheduler,
     private val apiPrefs: ApiPrefs,
-    private val accountEventHandler: AccountEventHandler
+    private val accountEventHandler: AccountEventHandler,
+    private val featureFlagProvider: FeatureFlagProvider,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         AccountUiState(
@@ -62,6 +69,7 @@ class AccountViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var showExperienceSwitcher = false
+    private var showOfflineSettings = false
     private var helpLinks: List<HelpLink> = emptyList()
 
     init {
@@ -124,9 +132,14 @@ class AccountViewModel @Inject constructor(
                 type = AccountItemType.Open(AccountRoute.CalendarFeed),
             ),
             AccountItemState(
+                title = context.getString(R.string.offline_settingsTitle),
+                type = AccountItemType.Open(AccountRoute.OfflineSettings),
+                visible = showOfflineSettings,
+            ),
+            AccountItemState(
                 title = context.getString(R.string.accountAdvancedLabel),
                 type = AccountItemType.Open(AccountRoute.Advanced),
-            )
+            ),
         )
     )
 
@@ -173,12 +186,13 @@ class AccountViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceRefresh: Boolean = false) {
-        val user = repository.getUserDetails(forceRefresh = forceRefresh)
+        val user = getAccountUserDetailsUseCase(forceRefresh)
 
-        val experiences = repository.getExperiences(forceRefresh = forceRefresh)
+        val experiences = getAccountExperiencesUseCase(forceRefresh)
         showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+        showOfflineSettings = featureFlagProvider.offlineEnabled()
 
-        helpLinks = repository.getHelpLinks(forceRefresh = forceRefresh)
+        helpLinks = getAccountHelpLinksUseCase(forceRefresh)
 
         _uiState.update {
             it.copy(

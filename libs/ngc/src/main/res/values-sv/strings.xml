@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Mitt arbete</string>
     <string name="ngc_courseHomeTabMore">Mer</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Tillgänglig till</string>
+    <string name="ngc_quizSettings">Quiz-inställningar</string>
+    <string name="ngc_submission">Inlämning</string>
+    <string name="ngc_continueDraft">Fortsätt med utkastet</string>
+    <string name="ngc_assignmentReminder">Uppgiftspåminnelse</string>
+    <string name="ngc_classPerformance">Klassresultat</string>
+    <string name="ngc_newAttempt">Nytt försök</string>
+    <string name="ngc_submitAssignment">Lämna in uppgift</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Tillåtna filtyper</string>
+    <string name="ngc_noDueDate">Inget inlämningsdatum</string>
+    <string name="ngc_noAssignmentDescription">Ingen uppgiftsbeskrivning</string>
+    <string name="ngc_retry">Försök igen</string>
+    <string name="ngc_finalGrade">Totalt omdöme</string>
+    <string name="ngc_notYetGraded">Inte bedömd än</string>
+    <string name="ngc_uploadingSubmission">Laddar upp inlämning &#8230;</string>
+    <string name="ngc_submissionFailed">Inlämningen misslyckades</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Extra kredit</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dag sen</item>
+        <item quantity="other">%d dagar sen</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Lägsta: %s</string>
+    <string name="ngc_classPerformanceAverage">Genomsnitt: %s</string>
+    <string name="ngc_classPerformanceHighest">Högsta: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Ytterligare information</string>
+    <string name="ngc_submissionSegmentInstructions">Instruktioner</string>
+    <string name="ngc_submissionSegmentRubric">Matris</string>
+    <string name="ngc_submissionSegmentComments">Kommentarer</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">hantera offlineinnehåll</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Anpassa översikt</string>
+    <string name="a11y_submissionSupportingPaneExpand">Visa ytterligare information</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Dölj ytterligare information</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Lämna in uppgift</string>
+    <string name="ngc_submission_newSubmission">Ny inlämning </string>
+    <string name="ngc_submission_textEntry">Textinmatning</string>
+    <string name="ngc_submission_submit">Lämna in</string>
+    <string name="ngc_submission_deleteDraft">Radera utkast</string>
+    <string name="ngc_submission_draftSaved">Sparade %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Ange din inlämningstext här</string>
+    <string name="ngc_submission_submissionError">Fel vid inlämning av uppgift</string>
+    <string name="ngc_submission_loadError">Det gick inte att läsa in uppgiften</string>
+    <string name="ngc_submission_dueDate">Inlämningsdatum %1$s</string>
+    <string name="ngc_submission_retry">Försök igen</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Vill du radera utkastet?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Ditt utkast raderas permanent och kan inte återställas.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Radera</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Avbryt</string>
+    <string name="ngc_back">Tillbaka</string>
 </resources>

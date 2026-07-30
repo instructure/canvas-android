@@ -18,15 +18,18 @@
 
 package com.instructure.dataseeding.soseedy
 
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.CreateQuizQuestionApiModel
 import com.instructure.dataseeding.api.EnrollmentsApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.UserApi
-import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.dataseeding.model.ClassicQuizzesApiModel
 import com.instructure.dataseeding.model.QuizSubmissionApiModel
 import org.hamcrest.CoreMatchers.instanceOf
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThat
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -43,7 +46,7 @@ class QuizzesTest {
 
     @Test
     fun createQuiz() {
-        val quiz = QuizzesApi.createQuiz(
+        val quiz = ClassicQuizzesApi.createQuiz(
                 courseId = course.id,
                 withDescription = true,
                 lockAt = "",
@@ -52,7 +55,7 @@ class QuizzesTest {
                 published = false,
                 token = teacher.token
         )
-        assertThat(quiz, instanceOf(QuizApiModel::class.java))
+        assertThat(quiz, instanceOf(ClassicQuizzesApiModel::class.java))
         assertTrue(quiz.id >= 1)
         assertTrue(quiz.title.isNotEmpty())
         assertFalse(quiz.published)
@@ -60,7 +63,7 @@ class QuizzesTest {
 
     @Test
     fun createQuizQuestion() {
-        val quiz = QuizzesApi.createQuiz(
+        val quiz = ClassicQuizzesApi.createQuiz(
                 courseId = course.id,
                 withDescription = true,
                 lockAt = "",
@@ -69,7 +72,7 @@ class QuizzesTest {
                 published = false,
                 token = teacher.token
         )
-        val question = QuizzesApi.createQuizQuestion(
+        val question = ClassicQuizzesApi.createQuizQuestion(
                 courseId = course.id,
                 quizId = quiz.id,
                 teacherToken = teacher.token
@@ -80,7 +83,7 @@ class QuizzesTest {
 
     @Test
     fun publishQuiz() {
-        var quiz = QuizzesApi.createQuiz(
+        var quiz = ClassicQuizzesApi.createQuiz(
                 courseId = course.id,
                 withDescription = true,
                 lockAt = "",
@@ -90,13 +93,13 @@ class QuizzesTest {
                 token = teacher.token
         )
 
-        quiz = QuizzesApi.publishQuiz(
+        quiz = ClassicQuizzesApi.publishQuiz(
                 courseId = course.id,
                 quizId = quiz.id,
                 teacherToken = teacher.token,
                 published = true
         )
-        assertThat(quiz, instanceOf(QuizApiModel::class.java))
+        assertThat(quiz, instanceOf(ClassicQuizzesApiModel::class.java))
         assertTrue(quiz.id >= 1)
         assertTrue(quiz.title.isNotEmpty())
         assertTrue(quiz.published)
@@ -104,7 +107,7 @@ class QuizzesTest {
 
     @Test
     fun createQuizSubmission() {
-        val quiz = QuizzesApi.createQuiz(
+        val quiz = ClassicQuizzesApi.createQuiz(
                 courseId = course.id,
                 withDescription = true,
                 lockAt = "",
@@ -114,7 +117,7 @@ class QuizzesTest {
                 token = teacher.token
         )
 
-        val submission = QuizzesApi.createQuizSubmission(
+        val submission = ClassicQuizzesApi.createQuizSubmission(
                 courseId = course.id,
                 quizId = quiz.id,
                 studentToken = student.token
@@ -128,7 +131,7 @@ class QuizzesTest {
 
     @Test
     fun completeQuizSubmission() {
-        val quiz = QuizzesApi.createQuiz(
+        val quiz = ClassicQuizzesApi.createQuiz(
                 courseId = course.id,
                 withDescription = true,
                 lockAt = "",
@@ -137,13 +140,13 @@ class QuizzesTest {
                 published = true,
                 token = teacher.token
         )
-        var submission = QuizzesApi.createQuizSubmission(
+        var submission = ClassicQuizzesApi.createQuizSubmission(
                 courseId = course.id,
                 quizId = quiz.id,
                 studentToken = student.token
         ).quizSubmissions[0]
 
-        submission = QuizzesApi.completeQuizSubmission(
+        submission = ClassicQuizzesApi.completeQuizSubmission(
                 courseId = course.id,
                 quizId = quiz.id,
                 submissionId = submission.id,
@@ -160,8 +163,8 @@ class QuizzesTest {
     @Test
     fun seedQuizzes() {
         for (quizCount in 0..2) {
-            val quizzes = QuizzesApi.seedQuizzes(
-                    QuizzesApi.CreateQuizRequest(
+            val quizzes = ClassicQuizzesApi.seedQuizzes(
+                    ClassicQuizzesApi.CreateQuizRequest(
                             courseId = course.id,
                             withDescription = false,
                             published = false,
@@ -175,14 +178,14 @@ class QuizzesTest {
 
     @Test
     fun seedQuizSubmission() {
-        val quiz = QuizzesApi.createQuiz(QuizzesApi.CreateQuizRequest(
+        val quiz = ClassicQuizzesApi.createQuiz(ClassicQuizzesApi.CreateQuizRequest(
                 courseId = course.id,
                 withDescription = true,
                 published = true,
                 token = teacher.token
         ))
-        val incompleteResponse = QuizzesApi.seedQuizSubmission(
-                request = QuizzesApi.CreateQuizSubmissionRequest(
+        val incompleteResponse = ClassicQuizzesApi.seedQuizSubmission(
+                request = ClassicQuizzesApi.CreateQuizSubmissionRequest(
                         courseId = course.id,
                         quizId = quiz.id,
                         studentToken = student.token
@@ -192,7 +195,7 @@ class QuizzesTest {
         assertThat(incompleteResponse, instanceOf(QuizSubmissionApiModel::class.java))
         assertTrue(incompleteResponse.id >= 1)
         assertEquals(1, incompleteResponse.attempt)
-        val submission = QuizzesApi.completeQuizSubmission(
+        val submission = ClassicQuizzesApi.completeQuizSubmission(
                 courseId = course.id,
                 quizId = quiz.id,
                 submissionId = incompleteResponse.id,

@@ -263,6 +263,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Удалить этот ответ %s</string>
+    <string name="utils_announcementDeleted">Аннотация удалена.</string>
+    <string name="utils_discussionDeleted">Обсуждение удалено.</string>
     <string name="utils_discussionsUnknownAuthor">Неизвестный автор</string>
     <string name="utils_discussionsReply">Ответить</string>
     <string name="utils_discussionsEdit">Редактировать</string>

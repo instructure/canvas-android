@@ -27,6 +27,7 @@ data class LearnContentCardState(
     val buttonState: LearnContentCardButtonState? = null,
     val cardChips: List<LearnContentCardChipState> = emptyList(),
     val courseNames: List<String> = emptyList(),
+    val isSynced: Boolean = true,
 )
 
 data class LearnContentCardButtonState(

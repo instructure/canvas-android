@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
@@ -70,6 +71,8 @@ abstract class ParentTest : CanvasTest() {
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
     val aboutPage = AboutPage()
+
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     fun setupFileOnDevice(fileName: String): Uri {
         File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()

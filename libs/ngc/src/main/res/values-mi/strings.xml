@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Taku Mahi</string>
     <string name="ngc_courseHomeTabMore">Ētahi atu</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">E wātea ana tae noa kiwātea noa</string>
+    <string name="ngc_quizSettings">Ngā tautuhinga pātaitai</string>
+    <string name="ngc_submission">Tukunga</string>
+    <string name="ngc_continueDraft">Haere tonu te tauira</string>
+    <string name="ngc_assignmentReminder">Whakamaumaharatanga Taumahi</string>
+    <string name="ngc_classPerformance">Te Mahi o te Karaehe</string>
+    <string name="ngc_newAttempt">Nganatanga hou</string>
+    <string name="ngc_submitAssignment">Tukuna te mahi</string>
+    <string name="ngc_studio">Whare mahi</string>
+    <string name="ngc_allowedFileTypes">Ngā momo kōnae e whakaaetia ana</string>
+    <string name="ngc_noDueDate">Kāore he rā kati</string>
+    <string name="ngc_noAssignmentDescription">Kāore he whakaahuatanga o te mahi</string>
+    <string name="ngc_retry">Whakamātau anō</string>
+    <string name="ngc_finalGrade">Tau Whakamutunga</string>
+    <string name="ngc_notYetGraded">Kāore anō kia mākahia</string>
+    <string name="ngc_uploadingSubmission">Te tukuake i te tukunga&#8230;</string>
+    <string name="ngc_submissionFailed">I rahua te tukunga</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Whiwhinga Tāpiri</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d rā i muri</item>
+        <item quantity="other">%d rā i muri</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Te iti rawa: %s</string>
+    <string name="ngc_classPerformanceAverage">Toharite: %s</string>
+    <string name="ngc_classPerformanceHighest">Teitei rawa: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Ngā kōrero tāpiri</string>
+    <string name="ngc_submissionSegmentInstructions">Ngā Tohutohu</string>
+    <string name="ngc_submissionSegmentRubric">Rubric</string>
+    <string name="ngc_submissionSegmentComments">Ngā kōrero</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Whakahaerehia ngā ihirangi tuimotu</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Whakaritea te papatohu</string>
+    <string name="a11y_submissionSupportingPaneExpand">Whakawhānuihia ngā mōhiohio tāpiri</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Whakaitihia ngā mōhiohio tāpiri</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Tukuna te Taumahi</string>
+    <string name="ngc_submission_newSubmission">Tukunga Hou</string>
+    <string name="ngc_submission_textEntry">Whakauru Kuputuhi</string>
+    <string name="ngc_submission_submit">Tukuna</string>
+    <string name="ngc_submission_deleteDraft">Mukua te tauira</string>
+    <string name="ngc_submission_draftSaved">Kua tiakina %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Tāuruhia tō tuhinga tuku ki konei</string>
+    <string name="ngc_submission_submissionError">Hapa i te tuku i te taumahi</string>
+    <string name="ngc_submission_loadError">I rahua te uta i te taumahi</string>
+    <string name="ngc_submission_dueDate">Te utu %1$s</string>
+    <string name="ngc_submission_retry">Whakamātau anō</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Mukua te tauira?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Ka mukua rawatia tō tauira, ā, kāore e taea te whakaora.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Mukua</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Whakakore</string>
+    <string name="ngc_back">Hoki</string>
 </resources>

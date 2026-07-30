@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -74,7 +75,9 @@ private fun WelcomeContent(
             .semantics { contentDescription = contentDescriptionText }
     ) {
         Text(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("welcomeGreetingText"),
             text = uiState.greeting,
             fontSize = 22.sp,
             fontWeight = FontWeight.SemiBold,
@@ -84,7 +87,8 @@ private fun WelcomeContent(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 2.dp),
+                .padding(top = 2.dp)
+                .testTag("welcomeMessageText"),
             text = uiState.message,
             fontSize = 14.sp,
             color = colorResource(R.color.textDarkest),

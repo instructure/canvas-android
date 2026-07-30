@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">จำกัดเวลา: %s</string>
     <string name="allowedAttempts">จำนวนครั้งที่อนุญาต: %s</string>
     <string name="usedAttempts">จำนวนครั้งที่ใช้ไปแล้ว: %d</string>
+    <string name="assignmentAttemptsUnlimited">การดำเนินการที่ไม่จำกัดจำนวนครั้ง</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d จาก %2$d ครั้งที่ดำเนินการ</string>
     <string name="generalUnexpectedError">เกิดข้อผิดพลาดที่ไม่คาดคิด</string>
 
     <string name="deleteSelected">ลบ</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID ล็อกอิน</string>
     <string name="aboutEmailTitle">อีเมล</string>
     <string name="aboutVersionTitle">เวอร์ชั่น</string>
+    <string name="aboutOpenSourceTitle">เปิดรหัสข้อมูลต้นทางและสิทธิ์ใช้งาน</string>
+    <string name="aboutOpenSourceSubtitle">ดูรหัสข้อมูลต้นทางและเปิดสิทธิ์ใช้งานต้นทาง</string>
     <string name="assignmentRefreshError">มีปัญหาในการรีโหลดภารกิจนี้ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
     <string name="instructure_logo">โลโก้ Instructure</string>
     <string name="preferences">ค่าปรับตั้ง</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">จัดเรียงจาก</string>
     <string name="gradesEmptyTitle">ไม่มีภารกิจ</string>
     <string name="gradesEmptyMessage">ดูเหมือนจะยังไม่ได้จัดทำภารกิจในพื้นที่นี้</string>
+    <string name="gradesEmptyMessageForPeriod">ไม่มีภารกิจใน %s</string>
+    <string name="gradesCommentsContentDescription">%d ความเห็น</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ความเห็นที่ยังไม่ได้อ่าน</string>
     <string name="noMatchingAssignments">ไม่มีภารกิจที่ตรงกัน</string>
     <string name="noMatchingAssignmentsDescription">ไม่มีภารกิจที่ตรงกับการค้นหาของคุณ ลองคำค้นหาอื่น</string>
     <string name="errorLoadingGrades">เรามีปัญหาในการโหลดเกรดสำหรับผู้เรียนของคุณ กรุณาลองโหลดหน้าเพจใหม่หรือลองใหม่อีกครั้งในภายหลัง</string>

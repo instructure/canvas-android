@@ -42,4 +42,13 @@ class AssignmentRepositoryImpl(
             assignmentApi.getNextPageAssignmentGroupListWithAssignments(nextUrl, params)
         }
     }
+
+    override suspend fun getAssignmentWithHistory(
+        courseId: Long,
+        assignmentId: Long,
+        forceRefresh: Boolean
+    ): DataResult<Assignment> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params)
+    }
 }

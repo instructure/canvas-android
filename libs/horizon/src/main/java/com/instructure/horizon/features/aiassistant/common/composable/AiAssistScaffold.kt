@@ -18,9 +18,9 @@ package com.instructure.horizon.features.aiassistant.common.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.aiinformation.AiInformationScreen
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 
 @Composable
 fun AiAssistScaffold(
@@ -41,36 +42,39 @@ fun AiAssistScaffold(
 ) {
     var showAiInformation by rememberSaveable { mutableStateOf(false) }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
-        AiAssistToolbar(
-            onDismissPressed = {
-                onClearChatHistory()
-                onDismiss()
-            },
-            onBackPressed = if (navController.previousBackStackEntry != null) {
-                {
+    HorizonEdgeToEdgeSystemBars { statusBarInsets, navigationBarInsets ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .windowInsetsPadding(statusBarInsets)
+                .windowInsetsPadding(navigationBarInsets)
+                .imePadding(),
+        ) {
+            AiAssistToolbar(
+                onDismissPressed = {
                     onClearChatHistory()
-                    navController.popBackStack()
-                }
-            } else {
-                null
-            },
-            onInfoPressed = { showAiInformation = true },
-            modifier = Modifier
-        )
+                    onDismiss()
+                },
+                onBackPressed = if (navController.previousBackStackEntry != null) {
+                    {
+                        onClearChatHistory()
+                        navController.popBackStack()
+                    }
+                } else {
+                    null
+                },
+                onInfoPressed = { showAiInformation = true },
+            )
 
-        content(Modifier
-            .weight(1f)
-            .padding(horizontal = 24.dp))
+            content(
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 24.dp),
+            )
+        }
     }
 
     if (showAiInformation) {
-        AiInformationScreen(
-            onDismiss = { showAiInformation = false },
-        )
+        AiInformationScreen(onDismiss = { showAiInformation = false })
     }
 }

@@ -22,6 +22,10 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsMan
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.CoursesProgressNetworkDataSource
+import com.instructure.horizon.data.datasource.WidgetsNetworkDataSource
+import com.instructure.horizon.data.repository.CoursesProgressRepository
+import com.instructure.horizon.data.repository.WidgetsRepository
 import com.instructure.journey.GetWidgetDataQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -41,13 +45,15 @@ class DashboardTimeSpentRepositoryTest {
     private val getCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private lateinit var repository: DashboardTimeSpentRepository
+    private lateinit var widgetsRepository: WidgetsRepository
+    private lateinit var coursesProgressRepository: CoursesProgressRepository
 
     @Before
     fun setup() {
         val user = User(id = 1L)
         every { apiPrefs.user } returns user
-        repository = DashboardTimeSpentRepository(getWidgetsManager, getCoursesManager, apiPrefs)
+        widgetsRepository = WidgetsRepository(WidgetsNetworkDataSource(getWidgetsManager))
+        coursesProgressRepository = CoursesProgressRepository(CoursesProgressNetworkDataSource(getCoursesManager, apiPrefs))
     }
 
     @After
@@ -72,7 +78,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getWidgetsManager.getTimeSpentWidgetData(null, false) } returns graphqlData
 
-        val result = repository.getTimeSpentData(null, false)
+        val result = widgetsRepository.getTimeSpentData(null, false)
 
         assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
         assertEquals(1, result.data.size)
@@ -99,7 +105,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getWidgetsManager.getTimeSpentWidgetData(courseId, false) } returns graphqlData
 
-        val result = repository.getTimeSpentData(courseId, false)
+        val result = widgetsRepository.getTimeSpentData(courseId, false)
 
         assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
         assertEquals(1, result.data.size)
@@ -120,7 +126,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getWidgetsManager.getTimeSpentWidgetData(null, true) } returns graphqlData
 
-        val result = repository.getTimeSpentData(null, true)
+        val result = widgetsRepository.getTimeSpentData(null, true)
 
         assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
         assertEquals(150, result.data[0].minutesPerDay)
@@ -138,7 +144,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getCoursesManager.getCoursesWithProgress(userId, false) } returns dataResult
 
-        val result = repository.getCourses(false)
+        val result = coursesProgressRepository.getCoursesWithProgress(false)
 
         assertEquals(courses, result)
         coVerify { getCoursesManager.getCoursesWithProgress(userId, false) }
@@ -154,7 +160,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getCoursesManager.getCoursesWithProgress(userId, true) } returns dataResult
 
-        val result = repository.getCourses(true)
+        val result = coursesProgressRepository.getCoursesWithProgress(true)
 
         assertEquals(courses, result)
         coVerify { getCoursesManager.getCoursesWithProgress(userId, true) }
@@ -168,7 +174,7 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getCoursesManager.getCoursesWithProgress(userId, false) } returns dataResult
 
-        val result = repository.getCourses(false)
+        val result = coursesProgressRepository.getCoursesWithProgress(false)
 
         assertEquals(emptyList<CourseWithProgress>(), result)
     }
@@ -179,13 +185,13 @@ class DashboardTimeSpentRepositoryTest {
 
         coEvery { getCoursesManager.getCoursesWithProgress(userId, false) } returns DataResult.Fail()
 
-        repository.getCourses(false)
+        coursesProgressRepository.getCoursesWithProgress(false)
     }
 
     @Test(expected = Exception::class)
     fun `getTimeSpentData propagates exceptions`() = runTest {
         coEvery { getWidgetsManager.getTimeSpentWidgetData(null, false) } throws Exception("Network error")
 
-        repository.getTimeSpentData(null, false)
+        widgetsRepository.getTimeSpentData(null, false)
     }
 }

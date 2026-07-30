@@ -1462,6 +1462,8 @@
     <string name="quizTimeLimit">Giới hạn thời gian: %s</string>
     <string name="allowedAttempts">Lần làm được phép: %s</string>
     <string name="usedAttempts">Lần làm đã sử dụng: %d</string>
+    <string name="assignmentAttemptsUnlimited">Số lần làm không giới hạn</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d trên %2$d lần làm</string>
     <string name="generalUnexpectedError">Đã xảy ra lỗi không lường trước.</string>
 
     <string name="deleteSelected">Xóa</string>
@@ -1505,6 +1507,8 @@
     <string name="aboutLoginTitle">ID Đăng Nhập</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Phiên bản</string>
+    <string name="aboutOpenSourceTitle">Mã Nguồn Mở và Giấy Phép</string>
+    <string name="aboutOpenSourceSubtitle">Xem mã nguồn mở và giấy phép mã nguồn mở.</string>
     <string name="assignmentRefreshError">Đã xảy ra vấn đề khi tải lại bài tập này. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Ưu tiên</string>
@@ -1953,6 +1957,9 @@
     <string name="gradePreferencesHeaderSortBy">Sắp Xếp Theo</string>
     <string name="gradesEmptyTitle">Không Có Bài Tập</string>
     <string name="gradesEmptyMessage">Có vẻ bài tập chưa được tạo trong không gian này.</string>
+    <string name="gradesEmptyMessageForPeriod">Không có bài tập nào trong %s.</string>
+    <string name="gradesCommentsContentDescription">%d bình luận</string>
+    <string name="gradesUnreadCommentsContentDescription">%d bình luận chưa đọc</string>
     <string name="noMatchingAssignments">Không Có Bài Tập Nào Khớp</string>
     <string name="noMatchingAssignmentsDescription">Không có bài tập nào khớp với tìm kiếm của bạn. Thử một từ khóa tìm kiếm khác.</string>
     <string name="errorLoadingGrades">Chúng tôi đang gặp khó khăn khi tải điểm sinh viên của bạn. Vui lòng thử tải lại trang hoặc kiểm tra lại sau.</string>

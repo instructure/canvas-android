@@ -76,7 +76,8 @@ fun ComposeNotesHighlightingCanvasWebView(
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
     scrollState: ScrollState? = null,
-    scrollToNoteId: String? = null
+    scrollToNoteId: String? = null,
+    canMarkNotes: Boolean = true,
 ) {
     var pageHeight by remember { mutableIntStateOf(0) }
     var scrollValue by rememberSaveable { mutableIntStateOf(0) }
@@ -146,7 +147,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                                         clipboardManager.setText(AnnotatedString(selectedText))
                                     }
                                 )
-                                if (notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
+                                if (canMarkNotes && notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
                                     add(
                                         ActionMenuItem(2, context.getString(R.string.notesActionMenuMarkImportantNote)) {
                                             notesCallback.onNoteAdded(

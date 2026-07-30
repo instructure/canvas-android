@@ -27,8 +27,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.dataseeding.api.SeedApi
@@ -50,7 +48,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2E() {
 
@@ -105,7 +102,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginWithNotTeacherRole() {
 
@@ -146,7 +142,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginE2EWithLastSavedSchool() {
 
@@ -173,7 +168,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.ACCESS_TOKEN_EXPIRATION)
     fun testTokenExpirationForcedLogoutThenLogBackE2E() {
 
@@ -212,7 +206,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @Stub("MBL-19866")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testInvalidAndEmptyLoginCredentialsE2E() {
 
@@ -232,13 +225,11 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        /* Somehow React does not recognize the invalid credentials, need to be fixed in follow-up ticket
         Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD').")
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
 
         Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.assertLoginEmailErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
-        */
 
         Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field.")
         loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
@@ -251,7 +242,7 @@ class LoginE2ETest : TeacherTest() {
         loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
 
         Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
-        loginSignInPage.assertLoginEmailErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+        loginSignInPage.assertLoginPasswordErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
         Log.d(STEP_TAG, "Try to login with leaving only the username field empty.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
@@ -261,7 +252,6 @@ class LoginE2ETest : TeacherTest() {
     }
 
     @Test
-    @Stub("Stubbed because there was some change on 7th or 8th of July, 2025 and on the CI it loads an invalid URL page, however the test runs locally.")
     @E2E
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.CANVAS_NETWORK)
     fun testCanvasNetworkSignInPageE2E() {
@@ -275,7 +265,6 @@ class LoginE2ETest : TeacherTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testWrongDomainE2E() {
 

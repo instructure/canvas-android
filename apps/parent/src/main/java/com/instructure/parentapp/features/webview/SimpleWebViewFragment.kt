@@ -36,6 +36,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyImeAndSystemBarMargin
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -131,6 +132,7 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun applyTheme() = with(binding) {
         webView.setPadding(0, 0, 0, 0)
+        webView.applyImeAndSystemBarMargin()
         toolbar.applyTopSystemBarInsets()
         toolbar.title = title.orEmpty()
         toolbar.setupAsBackButton(this@SimpleWebViewFragment)

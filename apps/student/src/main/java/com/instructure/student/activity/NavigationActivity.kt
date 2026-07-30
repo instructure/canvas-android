@@ -76,6 +76,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.FullScreenInteractions
 import com.instructure.interactions.Navigation
@@ -226,6 +227,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     lateinit var alarmScheduler: AlarmScheduler
 
     @Inject
+    lateinit var horizonDatabaseProvider: HorizonDatabaseProvider
+
+    @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
 
     @Inject
@@ -279,7 +283,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS,
                         typefaceBehavior = typefaceBehavior,
                         databaseProvider = databaseProvider,
-                        alarmScheduler = alarmScheduler
+                        alarmScheduler = alarmScheduler,
+                        horizonDatabaseProvider = horizonDatabaseProvider,
                     ).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
@@ -290,7 +295,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                                     LogoutTask.Type.LOGOUT,
                                     typefaceBehavior = typefaceBehavior,
                                     databaseProvider = databaseProvider,
-                                    alarmScheduler = alarmScheduler
+                                    alarmScheduler = alarmScheduler,
+                                    horizonDatabaseProvider = horizonDatabaseProvider,
                                 ).execute()
                             }
                             .setNegativeButton(android.R.string.cancel, null)
@@ -649,7 +655,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                         LogoutTask.Type.LOGOUT,
                         typefaceBehavior = typefaceBehavior,
                         databaseProvider = databaseProvider,
-                        alarmScheduler = alarmScheduler
+                        alarmScheduler = alarmScheduler,
+                        horizonDatabaseProvider = horizonDatabaseProvider,
                     ).execute()
                 }
             }
@@ -700,7 +707,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
-            StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
+            StudentLogoutTask(
+                LogoutTask.Type.LOGOUT,
+                databaseProvider = databaseProvider,
+                alarmScheduler = alarmScheduler,
+                horizonDatabaseProvider = horizonDatabaseProvider,
+            ).execute()
         }
 
         setupBottomNavigation()

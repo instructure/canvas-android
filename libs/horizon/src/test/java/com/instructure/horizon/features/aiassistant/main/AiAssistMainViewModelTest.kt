@@ -19,8 +19,8 @@ package com.instructure.horizon.features.aiassistant.main
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
-import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
+import com.instructure.horizon.data.repository.AiAssistResponse
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
@@ -44,7 +44,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AiAssistMainViewModelTest {
-    private val repository: AiAssistRepository = mockk(relaxed = true)
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -70,7 +70,7 @@ class AiAssistMainViewModelTest {
             role = JourneyAssistRole.Assistant
         )
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(testMessage, testState)
     }
 
@@ -88,7 +88,7 @@ class AiAssistMainViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt("", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "" })
         } returns AiAssistResponse(initialMessage, testState)
 
         val viewModel = getViewModel()
@@ -100,11 +100,11 @@ class AiAssistMainViewModelTest {
     }
 
     @Test
-    fun `ViewModel calls repository on initialization`() = runTest {
+    fun `ViewModel calls use case on initialization`() = runTest {
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify(atLeast = 1) { repository.answerPrompt(any(), any(), any()) }
+        coVerify(atLeast = 1) { answerAiAssistPromptUseCase(any()) }
     }
 
     @Test
@@ -120,14 +120,14 @@ class AiAssistMainViewModelTest {
     }
 
     @Test
-    fun `sendMessage calls repository and adds response`() = runTest {
+    fun `sendMessage calls use case and adds response`() = runTest {
         val responseMessage = AiAssistMessage(
             text = "Hi there!",
             role = JourneyAssistRole.Assistant
         )
 
         coEvery {
-            repository.answerPrompt("Hello", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "Hello" })
         } returns AiAssistResponse(responseMessage, testState)
 
         val viewModel = getViewModel()
@@ -136,7 +136,7 @@ class AiAssistMainViewModelTest {
         viewModel.uiState.value.sendMessage("Hello")
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { repository.answerPrompt("Hello", any(), any()) }
+        coVerify { answerAiAssistPromptUseCase(match { it.prompt == "Hello" }) }
         assertTrue(viewModel.uiState.value.messages.any {
             it.role == JourneyAssistRole.Assistant && it.text == "Hi there!"
         })
@@ -145,7 +145,7 @@ class AiAssistMainViewModelTest {
     @Test
     fun `sendMessage shows loading state during API call`() = runTest {
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
             val message = AiAssistMessage(
@@ -182,11 +182,11 @@ class AiAssistMainViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt("", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "" })
         } returns AiAssistResponse(response1, testState)
 
         coEvery {
-            repository.answerPrompt("First", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "First" })
         } returns AiAssistResponse(response2, testState)
 
         val viewModel = getViewModel()
@@ -208,7 +208,7 @@ class AiAssistMainViewModelTest {
     @Test
     fun `sendMessage handles error gracefully`() = runTest {
         coEvery {
-            repository.answerPrompt("Error", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "Error" })
         } throws Exception("Network error")
 
         val viewModel = getViewModel()
@@ -259,7 +259,7 @@ class AiAssistMainViewModelTest {
     }
 
     @Test
-    fun `state is updated from repository response`() = runTest {
+    fun `state is updated from use case response`() = runTest {
         val updatedState = JourneyAssistState(
             courseID = "456",
             fileID = "789",
@@ -277,11 +277,11 @@ class AiAssistMainViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt("", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "" })
         } returns AiAssistResponse(message1, testState)
 
         coEvery {
-            repository.answerPrompt("Test", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "Test" })
         } returns AiAssistResponse(message2, updatedState)
 
         val viewModel = getViewModel()
@@ -294,13 +294,12 @@ class AiAssistMainViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         coVerify {
-            repository.answerPrompt(
-                "Another",
-                any(),
-                match { state ->
-                    state.courseID == "456" &&
-                    state.fileID == "789" &&
-                    state.pageID == "101"
+            answerAiAssistPromptUseCase(
+                match { params ->
+                    params.prompt == "Another" &&
+                    params.state.courseID == "456" &&
+                    params.state.fileID == "789" &&
+                    params.state.pageID == "101"
                 }
             )
         }
@@ -309,7 +308,7 @@ class AiAssistMainViewModelTest {
     @Test
     fun `initialization error sets loading to false`() = runTest {
         coEvery {
-            repository.answerPrompt("", any(), any())
+            answerAiAssistPromptUseCase(match { it.prompt == "" })
         } throws Exception("Init error")
 
         val viewModel = getViewModel()
@@ -320,6 +319,6 @@ class AiAssistMainViewModelTest {
     }
 
     private fun getViewModel(): AiAssistMainViewModel {
-        return AiAssistMainViewModel(repository, aiAssistContextProvider)
+        return AiAssistMainViewModel(answerAiAssistPromptUseCase, aiAssistContextProvider)
     }
 }

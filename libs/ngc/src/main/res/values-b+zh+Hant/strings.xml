@@ -26,7 +26,60 @@
     <string name="ngc_courseHomeTabMyWork">我的工作</string>
     <string name="ngc_courseHomeTabMore">更多</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">可用截止時間：</string>
+    <string name="ngc_quizSettings">測驗設定</string>
+    <string name="ngc_submission">提交項目</string>
+    <string name="ngc_continueDraft">繼續草稿</string>
+    <string name="ngc_assignmentReminder">作業提醒</string>
+    <string name="ngc_classPerformance">課堂表現</string>
+    <string name="ngc_newAttempt">新嘗試</string>
+    <string name="ngc_submitAssignment">提交作業</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">允許的檔案類型</string>
+    <string name="ngc_noDueDate">無截止日期</string>
+    <string name="ngc_noAssignmentDescription">無作業描述</string>
+    <string name="ngc_retry">重試</string>
+    <string name="ngc_finalGrade">最終評分</string>
+    <string name="ngc_notYetGraded">尚未評分</string>
+    <string name="ngc_uploadingSubmission">上傳提交項目中...</string>
+    <string name="ngc_submissionFailed">提交項目失敗</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">額外加分</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="other">遲到 %d 天</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">最低分：%s</string>
+    <string name="ngc_classPerformanceAverage">平均：%s</string>
+    <string name="ngc_classPerformanceHighest">最高分：%s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">額外資訊</string>
+    <string name="ngc_submissionSegmentInstructions">教學</string>
+    <string name="ngc_submissionSegmentRubric">評分標準</string>
+    <string name="ngc_submissionSegmentComments">評論</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">管理離線內容</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">自訂控制面板</string>
+    <string name="a11y_submissionSupportingPaneExpand">展開額外資訊</string>
+    <string name="a11y_submissionSupportingPaneCollapse">收起額外資訊</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">提交作業</string>
+    <string name="ngc_submission_newSubmission">新提交項目</string>
+    <string name="ngc_submission_textEntry">文字條目</string>
+    <string name="ngc_submission_submit">提交</string>
+    <string name="ngc_submission_deleteDraft">刪除草稿</string>
+    <string name="ngc_submission_draftSaved">已儲存 %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">請在此輸入您的提交項目文字</string>
+    <string name="ngc_submission_submissionError">提交作業時發生錯誤</string>
+    <string name="ngc_submission_loadError">無法載入作業</string>
+    <string name="ngc_submission_dueDate">截止於 %1$s</string>
+    <string name="ngc_submission_retry">重試</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">刪除草稿？</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">您的草稿將永久刪除且無法恢復。</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">刪除</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">取消</string>
+    <string name="ngc_back">返回</string>
 </resources>

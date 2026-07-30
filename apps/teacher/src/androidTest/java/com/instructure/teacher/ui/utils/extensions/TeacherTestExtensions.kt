@@ -19,7 +19,6 @@ package com.instructure.teacher.ui.utils.extensions
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import android.os.Environment
 import androidx.fragment.app.FragmentActivity
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -30,12 +29,12 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.PagesApi
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.RubricsApi
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -185,7 +184,7 @@ fun TeacherTest.seedQuizQuestion(
         quizId: Long,
         teacherToken: String
 ) {
-    QuizzesApi.createQuizQuestion(
+    ClassicQuizzesApi.createQuizQuestion(
             courseId = courseId,
             quizId = quizId,
             teacherToken = teacherToken
@@ -195,7 +194,7 @@ fun TeacherTest.seedQuizQuestion(
 fun TeacherTest.publishQuiz(courseId: Long,
                             quizId: Long,
                             teacherToken: String) {
-    QuizzesApi.publishQuiz(
+    ClassicQuizzesApi.publishQuiz(
             courseId = courseId,
             quizId = quizId,
             teacherToken = teacherToken,
@@ -213,8 +212,8 @@ fun TeacherTest.seedQuizzes(
         published: Boolean = true,
         teacherToken: String): QuizListApiModel {
 
-    return QuizzesApi.seedQuizzes(
-            request = QuizzesApi.CreateQuizRequest(
+    return ClassicQuizzesApi.seedQuizzes(
+            request = ClassicQuizzesApi.CreateQuizRequest(
                     courseId = courseId,
                     withDescription = withDescription,
                     published = published,
@@ -234,8 +233,8 @@ fun TeacherTest.seedQuizSubmission(
         studentToken: String,
         complete: Boolean = true): QuizSubmissionApiModel {
 
-    return QuizzesApi.seedQuizSubmission(
-            request = QuizzesApi.CreateQuizSubmissionRequest(
+    return ClassicQuizzesApi.seedQuizSubmission(
+            request = ClassicQuizzesApi.CreateQuizSubmissionRequest(
                     courseId = courseId,
                     quizId = quizId,
                     studentToken = studentToken
@@ -287,7 +286,7 @@ fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long? = null, token
 
     // Create the file
     val file = File(
-            Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+            Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
             .apply { createNewFile() }
 
     // Add contents to file

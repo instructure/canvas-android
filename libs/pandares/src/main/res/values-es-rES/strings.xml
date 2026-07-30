@@ -1463,6 +1463,8 @@
     <string name="quizTimeLimit">Límite de tiempo: %s</string>
     <string name="allowedAttempts">Intentos permitidos: %s</string>
     <string name="usedAttempts">Intentos usados: %d</string>
+    <string name="assignmentAttemptsUnlimited">Intentos ilimitados</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d de %2$d intentos</string>
     <string name="generalUnexpectedError">Ha habido un error inesperado.</string>
 
     <string name="deleteSelected">Eliminar</string>
@@ -1506,6 +1508,8 @@
     <string name="aboutLoginTitle">Identificación de inicio de sesión</string>
     <string name="aboutEmailTitle">Correo electrónico</string>
     <string name="aboutVersionTitle">Versión</string>
+    <string name="aboutOpenSourceTitle">Código abierto y licencias</string>
+    <string name="aboutOpenSourceSubtitle">Ver el código fuente y las licencias de código abierto.</string>
     <string name="assignmentRefreshError">Se ha producido un problema al volver a cargar esta actividad. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="instructure_logo">Logo de Instructure</string>
     <string name="preferences">Preferencias</string>
@@ -1954,6 +1958,9 @@
     <string name="gradePreferencesHeaderSortBy">Ordenar por</string>
     <string name="gradesEmptyTitle">No hay actividades</string>
     <string name="gradesEmptyMessage">Parece que aún no se han creado actividades en este espacio.</string>
+    <string name="gradesEmptyMessageForPeriod">No hay actividades en %s.</string>
+    <string name="gradesCommentsContentDescription">%d comentarios</string>
+    <string name="gradesUnreadCommentsContentDescription">%d comentarios sin leer</string>
     <string name="noMatchingAssignments">No hay ninguna actividad que corresponda</string>
     <string name="noMatchingAssignmentsDescription">No hay ninguna actividad que corresponda con tu búsqueda. Prueba con un término de búsqueda diferente.</string>
     <string name="errorLoadingGrades">Tenemos problemas al cargar las notas de tu estudiante. Intenta volver a cargar la página o vuelve a consultarlo más tarde.</string>

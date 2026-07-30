@@ -66,6 +66,8 @@ android {
 dependencies {
     implementation(project(":pandautils"))
     implementation(project(":login-api-2"))
+    implementation(project(":annotations"))
+    implementation(project(":rceditor"))
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
@@ -91,6 +93,12 @@ dependencies {
         isTransitive = true
     }
 
+    /* Room */
+    implementation(Libs.ROOM)
+    implementation(Libs.ROOM_COROUTINES)
+    ksp(Libs.ROOM_COMPILER)
+    testImplementation(Libs.ROOM_TEST)
+
     /* Android Test Dependencies */
     androidTestImplementation(project(":espresso"))
     androidTestImplementation(project(":dataseedingapi"))
@@ -105,6 +113,7 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    testImplementation(Libs.ANDROIDX_WORK_TEST)
     androidTestImplementation(Libs.HILT_TESTING)
 
     /* Pandautils dependencies to provide fake implementations for testing */

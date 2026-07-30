@@ -42,7 +42,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `unread announcement is returned`() = runTest {
         val node = node(id = "10", title = "Unread", read = false, unreadCount = 0)
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(listOf(node))
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(listOf(node))
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -55,7 +55,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `read announcement with unread entries is returned`() = runTest {
         val node = node(id = "20", title = "Has Replies", read = true, unreadCount = 3)
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(listOf(node))
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(listOf(node))
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -67,7 +67,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `fully read announcement with no unread entries is filtered out`() = runTest {
         val node = node(id = "30", title = "Already Read", read = true, unreadCount = 0)
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(listOf(node))
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(listOf(node))
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -76,7 +76,7 @@ class LoadCourseAnnouncementsUseCaseTest {
 
     @Test
     fun `null nodes returns empty list`() = runTest {
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(null)
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(null)
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -85,7 +85,7 @@ class LoadCourseAnnouncementsUseCaseTest {
 
     @Test
     fun `null course response returns empty list`() = runTest {
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns CourseAnnouncementsQuery.Data(course = null)
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns CourseAnnouncementsQuery.Data(course = null)
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -99,7 +99,7 @@ class LoadCourseAnnouncementsUseCaseTest {
             node(id = "2", title = "Second", read = true, unreadCount = 1),
             node(id = "3", title = "Third", read = true, unreadCount = 0)
         )
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(nodes)
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(nodes)
 
         val result = useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L))
 
@@ -110,20 +110,20 @@ class LoadCourseAnnouncementsUseCaseTest {
 
     @Test
     fun `courseId is passed to manager`() = runTest {
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(emptyList())
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(emptyList())
 
         useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 42L))
 
-        coVerify { dashboardCoursesManager.getCourseAnnouncements(42L, null, any()) }
+        coVerify { dashboardCoursesManager.getCourseAnnouncements(42L, any()) }
     }
 
     @Test
     fun `forceNetwork param is propagated to manager`() = runTest {
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns dataWithNodes(emptyList())
+        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any()) } returns dataWithNodes(emptyList())
 
         useCase(LoadCourseAnnouncementsUseCase.Params(courseId = 1L, forceNetwork = false))
 
-        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, null, forceNetwork = false) }
+        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, forceNetwork = false) }
     }
 
     private fun node(

@@ -27,7 +27,9 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.features.announcement.navigation.AnnouncementRoute
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.model.HorizonAnnouncementKind
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeViewModel
@@ -138,7 +140,7 @@ fun NavGraphBuilder.horizonInboxNavigation(
             LaunchedEffect(Unit) {
                 val courseId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.COURSE_ID) ?: return@LaunchedEffect
                 val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
-                navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.CourseNotification, courseId)) {
+                navController.navigate(AnnouncementRoute.Details.route(HorizonAnnouncementKind.COURSE, id, courseId)) {
                     popUpTo(HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route) {
                         inclusive = true
                     }

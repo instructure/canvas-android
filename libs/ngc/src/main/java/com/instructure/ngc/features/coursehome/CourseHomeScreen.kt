@@ -21,8 +21,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -35,15 +38,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.navigation.CollapsingTopBar
-import com.instructure.instui.compose.navigation.SegmentedControl
 import com.instructure.ngc.R
-import com.instructure.ngc.features.coursehome.home.CourseHomeTabScreen
-import com.instructure.ngc.features.coursehome.modules.CourseModulesScreen
-import com.instructure.ngc.features.coursehome.mywork.CourseMyWorkScreen
-import com.instructure.ngc.features.coursehome.navigation.CourseNavigationScreen
 import com.instructure.pandautils.designsystem.Image
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.Loading
@@ -52,7 +51,7 @@ import com.instructure.pandautils.utils.ViewStyler
 @Composable
 fun CourseHomeScreen(
     onNavigateBack: () -> Unit,
-    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
+    onGradesClick: () -> Unit,
     viewModel: CourseHomeViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -60,8 +59,7 @@ fun CourseHomeScreen(
     CourseHomeScreenContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onTabSelected = viewModel::onTabSelected,
-        onAssignmentClick = onAssignmentClick,
+        onGradesClick = onGradesClick,
     )
 }
 
@@ -70,8 +68,7 @@ fun CourseHomeScreen(
 fun CourseHomeScreenContent(
     uiState: CourseHomeUiState,
     onNavigateBack: () -> Unit,
-    onTabSelected: (CourseHomeTab) -> Unit,
-    onAssignmentClick: (courseId: Long, assignmentId: Long) -> Unit = { _, _ -> },
+    onGradesClick: () -> Unit,
 ) {
     if (uiState.isLoading) {
         val context = LocalContext.current
@@ -118,39 +115,17 @@ fun CourseHomeScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .padding(16.dp)
         ) {
-            val tabLabels = uiState.availableTabs.map { stringResource(it.labelRes()) }
-            val selectedIndex = uiState.availableTabs.indexOf(uiState.selectedTab).coerceAtLeast(0)
-
-            SegmentedControl(
-                tabs = tabLabels,
-                selectedIndex = selectedIndex,
-                onTabSelected = { index -> onTabSelected(uiState.availableTabs[index]) },
+            Button(
+                onClick = onGradesClick,
                 modifier = Modifier.fillMaxWidth(),
-            )
-
-            when (uiState.selectedTab) {
-                CourseHomeTab.HOME -> CourseHomeTabScreen(
-                    modifier = Modifier.fillMaxSize(),
-                    scrollBehavior = scrollBehavior,
-                )
-                CourseHomeTab.MODULES -> CourseModulesScreen(modifier = Modifier.fillMaxSize())
-                CourseHomeTab.MY_WORK -> CourseMyWorkScreen(
-                    courseId = uiState.courseId,
-                    onAssignmentClick = onAssignmentClick,
-                    modifier = Modifier.fillMaxSize(),
-                )
-                CourseHomeTab.MORE -> CourseNavigationScreen(modifier = Modifier.fillMaxSize())
+                colors = ButtonDefaults.buttonColors(containerColor = courseColor),
+            ) {
+                Text(text = stringResource(R.string.grades))
             }
         }
     }
-}
-
-private fun CourseHomeTab.labelRes(): Int = when (this) {
-    CourseHomeTab.HOME -> R.string.ngc_courseHomeTabHome
-    CourseHomeTab.MODULES -> R.string.ngc_courseHomeTabModules
-    CourseHomeTab.MY_WORK -> R.string.ngc_courseHomeTabMyWork
-    CourseHomeTab.MORE -> R.string.ngc_courseHomeTabMore
 }
 
 @Preview
@@ -160,11 +135,10 @@ private fun CourseHomeScreenPreview() {
         CourseHomeScreenContent(
             uiState = CourseHomeUiState(
                 courseName = "Introduction to Space Stations with an aggressively long name to test collapsing behavior.",
-                selectedTab = CourseHomeTab.HOME,
                 isLoading = false,
             ),
             onNavigateBack = {},
-            onTabSelected = {},
+            onGradesClick = {},
         )
     }
 }

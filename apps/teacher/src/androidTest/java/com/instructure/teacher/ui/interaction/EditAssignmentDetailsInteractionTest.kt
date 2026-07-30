@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.interaction
 
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
@@ -82,6 +83,7 @@ class EditAssignmentDetailsInteractionTest : TeacherComposeTest() {
     }
 
     @Test
+    @ReleaseExclude
     fun editDueTime() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueTime()
@@ -162,6 +164,7 @@ class EditAssignmentDetailsInteractionTest : TeacherComposeTest() {
     }
 
     @Test
+    @ReleaseExclude
     fun unlockDateAfterLockDateError() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditUnlockDate()

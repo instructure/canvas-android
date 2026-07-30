@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectsearch.SingleSelectSearch
@@ -50,8 +51,12 @@ fun AccountAdvancedScreen(
     HorizonScaffold(
         title = stringResource(R.string.accountAdvancedTitle),
         onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
-        LoadingStateWrapper(state.screenState) {
+        LoadingStateWrapper(
+            loadingState = state.screenState,
+            containerColor = HorizonColors.Surface.pageSecondary(),
+        ) {
             AccountAdvancedContent(state, modifier)
         }
     }

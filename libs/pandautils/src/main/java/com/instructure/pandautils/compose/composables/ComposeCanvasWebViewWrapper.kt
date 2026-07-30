@@ -43,6 +43,12 @@ import com.instructure.pandautils.views.CanvasWebViewWrapper
  * [ComposeCanvasWebViewStateViewModel] and overwrite each other's [webViewState] (e.g. the syllabus
  * and front-page tabs would display each other's content). The default `null` is equivalent to
  * `viewModel()` and is safe when only one wrapper exists per scope.
+ *
+ * @param preserveState When `true` (default) the WebView's state is saved/restored across
+ * configuration changes to keep scroll position and DOM. Set to `false` for short, read-only
+ * previews that reference local `file://` resources: `WebView.restoreState()` does not re-render
+ * `file://` image subresources of a `loadDataWithBaseURL` page, so we reload the HTML fresh on
+ * recreation instead, which renders them correctly.
  */
 @Composable
 fun ComposeCanvasWebViewWrapper(
@@ -53,6 +59,7 @@ fun ComposeCanvasWebViewWrapper(
     title: String? = null,
     baseUrl: String? = null,
     webViewStateKey: String? = null,
+    preserveState: Boolean = true,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
@@ -108,7 +115,7 @@ fun ComposeCanvasWebViewWrapper(
             update = { view ->
                 configKey // Read configuration to trigger update on change
                 savedHtml.value = content // Update saved HTML on each update
-                if (webViewState.isEmpty) {
+                if (webViewState.isEmpty || !preserveState) {
                     if (useInAppFormatting) {
                         view.loadHtml(savedHtml.value, title, baseUrl)
                     } else {
@@ -133,7 +140,9 @@ fun ComposeCanvasWebViewWrapper(
             },
             onRelease = {
                 savedThemeSwitched.putBoolean("themeSwitched", it.themeSwitched)
-                it.webView.saveState(webViewState)
+                if (preserveState) {
+                    it.webView.saveState(webViewState)
+                }
             },
             modifier = modifier.fillMaxSize()
         )

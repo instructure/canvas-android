@@ -67,6 +67,7 @@ import com.instructure.student.ui.pages.classic.HelpPage
 import com.instructure.student.ui.pages.classic.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.pages.classic.ModuleProgressionPage
 import com.instructure.student.ui.pages.classic.ModulesPage
+import com.instructure.student.ui.pages.classic.NewQuizWebViewPage
 import com.instructure.student.ui.pages.classic.NotificationPage
 import com.instructure.student.ui.pages.classic.PageDetailsPage
 import com.instructure.student.ui.pages.classic.PageListPage
@@ -117,6 +118,7 @@ abstract class StudentTest : CanvasTest() {
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()
+    val newQuizWebViewPage = NewQuizWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
     val groupBrowserPage = GroupBrowserPage()
     val conferenceListPage = ConferenceListPage()

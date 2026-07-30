@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.DiscussionTopicHeader.ReadState
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.accessibilityClassName
@@ -88,7 +89,9 @@ class DiscussionListHolder(private val binding: AdapterDiscussionBinding) : Recy
         val unreadDisplayCount = if (discussionTopicHeader.unreadCount > 99) context.getString(R.string.max_count)
         else discussionTopicHeader.unreadCount.toString()
 
-        statusIndicator.setVisible(discussionTopicHeader.unreadCount != 0)
+        statusIndicator.setVisible(
+            discussionTopicHeader.unreadCount != 0 || discussionTopicHeader.status == ReadState.UNREAD
+        )
 
         readUnreadCounts.text = context.getString(
             R.string.discussions_unread_replies_blank,

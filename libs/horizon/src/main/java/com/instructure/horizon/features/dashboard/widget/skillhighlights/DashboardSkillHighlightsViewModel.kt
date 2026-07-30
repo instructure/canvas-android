@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetSkillsUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.SkillHighlight
@@ -32,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardSkillHighlightsViewModel @Inject constructor(
-    private val repository: DashboardSkillHighlightsRepository
+    private val getSkillsUseCase: GetSkillsUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -52,7 +53,7 @@ class DashboardSkillHighlightsViewModel @Inject constructor(
 
     private suspend fun loadSkillsData(forceNetwork: Boolean = false) {
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-        val skills = repository.getSkills(completedOnly = true, forceNetwork = forceNetwork)
+        val skills = getSkillsUseCase(GetSkillsUseCase.Params(completedOnly = true, forceNetwork = forceNetwork))
 
         val topSkills = skills
             .map { skill ->

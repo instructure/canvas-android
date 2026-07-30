@@ -14,6 +14,7 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.student.ui.pages.classic
 
 import android.view.View
@@ -26,7 +27,8 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
 import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.dataseeding.model.ClassicQuizzesApiModel
+import com.instructure.dataseeding.model.NewQuizzesApiModel
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
@@ -39,6 +41,7 @@ import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
@@ -67,7 +70,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
     }
 
-    fun assertQuizDisplayed(quiz: QuizApiModel) {
+    fun assertQuizDisplayed(quiz: ClassicQuizzesApiModel) {
         assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
     }
 
@@ -79,7 +82,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         onView(withId(R.id.listView) + withAncestor(R.id.quizListPage)).check(RecyclerViewItemCountAssertion(count + 1))
     }
 
-    fun selectQuiz(quiz: QuizApiModel) {
+    fun selectQuiz(quiz: ClassicQuizzesApiModel) {
         clickMatcher(allOf(withId(R.id.title), withText(quiz.title)))
     }
 
@@ -87,8 +90,20 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         clickMatcher(allOf(withId(R.id.title), withText(quiz.title)))
     }
 
-    fun assertQuizNotDisplayed(quiz: QuizApiModel) {
-        onView(withText(quiz.title)).check(doesNotExist())
+    fun assertQuizNotDisplayed(quiz: ClassicQuizzesApiModel) {
+        onView(withText(quiz.title)).waitForCheck(doesNotExist())
+    }
+
+    fun assertNewQuizDisplayed(newQuiz: NewQuizzesApiModel) {
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText(newQuiz.title)))
+    }
+
+    fun selectNewQuiz(newQuiz: NewQuizzesApiModel) {
+        clickMatcher(allOf(withId(R.id.title), withText(newQuiz.title)))
+    }
+
+    fun assertNewQuizNotDisplayed(newQuiz: NewQuizzesApiModel) {
+        onView(withText(newQuiz.title)).waitForCheck(doesNotExist())
     }
 
     fun refresh() {

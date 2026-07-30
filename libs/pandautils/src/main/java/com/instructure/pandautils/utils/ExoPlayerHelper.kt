@@ -203,9 +203,13 @@ class ExoAgent private constructor(val uri: Uri) {
                 currentState = when (playbackState) {
                     Player.STATE_BUFFERING -> ExoAgentState.BUFFERING
                     Player.STATE_ENDED -> {
+                        // Rewind and pause instead of releasing the player. Clients that swap back to
+                        // a thumbnail on ENDED (the legacy fullscreen views) release it themselves via
+                        // reset(); clients that keep the PlayerView visible (the Compose inline
+                        // preview) need a live player so the controls stay responsive and playback can
+                        // be restarted.
                         player?.seekToDefaultPosition()
-                        player?.stop()
-                        player?.release()
+                        player?.playWhenReady = false
                         ExoAgentState.ENDED
                     }
 

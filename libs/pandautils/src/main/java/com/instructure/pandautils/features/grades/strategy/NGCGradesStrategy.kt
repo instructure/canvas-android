@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
@@ -31,15 +30,12 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.applyAssignmentTypeFilters
 import com.instructure.pandautils.features.assignments.list.filter.applyStatusFilter
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
-import com.instructure.pandautils.features.grades.GradeCalculator
 import com.instructure.pandautils.features.grades.GradesFilterUiState
 import com.instructure.pandautils.features.grades.GradesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import javax.inject.Inject
 
-class NGCGradesStrategy @Inject constructor(
-    private val gradeCalculator: GradeCalculator,
-) : GradesExperienceStrategy {
+class NGCGradesStrategy @Inject constructor() : GradesExperienceStrategy {
 
     override fun initialFilterState(
         course: Course,
@@ -118,7 +114,8 @@ class NGCGradesStrategy @Inject constructor(
     ): List<AssignmentGroupUiState> {
         if (sortBy != SortBy.GROUP) return items
 
-        val filtered = if (course?.isApplyAssignmentGroupWeights == true) {
+        // Hide groups with no weight when the course applies assignment-group weights.
+        return if (course?.isApplyAssignmentGroupWeights == true) {
             val weightedGroupIds = domainGroups
                 .filter { it.groupWeight > 0.0 }
                 .map { it.id }
@@ -126,26 +123,6 @@ class NGCGradesStrategy @Inject constructor(
             items.filter { it.id in weightedGroupIds }
         } else {
             items
-        }
-
-        val whatIfScores = if (showWhatIfScore) {
-            filtered.flatMap { it.assignments }
-                .filter { it.whatIfScore != null }
-                .associate { it.id to it.whatIfScore!! }
-        } else {
-            emptyMap()
-        }
-
-        val groupsById = domainGroups.associateBy { it.id }
-        return filtered.map { item ->
-            val originalGroup = groupsById[item.id] ?: return@map item.copy(gradeText = null)
-            val percent = gradeCalculator.calculateGrade(
-                groups = listOf(originalGroup),
-                whatIfScores = whatIfScores,
-                applyGroupWeights = false,
-                onlyGraded = onlyGraded,
-            )
-            item.copy(gradeText = NumberHelper.doubleToPercentage(percent))
         }
     }
 }

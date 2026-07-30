@@ -8,12 +8,12 @@
 # Test and automation ownership.
 # Applies to the automation modules and all standard Android test sources,
 # as well as any file matching the *Test.kt or *Tests.kt naming convention.
-/automation/espresso/** @kdeakinstructure @adamNagy56
-/automation/dataseedingapi/** @kdeakinstructure @adamNagy56
-**/src/test/** @kdeakinstructure @adamNagy56
-**/src/androidTest/** @kdeakinstructure @adamNagy56
-*Test.kt @kdeakinstructure @adamNagy56
-*Tests.kt @kdeakinstructure @adamNagy56
+/automation/espresso/** @adamNagy56
+/automation/dataseedingapi/** @adamNagy56
+**/src/test/** @adamNagy56
+**/src/androidTest/** @adamNagy56
+*Test.kt @adamNagy56
+*Tests.kt @adamNagy56
 
 # Horizon module ownership.
 # Takes precedence over the test ownership rules for files within libs/horizon.

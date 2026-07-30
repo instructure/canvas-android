@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.interaction
 
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
@@ -51,6 +52,7 @@ class EditQuizDetailsInteractionTest : TeacherTest() {
     }
 
     @Test
+    @ReleaseExclude
     fun editQuizTitle() {
         getToEditQuizDetailsPage()
         val newName = randomString()

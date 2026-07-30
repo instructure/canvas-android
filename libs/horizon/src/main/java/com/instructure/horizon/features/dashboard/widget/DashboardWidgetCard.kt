@@ -51,6 +51,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.pandautils.compose.modifiers.conditional
 
 data class DashboardWidgetPageState(
@@ -72,6 +75,7 @@ fun DashboardWidgetCard(
     isLoading: Boolean = false,
     useMinWidth: Boolean = true,
     onClick: (() -> Unit)? = null,
+    onClose: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val context = LocalContext.current
@@ -146,6 +150,17 @@ fun DashboardWidgetCard(
                         style = HorizonTypography.p2,
                         color = HorizonColors.Text.dataPoint(),
                         modifier = Modifier.shimmerEffect(isLoading)
+                    )
+                }
+
+                if (onClose != null) {
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    IconButton(
+                        iconRes = R.drawable.close,
+                        size = IconButtonSize.SMALL,
+                        color = IconButtonColor.Ghost,
+                        contentDescription = stringResource(R.string.offline_dismissSync),
+                        onClick = onClose,
                     )
                 }
             }

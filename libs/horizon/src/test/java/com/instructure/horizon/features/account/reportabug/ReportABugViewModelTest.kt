@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.ErrorReportResult
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.SubmitErrorReportUseCase
 import com.instructure.horizon.features.account.AccountEvent
 import com.instructure.horizon.features.account.AccountEventHandler
 import io.mockk.coEvery
@@ -49,7 +50,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class ReportABugViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: ReportABugRepository = mockk(relaxed = true)
+    private val submitErrorReportUseCase: SubmitErrorReportUseCase = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val accountEventHandler: AccountEventHandler = AccountEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -80,7 +81,7 @@ class ReportABugViewModelTest {
         every { context.getString(R.string.reportAProblemTopicUrgentIssue) } returns "Urgent issue"
         every { context.getString(R.string.reportAProblemTopicCriticalError) } returns "Critical system error"
 
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } returns testErrorReportResult
+        coEvery { submitErrorReportUseCase(any()) } returns testErrorReportResult
     }
 
     @After
@@ -253,12 +254,7 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = any(),
-                severity = ErrorReportAPI.Severity.COMMENT.tag
-            )
+            submitErrorReportUseCase(match { it.severity == ErrorReportAPI.Severity.COMMENT.tag })
         }
     }
 
@@ -272,12 +268,7 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = any(),
-                severity = ErrorReportAPI.Severity.NOT_URGENT.tag
-            )
+            submitErrorReportUseCase(match { it.severity == ErrorReportAPI.Severity.NOT_URGENT.tag })
         }
     }
 
@@ -291,12 +282,7 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = any(),
-                severity = ErrorReportAPI.Severity.WORKAROUND_POSSIBLE.tag
-            )
+            submitErrorReportUseCase(match { it.severity == ErrorReportAPI.Severity.WORKAROUND_POSSIBLE.tag })
         }
     }
 
@@ -310,12 +296,7 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = any(),
-                severity = ErrorReportAPI.Severity.BLOCKING.tag
-            )
+            submitErrorReportUseCase(match { it.severity == ErrorReportAPI.Severity.BLOCKING.tag })
         }
     }
 
@@ -329,12 +310,7 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = any(),
-                severity = ErrorReportAPI.Severity.CRITICAL.tag
-            )
+            submitErrorReportUseCase(match { it.severity == ErrorReportAPI.Severity.CRITICAL.tag })
         }
     }
 
@@ -351,7 +327,7 @@ class ReportABugViewModelTest {
     }
 
     @Test
-    fun `successful submit calls repository with correct parameters`() = runTest {
+    fun `successful submit calls use case with correct parameters`() = runTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
@@ -360,11 +336,13 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = "Test Subject",
-                description = "Test Description",
-                email = "test@example.com",
-                severity = ErrorReportAPI.Severity.WORKAROUND_POSSIBLE.tag
+            submitErrorReportUseCase(
+                SubmitErrorReportUseCase.Params(
+                    subject = "Test Subject",
+                    description = "Test Description",
+                    email = "test@example.com",
+                    severity = ErrorReportAPI.Severity.WORKAROUND_POSSIBLE.tag,
+                )
             )
         }
     }
@@ -405,18 +383,13 @@ class ReportABugViewModelTest {
         viewModel.uiState.value.onSubmit()
 
         coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = "custom@example.com",
-                severity = any()
-            )
+            submitErrorReportUseCase(match { it.email == "custom@example.com" })
         }
     }
 
     @Test
     fun `failed submit sets snackbarMessage on error`() = runTest {
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { submitErrorReportUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
@@ -429,7 +402,7 @@ class ReportABugViewModelTest {
 
     @Test
     fun `failed submit sets isLoading to false after error`() = runTest {
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { submitErrorReportUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
@@ -442,7 +415,7 @@ class ReportABugViewModelTest {
 
     @Test
     fun `failed submit does not set shouldNavigateBack`() = runTest {
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { submitErrorReportUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
@@ -460,7 +433,7 @@ class ReportABugViewModelTest {
             accountEventHandler.events.collect { events.add(it) }
         }
 
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { submitErrorReportUseCase(any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
@@ -476,7 +449,7 @@ class ReportABugViewModelTest {
     private fun getViewModel(): ReportABugViewModel {
         return ReportABugViewModel(
             context,
-            repository,
+            submitErrorReportUseCase,
             apiPrefs,
             accountEventHandler
         )

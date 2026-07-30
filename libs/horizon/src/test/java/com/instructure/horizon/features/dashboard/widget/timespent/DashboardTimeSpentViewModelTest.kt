@@ -17,7 +17,11 @@
 package com.instructure.horizon.features.dashboard.widget.timespent
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.horizon.domain.usecase.GetCoursesWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetTimeSpentDataUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.model.TimeSpentDataEntry
+import com.instructure.horizon.model.TimeSpentWidgetData
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -37,7 +41,8 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardTimeSpentViewModelTest {
 
-    private val repository: DashboardTimeSpentRepository = mockk(relaxed = true)
+    private val getCoursesWithProgressUseCase: GetCoursesWithProgressUseCase = mockk(relaxed = true)
+    private val getTimeSpentDataUseCase: GetTimeSpentDataUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: DashboardTimeSpentViewModel
@@ -52,6 +57,8 @@ class DashboardTimeSpentViewModelTest {
         Dispatchers.resetMain()
         unmockkAll()
     }
+
+    private fun createViewModel() = DashboardTimeSpentViewModel(getCoursesWithProgressUseCase, getTimeSpentDataUseCase)
 
     @Test
     fun `init loads time spent data successfully`() = runTest {
@@ -68,10 +75,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
@@ -84,9 +91,9 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `init handles error gracefully`() = runTest {
-        coEvery { repository.getCourses(forceNetwork = false) } throws Exception("Network error")
+        coEvery { getCoursesWithProgressUseCase(false) } throws Exception("Network error")
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.ERROR, state.state)
@@ -105,10 +112,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals((minutesSpent / 60), state.cardState.hours)
@@ -123,10 +130,10 @@ class DashboardTimeSpentViewModelTest {
             data = emptyList()
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(0, state.cardState.hours)
@@ -146,10 +153,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(150 / 60, state.cardState.hours)
@@ -168,10 +175,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(0, state.cardState.hours)
@@ -191,10 +198,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val initialState = viewModel.uiState.value
         assertEquals(null, initialState.cardState.selectedCourseId)
@@ -217,10 +224,10 @@ class DashboardTimeSpentViewModelTest {
             )
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         val initialState = viewModel.uiState.value
         initialState.cardState.onCourseSelected("Math 101")
@@ -235,24 +242,24 @@ class DashboardTimeSpentViewModelTest {
     }
 
     @Test
-    fun `refresh calls repository with forceNetwork true`() = runTest {
+    fun `refresh calls use case with forceNetwork true`() = runTest {
         val courses = emptyList<CourseWithProgress>()
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = emptyList()
         )
 
-        coEvery { repository.getCourses(forceNetwork = any()) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(any()) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         var refreshCompleted = false
         viewModel.uiState.value.onRefresh {
             refreshCompleted = true
         }
 
-        coVerify { repository.getTimeSpentData(forceNetwork = true) }
+        coVerify { getTimeSpentDataUseCase(match { it.forceNetwork }) }
         assertEquals(true, refreshCompleted)
     }
 
@@ -264,11 +271,11 @@ class DashboardTimeSpentViewModelTest {
             data = emptyList()
         )
 
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
-        coEvery { repository.getCourses(forceNetwork = true) } throws Exception("Network error")
+        coEvery { getCoursesWithProgressUseCase(false) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(true) } throws Exception("Network error")
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         var refreshCompleted = false
         viewModel.uiState.value.onRefresh {
@@ -288,10 +295,10 @@ class DashboardTimeSpentViewModelTest {
             data = emptyList()
         )
 
-        coEvery { repository.getCourses(forceNetwork = any()) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
+        coEvery { getCoursesWithProgressUseCase(any()) } returns courses
+        coEvery { getTimeSpentDataUseCase(any()) } returns timeSpentData
 
-        viewModel = DashboardTimeSpentViewModel(repository)
+        viewModel = createViewModel()
 
         viewModel.uiState.value.onRefresh {}
 

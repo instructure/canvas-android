@@ -21,6 +21,7 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -38,8 +39,8 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
     private val bottomNavigationView by OnViewWithId(R.id.bottom_nav)
-    private val alertsItem by OnViewWithId(R.id.alerts)
-    private val calendarItem by OnViewWithId(R.id.calendar)
+    private val alertsItem by WaitForViewWithId(R.id.alerts)
+    private val calendarItem by WaitForViewWithId(R.id.calendar)
 
     fun waitForRender() {
         onViewWithId(R.id.navigationButtonHolder).waitForCheck(ViewAssertions.matches(ViewMatchers.isDisplayed()))

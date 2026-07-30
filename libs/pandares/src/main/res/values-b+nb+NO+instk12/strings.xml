@@ -1462,6 +1462,8 @@
     <string name="quizTimeLimit">Tidsbegrensing: %s</string>
     <string name="allowedAttempts">Tillatte forsøk: %s</string>
     <string name="usedAttempts">Forsøk brukt: %d</string>
+    <string name="assignmentAttemptsUnlimited">Ubegrensede forsøk</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d av %2$d forsøk</string>
     <string name="generalUnexpectedError">Det oppsto en uventet feil.</string>
 
     <string name="deleteSelected">Slett</string>
@@ -1505,6 +1507,8 @@
     <string name="aboutLoginTitle">Innloggings-ID</string>
     <string name="aboutEmailTitle">E-post</string>
     <string name="aboutVersionTitle">Versjon</string>
+    <string name="aboutOpenSourceTitle">Åpne kilder og lisenser</string>
+    <string name="aboutOpenSourceSubtitle">Vis kildekoden og åpne kildelisenser.</string>
     <string name="assignmentRefreshError">Det oppstod et problem med lasting av denne oppgaven. Kontroller tilkoblingen og prøv på nytt.</string>
     <string name="instructure_logo">Instructure-logo</string>
     <string name="preferences">Preferanser</string>
@@ -1953,6 +1957,9 @@
     <string name="gradePreferencesHeaderSortBy">Sortert på</string>
     <string name="gradesEmptyTitle">Ingen oppgaver</string>
     <string name="gradesEmptyMessage">Det ser ut som det ikke er opprettet oppgaver i dette området enda.</string>
+    <string name="gradesEmptyMessageForPeriod">Det er ingen oppgaver i %s.</string>
+    <string name="gradesCommentsContentDescription">%d kommentarer</string>
+    <string name="gradesUnreadCommentsContentDescription">%d uleste kommentarer</string>
     <string name="noMatchingAssignments">Ingen matchende oppgaver</string>
     <string name="noMatchingAssignmentsDescription">Ingen oppgaver matcher søket ditt. Prøv et annet søkeord.</string>
     <string name="errorLoadingGrades">Vi har problemer med å laste inn elevenes vurderinger. Prøv å laste inn siden på nytt eller sjekk innom senere.</string>

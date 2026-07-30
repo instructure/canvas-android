@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.JourneyAdapter
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
@@ -118,6 +119,7 @@ abstract class LogoutTask(
                 CanvasRestAdapter.okHttpClient.cache?.evictAll()
                 RestBuilder.clearCacheDirectory()
                 QLClientConfig.clearCacheDirectory()
+                JourneyAdapter.clearCacheDirectory(ContextKeeper.appContext)
                 Utils.getAttachmentsDirectory(ContextKeeper.appContext).deleteRecursively()
                 File(ContextKeeper.appContext.filesDir, "cache").deleteRecursively()
 

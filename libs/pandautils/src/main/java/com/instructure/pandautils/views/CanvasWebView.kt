@@ -63,6 +63,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -81,6 +82,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.requestWebPermissions
@@ -152,6 +154,10 @@ class CanvasWebView @JvmOverloads constructor(
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
 
     var overrideHtmlFormatColors: HtmlFormatColors? = null
+
+    // Colors to use when the user switches the content to light appearance (see CanvasWebViewWrapper's
+    // theme switch). Lets a consumer provide its own light theme instead of the generic defaults.
+    var overrideHtmlFormatColorsSwitched: HtmlFormatColors? = null
 
     inner class JavascriptInterface {
         @android.webkit.JavascriptInterface  // Must match Javascript interface method of VideoWebChromeClient
@@ -643,16 +649,12 @@ class CanvasWebView @JvmOverloads constructor(
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", HtmlSanitizer.escapeForHtmlContext(title))
-            .replace("{\$BACKGROUND$}", colorResToHexString(colors.backgroundColorRes))
-            .replace("{\$COLOR$}", colorResToHexString(colors.textColor))
-            .replace("{\$LINK_COLOR$}", colorResToHexString(colors.linkColor))
-            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(colors.visitedLinkColor))
+            .replace("{\$BACKGROUND$}", colors.backgroundHex(context))
+            .replace("{\$COLOR$}", colors.textHex(context))
+            .replace("{\$LINK_COLOR$}", colors.linkHex(context))
+            .replace("{\$VISITED_LINK_COLOR\$}", colors.visitedLinkHex(context))
             .replace("{\$FONT_NAME$}", fontName)
             .replace("{\$FONT_PATH$}", fontPath)
-    }
-
-    private fun colorResToHexString(@ColorRes colorRes: Int): String {
-        return "#" + Integer.toHexString(context.getColor(colorRes)).substring(2)
     }
 
     /**
@@ -913,10 +915,17 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     /**
-     * Checks if the HTML content contains Studio LTI embed iframes
+     * Checks if the HTML content contains Studio LTI embed iframes.
+     *
+     * We key off the `studio_embed` marker class that [HtmlContentFormatter.iframeWithStudioEmbed]
+     * injects for every Studio embed, rather than matching the encoded immersive-view launch type.
+     * The launch type lives inside an already URL-encoded url= parameter that gets encoded a second
+     * time when it is spliced into the div's onClick JS context, so matching on its encoded form is
+     * brittle: an encoding change (e.g. the XSS hardening in MBL-20032) silently breaks detection,
+     * the post-message bridge script is never injected, and Studio videos become unplayable.
      */
     private fun containsStudioContent(html: String): Boolean {
-        return html.contains(URLEncoder.encode("custom_arc_launch_type=immersive_view", "UTF-8"), ignoreCase = true)
+        return html.contains(STUDIO_EMBED_MARKER, ignoreCase = true)
     }
 
     /**
@@ -1000,6 +1009,7 @@ class CanvasWebView @JvmOverloads constructor(
         private const val VIDEO_PICKER_RESULT_CODE = 1202
         private const val COPY_LINK_ID = 9357
         private const val SHARE_LINK_ID = 9358
+        private const val STUDIO_EMBED_MARKER = "class=\"" + HtmlContentFormatter.STUDIO_EMBED_CLASS + "\""
 
         fun getReferrer(shouldIncludeProtocol: Boolean = false): String {
             return if (shouldIncludeProtocol) ApiPrefs.fullDomain else ApiPrefs.domain
@@ -1075,12 +1085,32 @@ class CanvasWebView @JvmOverloads constructor(
     }
 }
 
+/**
+ * Colors applied to WebView HTML content. By default they resolve from color resources, but each can
+ * be overridden with a resolved [ColorInt] (e.g. a Compose/design-system color) — when an int is
+ * provided it takes precedence over the matching resource, otherwise the resource is used. This lets
+ * callers pass dynamic colors without static resources while leaving resource-based call sites unchanged.
+ */
 data class HtmlFormatColors(
     @ColorRes val backgroundColorRes: Int = R.color.backgroundLightest,
     @ColorRes val textColor: Int = R.color.textDarkest,
     @ColorRes val linkColor: Int = R.color.textInfo,
-    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade
-)
+    @ColorRes val visitedLinkColor: Int = R.color.textMasquerade,
+    @ColorInt val backgroundColorInt: Int? = null,
+    @ColorInt val textColorInt: Int? = null,
+    @ColorInt val linkColorInt: Int? = null,
+    @ColorInt val visitedLinkColorInt: Int? = null,
+) {
+    fun backgroundHex(context: Context): String = hex(context, backgroundColorInt, backgroundColorRes)
+    fun textHex(context: Context): String = hex(context, textColorInt, textColor)
+    fun linkHex(context: Context): String = hex(context, linkColorInt, linkColor)
+    fun visitedLinkHex(context: Context): String = hex(context, visitedLinkColorInt, visitedLinkColor)
+
+    private fun hex(context: Context, @ColorInt colorInt: Int?, @ColorRes colorRes: Int): String {
+        val color = colorInt ?: context.getColor(colorRes)
+        return String.format("#%06X", 0xFFFFFF and color)
+    }
+}
 
 class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
 

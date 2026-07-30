@@ -16,21 +16,18 @@
  */
 package com.instructure.teacher.ui.e2e.classic
 
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.pdf.PdfDocument
-import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
-import androidx.test.uiautomator.UiSelector
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -53,7 +50,6 @@ import com.instructure.teacher.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileWriter
 
 @HiltAndroidTest
@@ -108,7 +104,7 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(PREPARATION_TAG, "Create a discussion attachment file.")
         val discussionAttachmentFile = File(
-                Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+                Randomizer.randomTextFileName(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir.absolutePath))
                 .apply { createNewFile() }
 
         Log.d(PREPARATION_TAG, "Add some content to '${discussionAttachmentFile.name}' file")
@@ -250,6 +246,7 @@ class FilesE2ETest: TeacherComposeTest() {
 
     @E2E
     @Test
+    @ReleaseExclude
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E)
     fun testCommentAttachmentUploadWithUIE2E() {
 
@@ -291,24 +288,9 @@ class FilesE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${submissionUploadInfo.fileName}' file has selected.")
         speedGraderPage.assertSelectedAttachmentItemDisplayed(submissionUploadInfo.fileName)
 
-        Log.d(PREPARATION_TAG, "Create a PDF file for comment attachment test.")
-        val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
-        val pdfFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), pdfFileName)
-        pdfFile.createNewFile()
-
-        Log.d(PREPARATION_TAG, "Write content to PDF file '${pdfFile.name}'.")
-        PdfDocument().apply {
-            val pageInfo = PdfDocument.PageInfo.Builder(300, 300, 1).create()
-            val page = startPage(pageInfo)
-            val canvas = page.canvas
-            val paint = Paint()
-            paint.color = Color.BLACK
-            paint.textSize = 12f
-            canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
-            finishPage(page)
-            writeTo(FileOutputStream(pdfFile))
-            close()
-        }
+        Log.d(PREPARATION_TAG, "Setup the 'samplepdf.pdf' file on the device for comment attachment.")
+        val pdfFileName = "samplepdf.pdf"
+        setupFileOnDevice(pdfFileName)
 
         Log.d(STEP_TAG, "Click on comment attachment button.")
         speedGraderPage.clickCommentAttachmentButton()
@@ -316,40 +298,22 @@ class FilesE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Select 'Choose Files' from attachment type dialog.")
         speedGraderPage.clickChooseFilesOption()
 
-        Log.d(STEP_TAG, "Select 'Device' as file source.")
-        fileChooserPage.chooseDevice()
-
-        Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
-        val pdfFileObject = device.findObject(UiSelector().textContains(pdfFileName))
-        if (pdfFileObject.exists()) {
-            Log.d(STEP_TAG, "Found PDF file with exact name, clicking...")
-            pdfFileObject.click()
-        } else {
-            Log.d(STEP_TAG, "PDF file not immediately visible, trying to navigate to Downloads...")
-            val showRootsButton = device.findObject(UiSelector().descriptionContains("Show roots"))
-            if (showRootsButton.exists()) {
-                showRootsButton.click()
-            }
-
-            val downloadsItem = device.findObject(UiSelector().textContains("Downloads"))
-            if (downloadsItem.exists()) {
-                downloadsItem.click()
-            }
-
-            val pdfFileObject2 = device.findObject(UiSelector().textContains(pdfFileName))
-            if (pdfFileObject2.exists()) {
-                pdfFileObject2.click()
-            }
+        Log.d(PREPARATION_TAG, "Simulate file picker intent for '$pdfFileName'.")
+        Intents.init()
+        try {
+            stubFilePickerIntent(pdfFileName)
+            fileChooserPage.chooseDevice()
+        } finally {
+            Intents.release()
         }
-        device.waitForIdle()
 
         Log.d(STEP_TAG, "Click 'UPLOAD' button.")
         fileChooserPage.clickUpload()
         triggerWorkManagerJobs("FileUploadWorker")
 
-        Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '${pdfFile.name}' is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '$pdfFileName' is displayed.")
         Thread.sleep(5000) // Wait for upload to complete and comment to be sent
-        speedGraderPage.assertCommentAttachmentDisplayed(pdfFile.name)
+        speedGraderPage.assertCommentAttachmentDisplayed(pdfFileName)
 
         Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because one comment with attachment was uploaded.")
         speedGraderPage.assertCommentsLabelDisplayed(1)

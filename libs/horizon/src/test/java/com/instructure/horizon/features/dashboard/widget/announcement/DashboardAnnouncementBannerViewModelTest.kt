@@ -18,8 +18,12 @@ package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetUnreadAnnouncementsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.model.HorizonAnnouncement
+import com.instructure.horizon.model.HorizonAnnouncementKind
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -31,6 +35,7 @@ import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -43,9 +48,11 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardAnnouncementBannerViewModelTest {
-    private val repository: DashboardAnnouncementBannerRepository = mockk(relaxed = true)
+    private val getUnreadAnnouncementsUseCase: GetUnreadAnnouncementsUseCase = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val eventHandler = DashboardEventHandler()
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -53,6 +60,7 @@ class DashboardAnnouncementBannerViewModelTest {
         mockkObject(ThemePrefs)
         every { ThemePrefs.brandColor } returns 1
         every { context.getString(R.string.notificationsAnnouncementCategoryLabel) } returns "Announcement"
+        every { offlineState.isOffline } returns isOfflineFlow
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -62,18 +70,39 @@ class DashboardAnnouncementBannerViewModelTest {
         unmockkAll()
     }
 
+    private fun courseAnnouncement(title: String, courseId: Long, courseName: String): HorizonAnnouncement =
+        HorizonAnnouncement(
+            id = 1L,
+            kind = HorizonAnnouncementKind.COURSE,
+            courseId = courseId,
+            courseName = courseName,
+            title = title,
+            message = "",
+            authorDisplayName = null,
+            postedAt = Date(),
+            isUnread = true,
+            isClosed = false,
+        )
+
+    private fun accountAnnouncement(title: String): HorizonAnnouncement =
+        HorizonAnnouncement(
+            id = 2L,
+            kind = HorizonAnnouncementKind.ACCOUNT,
+            courseId = null,
+            courseName = null,
+            title = title,
+            message = "",
+            authorDisplayName = null,
+            postedAt = Date(),
+            isUnread = true,
+            isClosed = false,
+        )
+
     @Test
     fun `Test initialization loads announcement data`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Test Announcement",
-                source = "Course 101",
-                date = Date(),
-                type = AnnouncementType.COURSE,
-                route = "test/route"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(match { !it.forceRefresh }) } returns listOf(
+            courseAnnouncement("Test Announcement", 101L, "Course 101")
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -82,28 +111,15 @@ class DashboardAnnouncementBannerViewModelTest {
         assertEquals(DashboardItemState.SUCCESS, state.state)
         assertEquals(1, state.cardState.items.size)
         assertEquals("Test Announcement", state.cardState.items[0].title)
-        coVerify { repository.getUnreadAnnouncements(false) }
+        coVerify { getUnreadAnnouncementsUseCase(match { !it.forceRefresh }) }
     }
 
     @Test
     fun `Test shows all announcements`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "First Announcement",
-                source = "Course 101",
-                date = Date(),
-                type = AnnouncementType.COURSE,
-                route = "test/route1"
-            ),
-            AnnouncementBannerItem(
-                title = "Second Announcement",
-                source = "Course 102",
-                date = Date(),
-                type = AnnouncementType.GLOBAL,
-                route = "test/route2"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(match { !it.forceRefresh }) } returns listOf(
+            courseAnnouncement("First Announcement", 101L, "Course 101"),
+            accountAnnouncement("Second Announcement"),
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -116,7 +132,7 @@ class DashboardAnnouncementBannerViewModelTest {
 
     @Test
     fun `Test no announcements returns empty list`() = runTest {
-        coEvery { repository.getUnreadAnnouncements(false) } returns emptyList()
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns emptyList()
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -127,8 +143,8 @@ class DashboardAnnouncementBannerViewModelTest {
     }
 
     @Test
-    fun `Test error state when repository throws exception`() = runTest {
-        coEvery { repository.getUnreadAnnouncements(false) } throws Exception("Network error")
+    fun `Test error state when use case throws exception`() = runTest {
+        coEvery { getUnreadAnnouncementsUseCase(any()) } throws Exception("Network error")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -138,18 +154,10 @@ class DashboardAnnouncementBannerViewModelTest {
     }
 
     @Test
-    fun `Test refresh calls repository with forceNetwork true`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Test Announcement",
-                source = "Course 101",
-                date = Date(),
-                type = AnnouncementType.COURSE,
-                route = "test/route"
-            )
+    fun `Test refresh calls use case with forceNetwork true`() = runTest {
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            courseAnnouncement("Test Announcement", 101L, "Course 101")
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
-        coEvery { repository.getUnreadAnnouncements(true) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -159,21 +167,14 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         assertTrue(completed)
-        coVerify { repository.getUnreadAnnouncements(true) }
+        coVerify { getUnreadAnnouncementsUseCase(match { it.forceRefresh }) }
     }
 
     @Test
     fun `Test refresh updates state to loading then success`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Test Announcement",
-                source = "Course 101",
-                date = Date(),
-                type = AnnouncementType.GLOBAL,
-                route = "test/route"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            accountAnnouncement("Test Announcement")
         )
-        coEvery { repository.getUnreadAnnouncements(any()) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -189,17 +190,10 @@ class DashboardAnnouncementBannerViewModelTest {
 
     @Test
     fun `Test refresh with error sets error state`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Test Announcement",
-                source = "Course 101",
-                date = Date(),
-                type = AnnouncementType.COURSE,
-                route = "test/route"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(match { !it.forceRefresh }) } returns listOf(
+            courseAnnouncement("Test Announcement", 101L, "Course 101")
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
-        coEvery { repository.getUnreadAnnouncements(true) } throws Exception("Refresh failed")
+        coEvery { getUnreadAnnouncementsUseCase(match { it.forceRefresh }) } throws Exception("Refresh failed")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -215,49 +209,38 @@ class DashboardAnnouncementBannerViewModelTest {
 
     @Test
     fun `Test course announcement type`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Course Announcement",
-                source = "Introduction to Kotlin",
-                date = Date(),
-                type = AnnouncementType.COURSE,
-                route = "courses/123/announcements/456"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            courseAnnouncement("Course Announcement", 123L, "Introduction to Kotlin")
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertEquals(1, state.cardState.items.size)
-        assertEquals(announcements[0].route, state.cardState.items[0].route)
         assertEquals("Introduction to Kotlin", state.cardState.items[0].source)
     }
 
     @Test
     fun `Test global announcement type`() = runTest {
-        val announcements = listOf(
-            AnnouncementBannerItem(
-                title = "Global Announcement",
-                source = null,
-                date = Date(),
-                type = AnnouncementType.GLOBAL,
-                route = "horizon/inbox/account_notification/123"
-            )
+        coEvery { getUnreadAnnouncementsUseCase(any()) } returns listOf(
+            accountAnnouncement("Global Announcement")
         )
-        coEvery { repository.getUnreadAnnouncements(false) } returns announcements
 
         val viewModel = getViewModel()
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
         assertEquals(1, state.cardState.items.size)
-        assertEquals(announcements[0].route, state.cardState.items[0].route)
         assertEquals(null, state.cardState.items[0].source)
     }
 
     private fun getViewModel(): DashboardAnnouncementBannerViewModel {
-        return DashboardAnnouncementBannerViewModel(repository, eventHandler, context)
+        return DashboardAnnouncementBannerViewModel(
+            getUnreadAnnouncementsUseCase,
+            eventHandler,
+            context,
+            offlineState,
+        )
     }
 }

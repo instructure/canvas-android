@@ -18,6 +18,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -35,6 +36,10 @@ android {
 
     compileSdkVersion Versions.COMPILE_SDK
     buildToolsVersion Versions.BUILD_TOOLS
+
+    buildFeatures {
+        compose true
+    }
 
     defaultConfig {
         minSdkVersion Versions.MIN_SDK

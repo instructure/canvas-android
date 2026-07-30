@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">งานของฉัน</string>
     <string name="ngc_courseHomeTabMore">มากกว่า</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">ใช้ได้จนถึง</string>
+    <string name="ngc_quizSettings">ค่าปรับตั้งแบบทดสอบ</string>
+    <string name="ngc_submission">ผลงานจัดส่ง</string>
+    <string name="ngc_continueDraft">ดำเนินการในฉบับร่างต่อไป</string>
+    <string name="ngc_assignmentReminder">การแจ้งเตือนภารกิจ</string>
+    <string name="ngc_classPerformance">ผลสัมฤทธิ์ของชั้นเรียน</string>
+    <string name="ngc_newAttempt">การดำเนินการใหม่</string>
+    <string name="ngc_submitAssignment">จัดส่งภารกิจ</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">ประเภทไฟล์ที่อนุญาต</string>
+    <string name="ngc_noDueDate">ไม่มีวันครบกำหนด</string>
+    <string name="ngc_noAssignmentDescription">ไม่มีรายละเอียดภารกิจ</string>
+    <string name="ngc_retry">ลองใหม่</string>
+    <string name="ngc_finalGrade">เกรดสรุป</string>
+    <string name="ngc_notYetGraded">ยังไม่ได้ให้เกรด</string>
+    <string name="ngc_uploadingSubmission">กำลังอัพโหลดผลงานจัดส่ง...</string>
+    <string name="ngc_submissionFailed">จัดส่งล้มเหลว</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">หน่วยกิตเพิ่มเติม</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d วันที่ล่าช้า</item>
+        <item quantity="other">%d วันที่ล่าช้า</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">ต่ำสุด: %s</string>
+    <string name="ngc_classPerformanceAverage">เฉลี่ย: %s</string>
+    <string name="ngc_classPerformanceHighest">สูงสุด: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">ข้อมูลเพิ่มเติม</string>
+    <string name="ngc_submissionSegmentInstructions">คำแนะนำ</string>
+    <string name="ngc_submissionSegmentRubric">เกณฑ์การให้คะแนน</string>
+    <string name="ngc_submissionSegmentComments">ความเห็น</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">จัดการเนื้อหาออฟไลน์</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">กำหนดค่าแผงข้อมูล</string>
+    <string name="a11y_submissionSupportingPaneExpand">ขยายข้อมูลเพิ่มเติม</string>
+    <string name="a11y_submissionSupportingPaneCollapse">ย่อข้อมูลเพิ่มเติม</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">จัดส่งภารกิจ</string>
+    <string name="ngc_submission_newSubmission">ผลงานจัดส่งใหม่</string>
+    <string name="ngc_submission_textEntry">การกรอกข้อความ</string>
+    <string name="ngc_submission_submit">ส่ง</string>
+    <string name="ngc_submission_deleteDraft">ลบร่าง</string>
+    <string name="ngc_submission_draftSaved">บันทึก %1$s แล้ว</string>
+    <string name="ngc_submission_textEntryPlaceholder">กรอกข้อความสำหรับผลงานจัดส่งของคุณที่นี่</string>
+    <string name="ngc_submission_submissionError">เกิดข้อผิดพลาดในการจัดส่งภารกิจ</string>
+    <string name="ngc_submission_loadError">ไม่สามารถโหลดภารกิจได้</string>
+    <string name="ngc_submission_dueDate">ครบกำหนด %1$s</string>
+    <string name="ngc_submission_retry">ลองใหม่</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">ลบร่างหรือไม่</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">ข้อมูลร่างของคุณจะถูกลบถาวรและไม่สามารถกู้คืนได้</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">ลบ</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">ยกเลิก</string>
+    <string name="ngc_back">ย้อนกลับ</string>
 </resources>

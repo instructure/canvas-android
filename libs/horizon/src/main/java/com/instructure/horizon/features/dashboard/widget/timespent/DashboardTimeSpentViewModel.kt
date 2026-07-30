@@ -20,9 +20,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetCoursesWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetTimeSpentDataUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.CourseOption
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
+import com.instructure.horizon.model.TimeSpentWidgetData
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +35,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardTimeSpentViewModel @Inject constructor(
-    private val repository: DashboardTimeSpentRepository
+    private val getCoursesWithProgressUseCase: GetCoursesWithProgressUseCase,
+    private val getTimeSpentDataUseCase: GetTimeSpentDataUseCase,
 ) : ViewModel() {
 
     private var courses: List<CourseOption> = emptyList()
@@ -52,14 +56,14 @@ class DashboardTimeSpentViewModel @Inject constructor(
     private fun loadTimeSpentData(forceNetwork: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            courses = repository.getCourses(forceNetwork).map {
+            courses = getCoursesWithProgressUseCase(forceNetwork).map {
                 CourseOption(
                     id = it.courseId,
                     name = it.courseName,
                 )
             }
 
-            timeSpentData = repository.getTimeSpentData(null, forceNetwork)
+            timeSpentData = getTimeSpentDataUseCase(GetTimeSpentDataUseCase.Params(courseId = null, forceNetwork = forceNetwork))
             updateTimeSpentWidgetState()
 
         } catch {

@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Mi trabajo</string>
     <string name="ngc_courseHomeTabMore">Más</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Disponible hasta</string>
+    <string name="ngc_quizSettings">Configuraciones del examen</string>
+    <string name="ngc_submission">Entrega</string>
+    <string name="ngc_continueDraft">Continuar borrador</string>
+    <string name="ngc_assignmentReminder">Recordatorio de la tarea</string>
+    <string name="ngc_classPerformance">Desempeño de la clase</string>
+    <string name="ngc_newAttempt">Nuevo intento</string>
+    <string name="ngc_submitAssignment">Entregar tarea</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Tipos de archivos admitidos</string>
+    <string name="ngc_noDueDate">No hay ninguna fecha de entrega</string>
+    <string name="ngc_noAssignmentDescription">No hay ninguna descripción de la tarea</string>
+    <string name="ngc_retry">Reintentar</string>
+    <string name="ngc_finalGrade">Calificación final</string>
+    <string name="ngc_notYetGraded">No calificado todavía</string>
+    <string name="ngc_uploadingSubmission">Cargando entrega&#8230;</string>
+    <string name="ngc_submissionFailed">La entrega ha fallado</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Crédito extra</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d día de atraso</item>
+        <item quantity="other">%d días de atraso</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Más baja: %s</string>
+    <string name="ngc_classPerformanceAverage">Promedio: %s</string>
+    <string name="ngc_classPerformanceHighest">Más alta: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Información adicional</string>
+    <string name="ngc_submissionSegmentInstructions">Instrucciones</string>
+    <string name="ngc_submissionSegmentRubric">Rúbrica</string>
+    <string name="ngc_submissionSegmentComments">Comentarios</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Administrar contenido sin conexión</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Personalizar tablero</string>
+    <string name="a11y_submissionSupportingPaneExpand">Expandir información adicional</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Colapsar información adicional</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Entregar tarea</string>
+    <string name="ngc_submission_newSubmission">Nueva entrega</string>
+    <string name="ngc_submission_textEntry">Entrada de texto</string>
+    <string name="ngc_submission_submit">Entregar</string>
+    <string name="ngc_submission_deleteDraft">Eliminar borrador</string>
+    <string name="ngc_submission_draftSaved">Se guardó %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Ingrese aquí el texto de la entrega</string>
+    <string name="ngc_submission_submissionError">Se produjo un error al entregar la tarea</string>
+    <string name="ngc_submission_loadError">No se pudo cargar la tarea</string>
+    <string name="ngc_submission_dueDate">Fecha de entrega %1$s</string>
+    <string name="ngc_submission_retry">Reintentar</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">¿Desea eliminar el borrador?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">El borrador se eliminará de manera permanente y no se puede recuperar.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Eliminar</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cancelar</string>
+    <string name="ngc_back">Volver</string>
 </resources>

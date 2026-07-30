@@ -49,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.container.Card as InstUICard
 import com.instructure.instui.compose.container.Elevation
 import com.instructure.instui.token.icon.InstUIIcons
@@ -89,8 +90,11 @@ private fun InstUIGradesCard(
         onlyGraded -> stringResource(id = R.string.gradesBasedOnGraded)
         else -> stringResource(id = R.string.gradesTotal)
     }
+    val courseColor = LocalCourseColor.current
+    val contentColor = if (whatIf) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Text.base()
     InstUICard(
         elevation = Elevation.Level1,
+        backgroundColor = if (whatIf) courseColor else InstUISemanticColors.Background.container(),
         modifier = modifier.fillMaxWidth(),
     ) {
         Row(
@@ -107,16 +111,16 @@ private fun InstUIGradesCard(
                     title
                 },
                 style = InstUIHeading.titleCardMini,
-                color = InstUISemanticColors.Text.base(),
+                color = contentColor,
                 modifier = Modifier.weight(1f),
             )
             if (uiState.isGradeLocked) {
-                InstUIIcon(imageVector = InstUIIcons.lock)
+                InstUIIcon(imageVector = InstUIIcons.lock, tint = contentColor)
             } else {
                 InstUIText(
                     text = uiState.gradeText,
                     style = InstUIHeading.titleCardMini,
-                    color = InstUISemanticColors.Text.base(),
+                    color = contentColor,
                 )
             }
         }
@@ -242,6 +246,21 @@ private fun GradesCardContentInstUIPreview() {
                 uiState = previewState,
                 contextColor = 0xFF00828E.toInt(),
                 shouldShowNewText = false,
+            )
+        }
+    }
+}
+
+@Preview(name = "GradesCardContent InstUI What-If — Light", showBackground = true)
+@Preview(name = "GradesCardContent InstUI What-If — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun GradesCardContentInstUIWhatIfPreview() {
+    InstUITheme(courseColor = Color(0xFF00828E)) {
+        CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
+            GradesCardContent(
+                uiState = previewState.copy(showWhatIfScore = true),
+                contextColor = 0xFF00828E.toInt(),
+                shouldShowNewText = true,
             )
         }
     }

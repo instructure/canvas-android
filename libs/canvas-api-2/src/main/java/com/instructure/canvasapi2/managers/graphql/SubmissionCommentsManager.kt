@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.managers.graphql
 
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.MarkSubmissionCommentsReadMutation
 import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 interface SubmissionCommentsManager {
@@ -28,4 +29,9 @@ interface SubmissionCommentsManager {
         attempt: Int? = null,
         isGroupComment: Boolean = false,
     ): CreateSubmissionCommentMutation.Data
+
+    suspend fun markSubmissionCommentsRead(
+        submissionId: Long,
+        submissionCommentIds: List<Long>,
+    ): MarkSubmissionCommentsReadMutation.Data
 }

@@ -30,4 +30,5 @@ data class PageDetailsUiState(
     val pageId: Long = -1L,
     val pageUrl: String = "",
     val addNote: (highlightedData: NoteHighlightedData, type: String) -> Unit = { _, _ -> },
+    val isOnline: Boolean = true,
 )

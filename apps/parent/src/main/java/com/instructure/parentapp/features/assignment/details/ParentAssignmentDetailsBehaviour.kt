@@ -17,92 +17,42 @@
 package com.instructure.parentapp.features.assignment.details
 
 import android.content.Context
-import android.content.res.ColorStateList
 import androidx.annotation.ColorInt
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.interactions.bookmarks.Bookmarker
-import com.instructure.pandautils.binding.setTint
-import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.MessageFabConfig
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyBottomSystemBarMargin
-import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
 class ParentAssignmentDetailsBehaviour @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val parentPrefs: ParentPrefs,
     private val apiPrefs: ApiPrefs,
-): AssignmentDetailsBehaviour() {
-    @ColorInt override val dialogColor: Int = parentPrefs.currentStudent.studentColor
+) : AssignmentDetailsBehaviour() {
+    @ColorInt
+    override val dialogColor: Int = parentPrefs.currentStudent.studentColor
 
-    private var fab: FloatingActionButton? = null
-
-    override fun applyTheme(
-        activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        bookmark: Bookmarker,
-        course: Course?,
-        toolbar: Toolbar
-    ) {
-        ViewStyler.themeToolbarColored(activity, toolbar, parentPrefs.currentStudent.studentColor, activity.getColor(R.color.textLightest))
+    override fun applyStatusBarTheme(activity: FragmentActivity, course: Course?) {
         ViewStyler.setStatusBarDark(activity, parentPrefs.currentStudent.studentColor)
     }
 
-    override fun setupAppSpecificViews(
-        activity: FragmentActivity,
-        binding: FragmentAssignmentDetailsBinding?,
-        course: Course,
-        assignment: Assignment?,
-        routeToCompose: ((InboxComposeOptions) -> Unit)?
-    ) {
-        binding?.assignmentDetailsPage?.addView(messageFAB(activity, course, assignment, routeToCompose))
-
-        binding?.scrollView?.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            if (binding.scrollView.scrollY == 0) {
-                fab?.show()
-            } else if (binding.scrollView.getChildAt(0).bottom <= (binding.scrollView.height + binding.scrollView.scrollY)) {
-                fab?.hide()
-            } else if (scrollY < oldScrollY) {
-                fab?.show()
-            } else if (scrollY > oldScrollY) {
-                fab?.hide()
-            }
-        }
-    }
-
-    private fun messageFAB(context: Context, course: Course, assignment: Assignment?, routeToCompose: ((InboxComposeOptions) -> Unit)?): FloatingActionButton {
-        return FloatingActionButton(context).apply {
-            setImageDrawable(AppCompatResources.getDrawable(context, R.drawable.ic_chat))
-            contentDescription = context.getString(R.string.sendMessageAboutAssignment)
-            setTint(R.color.textLightest)
-            backgroundTintList = ColorStateList.valueOf(parentPrefs.currentStudent.studentColor)
-            layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.WRAP_CONTENT, ConstraintLayout.LayoutParams.WRAP_CONTENT).apply {
-                bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-                endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-                marginEnd = context.DP(16).toInt()
-                bottomMargin = context.DP(16).toInt()
-            }
-            applyBottomSystemBarMargin()
-            onClick {
-                routeToCompose?.invoke(getInboxComposeOptions(context, course, assignment))
-            }
-        }
-        .also { fab = it }
+    override fun getMessageFabConfig(course: Course?, assignment: Assignment?): MessageFabConfig {
+        return MessageFabConfig(
+            iconRes = R.drawable.ic_chat,
+            contentDescription = context.getString(R.string.sendMessageAboutAssignment),
+            options = getInboxComposeOptions(context, course, assignment)
+        )
     }
 
     private fun getInboxComposeOptions(context: Context, course: Course?, assignment: Assignment?): InboxComposeOptions {

@@ -26,7 +26,63 @@
     <string name="ngc_courseHomeTabMyWork">Моя работа</string>
     <string name="ngc_courseHomeTabMore">Больше</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Доступно до</string>
+    <string name="ngc_quizSettings">Настройки теста</string>
+    <string name="ngc_submission">Отправка</string>
+    <string name="ngc_continueDraft">Продолжить черновик</string>
+    <string name="ngc_assignmentReminder">Напоминание о задании</string>
+    <string name="ngc_classPerformance">Результаты успеваемости класса</string>
+    <string name="ngc_newAttempt">Новая попытка</string>
+    <string name="ngc_submitAssignment">Отправить задание</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Разрешенные типы файлов</string>
+    <string name="ngc_noDueDate">Срок выполнения не задан</string>
+    <string name="ngc_noAssignmentDescription">Нет описания задания</string>
+    <string name="ngc_retry">Повторить</string>
+    <string name="ngc_finalGrade">Итоговая оценка</string>
+    <string name="ngc_notYetGraded">Пока без оценки</string>
+    <string name="ngc_uploadingSubmission">Выполняется отправка...</string>
+    <string name="ngc_submissionFailed">Ошибка отправки</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Дополнительные баллы</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">На %d день позднее.</item>
+        <item quantity="few">На %d дня(-ей) позднее.</item>
+        <item quantity="many">На %d дня(-ей) позднее.</item>
+        <item quantity="other">На %d дня(-ей) позднее.</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Самые низкие: %s</string>
+    <string name="ngc_classPerformanceAverage">Сред.: %s</string>
+    <string name="ngc_classPerformanceHighest">Самая высокая: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Дополнительная информация</string>
+    <string name="ngc_submissionSegmentInstructions">Инструкции</string>
+    <string name="ngc_submissionSegmentRubric">Рубрика</string>
+    <string name="ngc_submissionSegmentComments">Комментарии</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Управление офлайн-контентом</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Настроить панель управления</string>
+    <string name="a11y_submissionSupportingPaneExpand">Развернуть дополнительную информацию</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Свернуть дополнительную информацию</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Отправить задание</string>
+    <string name="ngc_submission_newSubmission">Новая отправка</string>
+    <string name="ngc_submission_textEntry">Ввод текста</string>
+    <string name="ngc_submission_submit">Отправить</string>
+    <string name="ngc_submission_deleteDraft">Удалить черновик</string>
+    <string name="ngc_submission_draftSaved">Сохраненный %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Введите здесь текст вашей отправки</string>
+    <string name="ngc_submission_submissionError">Ошибка при отправке задания</string>
+    <string name="ngc_submission_loadError">Не удалось загрузить задание</string>
+    <string name="ngc_submission_dueDate">Срок %1$s</string>
+    <string name="ngc_submission_retry">Повторить</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Удалить черновик?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Ваш черновик будет окончательно удален, и его невозможно будет восстановить.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Удалить</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Отменить</string>
+    <string name="ngc_back">Назад</string>
 </resources>

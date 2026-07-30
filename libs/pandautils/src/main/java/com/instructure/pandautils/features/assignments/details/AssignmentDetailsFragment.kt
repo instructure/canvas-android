@@ -27,20 +27,27 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.FragmentInteractions
@@ -53,24 +60,20 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
-import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.assignments.details.composables.DiscussionCheckpointLayout
-import com.instructure.pandautils.features.assignments.details.composables.DueDateReminderLayout
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
+import com.instructure.pandautils.features.assignments.details.composables.AssignmentDetailsScreen
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
-import com.instructure.pandautils.utils.applyBottomSystemBarMargin
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.needsPermissions
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
-import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.FloatingRecordingView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -99,13 +102,12 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     val submissionId by LongArg(key = Const.SUBMISSION_ID, default = -1)
 
-    private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
 
     private var captureVideoUri: Uri? = null
     private val captureVideoContract = registerForActivityResult(ActivityResultContracts.CaptureVideo()) {
         val assignment = viewModel.assignment
-        val course = viewModel.course.value
+        val course = viewModel.currentCourse
         if (assignment != null && captureVideoUri != null && it && course != null) {
             val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
             assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!, nextAttempt.toLong(), "camera")
@@ -116,7 +118,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     private val mediaPickerContract = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
         val assignment = viewModel.assignment
-        val course = viewModel.course.value
+        val course = viewModel.currentCourse
         if (assignment != null && it != null && course != null) {
             val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
             assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it, nextAttempt.toLong(), "library")
@@ -129,77 +131,143 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
-    override fun applyTheme() {
-        binding?.toolbar?.apply {
-            applyTopSystemBarInsets()
-            setupAsBackButton {
-                activity?.onBackPressed()
-            }
-
-            title = context?.getString(R.string.assignmentDetails)
-
-            assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, viewModel.course.value, this)
-        }
-    }
+    override fun applyTheme() = Unit
 
     override fun getFragment(): Fragment = this
 
     override fun title() = ""
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAssignmentDetailsBinding.inflate(inflater, container, false)
-        binding?.lifecycleOwner = this
-        binding?.viewModel = viewModel
-        viewModel.course.value?.let {
-            viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
-        }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return ComposeView(requireActivity()).apply {
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                val initialToolbarColor = remember { assignmentDetailsBehaviour.getThemeColor(Course(id = courseId)) }
+                val toolbarColor = uiState.courseColor?.color() ?: initialToolbarColor
 
-        binding?.dueComposeView?.setContent {
-            val states = viewModel.dueDateReminderViewStates
-            DueDateReminderLayout(
-                states,
-                onAddClick = { tag -> checkAlarmPermission(tag) },
-                onRemoveClick = { reminderId ->
-                    viewModel.showDeleteReminderConfirmationDialog(
-                        requireContext(),
-                        reminderId,
-                        assignmentDetailsBehaviour.dialogColor
-                    )
+                LaunchedEffect(uiState.courseColor) {
+                    viewModel.currentCourse?.let { course ->
+                        viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(course))
+                        assignmentDetailsBehaviour.applyStatusBarTheme(requireActivity(), course)
+                    }
                 }
-            )
-        }
 
-        binding?.checkpointGradesComposeView?.setContent {
-            val checkpoints = viewModel.discussionCheckpoints.collectAsState()
-            DiscussionCheckpointLayout(checkpoints.value)
-        }
-
-        return binding?.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        applyTheme()
-        setupDescriptionView()
-
-        viewModel.events.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let {
-                handleAction(it)
-            }
-        }
-
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            if (state.isSuccessState()) {
-                assignmentDetailsBehaviour.setupAppSpecificViews(
-                    requireActivity(),
-                    binding,
-                    viewModel.course.value!!,
-                    viewModel.assignment
-                ) { options ->
-                    assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
+                LaunchedEffect(uiState.navigation) {
+                    uiState.navigation?.let { navigation ->
+                        handleNavigation(navigation)
+                        uiState.onNavigationHandled()
+                    }
                 }
-                binding?.submitButton?.applyBottomSystemBarMargin()
+
+                LaunchedEffect(uiState.toastMessage) {
+                    uiState.toastMessage?.let { message ->
+                        toast(message)
+                        uiState.onToastShown()
+                    }
+                }
+
+                LaunchedEffect(uiState.mediaDialogAssignment) {
+                    if (uiState.mediaDialogAssignment != null) {
+                        assignmentDetailsBehaviour.showMediaDialog(
+                            requireActivity(),
+                            { viewModel.onAudioRecordingRequested() },
+                            ::startVideoCapture,
+                            { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) }
+                        )
+                        uiState.onMediaDialogShown()
+                    }
+                }
+
+                LaunchedEffect(uiState.submitDialog) {
+                    uiState.submitDialog?.let { dialog ->
+                        viewModel.currentCourse?.let { course ->
+                            assignmentDetailsBehaviour.showSubmitDialog(
+                                requireActivity(),
+                                { viewModel.onAudioRecordingRequested() },
+                                ::startVideoCapture,
+                                { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) },
+                                dialog.assignment,
+                                course,
+                                viewModel.isStudioAccepted(),
+                                dialog.studioLTITool
+                            )
+                        }
+                        uiState.onSubmitDialogShown()
+                    }
+                }
+
+                LaunchedEffect(uiState.createReminder) {
+                    uiState.createReminder?.let { reminder ->
+                        checkAlarmPermission(reminder.tag)
+                        uiState.onCreateReminderShown()
+                    }
+                }
+
+                LaunchedEffect(uiState.deleteReminderId) {
+                    uiState.deleteReminderId?.let { reminderId ->
+                        viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
+                        uiState.onDeleteReminderShown()
+                    }
+                }
+
+                val navigationHost = activity as? Navigation
+                val bookmarkable = navigationHost?.canBookmark().orDefault() && viewModel.bookmarker.canBookmark
+                val onAddBookmark: (() -> Unit)? = if (bookmarkable) {
+                    {
+                        if (APIHelper.hasNetworkConnection()) {
+                            navigationHost?.addBookmark()
+                        } else {
+                            Toast.makeText(requireContext(), getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    null
+                }
+
+                val messageFab = remember(uiState.screenState) {
+                    assignmentDetailsBehaviour.getMessageFabConfig(viewModel.currentCourse, viewModel.assignment)?.let { config ->
+                        MessageFabUiState(
+                            iconRes = config.iconRes,
+                            contentDescription = config.contentDescription,
+                            onClick = { assignmentDetailsRouter.navigateToSendMessage(requireActivity(), config.options) }
+                        )
+                    }
+                }
+
+                AssignmentDetailsScreen(
+                    title = getString(R.string.assignmentDetails),
+                    subtitle = viewModel.currentCourse?.name.orEmpty(),
+                    uiState = uiState,
+                    toolbarColor = toolbarColor,
+                    navigationActionClick = { activity?.onBackPressed() },
+                    webViewCallbacks = descriptionWebViewCallbacks(),
+                    embeddedWebViewCallbacks = descriptionEmbeddedWebViewCallbacks(),
+                    applyOnWebView = {
+                        addVideoClient(requireActivity())
+                        focusable = View.NOT_FOCUSABLE
+                        isFocusableInTouchMode = false
+                    },
+                    onAddBookmark = onAddBookmark,
+                    messageFab = messageFab,
+                    recordingOverlay = {
+                        if (uiState.showAudioRecording) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                AndroidView(
+                                    modifier = Modifier.align(Alignment.BottomStart),
+                                    factory = { context ->
+                                        FloatingRecordingView(context).apply {
+                                            setContentType(RecordingMediaType.Audio)
+                                            stoppedCallback = { viewModel.onAudioRecordingFinished() }
+                                            recordingCallback = { file ->
+                                                viewModel.uploadAudioSubmission(context, file)
+                                                viewModel.onAudioRecordingFinished()
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                )
             }
         }
     }
@@ -209,113 +277,98 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         checkAlarmPermissionResult()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return assignmentDetailsBehaviour.onOptionsItemSelected(requireActivity(), item)
-    }
+    private fun descriptionWebViewCallbacks() = ComposeWebViewCallbacks(
+        openMedia = { _, url, _ -> webViewRouter.openMedia(url) },
+        canRouteInternally = { url -> webViewRouter.canRouteInternally(url, false) },
+        routeInternally = { url ->
+            val extras = viewModel.assignment?.let { assignment ->
+                viewModel.currentCourse?.let { course ->
+                    Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment)) }
+                }
+            }
+            webViewRouter.routeInternally(url, extras)
+        }
+    )
 
-    private fun handleAction(action: AssignmentDetailAction) {
-        val canvasContext: CanvasContext = viewModel.course.value ?: run {
+    private fun descriptionEmbeddedWebViewCallbacks() = ComposeEmbeddedWebViewCallbacks(
+        shouldLaunchInternalWebViewFragment = { true },
+        launchInternalWebViewFragment = { url ->
+            viewModel.currentCourse?.let {
+                webViewRouter.launchInternalWebViewFragment(url, it)
+            }
+        }
+    )
+
+    private fun handleNavigation(navigation: AssignmentDetailsNavigation) {
+        val canvasContext: CanvasContext = viewModel.currentCourse ?: run {
             toast(R.string.generalUnexpectedError)
             return
         }
 
-        when (action) {
-            is AssignmentDetailAction.ShowToast -> {
-                toast(action.message)
+        when (navigation) {
+            is AssignmentDetailsNavigation.LtiScreen -> {
+                webViewRouter.openLtiScreen(viewModel.currentCourse, navigation.url)
             }
-            is AssignmentDetailAction.NavigateToLtiScreen -> {
-                webViewRouter.openLtiScreen(viewModel.course.value, action.url)
-            }
-            is AssignmentDetailAction.NavigateToSubmissionScreen -> {
+            is AssignmentDetailsNavigation.SubmissionScreen -> {
                 assignmentDetailsRouter.navigateToSubmissionScreen(
                     requireActivity(),
                     canvasContext,
                     assignmentId,
-                    action.assignmentUrl,
-                    action.isAssignmentEnhancementEnabled,
-                    action.isObserver,
-                    action.selectedSubmissionAttempt,
-                    action.isQuiz
+                    navigation.assignmentUrl,
+                    navigation.isAssignmentEnhancementEnabled,
+                    navigation.isObserver,
+                    navigation.selectedSubmissionAttempt,
+                    navigation.isQuiz
                 )
             }
-            is AssignmentDetailAction.NavigateToQuizScreen -> {
-                assignmentDetailsRouter.navigateToQuizScreen(requireActivity(), canvasContext, action.quiz, action.quiz.url.orEmpty())
+            is AssignmentDetailsNavigation.QuizScreen -> {
+                assignmentDetailsRouter.navigateToQuizScreen(requireActivity(), canvasContext, navigation.quiz, navigation.quiz.url.orEmpty())
             }
-            is AssignmentDetailAction.NavigateToDiscussionScreen -> {
-                assignmentDetailsRouter.navigateToDiscussionScreen(requireActivity(), canvasContext, action.discussionTopicHeaderId)
+            is AssignmentDetailsNavigation.DiscussionScreen -> {
+                assignmentDetailsRouter.navigateToDiscussionScreen(requireActivity(), canvasContext, navigation.discussionTopicHeaderId)
             }
-            is AssignmentDetailAction.NavigateToUploadScreen -> {
-                assignmentDetailsRouter.navigateToUploadScreen(requireActivity(), canvasContext, action.assignment)
+            is AssignmentDetailsNavigation.UploadScreen -> {
+                assignmentDetailsRouter.navigateToUploadScreen(requireActivity(), canvasContext, navigation.assignment)
             }
-            is AssignmentDetailAction.NavigateToTextEntryScreen -> {
-                assignmentDetailsRouter.navigateToTextEntryScreen(requireActivity(), canvasContext, assignmentId, action.assignmentName, action.submittedText, action.isFailure)
+            is AssignmentDetailsNavigation.TextEntryScreen -> {
+                assignmentDetailsRouter.navigateToTextEntryScreen(requireActivity(), canvasContext, assignmentId, navigation.assignmentName, navigation.submittedText, navigation.isFailure)
             }
-            is AssignmentDetailAction.NavigateToUrlSubmissionScreen -> {
-                assignmentDetailsRouter.navigateToUrlSubmissionScreen(requireActivity(), canvasContext, assignmentId, action.assignmentName, action.submittedUrl, action.isFailure)
+            is AssignmentDetailsNavigation.UrlSubmissionScreen -> {
+                assignmentDetailsRouter.navigateToUrlSubmissionScreen(requireActivity(), canvasContext, assignmentId, navigation.assignmentName, navigation.submittedUrl, navigation.isFailure)
             }
-            is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen -> {
-                action.assignment.submission?.id?.let { submissionId ->
+            is AssignmentDetailsNavigation.AnnotationSubmissionScreen -> {
+                navigation.assignment.submission?.id?.let { submissionId ->
                     assignmentDetailsRouter.navigateToAnnotationSubmissionScreen(
                         requireActivity(),
                         canvasContext,
-                        action.assignment.annotatableAttachmentId,
+                        navigation.assignment.annotatableAttachmentId,
                         submissionId,
-                        action.assignment.id,
-                        action.assignment.name.orEmpty()
+                        navigation.assignment.id,
+                        navigation.assignment.name.orEmpty()
                     )
                 }
             }
-            is AssignmentDetailAction.NavigateToLtiLaunchScreen -> {
+            is AssignmentDetailsNavigation.LtiLaunchScreen -> {
                 assignmentDetailsRouter.navigateToLtiLaunchScreen(
                     requireActivity(),
                     canvasContext,
-                    action.ltiTool?.url.orEmpty(),
-                    action.title,
+                    navigation.ltiTool?.url.orEmpty(),
+                    navigation.title,
                     isAssignmentLTI = true,
-                    ltiTool = action.ltiTool,
-                    openInternally = action.openInternally
+                    ltiTool = navigation.ltiTool,
+                    openInternally = navigation.openInternally
                 )
             }
-            is AssignmentDetailAction.ShowMediaDialog -> {
-                assignmentDetailsBehaviour.showMediaDialog(
-                    requireActivity(),
-                    binding,
-                    { viewModel.uploadAudioSubmission(context, it) },
-                    ::startVideoCapture,
-                    { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) }
-                )
+            is AssignmentDetailsNavigation.UploadStatusScreen -> {
+                assignmentDetailsRouter.navigateToUploadStatusScreen(requireActivity(), navigation.submissionId)
             }
-            is AssignmentDetailAction.ShowSubmitDialog -> {
-                viewModel.course.value?.let {
-                    assignmentDetailsBehaviour.showSubmitDialog(
-                        requireActivity(),
-                        binding,
-                        { viewModel.uploadAudioSubmission(context, it) },
-                        ::startVideoCapture,
-                        { mediaPickerContract.launch(arrayOf("video/*", "audio/*")) },
-                        action.assignment,
-                        it,
-                        viewModel.isStudioAccepted(),
-                        action.studioLTITool
-                    )
-                }
-            }
-            is AssignmentDetailAction.NavigateToUploadStatusScreen -> {
-                assignmentDetailsRouter.navigateToUploadStatusScreen(requireActivity(), action.submissionId)
-            }
-            is AssignmentDetailAction.OnDiscussionHeaderAttachmentClicked -> {
-                action.attachments.firstOrNull()?.let {
+            is AssignmentDetailsNavigation.DiscussionAttachment -> {
+                navigation.attachments.firstOrNull()?.let {
                     assignmentDetailsRouter.navigateToDiscussionAttachmentScreen(requireActivity(), canvasContext, it)
                 }
             }
-            is AssignmentDetailAction.ShowReminderDialog -> {
-                checkAlarmPermission()
-            }
-            is AssignmentDetailAction.ShowDeleteReminderConfirmationDialog -> {
-                viewModel.showDeleteReminderConfirmationDialog(requireContext(), action.reminderId, assignmentDetailsBehaviour.dialogColor)
-            }
-            is AssignmentDetailAction.NavigateToSendMessage -> {
-                assignmentDetailsRouter.navigateToSendMessage(requireActivity(), action.options)
+            is AssignmentDetailsNavigation.SendMessage -> {
+                assignmentDetailsRouter.navigateToSendMessage(requireActivity(), navigation.options)
             }
         }
     }
@@ -335,69 +388,6 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
         captureVideoUri = viewModel.getVideoUri(requireActivity())
         captureVideoContract.launch(captureVideoUri)
-    }
-
-    private fun showAudioRecordingView() {
-        binding?.floatingRecordingView?.apply {
-            setContentType(RecordingMediaType.Audio)
-            setVisible()
-            stoppedCallback = {}
-            recordingCallback = {
-                viewModel.uploadAudioSubmission(context, it)
-            }
-        }
-    }
-
-    private fun setupDescriptionView() {
-        // Apply bottom insets to the scroll content container instead of individual views
-        // to ensure proper padding in portrait mode for all content (including quizzes)
-        binding?.scrollView?.let { scrollView ->
-            val scrollContent = scrollView.getChildAt(0)
-            scrollContent?.let {
-                ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
-                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                    view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
-                    windowInsets
-                }
-                ViewCompat.requestApplyInsets(scrollContent)
-            }
-        }
-        binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
-        binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
-                webViewRouter.openMedia(url)
-            }
-
-            override fun onPageFinishedCallback(webView: WebView, url: String) {}
-            override fun onPageStartedCallback(webView: WebView, url: String) {}
-            override fun canRouteInternallyDelegate(url: String): Boolean {
-                return webViewRouter.canRouteInternally(url, false)
-            }
-
-            override fun routeInternallyCallback(url: String) {
-                val extras = viewModel.assignment?.let { assignment ->
-                    viewModel.course.value?.let { course ->
-                        Bundle().apply { putParcelable(Const.SUBMISSION_TARGET, ShareFileSubmissionTarget(course, assignment)) }
-                    }
-                }
-                webViewRouter.routeInternally(url, extras)
-            }
-        }
-
-        binding?.descriptionWebViewWrapper?.webView?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) {
-                viewModel.course.value?.let {
-                    webViewRouter.launchInternalWebViewFragment(url, it)
-                }
-            }
-
-            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-        }
-
-        binding?.descriptionWebViewWrapper?.webView?.apply {
-            focusable = View.NOT_FOCUSABLE
-            isFocusableInTouchMode = false
-        }
     }
 
     private fun checkAlarmPermission(tag: String? = null) {

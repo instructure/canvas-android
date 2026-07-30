@@ -61,9 +61,13 @@ fun AccountNotificationsScreen(
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountNotificationsTitle),
-        onBackPressed = { navController.popBackStack() }
+        onBackPressed = { navController.popBackStack() },
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
     ) { modifier ->
-        LoadingStateWrapper(state.screenState) {
+        LoadingStateWrapper(
+            loadingState = state.screenState,
+            containerColor = HorizonColors.Surface.pageSecondary(),
+        ) {
             AccountNotificationContent(state, modifier)
         }
     }

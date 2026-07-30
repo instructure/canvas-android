@@ -42,6 +42,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.features.announcement.navigation.announcementNavigation
 import com.instructure.horizon.features.home.HomeBottomNavigationBar
 import com.instructure.horizon.features.home.horizonHomeNavigation
 import com.instructure.horizon.features.home.isBottomBarVisible
@@ -51,6 +52,9 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceVie
 import com.instructure.horizon.features.notebook.navigation.notebookNavigation
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
+import com.instructure.horizon.features.queuedsubmissions.QUEUED_SUBMISSIONS_PATH
+import com.instructure.horizon.features.queuedsubmissions.QueuedSubmissionsScreen
+import com.instructure.horizon.features.queuedsubmissions.QueuedSubmissionsViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
@@ -70,6 +74,7 @@ sealed class MainNavigationRoute(val route: String) {
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
     data object Inbox : MainNavigationRoute("inbox")
+    data object QueuedSubmissions : MainNavigationRoute("queued_submissions")
 
     @Serializable
     data class ModuleItemSequence(
@@ -139,6 +144,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 }
             }
             horizonInboxNavigation(navController)
+            announcementNavigation(navController)
             composable<MainNavigationRoute.ModuleItemSequence>(
                 enterTransition = { enterTransition() },
                 exitTransition = { exitTransition() },
@@ -153,6 +159,18 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 val viewModel = hiltViewModel<NotificationViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 NotificationScreen(uiState, navController)
+            }
+            composable(
+                route = MainNavigationRoute.QueuedSubmissions.route,
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "${ApiPrefs.fullDomain}$QUEUED_SUBMISSIONS_PATH"
+                    }
+                )
+            ) {
+                val viewModel = hiltViewModel<QueuedSubmissionsViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                QueuedSubmissionsScreen(uiState, navController)
             }
 
             // Assignment Details deep link

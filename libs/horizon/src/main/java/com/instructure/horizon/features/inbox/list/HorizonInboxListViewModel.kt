@@ -28,6 +28,11 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.inbox.GetConversationsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxAccountAnnouncementsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxCourseAnnouncementsUseCase
+import com.instructure.horizon.domain.usecase.inbox.GetInboxRecipientsUseCase
+import com.instructure.horizon.domain.usecase.inbox.InvalidateConversationListCacheUseCase
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.InboxEvent
 import com.instructure.horizon.features.inbox.InboxEventHandler
@@ -49,7 +54,11 @@ import javax.inject.Inject
 @HiltViewModel
 class HorizonInboxListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: HorizonInboxListRepository,
+    private val getConversationsUseCase: GetConversationsUseCase,
+    private val getInboxRecipientsUseCase: GetInboxRecipientsUseCase,
+    private val getInboxCourseAnnouncementsUseCase: GetInboxCourseAnnouncementsUseCase,
+    private val getInboxAccountAnnouncementsUseCase: GetInboxAccountAnnouncementsUseCase,
+    private val invalidateConversationListCacheUseCase: InvalidateConversationListCacheUseCase,
     private val inboxEventHandler: InboxEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -117,7 +126,9 @@ class HorizonInboxListViewModel @Inject constructor(
     }
 
     private suspend fun fetchRecipients(query: String) {
-        val recipients = repository.getRecipients(query, false)
+        val recipients = getInboxRecipientsUseCase(
+            GetInboxRecipientsUseCase.Params(searchQuery = query, forceNetwork = false)
+        )
         _uiState.update {
             it.copy(allRecipients = recipients)
         }
@@ -133,7 +144,7 @@ class HorizonInboxListViewModel @Inject constructor(
         val conversations = if (conversationScope == null) {
             emptyList()
         } else {
-            repository.getConversations(conversationScope, forceRefresh)
+            getConversationsUseCase(GetConversationsUseCase.Params(conversationScope, forceRefresh))
                 .filter { conversation ->
                     uiState.value.selectedRecipients.isEmpty()
                             || conversation.audience?.map { it.toString() }?.containsAll(
@@ -142,7 +153,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 }
         }
         val accountAnnouncements = if (uiState.value.selectedScope != HorizonInboxScope.Sent) {
-             repository.getAccountAnnouncements(forceRefresh)
+             getInboxAccountAnnouncementsUseCase(forceRefresh)
                  .filter {
                      uiState.value.selectedRecipients.isEmpty()
                  }
@@ -150,7 +161,7 @@ class HorizonInboxListViewModel @Inject constructor(
             emptyList()
         }
         val courseAnnouncements = if (uiState.value.selectedScope != HorizonInboxScope.Sent) {
-            repository.getCourseAnnouncements(forceRefresh)
+            getInboxCourseAnnouncementsUseCase(forceRefresh)
                 .filter {
                     uiState.value.selectedRecipients.isEmpty()
                             || listOf(it.second.author?.id?.toString()) == uiState.value.selectedRecipients.map { recipient -> recipient.stringId }
@@ -304,6 +315,6 @@ class HorizonInboxListViewModel @Inject constructor(
             )
         }
 
-        repository.invalidateConversationListCachedResponse()
+        invalidateConversationListCacheUseCase()
     }
 }

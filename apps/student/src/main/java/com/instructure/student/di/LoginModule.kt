@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.database.HorizonDatabaseProvider
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyRouter
 import com.instructure.loginapi.login.features.cookieconsent.CookieConsentRouter
@@ -48,18 +49,20 @@ class LoginModule {
     fun provideAcceptabelUsePolicyRouter(
         activity: FragmentActivity,
         databaseProvider: DatabaseProvider,
-        alarmScheduler: AlarmScheduler
+        alarmScheduler: AlarmScheduler,
+        horizonDatabaseProvider: HorizonDatabaseProvider,
     ): AcceptableUsePolicyRouter {
-        return StudentAcceptableUsePolicyRouter(activity, databaseProvider, alarmScheduler)
+        return StudentAcceptableUsePolicyRouter(activity, databaseProvider, alarmScheduler, horizonDatabaseProvider)
     }
 
     @Provides
     fun provideLoginNavigation(
         activity: FragmentActivity,
         databaseProvider: DatabaseProvider,
-        alarmScheduler: AlarmScheduler
+        alarmScheduler: AlarmScheduler,
+        horizonDatabaseProvider: HorizonDatabaseProvider,
     ): LoginNavigation {
-        return StudentLoginNavigation(activity, databaseProvider, alarmScheduler)
+        return StudentLoginNavigation(activity, databaseProvider, alarmScheduler, horizonDatabaseProvider)
     }
 
     @Provides

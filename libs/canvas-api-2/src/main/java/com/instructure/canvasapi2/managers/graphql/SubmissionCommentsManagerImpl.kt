@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.managers.graphql
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.MarkSubmissionCommentsReadMutation
 import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
@@ -119,6 +120,18 @@ class SubmissionCommentsManagerImpl(private val apolloClient: ApolloClient) : Su
             comment,
             Optional.Present(attempt),
             Optional.Present(isGroupComment)
+        )
+        val result = apolloClient.enqueueMutation(mutation)
+        return result.dataAssertNoErrors
+    }
+
+    override suspend fun markSubmissionCommentsRead(
+        submissionId: Long,
+        submissionCommentIds: List<Long>
+    ): MarkSubmissionCommentsReadMutation.Data {
+        val mutation = MarkSubmissionCommentsReadMutation(
+            submissionId = submissionId.toString(),
+            submissionCommentIds = submissionCommentIds.map { it.toString() }
         )
         val result = apolloClient.enqueueMutation(mutation)
         return result.dataAssertNoErrors

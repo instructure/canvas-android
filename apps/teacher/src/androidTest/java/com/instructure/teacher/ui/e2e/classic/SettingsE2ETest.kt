@@ -56,7 +56,6 @@ class SettingsE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testPronounsE2E() {
 
@@ -605,7 +604,6 @@ class SettingsE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesWithDifferentUsersE2E() {
 
@@ -762,7 +760,6 @@ class SettingsE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
     fun testInboxSignaturesFABButtonWithDifferentUsersE2E() {
 

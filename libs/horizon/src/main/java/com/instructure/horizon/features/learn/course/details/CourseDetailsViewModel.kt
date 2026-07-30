@@ -20,17 +20,29 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.GetCourseDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramsForCourseUseCase
+import com.instructure.horizon.domain.usecase.HasExternalToolsUseCase
 import com.instructure.horizon.features.learn.navigation.LearnRoute
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class CourseDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: CourseDetailsRepository
+    private val getCourseDetailsUseCase: GetCourseDetailsUseCase,
+    private val getProgramsForCourseUseCase: GetProgramsForCourseUseCase,
+    private val hasExternalToolsUseCase: HasExternalToolsUseCase,
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CourseDetailsUiState())
@@ -40,6 +52,21 @@ class CourseDetailsViewModel @Inject constructor(
 
     init {
         loadData()
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
+            viewModelScope.tryLaunch {
+                val lastSyncedAt = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.COURSE_DETAILS))
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+            } catch { }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            loadData()
+        }
     }
 
     private fun loadData() {
@@ -53,9 +80,9 @@ class CourseDetailsViewModel @Inject constructor(
     }
 
     suspend fun fetchData(forceRefresh: Boolean = false) {
-        val course = repository.getCourse(courseId, forceRefresh)
-        val programs = repository.getProgramsForCourse(courseId, forceRefresh)
-        val hasTools = repository.hasExternalTools(courseId, forceRefresh)
+        val course = getCourseDetailsUseCase(GetCourseDetailsUseCase.Params(courseId, forceRefresh))
+        val programs = getProgramsForCourseUseCase(GetProgramsForCourseUseCase.Params(courseId, forceRefresh))
+        val hasTools = hasExternalToolsUseCase(HasExternalToolsUseCase.Params(courseId, forceRefresh))
         val availableTabs = if (hasTools)
             CourseDetailsTab.entries
         else

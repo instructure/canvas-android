@@ -108,6 +108,10 @@ fun DashboardScreenContent(
         navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToManageOfflineContent)
     }
 
+    val customizeDashboardClick = rememberWithRequireNetwork {
+        navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard)
+    }
+
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         contentWindowInsets = WindowInsets(0),
@@ -136,7 +140,7 @@ fun DashboardScreenContent(
                         }
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu
-                            navigationHandler.handleDashboardNavigation(DashboardNavigationEvent.Dashboard.NavigateToCustomizeDashboard)
+                            customizeDashboardClick()
                         }) {
                             Text(
                                 stringResource(R.string.customize_dashboard),

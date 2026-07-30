@@ -38,7 +38,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -67,6 +66,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCard
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeModalBottomSheet
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectStatus
@@ -77,12 +77,11 @@ import kotlinx.coroutines.delay
 @Composable
 fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, modifier: Modifier = Modifier) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ModalBottomSheet(
+    EdgeToEdgeModalBottomSheet(
         containerColor = HorizonColors.Surface.pagePrimary(),
         sheetState = bottomSheetState,
         onDismissRequest = uiState.onCloseClick,
         dragHandle = null,
-        modifier = Modifier.padding(top = 48.dp)
     ) {
         Column(
             modifier = modifier

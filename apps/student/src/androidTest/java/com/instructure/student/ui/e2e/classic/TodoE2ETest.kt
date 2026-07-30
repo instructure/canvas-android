@@ -14,9 +14,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CalendarEventApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.PlannerAPI
-import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
@@ -60,7 +60,7 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course with today due date.")
         val todayQuiz =
-            QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 0.days.fromNow.iso8601)
+            ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 0.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with tomorrow due date.")
         val thisWeekAssignment = AssignmentsApi.createAssignment(
@@ -84,7 +84,7 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' course with 1 week away due date.")
         val nextWeekQuiz =
-            QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 8.days.fromNow.iso8601)
+            ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 8.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with 2 weeks away due date.")
         val twoWeeksAwayAssignment = AssignmentsApi.createAssignment(
@@ -98,7 +98,7 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' course with 3 weeks away due date.")
         val threeWeeksAwayQuiz =
-            QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 22.days.fromNow.iso8601)
+            ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 22.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with 4 weeks away due date.")
         val fourWeeksAwayAssignment = AssignmentsApi.createAssignment(
@@ -371,7 +371,7 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course with today due date.")
         val todayQuiz =
-            QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 0.days.fromNow.iso8601)
+            ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 0.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with this week but PAST due date.")
         val thisWeekPastAssignment = AssignmentsApi.createAssignment( // Need to "exclude" this one on sunday runs because then this assignment is on Saturday and it would confuse the test logic.
@@ -384,7 +384,7 @@ class TodoE2ETest : StudentComposeTest() {
         )
 
         Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course with 1 week AGO (so 'Last Week') due date.")
-        val lastWeekQuiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 7.days.ago.iso8601)
+        val lastWeekQuiz = ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 7.days.ago.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with 2 weeks AGO due date.")
         val twoWeeksAgoAssignment = AssignmentsApi.createAssignment(
@@ -398,7 +398,7 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' course with 3 weeks AGO due date.")
         val threeWeeksAgoQuiz =
-            QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 21.days.ago.iso8601)
+            ClassicQuizzesApi.createQuiz(course.id, teacher.token, dueAt = 21.days.ago.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course with 4 weeks AGO due date.")
         val fourWeeksAgoAssignment = AssignmentsApi.createAssignment(

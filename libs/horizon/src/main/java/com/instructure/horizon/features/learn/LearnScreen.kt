@@ -30,6 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -41,8 +44,12 @@ import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearning
 import com.instructure.horizon.features.learn.mycontent.LearnMyContentScreen
 import com.instructure.horizon.features.learn.mycontent.LearnMyContentViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.offlineDisabled
+import com.instructure.horizon.horizonui.organisms.OfflineScreenWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
+import com.instructure.horizon.horizonui.organisms.tabrow.Tab
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
+import com.instructure.horizon.horizonui.selectable
 
 @Composable
 fun LearnScreen(
@@ -64,32 +71,56 @@ fun LearnScreen(
         pagerState.animateScrollToPage(pageIndex)
     }
 
-    CollapsableScaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { paddingValues ->
-            TabRow(
-                tabs = state.tabs,
-                selectedIndex = state.tabs.indexOf(state.selectedTab),
-                onTabSelected = { state.updateSelectedTabIndex(it) },
-                tabAlignment = Alignment.Start,
-                tabItemToLabel = { stringResource(it.labelRes) },
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .padding(horizontal = 24.dp)
-            )
-        }
-    ) { paddingValues ->
-        HorizontalPager(pagerState, Modifier.padding(paddingValues)) { pageIndex ->
-            when(LearnTab.entries[pageIndex]) {
-                LearnTab.MY_CONTENT -> {
-                    val viewModel = hiltViewModel<LearnMyContentViewModel>()
-                    val state by viewModel.uiState.collectAsState()
-                    LearnMyContentScreen(state, navController)
-                }
-                LearnTab.BROWSE -> {
-                    val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
-                    val state by viewModel.uiState.collectAsState()
-                    LearnLearningLibraryListScreen(state, navController)
+    val context = LocalContext.current
+    OfflineScreenWrapper(
+        isOffline = state.isOffline,
+        lastSyncedAtMs = state.lastSyncedAtMs,
+    ) {
+        CollapsableScaffold(
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            topBar = { paddingValues ->
+                TabRow(
+                    tabs = state.tabs,
+                    selectedIndex = state.tabs.indexOf(state.selectedTab),
+                    onTabSelected = { state.updateSelectedTabIndex(it) },
+                    tabAlignment = Alignment.Start,
+                    isTabEnabled = { !(state.isOffline && it == LearnTab.BROWSE) },
+                    tab = { tabItem, isSelected, tabModifier ->
+                        val isDisabled = state.isOffline && tabItem == LearnTab.BROWSE
+                        Tab(
+                            label = stringResource(tabItem.labelRes),
+                            isSelected = isSelected,
+                            modifier = Modifier
+                                .offlineDisabled(isDisabled)
+                                .then(tabModifier)
+                                .semantics {
+                                    role = Role.Tab
+                                    selectable(context, isSelected)
+                                }
+                        )
+                    },
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .padding(horizontal = 24.dp)
+                )
+            }
+        ) { paddingValues ->
+            HorizontalPager(
+                pagerState,
+                Modifier.padding(paddingValues),
+                userScrollEnabled = !state.isOffline,
+            ) { pageIndex ->
+                when(LearnTab.entries[pageIndex]) {
+                    LearnTab.MY_CONTENT -> {
+                        val viewModel = hiltViewModel<LearnMyContentViewModel>()
+                        val state by viewModel.uiState.collectAsState()
+                        LearnMyContentScreen(state, navController)
+                    }
+                    LearnTab.BROWSE -> {
+                        val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
+                        val state by viewModel.uiState.collectAsState()
+                        LearnLearningLibraryListScreen(state, navController)
+                    }
                 }
             }
         }

@@ -26,7 +26,7 @@ class LoadCourseAnnouncementsUseCase @Inject constructor(
 ) : BaseUseCase<LoadCourseAnnouncementsUseCase.Params, List<DiscussionTopicHeader>>() {
 
     override suspend fun execute(params: Params): List<DiscussionTopicHeader> {
-        val data = dashboardCoursesManager.getCourseAnnouncements(params.courseId, cursor = null, forceNetwork = params.forceNetwork)
+        val data = dashboardCoursesManager.getCourseAnnouncements(params.courseId, forceNetwork = params.forceNetwork)
         val nodes = data.course?.onCourse?.announcements?.nodes ?: return emptyList()
         return nodes.mapNotNull { node ->
             node ?: return@mapNotNull null

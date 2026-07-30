@@ -22,8 +22,11 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
@@ -47,7 +50,14 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
 
     fun addBookmark(bookmarkName: String) {
         openOverflowMenu()
-        Espresso.onView(withText("Add Bookmark")).click()
+        // "Add Bookmark" is a View menu item on View screens (e.g. the course home page) and a
+        // Compose dropdown item on the migrated Assignment Details screen; the bookmark editor that
+        // follows is an Android View dialog either way.
+        try {
+            Espresso.onView(withText("Add Bookmark")).click()
+        } catch (e: NoMatchingViewException) {
+            composeTestRule.onNodeWithText("Add Bookmark").performClick()
+        }
         Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
         Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
         if(CanvasTest.isLandscapeDevice()) Espresso.pressBack()
@@ -70,20 +80,23 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
     fun assertDiscussionCheckpointDetailsOnDetailsPage(checkpointText: String, dueAt: String)
     {
         composeTestRule.waitForIdle()
-        try {
-            composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
-        } catch (e: AssertionError) {
-            Espresso.onView(withId(R.id.dueComposeView)).perform(ViewActions.scrollTo())
-            composeTestRule.waitForIdle()
-        }
-
+        // Scroll the checkpoint's due-date value into view (it sits below the header and can be
+        // off-screen on landscape / small screens), then assert both the header and the due date.
+        val dueDateNode = hasText(dueAt) and hasAnyAncestor(
+            hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText"))
+        )
+        composeTestRule.onNode(dueDateNode).performScrollTo().assertIsDisplayed()
         composeTestRule.onNode(hasTestTag("dueDateHeaderText-$checkpointText"), useUnmergedTree = true).assertIsDisplayed()
-        composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
     }
 
     fun assertCheckpointGradesView(checkpointName: String, checkpointGrade: String) {
         composeTestRule.onNode(hasTestTag("checkpointName") and hasText(checkpointName), useUnmergedTree = true).assertIsDisplayed()
         composeTestRule.onNode(hasTestTag("checkpointGrade") and hasText(checkpointGrade), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    //OfflineMethod
+    fun assertModulesToolbarTitle(title: String) {
+        onView(withText(title) + withAncestor(R.id.moduleProgressionPage)).assertDisplayed()
     }
 
     //OfflineMethod

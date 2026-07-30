@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.GetUserUseCase
+import com.instructure.horizon.domain.usecase.UpdateUserTimeZoneUseCase
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -36,7 +38,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountAdvancedViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: AccountAdvancedRepository,
+    private val getUserUseCase: GetUserUseCase,
+    private val updateUserTimeZoneUseCase: UpdateUserTimeZoneUseCase,
     private val apiPrefs: ApiPrefs,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -62,8 +65,7 @@ class AccountAdvancedViewModel @Inject constructor(
                 it.copy(screenState = it.screenState.copy(isLoading = true))
             }
 
-            val user = repository.getUser(apiPrefs.user!!.id
-            )
+            val user = getUserUseCase(GetUserUseCase.Params(apiPrefs.user!!.id, forceNetwork = true))
             _uiState.update {
                 it.copy(
                     timeZoneOptions = TimeZone.getAvailableIDs().map { TimeZone.getTimeZone(it) },
@@ -90,7 +92,7 @@ class AccountAdvancedViewModel @Inject constructor(
             }
 
             val selectedTimeZone = _uiState.value.selectedTimeZone
-            repository.updateUserTimeZone(selectedTimeZone.id)
+            updateUserTimeZoneUseCase(selectedTimeZone.id)
 
             _uiState.update {
                 it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountAdvancedUpdatedMessage)))

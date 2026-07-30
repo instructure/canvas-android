@@ -36,3 +36,11 @@ val Double.stringValueWithoutTrailingZeros: String
         val format = DecimalFormat("0.#")
         return format.format(this)
     }
+
+fun Double.toFormattedStringWithoutTrailingZeros(maxDecimals: Int = 2): String {
+    return if (this % 1 == 0.0) {
+        this.toLong().toString()
+    } else {
+        this.toBigDecimal().setScale(maxDecimals, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+    }
+}

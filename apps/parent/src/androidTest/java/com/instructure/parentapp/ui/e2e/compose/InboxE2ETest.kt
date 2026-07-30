@@ -19,12 +19,11 @@ package com.instructure.parentapp.ui.e2e.compose
 
 import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -41,6 +40,7 @@ import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
+import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.extensions.seedData
@@ -484,6 +484,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
@@ -628,7 +629,6 @@ class InboxE2ETest: ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Beta maintenance period, UI login does not work")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
 
@@ -643,8 +643,8 @@ class InboxE2ETest: ParentComposeTest() {
         setupFileOnDevice(videoFileName)
         File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
-        val conversationSubject = "Need Document Help"
-        val conversationBody = "Can you please send me the course document?"
+        val conversationSubject = "Need Help with Assignment"
+        val conversationBody = "Can you please send me a demo video?"
         Log.d(PREPARATION_TAG, "Create a conversation from '${teacher.name}' to '${parent.name}'.")
         val seededConversation = ConversationsApi.createConversationForCourse(token = teacher.token, courseId = course.id, recipients = listOf(parent.id.toString()), subject = conversationSubject, body = conversationBody)[0]
 
@@ -671,7 +671,7 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Click Reply button to respond to the conversation.")
         inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
 
-        val replyMessage = "Sure! Here is the document."
+        val replyMessage = "Sure! Here is the demo video."
         Log.d(STEP_TAG, "Type reply message: '$replyMessage'")
         inboxComposeMessagePage.typeBody(replyMessage)
 
@@ -706,32 +706,42 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.assertAttachmentDisplayed(videoFileName)
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
-        Log.d(STEP_TAG, "Click on the video attachment to download it.")
+        Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
         inboxDetailsPage.clickAttachment(videoFileName)
 
-        Log.d(STEP_TAG, "Wait for download to complete.")
-        sleep(5000)
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
 
-        Log.d(STEP_TAG, "Open the Notification bar.")
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-        device.openNotification()
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
 
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
-            Log.d(STEP_TAG, "Find download notification.")
-            val downloadNotification = device.findObject(UiSelector().textContains(videoFileName).className("android.widget.TextView"))
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
 
-            Log.d(ASSERTION_TAG, "Assert that 'Download complete' text is displayed in notification.")
-            val downloadCompleteText = device.findObject(UiSelector().textContains("Download complete"))
-            assert(downloadCompleteText.exists()) { "Download complete text not found in notification" }
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
 
-            Log.d(ASSERTION_TAG, "Assert that file name '$videoFileName' is displayed in notification.")
-            assert(downloadNotification.exists()) { "File name '$videoFileName' not found in notification" }
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstPositionText = getVideoPosition(R.id.exo_position)
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondPositionText = getVideoPosition(R.id.exo_position)
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstPositionText != secondPositionText) {
+            "Video position did not change. First: $firstPositionText, Second: $secondPositionText"
         }
 
-        Log.d(STEP_TAG, "Close notification shade.")
-        device.pressBack()
+        Log.d(STEP_TAG, "Navigate back to the conversation details.")
+        Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Assert that the '${conversationSubject}' is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' is displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
 
         Log.d(STEP_TAG, "Navigate back to inbox.")

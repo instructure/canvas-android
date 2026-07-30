@@ -25,11 +25,17 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.R
+import com.instructure.horizon.domain.usecase.EnrollProgramCourseUseCase
+import com.instructure.horizon.domain.usecase.GetCoursesByIdUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramDetailsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.learn.program.details.components.CourseCardStatus
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import kotlinx.coroutines.flow.MutableStateFlow
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,9 +59,14 @@ import java.util.Locale
 class ProgramDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
-    private val repository: ProgramDetailsRepository = mockk(relaxed = true)
+    private val getProgramDetailsUseCase: GetProgramDetailsUseCase = mockk(relaxed = true)
+    private val getCoursesByIdUseCase: GetCoursesByIdUseCase = mockk(relaxed = true)
+    private val enrollProgramCourseUseCase: EnrollProgramCourseUseCase = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val offlineState: HorizonOfflineState = mockk(relaxed = true)
+    private val isOfflineFlow = MutableStateFlow(false)
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testProgramId = "program123"
@@ -68,6 +79,7 @@ class ProgramDetailsViewModelTest {
         every { context.getSharedPreferences(any(), any()) } returns sharedPrefs
         every { sharedPrefs.getInt(any(), any()) } returns 0
 
+        every { offlineState.isOffline } returns isOfflineFlow
         ContextKeeper.appContext = context
         every { savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) } returns testProgramId
         every { context.getString(any()) } returns ""
@@ -96,8 +108,8 @@ class ProgramDetailsViewModelTest {
             requirements = listOf(createTestProgramRequirement(courseId = 1L, progress = 0.0))
         )
         val courses = listOf(createTestCourse(courseId = 1L, courseName = "Intro to Programming"))
-        coEvery { repository.getProgramDetails(testProgramId, false) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(testProgramId, false)) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -105,12 +117,12 @@ class ProgramDetailsViewModelTest {
         assertFalse(state.loadingState.isLoading)
         assertFalse(state.loadingState.isError)
         assertEquals("Software Engineering", state.programName)
-        coVerify { repository.getProgramDetails(testProgramId, false) }
+        coVerify { getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(testProgramId, false)) }
     }
 
     @Test
     fun `Loading state shows error when repository fails`() {
-        coEvery { repository.getProgramDetails(any(), any()) } throws Exception("Network error")
+        coEvery { getProgramDetailsUseCase(any()) } throws Exception("Network error")
 
         val viewModel = getViewModel()
 
@@ -123,12 +135,12 @@ class ProgramDetailsViewModelTest {
     fun `Program ID is extracted from SavedStateHandle`() {
         val program = createTestProgram(id = testProgramId)
         val courses = emptyList<CourseWithModuleItemDurations>()
-        coEvery { repository.getProgramDetails(testProgramId, false) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(testProgramId, false)) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         getViewModel()
 
-        coVerify { repository.getProgramDetails(testProgramId, false) }
+        coVerify { getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(testProgramId, false)) }
     }
 
     @Test
@@ -140,8 +152,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -159,8 +171,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -172,8 +184,8 @@ class ProgramDetailsViewModelTest {
     fun `Progress bar hidden when no requirements`() {
         val program = createTestProgram(requirements = emptyList())
         val courses = emptyList<CourseWithModuleItemDurations>()
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -196,8 +208,8 @@ class ProgramDetailsViewModelTest {
             createTestCourse(courseId = 2L),
             createTestCourse(courseId = 3L)
         )
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -221,8 +233,8 @@ class ProgramDetailsViewModelTest {
             createTestCourse(courseId = 2L),
             createTestCourse(courseId = 3L)
         )
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -238,8 +250,8 @@ class ProgramDetailsViewModelTest {
             requirements = listOf(createTestProgramRequirement(courseId = 1L))
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -253,8 +265,8 @@ class ProgramDetailsViewModelTest {
             requirements = listOf(createTestProgramRequirement(courseId = 1L, required = true))
         )
         val courses = listOf(createTestCourse(courseId = 1L, moduleItemsDuration = listOf("PT2H", "PT1H")))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -270,8 +282,8 @@ class ProgramDetailsViewModelTest {
             requirements = listOf(createTestProgramRequirement(courseId = 1L, required = true))
         )
         val courses = listOf(createTestCourse(courseId = 1L, moduleItemsDuration = emptyList()))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -290,8 +302,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -310,8 +322,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -331,8 +343,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -352,8 +364,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -373,8 +385,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -394,8 +406,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -416,8 +428,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -439,8 +451,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -466,8 +478,8 @@ class ProgramDetailsViewModelTest {
                 endDate = "2024-12-31"
             )
         )
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -485,8 +497,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L), createTestCourse(courseId = 2L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -513,8 +525,8 @@ class ProgramDetailsViewModelTest {
             createTestCourse(courseId = 2L),
             createTestCourse(courseId = 3L)
         )
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -537,8 +549,8 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L), createTestCourse(courseId = 2L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
 
         val viewModel = getViewModel()
 
@@ -551,29 +563,29 @@ class ProgramDetailsViewModelTest {
     }
 
     @Test
-    fun `Refresh calls repository with forceNetwork true`() {
+    fun `Refresh calls use case with forceNetwork true`() {
         val program = createTestProgram()
         val courses = emptyList<CourseWithModuleItemDurations>()
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
         val viewModel = getViewModel()
 
         viewModel.state.value.loadingState.onRefresh()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { repository.getProgramDetails(testProgramId, true) }
+        coVerify { getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(testProgramId, true)) }
     }
 
     @Test
     fun `Refresh on error shows snackbar message`() {
         val program = createTestProgram()
         val courses = emptyList<CourseWithModuleItemDurations>()
-        coEvery { repository.getProgramDetails(any(), false) } returns program
-        coEvery { repository.getCoursesById(any(), false) } returns courses
+        coEvery { getProgramDetailsUseCase(match { !it.forceRefresh }) } returns program
+        coEvery { getCoursesByIdUseCase(match { !it.forceRefresh }) } returns courses
         every { context.getString(R.string.programDetails_failedToRefresh) } returns "Failed to refresh"
         val viewModel = getViewModel()
 
-        coEvery { repository.getProgramDetails(any(), true) } throws Exception("Network error")
+        coEvery { getProgramDetailsUseCase(match { it.forceRefresh }) } throws Exception("Network error")
         viewModel.state.value.loadingState.onRefresh()
         testDispatcher.scheduler.advanceUntilIdle()
 
@@ -590,9 +602,9 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
-        coEvery { repository.enrollCourse(any()) } returns DataResult.Success(Unit)
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
+        coEvery { enrollProgramCourseUseCase(any()) } returns DataResult.Success(Unit)
 
         val viewModel = getViewModel()
         val initialState = viewModel.state.value
@@ -600,7 +612,7 @@ class ProgramDetailsViewModelTest {
         initialState.programProgressState.courses[0].courseCard.onEnrollClicked?.invoke()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { repository.enrollCourse("progress123") }
+        coVerify { enrollProgramCourseUseCase("progress123") }
     }
 
     @Test
@@ -611,9 +623,9 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
-        coEvery { repository.enrollCourse(any()) } returns DataResult.Success(Unit)
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
+        coEvery { enrollProgramCourseUseCase(any()) } returns DataResult.Success(Unit)
 
         val viewModel = getViewModel()
         val initialState = viewModel.state.value
@@ -622,7 +634,7 @@ class ProgramDetailsViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         coVerify { dashboardEventHandler.postEvent(any()) }
-        coVerify(atLeast = 2) { repository.getProgramDetails(testProgramId, any()) }
+        coVerify(atLeast = 2) { getProgramDetailsUseCase(match { it.programId == testProgramId }) }
     }
 
     @Test
@@ -633,9 +645,9 @@ class ProgramDetailsViewModelTest {
             )
         )
         val courses = listOf(createTestCourse(courseId = 1L))
-        coEvery { repository.getProgramDetails(any(), any()) } returns program
-        coEvery { repository.getCoursesById(any(), any()) } returns courses
-        coEvery { repository.enrollCourse(any()) } returns DataResult.Fail()
+        coEvery { getProgramDetailsUseCase(any()) } returns program
+        coEvery { getCoursesByIdUseCase(any()) } returns courses
+        coEvery { enrollProgramCourseUseCase(any()) } returns DataResult.Fail()
         every { context.getString(R.string.programDetails_enrollFailed) } returns "Enroll failed"
 
         val viewModel = getViewModel()
@@ -649,7 +661,17 @@ class ProgramDetailsViewModelTest {
     }
 
     private fun getViewModel(): ProgramDetailsViewModel {
-        val viewModel = ProgramDetailsViewModel(context, resources, repository, dashboardEventHandler, savedStateHandle)
+        val viewModel = ProgramDetailsViewModel(
+            context,
+            resources,
+            getProgramDetailsUseCase,
+            getCoursesByIdUseCase,
+            enrollProgramCourseUseCase,
+            dashboardEventHandler,
+            savedStateHandle,
+            offlineState,
+            getLastSyncedAtUseCase,
+        )
         testDispatcher.scheduler.advanceUntilIdle()
         return viewModel
     }

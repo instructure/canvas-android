@@ -17,6 +17,7 @@
 package com.instructure.instui.compose.list
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -70,6 +72,10 @@ fun SectionHeader(
     modifier: Modifier = Modifier,
     trailing: String? = null,
 ) {
+    val rotation by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        label = "sectionHeaderChevronRotation",
+    )
     Row(
         modifier = modifier
             .background(InstUISemanticColors.Background.base())
@@ -98,7 +104,7 @@ fun SectionHeader(
         Icon(
             imageVector = InstUIIcons.chevronDown,
             size = IconSize.Medium,
-            modifier = Modifier.rotate(if (expanded) 180f else 0f),
+            modifier = Modifier.rotate(rotation),
         )
     }
 }

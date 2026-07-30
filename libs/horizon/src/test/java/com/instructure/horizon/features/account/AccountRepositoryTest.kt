@@ -23,10 +23,17 @@ import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.AccountLocalDataSource
+import com.instructure.horizon.data.datasource.AccountNetworkDataSource
+import com.instructure.horizon.data.repository.AccountRepository
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -34,6 +41,14 @@ class AccountRepositoryTest {
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
     private val experienceAPI: ExperienceAPI = mockk(relaxed = true)
     private val helpLinksApi: HelpLinksAPI.HelpLinksAPI = mockk(relaxed = true)
+    private val localDataSource: AccountLocalDataSource = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+
+    init {
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
+    }
 
     @Test
     fun `Test successful user details retrieval`() = runTest {
@@ -98,6 +113,7 @@ class AccountRepositoryTest {
     }
 
     private fun getRepository(): AccountRepository {
-        return AccountRepository(userApi, experienceAPI, helpLinksApi)
+        val networkDataSource = AccountNetworkDataSource(userApi, experienceAPI, helpLinksApi)
+        return AccountRepository(networkDataSource, localDataSource, networkStateProvider, featureFlagProvider)
     }
 }
