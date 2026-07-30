@@ -43,6 +43,7 @@ import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
+import com.instructure.student.ui.pages.compose.NewDashboardPage
 import com.instructure.student.ui.pages.compose.TextSubmissionUploadPage
 import org.junit.Rule
 
@@ -80,4 +81,5 @@ abstract class StudentComposeTest : StudentTest() {
     )
     val textSubmissionUploadPage = TextSubmissionUploadPage(composeTestRule)
     val gradesPage = GradesPage(composeTestRule)
+    val newDashboardPage = NewDashboardPage(composeTestRule)
 }

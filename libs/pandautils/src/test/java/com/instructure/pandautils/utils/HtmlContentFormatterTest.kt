@@ -205,6 +205,48 @@ class HtmlContentFormatterTest {
         )
     }
 
+    // MBL-20169 — CanvasWebView.containsStudioContent injects the LTI post-message bridge only when
+    // the formatted HTML contains the studio_embed marker class. If the formatter stops emitting that
+    // exact class, the bridge is never injected and Studio videos become unplayable. This locks the
+    // contract between the two files (they share HtmlContentFormatter.STUDIO_EMBED_CLASS).
+    //
+    // The srcUrls below are every Studio embed variant produced by Canvas with the
+    // rce_studio_embed_improvements flag on (from the MBL-20169 repro page): the media_attachments
+    // embed, and the external_tools/retrieve embeds for thumbnail_embed and learn_embed (the latter
+    // also with the download / lock-speed / transcript custom params). Each must be (a) recognised as
+    // a Studio embed and (b) carry the studio_embed marker so the WebView injects the bridge.
+    @Test
+    fun `all Studio embed variants are detected and carry the studio_embed marker`() {
+        val studioEmbedSrcUrls = mapOf(
+            "media_attachments" to
+                "https://studio-sandbox.cd.instructure.com/media_attachments_iframe/27752",
+            "thumbnail_embed" to
+                "https://studio-sandbox.cd.instructure.com/courses/993/external_tools/retrieve?display=borderless&amp;url=https%3A%2F%2Ftamasjakli.arc.inseng.net%2Flti%2Flaunch%3Fcustom_arc_launch_type%3Dthumbnail_embed%26custom_arc_media_id%3Dc071aded-4e8a-4fd0-93e6-236c2b31a36d-81%26custom_arc_start_at%3D0",
+            "learn_embed" to
+                "https://studio-sandbox.cd.instructure.com/courses/993/external_tools/retrieve?display=borderless&amp;url=https%3A%2F%2Ftamasjakli.arc.inseng.net%2Flti%2Flaunch%3Fcustom_arc_launch_type%3Dlearn_embed%26custom_arc_media_id%3Dc071aded-4e8a-4fd0-93e6-236c2b31a36d-81%26custom_arc_start_at%3D0",
+            "learn_embed with download and transcript params" to
+                "https://studio-sandbox.cd.instructure.com/courses/993/external_tools/retrieve?display=borderless&amp;url=https%3A%2F%2Fstudio-sandbox.staging.instructuremedia.com%2Flti%2Flaunch%3Fcustom_arc_display_download%3Dtrue%26custom_arc_launch_type%3Dlearn_embed%26custom_arc_lock_speed%3Dtrue%26custom_arc_media_id%3Dad498ec8-ba07-431b-93c4-6df56136b721-12%26custom_arc_start_at%3D0%26custom_arc_transcript_downloadable%3Dtrue",
+        )
+
+        val marker = "class=\"${HtmlContentFormatter.STUDIO_EMBED_CLASS}\""
+
+        studioEmbedSrcUrls.forEach { (label, srcUrl) ->
+            // (a) formatHtmlWithIframes routes anything matched by either predicate through
+            // iframeWithStudioEmbed, so both must classify this src as a Studio embed.
+            assertTrue(
+                "[$label] must be detected as a Studio embed so it is routed to iframeWithStudioEmbed",
+                HtmlContentFormatter.hasStudioEmbedUrl(srcUrl) || HtmlContentFormatter.hasStudioMediaUrl(srcUrl)
+            )
+
+            // (b) the Studio branch must emit the marker CanvasWebView.containsStudioContent keys off.
+            val result = formatter.iframeWithStudioEmbed(srcUrl, "<iframe src=\"$srcUrl\"></iframe>")
+            assertTrue(
+                "[$label] must carry the $marker marker so CanvasWebView injects the post-message bridge",
+                result.contains(marker)
+            )
+        }
+    }
+
     private fun extractOnClickValue(html: String): String = extractBetween(html, "onClick=\"", "\">")
 
     private fun extractBetween(haystack: String, prefix: String, suffix: String): String {

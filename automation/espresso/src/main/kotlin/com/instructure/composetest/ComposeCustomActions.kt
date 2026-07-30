@@ -16,10 +16,14 @@
  */
 package com.instructure.composetest
 
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onLast
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 
 /**
@@ -33,9 +37,40 @@ fun ComposeTestRule.clickToolbarIconButton(
     toolbarTag: String = "toolbar"
 ) {
     waitForIdle()
-    onNode(
+    // When Compose screens are stacked (e.g. a sub-screen pushed over another Compose screen), the
+    // underlying screen's toolbar stays in the semantics tree, so more than one node can match.
+    // Target the topmost (last-attached) screen's toolbar button.
+    onAllNodes(
         hasParent(hasTestTag(toolbarTag)).and(
             hasContentDescription(contentDescription)
         )
-    ).performClick()
+    ).onLast().performClick()
+}
+
+/**
+ * Waits until at least one node with the given test tag is present in the semantics tree.
+ *
+ * @param tag The test tag to wait for
+ * @param timeoutMillis The maximum time to wait, defaults to 20000ms
+ */
+fun ComposeTestRule.waitForTag(tag: String, timeoutMillis: Long = 20000) {
+    waitUntil(timeoutMillis = timeoutMillis) {
+        onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
+    }
+}
+
+/**
+ * Returns whether a node with the given test tag is currently displayed.
+ *
+ * @param tag The test tag to check
+ * @param useUnmergedTree Whether to query the unmerged semantics tree, needed when the tagged node is a
+ * descendant of a node that merges its descendants (e.g. a clickable card)
+ */
+fun ComposeTestRule.isTagDisplayed(tag: String, useUnmergedTree: Boolean = false): Boolean {
+    return try {
+        onNodeWithTag(tag, useUnmergedTree = useUnmergedTree).assertIsDisplayed()
+        true
+    } catch (_: AssertionError) {
+        false
+    }
 }

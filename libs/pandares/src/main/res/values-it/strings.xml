@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Limite di tempo: %s</string>
     <string name="allowedAttempts">Tentativi consentiti: %s</string>
     <string name="usedAttempts">Tentativi utilizzati: %d</string>
+    <string name="assignmentAttemptsUnlimited">Tentativi illimitati</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d tentativi su %2$d</string>
     <string name="generalUnexpectedError">Si verificato un errore imprevisto.</string>
 
     <string name="deleteSelected">Elimina</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID di accesso</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versione</string>
+    <string name="aboutOpenSourceTitle">Open-source e licenze</string>
+    <string name="aboutOpenSourceSubtitle">Visualizza il codice sorgente e le licenze open-source.</string>
     <string name="assignmentRefreshError">Si è verificato un problema durante la ricarica di questo compito. Verifica la connessione e riprova.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Preferenze</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Ordina per</string>
     <string name="gradesEmptyTitle">Nessun compito</string>
     <string name="gradesEmptyMessage">Sembra che i compiti non siano ancora stati creati in questo spazio.</string>
+    <string name="gradesEmptyMessageForPeriod">Non vi sono compiti in %s.</string>
+    <string name="gradesCommentsContentDescription">%d commenti</string>
+    <string name="gradesUnreadCommentsContentDescription">%d commenti non letti</string>
     <string name="noMatchingAssignments">Nessun compito corrispondente</string>
     <string name="noMatchingAssignmentsDescription">Nessun compito corrispondente alla tua ricerca. prova un termine di ricerca differente.</string>
     <string name="errorLoadingGrades">Si sono verificati dei problemi nel caricare i voti dello studente. Prova a ricaricare la pagina o ricontrolla in seguito.</string>

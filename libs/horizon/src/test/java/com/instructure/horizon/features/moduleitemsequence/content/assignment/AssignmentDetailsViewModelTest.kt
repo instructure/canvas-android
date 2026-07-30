@@ -18,21 +18,36 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.domain.usecase.GetAssignmentDetailsUseCase
+import com.instructure.horizon.domain.usecase.GetSubmissionHistoryUseCase
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -45,9 +60,19 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class AssignmentDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
-    private val repository: AssignmentDetailsRepository = mockk(relaxed = true)
+    private val getAssignmentDetailsUseCase: GetAssignmentDetailsUseCase = mockk(relaxed = true)
+    private val getSubmissionHistoryUseCase: GetSubmissionHistoryUseCase = mockk(relaxed = true)
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
+    private val oAuthApi: OAuthAPI.OAuthInterface = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val createSubmissionDao: CreateSubmissionDao = mockk(relaxed = true)
+    private val createFileSubmissionDao: CreateFileSubmissionDao = mockk(relaxed = true)
+    private val submissionHelper: HorizonSubmissionHelper = mockk(relaxed = true)
+    private val textSubmissionFlow = MutableStateFlow<CreateSubmissionEntity?>(null)
+    private val fileSubmissionFlow = MutableStateFlow<CreateSubmissionEntity?>(null)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val courseId = 1L
@@ -64,12 +89,23 @@ class AssignmentDetailsViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignment
-        coEvery { repository.hasUnreadComments(any(), any()) } returns false
-        coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
+        coEvery { getAssignmentDetailsUseCase(any()) } returns testAssignment
+        coEvery { getSubmissionHistoryUseCase(any()) } returns emptyList()
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 0
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returns "Formatted content"
         coEvery { aiAssistContextProvider.aiAssistContext } returns mockk(relaxed = true)
         coEvery { aiAssistContextProvider.aiAssistContext = any() } returns Unit
+        coEvery { networkStateProvider.isOnline() } returns true
+        every {
+            createSubmissionDao.findSubmissionByAssignmentIdAndTypeFlow(
+                any(), any(), Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+            )
+        } returns textSubmissionFlow
+        every {
+            createSubmissionDao.findSubmissionByAssignmentIdAndTypeFlow(
+                any(), any(), Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            )
+        } returns fileSubmissionFlow
     }
 
     @After
@@ -88,7 +124,7 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertFalse(viewModel.uiState.value.loadingState.isLoading)
-        coVerify { repository.getAssignment(assignmentId, courseId, false) }
+        coVerify { getAssignmentDetailsUseCase(GetAssignmentDetailsUseCase.Params(courseId, assignmentId, false)) }
     }
 
     @Test
@@ -106,7 +142,7 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Test failed data load sets error state`() = runTest {
-        coEvery { repository.getAssignment(any(), any(), any()) } throws Exception("Network error")
+        coEvery { getAssignmentDetailsUseCase(any()) } throws Exception("Network error")
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -127,12 +163,12 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(savedStateHandle)
 
-        coVerify { repository.hasUnreadComments(assignmentId, false) }
+        coVerify { getUnreadCommentsCountUseCase(any()) }
     }
 
     @Test
     fun `Test unread comments flag is set correctly`() = runTest {
-        coEvery { repository.hasUnreadComments(any(), any()) } returns true
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 1
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -147,7 +183,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test assignment with no submission shows add submission`() = runTest {
         val assignmentWithoutSubmission = testAssignment.copy(submission = null)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithoutSubmission
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithoutSubmission
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -163,10 +199,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test assignment with submission shows submission details`() = runTest {
         val submission = Submission(attempt = 1L, workflowState = "submitted")
-        val assignmentWithSubmission = testAssignment.copy(
-            submission = submission
-        )
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithSubmission
+        coEvery { getSubmissionHistoryUseCase(any()) } returns listOf(submission)
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -176,26 +209,6 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(savedStateHandle)
 
         assertTrue(viewModel.uiState.value.showSubmissionDetails)
-    }
-
-    @Test
-    fun `Test LTI URL authentication is performed`() = runTest {
-        val ltiUrl = "https://lti.example.com/launch"
-        val testAssignmentWithLti = testAssignment.copy(
-            externalToolAttributes = mockk {
-                coEvery { url } returns ltiUrl
-            }
-        )
-        coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignmentWithLti
-
-        val savedStateHandle = SavedStateHandle(mapOf(
-            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
-            Const.COURSE_ID to courseId
-        ))
-
-        val viewModel = getViewModel(savedStateHandle)
-
-        assertEquals(ltiUrl, viewModel.uiState.value.ltiUrl)
     }
 
     @Test
@@ -214,7 +227,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test attempt selector visibility for multiple attempts`() = runTest {
         val assignmentWithMultipleAttempts = testAssignment.copy(allowedAttempts = 3L)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithMultipleAttempts
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithMultipleAttempts
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -229,7 +242,7 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Test attempt selector is hidden for single attempt assignment`() = runTest {
         val assignmentWithSingleAttempt = testAssignment.copy(allowedAttempts = 1L)
-        coEvery { repository.getAssignment(any(), any(), any()) } returns assignmentWithSingleAttempt
+        coEvery { getAssignmentDetailsUseCase(any()) } returns assignmentWithSingleAttempt
 
         val savedStateHandle = SavedStateHandle(mapOf(
             ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
@@ -255,12 +268,242 @@ class AssignmentDetailsViewModelTest {
         assertTrue(viewModel.uiState.value.toolsBottomSheetUiState.show)
     }
 
+    @Test
+    fun `Pending submission reflects an active scheduled submission`() = runTest {
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+
+        assertEquals(SubmissionState.QUEUED, viewModel.uiState.value.pendingSubmission?.state)
+    }
+
+    @Test
+    fun `A draft submission is not treated as pending`() = runTest {
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = true,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+
+        assertNull(viewModel.uiState.value.pendingSubmission)
+    }
+
+    @Test
+    fun `Pending submission clears when the submission row is removed`() = runTest {
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.SUBMITTING,
+        )
+        testScheduler.advanceUntilIdle()
+        assertEquals(SubmissionState.SUBMITTING, viewModel.uiState.value.pendingSubmission?.state)
+
+        textSubmissionFlow.value = null
+        testScheduler.advanceUntilIdle()
+        assertNull(viewModel.uiState.value.pendingSubmission)
+    }
+
+    @Test
+    fun `Offline scheduled submission is shown as a queued attempt`() = runTest {
+        coEvery { networkStateProvider.isOnline() } returns false
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(1L, state.submissionDetailsUiState.pendingAttemptNumber)
+        assertEquals(1L, state.submissionDetailsUiState.currentSubmissionAttempt)
+        assertTrue(state.showSubmissionDetails)
+        assertFalse(state.showAddSubmission)
+        assertEquals(SubmissionState.QUEUED, state.pendingSubmission?.state)
+        val queuedCard = state.attemptSelectorUiState.attempts.first()
+        assertEquals(1L, queuedCard.attemptNumber)
+        assertTrue(queuedCard.selected)
+        assertNotNull(queuedCard.pillText)
+    }
+
+    @Test
+    fun `Offline queued attempt is numbered after the last real attempt`() = runTest {
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { getSubmissionHistoryUseCase(any()) } returns listOf(Submission(attempt = 1L, workflowState = "submitted"))
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(2L, state.submissionDetailsUiState.pendingAttemptNumber)
+        assertEquals(2L, state.submissionDetailsUiState.currentSubmissionAttempt)
+        // Queued attempt on top, followed by the real attempt.
+        assertEquals(2L, state.attemptSelectorUiState.attempts[0].attemptNumber)
+        assertEquals(1L, state.attemptSelectorUiState.attempts[1].attemptNumber)
+    }
+
+    @Test
+    fun `Cancelling an offline queued attempt with no real submission returns to add submission`() = runTest {
+        coEvery { networkStateProvider.isOnline() } returns false
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+        assertEquals(1L, viewModel.uiState.value.submissionDetailsUiState.pendingAttemptNumber)
+
+        // Cancel reverts the entity to a draft, so it drops out of the scheduled flow.
+        textSubmissionFlow.value = null
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertNull(state.pendingSubmission)
+        assertEquals(-1L, state.submissionDetailsUiState.pendingAttemptNumber)
+        assertTrue(state.showAddSubmission)
+        assertFalse(state.showSubmissionDetails)
+    }
+
+    @Test
+    fun `Completed offline queued attempt silently refreshes without a confirmation modal`() = runTest {
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { getSubmissionHistoryUseCase(match { !it.forceRefresh }) } returns emptyList()
+        coEvery { getSubmissionHistoryUseCase(match { it.forceRefresh }) } returns listOf(Submission(attempt = 1L, workflowState = "submitted"))
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        val entity = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        textSubmissionFlow.value = entity
+        testScheduler.advanceUntilIdle()
+        assertEquals(1L, viewModel.uiState.value.submissionDetailsUiState.pendingAttemptNumber)
+
+        textSubmissionFlow.value = entity.copy(submissionState = SubmissionState.COMPLETED)
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.submissionConfirmationUiState.show)
+        assertNull(state.pendingSubmission)
+        assertEquals(-1L, state.submissionDetailsUiState.pendingAttemptNumber)
+        assertTrue(state.showSubmissionDetails)
+        coVerify { getSubmissionHistoryUseCase(match { it.forceRefresh }) }
+    }
+
+    @Test
+    fun `Selecting an older real attempt while an offline attempt is queued shows the real attempt`() = runTest {
+        coEvery { networkStateProvider.isOnline() } returns false
+        coEvery { getSubmissionHistoryUseCase(any()) } returns listOf(Submission(attempt = 1L, workflowState = "submitted"))
+        val savedStateHandle = SavedStateHandle(mapOf(
+            ModuleItemContent.Assignment.ASSIGNMENT_ID to assignmentId,
+            Const.COURSE_ID to courseId
+        ))
+        val viewModel = getViewModel(savedStateHandle)
+
+        textSubmissionFlow.value = CreateSubmissionEntity(
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(courseId),
+            userId = 1L,
+            isDraft = false,
+            submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            submissionState = SubmissionState.QUEUED,
+        )
+        testScheduler.advanceUntilIdle()
+        assertEquals(2L, viewModel.uiState.value.submissionDetailsUiState.currentSubmissionAttempt)
+
+        val realCard = viewModel.uiState.value.attemptSelectorUiState.attempts.first { it.attemptNumber == 1L }
+        realCard.onClick?.invoke()
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(1L, state.submissionDetailsUiState.currentSubmissionAttempt)
+        // The queued attempt is still pending, just not the one being viewed.
+        assertNotNull(state.pendingSubmission)
+        assertEquals(2L, state.submissionDetailsUiState.pendingAttemptNumber)
+    }
+
     private fun getViewModel(savedStateHandle: SavedStateHandle): AssignmentDetailsViewModel {
         return AssignmentDetailsViewModel(
             context,
-            repository,
+            getAssignmentDetailsUseCase,
+            getSubmissionHistoryUseCase,
+            getUnreadCommentsCountUseCase,
             htmlContentFormatter,
+            oAuthApi,
+            apiPrefs,
             aiAssistContextProvider,
+            networkStateProvider,
+            createSubmissionDao,
+            createFileSubmissionDao,
+            submissionHelper,
             savedStateHandle
         )
     }

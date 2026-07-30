@@ -35,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -43,31 +44,27 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -77,7 +74,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -123,6 +119,10 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.OfflineAwareContent
+import com.instructure.horizon.horizonui.organisms.OfflineBanner
+import com.instructure.horizon.horizonui.organisms.OfflineContentState
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsingBarsNestedScrollConnection
 import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -140,33 +140,41 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         statusBarAlpha = 1f,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
-            ModuleItemSequenceBottomBar(
-                showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                showPreviousButton = uiState.currentPosition > 0,
-                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
-                        || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
-                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                onNextClick = uiState.onNextClick,
-                onPreviousClick = uiState.onPreviousClick,
-                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = {
-                    navController.navigate(
-                        NotebookRoute.Notebook.route(
-                            uiState.courseId.toString(),
-                            uiState.objectTypeAndId.first,
-                            uiState.objectTypeAndId.second,
-                            true,
-                            false,
-                            true
-                        )
+            Column {
+                if (uiState.isOffline) {
+                    OfflineBanner(
+                        lastSyncedAtMs = uiState.lastSyncedAtMs,
+                        modifier = Modifier.fillMaxWidth(),
                     )
-                },
-                notebookEnabled = uiState.notebookButtonEnabled,
-                aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                hasUnreadComments = uiState.hasUnreadComments
-            )
+                }
+                ModuleItemSequenceBottomBar(
+                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                    showPreviousButton = uiState.currentPosition > 0,
+                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                    showAiAssistButton = (uiState.currentItem?.moduleItemContent is ModuleItemContent.File)
+                            || (uiState.currentItem?.moduleItemContent is ModuleItemContent.Page),
+                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                    onNextClick = uiState.onNextClick,
+                    onPreviousClick = uiState.onPreviousClick,
+                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                    onNotebookClick = {
+                        navController.navigate(
+                            NotebookRoute.Notebook.route(
+                                uiState.courseId.toString(),
+                                uiState.objectTypeAndId.first,
+                                uiState.objectTypeAndId.second,
+                                true,
+                                false,
+                                true
+                            )
+                        )
+                    },
+                    notebookEnabled = uiState.notebookButtonEnabled,
+                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                    hasUnreadComments = uiState.hasUnreadComments
+                )
+            }
         }
     ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -185,14 +193,19 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             )
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
-                MarkAsDoneButton(markAsDoneState)
+                MarkAsDoneButton(
+                    markAsDoneState = markAsDoneState,
+                )
             }
         }
     }
 }
 
 @Composable
-private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifier: Modifier = Modifier) {
+private fun BoxScope.MarkAsDoneButton(
+    markAsDoneState: MarkAsDoneUiState,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier
             .align(Alignment.BottomEnd)
@@ -228,7 +241,7 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
                 onClick = if (markAsDoneState.isDone) markAsDoneState.onMarkAsNotDoneClick else markAsDoneState.onMarkAsDoneClick,
                 iconPosition = ButtonIconPosition.Start(
                     iconRes = if (markAsDoneState.isDone) R.drawable.check_box else R.drawable.check_box_outline_blank,
-                )
+                ),
             )
         }
     }
@@ -242,32 +255,24 @@ private fun ModuleItemSequenceContent(
     modifier: Modifier = Modifier
 ) {
     val parentNavController = navController
-    val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
-        save = { it.value.appBarMaxHeight to it.value.appBarOffset },
-        restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
-    )
     val density = LocalDensity.current
-    var moduleHeaderHeight by rememberSaveable { mutableIntStateOf(0) }
-    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
+    val connection = rememberSaveable(saver = CollapsingBarsNestedScrollConnection.Saver) {
+        CollapsingBarsNestedScrollConnection()
+    }
+    // Body is padded down by the visible header height, so the connection should consume scroll
+    // for the full header range — otherwise the header collapses *and* the inner scrollable
+    // scrolls in the same gesture, giving a double-speed feel.
+    connection.topBodyFloorCollapsePx = connection.topBarMaxHeight
     val contentScrollState = rememberScrollState()
 
     Box(
         modifier = modifier
-            .nestedScroll(nestedScrollConnection)
+            .nestedScroll(connection)
     ) {
         Box(
             modifier = Modifier
-                .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
-                .onGloballyPositioned { coordinates ->
-                    if (coordinates.size.height != moduleHeaderHeight) {
-                        moduleHeaderHeight = coordinates.size.height
-                        val temp = nestedScrollConnection.appBarOffset
-                        nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply {
-                                appBarOffset = temp
-                            }
-                    }
-                }
+                .offset { IntOffset(0, connection.topBarOffset) }
+                .onGloballyPositioned { connection.topBarMaxHeight = it.size.height }
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
@@ -278,7 +283,9 @@ private fun ModuleItemSequenceContent(
                 onBackPressed = onBackPressed
             )
         }
-        var moduleHeaderHeight = max(0.dp, with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+        val moduleHeaderHeight = with(density) {
+            (connection.topBarMaxHeight + connection.topBarOffset).coerceAtLeast(0).toDp()
+        }
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -296,7 +303,7 @@ private fun ModuleItemSequenceContent(
                 var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
                     if (uiState.currentPosition != previousPosition) {
-                        nestedScrollConnection.appBarOffset = 0
+                        connection.topBarOffset = 0
                         previousPosition = uiState.currentPosition
                     }
                     contentScrollState.scrollTo(0)
@@ -437,7 +444,9 @@ private fun ModuleItemContentScreen(
     scrollToNoteId: String?,
     modifier: Modifier = Modifier
 ) {
-    if (moduleItemUiState.isLoading) {
+    if (!moduleItemUiState.isAvailableOffline) {
+        OfflineAwareContent(state = OfflineContentState.NotAvailableOffline, modifier = modifier) { }
+    } else if (moduleItemUiState.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxSize()
@@ -637,22 +646,6 @@ private fun ModuleItemSequenceBottomBar(
                 modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
-    }
-}
-
-private class CollapsingAppBarNestedScrollConnection(
-    val appBarMaxHeight: Int
-) : NestedScrollConnection {
-
-    var appBarOffset: Int by mutableIntStateOf(0)
-
-    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-        val delta = available.y.toInt()
-        val newOffset = appBarOffset + delta
-        val previousOffset = appBarOffset
-        appBarOffset = newOffset.coerceIn(-appBarMaxHeight, 0)
-        val consumed = appBarOffset - previousOffset
-        return Offset(0f, consumed.toFloat())
     }
 }
 

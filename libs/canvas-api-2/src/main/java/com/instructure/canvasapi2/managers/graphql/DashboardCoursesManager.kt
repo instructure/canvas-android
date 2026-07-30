@@ -33,7 +33,6 @@ interface DashboardCoursesManager {
 
     suspend fun getCourseAnnouncements(
         courseId: Long,
-        cursor: String? = null,
         forceNetwork: Boolean = true
     ): CourseAnnouncementsQuery.Data
 }

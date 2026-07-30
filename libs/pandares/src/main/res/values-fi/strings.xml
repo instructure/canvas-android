@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Aikaraja: %s</string>
     <string name="allowedAttempts">Sallitut yritykset: %s</string>
     <string name="usedAttempts">Yritystä käytetty: %d</string>
+    <string name="assignmentAttemptsUnlimited">Rajoittamattomasti yrityksiä</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d/%2$d yritystä</string>
     <string name="generalUnexpectedError">Ilmeni odottamaton virhe.</string>
 
     <string name="deleteSelected">Poista</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Käyttäjätunnus</string>
     <string name="aboutEmailTitle">Sähköposti</string>
     <string name="aboutVersionTitle">Versio</string>
+    <string name="aboutOpenSourceTitle">Avaa lähde ja lisenssit</string>
+    <string name="aboutOpenSourceSubtitle">Näytä lähdekoodi ja avoimen lähdekoodin lisenssit.</string>
     <string name="assignmentRefreshError">Tämän tehtävän uudelleenlataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="instructure_logo">Instructure-logo</string>
     <string name="preferences">Asetukset</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Lajitteluperuste</string>
     <string name="gradesEmptyTitle">Ei tehtäviä</string>
     <string name="gradesEmptyMessage">Näyttää siltä kuin tehtäviä ei vielä olisi luotu tässä tilassa.</string>
+    <string name="gradesEmptyMessageForPeriod">Kohteessa %s ei ole tehtäviä.</string>
+    <string name="gradesCommentsContentDescription">%d kommenttia</string>
+    <string name="gradesUnreadCommentsContentDescription">%d lukemattomatonta kommenttia</string>
     <string name="noMatchingAssignments">Ei täsmääviä tehtäviä</string>
     <string name="noMatchingAssignmentsDescription">Hakuasi ei vastaa yhtään tehtävää. Yritä erilaista hakutermiä.</string>
     <string name="errorLoadingGrades">Opiskelijasi arvosanojen latauksessa ilmeni virhe. Yritä ladata sivua uudelleen tai yritä myöhemmin uudelleen.</string>

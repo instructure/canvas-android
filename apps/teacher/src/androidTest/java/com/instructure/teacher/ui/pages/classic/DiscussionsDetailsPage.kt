@@ -25,9 +25,11 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
@@ -52,6 +54,17 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
             .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$menuText']")))
     }
 
+    fun clickOnDeleteMenuButtonAndConfirm() {
+        try {
+            Web.onWebView()
+                .withElement(DriverAtoms.findElement(Locator.XPATH, "//span[text()='Delete']"))
+                .perform(webClick())
+        } catch (e: Exception) {
+            // Expected: the blocking confirm() dialog interrupts the web interaction.
+        }
+        waitForView(withId(android.R.id.button1)).click()
+    }
+
     fun assertToolbarDiscussionTitle(discussionTitle: String) {
         onView(withText(discussionTitle) + withAncestor(withId(R.id.toolbar) + ViewMatchers.hasSibling(
             withId(R.id.discussionWebView)
@@ -60,8 +73,12 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
     }
 
     fun assertDiscussionEntryMessageDisplayed(entryMessage: String) {
-        Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$entryMessage']")))
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//*[normalize-space(text())='$entryMessage']",
+            timeoutMillis = 10000
+        )
     }
 
     fun assertReplyCounter(replyCount: Int) {
@@ -76,8 +93,8 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
     }
 
     fun assertReplyDisplayed(replyMessage: String) {
-        Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$replyMessage']")))
+        Web.onWebView(withId(R.id.discussionWebView))
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//*[normalize-space(text())='$replyMessage']")))
     }
 
 
@@ -96,7 +113,7 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
         waitForWebElement(
             webViewMatcher = withId(R.id.discussionWebView),
             locator = Locator.XPATH,
-            value = "//span[text()='$replyMessage']",
+            value = "//*[normalize-space(text())='$replyMessage']",
             timeoutMillis = 10000,
             intervalMillis = 500
         )

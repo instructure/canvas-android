@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Tijdslimiet: %s</string>
     <string name="allowedAttempts">Toegestane pogingen: %s</string>
     <string name="usedAttempts">Gebruikte pogingen: %d</string>
+    <string name="assignmentAttemptsUnlimited">Onbeperkt aantal pogingen</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d van de %2$d pogingen</string>
     <string name="generalUnexpectedError">Er is een onverwachte fout opgetreden.</string>
 
     <string name="deleteSelected">Verwijderen</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">Aanmeldings-ID</string>
     <string name="aboutEmailTitle">E-mail</string>
     <string name="aboutVersionTitle">Versie</string>
+    <string name="aboutOpenSourceTitle">Open bronnen en licenties</string>
+    <string name="aboutOpenSourceSubtitle">Bekijk de broncode en licenties voor open bronnen.</string>
     <string name="assignmentRefreshError">Er is een probleem met het opnieuw laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Voorkeuren</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Sorteren op</string>
     <string name="gradesEmptyTitle">Geen opdrachten</string>
     <string name="gradesEmptyMessage">Het lijkt erop dat er in deze ruimte nog geen opdrachten zijn gemaakt.</string>
+    <string name="gradesEmptyMessageForPeriod">Er zijn geen opdrachten in %s.</string>
+    <string name="gradesCommentsContentDescription">%d opmerkingen</string>
+    <string name="gradesUnreadCommentsContentDescription">%d ongelezen opmerkingen</string>
     <string name="noMatchingAssignments">Geen overeenkomende opdrachten</string>
     <string name="noMatchingAssignmentsDescription">Geen opdrachten die overeenkomen met je zoekopdracht. Probeer een andere zoekterm.</string>
     <string name="errorLoadingGrades">We ondervinden problemen bij het laden van de cijfers van je student. Probeer de pagina opnieuw te laden of kom later terug.</string>

@@ -131,7 +131,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okio.IOException
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -388,7 +387,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 val theme = awaitApi<CanvasTheme> { ThemeManager.getTheme(it, false) }
                 ThemePrefs.applyCanvasTheme(theme, this@InitActivity)
                 binding.bottomBar.applyTheme(ThemePrefs.brandColor, getColor(R.color.textDarkest))
-            } catch(e: IOException) {
+            } catch (e: Throwable) {
                 LoggingUtility.log(e.stackTrace.toString(), Log.WARN)
             }
         }

@@ -216,6 +216,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     private suspend fun getUnreadMessageCount() {
+        if (ApiPrefs.canvasCareerView.orDefault()) return
         val unreadCount = awaitApi<UnreadConversationCount> { UnreadCountManager.getUnreadConversationCount(it, true) }
         unreadCount.let {
             val unreadCountInt = (it.unreadCount ?: "0").toInt()
@@ -224,6 +225,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     protected suspend fun getToDoCount() {
+        if (ApiPrefs.canvasCareerView.orDefault()) return
         val todoFilters = toDoFilterDao.findByUser(
             apiPrefs.fullDomain,
             apiPrefs.user?.id.orDefault()
@@ -262,6 +264,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     }
 
     private fun getUnreadNotificationCount() {
+        if (ApiPrefs.canvasCareerView.orDefault()) return
         UnreadCountManager.getUnreadNotificationCount(object : StatusCallback<List<UnreadNotificationCount>>() {
             override fun onResponse(data: Call<List<UnreadNotificationCount>>, response: Response<List<UnreadNotificationCount>>) {
                 updateNotificationCount(response.body()?.sumOf { it.unreadCount.orDefault() }.orDefault())

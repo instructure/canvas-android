@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.AuthenticateUrlUseCase
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExternalToolViewModel @Inject constructor(
-    private val externalToolRepository: ExternalToolRepository,
+    private val authenticateUrlUseCase: AuthenticateUrlUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -59,7 +60,7 @@ class ExternalToolViewModel @Inject constructor(
             _uiState.update {
                 it.copy(openExternallyLoading = true)
             }
-            val authUrl = externalToolRepository.authenticateUrl(url)
+            val authUrl = authenticateUrlUseCase(url)
             _uiState.update {
                 it.copy(authenticatedUrl = authUrl, openExternallyLoading = false)
             }

@@ -17,17 +17,31 @@
 package com.instructure.ngc.features.submission.supportingpane
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.instructure.instui.compose.text.Text
+import com.instructure.ngc.features.comments.SubmissionCommentsComponent
 
+/**
+ * Comments pane of the NGC submission screen. Delegates to the reusable comments component so it shares the
+ * same UI, ViewModel and data loading as the assignment-details comments bottom sheet.
+ */
 @Composable
-fun SubmissionCommentsScreen(modifier: Modifier = Modifier) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        // Placeholder — content will be added in a future ticket
-        item {
-            Text("Comments — coming soon!")
-        }
-    }
+fun SubmissionCommentsScreen(
+    courseId: Long,
+    assignmentId: Long,
+    studentId: Long,
+    attemptId: Long?,
+    modifier: Modifier = Modifier,
+    onOpenFile: (url: String, contentType: String, fileName: String) -> Unit = { _, _, _ -> },
+    onOpenMedia: (url: String, contentType: String, fileName: String, thumbnailUrl: String?) -> Unit = { _, _, _, _ -> },
+) {
+    SubmissionCommentsComponent(
+        courseId = courseId,
+        assignmentId = assignmentId,
+        studentId = studentId,
+        attemptId = attemptId,
+        modifier = modifier.fillMaxSize(),
+        onOpenFile = onOpenFile,
+        onOpenMedia = onOpenMedia,
+    )
 }

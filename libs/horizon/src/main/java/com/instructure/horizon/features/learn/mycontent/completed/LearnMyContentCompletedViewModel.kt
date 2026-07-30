@@ -19,22 +19,28 @@ package com.instructure.horizon.features.learn.mycontent.completed
 import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
-import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
-import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.horizon.R
+import com.instructure.canvasapi2.models.journey.mycontent.CourseEnrollmentItem
+import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsParams
+import com.instructure.horizon.domain.usecase.GetLearnMyContentCompletedItemsUseCase
+import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
+import com.instructure.horizon.domain.usecase.OfflineCardStateHelper
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
-import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
 import com.instructure.horizon.features.learn.mycontent.common.toCardState
+import com.instructure.horizon.offline.HorizonOfflineState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnMyContentCompletedViewModel @Inject constructor(
     private val resources: Resources,
-    repository: LearnMyContentRepository,
-) : LearnMyContentViewModel<LearnContentCardState>(repository) {
+    private val getLearnMyContentCompletedItemsUseCase: GetLearnMyContentCompletedItemsUseCase,
+    private val offlineCardStateHelper: OfflineCardStateHelper,
+    getNextModuleItemUseCase: GetNextModuleItemUseCase,
+    offlineState: HorizonOfflineState,
+) : LearnMyContentViewModel<LearnContentCardState>(getNextModuleItemUseCase, offlineState) {
 
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)
@@ -44,21 +50,23 @@ class LearnMyContentCompletedViewModel @Inject constructor(
         searchQuery: String,
         sortBy: CollectionItemSortOption,
         typeFilter: LearnLearningLibraryTypeFilter,
-        forceNetwork: Boolean,
+        forceRefresh: Boolean,
     ): Pair<List<LearnContentCardState>, LearningLibraryPageInfo> {
-        val response = repository.getLearnItems(
-            cursor = cursor,
-            searchQuery = searchQuery.ifEmpty { null },
-            sortBy = sortBy,
-            status = listOf(LearnItemStatus.COMPLETED),
-            itemTypes = typeFilter.toLearnItemType()?.let { listOf(it) },
-            forceNetwork = forceNetwork,
-        )
-        return response.items.map {
-            it.toCardState(
-                resources,
-                { fetchNextModuleItemRoute(it, forceNetwork) }
+        val response = getLearnMyContentCompletedItemsUseCase(
+            GetLearnMyContentCompletedItemsParams(
+                cursor = cursor,
+                searchQuery = searchQuery.ifEmpty { null },
+                sortBy = sortBy,
+                itemTypes = typeFilter.toLearnItemType()?.let { listOf(it) },
+                forceRefresh = forceRefresh,
             )
+        )
+        val offlineContext = offlineCardStateHelper.buildContext(
+            response.items.filterIsInstance<CourseEnrollmentItem>().mapNotNull { it.imageUrl }
+        )
+        return response.items.map { item ->
+            val courseId = (item as? CourseEnrollmentItem)?.id?.toLongOrNull()
+            item.toCardState(resources, { fetchNextModuleItemRoute(it) }, offlineContext.isSynced(courseId), offlineContext.resolvedImageUrls)
         } to response.pageInfo
     }
 }

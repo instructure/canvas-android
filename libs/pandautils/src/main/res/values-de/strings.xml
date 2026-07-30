@@ -261,6 +261,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Diese Antwort %s gelöscht</string>
+    <string name="utils_announcementDeleted">Ankündigung gelöscht.</string>
+    <string name="utils_discussionDeleted">Diskussion gelöscht.</string>
     <string name="utils_discussionsUnknownAuthor">Unbekannter Autor</string>
     <string name="utils_discussionsReply">Antworten</string>
     <string name="utils_discussionsEdit">Ändern</string>

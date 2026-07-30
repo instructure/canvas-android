@@ -22,22 +22,31 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.data.repository.dashboardcourses.DashboardCoursesRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 class LoadVisibleCoursesUseCase @Inject constructor(
     private val dashboardCoursesRepository: DashboardCoursesRepository,
     private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase
 ) : BaseUseCase<LoadVisibleCoursesUseCase.Params, LoadVisibleCoursesUseCase.Result>() {
 
-    override suspend fun execute(params: Params): Result {
-        val coursesData = dashboardCoursesRepository.getCourses(params.forceRefresh)
-        val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(params.forceRefresh))
+    override suspend fun execute(params: Params): Result = coroutineScope {
+        val coursesDeferred = async {
+            dashboardCoursesRepository.getCourses(params.forceRefresh)
+        }
+        val cardsDeferred = async {
+            loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(params.forceRefresh))
+        }
+
+        val coursesData = coursesDeferred.await()
+        val dashboardCards = cardsDeferred.await()
 
         val coursesMap = coursesData.courses.associateBy { it.id }
         val visibleCourses = dashboardCards
             .mapNotNull { card -> applyNickname(coursesMap[card.id], card) }
             .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
 
-        return Result(
+        Result(
             visibleCourses = visibleCourses,
             allCourses = coursesData.courses,
             announcementsMap = coursesData.announcementsMap

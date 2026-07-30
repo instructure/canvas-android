@@ -27,7 +27,9 @@ import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissio
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionCommentFileEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.utils.FileUploadUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Date
 
@@ -74,18 +76,42 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         text: String
     ) {
-        insertDraft(assignmentId) {
+        saveDraft(canvasContext, assignmentId, assignmentName, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, text)
+    }
+
+    suspend fun saveDraft(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        assignmentName: String?,
+        submissionType: String,
+        entry: String
+    ) {
+        insertDraft(assignmentId, submissionType) {
             val entity = CreateSubmissionEntity(
                 assignmentName = assignmentName,
                 assignmentId = assignmentId,
                 canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+                submissionType = submissionType,
                 userId = getUserId(),
                 lastActivityDate = Date(),
-                submissionEntry = text,
+                submissionEntry = entry,
                 isDraft = true
             )
             it.submissionDao().insert(entity)
+        }
+    }
+
+    suspend fun loadDraft(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        submissionType: String
+    ): CreateSubmissionEntity? {
+        return withContext(Dispatchers.IO) {
+            studentDb.submissionDao().findDraftSubmissionByAssignmentIdAndType(
+                assignmentId,
+                getUserId(),
+                submissionType
+            )
         }
     }
 
@@ -413,13 +439,17 @@ abstract class BaseSubmissionHelper(
         submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
         insertBlock: suspend (StudentDb) -> Unit
     ): Long {
-        deleteDraftsForAssignment(assignmentId, submissionType)
-        insertBlock(studentDb)
-        return studentDb.submissionDao().getLastInsert()
+        return insertDraft(assignmentId, submissionType.apiString, insertBlock)
     }
 
-    private suspend fun deleteDraftsForAssignment(assignmentId: Long, submissionType: Assignment.SubmissionType) {
-        studentDb.submissionDao().deleteDraftByAssignmentIdAndType(assignmentId, getUserId(), submissionType.apiString)
+    private suspend fun insertDraft(
+        assignmentId: Long,
+        submissionType: String,
+        insertBlock: suspend (StudentDb) -> Unit
+    ): Long {
+        studentDb.submissionDao().deleteDraftByAssignmentIdAndType(assignmentId, getUserId(), submissionType)
+        insertBlock(studentDb)
+        return studentDb.submissionDao().getLastInsert()
     }
 
     fun deletePendingComment(commentId: Long) {

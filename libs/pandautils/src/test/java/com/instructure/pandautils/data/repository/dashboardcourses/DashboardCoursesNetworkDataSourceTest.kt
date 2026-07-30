@@ -16,7 +16,6 @@
 
 package com.instructure.pandautils.data.repository.dashboardcourses
 
-import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.models.Course
@@ -30,7 +29,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 class DashboardCoursesNetworkDataSourceTest {
 
@@ -94,122 +92,17 @@ class DashboardCoursesNetworkDataSourceTest {
     }
 
     @Test
-    fun `unread announcements are included in announcementsMap`() = runTest {
-        val announcementNode = DashboardCoursesQuery.Node1(
-            _id = "10",
-            title = "Important Update",
-            message = "Hello students",
-            postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = false),
-            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
-        )
-        val announcements = DashboardCoursesQuery.Announcements(
-            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-            nodes = listOf(announcementNode)
-        )
+    fun `announcements are not loaded by the network source`() = runTest {
+        // Announcements are decoupled from the courses query and loaded separately in a capped
+        // background pass, so the network data source must never populate the announcements map.
         val data = buildQueryData(
-            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
+            allCourse(id = "1", name = "Course", dashboardCard = dashboardCard(position = 0))
         )
         coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
 
         val result = dataSource.getCourses(false)
 
-        val courseAnnouncements = result.announcementsMap[1L]
-        assertEquals(1, courseAnnouncements?.size)
-        assertEquals(10L, courseAnnouncements?.first()?.id)
-        assertEquals("Important Update", courseAnnouncements?.first()?.title)
-        assertTrue(courseAnnouncements?.first()?.announcement == true)
-    }
-
-    @Test
-    fun `read announcement with unread entries is included`() = runTest {
-        val readAnnouncementWithEntries = DashboardCoursesQuery.Node1(
-            _id = "10",
-            title = "Announcement with replies",
-            message = "Check the replies",
-            postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = true),
-            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 3)
-        )
-        val announcements = DashboardCoursesQuery.Announcements(
-            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-            nodes = listOf(readAnnouncementWithEntries)
-        )
-        val data = buildQueryData(
-            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
-        )
-        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-
-        val result = dataSource.getCourses(false)
-
-        val courseAnnouncements = result.announcementsMap[1L]
-        assertEquals(1, courseAnnouncements?.size)
-        assertEquals(3, courseAnnouncements?.first()?.unreadCount)
-    }
-
-    @Test
-    fun `fully read announcements with no unread entries are filtered out`() = runTest {
-        val readAnnouncement = DashboardCoursesQuery.Node1(
-            _id = "10",
-            title = "Old Announcement",
-            message = "Already read",
-            postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = true),
-            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
-        )
-        val announcements = DashboardCoursesQuery.Announcements(
-            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-            nodes = listOf(readAnnouncement)
-        )
-        val data = buildQueryData(
-            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
-        )
-        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-
-        val result = dataSource.getCourses(false)
-
-        val courseAnnouncements = result.announcementsMap[1L]
-        assertTrue(courseAnnouncements.isNullOrEmpty())
-    }
-
-    @Test
-    fun `announcements are depaginated per course when hasNextPage is true`() = runTest {
-        val firstPageNode = DashboardCoursesQuery.Node1(
-            _id = "10",
-            title = "First Page",
-            message = "msg",
-            postedAt = Date(),
-            participant = DashboardCoursesQuery.Participant(read = false),
-            entryCounts = DashboardCoursesQuery.EntryCounts(unreadCount = 0)
-        )
-        val announcements = DashboardCoursesQuery.Announcements(
-            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = true, endCursor = "cursor1"),
-            nodes = listOf(firstPageNode)
-        )
-        val data = buildQueryData(
-            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
-        )
-        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-        coEvery { dashboardCoursesManager.getCourseAnnouncements(any(), any(), any()) } returns CourseAnnouncementsQuery.Data(course = null)
-
-        dataSource.getCourses(false)
-
-        coVerify { dashboardCoursesManager.getCourseAnnouncements(1L, "cursor1", any()) }
-    }
-
-    @Test
-    fun `announcements are not depaginated when hasNextPage is false`() = runTest {
-        val announcements = DashboardCoursesQuery.Announcements(
-            pageInfo = DashboardCoursesQuery.PageInfo(hasNextPage = false, endCursor = null),
-            nodes = emptyList()
-        )
-        val data = buildQueryData(
-            allCourse(id = "1", name = "Course", announcements = announcements, dashboardCard = dashboardCard(position = 0))
-        )
-        coEvery { dashboardCoursesManager.getDashboardCourses(any()) } returns data
-
-        dataSource.getCourses(false)
-
+        assertTrue(result.announcementsMap.isEmpty())
         coVerify(exactly = 0) { dashboardCoursesManager.getCourseAnnouncements(any(), any()) }
     }
 
@@ -270,8 +163,7 @@ class DashboardCoursesNetworkDataSourceTest {
         courseCode: String? = null,
         imageUrl: String? = null,
         dashboardCard: DashboardCoursesQuery.DashboardCard? = null,
-        enrollmentsConnection: DashboardCoursesQuery.EnrollmentsConnection? = null,
-        announcements: DashboardCoursesQuery.Announcements? = null
+        enrollmentsConnection: DashboardCoursesQuery.EnrollmentsConnection? = null
     ): DashboardCoursesQuery.AllCourse {
         return DashboardCoursesQuery.AllCourse(
             _id = id,
@@ -279,8 +171,7 @@ class DashboardCoursesNetworkDataSourceTest {
             courseCode = courseCode,
             imageUrl = imageUrl,
             dashboardCard = dashboardCard,
-            enrollmentsConnection = enrollmentsConnection,
-            announcements = announcements
+            enrollmentsConnection = enrollmentsConnection
         )
     }
 

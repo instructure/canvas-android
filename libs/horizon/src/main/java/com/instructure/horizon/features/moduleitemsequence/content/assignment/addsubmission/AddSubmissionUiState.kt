@@ -27,6 +27,8 @@ data class AddSubmissionUiState(
     val onSubmissionButtonClicked: () -> Unit = {},
     val showSubmissionConfirmation: Boolean = false,
     val onDismissSubmissionConfirmation: () -> Unit = {},
+    val showOfflineSubmissionWarning: Boolean = false,
+    val onDismissOfflineSubmissionWarning: () -> Unit = {},
     val onSubmitAssignment: () -> Unit = {},
     val submissionInProgress: Boolean = false,
     val errorMessage: String? = null,
@@ -51,7 +53,9 @@ sealed class AddSubmissionTypeUiState(
         val text: String = "",
         val onTextChanged: (String) -> Unit = {},
         override val draftUiState: DraftUiState = DraftUiState(),
-        override val submitEnabled: Boolean = false
+        override val submitEnabled: Boolean = false,
+        val onStageImage: suspend (Uri) -> String? = { null },
+        val contentResetKey: Int = 0
     ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText, Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
         override fun copyWith(
             draftUiState: DraftUiState,

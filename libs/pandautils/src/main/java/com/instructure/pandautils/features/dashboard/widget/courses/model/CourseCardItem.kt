@@ -26,6 +26,7 @@ data class CourseCardItem(
     val color: Int,
     val grade: GradeDisplay,
     val announcements: List<DiscussionTopicHeader> = emptyList(),
+    val announcementsLoading: Boolean = false,
     val isSynced: Boolean = false,
     val isClickable: Boolean = true
 )

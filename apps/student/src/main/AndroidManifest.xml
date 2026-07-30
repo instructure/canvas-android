@@ -138,6 +138,11 @@
             android:configChanges="orientation|screenSize"/>
 
         <activity
+            android:name=".activity.NgcFileViewerActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
             android:name=".activity.ViewMediaActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
@@ -282,6 +287,7 @@
 
         <activity
             android:name="com.instructure.ngc.NGCActivity"
+            android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="adjustResize"
             android:exported="false"
             android:label="@string/student_app_name"

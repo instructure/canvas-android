@@ -23,6 +23,8 @@ import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessaging
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.tryOrNull
+import com.instructure.horizon.database.HorizonDatabaseProvider
+import com.instructure.horizon.offline.sync.HorizonOfflineSyncWorker
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -40,7 +42,8 @@ class StudentLogoutTask(
     canvasForElementaryFeatureFlag: Boolean = false,
     typefaceBehavior: TypefaceBehavior? = null,
     private val databaseProvider: DatabaseProvider? = null,
-    private val alarmScheduler: AlarmScheduler? = null
+    private val alarmScheduler: AlarmScheduler? = null,
+    private val horizonDatabaseProvider: HorizonDatabaseProvider? = null,
 ) : LogoutTask(type, uri, canvasForElementaryFeatureFlag, typefaceBehavior) {
 
     override fun onCleanup() {
@@ -72,6 +75,7 @@ class StudentLogoutTask(
             val dir = File(ContextKeeper.appContext.filesDir, it.toString())
             dir.deleteRecursively()
             databaseProvider?.clearDatabase(it)
+            horizonDatabaseProvider?.clearDatabase(it)
         }
     }
 
@@ -80,6 +84,8 @@ class StudentLogoutTask(
         workManager.apply {
             cancelAllWorkByTag(OfflineSyncWorker.PERIODIC_TAG)
             cancelAllWorkByTag(OfflineSyncWorker.ONE_TIME_TAG)
+            cancelAllWorkByTag(HorizonOfflineSyncWorker.PERIODIC_TAG)
+            cancelAllWorkByTag(HorizonOfflineSyncWorker.ONE_TIME_TAG)
         }
     }
 

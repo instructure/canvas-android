@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.models.journey.assist
 
 data class JourneyAssistChipOption(
-    val chip: String,
+    val chip: String?,
+    val chipKey: String?,
     val prompt: String
 )

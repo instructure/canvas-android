@@ -128,7 +128,7 @@ class PagesE2ETest : TeacherTest() {
         editPageDetailsPage.toggleFrontPage()
 
         Log.d(ASSERTION_TAG, "Assert that a front page cannot be unpublished.")
-        editPageDetailsPage.unableToSaveUnpublishedFrontPage()
+        editPageDetailsPage.unableToSaveUnpublishedFrontPage(activityRule.activity)
 
         Log.d(STEP_TAG, "Publish '${frontPage.title}' page again. Click on 'Save' and navigate back-")
         editPageDetailsPage.togglePublished()

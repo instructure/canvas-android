@@ -15,9 +15,15 @@
  */
 package com.instructure.horizon.horizonui.organisms.scaffolds
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.contentColorFor
@@ -25,8 +31,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.util.DefaultBarAlpha
 import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.horizontalSafeDrawing
 
+/**
+ * Edge-to-edge scaffold around `material3.Scaffold` with Horizon's translucent system-bar overlays.
+ *
+ * The body wrapper applies horizontal safe-drawing insets via `Modifier.windowInsetsPadding`
+ * (consume-aware, so a nested scaffold inside `content` won't double-pad). IME is handled by
+ * `Modifier.imePadding()` on the same wrapper, with the bottomBar's height consumed first so the
+ * keyboard padding doesn't stack on top of the bar padding. The bar slot itself stays at the
+ * screen bottom and is hidden behind the keyboard when it opens.
+ */
 @Composable
 fun EdgeToEdgeScaffold(
     modifier: Modifier = Modifier,
@@ -39,18 +56,18 @@ fun EdgeToEdgeScaffold(
     contentColor: Color = contentColorFor(containerColor),
     statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
     navigationBarColor: Color? = null,
-    statusBarAlpha: Float = 0.8f,
-    navigationBarAlpha: Float = 0.8f,
-    content: @Composable (PaddingValues) -> Unit
+    statusBarAlpha: Float = DefaultBarAlpha,
+    navigationBarAlpha: Float = DefaultBarAlpha,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     HorizonEdgeToEdgeSystemBars(
         statusBarColor = statusBarColor,
         navigationBarColor = navigationBarColor,
         statusBarAlpha = statusBarAlpha,
-        navigationBarAlpha = navigationBarAlpha
-    ) { statusBarWindowInsets, navigationBarWindowInsets ->
+        navigationBarAlpha = navigationBarAlpha,
+    ) { statusBarInsets, navigationBarInsets ->
         Scaffold(
-            modifier = modifier.imePadding(),
+            modifier = modifier,
             topBar = topBar,
             bottomBar = bottomBar,
             snackbarHost = snackbarHost,
@@ -58,8 +75,20 @@ fun EdgeToEdgeScaffold(
             floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
             contentColor = contentColor,
-            contentWindowInsets = statusBarWindowInsets.add(navigationBarWindowInsets),
-            content = content
+            // Pull only the bottom from nav insets — horizontal safe drawing is applied via
+            // Modifier.windowInsetsPadding on the body wrapper below.
+            contentWindowInsets = statusBarInsets
+                .add(navigationBarInsets.only(WindowInsetsSides.Bottom)),
+            content = { paddingValues ->
+                Box(
+                    modifier = Modifier
+                        .consumeWindowInsets(paddingValues)
+                        .imePadding()
+                        .windowInsetsPadding(WindowInsets.horizontalSafeDrawing),
+                ) {
+                    content(paddingValues)
+                }
+            },
         )
     }
 }

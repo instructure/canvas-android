@@ -19,10 +19,10 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import java.io.File
 
 interface AssignmentDetailsSubmissionHandler {
@@ -34,7 +34,17 @@ interface AssignmentDetailsSubmissionHandler {
     var lastSubmissionIsDraft: Boolean
     var lastSubmissionEntry: String?
 
-    fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit, updateGradeCell: () -> Unit = {})
+    fun addAssignmentSubmissionObserver(
+        context: Context,
+        assignmentId: Long,
+        userId: Long,
+        resources: Resources,
+        getAttempts: () -> List<AssignmentDetailsAttemptViewData>,
+        setAttempts: (List<AssignmentDetailsAttemptViewData>) -> Unit,
+        setHasDraft: (Boolean) -> Unit,
+        refreshAssignment: () -> Unit,
+        updateGradeCell: () -> Unit = {}
+    )
 
     fun removeAssignmentSubmissionObserver()
 

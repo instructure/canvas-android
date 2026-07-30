@@ -17,6 +17,7 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.MarkSubmissionCommentsReadMutation
 import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.models.SubmissionComment
@@ -63,7 +64,8 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
                         thumbnailUrl = attachment.thumbnailUrl,
                         url = attachment.url
                     )
-                }
+                },
+                authorVisibleName = "${comment.authorName} (${comment.authorPronouns ?: "No pronouns"})"
             )
         } ?: emptyList()
 
@@ -101,5 +103,12 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
         }
 
         return CreateSubmissionCommentMutation.Data(null)
+    }
+
+    override suspend fun markSubmissionCommentsRead(
+        submissionId: Long,
+        submissionCommentIds: List<Long>
+    ): MarkSubmissionCommentsReadMutation.Data {
+        TODO("Not yet implemented")
     }
 }

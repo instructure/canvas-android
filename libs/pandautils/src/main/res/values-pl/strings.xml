@@ -263,6 +263,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Usunięto tę odpowiedź %s</string>
+    <string name="utils_announcementDeleted">Usunięto ogłoszenie.</string>
+    <string name="utils_discussionDeleted">Usunięto dyskusję.</string>
     <string name="utils_discussionsUnknownAuthor">Nieznany autor</string>
     <string name="utils_discussionsReply">Odpowiedz</string>
     <string name="utils_discussionsEdit">Edytuj</string>

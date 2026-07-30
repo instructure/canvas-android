@@ -25,7 +25,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.dataseeding.api.AssignmentsApi
-import com.instructure.dataseeding.api.QuizzesApi
+import com.instructure.dataseeding.api.ClassicQuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.QuizAnswer
@@ -109,7 +109,7 @@ class OfflineGradesE2ETest : StudentComposeTest() {
         val quizQuestions = makeQuizQuestions()
 
         Log.d(PREPARATION_TAG, "Publish the previously made quiz.")
-        val quiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
+        val quiz = ClassicQuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)

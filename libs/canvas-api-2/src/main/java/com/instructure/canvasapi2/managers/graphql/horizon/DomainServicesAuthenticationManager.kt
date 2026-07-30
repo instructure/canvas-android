@@ -17,38 +17,32 @@ abstract class DomainServicesAuthenticationManager(
     private val domainServicesApiPref: DomainServicesApiPref,
     private val domainService: DomainService
 ) {
-    suspend fun getAuthenticationToken(forceRefresh: Boolean = false): String {
+    suspend fun getAuthenticationToken(forceRefresh: Boolean = false): String? {
         val cachedToken = domainServicesApiPref.token?.ifEmpty { null }
-        return if (forceRefresh || cachedToken == null || isTokenExpired(cachedToken)) {
-            val newToken = requestAuthenticationToken(domainService)
-            domainServicesApiPref.token = newToken
-
-            newToken
-
-        } else {
-            cachedToken
+        if (!forceRefresh && cachedToken != null && !isTokenExpired(cachedToken)) {
+            return cachedToken
         }
+        val newToken = requestAuthenticationToken(domainService) ?: return null
+        domainServicesApiPref.token = newToken
+        return newToken
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    private suspend fun requestAuthenticationToken(domainService: DomainService): String {
+    private suspend fun requestAuthenticationToken(domainService: DomainService): String? {
         val workflows = domainService.workflows
-        val params = RestParams()
-        val newToken = domainServicesAuthenticationAPI
+        val params = RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+        val encoded = domainServicesAuthenticationAPI
             .getDomainServiceAuthentication(null, false,
                 DomainServicesWorkflow(workflows), params)
             .map { it.token }
-            .dataOrNull
-            .orEmpty()
+            .dataOrNull ?: return null
 
-        return String(Base64.Default.decode(newToken))
+        return runCatching { String(Base64.Default.decode(encoded)) }.getOrNull()
     }
 
     private fun isTokenExpired(token: String?): Boolean {
         if (token.isNullOrEmpty()) return true
-        if (JWT.decode(token).expiresAt <= Date()) return true
-
-        return false
+        return runCatching { JWT.decode(token).expiresAt <= Date() }.getOrDefault(true)
     }
 }
 

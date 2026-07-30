@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -36,28 +37,25 @@ fun HorizonScaffold(
     title: String,
     onBackPressed: () -> Unit,
     snackbarHost: @Composable () -> Unit = {},
+    navigationBarColor: Color? = null,
     content: @Composable (Modifier) -> Unit,
 ) {
     EdgeToEdgeScaffold(
         topBar = { HorizonTopAppBar(title, onBackPressed) },
         snackbarHost = snackbarHost,
         containerColor = HorizonColors.Surface.pagePrimary(),
-        contentColor = HorizonColors.Surface.pagePrimary()
+        contentColor = HorizonColors.Surface.pagePrimary(),
+        navigationBarColor = navigationBarColor,
+        navigationBarAlpha = 1f,
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .background(HorizonColors.Surface.pagePrimary())
                 .fillMaxSize()
                 .padding(innerPadding)
                 .clip(HorizonCornerRadius.level5)
-                .background(HorizonColors.Surface.pageSecondary())
-
+                .background(HorizonColors.Surface.pageSecondary()),
         ) {
-            content(
-                Modifier
-                    .fillMaxSize()
-                    .background(HorizonColors.Surface.pageSecondary())
-            )
+            content(Modifier.fillMaxSize())
         }
     }
 }
@@ -72,7 +70,7 @@ private fun PreviewHorizonScaffoldPreview() {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp),
         ) {
             Column {
                 Text("This is a preview of the HorizonScaffold")

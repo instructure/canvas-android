@@ -52,7 +52,6 @@ import com.instructure.pandautils.features.assignments.details.gradecellview.Gra
 import com.instructure.pandautils.features.reminder.DateTimePicker
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderRepository
-import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -153,8 +152,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Error(expected), viewModel.state.value)
-        assertEquals(expected, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+        assertEquals(AssignmentDetailsScreenState.Error(expected), viewModel.uiState.value.screenState)
+        assertEquals(expected, (viewModel.uiState.value.screenState as? AssignmentDetailsScreenState.Error)?.message)
     }
 
     @Test
@@ -169,8 +168,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Error(authError), viewModel.state.value)
-        assertEquals(authError, (viewModel.state.value as? ViewState.Error)?.errorMessage)
+        assertEquals(AssignmentDetailsScreenState.Error(authError), viewModel.uiState.value.screenState)
+        assertEquals(authError, (viewModel.uiState.value.screenState as? AssignmentDetailsScreenState.Error)?.message)
     }
 
     @Test
@@ -183,8 +182,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Success, viewModel.state.value)
-        assertEquals(true, viewModel.data.value?.fullLocked)
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(true, viewModel.uiState.value.fullLocked)
     }
 
     @Test
@@ -207,9 +206,9 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Success, viewModel.state.value)
-        assertEquals(false, viewModel.data.value?.fullLocked)
-        assertEquals(expectedLockedMessage, viewModel.data.value?.lockedMessage)
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(false, viewModel.uiState.value.fullLocked)
+        assertEquals(expectedLockedMessage, viewModel.uiState.value.lockedMessage)
     }
 
     @Test
@@ -224,8 +223,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Success, viewModel.state.value)
-        assertEquals(expected, viewModel.data.value?.assignmentName)
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(expected, viewModel.uiState.value.assignmentName)
     }
 
     @Test
@@ -240,8 +239,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Success, viewModel.state.value)
-        assertEquals(expected, viewModel.data.value?.assignmentName)
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(expected, viewModel.uiState.value.assignmentName)
     }
 
     @Test
@@ -255,8 +254,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(ViewState.Success, viewModel.state.value)
-        assertEquals(true, viewModel.data.value?.hasDraft)
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(true, viewModel.uiState.value.hasDraft)
     }
 
     @Test
@@ -277,7 +276,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(3, viewModel.data.value?.attempts?.size)
+        assertEquals(3, viewModel.uiState.value.attempts.size)
     }
 
     @Test
@@ -301,8 +300,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedGradeCell, viewModel.data.value?.selectedGradeCellViewData)
-        assertEquals(GradeCellViewData.State.EMPTY, viewModel.data.value?.selectedGradeCellViewData?.state)
+        assertEquals(expectedGradeCell, viewModel.uiState.value.gradeCell)
+        assertEquals(GradeCellViewData.State.EMPTY, viewModel.uiState.value.gradeCell?.state)
     }
 
     @Test
@@ -324,10 +323,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.uiState.value.submissionStatusText)
+        assertEquals(expectedTint, viewModel.uiState.value.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.uiState.value.submissionStatusIcon)
+        assertEquals(true, viewModel.uiState.value.submissionStatusVisible)
     }
 
     @Test
@@ -346,10 +345,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.uiState.value.submissionStatusText)
+        assertEquals(expectedTint, viewModel.uiState.value.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.uiState.value.submissionStatusIcon)
+        assertEquals(true, viewModel.uiState.value.submissionStatusVisible)
     }
 
     @Test
@@ -374,10 +373,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.uiState.value.submissionStatusText)
+        assertEquals(expectedTint, viewModel.uiState.value.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.uiState.value.submissionStatusIcon)
+        assertEquals(true, viewModel.uiState.value.submissionStatusVisible)
     }
 
     @Test
@@ -399,10 +398,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.uiState.value.submissionStatusText)
+        assertEquals(expectedTint, viewModel.uiState.value.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.uiState.value.submissionStatusIcon)
+        assertEquals(true, viewModel.uiState.value.submissionStatusVisible)
     }
 
     @Test
@@ -433,10 +432,10 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
-        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
-        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
-        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+        assertEquals(expectedLabelText, viewModel.uiState.value.submissionStatusText)
+        assertEquals(expectedTint, viewModel.uiState.value.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.uiState.value.submissionStatusIcon)
+        assertEquals(true, viewModel.uiState.value.submissionStatusVisible)
     }
 
     @Test
@@ -471,10 +470,10 @@ class AssignmentDetailsViewModelTest {
         every { colorProvider.getContentColor(any()) } returns colorKeeper.getOrGenerateColor(course)
 
         val viewModel = getViewModel()
-        viewModel.onAttemptSelected(2)
+        viewModel.uiState.value.actions.onAttemptSelected(2)
 
-        assertEquals(3, viewModel.data.value?.attempts?.size)
-        assertEquals(expectedGradeCellViewData, viewModel.data.value?.selectedGradeCellViewData)
+        assertEquals(3, viewModel.uiState.value.attempts.size)
+        assertEquals(expectedGradeCellViewData, viewModel.uiState.value.gradeCell)
     }
 
     @Test
@@ -487,9 +486,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
         val viewModel = getViewModel()
-        viewModel.onLtiButtonPressed(expected)
+        viewModel.uiState.value.actions.onLtiButtonPressed(expected)
 
-        assertEquals(expected, (viewModel.events.value?.peekContent() as AssignmentDetailAction.NavigateToLtiScreen).url)
+        assertEquals(expected, (viewModel.uiState.value.navigation as AssignmentDetailsNavigation.LtiScreen).url)
     }
 
     @Test
@@ -500,16 +499,16 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment(htmlUrl = "https://assignment.url")
 
         val viewModel = getViewModel()
-        viewModel.onGradeCellClicked()
+        viewModel.uiState.value.actions.onGradeCellClick()
 
-        val expected = AssignmentDetailAction.NavigateToSubmissionScreen(
+        val expected = AssignmentDetailsNavigation.SubmissionScreen(
             isObserver = false,
             selectedSubmissionAttempt = null,
             assignmentUrl = "https://assignment.url",
             isAssignmentEnhancementEnabled = true,
             isQuiz = false
         )
-        assertEquals(expected, viewModel.events.value?.peekContent())
+        assertEquals(expected, viewModel.uiState.value.navigation)
     }
 
     @Test
@@ -519,16 +518,16 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.isUploading } returns true
         every { submissionHandler.lastSubmissionIsDraft } returns false
-        every { submissionHandler.lastSubmissionSubmissionType} returns "online_text_entry"
-        every { submissionHandler.lastSubmissionEntry} returns "test"
-        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
+        every { submissionHandler.lastSubmissionSubmissionType } returns "online_text_entry"
+        every { submissionHandler.lastSubmissionEntry } returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId } returns 0L
 
         val viewModel = getViewModel()
-        viewModel.onGradeCellClicked()
+        viewModel.uiState.value.actions.onGradeCellClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.TextEntryScreen)
     }
 
     @Test
@@ -538,16 +537,16 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.isUploading } returns true
         every { submissionHandler.lastSubmissionIsDraft } returns false
-        every { submissionHandler.lastSubmissionSubmissionType} returns "online_upload"
-        every { submissionHandler.lastSubmissionEntry} returns "test"
-        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
+        every { submissionHandler.lastSubmissionSubmissionType } returns "online_upload"
+        every { submissionHandler.lastSubmissionEntry } returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId } returns 0L
 
         val viewModel = getViewModel()
-        viewModel.onGradeCellClicked()
+        viewModel.uiState.value.actions.onGradeCellClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUploadStatusScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.UploadStatusScreen)
     }
 
     @Test
@@ -557,16 +556,16 @@ class AssignmentDetailsViewModelTest {
 
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns Assignment()
 
-        every { submissionHandler.isUploading} returns true
+        every { submissionHandler.isUploading } returns true
         every { submissionHandler.lastSubmissionIsDraft } returns false
-        every { submissionHandler.lastSubmissionSubmissionType} returns "online_url"
-        every { submissionHandler.lastSubmissionEntry} returns "test"
-        every { submissionHandler.lastSubmissionAssignmentId} returns 0L
+        every { submissionHandler.lastSubmissionSubmissionType } returns "online_url"
+        every { submissionHandler.lastSubmissionEntry } returns "test"
+        every { submissionHandler.lastSubmissionAssignmentId } returns 0L
 
         val viewModel = getViewModel()
-        viewModel.onGradeCellClicked()
+        viewModel.uiState.value.actions.onGradeCellClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.UrlSubmissionScreen)
     }
 
     @Test
@@ -580,9 +579,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getQuiz(any(), any(), any()) } returns Quiz()
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToQuizScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.QuizScreen)
     }
 
     @Test
@@ -594,9 +593,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToDiscussionScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.DiscussionScreen)
     }
 
     @Test
@@ -614,9 +613,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowSubmitDialog)
+        assertTrue(viewModel.uiState.value.submitDialog != null)
     }
 
     @Test
@@ -628,9 +627,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToTextEntryScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.TextEntryScreen)
     }
 
     @Test
@@ -642,9 +641,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToUrlSubmissionScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.UrlSubmissionScreen)
     }
 
     @Test
@@ -656,9 +655,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToAnnotationSubmissionScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.AnnotationSubmissionScreen)
     }
 
     @Test
@@ -670,9 +669,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.ShowMediaDialog)
+        assertTrue(viewModel.uiState.value.mediaDialogAssignment != null)
     }
 
     @Test
@@ -687,9 +686,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns mockk(relaxed = true)
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
+        assertTrue(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.LtiLaunchScreen)
     }
 
     @Test
@@ -705,11 +704,9 @@ class AssignmentDetailsViewModelTest {
         coEvery { assignmentDetailsRepository.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns null
 
         val viewModel = getViewModel()
-        viewModel.onSubmitButtonClicked()
+        viewModel.uiState.value.actions.onSubmitClick()
 
-        val action = viewModel.events.value?.peekContent()
-        assertTrue(action is AssignmentDetailAction.ShowToast)
-        assertEquals(errorMessage, (action as AssignmentDetailAction.ShowToast).message)
+        assertEquals(errorMessage, viewModel.uiState.value.toastMessage)
     }
 
     @Test
@@ -724,7 +721,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals("20 pts", viewModel.data.value?.points)
+        assertEquals("20 pts", viewModel.uiState.value.points)
     }
 
     @Test
@@ -740,7 +737,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals("", viewModel.data.value?.points)
+        assertEquals("", viewModel.uiState.value.points)
     }
 
     @Test
@@ -752,7 +749,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.showContent(viewModel.state.value))
+        assertTrue(viewModel.uiState.value.screenState is AssignmentDetailsScreenState.Error)
     }
 
     @Test
@@ -764,7 +761,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertTrue(viewModel.showContent(viewModel.state.value))
+        assertEquals(AssignmentDetailsScreenState.Content, viewModel.uiState.value.screenState)
     }
 
     @Test
@@ -777,7 +774,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.uiState.value.submitVisible)
     }
 
     @Test
@@ -791,7 +788,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.uiState.value.submitVisible)
     }
 
     @Test
@@ -804,7 +801,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.data.value?.submitVisible!!)
+        assertFalse(viewModel.uiState.value.submitVisible)
     }
 
     @Test
@@ -833,7 +830,7 @@ class AssignmentDetailsViewModelTest {
 
         assertEquals(
             reminderEntities.map { it.id },
-            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+            viewModel.uiState.value.reminders[0].reminders.map { it.id }
         )
     }
 
@@ -891,12 +888,12 @@ class AssignmentDetailsViewModelTest {
 
         assertEquals(
             reminderEntities.filter { it.tag == "reply_to_topic" }.map { it.id },
-            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+            viewModel.uiState.value.reminders[0].reminders.map { it.id }
         )
 
         assertEquals(
             reminderEntities.filter { it.tag == "reply_to_entry" }.map { it.id },
-            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
+            viewModel.uiState.value.reminders[1].reminders.map { it.id }
         )
     }
 
@@ -920,13 +917,13 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(realReminderManager)
 
-        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
+        assertEquals(0, viewModel.uiState.value.reminders[0].reminders.size)
 
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
         assertEquals(
             listOf(1L),
-            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+            viewModel.uiState.value.reminders[0].reminders.map { it.id }
         )
     }
 
@@ -977,8 +974,8 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(realReminderManager)
 
-        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
-        assertEquals(0, viewModel.dueDateReminderViewStates[1].reminders.size)
+        assertEquals(0, viewModel.uiState.value.reminders[0].reminders.size)
+        assertEquals(0, viewModel.uiState.value.reminders[1].reminders.size)
 
         remindersLiveData.value = listOf(
             ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000, "reply_to_topic"),
@@ -987,34 +984,14 @@ class AssignmentDetailsViewModelTest {
 
         assertEquals(
             listOf(1L),
-            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+            viewModel.uiState.value.reminders[0].reminders.map { it.id }
         )
 
         assertEquals(
             listOf(2L),
-            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
+            viewModel.uiState.value.reminders[1].reminders.map { it.id }
         )
     }
-
-    @Test
-    fun `Add reminder posts action`() {
-        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
-        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
-
-        val assignment = Assignment(
-            name = "Test",
-            submissionTypesRaw = listOf("online_text_entry"),
-            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
-        )
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
-
-        val viewModel = getViewModel()
-
-        viewModel.onAddReminderClicked()
-
-        assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
-    }
-
 
     @Test
     fun `studio disabled if not allowed in assignment`() {
@@ -1190,15 +1167,14 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
 
         val viewModel = getViewModel()
-
-        val expected = AssignmentDetailAction.NavigateToSubmissionScreen(
+        val expected = AssignmentDetailsNavigation.SubmissionScreen(
             isObserver = false,
             selectedSubmissionAttempt = 2L,
             assignmentUrl = "https://assignment.url",
             isAssignmentEnhancementEnabled = true,
             isQuiz = false
         )
-        assertEquals(expected, viewModel.events.value?.peekContent())
+        assertEquals(expected, viewModel.uiState.value.navigation)
     }
 
     @Test
@@ -1214,8 +1190,7 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns null
 
         val viewModel = getViewModel()
-
-        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
     }
 
     @Test
@@ -1232,8 +1207,7 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
 
         val viewModel = getViewModel()
-
-        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
     }
 
     @Test
@@ -1249,8 +1223,7 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
 
         val viewModel = getViewModel()
-
-        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
     }
 
     @Test
@@ -1267,8 +1240,7 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
 
         val viewModel = getViewModel()
-
-        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
     }
 
     @Test
@@ -1285,12 +1257,11 @@ class AssignmentDetailsViewModelTest {
         every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
 
         val viewModel = getViewModel()
-
-        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+        assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
     }
 
     @Test
-    fun `Assignment with checkpoints and subAssignmentSubmissions maps dueDateReminderViewStates correctly`() {
+    fun `Assignment with checkpoints and subAssignmentSubmissions maps reminders correctly`() {
         val course =
             Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
@@ -1330,12 +1301,12 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(2, viewModel.dueDateReminderViewStates.size)
-        assertEquals("reply_to_topic", viewModel.dueDateReminderViewStates[0].tag)
-        assertEquals("reply_to_entry", viewModel.dueDateReminderViewStates[1].tag)
+        assertEquals(2, viewModel.uiState.value.reminders.size)
+        assertEquals("reply_to_topic", viewModel.uiState.value.reminders[0].tag)
+        assertEquals("reply_to_entry", viewModel.uiState.value.reminders[1].tag)
 
-        assertTrue(viewModel.dueDateReminderViewStates[0].reminders.isEmpty())
-        assertTrue(viewModel.dueDateReminderViewStates[1].reminders.isEmpty())
+        assertTrue(viewModel.uiState.value.reminders[0].reminders.isEmpty())
+        assertTrue(viewModel.uiState.value.reminders[1].reminders.isEmpty())
     }
 
     @Test
@@ -1384,19 +1355,19 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(2, viewModel.discussionCheckpoints.value.size)
+        assertEquals(2, viewModel.uiState.value.checkpoints.size)
 
         // First checkpoint - graded
-        assertEquals("Reply to topic", viewModel.discussionCheckpoints.value[0].name)
-        assertEquals("5 / 5 pts", viewModel.discussionCheckpoints.value[0].grade)
-        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is SubmissionStateLabel.Predefined)
-        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as SubmissionStateLabel.Predefined).labelRes)
+        assertEquals("Reply to topic", viewModel.uiState.value.checkpoints[0].name)
+        assertEquals("5 / 5 pts", viewModel.uiState.value.checkpoints[0].grade)
+        assertTrue(viewModel.uiState.value.checkpoints[0].stateLabel is SubmissionStateLabel.Predefined)
+        assertEquals(R.string.gradedSubmissionLabel, (viewModel.uiState.value.checkpoints[0].stateLabel as SubmissionStateLabel.Predefined).labelRes)
 
         // Second checkpoint - late
-        assertEquals("Additional replies (3)", viewModel.discussionCheckpoints.value[1].name)
-        assertEquals("3 / 5 pts", viewModel.discussionCheckpoints.value[1].grade)
-        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is SubmissionStateLabel.Predefined)
-        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as SubmissionStateLabel.Predefined).labelRes)
+        assertEquals("Additional replies (3)", viewModel.uiState.value.checkpoints[1].name)
+        assertEquals("3 / 5 pts", viewModel.uiState.value.checkpoints[1].grade)
+        assertTrue(viewModel.uiState.value.checkpoints[1].stateLabel is SubmissionStateLabel.Predefined)
+        assertEquals(R.string.lateSubmissionLabel, (viewModel.uiState.value.checkpoints[1].stateLabel as SubmissionStateLabel.Predefined).labelRes)
     }
 
     @Test
@@ -1412,6 +1383,6 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertTrue(viewModel.discussionCheckpoints.value.isEmpty())
+        assertTrue(viewModel.uiState.value.checkpoints.isEmpty())
     }
 }

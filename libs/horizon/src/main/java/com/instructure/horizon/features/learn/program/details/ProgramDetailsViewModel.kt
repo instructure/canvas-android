@@ -18,7 +18,6 @@ package com.instructure.horizon.features.learn.program.details
 import android.content.Context
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
@@ -26,6 +25,11 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.database.entity.SyncDataType
+import com.instructure.horizon.domain.usecase.EnrollProgramCourseUseCase
+import com.instructure.horizon.domain.usecase.GetCoursesByIdUseCase
+import com.instructure.horizon.domain.usecase.GetLastSyncedAtUseCase
+import com.instructure.horizon.domain.usecase.GetProgramDetailsUseCase
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
@@ -38,16 +42,20 @@ import com.instructure.horizon.features.learn.program.details.components.Program
 import com.instructure.horizon.features.learn.program.details.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.offline.HorizonOfflineState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.sum
 import com.instructure.pandautils.utils.toFormattedString
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,9 +65,13 @@ import kotlin.time.Duration
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val repository: ProgramDetailsRepository,
+    private val getProgramDetailsUseCase: GetProgramDetailsUseCase,
+    private val getCoursesByIdUseCase: GetCoursesByIdUseCase,
+    private val enrollProgramCourseUseCase: EnrollProgramCourseUseCase,
     private val dashboardEventHandler: DashboardEventHandler,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val offlineState: HorizonOfflineState,
+    private val getLastSyncedAtUseCase: GetLastSyncedAtUseCase,
 ) : ViewModel() {
 
     private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
@@ -76,6 +88,21 @@ class ProgramDetailsViewModel @Inject constructor(
 
     init {
         loadData()
+        offlineState.isOffline
+            .onEach { isOffline -> handleOfflineStateChange(isOffline) }
+            .launchIn(viewModelScope)
+    }
+
+    private fun handleOfflineStateChange(isOffline: Boolean) {
+        if (isOffline) {
+            viewModelScope.tryLaunch {
+                val lastSyncedAt = getLastSyncedAtUseCase(GetLastSyncedAtUseCase.Params(SyncDataType.DASHBOARD_PROGRAMS))
+                _uiState.update { it.copy(isOffline = true, lastSyncedAtMs = lastSyncedAt) }
+            } catch { }
+        } else {
+            _uiState.update { it.copy(isOffline = false, lastSyncedAtMs = null) }
+            loadData()
+        }
     }
 
     private fun loadData() {
@@ -89,8 +116,10 @@ class ProgramDetailsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData(forceRefresh: Boolean = false) {
-        val program = repository.getProgramDetails(programId, forceRefresh)
-        val courses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceRefresh)
+        val program = getProgramDetailsUseCase(GetProgramDetailsUseCase.Params(programId, forceRefresh))
+        val courses = getCoursesByIdUseCase(
+            GetCoursesByIdUseCase.Params(program.sortedRequirements.map { it.courseId }, forceRefresh)
+        )
         updateUiState(program, courses)
     }
 
@@ -337,7 +366,7 @@ class ProgramDetailsViewModel @Inject constructor(
     private fun enrollCourse(courseId: Long, progressId: String) {
         updateCourseEnrollLoadingState(courseId, true)
         viewModelScope.launch {
-            val enrollResult = repository.enrollCourse(progressId)
+            val enrollResult = enrollProgramCourseUseCase(progressId)
             if (enrollResult.isFail) {
                 updateCourseEnrollLoadingState(courseId, false)
                 _uiState.update {

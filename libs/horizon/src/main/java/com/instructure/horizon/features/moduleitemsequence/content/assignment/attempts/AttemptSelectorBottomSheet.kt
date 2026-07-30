@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
@@ -54,6 +53,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCard
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeModalBottomSheet
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,13 +62,11 @@ fun AttemptSelectorBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 ) {
-    ModalBottomSheet(
+    EdgeToEdgeModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = uiState.onDismiss,
         dragHandle = null,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 48.dp)
+        modifier = modifier.fillMaxSize(),
     ) {
         Column {
             Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {

@@ -22,21 +22,27 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetNextModuleItemUseCase
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.offline.HorizonOfflineState
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class LearnMyContentViewModel<T>(
-    protected val repository: LearnMyContentRepository,
+    protected val getNextModuleItemUseCase: GetNextModuleItemUseCase,
+    offlineState: HorizonOfflineState,
 ) : ViewModel() {
 
     private data class Filters(
@@ -47,6 +53,7 @@ abstract class LearnMyContentViewModel<T>(
 
     private var nextCursor: String? = null
     private var currentFilters = Filters()
+    private var lastEmittedFilters: Filters? = null
     private val filtersFlow = MutableSharedFlow<Filters>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     protected val _uiState = MutableStateFlow(
@@ -71,17 +78,26 @@ abstract class LearnMyContentViewModel<T>(
                 load()
             }
         }
+
+        offlineState.isOffline
+            .drop(1)
+            .onEach { isOffline -> if (!isOffline) refresh() }
+            .launchIn(viewModelScope)
     }
 
     fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption, typeFilter: LearnLearningLibraryTypeFilter) {
-        filtersFlow.tryEmit(Filters(searchQuery, sortBy, typeFilter))
+        val newFilters = Filters(searchQuery, sortBy, typeFilter)
+        if (lastEmittedFilters != newFilters) {
+            lastEmittedFilters = newFilters
+            filtersFlow.tryEmit(newFilters)
+        }
     }
 
     private fun load() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             nextCursor = null
-            fetchAndUpdate(cursor = null)
+            fetchAndUpdate(cursor = null, forceRefresh = false)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true)) }
@@ -92,7 +108,7 @@ abstract class LearnMyContentViewModel<T>(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             nextCursor = null
-            fetchAndUpdate(cursor = null, forceNetwork = true)
+            fetchAndUpdate(cursor = null, forceRefresh = true)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = errorMessage)) }
@@ -102,20 +118,20 @@ abstract class LearnMyContentViewModel<T>(
     private fun loadMore() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isMoreLoading = true) }
-            fetchAndUpdate(cursor = nextCursor, append = true)
+            fetchAndUpdate(cursor = nextCursor, forceRefresh = false, append = true)
             _uiState.update { it.copy(isMoreLoading = false) }
         } catch {
             _uiState.update { it.copy(isMoreLoading = false, loadingState = it.loadingState.copy(snackbarMessage = errorMessage)) }
         }
     }
 
-    private suspend fun fetchAndUpdate(cursor: String?, forceNetwork: Boolean = false, append: Boolean = false) {
+    private suspend fun fetchAndUpdate(cursor: String?, forceRefresh: Boolean = false, append: Boolean = false) {
         val (items, pageInfo) = fetchPage(
             cursor = cursor,
             searchQuery = currentFilters.searchQuery,
             sortBy = currentFilters.sortBy.toCollectionItemSortOption(),
             typeFilter = currentFilters.typeFilter,
-            forceNetwork = forceNetwork,
+            forceRefresh = forceRefresh,
         )
         nextCursor = if (pageInfo.hasNextPage) pageInfo.nextCursor else null
         _uiState.update { state ->
@@ -132,21 +148,13 @@ abstract class LearnMyContentViewModel<T>(
         searchQuery: String,
         sortBy: CollectionItemSortOption,
         typeFilter: LearnLearningLibraryTypeFilter,
-        forceNetwork: Boolean,
+        forceRefresh: Boolean,
     ): Pair<List<T>, LearningLibraryPageInfo>
 
-    protected suspend fun fetchNextModuleItemRoute(courseId: Long?, forceNetwork: Boolean): Any? {
+    protected suspend fun fetchNextModuleItemRoute(courseId: Long?): Any? {
         if (courseId == null) return null
-        val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork)
-        val nextModuleItem = modules.flatMap { module -> module.items }.firstOrNull()
-        if (nextModuleItem == null) {
-            return null
-        }
-
-        return MainNavigationRoute.ModuleItemSequence(
-            courseId,
-            nextModuleItem.id
-        )
+        val nextModuleItem = getNextModuleItemUseCase(GetNextModuleItemUseCase.Params(courseId)) ?: return null
+        return MainNavigationRoute.ModuleItemSequence(courseId, nextModuleItem.moduleItemId)
     }
 
     private fun onSnackbarDismiss() {

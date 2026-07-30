@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetCoursesWithProgressUseCase
+import com.instructure.horizon.domain.usecase.GetLearningStatusDataUseCase
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardMyProgressViewModel @Inject constructor(
-    private val repository: DashboardMyProgressRepository
+    private val getCoursesWithProgressUseCase: GetCoursesWithProgressUseCase,
+    private val getLearningStatusDataUseCase: GetLearningStatusDataUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -47,8 +50,8 @@ class DashboardMyProgressViewModel @Inject constructor(
     private fun loadMyProgressData(forceNetwork: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            val courses = repository.getCourses(forceNetwork)
-            val data = repository.getLearningStatusData(forceNetwork = forceNetwork)?.data
+            val courses = getCoursesWithProgressUseCase(forceNetwork)
+            val data = getLearningStatusDataUseCase(GetLearningStatusDataUseCase.Params(forceNetwork = forceNetwork))?.data
                 .orEmpty()
                 .filter { dataEntry -> courses.any { it.courseId == dataEntry.courseId } }
             val moduleCountCompleted = data.sumOf { it.moduleCountCompleted ?: 0}

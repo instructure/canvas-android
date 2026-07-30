@@ -15,43 +15,62 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
+import android.content.ContentValues
+import android.content.Context
 import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.apis.OAuthAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.GetFileDetailsUseCase
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.util.sanitizeAsFilename
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.horizon.database.dao.HorizonLocalFileDao
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
+import android.os.Environment
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class FileDetailsViewModel @Inject constructor(
-    private val fileDetailsRepository: FileDetailsRepository,
+    @ApplicationContext private val context: Context,
+    private val getFileDetailsUseCase: GetFileDetailsUseCase,
+    private val oAuthApi: OAuthAPI.OAuthInterface,
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     private val fileCache: FileCache,
     private val crashlytics: FirebaseCrashlytics,
+    private val networkStateProvider: NetworkStateProvider,
+    private val localFileDao: HorizonLocalFileDao,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val fileUrl = savedStateHandle[ModuleItemContent.File.FILE_URL] ?: ""
+    private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
 
     private val _uiState =
         MutableStateFlow(
@@ -67,7 +86,8 @@ class FileDetailsViewModel @Inject constructor(
 
     private var runningWorkerId: UUID? = null
 
-    private var fileFolder: FileFolder? = null
+    private var fileUrl_: String = ""
+    private var displayName_: String = ""
 
     init {
         loadData()
@@ -76,18 +96,32 @@ class FileDetailsViewModel @Inject constructor(
     private fun loadData() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
-            fileFolder = fileDetailsRepository.getFileFolderFromURL(fileUrl)
-            val authUrl = fileDetailsRepository.getAuthenticatedFileUrl(fileUrl.replace("api/v1/", ""))
-            fileFolder?.let { file ->
-                _uiState.update {
-                    it.copy(
-                        fileId = file.id,
-                        loadingState = it.loadingState.copy(isLoading = false),
-                        fileName = file.displayName.orEmpty(),
-                        filePreview = getFilePreview(file, authUrl),
-                        mimeType = file.contentType ?: "*/*",
-                    )
-                }
+            val fileDetails = getFileDetailsUseCase(GetFileDetailsUseCase.Params(fileUrl, courseId))
+            fileUrl_ = fileDetails.url
+            displayName_ = fileDetails.displayName
+            val authUrl = if (fileDetails.localPath == null) {
+                oAuthApi.getAuthenticatedSession(
+                    "${fileDetails.url.replace("api/v1/", "")}?display=borderless",
+                    RestParams(isForceReadFromNetwork = true)
+                ).dataOrNull?.sessionUrl
+            } else {
+                null
+            }
+            _uiState.update {
+                it.copy(
+                    fileId = fileDetails.id,
+                    loadingState = it.loadingState.copy(isLoading = false),
+                    fileName = fileDetails.displayName,
+                    filePreview = getFilePreview(
+                        url = fileDetails.url,
+                        displayName = fileDetails.displayName,
+                        contentType = fileDetails.contentType.orEmpty(),
+                        thumbnailUrl = fileDetails.thumbnailUrl.orEmpty(),
+                        authUrl = authUrl,
+                        localPath = fileDetails.localPath,
+                    ),
+                    mimeType = fileDetails.contentType ?: "*/*",
+                )
             }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true)) }
@@ -95,21 +129,83 @@ class FileDetailsViewModel @Inject constructor(
     }
 
     private fun onDownloadClicked() {
-        fileFolder?.let { file ->
+        if (!networkStateProvider.isOnline()) {
+            onDownloadOffline()
+        } else {
+            onDownloadOnline()
+        }
+    }
+
+    private fun onDownloadOffline() {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(downloadState = FileDownloadProgressState.STARTING) }
-            val workRequest = FileDownloadWorker.createOneTimeWorkRequest(file.displayName.orEmpty(), file.url.orEmpty())
-            workManager.enqueue(workRequest)
-            runningWorkerId = workRequest.id
-            val workerId = workRequest.id.toString()
-            viewModelScope.tryLaunch {
-                fileDownloadProgressDao.findByWorkerIdFlow(workerId)
-                    .collect { progress ->
-                        updateProgress(progress)
-                    }
-            } catch {
-                _uiState.update {
-                    it.copy(downloadState = FileDownloadProgressState.ERROR)
+            val localFile = localFileDao.findById(_uiState.value.fileId)
+            val srcFile = localFile?.let { File(it.path) }?.takeIf { it.exists() }
+            if (srcFile == null) {
+                _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+                return@tryLaunch
+            }
+
+            val destUri = withContext(Dispatchers.IO) {
+                copyToDownloads(srcFile, displayName_.sanitizeAsFilename(), _uiState.value.mimeType)
+            }
+
+            _uiState.update {
+                it.copy(
+                    downloadProgress = 1f,
+                    downloadState = FileDownloadProgressState.COMPLETED,
+                    filePathToOpen = destUri.toString(),
+                )
+            }
+        } catch {
+            _uiState.update { it.copy(downloadState = FileDownloadProgressState.ERROR) }
+        }
+    }
+
+    private fun copyToDownloads(srcFile: File, displayName: String, mimeType: String): Uri {
+        val resolver = context.contentResolver
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Files.getContentUri("external")
+        }
+        val values = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, displayName)
+            put(MediaStore.Downloads.MIME_TYPE, mimeType)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                put(MediaStore.Downloads.IS_PENDING, 1)
+            }
+        }
+        val uri = resolver.insert(collection, values)
+            ?: throw java.io.IOException("Failed to register file in MediaStore Downloads")
+
+        resolver.openOutputStream(uri).use { out ->
+            requireNotNull(out) { "MediaStore returned no output stream for $uri" }
+            srcFile.inputStream().use { input -> input.copyTo(out) }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val finalize = ContentValues().apply { put(MediaStore.Downloads.IS_PENDING, 0) }
+            resolver.update(uri, finalize, null, null)
+        }
+        return uri
+    }
+
+    private fun onDownloadOnline() {
+        _uiState.update { it.copy(downloadState = FileDownloadProgressState.STARTING) }
+        val workRequest = FileDownloadWorker.createOneTimeWorkRequest(displayName_, fileUrl_)
+        workManager.enqueue(workRequest)
+        runningWorkerId = workRequest.id
+        val workerId = workRequest.id.toString()
+        viewModelScope.tryLaunch {
+            fileDownloadProgressDao.findByWorkerIdFlow(workerId)
+                .collect { progress ->
+                    updateProgress(progress)
                 }
+        } catch {
+            _uiState.update {
+                it.copy(downloadState = FileDownloadProgressState.ERROR)
             }
         }
     }
@@ -137,44 +233,48 @@ class FileDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(filePathToOpen = null) }
     }
 
-    private suspend fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
-        val url = file.url.orEmpty()
-        val displayName = file.displayName.orEmpty()
-        val contentType = file.contentType.orEmpty()
-        val thumbnailUrl = file.thumbnailUrl.orEmpty()
-
+    private suspend fun getFilePreview(
+        url: String,
+        displayName: String,
+        contentType: String,
+        thumbnailUrl: String,
+        authUrl: String?,
+        localPath: String?,
+    ): FilePreviewUiState {
         try {
             return when {
                 contentType == "application/pdf" -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(url)
-                    tempFile?.let {
-                        FilePreviewUiState.Pdf(Uri.fromFile(it))
-                    } ?: FilePreviewUiState.NoPreview
+                    val uri = if (localPath != null) {
+                        Uri.fromFile(File(localPath))
+                    } else {
+                        Uri.fromFile(fileCache.awaitFileDownload(url) ?: return FilePreviewUiState.NoPreview)
+                    }
+                    FilePreviewUiState.Pdf(uri)
                 }
 
                 contentType.startsWith("video") || contentType.startsWith("audio") -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(url)
-                    tempFile?.let {
-                        FilePreviewUiState.Media(
-                            Uri.fromFile(it),
-                            thumbnailUrl,
-                            contentType,
-                            displayName
-                        )
-                    } ?: FilePreviewUiState.NoPreview
+                    val uri = if (localPath != null) {
+                        Uri.fromFile(File(localPath))
+                    } else {
+                        Uri.fromFile(fileCache.awaitFileDownload(url) ?: return FilePreviewUiState.NoPreview)
+                    }
+                    FilePreviewUiState.Media(uri, thumbnailUrl, contentType, displayName)
                 }
 
                 contentType.startsWith("image") -> {
-                    val tempFile: File? = fileCache.awaitFileDownload(url)
-                    tempFile?.let {
-                        FilePreviewUiState.Image(
-                            displayName = displayName,
-                            uri = Uri.fromFile(it)
-                        )
-                    } ?: FilePreviewUiState.NoPreview
+                    val uri = if (localPath != null) {
+                        Uri.fromFile(File(localPath))
+                    } else {
+                        Uri.fromFile(fileCache.awaitFileDownload(url) ?: return FilePreviewUiState.NoPreview)
+                    }
+                    FilePreviewUiState.Image(displayName = displayName, uri = uri)
                 }
 
-                else -> FilePreviewUiState.WebView("$authUrl&preview=1")
+                else -> if (authUrl != null) {
+                    FilePreviewUiState.WebView("$authUrl&preview=1")
+                } else {
+                    FilePreviewUiState.NoPreview
+                }
             }
         } catch (e: Exception) {
             crashlytics.recordException(e)

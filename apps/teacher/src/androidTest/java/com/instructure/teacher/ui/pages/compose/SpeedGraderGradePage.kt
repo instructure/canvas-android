@@ -116,6 +116,49 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
     }
 
     /**
+     * Asserts that a rubric rating point box with the specified point value is displayed.
+     *
+     * @param points The point value of the rating box to check for.
+     */
+    fun assertRubricRatingPointBoxDisplayed(points: String) {
+        composeTestRule.onNode(hasTestTag("rubricRatingPointBox-$points"), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that no rubric rating point box with the specified point value is displayed.
+     *
+     * @param points The point value that should not have a corresponding rating box displayed.
+     */
+    fun assertRubricRatingPointBoxNotDisplayed(points: String) {
+        composeTestRule.onAllNodesWithTag("rubricRatingPointBox-$points", useUnmergedTree = true).assertCountEquals(0)
+    }
+
+    /**
+     * Asserts that the rubric criterion score input field contains the expected score text.
+     *
+     * @param criterionId The ID of the rubric criterion.
+     * @param expected The expected score text to be contained in the field.
+     */
+    fun assertRubricScore(criterionId: String, expected: String) {
+        composeTestRule.onNode(hasTestTag("rubricCriterionScoreInput-$criterionId"), useUnmergedTree = true)
+            .performScrollTo()
+            .assertTextContains(expected)
+    }
+
+    /**
+     * Asserts that the rubric criterion's points-possible label is displayed with the specified text.
+     *
+     * @param text The expected points-possible text to be displayed.
+     */
+    fun assertRubricPointsPossibleDisplayed(text: String) {
+        composeTestRule.onNode(hasText(text, substring = true), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
      * Enters a score in the rubric criterion score input field.
      *
      * @param criterionId The ID of the rubric criterion.

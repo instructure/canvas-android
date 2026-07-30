@@ -16,11 +16,9 @@
 
 package com.instructure.pandautils.data.repository.dashboardcourses
 
-import com.instructure.canvasapi2.CourseAnnouncementsQuery
 import com.instructure.canvasapi2.DashboardCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Grades
 import com.instructure.canvasapi2.type.EnrollmentType
@@ -33,32 +31,10 @@ class DashboardCoursesNetworkDataSource(
     override suspend fun getCourses(forceRefresh: Boolean): DashboardCoursesData {
         val data = dashboardCoursesManager.getDashboardCourses(forceNetwork = forceRefresh)
         val courses = data.allCourses?.mapNotNull { mapGraphQlCourse(it) } ?: emptyList()
-        val announcementsMap = buildAnnouncementsMap(data, forceRefresh)
-        return DashboardCoursesData(courses = courses, announcementsMap = announcementsMap)
-    }
-
-    private suspend fun buildAnnouncementsMap(
-        data: DashboardCoursesQuery.Data,
-        forceRefresh: Boolean
-    ): Map<Long, List<DiscussionTopicHeader>> {
-        val announcementsMap = mutableMapOf<Long, List<DiscussionTopicHeader>>()
-
-        data.allCourses?.forEach { graphQlCourse ->
-            val courseId = graphQlCourse._id.toLongOrNull() ?: return@forEach
-            val hasNextPage = graphQlCourse.announcements?.pageInfo?.hasNextPage == true
-
-            val firstPageAnnouncements = mapDashboardAnnouncements(graphQlCourse.announcements?.nodes)
-
-            if (hasNextPage) {
-                val endCursor = graphQlCourse.announcements?.pageInfo?.endCursor
-                val announcementData = dashboardCoursesManager.getCourseAnnouncements(courseId, endCursor, forceRefresh)
-                announcementsMap[courseId] = firstPageAnnouncements + mapCourseAnnouncements(announcementData)
-            } else {
-                announcementsMap[courseId] = firstPageAnnouncements
-            }
-        }
-
-        return announcementsMap
+        // Announcements are intentionally not loaded here. Online they are fetched per visible
+        // course in a capped background pass (see CoursesWidgetViewModel) so course cards render
+        // immediately instead of blocking on announcement pagination.
+        return DashboardCoursesData(courses = courses)
     }
 
     private fun mapGraphQlCourse(graphQlCourse: DashboardCoursesQuery.AllCourse): Course? {
@@ -100,46 +76,5 @@ class DashboardCoursesNetworkDataSource(
             EnrollmentType.DesignerEnrollment -> KotlinEnrollmentType.Designer
             else -> KotlinEnrollmentType.NoEnrollment
         }
-    }
-
-    private fun mapDashboardAnnouncements(
-        nodes: List<DashboardCoursesQuery.Node1?>?
-    ): List<DiscussionTopicHeader> {
-        return nodes?.mapNotNull { node ->
-            node ?: return@mapNotNull null
-            val isUnread = node.participant?.read != true
-            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
-            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
-
-            DiscussionTopicHeader(
-                id = node._id.toLongOrNull() ?: return@mapNotNull null,
-                title = node.title,
-                message = node.message,
-                postedDate = node.postedAt,
-                unreadCount = node.entryCounts?.unreadCount ?: 0,
-                announcement = true
-            )
-        } ?: emptyList()
-    }
-
-    private fun mapCourseAnnouncements(
-        announcementData: CourseAnnouncementsQuery.Data
-    ): List<DiscussionTopicHeader> {
-        val nodes = announcementData.course?.onCourse?.announcements?.nodes
-        return nodes?.mapNotNull { node ->
-            node ?: return@mapNotNull null
-            val isUnread = node.participant?.read != true
-            val hasUnreadEntries = (node.entryCounts?.unreadCount ?: 0) > 0
-            if (!isUnread && !hasUnreadEntries) return@mapNotNull null
-
-            DiscussionTopicHeader(
-                id = node._id.toLongOrNull() ?: return@mapNotNull null,
-                title = node.title,
-                message = node.message,
-                postedDate = node.postedAt,
-                unreadCount = node.entryCounts?.unreadCount ?: 0,
-                announcement = true
-            )
-        } ?: emptyList()
     }
 }

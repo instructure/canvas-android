@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Mo Chuid Oibre</string>
     <string name="ngc_courseHomeTabMore">Tuilleadh</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Ar fáil go dtí</string>
+    <string name="ngc_quizSettings">Socruithe quiz</string>
+    <string name="ngc_submission">Uaslódáil</string>
+    <string name="ngc_continueDraft">Lean ar aghaidh leis an dréacht</string>
+    <string name="ngc_assignmentReminder">Meabhrúchán Taisc</string>
+    <string name="ngc_classPerformance">Feidhmíocht Ranga</string>
+    <string name="ngc_newAttempt">Iarracht nua</string>
+    <string name="ngc_submitAssignment">Cuir tasc isteach</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Cineálacha comhaid ceadaithe</string>
+    <string name="ngc_noDueDate">Gan dáta dlite</string>
+    <string name="ngc_noAssignmentDescription">Gan cur síos ar an tasc</string>
+    <string name="ngc_retry">Bain triail eile as</string>
+    <string name="ngc_finalGrade">Marc Deiridh</string>
+    <string name="ngc_notYetGraded">Níl sé marcáilte go fóill</string>
+    <string name="ngc_uploadingSubmission">Ag uaslódáil na uaslódála&#8230;</string>
+    <string name="ngc_submissionFailed">Theip ar an uaslódáil</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Creidmheas Breise</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d lá déanach</item>
+        <item quantity="other">%d lá déanach</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Is ísle: %s</string>
+    <string name="ngc_classPerformanceAverage">Avg: %s</string>
+    <string name="ngc_classPerformanceHighest">Is airde: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Faisnéis bhreise</string>
+    <string name="ngc_submissionSegmentInstructions">Treoracha</string>
+    <string name="ngc_submissionSegmentRubric">Rúibric</string>
+    <string name="ngc_submissionSegmentComments">Ráitis</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Bainistigh ábhar as líne</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Saincheap an deais rialaithe</string>
+    <string name="a11y_submissionSupportingPaneExpand">Leathnaigh an fhaisnéis bhreise</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Leacaigh an fhaisnéis bhreise</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Cuir Tasc Isteach</string>
+    <string name="ngc_submission_newSubmission">Uaslódáil Nua</string>
+    <string name="ngc_submission_textEntry">Iontráil Téacs</string>
+    <string name="ngc_submission_submit">Cuir isteach</string>
+    <string name="ngc_submission_deleteDraft">Scrios dréacht</string>
+    <string name="ngc_submission_draftSaved">Sábháladh %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Cuir isteach téacs d’uaslódála anseo</string>
+    <string name="ngc_submission_submissionError">Earráid ag cur an tasc isteach</string>
+    <string name="ngc_submission_loadError">Theip ar an tasc a lódáil</string>
+    <string name="ngc_submission_dueDate">Dlite %1$s</string>
+    <string name="ngc_submission_retry">Bain triail eile as</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">An bhfuil fonn ort an dréacht a scriosadh?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Scriosfar do dhréacht go buan agus ní féidir é a aisghabháil.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Scrios</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cealaigh</string>
+    <string name="ngc_back">Ar ais</string>
 </resources>

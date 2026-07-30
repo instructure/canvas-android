@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">La meva feina</string>
     <string name="ngc_courseHomeTabMore">Més</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Disponible fins al</string>
+    <string name="ngc_quizSettings">Configuració de la prova</string>
+    <string name="ngc_submission">Entrega</string>
+    <string name="ngc_continueDraft">Continueu amb l\'esborrany</string>
+    <string name="ngc_assignmentReminder">Recordatori de l\'activitat</string>
+    <string name="ngc_classPerformance">Rendiment de la classe</string>
+    <string name="ngc_newAttempt">Intent nou</string>
+    <string name="ngc_submitAssignment">Envieu l’activitat</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Tipus de fitxers permesos:</string>
+    <string name="ngc_noDueDate">Sense data de lliurament</string>
+    <string name="ngc_noAssignmentDescription">Sense descripció de l\'activitat</string>
+    <string name="ngc_retry">Torna a provar-ho</string>
+    <string name="ngc_finalGrade">Nota final</string>
+    <string name="ngc_notYetGraded">Encara no s\'ha qualificat</string>
+    <string name="ngc_uploadingSubmission">S\'està penjant l\'entrega&#8230;</string>
+    <string name="ngc_submissionFailed">S’ha produït un error en fer l\'entrega</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Crèdit extra</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dia tard</item>
+        <item quantity="other">%d dies tard</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">El més baix: %s</string>
+    <string name="ngc_classPerformanceAverage">Mitjana: %s</string>
+    <string name="ngc_classPerformanceHighest">El més alt: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Informació addicional</string>
+    <string name="ngc_submissionSegmentInstructions">Instruccions</string>
+    <string name="ngc_submissionSegmentRubric">Rúbrica</string>
+    <string name="ngc_submissionSegmentComments">Comentaris</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Gestioneu el contingut sense connexió</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Personalitzeu el panell de control</string>
+    <string name="a11y_submissionSupportingPaneExpand">Desplegueu la informació addicional</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Contraieu la informació addicional</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Entregueu l\'activitat</string>
+    <string name="ngc_submission_newSubmission">Entrega nova</string>
+    <string name="ngc_submission_textEntry">Entrada de text</string>
+    <string name="ngc_submission_submit">Entrega-ho</string>
+    <string name="ngc_submission_deleteDraft">Suprimiu l’esborrany</string>
+    <string name="ngc_submission_draftSaved">S’ha desat %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Introduïu el text de l’entrega aquí</string>
+    <string name="ngc_submission_submissionError">S’ha produït un error en enviar l’activitat</string>
+    <string name="ngc_submission_loadError">No s\'ha pogut carregar l’activitat</string>
+    <string name="ngc_submission_dueDate">Venç el %1$s</string>
+    <string name="ngc_submission_retry">Torna a provar-ho</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Voleu suprimir l’esborrany?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">L’esborrany se suprimirà permanentment i no es podrà recuperar.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Suprimeix-ho</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Cancel·la-ho</string>
+    <string name="ngc_back">Enrere</string>
 </resources>

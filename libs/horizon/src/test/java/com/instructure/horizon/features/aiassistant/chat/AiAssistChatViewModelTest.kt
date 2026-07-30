@@ -18,9 +18,9 @@ package com.instructure.horizon.features.aiassistant.chat
 
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
+import com.instructure.horizon.data.repository.AiAssistResponse
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
-import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
@@ -42,7 +42,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AiAssistChatViewModelTest {
-    private val repository: AiAssistRepository = mockk(relaxed = true)
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -68,7 +68,7 @@ class AiAssistChatViewModelTest {
             role = JourneyAssistRole.Assistant
         )
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(testMessage, testState)
     }
 
@@ -103,6 +103,6 @@ class AiAssistChatViewModelTest {
     }
 
     private fun getViewModel(): AiAssistChatViewModel {
-        return AiAssistChatViewModel(repository, aiAssistContextProvider)
+        return AiAssistChatViewModel(answerAiAssistPromptUseCase, aiAssistContextProvider)
     }
 }

@@ -21,8 +21,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.model.toJourneyAssistChatMessages
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +33,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistQuizViewModel @Inject constructor(
-    private val aiAssistRepository: AiAssistRepository,
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase,
     private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
 
@@ -92,11 +92,13 @@ class AiAssistQuizViewModel @Inject constructor(
                     it.copy(isLoading = true)
                 }
 
-                val response = aiAssistRepository.answerPrompt(
-                    prompt = aiAssistContextProvider.aiAssistContext.chatHistory
-                        .lastOrNull { it.role == JourneyAssistRole.User }?.text.orEmpty(),
-                    history = aiAssistContextProvider.aiAssistContext.chatHistory.toJourneyAssistChatMessages(),
-                    state = aiAssistContextProvider.aiAssistContext.state
+                val response = answerAiAssistPromptUseCase(
+                    AnswerAiAssistPromptUseCase.Params(
+                        prompt = aiAssistContextProvider.aiAssistContext.chatHistory
+                            .lastOrNull { it.role == JourneyAssistRole.User }?.text.orEmpty(),
+                        history = aiAssistContextProvider.aiAssistContext.chatHistory.toJourneyAssistChatMessages(),
+                        state = aiAssistContextProvider.aiAssistContext.state,
+                    )
                 )
 
                 aiAssistContextProvider.updateContextFromState(response.state)

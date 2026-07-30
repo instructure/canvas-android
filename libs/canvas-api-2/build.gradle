@@ -22,8 +22,8 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def journeyDebugBaseUrl = "https://journey-server-edge.us-east-1.core.inseng.io"
-def journeyReleaseBaseUrl = "https://journey-server-prod.{region}.core.inseng.io"
+def journeyCdBaseUrl = "https://journey-server-edge.us-east-1.core.inseng.io"
+def journeyProdBaseUrl = "https://journey-server-prod.{region}.core.inseng.io"
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -48,15 +48,14 @@ android {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
         buildConfigField "boolean", "IS_TESTING", isTesting()
+        buildConfigField "String", "JOURNEY_CD_BASE_URL", "\"$journeyCdBaseUrl\""
+        buildConfigField "String", "JOURNEY_PROD_BASE_URL", "\"$journeyProdBaseUrl\""
     }
 
     buildTypes {
         debug {
-            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyDebugBaseUrl\""
         }
         release {
-            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyReleaseBaseUrl\""
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

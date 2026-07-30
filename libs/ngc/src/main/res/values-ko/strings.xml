@@ -26,7 +26,60 @@
     <string name="ngc_courseHomeTabMyWork">내 작업</string>
     <string name="ngc_courseHomeTabMore">더 자세히</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">사용 가능 마감</string>
+    <string name="ngc_quizSettings">퀴즈 설정</string>
+    <string name="ngc_submission">제출</string>
+    <string name="ngc_continueDraft">초안으로 계속</string>
+    <string name="ngc_assignmentReminder">과제 미리 알림</string>
+    <string name="ngc_classPerformance">수업 성과</string>
+    <string name="ngc_newAttempt">새 시도</string>
+    <string name="ngc_submitAssignment">과제 제출</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">허용된 파일 유형</string>
+    <string name="ngc_noDueDate">기한 날짜 없음</string>
+    <string name="ngc_noAssignmentDescription">과제 설명 없음</string>
+    <string name="ngc_retry">다시 시도</string>
+    <string name="ngc_finalGrade">최종 성적</string>
+    <string name="ngc_notYetGraded">아직 채점되지 않음</string>
+    <string name="ngc_uploadingSubmission">제출 업로드 중...</string>
+    <string name="ngc_submissionFailed">제출 실패</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">추가 크레딧</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="other">%d일 늦음</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">가장 낮음: %s</string>
+    <string name="ngc_classPerformanceAverage">평균: %s</string>
+    <string name="ngc_classPerformanceHighest">가장 높음: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">추가 정보</string>
+    <string name="ngc_submissionSegmentInstructions">지시 사항</string>
+    <string name="ngc_submissionSegmentRubric">루브릭</string>
+    <string name="ngc_submissionSegmentComments">의견/댓글</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">오프라인 콘텐츠 관리</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">대시보드 사용자 지정</string>
+    <string name="a11y_submissionSupportingPaneExpand">추가 정보 펼치기</string>
+    <string name="a11y_submissionSupportingPaneCollapse">추가 정보 접기</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">과제 제출</string>
+    <string name="ngc_submission_newSubmission">새 제출</string>
+    <string name="ngc_submission_textEntry">텍스트 입력</string>
+    <string name="ngc_submission_submit">제출</string>
+    <string name="ngc_submission_deleteDraft">초안 삭제</string>
+    <string name="ngc_submission_draftSaved">%1$s 저장됨</string>
+    <string name="ngc_submission_textEntryPlaceholder">여기에 제출 텍스트 입력</string>
+    <string name="ngc_submission_submissionError">과제 제출 오류</string>
+    <string name="ngc_submission_loadError">과제를 로드하지 못함</string>
+    <string name="ngc_submission_dueDate">%1$s 기한</string>
+    <string name="ngc_submission_retry">다시 시도</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">초안을 삭제하시겠습니까?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">초안은 영구적으로 삭제되며 복구할 수 없습니다.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">삭제</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">취소</string>
+    <string name="ngc_back">뒤로</string>
 </resources>

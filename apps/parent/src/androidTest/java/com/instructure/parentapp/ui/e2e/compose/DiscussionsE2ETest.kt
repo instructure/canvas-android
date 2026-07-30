@@ -72,7 +72,7 @@ class DiscussionsE2ETest: ParentComposeTest() {
         val uploadedFile = FileUploadsApi.uploadFile(courseId = courseRootFolder.id, assignmentId = null, file = pdfBytes, fileName = pdfFileName, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
 
         Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints and PDF attachment for '${course.name}' course.")
-        val discussionWithCheckpointsTitle = "Discussion with PDF Attachment"
+        val discussionWithCheckpointsTitle = "Discussion with PDF Attachment used to verify that the attached PDF file can be downloaded from the assignment details screen of a checkpoint discussion without the message FAB overlapping it"
         val assignmentName = "Assignment with Checkpoints and PDF"
         val replyToTopicDueDate = "2029-11-12T22:59:00Z"
         val replyToEntryDueDate = "2029-11-19T22:59:00Z"
@@ -107,11 +107,15 @@ class DiscussionsE2ETest: ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarTitle()
         assignmentDetailsPage.assertAssignmentTitle(discussionWithCheckpointsTitle)
 
+        Log.d(STEP_TAG, "Scroll down to the description so the attachment icon is above the message FAB.")
+        assignmentDetailsPage.scrollToAssignmentDescription()
+
         Log.d(ASSERTION_TAG, "Assert that attachment icon is displayed.")
         assignmentDetailsPage.assertAttachmentIconDisplayed()
 
         Log.d(STEP_TAG, "Click on attachment icon to download it.")
         assignmentDetailsPage.clickAttachmentIcon()
+        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG, "Wait for download to complete.")
         sleep(5000)

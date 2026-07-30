@@ -1445,6 +1445,8 @@
     <string name="quizTimeLimit">시간 제한: %s</string>
     <string name="allowedAttempts">허용된 시도 횟수: %s</string>
     <string name="usedAttempts">사용된 시도 횟수: %d</string>
+    <string name="assignmentAttemptsUnlimited">무제한 시도</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d/%2$d번 시도</string>
     <string name="generalUnexpectedError">예상치 못한 오류가 발생했습니다.</string>
 
     <string name="deleteSelected">삭제</string>
@@ -1487,6 +1489,8 @@
     <string name="aboutLoginTitle">로그인 ID</string>
     <string name="aboutEmailTitle">이메일</string>
     <string name="aboutVersionTitle">버전</string>
+    <string name="aboutOpenSourceTitle">오픈소스 및 라이선스</string>
+    <string name="aboutOpenSourceSubtitle">소스 코드 및 오픈소스 라이선스를 확인합니다.</string>
     <string name="assignmentRefreshError">이 과제를 다시 로드하는 데 문제가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
     <string name="instructure_logo">Instructure 로고</string>
     <string name="preferences">기본 설정</string>
@@ -1933,6 +1937,9 @@
     <string name="gradePreferencesHeaderSortBy">정렬 기준</string>
     <string name="gradesEmptyTitle">과제 없음</string>
     <string name="gradesEmptyMessage">이 공간에는 아직 과제를 만들지 않은 것 같습니다.</string>
+    <string name="gradesEmptyMessageForPeriod">%s에 과제가 없습니다.</string>
+    <string name="gradesCommentsContentDescription">%d개 의견/댓글</string>
+    <string name="gradesUnreadCommentsContentDescription">%d개 읽지 않은 의견/댓글</string>
     <string name="noMatchingAssignments">일치하는 과제 없음</string>
     <string name="noMatchingAssignmentsDescription">검색과 일치하는 과제가 없습니다. 다른 검색어를 시도하세요.</string>
     <string name="errorLoadingGrades">학생의 성적을 로드하는 데 문제가 있습니다. 페이지를 다시 로드해 보거나 나중에 다시 확인하세요.</string>

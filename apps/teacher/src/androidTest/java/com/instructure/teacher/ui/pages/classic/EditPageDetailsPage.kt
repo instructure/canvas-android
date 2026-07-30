@@ -1,5 +1,6 @@
 package com.instructure.teacher.ui.pages.classic
 
+import android.app.Activity
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -10,7 +11,6 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.espresso.ActivityHelper
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
@@ -103,9 +103,9 @@ class EditPageDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : 
     /**
      * Displays a toast message indicating that saving an unpublished front page is not possible.
      */
-    fun unableToSaveUnpublishedFrontPage() {
+    fun unableToSaveUnpublishedFrontPage(activity: Activity) {
         savePage()
-        checkToastText(R.string.frontPageUnpublishedError, ActivityHelper.currentActivity())
+        checkToastText(R.string.frontPageUnpublishedError, activity)
     }
 
     /**

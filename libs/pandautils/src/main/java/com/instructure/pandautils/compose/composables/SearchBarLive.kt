@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -33,7 +34,6 @@ import com.instructure.pandautils.R
 
 @Composable
 fun SearchBarLive(
-    @DrawableRes icon: Int,
     tintColor: Color,
     placeholder: String,
     expanded: Boolean,
@@ -41,6 +41,8 @@ fun SearchBarLive(
     modifier: Modifier = Modifier,
     query: String,
     queryChanged: (String) -> Unit,
+    @DrawableRes icon: Int? = null,
+    iconVector: ImageVector? = null,
     collapsable: Boolean = true,
     @DrawableRes hintIcon: Int? = null,
     collapseOnSearch: Boolean = false
@@ -113,11 +115,21 @@ fun SearchBarLive(
                     placeholderColor = tintColor.copy(alpha = 0.5f),
                 ),
                 leadingIcon = {
-                    Icon(
-                        modifier = Modifier.height(20.dp),
-                        painter = painterResource(hintIcon ?: icon),
-                        contentDescription = null
-                    )
+                    val leadingRes = hintIcon ?: icon
+                    if (iconVector != null && hintIcon == null) {
+                        Icon(
+                            modifier = Modifier.height(20.dp),
+                            imageVector = iconVector,
+                            contentDescription = null,
+                            tint = tintColor
+                        )
+                    } else if (leadingRes != null) {
+                        Icon(
+                            modifier = Modifier.height(20.dp),
+                            painter = painterResource(leadingRes),
+                            contentDescription = null
+                        )
+                    }
                 },
                 trailingIcon = {
                     if (query.isNotEmpty()) {
@@ -139,11 +151,19 @@ fun SearchBarLive(
                 onClick = {
                     onExpand(true)
                 }) {
-                Icon(
-                    painter = painterResource(icon),
-                    contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
-                    tint = tintColor
-                )
+                if (iconVector != null) {
+                    Icon(
+                        imageVector = iconVector,
+                        contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
+                        tint = tintColor
+                    )
+                } else if (icon != null) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = stringResource(R.string.a11y_searchBarSearchButton),
+                        tint = tintColor
+                    )
+                }
             }
         }
     }

@@ -35,14 +35,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,26 +55,26 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import android.content.res.Configuration
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.instui.compose.LocalCourseColor
+import com.instructure.instui.compose.indicator.Icon as InstUIIcon
 import com.instructure.instui.compose.indicator.Pill
 import com.instructure.instui.compose.indicator.PillVariant
-import com.instructure.instui.compose.input.TextInput
 import com.instructure.instui.compose.indicator.IconSize
-import com.instructure.instui.compose.input.TextInputSize
 import com.instructure.instui.compose.list.AccordionIcon
 import com.instructure.instui.compose.list.ListItem
-import com.instructure.instui.compose.list.ListItemLeading
+import com.instructure.instui.compose.list.ListItemContentLine
+import com.instructure.instui.compose.list.ListItemLineSeparator
+import com.instructure.instui.compose.list.ListItemLineStyle
 import com.instructure.instui.compose.list.ListItemTrailing
 import com.instructure.instui.token.icon.InstUIIcons
 import com.instructure.instui.token.icon.messageSquare
+import com.instructure.instui.token.icon.pencil
+import com.instructure.instui.token.icon.x
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
@@ -93,8 +89,6 @@ import com.instructure.pandautils.features.grades.GradesAction
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.drawableId
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.instui.compose.text.Text as InstUIText
-import com.instructure.instui.token.component.InstUIText as InstUITextTokens
 
 @Composable
 fun GradesAssignmentItem(
@@ -121,90 +115,90 @@ private fun InstUIAssignmentItem(
 ) {
     val courseColor = LocalCourseColor.current
     val pillData = mapSubmissionStateToPill(uiState.submissionStateLabel)
-    val gradeText = uiState.displayGrade.text
     val hasWhatIfScore = showWhatIfScore && uiState.whatIfScore != null
-    val displayScore = if (hasWhatIfScore) {
+    val hasCheckpoints = uiState.checkpoints.isNotEmpty()
+
+    // In What-If mode show only the What-If score in place of the real grade.
+    val scoreText = if (hasWhatIfScore) {
         val whatIf = NumberHelper.formatDecimal(uiState.whatIfScore, 2, true)
         val max = NumberHelper.formatDecimal(uiState.maxScore.orDefault(), 2, true)
         "$whatIf/$max"
     } else {
-        gradeText
+        uiState.displayGrade.text.ifEmpty { null }
     }
 
-    val hasCheckpoints = uiState.checkpoints.isNotEmpty()
-
-    Column(modifier = modifier.fillMaxWidth()) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(if (hasWhatIfScore) courseColor else Color.Transparent)
+    ) {
         ListItem(
-            title = uiState.name,
-            subtext1 = uiState.dueDate,
-            leading = ListItemLeading.Icon(mapAssignmentIcon(uiState.iconRes)),
-            pill = pillData?.let { data ->
-                { Pill(text = data.text, variant = data.variant) }
-            },
-            score = if (displayScore.isNotEmpty()) {
-                {
-                    InstUIText(
-                        text = displayScore,
-                        color = courseColor,
-                        style = InstUITextTokens.contentImportant,
+            modifier = Modifier.semantics { testTag = "assignmentItem" },
+            isOnColor = hasWhatIfScore,
+            // The What-If pencil is centered vertically; the comment badge + chevron sit at the top.
+            trailingAlignment = if (showWhatIfScore) Alignment.CenterVertically else Alignment.Top,
+            content = {
+                ListItemContentLine(
+                    text = uiState.name,
+                    style = ListItemLineStyle.Title,
+                    isOnColor = hasWhatIfScore,
+                )
+                ListItemContentLine(
+                    text = uiState.dueDate,
+                    style = ListItemLineStyle.SupportingText,
+                    icon = mapAssignmentIcon(uiState.iconRes),
+                    iconTint = if (hasWhatIfScore) InstUISemanticColors.Text.onColor() else courseColor,
+                    isOnColor = hasWhatIfScore,
+                    modifier = Modifier.semantics { testTag = "assignmentDueDate" },
+                )
+                if (scoreText != null || pillData != null) {
+                    ListItemContentLine(
+                        text = scoreText,
+                        style = ListItemLineStyle.ImportantInfo,
+                        isOnColor = hasWhatIfScore,
+                        trailing = {
+                            pillData?.let { data ->
+                                if (scoreText != null) ListItemLineSeparator(hasWhatIfScore)
+                                Pill(text = data.text, variant = data.variant, icon = data.icon)
+                            }
+                        },
                     )
                 }
-            } else null,
-            trailing = when {
-                uiState.commentCount > 0 -> ListItemTrailing.Custom {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        CommentBadge(
-                            count = uiState.commentCount,
-                            hasUnread = uiState.hasUnreadComments,
-                        )
-                        // Render the checkpoint accordion arrow alongside the comment pill (laid out in a
-                        // spaced Row so the two never overlap). The Accordion trailing variant can't be used
-                        // here because the trailing slot already holds the comment badge, so we reuse the
-                        // same AccordionIcon directly.
-                        if (hasCheckpoints) {
-                            AccordionIcon(
-                                expanded = uiState.checkpointsExpanded,
-                                onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
-                                contentDescription = checkpointAccordionContentDescription(uiState.checkpointsExpanded),
-                                modifier = Modifier.testTag("expandDiscussionCheckpoints"),
-                            )
-                        }
-                    }
+            },
+            trailing = if (showWhatIfScore || uiState.commentCount > 0 || hasCheckpoints) {
+                ListItemTrailing.Custom {
+                    InstUIAssignmentTrailing(
+                        uiState = uiState,
+                        actionHandler = actionHandler,
+                        showWhatIfScore = showWhatIfScore,
+                        hasWhatIfScore = hasWhatIfScore,
+                        hasCheckpoints = hasCheckpoints,
+                    )
                 }
-
-                hasCheckpoints -> ListItemTrailing.Accordion(
-                    expanded = uiState.checkpointsExpanded,
-                    onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
-                    contentDescription = checkpointAccordionContentDescription(uiState.checkpointsExpanded),
-                )
-
-                else -> null
+            } else {
+                null
             },
             onClick = { actionHandler(GradesAction.AssignmentClick(uiState.id)) },
         )
-        if (hasCheckpoints) {
+        // Checkpoints can't be expanded while in What-If mode (no chevron), so only show them otherwise.
+        if (hasCheckpoints && !showWhatIfScore) {
             AnimatedVisibility(visible = uiState.checkpointsExpanded) {
-                // Indent so each checkpoint row's title lines up with the assignment title above it.
-                // The ListItem's own SpaceMd start padding accounts for the rest of the offset.
-                val checkpointIndent = IconSize.Large.dp + InstUILayoutSizes.Spacing.SpaceLg.spaceLg
-                Column(modifier = Modifier.padding(start = checkpointIndent, bottom = 8.dp)) {
+                // Indent the checkpoint rows to nest them under the parent assignment.
+                Column(
+                    modifier = Modifier.padding(
+                        start = InstUILayoutSizes.Spacing.SpaceLg.spaceLg,
+                        bottom = InstUILayoutSizes.Spacing.SpaceSm.spaceSm,
+                    )
+                ) {
                     uiState.checkpoints.forEach {
                         InstUICheckpointItem(
                             uiState = it,
                             onClick = { actionHandler(GradesAction.AssignmentClick(uiState.id)) },
+                            onCourseBackground = hasWhatIfScore,
                         )
                     }
                 }
             }
-        }
-        if (showWhatIfScore) {
-            WhatIfScoreField(
-                uiState = uiState,
-                actionHandler = actionHandler,
-            )
         }
     }
 }
@@ -251,46 +245,61 @@ private fun CommentBadge(
 }
 
 @Composable
-private fun WhatIfScoreField(
+private fun InstUIAssignmentTrailing(
     uiState: AssignmentUiState,
     actionHandler: (GradesAction) -> Unit,
+    showWhatIfScore: Boolean,
+    hasWhatIfScore: Boolean,
+    hasCheckpoints: Boolean,
 ) {
-    var text by remember(uiState.id, uiState.whatIfScore) {
-        mutableStateOf(uiState.whatIfScore?.let { NumberHelper.formatDecimal(it, 2, true) }.orEmpty())
-    }
-    val maxText = NumberHelper.formatDecimal(uiState.maxScore.orDefault(), 2, true)
+    val courseColor = LocalCourseColor.current
+    val onCourseColor = InstUISemanticColors.Text.onColor()
+    when {
+        // In What-If mode the pencil is a focused edit affordance and takes over the whole trailing —
+        // the comment badge and checkpoint chevron are intentionally hidden while editing.
+        showWhatIfScore -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .clickable { actionHandler(GradesAction.ShowWhatIfScoreDialog(uiState.id)) }
+                    .semantics {
+                        testTag = "editWhatIfScore"
+                        role = Role.Button
+                    },
+            ) {
+                InstUIIcon(
+                    imageVector = InstUIIcons.pencil,
+                    tint = if (hasWhatIfScore) onCourseColor else courseColor,
+                    size = IconSize.Large,
+                    contentDescription = stringResource(R.string.editWhatIfScore),
+                )
+            }
+        }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        InstUIText(
-            text = stringResource(R.string.whatIfScoreLabel),
-            style = InstUITextTokens.content,
-            modifier = Modifier.weight(1f),
-        )
-        TextInput(
-            value = text,
-            onValueChange = { newValue ->
-                text = newValue
-                val parsed = newValue.toDoubleOrNull()
-                actionHandler(GradesAction.UpdateWhatIfScore(uiState.id, parsed))
-            },
-            size = TextInputSize.Small,
-            placeholder = "-",
-            textAlign = TextAlign.End,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-            modifier = Modifier
-                .width(96.dp)
-                .semantics { testTag = "whatIfScoreField" }
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        InstUIText(
-            text = "/$maxText",
-            style = InstUITextTokens.content,
-        )
+        uiState.commentCount > 0 || hasCheckpoints -> {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+            ) {
+                if (uiState.commentCount > 0) {
+                    CommentBadge(
+                        count = uiState.commentCount,
+                        hasUnread = uiState.hasUnreadComments,
+                    )
+                }
+                if (hasCheckpoints) {
+                    AccordionIcon(
+                        expanded = uiState.checkpointsExpanded,
+                        onClick = { actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id)) },
+                        contentDescription = checkpointAccordionContentDescription(uiState.checkpointsExpanded),
+                        size = IconSize.Large,
+                        modifier = Modifier.testTag("expandDiscussionCheckpoints"),
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -298,28 +307,40 @@ private fun WhatIfScoreField(
 private fun InstUICheckpointItem(
     uiState: DiscussionCheckpointUiState,
     onClick: () -> Unit,
+    onCourseBackground: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    val courseColor = LocalCourseColor.current
-    val pillData = mapSubmissionStateToPill(uiState.submissionStateLabel)
     val gradeText = uiState.displayGrade.text
+    val pillData = mapSubmissionStateToPill(uiState.submissionStateLabel)
     ListItem(
         modifier = modifier,
-        title = uiState.name,
-        subtext1 = uiState.dueDate,
-        pill = pillData?.let { data ->
-            { Pill(text = data.text, variant = data.variant) }
-        },
-        score = if (gradeText.isNotEmpty()) {
-            {
-                InstUIText(
-                    text = gradeText,
-                    color = courseColor,
-                    style = InstUITextTokens.contentImportant,
+        isOnColor = onCourseBackground,
+        onClick = onClick,
+        content = {
+            ListItemContentLine(
+                text = uiState.name,
+                style = ListItemLineStyle.Title,
+                isOnColor = onCourseBackground,
+            )
+            ListItemContentLine(
+                text = uiState.dueDate,
+                style = ListItemLineStyle.SupportingText,
+                isOnColor = onCourseBackground,
+            )
+            if (gradeText.isNotEmpty() || pillData != null) {
+                ListItemContentLine(
+                    text = gradeText.ifEmpty { null },
+                    style = ListItemLineStyle.ImportantInfo,
+                    isOnColor = onCourseBackground,
+                    trailing = {
+                        pillData?.let { data ->
+                            if (gradeText.isNotEmpty()) ListItemLineSeparator(onCourseBackground)
+                            Pill(text = data.text, variant = data.variant, icon = data.icon)
+                        }
+                    },
                 )
             }
-        } else null,
-        onClick = onClick,
+        },
     )
 }
 
@@ -729,16 +750,50 @@ private fun GradesAssignmentItemInstUICheckpointsExpandedPreview() {
 }
 
 @Preview(name = "GradesAssignmentItem InstUI What-If", showBackground = true)
+@Preview(name = "GradesAssignmentItem InstUI What-If — Dark", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun GradesAssignmentItemInstUIWhatIfPreview() {
     InstUITheme(courseColor = Color(0xFF00828E)) {
         CompositionLocalProvider(LocalDesignSystem provides DesignSystem.InstUI) {
-            GradesAssignmentItem(
-                uiState = previewAssignment(id = 1, whatIf = 95.0),
-                actionHandler = {},
-                contextColor = 0xFF00828E.toInt(),
-                showWhatIfScore = true,
-            )
+            Column {
+                GradesAssignmentItem(
+                    uiState = previewAssignment(id = 1, whatIf = 95.0),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = true,
+                )
+                GradesAssignmentItem(
+                    uiState = previewAssignment(id = 2, name = "Bonus Quiz", whatIf = 140.0),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = true,
+                )
+                GradesAssignmentItem(
+                    uiState = previewAssignment(id = 3, name = "Unscored Essay"),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = true,
+                )
+                GradesAssignmentItem(
+                    uiState = previewAssignment(id = 4, name = "Checkpointed Discussion", whatIf = 8.0).copy(
+                        commentCount = 2,
+                        hasUnreadComments = true,
+                        checkpointsExpanded = true,
+                        checkpoints = listOf(
+                            DiscussionCheckpointUiState(
+                                name = "Reply to topic",
+                                dueDate = "Due Jul 6, 2025 12:00",
+                                submissionStateLabel = SubmissionStateLabel.Graded,
+                                displayGrade = DisplayGrade("4/5", "4 out of 5"),
+                                pointsPossible = 5,
+                            )
+                        )
+                    ),
+                    actionHandler = {},
+                    contextColor = 0xFF00828E.toInt(),
+                    showWhatIfScore = true,
+                )
+            }
         }
     }
 }

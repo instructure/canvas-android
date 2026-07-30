@@ -1564,6 +1564,8 @@
     <string name="quizTimeLimit">الحد الزمني: %s</string>
     <string name="allowedAttempts">المحاولات المسموح بها: %s</string>
     <string name="usedAttempts">المحاولات المستخدمة: %d</string>
+    <string name="assignmentAttemptsUnlimited">محاولات غير محدودة</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d من أصل %2$d من المحاولات</string>
     <string name="generalUnexpectedError">حدث خطأ غير متوقع.</string>
 
     <string name="deleteSelected">حذف</string>
@@ -1611,6 +1613,8 @@
     <string name="aboutLoginTitle">معرف تسجيل الدخول</string>
     <string name="aboutEmailTitle">البريد الإلكتروني</string>
     <string name="aboutVersionTitle">الإصدار</string>
+    <string name="aboutOpenSourceTitle">المصدر المفتوح والتراخيص</string>
+    <string name="aboutOpenSourceSubtitle">عرض التعليمة البرمجية للمصدر وتراخيص المصدر المفتوح.</string>
     <string name="assignmentRefreshError">حدثت مشكلة أثناء إعادة تحميل هذه المهمة. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="instructure_logo">شعار Instructure</string>
     <string name="preferences">التفضيلات</string>
@@ -2091,6 +2095,9 @@
     <string name="gradePreferencesHeaderSortBy">الفزر حسب</string>
     <string name="gradesEmptyTitle">لا توجد أي مهام</string>
     <string name="gradesEmptyMessage">يبدو أنه لم يتم إنشاء مهام في هذه المساحة حتى الآن.</string>
+    <string name="gradesEmptyMessageForPeriod">لا توجد واجبات في %s.</string>
+    <string name="gradesCommentsContentDescription">%d من التعليقات</string>
+    <string name="gradesUnreadCommentsContentDescription">%d من التعليقات غير المقروءة</string>
     <string name="noMatchingAssignments">لا توجد مهام مطابقة</string>
     <string name="noMatchingAssignmentsDescription">لا توجد مهام مطابقة لبحثك. جرب مصطلح بحث مختلفًا.</string>
     <string name="errorLoadingGrades">أنت تواجه مشكلة في تحميل درجات الطالب. يرجى محاولة إعادة تحميل الصفحة أو إعادة المحاولة لاحقًا.</string>

@@ -41,6 +41,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Python dependencies
+        run: pip install --quiet defusedxml
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:

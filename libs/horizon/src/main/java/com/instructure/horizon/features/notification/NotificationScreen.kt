@@ -119,7 +119,7 @@ private fun NotificationContent(
                 }
             } else {
                 items(state.notificationItems) { item ->
-                    NotificationItemContent(navController, item, showSnackbar)
+                    NotificationItemContent(navController, item, showSnackbar, state.onItemRead)
                 }
             }
         }
@@ -141,7 +141,8 @@ private fun EmptyNotificationItemContent() {
 private fun NotificationItemContent(
     navController: NavHostController,
     notificationItem: NotificationItem,
-    showSnackbar: (String) -> Unit
+    showSnackbar: (String) -> Unit,
+    onItemRead: (Long) -> Unit
 ) {
     val context = LocalContext.current
     Column(
@@ -160,6 +161,7 @@ private fun NotificationItemContent(
 
                 try {
                     navController.navigate(request)
+                    onItemRead(notificationItem.id)
                 } catch (e: IllegalArgumentException) {
                     showSnackbar(context.getString(R.string.notificationsFailedToOpenMessage))
                 }
@@ -241,6 +243,7 @@ private fun NotificationsScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val sampleNotifications = listOf(
         NotificationItem(
+            id = 1L,
             category = NotificationItemCategory(
                 stringResource(R.string.notificationsDueDateCategoryLabel),
                 StatusChipColor.Honey
@@ -252,6 +255,7 @@ private fun NotificationsScreenPreview() {
             deepLink = "myapp://course/1/assignment/1"
         ),
         NotificationItem(
+            id = 2L,
             category = NotificationItemCategory(
                 stringResource(R.string.notificationsScoreChangedCategoryLabel),
                 StatusChipColor.Violet

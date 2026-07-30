@@ -1461,6 +1461,8 @@
     <string name="quizTimeLimit">Limite de temps : %s</string>
     <string name="allowedAttempts">Tentatives autorisées : %s</string>
     <string name="usedAttempts">Tentatives utilisées : %d</string>
+    <string name="assignmentAttemptsUnlimited">Tentatives illimitées</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d sur %2$d tentatives</string>
     <string name="generalUnexpectedError">Une erreur inattendue est survenue.</string>
 
     <string name="deleteSelected">Supprimer</string>
@@ -1504,6 +1506,8 @@
     <string name="aboutLoginTitle">ID d’authentification</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Version</string>
+    <string name="aboutOpenSourceTitle">Logiciels et licences Open Source</string>
+    <string name="aboutOpenSourceSubtitle">Affichez le code source et les licences Open Source.</string>
     <string name="assignmentRefreshError">Il y a eu un problème pour recharger ce travail. Veuillez vérifier votre connexion, puis réessayez.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Préférences</string>
@@ -1952,6 +1956,9 @@
     <string name="gradePreferencesHeaderSortBy">Trier par</string>
     <string name="gradesEmptyTitle">Aucun travail</string>
     <string name="gradesEmptyMessage">Il semble qu’aucun travail n’ait été créé sur cet espace pour le moment.</string>
+    <string name="gradesEmptyMessageForPeriod">Il n’existe aucun travail dans %s.</string>
+    <string name="gradesCommentsContentDescription">%d commentaires</string>
+    <string name="gradesUnreadCommentsContentDescription">%d commentaires non lus</string>
     <string name="noMatchingAssignments">Aucun travail correspondant</string>
     <string name="noMatchingAssignmentsDescription">Aucun travail ne correspond à votre recherche. Essayez d’effectuer la recherche avec un autre terme.</string>
     <string name="errorLoadingGrades">Nous ne parvenons pas à charger les notes de votre élève. Veuillez essayer de charger la page à nouveau ou réessayez plus tard.</string>

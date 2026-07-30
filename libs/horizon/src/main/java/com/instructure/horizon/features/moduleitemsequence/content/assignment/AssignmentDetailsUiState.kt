@@ -15,11 +15,14 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 
 data class AssignmentDetailsUiState(
     val assignmentId: Long,
+    val pendingSubmission: PendingSubmissionUiState? = null,
     val loadingState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val instructions: String = "",
     val ltiUrl: String = "",
@@ -37,11 +40,25 @@ data class AssignmentDetailsUiState(
     val onCommentsBottomSheetDismissed: () -> Unit = {},
     val viewingAttemptText: String? = null,
     val onAssignmentUpdatedForAddSubmission: () -> Unit = {},
+    val isOffline: Boolean = false,
+)
+
+data class PendingSubmissionUiState(
+    val state: SubmissionState,
+    val submissionType: Assignment.SubmissionType,
+    val text: String? = null,
+    val fileNames: List<String> = emptyList(),
+    val showSubmitButton: Boolean = false,
+    val onSubmit: () -> Unit = {},
+    val onRetry: () -> Unit = {},
+    val onCancel: () -> Unit = {},
 )
 
 data class SubmissionDetailsUiState(
     val submissions: List<SubmissionUiState> = emptyList(),
     val currentSubmissionAttempt: Long = -1L,
+    val pendingAttemptNumber: Long = -1L,
+    val newAttemptEnabled: Boolean = true,
     val onNewAttemptClick: () -> Unit = {},
 )
 

@@ -26,7 +26,60 @@
     <string name="ngc_courseHomeTabMyWork">マイワーク</string>
     <string name="ngc_courseHomeTabMore">その他</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">終了日時</string>
+    <string name="ngc_quizSettings">小テスト設定</string>
+    <string name="ngc_submission">提出</string>
+    <string name="ngc_continueDraft">下書きを続ける</string>
+    <string name="ngc_assignmentReminder">課題のリマインダー</string>
+    <string name="ngc_classPerformance">クラスの成績</string>
+    <string name="ngc_newAttempt">新しい試行</string>
+    <string name="ngc_submitAssignment">課題を提出</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">許可されているファイルタイプ</string>
+    <string name="ngc_noDueDate">締切日なし</string>
+    <string name="ngc_noAssignmentDescription">課題の説明なし</string>
+    <string name="ngc_retry">再試行</string>
+    <string name="ngc_finalGrade">最終的な評定</string>
+    <string name="ngc_notYetGraded">まだ採点されていません</string>
+    <string name="ngc_uploadingSubmission">提出物をアップロード中&#8230;</string>
+    <string name="ngc_submissionFailed">提出に失敗しました</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">追加の単位</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="other">%d日遅延</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">最低：%s</string>
+    <string name="ngc_classPerformanceAverage">平均：%s</string>
+    <string name="ngc_classPerformanceHighest">最高：%s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">追加情報</string>
+    <string name="ngc_submissionSegmentInstructions">指示</string>
+    <string name="ngc_submissionSegmentRubric">ルービック</string>
+    <string name="ngc_submissionSegmentComments">コメント</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">オフラインコンテンツの管理</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">ダッシュボードカスタマイズ</string>
+    <string name="a11y_submissionSupportingPaneExpand">追加情報を開く</string>
+    <string name="a11y_submissionSupportingPaneCollapse">追加情報を折りたたむ</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">課題を提出する</string>
+    <string name="ngc_submission_newSubmission">新規提出物</string>
+    <string name="ngc_submission_textEntry">テキストエントリ</string>
+    <string name="ngc_submission_submit">送信</string>
+    <string name="ngc_submission_deleteDraft">下書きを削除する</string>
+    <string name="ngc_submission_draftSaved">%1$sを保存しました</string>
+    <string name="ngc_submission_textEntryPlaceholder">提出するテキストをここに入力してください</string>
+    <string name="ngc_submission_submissionError">課題送信時にエラーが発生しました</string>
+    <string name="ngc_submission_loadError">課題の読み込みに失敗しました</string>
+    <string name="ngc_submission_dueDate">%1$s期限</string>
+    <string name="ngc_submission_retry">再試行</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">下書きを削除しますか？</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">下書きは完全に削除され、復元することはできません。</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">削除</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">キャンセル</string>
+    <string name="ngc_back">戻る</string>
 </resources>

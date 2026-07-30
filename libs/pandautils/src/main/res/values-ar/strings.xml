@@ -265,6 +265,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">تم حذف هذا الرد %s</string>
+    <string name="utils_announcementDeleted">تم حذف الإعلان.</string>
+    <string name="utils_discussionDeleted">تم حذف النقاش.</string>
     <string name="utils_discussionsUnknownAuthor">مؤلف غير معروف</string>
     <string name="utils_discussionsReply">رد</string>
     <string name="utils_discussionsEdit">تحرير</string>

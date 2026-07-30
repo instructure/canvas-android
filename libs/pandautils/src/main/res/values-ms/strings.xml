@@ -261,6 +261,8 @@
     </plurals>
 
     <string name="utils_discussionsDeleted" formatted="false">Balasan ini dipadamkan %s</string>
+    <string name="utils_announcementDeleted">Pengumuman dipadamkan.</string>
+    <string name="utils_discussionDeleted">Perbincangan dipadamkan.</string>
     <string name="utils_discussionsUnknownAuthor">Pengarang Tidak Diketahui</string>
     <string name="utils_discussionsReply">Balas</string>
     <string name="utils_discussionsEdit">Edit</string>

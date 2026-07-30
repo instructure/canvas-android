@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Travay Mwen</string>
     <string name="ngc_courseHomeTabMore">Plis</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Disponib jiska</string>
+    <string name="ngc_quizSettings">Paramèt Quiz</string>
+    <string name="ngc_submission">Soumisyon</string>
+    <string name="ngc_continueDraft">Kontinye redaksyon an</string>
+    <string name="ngc_assignmentReminder">Rapèl Sesyon</string>
+    <string name="ngc_classPerformance">Pèfòmans Klas</string>
+    <string name="ngc_newAttempt">Nouvo tantativ</string>
+    <string name="ngc_submitAssignment">Soumèt devwa</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Kalite fichye ki otorize</string>
+    <string name="ngc_noDueDate">San delè</string>
+    <string name="ngc_noAssignmentDescription">Pa gen deskripsyon pou devwa a</string>
+    <string name="ngc_retry">Re eseye</string>
+    <string name="ngc_finalGrade">Nòt Final</string>
+    <string name="ngc_notYetGraded">Poko klase</string>
+    <string name="ngc_uploadingSubmission">Ap monte soumisyon&#8230;</string>
+    <string name="ngc_submissionFailed">Soumisyon an echwe</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Kredi anplis</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d jou anreta</item>
+        <item quantity="other">%d jou anreta</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Pi ba: %s</string>
+    <string name="ngc_classPerformanceAverage">Mwayèn: %s</string>
+    <string name="ngc_classPerformanceHighest">Pi wo: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Enfòmasyon anplis</string>
+    <string name="ngc_submissionSegmentInstructions">Enstriksyon</string>
+    <string name="ngc_submissionSegmentRubric">Ribrik</string>
+    <string name="ngc_submissionSegmentComments">Kòmantè</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Jere kontni san koneksyon</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Pèsonalize tablodbò</string>
+    <string name="a11y_submissionSupportingPaneExpand">Afiche plis enfòmasyon</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Kache enfòmasyon anplis yo</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Soumèt Sesyon</string>
+    <string name="ngc_submission_newSubmission">Nouvo soumisyon</string>
+    <string name="ngc_submission_textEntry">Antre Tèks</string>
+    <string name="ngc_submission_submit">Soumèt</string>
+    <string name="ngc_submission_deleteDraft">Elimine bouyon</string>
+    <string name="ngc_submission_draftSaved">Anrejistre %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Antre tèks soumisyon w lan isit la</string>
+    <string name="ngc_submission_submissionError">Erè nan soumisyon devwa</string>
+    <string name="ngc_submission_loadError">Chajman sesyon an echwe</string>
+    <string name="ngc_submission_dueDate">Delè %1$s</string>
+    <string name="ngc_submission_retry">Re eseye</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Elimine bouyon?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Bouyon ou a pral efase nèt epi li p ap ka rekipere.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Efase</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Anile</string>
+    <string name="ngc_back">Retounen</string>
 </resources>

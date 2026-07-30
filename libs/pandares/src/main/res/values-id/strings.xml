@@ -1468,6 +1468,8 @@
     <string name="quizTimeLimit">Batas waktu: %s</string>
     <string name="allowedAttempts">Upaya yang diizinkan: %s</string>
     <string name="usedAttempts">Upaya digunakan: %d</string>
+    <string name="assignmentAttemptsUnlimited">Upaya tidak terbatas</string>
+    <string name="assignmentAttemptsUsedOfAllowed">%1$d dari %2$d upaya</string>
     <string name="generalUnexpectedError">Terjadi kesalahan yang tidak terduga.</string>
     <string name="deleteSelected">Hapus</string>
     <string name="archiveSelected">Arsipkan</string>
@@ -1508,6 +1510,8 @@
     <string name="aboutLoginTitle">ID Login</string>
     <string name="aboutEmailTitle">Email</string>
     <string name="aboutVersionTitle">Versi</string>
+    <string name="aboutOpenSourceTitle">Sumber Terbuka dan Lisensi</string>
+    <string name="aboutOpenSourceSubtitle">Lihat kode sumber dan lisensi sumber terbuka.</string>
     <string name="assignmentRefreshError">Ada masalah saat memuat ulang tugas ini. Silakan periksa sambungan internet Anda dan coba lagi.</string>
     <string name="instructure_logo">Logo Instructure</string>
     <string name="preferences">Preferensi</string>
@@ -1955,6 +1959,9 @@
     <string name="gradePreferencesHeaderSortBy">Sortir Menurut</string>
     <string name="gradesEmptyTitle">Tidak Ada Tugas</string>
     <string name="gradesEmptyMessage">Sepertinya tugas belum dibuat di ruang ini.</string>
+    <string name="gradesEmptyMessageForPeriod">Tidak ada tugas di %s.</string>
+    <string name="gradesCommentsContentDescription">%d komentar</string>
+    <string name="gradesUnreadCommentsContentDescription">%d komentar yang belum dibaca</string>
     <string name="noMatchingAssignments">Tidak Ada Tugas yang Cocok</string>
     <string name="noMatchingAssignmentsDescription">Tidak ada tugas yang cocok dengan pencarian Anda. Coba istilah pencarian lain.</string>
     <string name="errorLoadingGrades">Kami kesulitan memuat nilai siswa Anda. Silakan memuat ulang halaman atau coba lagi nanti.</string>

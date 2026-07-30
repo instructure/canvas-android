@@ -84,7 +84,8 @@ import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
+import com.instructure.pandautils.utils.toFormattedString
+import com.instructure.pandautils.utils.toFormattedStringWithoutTrailingZeros
 import kotlin.math.roundToInt
 
 @Composable
@@ -240,7 +241,7 @@ private fun RubricCriterion(
                                         if (!hidePoints) {
                                             PointValueBox(
                                                 rating.id,
-                                                point = rating.points?.roundToInt().toString(),
+                                                point = rating.points.orDefault().toFormattedStringWithoutTrailingZeros(),
                                                 useRange = rubricCriterion.useRange,
                                                 selected = selected,
                                                 sharedTransitionScope = this@SharedTransitionLayout,
@@ -275,7 +276,7 @@ private fun RubricCriterion(
                                         val selected = assessment?.ratingId == rating.id
                                         PointValueBox(
                                             rating.id,
-                                            point = rating.points?.roundToInt().toString(),
+                                            point = rating.points.orDefault().toFormattedStringWithoutTrailingZeros(),
                                             selected = selected,
                                             useRange = rubricCriterion.useRange,
                                             sharedTransitionScope = this@SharedTransitionLayout,
@@ -319,7 +320,7 @@ private fun RubricCriterion(
                 CanvasDivider()
             }
             var textFieldScore by remember(assessment) {
-                mutableStateOf(assessment?.points?.stringValueWithoutTrailingZeros.orEmpty())
+                mutableStateOf(assessment?.points?.toFormattedString(maxDecimals = null).orEmpty())
             }
             var enteredPoint by remember(assessment) {
                 mutableStateOf(assessment?.points)
@@ -360,9 +361,9 @@ private fun RubricCriterion(
                 )
                 Text(
                     text = pluralStringResource(
-                        R.plurals.pointsPossible,
+                        R.plurals.pointsPossibleDecimal,
                         rubricCriterion.points?.roundToInt().orDefault(),
-                        rubricCriterion.points.orDefault()
+                        rubricCriterion.points.orDefault().toFormattedStringWithoutTrailingZeros()
                     ),
                     fontSize = 16.sp,
                     color = colorResource(R.color.textPlaceholder)

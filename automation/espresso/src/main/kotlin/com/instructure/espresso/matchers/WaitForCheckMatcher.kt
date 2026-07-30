@@ -61,9 +61,9 @@ class WaitForCheckMatcher<T>(private val matcher: Matcher<T>) : BaseMatcher<T>()
     companion object {
         private val log =
             EspressoLog(WaitForCheckMatcher::class.java)
-        private val uiController = UiControllerSingleton.get()
-
         private val waiting = AtomicBoolean(false)
+
+        private val uiController = UiControllerSingleton.get()
 
         fun finishedWaiting(): Boolean {
             return !waiting.get()

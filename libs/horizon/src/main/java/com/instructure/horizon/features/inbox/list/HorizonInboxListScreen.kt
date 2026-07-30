@@ -16,6 +16,8 @@
  */
 package com.instructure.horizon.features.inbox.list
 
+import com.instructure.horizon.features.announcement.navigation.AnnouncementRoute
+import com.instructure.horizon.model.HorizonAnnouncementKind
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -308,9 +310,20 @@ private fun LazyListScope.inboxContent(
                 if (item.type != HorizonInboxItemType.AccountNotification) {
                     state.setItemAsRead(item.id)
                 }
-                navController.navigate(
-                    HorizonInboxRoute.InboxDetails.route(item.id, item.type, item.courseId)
-                )
+                val route = when (item.type) {
+                    HorizonInboxItemType.Inbox -> HorizonInboxRoute.InboxDetails.route(item.id, item.type, item.courseId)
+                    HorizonInboxItemType.AccountNotification -> AnnouncementRoute.Details.route(
+                        kind = HorizonAnnouncementKind.ACCOUNT,
+                        id = item.id,
+                        courseId = null,
+                    )
+                    HorizonInboxItemType.CourseNotification -> AnnouncementRoute.Details.route(
+                        kind = HorizonAnnouncementKind.COURSE,
+                        id = item.id,
+                        courseId = item.courseId,
+                    )
+                }
+                navController.navigate(route)
             },
             Modifier
                 .then(

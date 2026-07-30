@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Mitt arbeid</string>
     <string name="ngc_courseHomeTabMore">Mer</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Tilgjengelig til</string>
+    <string name="ngc_quizSettings">Quiz-innstillinger</string>
+    <string name="ngc_submission">Innlevering</string>
+    <string name="ngc_continueDraft">Fortsett på utkast</string>
+    <string name="ngc_assignmentReminder">Oppgavepåminnelse</string>
+    <string name="ngc_classPerformance">Klasseprestasjon</string>
+    <string name="ngc_newAttempt">Nytt forsøk</string>
+    <string name="ngc_submitAssignment">Lever oppgave</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Tillatte filtyper</string>
+    <string name="ngc_noDueDate">Ingen forfallsdato</string>
+    <string name="ngc_noAssignmentDescription">Ingen oppgavebeskrivelse</string>
+    <string name="ngc_retry">Prøv igjen</string>
+    <string name="ngc_finalGrade">Sluttvurdering</string>
+    <string name="ngc_notYetGraded">Ikke vurdert enda</string>
+    <string name="ngc_uploadingSubmission">Laster opp innlevering &#8230;</string>
+    <string name="ngc_submissionFailed">Innlevering mislyktes</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Ekstrapoeng</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d dag for sent</item>
+        <item quantity="other">%d dager for sent</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Laveste: %s</string>
+    <string name="ngc_classPerformanceAverage">Gj.sn. %s</string>
+    <string name="ngc_classPerformanceHighest">Høyeste: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Ytterligere informasjon</string>
+    <string name="ngc_submissionSegmentInstructions">Instruksjoner</string>
+    <string name="ngc_submissionSegmentRubric">Vurderingsveiledning</string>
+    <string name="ngc_submissionSegmentComments">Kommentarer</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Administrer frakoblet innhold</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Tilpass dashbord</string>
+    <string name="a11y_submissionSupportingPaneExpand">Vis ytterligere informasjon</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Skjul ytterligere informasjon</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Lever oppgave</string>
+    <string name="ngc_submission_newSubmission">Nye innleveringer</string>
+    <string name="ngc_submission_textEntry">Innlegging av tekst</string>
+    <string name="ngc_submission_submit">Send inn</string>
+    <string name="ngc_submission_deleteDraft">Slett utkast</string>
+    <string name="ngc_submission_draftSaved">Lagret %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Skriv innleveringsteksten din her</string>
+    <string name="ngc_submission_submissionError">Kunne ikke sende inn oppgave</string>
+    <string name="ngc_submission_loadError">Kunne ikke laste inn oppgave</string>
+    <string name="ngc_submission_dueDate">Forfall: %1$s</string>
+    <string name="ngc_submission_retry">Prøv igjen</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Slette utkast?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Utkastet ditt vil bli permanent slettet og kan ikke gjenopprettes.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Slett</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Avbryt</string>
+    <string name="ngc_back">Tilbake</string>
 </resources>

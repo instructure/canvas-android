@@ -16,20 +16,31 @@
  */
 package com.instructure.horizon.features.moduleitemsequence
 
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.data.datasource.ModuleItemNetworkDataSource
+import com.instructure.horizon.data.repository.CourseRepository
+import com.instructure.horizon.data.repository.ModuleItemSequenceRepository
+import com.instructure.horizon.database.dao.HorizonCourseModuleDao
+import com.instructure.horizon.domain.usecase.GetUnreadCommentsCountUseCase
+import com.instructure.horizon.offline.HorizonOfflineActionQueue
+import com.instructure.horizon.offline.sync.MARK_AS_DONE_ACTION
+import com.instructure.horizon.offline.sync.MARK_AS_READ_ACTION
+import com.instructure.horizon.offline.sync.MarkAsDonePayload
+import com.instructure.horizon.offline.sync.MarkAsReadPayload
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.google.gson.Gson
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -40,16 +51,24 @@ import org.junit.Test
 
 class ModuleItemSequenceRepositoryTest {
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
-    private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
-    private val horizonGetCommentsManager: HorizonGetCommentsManager = mockk(relaxed = true)
+    private val courseRepository: CourseRepository = mockk(relaxed = true)
+    private val courseModuleDao: HorizonCourseModuleDao = mockk(relaxed = true)
+    private val getUnreadCommentsCountUseCase: GetUnreadCommentsCountUseCase = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val offlineActionQueue: HorizonOfflineActionQueue = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
+    private val gson = Gson()
     private val userId = 1L
     private val courseId = 1L
 
     @Before
     fun setup() {
         every { apiPrefs.user } returns User(id = userId, name = "Test User")
+        // featureFlagProvider.offlineEnabled() returns false by default (relaxed mock),
+        // so shouldFetchFromNetwork() = isOnline() || !offlineEnabled() = false || true = true
+        coEvery { offlineActionQueue.enqueue(any(), any(), any(), any()) } returns 1L
     }
 
     @Test
@@ -76,35 +95,12 @@ class ModuleItemSequenceRepositoryTest {
             ModuleItem(id = 1L, title = "Item 1"),
             ModuleItem(id = 2L, title = "Item 2")
         ))
-        coEvery { moduleApi.getFirstPageModulesWithItems(any(), any(), any(), any()) } returns
-            DataResult.Success(listOf(module))
+        coEvery { courseRepository.getModuleItems(any(), any()) } returns listOf(module)
 
         val result = getRepository().getModulesWithItems(courseId, false)
 
         assertEquals(1, result.size)
         assertEquals(module, result[0])
-    }
-
-    @Test
-    fun `Test modules with incomplete items fetches all items`() = runTest {
-        val incompleteModule = ModuleObject(id = 1L, name = "Module 1", itemCount = 3, items = listOf(
-            ModuleItem(id = 1L, title = "Item 1")
-        ))
-        val allItems = listOf(
-            ModuleItem(id = 1L, title = "Item 1"),
-            ModuleItem(id = 2L, title = "Item 2"),
-            ModuleItem(id = 3L, title = "Item 3")
-        )
-
-        coEvery { moduleApi.getFirstPageModulesWithItems(any(), any(), any(), any()) } returns
-            DataResult.Success(listOf(incompleteModule))
-        coEvery { moduleApi.getFirstPageModuleItems(any(), any(), any(), any(), any()) } returns
-            DataResult.Success(allItems)
-
-        val result = getRepository().getModulesWithItems(courseId, false)
-
-        assertEquals(1, result.size)
-        assertEquals(3, result[0].items.size)
     }
 
     @Test
@@ -151,19 +147,38 @@ class ModuleItemSequenceRepositoryTest {
     }
 
     @Test
-    fun `Test successful assignment retrieval`() = runTest {
-        val assignment = Assignment(id = 1L, name = "Assignment 1")
-        coEvery { assignmentApi.getAssignmentWithHistory(any(), any(), any()) } returns
-            DataResult.Success(assignment)
+    fun `Test mark as read offline marks completed locally and enqueues action`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        val payloadSlot = slot<String>()
+        coEvery { offlineActionQueue.enqueue(any(), capture(payloadSlot), any(), any()) } returns 1L
 
-        val result = getRepository().getAssignment(1L, courseId, false)
+        getRepository().markAsRead(courseId, 123L, 456L)
 
-        assertEquals(assignment, result)
+        coVerify(exactly = 1) { courseModuleDao.updateItemCompletion(456L, true) }
+        coVerify(exactly = 1) { offlineActionQueue.enqueue(MARK_AS_READ_ACTION, any(), courseId, any()) }
+        coVerify(exactly = 0) { moduleApi.markModuleItemRead(any(), any(), any(), any(), any()) }
+
+        val payload = gson.fromJson(payloadSlot.captured, MarkAsReadPayload::class.java)
+        assertEquals(MarkAsReadPayload(courseId, moduleId = 123L, itemId = 456L), payload)
+    }
+
+    @Test
+    fun `Test mark as read offline with offline disabled still calls network`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        coEvery { moduleApi.markModuleItemRead(any(), any(), any(), any(), any()) } returns
+            DataResult.Success("".toResponseBody())
+
+        getRepository().markAsRead(courseId, 123L, 456L)
+
+        coVerify(exactly = 1) { moduleApi.markModuleItemRead(any(), courseId, 123L, 456L, any()) }
+        coVerify(exactly = 0) { offlineActionQueue.enqueue(any(), any(), any(), any()) }
     }
 
     @Test
     fun `Test has unread comments returns true when count greater than zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(any(), any(), any()) } returns 5
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 5
 
         val result = getRepository().hasUnreadComments(1L, false)
 
@@ -172,7 +187,7 @@ class ModuleItemSequenceRepositoryTest {
 
     @Test
     fun `Test has unread comments returns false when count is zero`() = runTest {
-        coEvery { horizonGetCommentsManager.getUnreadCommentsCount(any(), any(), any()) } returns 0
+        coEvery { getUnreadCommentsCountUseCase(any()) } returns 0
 
         val result = getRepository().hasUnreadComments(1L, false)
 
@@ -187,6 +202,66 @@ class ModuleItemSequenceRepositoryTest {
     }
 
     private fun getRepository(): ModuleItemSequenceRepository {
-        return ModuleItemSequenceRepository(moduleApi, assignmentApi, horizonGetCommentsManager, apiPrefs)
+        return ModuleItemSequenceRepository(
+            ModuleItemNetworkDataSource(moduleApi),
+            courseRepository,
+            courseModuleDao,
+            getUnreadCommentsCountUseCase,
+            apiPrefs,
+            offlineActionQueue,
+            networkStateProvider,
+            featureFlagProvider,
+        )
+    }
+
+    @Test
+    fun `Test mark as done offline updates local flag and enqueues action`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        val moduleItem = ModuleItem(id = 456L, moduleId = 123L)
+        val payloadSlot = slot<String>()
+        coEvery { offlineActionQueue.enqueue(any(), capture(payloadSlot), any(), any()) } returns 1L
+
+        val result = getRepository().markAsDone(courseId, moduleItem)
+
+        assertTrue(result is DataResult.Success)
+        coVerify(exactly = 1) { courseModuleDao.updateItemCompletion(456L, true) }
+        coVerify(exactly = 1) { offlineActionQueue.enqueue(MARK_AS_DONE_ACTION, any(), courseId, any()) }
+        coVerify(exactly = 0) { moduleApi.markModuleItemAsDone(any(), any(), any(), any(), any()) }
+
+        val payload = gson.fromJson(payloadSlot.captured, MarkAsDonePayload::class.java)
+        assertEquals(MarkAsDonePayload(courseId, moduleId = 123L, itemId = 456L, done = true), payload)
+    }
+
+    @Test
+    fun `Test mark as not done offline updates local flag and enqueues action`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        val moduleItem = ModuleItem(id = 456L, moduleId = 123L)
+        val payloadSlot = slot<String>()
+        coEvery { offlineActionQueue.enqueue(any(), capture(payloadSlot), any(), any()) } returns 1L
+
+        val result = getRepository().markAsNotDone(courseId, moduleItem)
+
+        assertTrue(result is DataResult.Success)
+        coVerify(exactly = 1) { courseModuleDao.updateItemCompletion(456L, false) }
+        coVerify(exactly = 1) { offlineActionQueue.enqueue(MARK_AS_DONE_ACTION, any(), courseId, any()) }
+        coVerify(exactly = 0) { moduleApi.markModuleItemAsNotDone(any(), any(), any(), any(), any()) }
+
+        assertEquals(false, gson.fromJson(payloadSlot.captured, MarkAsDonePayload::class.java).done)
+    }
+
+    @Test
+    fun `Test mark as done offline with offline disabled still calls network`() = runTest {
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        val moduleItem = ModuleItem(id = 456L, moduleId = 123L)
+        coEvery { moduleApi.markModuleItemAsDone(any(), any(), any(), any(), any()) } returns
+            DataResult.Success("".toResponseBody())
+
+        getRepository().markAsDone(courseId, moduleItem)
+
+        coVerify(exactly = 1) { moduleApi.markModuleItemAsDone(any(), courseId, 123L, 456L, any()) }
+        coVerify(exactly = 0) { offlineActionQueue.enqueue(any(), any(), any(), any()) }
     }
 }

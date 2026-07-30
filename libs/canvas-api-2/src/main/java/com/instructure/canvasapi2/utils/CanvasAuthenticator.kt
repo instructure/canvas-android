@@ -31,16 +31,29 @@ private const val RETRY_HEADER = "mobile_refresh"
 
 class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenticator {
 
-    override fun authenticate(route: Route?, response: Response): Request? {
+    private val refreshLock = Any()
+
+    override fun authenticate(route: Route?, response: Response): Request? = synchronized(refreshLock) {
         // This is used to prevent user logout on embedded LTIs in pages where we can't obtain an authenticated session for the LTI url.
         val params = response.request.restParams()
         if (params?.shouldRefreshToken == false) {
             return null
         }
 
+        val currentBearer = OAuthAPI.authBearer(ApiPrefs.accessToken)
+        val requestBearer = response.request.header(AUTH_HEADER)
+        if (ApiPrefs.accessToken.isNotEmpty() && requestBearer != null && requestBearer != currentBearer) {
+            return response.request.newBuilder()
+                .header(AUTH_HEADER, currentBearer)
+                .header(RETRY_HEADER, RETRY_HEADER) // Mark retry to prevent infinite recursion
+                .build()
+        }
+
         if (response.request.header(RETRY_HEADER) != null) {
             logAuthAnalytics(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE)
-            EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
+            if (params?.shouldLoginOnTokenError != false) {
+                EventBus.getDefault().post(CanvasAuthError("Failed to authenticate"))
+            }
             return null // Give up, we've already failed to authenticate
         }
 
@@ -69,7 +82,6 @@ class CanvasAuthenticator(private val tokenRefresher: TokenRefresher) : Authenti
         }
 
         refreshTokenResponse.onFail<Failure> {
-            val params = response.request.restParams()
             if (params?.shouldLoginOnTokenError == false) {
                 return null
             }

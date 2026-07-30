@@ -29,6 +29,7 @@ import androidx.work.Data
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -111,6 +112,33 @@ suspend fun retry(retryCount: Int = 5, initialDelay: Long = 100, factor: Float =
     }
 }
 
+/**
+ * Retries [block] with exponential backoff, rethrowing the last exception once [maxAttempts] is
+ * reached. Unlike [retry], the final failure is surfaced to the caller instead of being swallowed,
+ * so callers can react to an exhausted retry (e.g. mark the operation as failed).
+ */
+suspend fun <T> retryWithBackoff(
+    maxAttempts: Int = 3,
+    initialDelay: Long = 500,
+    factor: Float = 2f,
+    block: suspend () -> T
+): T {
+    var attempt = 0
+    var currentDelay = initialDelay
+    while (true) {
+        try {
+            return block()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            attempt++
+            if (attempt >= maxAttempts.coerceAtLeast(1)) throw e
+            delay(currentDelay)
+            currentDelay = (currentDelay * factor).toLong()
+        }
+    }
+}
+
 suspend fun <T> poll(
     pollInterval: Long = 1000,
     maxAttempts: Int = 10,
@@ -183,8 +211,12 @@ fun Context.openFile(
     mimeType: String,
     chooserTitle: String
 ) {
-    val file = File(filePathToOpen)
-    val uri = FileProvider.getUriForFile(this, applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+    val uri = if (filePathToOpen.startsWith("content://")) {
+        filePathToOpen.toUri()
+    } else {
+        val file = File(filePathToOpen)
+        FileProvider.getUriForFile(this, applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+    }
 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         setDataAndType(uri, mimeType)

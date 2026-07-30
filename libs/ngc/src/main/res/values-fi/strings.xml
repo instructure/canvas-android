@@ -26,7 +26,61 @@
     <string name="ngc_courseHomeTabMyWork">Oma työ</string>
     <string name="ngc_courseHomeTabMore">Lisää</string>
 
+    <!-- Assignment details -->
+    <string name="ngc_availableUntil">Saatavissa tähän asti</string>
+    <string name="ngc_quizSettings">Testin asetukset</string>
+    <string name="ngc_submission">Tehtäväpalautus</string>
+    <string name="ngc_continueDraft">Jatka luonnokseen</string>
+    <string name="ngc_assignmentReminder">Tehtävän muistutus</string>
+    <string name="ngc_classPerformance">Kurssin suoritus</string>
+    <string name="ngc_newAttempt">Uusi yritys</string>
+    <string name="ngc_submitAssignment">Lähetä tehtävä</string>
+    <string name="ngc_studio">Studio</string>
+    <string name="ngc_allowedFileTypes">Sallittavat tiedostotyypit</string>
+    <string name="ngc_noDueDate">Ei määräpäivää</string>
+    <string name="ngc_noAssignmentDescription">Ei kohdistuksen kuvausta</string>
+    <string name="ngc_retry">Yritä uudelleen</string>
+    <string name="ngc_finalGrade">Lopullinen arvosana</string>
+    <string name="ngc_notYetGraded">Ei vielä arvioitu</string>
+    <string name="ngc_uploadingSubmission">Ladataan tehtäväpalautusta...</string>
+    <string name="ngc_submissionFailed">Tehtäväpalautus epäonnistui</string>
+
+    <!-- Assignment details grade card -->
+    <string name="ngc_extraCredit">Lisäpisteet</string>
+    <plurals name="ngc_daysLate">
+        <item quantity="one">%d päivän myöhässä</item>
+        <item quantity="other">%d päivän myöhässä</item>
+    </plurals>
+    <string name="ngc_classPerformanceLowest">Alin: %s</string>
+    <string name="ngc_classPerformanceAverage">Keskimäärin: %s</string>
+    <string name="ngc_classPerformanceHighest">Ylin: %s</string>
+
+
+    <!-- Submission supporting pane -->
+    <string name="ngc_submissionSupportingPaneTitle">Lisätiedot</string>
+    <string name="ngc_submissionSegmentInstructions">Ohjeet</string>
+    <string name="ngc_submissionSegmentRubric">Arviointitaulukko</string>
+    <string name="ngc_submissionSegmentComments">Kommentit</string>
     <!-- Accessibility -->
     <string name="a11y_dashboardManageOfflineContentDescription">Hallitse offline-sisältöä</string>
     <string name="a11y_dashboardCustomizeDashboardContentDescription">Mukauta kojelauta</string>
+    <string name="a11y_submissionSupportingPaneExpand">Laajenna lisätiedot</string>
+    <string name="a11y_submissionSupportingPaneCollapse">Kutista lisätiedot</string>
+    <!-- Submission main pane -->
+    <string name="ngc_submission_submitAssignment">Lähetä tehtävä</string>
+    <string name="ngc_submission_newSubmission">Uusi tehtäväpalautus</string>
+    <string name="ngc_submission_textEntry">Tekstin syöttäminen</string>
+    <string name="ngc_submission_submit">Lähetä</string>
+    <string name="ngc_submission_deleteDraft">Poista luonnos</string>
+    <string name="ngc_submission_draftSaved">Tallennettu %1$s</string>
+    <string name="ngc_submission_textEntryPlaceholder">Syötä tehtäväpalautuksesi teksti tähän</string>
+    <string name="ngc_submission_submissionError">Virhe tehtäväpalautuksen lähettämisessä</string>
+    <string name="ngc_submission_loadError">Tehtävän lataus epäonnistui</string>
+    <string name="ngc_submission_dueDate">Määräpäivä %1$s</string>
+    <string name="ngc_submission_retry">Yritä uudelleen</string>
+    <string name="ngc_submission_deleteDraftDialogTitle">Poistetaanko luonnos?</string>
+    <string name="ngc_submission_deleteDraftDialogMessage">Luonnoksesi poistetaan pysyvästi eikä sitä voida palauttaa.</string>
+    <string name="ngc_submission_deleteDraftDialogConfirm">Poista</string>
+    <string name="ngc_submission_deleteDraftDialogCancel">Peruuta</string>
+    <string name="ngc_back">Takaisin</string>
 </resources>

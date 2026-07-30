@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import android.content.Context
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -42,6 +43,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -58,8 +60,12 @@ class AssignmentDetailsFragmentModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(parentPrefs: ParentPrefs, apiPrefs: ApiPrefs): AssignmentDetailsBehaviour {
-        return ParentAssignmentDetailsBehaviour(parentPrefs, apiPrefs)
+    fun provideAssignmentDetailsBehaviour(
+        @ApplicationContext context: Context,
+        parentPrefs: ParentPrefs,
+        apiPrefs: ApiPrefs
+    ): AssignmentDetailsBehaviour {
+        return ParentAssignmentDetailsBehaviour(context, parentPrefs, apiPrefs)
     }
 }
 

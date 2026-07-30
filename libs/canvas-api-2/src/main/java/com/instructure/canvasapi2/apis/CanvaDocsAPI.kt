@@ -50,6 +50,12 @@ object CanvaDocsAPI {
 
         @POST("canvadoc_session")
         suspend fun createCanvaDocSession(@Body body: CanvaDocSessionRequestBody, @Tag restParams: RestParams): DataResult<CanvaDocSessionResponseBody>
+
+        @GET
+        suspend fun getCanvaDoc(@Url url: String, @Tag restParams: RestParams): DataResult<DocSession>
+
+        @GET("/2018-04-06/sessions/{sessionId}/annotations")
+        suspend fun getAnnotations(@Path("sessionId") sessionId: String, @Tag restParams: RestParams): DataResult<CanvaDocAnnotationResponse>
     }
 
     fun getCanvaDoc(

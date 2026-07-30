@@ -20,8 +20,8 @@ import com.instructure.canvasapi2.models.journey.assist.JourneyAssistFlashCard
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
-import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
+import com.instructure.horizon.data.repository.AiAssistResponse
+import com.instructure.horizon.domain.usecase.AnswerAiAssistPromptUseCase
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
@@ -45,7 +45,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AiAssistFlashcardViewModelTest {
-    private val repository: AiAssistRepository = mockk(relaxed = true)
+    private val answerAiAssistPromptUseCase: AnswerAiAssistPromptUseCase = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -168,7 +168,7 @@ class AiAssistFlashcardViewModelTest {
     }
 
     @Test
-    fun `regenerateFlashcards calls repository`() = runTest {
+    fun `regenerateFlashcards calls use case`() = runTest {
         val newFlashCards = listOf(
             JourneyAssistFlashCard("New Q1", "New A1"),
             JourneyAssistFlashCard("New Q2", "New A2")
@@ -181,7 +181,7 @@ class AiAssistFlashcardViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(responseMessage, JourneyAssistState())
 
         val viewModel = getViewModel()
@@ -189,7 +189,7 @@ class AiAssistFlashcardViewModelTest {
         viewModel.uiState.value.regenerateFlashcards()
         testDispatcher.scheduler.advanceUntilIdle()
 
-        coVerify { repository.answerPrompt(any(), any(), any()) }
+        coVerify { answerAiAssistPromptUseCase(any()) }
     }
 
     @Test
@@ -212,7 +212,7 @@ class AiAssistFlashcardViewModelTest {
         every { aiAssistContextProvider.aiAssistContext } returns testContext andThen updatedContext
 
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(responseMessage, JourneyAssistState())
 
         val viewModel = getViewModel()
@@ -230,7 +230,7 @@ class AiAssistFlashcardViewModelTest {
     @Test
     fun `regenerateFlashcards shows loading state`() = runTest {
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
             val message = AiAssistMessage(
@@ -255,7 +255,7 @@ class AiAssistFlashcardViewModelTest {
     @Test
     fun `regenerateFlashcards handles error gracefully`() = runTest {
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } throws Exception("Network error")
 
         val viewModel = getViewModel()
@@ -278,7 +278,7 @@ class AiAssistFlashcardViewModelTest {
         )
 
         coEvery {
-            repository.answerPrompt(any(), any(), any())
+            answerAiAssistPromptUseCase(any())
         } returns AiAssistResponse(responseMessage, JourneyAssistState())
 
         val viewModel = getViewModel()
@@ -320,6 +320,6 @@ class AiAssistFlashcardViewModelTest {
     }
 
     private fun getViewModel(): AiAssistFlashcardViewModel {
-        return AiAssistFlashcardViewModel(repository, aiAssistContextProvider)
+        return AiAssistFlashcardViewModel(answerAiAssistPromptUseCase, aiAssistContextProvider)
     }
 }
