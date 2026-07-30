@@ -4,7 +4,7 @@ object Versions {
     /* SDK Versions */
     const val COMPILE_SDK = 36
     const val MIN_SDK = 28
-    const val TARGET_SDK = 35
+    const val TARGET_SDK = 36
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "8.13.2"
