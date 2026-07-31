@@ -41,10 +41,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.LocalCourseColor
 import com.instructure.instui.compose.navigation.CollapsingTopBar
 import com.instructure.ngc.R
 import com.instructure.pandautils.designsystem.Image
-import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ViewStyler
 

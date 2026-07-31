@@ -73,9 +73,9 @@ private fun TextButtonPreview() {
             TextButton(text = "Done", onClick = {})
             TextButton(text = "Cancel", onClick = {}, enabled = false)
             TextButton(
-                text = "On color",
+                text = "On brand",
                 onClick = {},
-                contentColor = InstUISemanticColors.Text.onColor(),
+                contentColor = InstUISemanticColors.Text.inverse(),
                 modifier = Modifier.background(InstUISemanticColors.Background.brand()),
             )
         }

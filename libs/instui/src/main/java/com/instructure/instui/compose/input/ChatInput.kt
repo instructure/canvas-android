@@ -96,6 +96,7 @@ data class ChatToolbarAction(
  *     label = "Message",
  *     placeholder = "Type something…",
  *     onSend = { sendMessage(message) },
+ *     sendContentDescription = stringResource(R.string.send),
  *     toolbarActions = listOf(
  *         ChatToolbarAction(InstUIIcons.paperclip, "Attach file") { /* … */ },
  *         ChatToolbarAction(InstUIIcons.mic, "Voice") { /* … */ },
@@ -109,6 +110,7 @@ fun ChatInput(
     value: String,
     onValueChange: (String) -> Unit,
     onSend: () -> Unit,
+    sendContentDescription: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     label: String? = null,
@@ -324,14 +326,14 @@ fun ChatInput(
                             imageVector = InstUIIcons.send,
                             size = IconSize.Small,
                             color = IconColor.Inverse,
-                            contentDescription = "Send",
+                            contentDescription = sendContentDescription,
                         )
                     } else {
                         Icon(
                             imageVector = InstUIIcons.send,
                             tint = InstUIBaseButton.primaryDisabledTextColor,
                             size = IconSize.Small,
-                            contentDescription = "Send",
+                            contentDescription = sendContentDescription,
                         )
                     }
                 }
@@ -371,6 +373,7 @@ private fun ChatInputPlaceholderPreview() {
                 value = "",
                 onValueChange = {},
                 onSend = {},
+                sendContentDescription = "Send",
                 placeholder = "Type a message…",
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -394,6 +397,7 @@ private fun ChatInputFilledPreview() {
                 value = "Hello, everyone!",
                 onValueChange = {},
                 onSend = {},
+                sendContentDescription = "Send",
                 label = "Message",
                 isRequired = true,
                 leadingIcon = InstUIIcons.search,
@@ -419,6 +423,7 @@ private fun ChatInputToolbarPreview() {
                 value = "",
                 onValueChange = {},
                 onSend = {},
+                sendContentDescription = "Send",
                 placeholder = "Type a message…",
                 toolbarActions = listOf(
                     ChatToolbarAction(InstUIIcons.paperclip, "Attach file") {},
@@ -446,6 +451,7 @@ private fun ChatInputHintPreview() {
                 value = "Almost done!",
                 onValueChange = {},
                 onSend = {},
+                sendContentDescription = "Send",
                 label = "Reply",
                 hint = "Max 2 000 characters",
                 toolbarActions = listOf(
@@ -472,6 +478,7 @@ private fun ChatInputDisabledPreview() {
                 value = "Cannot edit this",
                 onValueChange = {},
                 onSend = {},
+                sendContentDescription = "Send",
                 label = "Message",
                 enabled = false,
                 toolbarActions = listOf(

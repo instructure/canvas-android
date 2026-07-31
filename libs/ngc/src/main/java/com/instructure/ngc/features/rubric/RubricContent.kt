@@ -129,7 +129,7 @@ private fun RubricRatingRow(rating: NgcRubricRating) {
     val courseColor = LocalCourseColor.current
     val isAssessed = rating.isAssessed
     // Assessed rating fills with the course color; everything else stays on the card background.
-    val contentColor = if (isAssessed) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Text.base()
+    val contentColor = if (isAssessed) InstUISemanticColors.Text.inverse() else InstUISemanticColors.Text.base()
     val detailColor = if (isAssessed) contentColor else InstUISemanticColors.Text.muted()
     Row(
         modifier = Modifier

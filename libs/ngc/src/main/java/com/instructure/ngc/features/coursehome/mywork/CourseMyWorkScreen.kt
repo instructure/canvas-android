@@ -27,15 +27,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import com.instructure.canvasapi2.models.Course
 import com.instructure.ngc.R
+import com.instructure.ngc.utils.rememberThemedCourseColor
 import com.instructure.pandautils.designsystem.DesignSystem
 import com.instructure.pandautils.designsystem.LocalDesignSystem
 import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
-import com.instructure.pandautils.utils.ColorKeeper
 
 @Composable
 fun CourseMyWorkScreen(
@@ -46,7 +45,7 @@ fun CourseMyWorkScreen(
 ) {
     val gradesViewModel: GradesViewModel = hiltViewModel()
     val uiState by gradesViewModel.uiState.collectAsState()
-    val courseColor = ColorKeeper.getOrGenerateColor(Course(id = courseId)).light
+    val courseColor = rememberThemedCourseColor(courseId)
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
     LaunchedEffect(Unit) {

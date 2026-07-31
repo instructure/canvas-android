@@ -61,7 +61,7 @@ sealed class IconButtonColor(
 ) {
     data object Default : IconButtonColor(
         backgroundColor = { InstUISemanticColors.Background.inverse() },
-        iconColor = { InstUISemanticColors.Icon.onColor() }
+        iconColor = { InstUISemanticColors.Icon.inverse() }
     )
 
     data object Inverse : IconButtonColor(

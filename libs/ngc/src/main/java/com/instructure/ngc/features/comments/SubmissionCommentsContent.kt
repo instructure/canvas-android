@@ -201,7 +201,7 @@ private fun OwnCommentItem(
                         .padding(InstUILayoutSizes.Spacing.SpaceSm.spaceSm)
                         .testTag("ownCommentText"),
                     style = InstUIText.content,
-                    color = InstUISemanticColors.Text.onColor(),
+                    color = InstUISemanticColors.Text.inverse(),
                     textAlign = TextAlign.End,
                 )
             }

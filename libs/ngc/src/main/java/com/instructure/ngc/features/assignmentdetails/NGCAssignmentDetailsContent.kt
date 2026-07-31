@@ -157,18 +157,18 @@ fun NGCAssignmentDetailsContent(
     onFullScreenMedia: (url: String, contentType: String, displayName: String, thumbnailUrl: String) -> Unit = { _, _, _, _ -> },
 ) {
     val courseColor = LocalCourseColor.current
-    val onColor = InstUISemanticColors.Text.onColor()
+    val contentColor = InstUISemanticColors.Text.inverse()
     val density = LocalDensity.current
     // Match the status bar icons to the toolbar text color (e.g. light text → light icons),
     // restoring the previous appearance when leaving the screen.
     val context = LocalContext.current
-    DisposableEffect(onColor) {
+    DisposableEffect(contentColor) {
         val window = context.getActivityOrNull()?.window
         if (window == null) {
             onDispose { }
         } else {
             val previousLightStatusBar = WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars
-            WindowInsetsHelper.setStatusBarAppearance(window, isLightStatusBar = onColor.luminance() < 0.5f)
+            WindowInsetsHelper.setStatusBarAppearance(window, isLightStatusBar = contentColor.luminance() < 0.5f)
             onDispose {
                 WindowInsetsHelper.setStatusBarAppearance(window, isLightStatusBar = previousLightStatusBar)
             }
@@ -187,13 +187,13 @@ fun NGCAssignmentDetailsContent(
                 title = uiState.assignmentName.ifEmpty { courseName },
                 subtitle = courseName.takeIf { uiState.assignmentName.isNotEmpty() },
                 containerColor = courseColor,
-                contentColor = onColor,
+                contentColor = contentColor,
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateBack,
                         modifier = Modifier.testTag("ngcAssignmentDetails_back"),
                     ) {
-                        Icon(imageVector = InstUIIcons.chevronLeft, tint = onColor)
+                        Icon(imageVector = InstUIIcons.chevronLeft, tint = contentColor)
                     }
                 },
             )

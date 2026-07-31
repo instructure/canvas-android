@@ -44,11 +44,13 @@ fun InstUITheme(
     val container = InstUISemanticColors.Background.container()
     val page = InstUISemanticColors.Background.page()
     val text = InstUISemanticColors.Text.base()
-    val onColor = InstUISemanticColors.Text.onColor()
+    // `primary` is the course color, which flips lightness across themes, so its paired
+    // content color must be `inverse`, not the theme-stable `onColor`.
+    val onPrimaryColor = InstUISemanticColors.Text.inverse()
     val baseScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
     val colorScheme = baseScheme.copy(
         primary = courseColor,
-        onPrimary = onColor,
+        onPrimary = onPrimaryColor,
         background = page,
         onBackground = text,
         surface = container,

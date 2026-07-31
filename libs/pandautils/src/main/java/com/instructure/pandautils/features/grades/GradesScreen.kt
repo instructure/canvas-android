@@ -381,7 +381,7 @@ private fun NGCGradesTopBar(
     actionHandler: (GradesAction) -> Unit,
     canvasContextColor: Int,
 ) {
-    val contentColor = InstUISemanticColors.Text.onColor()
+    val contentColor = InstUISemanticColors.Text.inverse()
     TopBar(
         title = if (uiState.isLoading) "" else appBar.title,
         subtitle = if (uiState.isLoading) null else appBar.subtitle,

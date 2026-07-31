@@ -91,7 +91,7 @@ private fun InstUIGradesCard(
         else -> stringResource(id = R.string.gradesTotal)
     }
     val courseColor = LocalCourseColor.current
-    val contentColor = if (whatIf) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Text.base()
+    val contentColor = if (whatIf) InstUISemanticColors.Text.inverse() else InstUISemanticColors.Text.base()
     InstUICard(
         elevation = Elevation.Level1,
         backgroundColor = if (whatIf) courseColor else InstUISemanticColors.Background.container(),

@@ -147,7 +147,7 @@ private fun InstUIAssignmentItem(
                     text = uiState.dueDate,
                     style = ListItemLineStyle.SupportingText,
                     icon = mapAssignmentIcon(uiState.iconRes),
-                    iconTint = if (hasWhatIfScore) InstUISemanticColors.Text.onColor() else courseColor,
+                    iconTint = if (hasWhatIfScore) InstUISemanticColors.Text.inverse() else courseColor,
                     isOnColor = hasWhatIfScore,
                     modifier = Modifier.semantics { testTag = "assignmentDueDate" },
                 )
@@ -253,7 +253,7 @@ private fun InstUIAssignmentTrailing(
     hasCheckpoints: Boolean,
 ) {
     val courseColor = LocalCourseColor.current
-    val onCourseColor = InstUISemanticColors.Text.onColor()
+    val onCourseColor = InstUISemanticColors.Text.inverse()
     when {
         // In What-If mode the pencil is a focused edit affordance and takes over the whole trailing —
         // the comment badge and checkpoint chevron are intentionally hidden while editing.

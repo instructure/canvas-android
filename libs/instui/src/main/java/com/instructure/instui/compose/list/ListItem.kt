@@ -182,6 +182,10 @@ sealed class ListItemTrailing {
  *     leading = ListItemLeading.Avatar { AsyncImage(url) },
  * )
  * ```
+ *
+ * @param isOnColor Whether the row itself is painted over a solid course color (e.g. a What-If
+ *   score row). Switches text to [InstUISemanticColors.Text.inverse] instead of the normal
+ *   base/muted pair so it stays legible on that background in both themes.
  */
 @Composable
 fun ListItem(
@@ -200,8 +204,8 @@ fun ListItem(
     content: (@Composable ColumnScope.() -> Unit)? = null,
     onClick: (() -> Unit)? = null,
 ) {
-    val primaryColor = if (isOnColor) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Text.base()
-    val secondaryColor = if (isOnColor) InstUISemanticColors.Text.onColor() else InstUITextTokens.mutedColor
+    val primaryColor = if (isOnColor) InstUISemanticColors.Text.inverse() else InstUISemanticColors.Text.base()
+    val secondaryColor = if (isOnColor) InstUISemanticColors.Text.inverse() else InstUITextTokens.mutedColor
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -283,6 +287,9 @@ enum class ListItemLineStyle { Title, Text, SupportingText, ImportantInfo }
  *
  * A line lays out (left to right): an optional 16dp [icon], the [text] styled per [style], and any
  * [trailing] content (e.g. a separator + pill). Use inside the `content` slot of [ListItem].
+ *
+ * @param isOnColor Whether this line is painted over a solid course color, same meaning as
+ *   [ListItem]'s own `isOnColor` — pass the parent row's value through.
  */
 @Composable
 fun ListItemContentLine(
@@ -323,6 +330,9 @@ fun ListItemContentLine(
 
 /**
  * Thin vertical divider used to separate segments within a [ListItemContentLine] (e.g. score | pill).
+ *
+ * @param isOnColor Whether the separator sits over a solid course color, same meaning as
+ *   [ListItem]'s own `isOnColor` — pass the parent row's value through.
  */
 @Composable
 fun ListItemLineSeparator(isOnColor: Boolean = false) {
@@ -332,14 +342,14 @@ fun ListItemLineSeparator(isOnColor: Boolean = false) {
             .width(1.dp)
             .clip(RoundedCornerShape(1.dp))
             .background(
-                if (isOnColor) InstUISemanticColors.Text.onColor() else InstUISemanticColors.Stroke.Container.base()
+                if (isOnColor) InstUISemanticColors.Text.inverse() else InstUISemanticColors.Stroke.Container.base()
             )
     )
 }
 
 @Composable
 private fun listItemLineColor(style: ListItemLineStyle, isOnColor: Boolean): Color = when {
-    isOnColor -> InstUISemanticColors.Text.onColor()
+    isOnColor -> InstUISemanticColors.Text.inverse()
     style == ListItemLineStyle.SupportingText -> InstUITextTokens.mutedColor
     style == ListItemLineStyle.ImportantInfo -> LocalCourseColor.current
     else -> InstUISemanticColors.Text.base()

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,14 +62,14 @@ data class TopNavAction(
 /**
  * InstUI top navigation bar.
  *
- * A thin wrapper over [TopBar] that pins the plum accent background and inverse text colors
- * from InstUI tokens, and wires up the per-variant leading icon and trailing action cap:
+ * A thin wrapper over [TopBar] that pins a theme-aware background/content color pair and wires
+ * up the per-variant leading icon and trailing action cap:
  * - [TopNavigationType.Page]: back arrow + up to 2 trailing icons (extras are silently clamped).
  * - [TopNavigationType.Modal]: close X + up to 1 trailing icon (extras are silently clamped).
  *
- * Colors are sourced exclusively from InstUI semantic tokens:
- * - Container: `InstUISemanticColors.Background.Accent.plum()` (plum/magenta, #c54396 in light).
- * - Content:   `InstUISemanticColors.Text.inverse()` (white in light, white in dark).
+ * Colors default to InstUI semantic tokens that flip together across themes:
+ * - Container: `InstUISemanticColors.Background.brand()` (navy170 in light, navy10 in dark).
+ * - Content:   `InstUISemanticColors.Text.inverse()` (white in light, grey180 in dark).
  *
  * Usage:
  * ```
@@ -77,6 +78,7 @@ data class TopNavAction(
  *     subtitle = "Biology 101",
  *     type = TopNavigationType.Page,
  *     onNavigationClick = { navController.navigateUp() },
+ *     navigationContentDescription = stringResource(R.string.back),
  *     actions = listOf(
  *         TopNavAction(InstUIIcons.edit, "Edit") { },
  *         TopNavAction(InstUIIcons.moreVertical, "More") { },
@@ -88,22 +90,26 @@ data class TopNavAction(
  * @param subtitle Optional secondary line below the title (`text/legend`). Typically the course name.
  * @param type Navigation variant — determines the leading icon and trailing action cap.
  * @param onNavigationClick Invoked when the user taps the leading back/close icon.
+ * @param navigationContentDescription Accessibility label for the leading back/close icon, supplied
+ *   by the caller so it can be localized.
  * @param actions Trailing icon actions. Capped at 2 for [TopNavigationType.Page] and 1 for
  *   [TopNavigationType.Modal]; any excess entries are silently dropped via `take(n)`.
  * @param modifier Optional modifier applied to the underlying [TopBar].
+ * @param containerColor Background color of the bar. Defaults to `Background.brand()`.
+ * @param contentColor Color of the title, subtitle, and icons. Defaults to `Text.inverse()`.
  */
 @Composable
 fun TopNavigation(
     title: String,
     onNavigationClick: () -> Unit,
+    navigationContentDescription: String,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     type: TopNavigationType = TopNavigationType.Page,
     actions: List<TopNavAction> = emptyList(),
+    containerColor: Color = InstUISemanticColors.Background.brand(),
+    contentColor: Color = InstUISemanticColors.Text.inverse(),
 ) {
-    val containerColor = InstUISemanticColors.Background.Accent.plum()
-    val contentColor = InstUISemanticColors.Text.inverse()
-
     // Enforce per-variant trailing icon cap: Page ≤ 2, Modal ≤ 1.
     val maxActions = if (type == TopNavigationType.Page) 2 else 1
     val clampedActions = actions.take(maxActions)
@@ -111,11 +117,6 @@ fun TopNavigation(
     val leadingIcon: ImageVector = when (type) {
         TopNavigationType.Page -> InstUIIcons.arrowLeft
         TopNavigationType.Modal -> InstUIIcons.x
-    }
-
-    val leadingContentDescription = when (type) {
-        TopNavigationType.Page -> "Navigate back"
-        TopNavigationType.Modal -> "Close"
     }
 
     TopBar(
@@ -134,7 +135,7 @@ fun TopNavigation(
                 Icon(
                     imageVector = leadingIcon,
                     tint = contentColor,
-                    contentDescription = leadingContentDescription,
+                    contentDescription = navigationContentDescription,
                     size = IconSize.Large,
                 )
             }
@@ -171,6 +172,7 @@ private fun TopNavigationPagePreview() {
             subtitle = "Biology 101",
             type = TopNavigationType.Page,
             onNavigationClick = {},
+            navigationContentDescription = "Navigate back",
             actions = listOf(
                 TopNavAction(
                     icon = InstUIIcons.x,
@@ -197,6 +199,7 @@ private fun TopNavigationModalPreview() {
             subtitle = "Biology 101",
             type = TopNavigationType.Modal,
             onNavigationClick = {},
+            navigationContentDescription = "Close",
             actions = listOf(
                 TopNavAction(
                     icon = InstUIIcons.arrowLeft,

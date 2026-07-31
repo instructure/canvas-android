@@ -60,7 +60,7 @@ private val TitleEndPadding = InstUILayoutSizes.Spacing.SpaceLg.spaceLg
  * [leading] content (image, color swatch, avatar, etc.) next to the title. As
  * the user scrolls, the leading content shrinks and fades, the background
  * transitions from base to [accentColor], and text/icon colors transition from
- * base to onColor. Status bar icons toggle light/dark automatically.
+ * base to inverse. Status bar icons toggle light/dark automatically.
  *
  * When the real design system component is ready, only this file's internals change.
  *
@@ -91,7 +91,7 @@ fun CollapsingTopBar(
     val expandedFraction = 1f - collapsedFraction
     val contentColor = lerp(
         InstUISemanticColors.Text.base(),
-        InstUISemanticColors.Text.onColor(),
+        InstUISemanticColors.Text.inverse(),
         collapsedFraction,
     )
 

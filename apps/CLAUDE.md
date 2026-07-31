@@ -161,6 +161,40 @@ The project uses a Router pattern for navigation between features:
 - **No Material Icons in `instui`** — don't use `Libs.COMPOSE_MATERIAL_ICONS` or `Icons.Filled.*`/`Icons.Default.*`; use an icon slot or defer icon-bearing work until the InstUI icon system exists
 - When **no Android design exists** for a component, build it from InstUI design tokens (typography, `InstUISemanticColors`, `InstUILayoutSizes.Spacing`) rather than stalling; lean iOS-faithful when an iOS reference implementation exists
 
+#### Dark mode: `onColor` vs `inverse`, and course/brand colors
+
+`InstUISemanticColors` ships two content-color families for text/icons/strokes drawn over a filled
+background, and they are **not interchangeable**:
+
+| token | light | dark | valid over |
+|---|---|---|---|
+| `Text/Icon/Stroke.onColor` | white | white | a background that is **dark in both themes** (theme-stable), e.g. `Background.success/error/warning/info`, `Background.Accent.*` |
+| `Text/Icon/Stroke.inverse` | white | `grey180` (dark text) | a background whose lightness **flips with the theme**, e.g. `Background.brand`, `Background.inverse`, any course color |
+
+- **Rule of thumb**: if the background token's own light/dark values differ (it "flips"), pair it
+  with `inverse()`. If the background is a fixed dark color in both themes, `onColor()` is correct.
+  Using `onColor()` over a flipping background is the classic dark-mode bug: content renders white
+  on a light background and becomes unreadable.
+- **Course colors are inverse-shaped by construction.** `ColorKeeper.createThemedColor` produces
+  `light = correctContrastForText(color, white)` and `dark = correctContrastForText(color,
+  textOnColorDark)` — the dark variant is contrast-corrected *for dark text*. So anything painted on
+  a themed course color (`LocalCourseColor`, `canvasContextColor`, a `courseColor` param, etc.) must
+  use `inverse()`, never `onColor()`.
+- **A component that pins a background must pin a content color that flips with it.** If a
+  component hardcodes both a container and a content color (e.g. a themed top bar), the default
+  pair must move together — a theme-stable container (`Background.Accent.plum`) paired with a
+  flipping content token (`inverse`) is a mismatch bug, not a valid combination. Prefer hoisting both
+  colors as parameters with theme-consistent defaults (e.g. `Background.brand()` + `Text.inverse()`)
+  over hardcoding either one.
+- **Resolving the light/dark course color in Compose**: use `isSystemInDarkTheme()`, not
+  `ColorKeeper.darkTheme` — the latter is a plain `var` set manually in each Activity's
+  `onConfigurationChanged` and won't trigger recomposition; `isSystemInDarkTheme()` is what NGC
+  already uses everywhere and recomposes correctly. `ColorKeeper.darkTheme` remains the right choice
+  only for non-Compose (View/XML) code.
+- The generated token files under `libs/instui/.../token/component/` (`// DO NOT EDIT`) are exempt
+  from this rule as pure token definitions — fix misuse at the *call site*, not by aliasing tokens
+  inside the generated files.
+
 ## Additional Context
 
 ### Initial Setup

@@ -64,7 +64,7 @@ fun NGCGradesFilterScreen(
     onBackPressed: () -> Unit,
 ) {
     var selected by remember { mutableStateOf(selectedOptions) }
-    val onColor = InstUISemanticColors.Text.onColor()
+    val contentColor = InstUISemanticColors.Text.inverse()
 
     Scaffold(
         topBar = {
@@ -72,19 +72,19 @@ fun NGCGradesFilterScreen(
                 title = stringResource(R.string.gradePreferences),
                 subtitle = courseName,
                 containerColor = contextColor,
-                contentColor = onColor,
+                contentColor = contentColor,
                 navigationIcon = {
                     ToolbarIcon(
                         imageVector = InstUIIcons.x,
                         contentDescription = stringResource(R.string.close),
-                        tint = onColor,
+                        tint = contentColor,
                         onClick = onBackPressed,
                     )
                 },
                 actions = {
                     TextButton(
                         text = stringResource(R.string.done),
-                        contentColor = onColor,
+                        contentColor = contentColor,
                         onClick = {
                             onFilterChange(selected)
                             onBackPressed()

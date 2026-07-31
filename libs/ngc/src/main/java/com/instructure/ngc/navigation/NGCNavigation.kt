@@ -16,12 +16,10 @@
 
 package com.instructure.ngc.navigation
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -31,7 +29,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.instructure.canvasapi2.models.Course
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.ngc.features.assignmentdetails.NGCAssignmentDetailsScreen
 import com.instructure.ngc.features.coursehome.CourseHomeScreen
@@ -42,9 +39,9 @@ import com.instructure.ngc.features.splash.SplashScreen
 import com.instructure.ngc.features.splash.SplashViewModel
 import com.instructure.ngc.features.submission.NGCSubmissionScreen
 import com.instructure.ngc.features.submission.NGCSubmissionViewModel
+import com.instructure.ngc.utils.rememberThemedCourseColor
 import com.instructure.pandautils.features.grades.EXPERIENCE_KEY
 import com.instructure.pandautils.features.grades.Experience
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import kotlinx.serialization.Serializable
 
@@ -119,11 +116,7 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             )
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(CourseHomeViewModel.ARG_COURSE_ID) ?: 0L
-            val isDark = isSystemInDarkTheme()
-            val themedColor = remember(courseId) {
-                ColorKeeper.getOrGenerateColor(Course(id = courseId))
-            }
-            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+            val courseColor = Color(rememberThemedCourseColor(courseId))
 
             InstUITheme(courseColor = courseColor) {
                 CourseHomeScreen(
@@ -146,11 +139,7 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             ),
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(CourseHomeViewModel.ARG_COURSE_ID) ?: 0L
-            val isDark = isSystemInDarkTheme()
-            val themedColor = remember(courseId) {
-                ColorKeeper.getOrGenerateColor(Course(id = courseId))
-            }
-            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+            val courseColor = Color(rememberThemedCourseColor(courseId))
 
             InstUITheme(courseColor = courseColor) {
                 CourseMyWorkScreen(
@@ -179,11 +168,7 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(Const.COURSE_ID) ?: 0L
             val assignmentId = backStackEntry.arguments?.getLong(Const.ASSIGNMENT_ID) ?: 0L
-            val isDark = isSystemInDarkTheme()
-            val themedColor = remember(courseId) {
-                ColorKeeper.getOrGenerateColor(Course(id = courseId))
-            }
-            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+            val courseColor = Color(rememberThemedCourseColor(courseId))
 
             InstUITheme(courseColor = courseColor) {
                 NGCAssignmentDetailsScreen(
@@ -210,11 +195,7 @@ fun NGCNavigation(navController: NavHostController, modifier: Modifier = Modifie
             ),
         ) { backStackEntry ->
             val courseId = backStackEntry.arguments?.getLong(NGCSubmissionViewModel.ARG_COURSE_ID) ?: 0L
-            val isDark = isSystemInDarkTheme()
-            val themedColor = remember(courseId) {
-                ColorKeeper.getOrGenerateColor(Course(id = courseId))
-            }
-            val courseColor = Color(if (isDark) themedColor.dark else themedColor.light)
+            val courseColor = Color(rememberThemedCourseColor(courseId))
 
             InstUITheme(courseColor = courseColor) {
                 NGCSubmissionScreen(
