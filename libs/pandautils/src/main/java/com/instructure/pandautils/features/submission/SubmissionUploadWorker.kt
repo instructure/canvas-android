@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
@@ -36,6 +37,7 @@ import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmiss
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.NotoriousUploader
 import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -87,7 +89,8 @@ class SubmissionUploadWorker @AssistedInject constructor(
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
                 SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
                 SubmissionWorkerAction.URL_ENTRY -> uploadUrl(submission)
-                // TODO: add MEDIA_ENTRY, STUDIO_ENTRY, STUDENT_ANNOTATION
+                SubmissionWorkerAction.MEDIA_ENTRY -> uploadMedia(submission)
+                // TODO: add STUDIO_ENTRY, STUDENT_ANNOTATION
                 //  when those submission types are supported in the NGC experience.
                 else -> Result.failure()
             }
@@ -138,6 +141,59 @@ class SubmissionUploadWorker @AssistedInject constructor(
         )
 
         return handleSubmissionResult(result, submission)
+    }
+
+    internal suspend fun uploadMedia(submission: CreateSubmissionEntity): Result {
+        val mediaFile = createFileSubmissionDao.findFileForSubmissionId(submission.id)
+            ?: return Result.failure() // The file was deleted, so there's nothing to upload
+
+        var lastReportedPercent = -1
+
+        val uploadResult = NotoriousUploader.performUpload(
+            mediaFile.fullPath ?: return failFileSubmission(submission),
+            object : ProgressRequestUpdateListener {
+                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                    runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
+                        ?: return false // Stop uploading; submission was deleted (cancelled)
+
+                    val overallPercent = (progressPercent * 100f).toInt().coerceIn(1, 99)
+                    if (overallPercent > lastReportedPercent) {
+                        lastReportedPercent = overallPercent
+                        runBlocking { createSubmissionDao.updateProgress(overallPercent.toDouble(), submission.id) }
+                    }
+                    return true
+                }
+            }
+        )
+
+        return uploadResult.dataOrNull?.let { result ->
+            val mediaId = result.id ?: return failFileSubmission(submission)
+
+            val params = RestParams(
+                canvasContext = submission.canvasContext,
+                domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+                shouldLoginOnTokenError = false
+            )
+
+            val submissionResult = submissionApi.postMediaSubmission(
+                submission.canvasContext.id,
+                submission.assignmentId,
+                Assignment.SubmissionType.MEDIA_RECORDING.apiString,
+                mediaId,
+                FileUtils.mediaTypeFromNotoriousCode(result.mediaType),
+                params
+            )
+
+            submissionResult.dataOrNull?.let {
+                createSubmissionDao.updateProgress(100.0, submission.id)
+                delay(1000)
+                // Clean up the temp copy from internal cache before deleting the DB rows
+                mediaFile.fullPath?.let { path -> FileUploadUtils.deleteTempFile(path) }
+                createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
+                createSubmissionDao.deleteSubmissionById(submission.id)
+                Result.success()
+            } ?: failFileSubmission(submission)
+        } ?: failFileSubmission(submission)
     }
 
     internal suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {

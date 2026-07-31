@@ -18,8 +18,10 @@ package com.instructure.ngc.features.assignmentdetails
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.ngc.features.submission.domain.FileDraftData
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
+import com.instructure.ngc.features.submission.domain.MediaDraftData
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.TextDraftData
 import com.instructure.ngc.features.submission.domain.UrlDraftData
@@ -46,6 +48,7 @@ class NGCSubmitDraftHintsViewModelTest {
     private val getTextDraftUseCase: GetTextDraftUseCase = mockk()
     private val getFileDraftUseCase: GetFileDraftUseCase = mockk()
     private val getUrlDraftUseCase: GetUrlDraftUseCase = mockk()
+    private val getMediaDraftUseCase: GetMediaDraftUseCase = mockk()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val assignmentId = 99L
@@ -54,6 +57,7 @@ class NGCSubmitDraftHintsViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         coEvery { getUrlDraftUseCase(any()) } returns null
+        coEvery { getMediaDraftUseCase(any()) } returns null
     }
 
     @After
@@ -66,6 +70,7 @@ class NGCSubmitDraftHintsViewModelTest {
         getTextDraftUseCase = getTextDraftUseCase,
         getFileDraftUseCase = getFileDraftUseCase,
         getUrlDraftUseCase = getUrlDraftUseCase,
+        getMediaDraftUseCase = getMediaDraftUseCase,
     )
 
     @Test
@@ -126,6 +131,37 @@ class NGCSubmitDraftHintsViewModelTest {
         assertTrue(vm.uiState.value.hasUrlDraft)
         assertFalse(vm.uiState.value.hasTextDraft)
         assertFalse(vm.uiState.value.hasFileDraft)
+    }
+
+    @Test
+    fun `uiState reflects media draft when one exists`() = runTest {
+        coEvery { getTextDraftUseCase(any()) } returns null
+        coEvery { getFileDraftUseCase(any()) } returns FileDraftData(emptyList(), null)
+        coEvery { getMediaDraftUseCase(any()) } returns MediaDraftData(
+            path = "/tmp/clip.mp4",
+            name = "clip.mp4",
+            contentType = "video/mp4",
+            savedAt = Date(),
+        )
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(vm.uiState.value.hasMediaDraft)
+        assertFalse(vm.uiState.value.hasTextDraft)
+        assertFalse(vm.uiState.value.hasFileDraft)
+    }
+
+    @Test
+    fun `uiState hasMediaDraft is false when use case throws`() = runTest {
+        coEvery { getTextDraftUseCase(any()) } returns null
+        coEvery { getFileDraftUseCase(any()) } returns FileDraftData(emptyList(), null)
+        coEvery { getMediaDraftUseCase(any()) } throws RuntimeException("DB error")
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(vm.uiState.value.hasMediaDraft)
     }
 
     @Test

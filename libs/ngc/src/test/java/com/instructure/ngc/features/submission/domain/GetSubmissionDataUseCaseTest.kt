@@ -307,7 +307,7 @@ class GetSubmissionDataUseCaseTest {
         val assignment = Assignment(
             id = assignmentId,
             name = "Non-NGC Assignment",
-            submissionTypesRaw = listOf("online_quiz", "media_recording"),
+            submissionTypesRaw = listOf("online_quiz", "student_annotation"),
             submission = null
         )
         val course = Course(id = courseId, name = "Test Course")
@@ -373,6 +373,105 @@ class GetSubmissionDataUseCaseTest {
         assertEquals("application/pdf", draftFile.contentType)
         assertEquals("/tmp/essay.pdf", draftFile.fullPath)
         assertEquals(savedAt, result.fileDraftSavedAt)
+    }
+
+    @Test
+    fun `availableTypes - includes MEDIA_RECORDING when assignment allows it`() = runTest {
+        val courseId = 13L
+        val assignmentId = 107L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Media Assignment",
+            submissionTypesRaw = listOf("online_text_entry", "media_recording"),
+            submission = null
+        )
+        val course = Course(id = courseId, name = "Film 101")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertEquals(
+            listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.MEDIA_RECORDING),
+            result.availableTypes
+        )
+    }
+
+    // -------------------------------------------------------------------------
+    // draftMedia and mediaDraftSavedAt
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `draftMedia - mapped from CreateFileSubmissionEntity when media draft exists`() = runTest {
+        val courseId = 14L
+        val assignmentId = 108L
+        val savedAt = Date(1_700_000_002_000L)
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Media Assignment",
+            submissionTypesRaw = listOf("media_recording"),
+            submission = null
+        )
+        val course = Course(id = courseId, name = "Film 101")
+
+        val mediaDraftEntity = CreateSubmissionEntity(
+            id = 60L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString,
+            userId = 1L,
+            lastActivityDate = savedAt,
+            isDraft = true,
+        )
+        val clipEntity = CreateFileSubmissionEntity(
+            id = 210L,
+            dbSubmissionId = 60L,
+            name = "clip.mp4",
+            size = 4096L,
+            contentType = "video/mp4",
+            fullPath = "/tmp/clip.mp4",
+        )
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), assignmentId, Assignment.SubmissionType.MEDIA_RECORDING.apiString) } returns mediaDraftEntity
+        coEvery { createFileSubmissionDao.findFilesForSubmissionId(60L) } returns listOf(clipEntity)
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.MEDIA_RECORDING))
+
+        assertEquals("/tmp/clip.mp4", result.draftMediaPath)
+        assertEquals("clip.mp4", result.draftMediaName)
+        assertEquals("video/mp4", result.draftMediaContentType)
+        assertEquals(savedAt, result.mediaDraftSavedAt)
+    }
+
+    @Test
+    fun `draftMedia - null fields and mediaDraftSavedAt null when no media draft`() = runTest {
+        val courseId = 15L
+        val assignmentId = 109L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Media Assignment",
+            submissionTypesRaw = listOf("media_recording"),
+            submission = null
+        )
+        val course = Course(id = courseId, name = "Film 202")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.MEDIA_RECORDING))
+
+        assertNull(result.draftMediaPath)
+        assertNull(result.draftMediaName)
+        assertNull(result.draftMediaContentType)
+        assertNull(result.mediaDraftSavedAt)
     }
 
     @Test

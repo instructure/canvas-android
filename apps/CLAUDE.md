@@ -138,6 +138,7 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Common utilities, dialogs, and base classes are in `:pandautils`
 - **Never hardcode user-facing strings** — always use string resources (`stringResource(R.string.x)` in Compose, `resources.getString(...)` elsewhere) so copy stays localizable. Exempt: logs, exceptions, API/enum value comparisons, HTML wrappers, delimiters, empty defaults, and KDoc/`@Preview` sample text
 - **New user-facing strings go in `pandares`** (`libs/pandares/src/main/res/values/strings.xml`, non-translatable strings in the not-translatable file); import the `R` class of the module the string belongs to in code, never a fully-qualified reference
+- **No cross-module aliased `R` imports** — never `import com.instructure.canvasapi2.R as CanvasApiR` (or any other module's `R`) to borrow a string; import the module's own `R` and add new user-facing strings to `pandares`
 
 ### Router Pattern
 The project uses a Router pattern for navigation between features:

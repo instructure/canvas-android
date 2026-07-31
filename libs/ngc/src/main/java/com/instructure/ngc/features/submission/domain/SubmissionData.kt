@@ -34,6 +34,10 @@ data class SubmissionData(
     val instructionsHtml: String? = null,
     val draftUrl: String? = null,
     val urlDraftSavedAt: Date? = null,
+    val draftMediaPath: String? = null,
+    val draftMediaName: String? = null,
+    val draftMediaContentType: String? = null,
+    val mediaDraftSavedAt: Date? = null,
     // Read-only rubric built from the assignment + course restrict-quantitative-data setting; null when
     // the assignment has no rubric. Rendered on the submission supporting pane's Rubric tab.
     val rubricUiState: NgcRubricUiState? = null,

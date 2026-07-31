@@ -119,14 +119,15 @@ abstract class BaseSubmissionHelper(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
-        files: List<FileSubmitObject>
+        files: List<FileSubmitObject>,
+        submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_UPLOAD
     ): Long {
-        return insertDraft(assignmentId, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD) {
+        return insertDraft(assignmentId, submissionType = submissionType) {
             val entity = CreateSubmissionEntity(
                 assignmentName = assignmentName,
                 assignmentId = assignmentId,
                 canvasContext = canvasContext,
-                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                submissionType = submissionType.apiString,
                 userId = getUserId(),
                 lastActivityDate = Date(),
                 isDraft = true,
@@ -153,10 +154,11 @@ abstract class BaseSubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         url: String,
-        attempt: Long = 1L
+        attempt: Long = 1L,
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
     ): Long {
         val dbSubmissionId = runBlocking {
-            insertNewSubmission(assignmentId) {
+            insertNewSubmission(assignmentId, deleteBySubmissionTypeFilter = deleteBySubmissionTypeFilter) {
                 val entity = CreateSubmissionEntity(
                     submissionEntry = url,
                     assignmentName = assignmentName,
@@ -227,7 +229,8 @@ abstract class BaseSubmissionHelper(
         mediaFilePath: String,
         attempt: Long = 1L,
         mediaType: String? = null,
-        mediaSource: String? = null
+        mediaSource: String? = null,
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
     ): Long {
         val file = File(mediaFilePath).let {
             FileSubmitObject(
@@ -238,7 +241,7 @@ abstract class BaseSubmissionHelper(
             )
         }
         val dbSubmissionId = runBlocking {
-            insertNewSubmission(assignmentId, listOf(file)) {
+            insertNewSubmission(assignmentId, listOf(file), deleteBySubmissionTypeFilter) {
                 val entity = CreateSubmissionEntity(
                     assignmentName = assignmentName,
                     assignmentId = assignmentId,

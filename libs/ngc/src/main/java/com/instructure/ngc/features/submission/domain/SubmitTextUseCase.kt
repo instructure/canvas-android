@@ -15,6 +15,7 @@
  */
 package com.instructure.ngc.features.submission.domain
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.submission.SubmissionUploadHelper
@@ -38,7 +39,8 @@ class SubmitTextUseCase @Inject constructor(
             assignmentId = params.assignmentId,
             assignmentName = params.assignmentName,
             text = params.html,
-            attempt = params.attempt ?: 1L
+            attempt = params.attempt ?: 1L,
+            deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
         )
     }
 }

@@ -49,6 +49,7 @@ object Versions {
     const val REORDERABLE = "2.4.0"
     const val MLKIT_DOCUMENT_SCANNER = "16.0.0"
     const val JSOUP = "1.18.3"
+    const val CAMERAX = "1.6.1"
 }
 
 object Libs {
@@ -143,6 +144,11 @@ object Libs {
     const val MEDIA3_DASH = "androidx.media3:media3-exoplayer-dash:${Versions.MEDIA3}"
     const val MEDIA3_SMOOTH_STREAMING = "androidx.media3:media3-exoplayer-smoothstreaming:${Versions.MEDIA3}"
     const val MEDIA3_DATASOURCE_OKHTTP = "androidx.media3:media3-datasource-okhttp:${Versions.MEDIA3}"
+    const val CAMERAX_CORE = "androidx.camera:camera-core:${Versions.CAMERAX}"
+    const val CAMERAX_CAMERA2 = "androidx.camera:camera-camera2:${Versions.CAMERAX}"
+    const val CAMERAX_LIFECYCLE = "androidx.camera:camera-lifecycle:${Versions.CAMERAX}"
+    const val CAMERAX_VIEW = "androidx.camera:camera-view:${Versions.CAMERAX}"
+    const val CAMERAX_VIDEO = "androidx.camera:camera-video:${Versions.CAMERAX}"
     const val PHOTO_VIEW = "com.github.chrisbanes:PhotoView:${Versions.PHOTO_VIEW}"
     const val ANDROID_SVG = "com.caverock:androidsvg:1.4"
     const val RICH_EDITOR = "jp.wasabeef:richeditor-android:2.0.0"

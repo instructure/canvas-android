@@ -98,6 +98,8 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
 import com.instructure.ngc.features.submission.file.FileSubmissionContent
 import com.instructure.ngc.features.submission.file.rememberFilePicker
+import com.instructure.ngc.features.submission.media.MediaSubmissionContent
+import com.instructure.ngc.features.submission.media.rememberMediaPicker
 import com.instructure.ngc.features.submission.url.UrlSubmissionContent
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPane
 import com.instructure.ngc.navigation.NGCAttachmentRouterEntryPoint
@@ -356,8 +358,13 @@ private fun SubmissionFormContent(
     modifier: Modifier = Modifier,
 ) {
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+    // Plain (non-saveable) state, matching AudioRecorderHolder's own state: an unconfirmed take
+    // can't survive process death anyway, so persisting this lock across it would just strand
+    // the type selector disabled with nothing left to unlock it.
+    var mediaTakeInProgress by remember { mutableStateOf(false) }
 
     val filePicker = rememberFilePicker(onFilesPicked = uiState.fileState.onFilesPicked)
+    val mediaPicker = rememberMediaPicker(onClipReady = uiState.mediaState.onClipReady)
 
     if (showDeleteConfirmDialog) {
         AlertDialog(
@@ -418,8 +425,9 @@ private fun SubmissionFormContent(
             )
         }
 
-        // "New Submission" label + type selector row
-        SubmissionTypeRow(uiState = uiState)
+        // "New Submission" label + type selector row. Locked while an unconfirmed media take
+        // exists so switching types can't silently discard it.
+        SubmissionTypeRow(uiState = uiState, typeSwitchEnabled = !mediaTakeInProgress)
 
         // Main-pane content swaps based on the selected submission type.
         // AnimatedContent cross-fades the two subtrees to avoid a hard visual flash when the
@@ -451,6 +459,22 @@ private fun SubmissionFormContent(
                         previewUrl = uiState.urlState.previewUrl,
                         urlError = uiState.urlState.urlError,
                         onUrlChanged = onUrlChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                Assignment.SubmissionType.MEDIA_RECORDING -> {
+                    MediaSubmissionContent(
+                        clipName = uiState.mediaState.clipName,
+                        clipPath = uiState.mediaState.clipPath,
+                        clipContentType = uiState.mediaState.clipContentType,
+                        onClipReady = uiState.mediaState.onClipReady,
+                        onChooseMediaFile = mediaPicker.chooseMediaFile,
+                        onRequestAudioPermission = mediaPicker.requestAudioPermission,
+                        audioPermissionDenied = mediaPicker.audioPermissionDenied,
+                        onRequestVideoPermission = mediaPicker.requestVideoPermission,
+                        videoPermissionDenied = mediaPicker.videoPermissionDenied,
+                        onUnconfirmedTakeChanged = { mediaTakeInProgress = it },
+                        enabled = !uiState.submitting,
                         modifier = Modifier.fillMaxWidth(),
                     )
                 }
@@ -539,6 +563,7 @@ private fun SubmissionFormContent(
 private fun SubmissionTypeRow(
     uiState: NGCSubmissionUiState,
     modifier: Modifier = Modifier,
+    typeSwitchEnabled: Boolean = true,
 ) {
     val isInteractive = uiState.availableTypes.size > 1
 
@@ -560,7 +585,7 @@ private fun SubmissionTypeRow(
                 options = options,
                 selectedIndex = selectedIndex,
                 onSelect = { index -> uiState.onSubmissionTypeSelected(uiState.availableTypes[index]) },
-                enabled = !uiState.submitting,
+                enabled = !uiState.submitting && typeSwitchEnabled,
                 modifier = Modifier.weight(1f),
             )
         } else {
@@ -589,6 +614,7 @@ private fun submissionTypeLabel(type: Assignment.SubmissionType): String = when 
     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> stringResource(R.string.ngc_submission_textEntry)
     Assignment.SubmissionType.ONLINE_UPLOAD -> stringResource(R.string.ngc_submission_fileUpload)
     Assignment.SubmissionType.ONLINE_URL -> stringResource(R.string.websiteUrl)
+    Assignment.SubmissionType.MEDIA_RECORDING -> stringResource(R.string.ngc_submission_mediaRecording)
     else -> type.apiString
 }
 

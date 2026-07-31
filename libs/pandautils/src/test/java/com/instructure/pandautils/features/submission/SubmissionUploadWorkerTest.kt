@@ -24,17 +24,22 @@ import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.NotoriousUploader
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkObject
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -86,10 +91,18 @@ class SubmissionUploadWorkerTest {
         userId = 7L,
         submissionEntry = "https://www.instructure.com"
     )
+    private val mediaSubmission = CreateSubmissionEntity(
+        id = 4L,
+        assignmentId = 99L,
+        canvasContext = course,
+        submissionType = "media_recording",
+        userId = 7L,
+    )
 
     @Before
     fun setUp() {
         mockkObject(FileUploadManager)
+        mockkObject(NotoriousUploader)
         worker = SubmissionUploadWorker(
             context = context,
             workerParameters = workerParams,
@@ -104,6 +117,7 @@ class SubmissionUploadWorkerTest {
     @After
     fun tearDown() {
         unmockkObject(FileUploadManager)
+        unmockkObject(NotoriousUploader)
     }
 
     // -------------------------------------------------------------------------
@@ -221,6 +235,166 @@ class SubmissionUploadWorkerTest {
                 url = "https://www.instructure.com",
                 restParams = any<RestParams>()
             )
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // uploadMedia
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `uploadMedia success calls postMediaSubmission, updateProgress(100) and deletes rows, returns Result_success`() = runTest {
+        val mediaFile = mediaFileEntity(id = 20L, submissionId = mediaSubmission.id)
+        val notoriousResult = NotoriousResult(id = "notorious123", mediaType = 1L)
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, any()) } returns DataResult.Success(notoriousResult)
+        coEvery {
+            submissionApi.postMediaSubmission(course.id, mediaSubmission.assignmentId, any(), "notorious123", any(), any())
+        } returns DataResult.Success(Submission(id = 1L))
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        coVerify {
+            submissionApi.postMediaSubmission(
+                contextId = course.id,
+                assignmentId = mediaSubmission.assignmentId,
+                submissionType = "media_recording",
+                notoriousId = "notorious123",
+                mediaType = "video",
+                restParams = any()
+            )
+        }
+        coVerify { createSubmissionDao.updateProgress(100.0, mediaSubmission.id) }
+        coVerify { createFileSubmissionDao.deleteFilesForSubmissionId(mediaSubmission.id) }
+        coVerify { createSubmissionDao.deleteSubmissionById(mediaSubmission.id) }
+        assertEquals(Result.success(), result)
+    }
+
+    @Test
+    fun `uploadMedia - no pending file returns Result_failure`() = runTest {
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns null
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadMedia - Notorious upload failure calls setSubmissionError(true) and setDraft(true), returns failure`() = runTest {
+        val mediaFile = mediaFileEntity(id = 21L, submissionId = mediaSubmission.id)
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, any()) } returns DataResult.Fail()
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        coVerify { createSubmissionDao.setSubmissionError(true, mediaSubmission.id) }
+        coVerify { createSubmissionDao.setDraft(mediaSubmission.id, true) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadMedia - postMediaSubmission failure calls setSubmissionError(true) and setDraft(true), returns failure`() = runTest {
+        val mediaFile = mediaFileEntity(id = 22L, submissionId = mediaSubmission.id)
+        val notoriousResult = NotoriousResult(id = "notorious456", mediaType = 5L)
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, any()) } returns DataResult.Success(notoriousResult)
+        coEvery {
+            submissionApi.postMediaSubmission(any(), any(), any(), any(), any(), any())
+        } returns DataResult.Fail()
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        coVerify { createSubmissionDao.setSubmissionError(true, mediaSubmission.id) }
+        coVerify { createSubmissionDao.setDraft(mediaSubmission.id, true) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadMedia progress listener returns false and aborts when submission was deleted (cancelled)`() = runTest {
+        val mediaFile = mediaFileEntity(id = 23L, submissionId = mediaSubmission.id)
+        val listenerSlot = slot<ProgressRequestUpdateListener>()
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, capture(listenerSlot)) } returns DataResult.Fail()
+        coEvery { createSubmissionDao.findSubmissionById(mediaSubmission.id) } returns null
+
+        worker.uploadMedia(mediaSubmission)
+
+        val shouldContinue = listenerSlot.captured.onProgressUpdated(0.5f, 1024L)
+
+        assertEquals(false, shouldContinue)
+    }
+
+    @Test
+    fun `uploadMedia progress listener returns true and writes throttled progress when not cancelled`() = runTest {
+        val mediaFile = mediaFileEntity(id = 24L, submissionId = mediaSubmission.id)
+        val listenerSlot = slot<ProgressRequestUpdateListener>()
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, capture(listenerSlot)) } returns DataResult.Fail()
+        coEvery { createSubmissionDao.findSubmissionById(mediaSubmission.id) } returns mediaSubmission
+
+        worker.uploadMedia(mediaSubmission)
+
+        val shouldContinue = listenerSlot.captured.onProgressUpdated(0.5f, 1024L)
+
+        assertEquals(true, shouldContinue)
+        coVerify { createSubmissionDao.updateProgress(50.0, mediaSubmission.id) }
+    }
+
+    @Test
+    fun `uploadMedia - null result id calls setSubmissionError(true) and setDraft(true), does not call postMediaSubmission, returns failure`() = runTest {
+        val mediaFile = mediaFileEntity(id = 26L, submissionId = mediaSubmission.id)
+        val notoriousResult = NotoriousResult(id = null, mediaType = 1L)
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+        coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, any()) } returns DataResult.Success(notoriousResult)
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        coVerify(exactly = 0) { submissionApi.postMediaSubmission(any(), any(), any(), any(), any(), any()) }
+        coVerify { createSubmissionDao.setSubmissionError(true, mediaSubmission.id) }
+        coVerify { createSubmissionDao.setDraft(mediaSubmission.id, true) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadMedia - pending file with null fullPath calls setSubmissionError(true) and setDraft(true), returns failure`() = runTest {
+        val mediaFile = mediaFileEntity(id = 27L, submissionId = mediaSubmission.id).copy(fullPath = null)
+
+        coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+
+        val result = worker.uploadMedia(mediaSubmission)
+
+        coVerify(exactly = 0) { NotoriousUploader.performUpload(any(), any()) }
+        coVerify { createSubmissionDao.setSubmissionError(true, mediaSubmission.id) }
+        coVerify { createSubmissionDao.setDraft(mediaSubmission.id, true) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadMedia success cleans up the temp media file via FileUploadUtils_deleteTempFile`() = runTest {
+        val mediaFile = mediaFileEntity(id = 25L, submissionId = mediaSubmission.id)
+        val notoriousResult = NotoriousResult(id = "notorious789", mediaType = 1L)
+
+        mockkObject(FileUploadUtils)
+        try {
+            every { FileUploadUtils.deleteTempFile(any()) } returns true
+
+            coEvery { createFileSubmissionDao.findFileForSubmissionId(mediaSubmission.id) } returns mediaFile
+            coEvery { NotoriousUploader.performUpload(mediaFile.fullPath!!, any()) } returns DataResult.Success(notoriousResult)
+            coEvery {
+                submissionApi.postMediaSubmission(any(), any(), any(), any(), any(), any())
+            } returns DataResult.Success(Submission(id = 1L))
+
+            worker.uploadMedia(mediaSubmission)
+
+            verify { FileUploadUtils.deleteTempFile(mediaFile.fullPath) }
+        } finally {
+            unmockkObject(FileUploadUtils)
         }
     }
 
@@ -343,5 +517,17 @@ class SubmissionUploadWorkerTest {
         size = 1024L,
         contentType = "application/pdf",
         fullPath = "/tmp/file_$id.pdf",
+    )
+
+    private fun mediaFileEntity(
+        id: Long,
+        submissionId: Long,
+    ) = CreateFileSubmissionEntity(
+        id = id,
+        dbSubmissionId = submissionId,
+        name = "clip_$id.mp4",
+        size = 2048L,
+        contentType = "video/mp4",
+        fullPath = "/tmp/clip_$id.mp4",
     )
 }

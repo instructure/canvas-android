@@ -45,7 +45,13 @@ import com.instructure.pandautils.utils.onClick
 
 @SuppressLint("UnsafeOptInUsageError")
 @Composable
-fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, String) -> Unit, modifier: Modifier = Modifier) {
+fun MediaFileContent(
+    uri: Uri,
+    contentType: String,
+    onFullScreenClicked: (Uri, String) -> Unit,
+    modifier: Modifier = Modifier,
+    showFullScreenButton: Boolean = true,
+) {
     val context = LocalContext.current
     val exoAgent = remember(uri) { ExoAgent.getAgentForUri(uri) }
     var playerViewInstance: PlayerView? by remember { mutableStateOf(null) }
@@ -85,9 +91,14 @@ fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, S
                 controllerAutoShow = true
                 setBackgroundColor(context.getColor(R.color.black))
 
-                findViewById<View>(R.id.fullscreenButton).onClick {
-                    exoAgent.flagForResume()
-                    onFullScreenClicked(uri, contentType)
+                val fullScreenButton = findViewById<View>(R.id.fullscreenButton)
+                if (showFullScreenButton) {
+                    fullScreenButton.onClick {
+                        exoAgent.flagForResume()
+                        onFullScreenClicked(uri, contentType)
+                    }
+                } else {
+                    fullScreenButton.visibility = View.GONE
                 }
 
                 exoAgent.attach(this, object : ExoInfoListener {

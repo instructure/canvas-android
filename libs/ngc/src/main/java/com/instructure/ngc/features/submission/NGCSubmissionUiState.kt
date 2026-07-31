@@ -47,6 +47,16 @@ data class UrlSubmissionUiState(
     val contentResetKey: Int = 0,
 )
 
+data class MediaSubmissionUiState(
+    // The single attached clip (audio or video). All three fields are null when no clip is attached.
+    // Unlike Text/Url there is no text field to re-seed, so no contentResetKey is needed — the clip
+    // card renders directly off these fields.
+    val clipName: String? = null,
+    val clipPath: String? = null,
+    val clipContentType: String? = null,
+    val onClipReady: (FileSubmitObject) -> Unit = {},
+)
+
 data class NGCSubmissionUiState(
     val loading: Boolean = true,
     val loadError: String? = null,
@@ -66,6 +76,7 @@ data class NGCSubmissionUiState(
     val textState: TextSubmissionUiState = TextSubmissionUiState(),
     val fileState: FileSubmissionUiState = FileSubmissionUiState(),
     val urlState: UrlSubmissionUiState = UrlSubmissionUiState(),
+    val mediaState: MediaSubmissionUiState = MediaSubmissionUiState(),
 
     val savedAtText: String = "",
     val submitting: Boolean = false,

@@ -247,6 +247,7 @@ fun NGCAssignmentDetailsScreen(
                             Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> draftHintsUiState.hasTextDraft
                             Assignment.SubmissionType.ONLINE_UPLOAD -> draftHintsUiState.hasFileDraft
                             Assignment.SubmissionType.ONLINE_URL -> draftHintsUiState.hasUrlDraft
+                            Assignment.SubmissionType.MEDIA_RECORDING -> draftHintsUiState.hasMediaDraft
                             else -> false
                         },
                     )
@@ -271,7 +272,8 @@ fun NGCAssignmentDetailsScreen(
                     // NGC-implemented submission types route to the submission screen with that type preselected.
                     type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY ||
                         type == Assignment.SubmissionType.ONLINE_UPLOAD ||
-                        type == Assignment.SubmissionType.ONLINE_URL -> type?.let { onNavigateToSubmission(it) }
+                        type == Assignment.SubmissionType.ONLINE_URL ||
+                        type == Assignment.SubmissionType.MEDIA_RECORDING -> type?.let { onNavigateToSubmission(it) }
                     else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
                 }
             },

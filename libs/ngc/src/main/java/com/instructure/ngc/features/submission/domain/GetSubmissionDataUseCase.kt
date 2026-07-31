@@ -43,6 +43,7 @@ class GetSubmissionDataUseCase @Inject constructor(
         Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
         Assignment.SubmissionType.ONLINE_UPLOAD,
         Assignment.SubmissionType.ONLINE_URL,
+        Assignment.SubmissionType.MEDIA_RECORDING,
     )
 
     override suspend fun execute(params: Params): SubmissionData {
@@ -77,6 +78,22 @@ class GetSubmissionDataUseCase @Inject constructor(
                 )
                 DraftPayload(draftUrl = urlDraft?.submissionEntry, urlDraftSavedAt = urlDraft?.lastActivityDate)
             }
+            Assignment.SubmissionType.MEDIA_RECORDING -> {
+                val mediaDraft = submissionUploadHelper.loadDraft(
+                    canvasContext, assignmentId, Assignment.SubmissionType.MEDIA_RECORDING.apiString
+                )
+                val clip = if (mediaDraft != null) {
+                    createFileSubmissionDao.findFilesForSubmissionId(mediaDraft.id).map { it.toSubmissionFileData() }.firstOrNull()
+                } else {
+                    null
+                }
+                DraftPayload(
+                    draftMediaPath = clip?.fullPath,
+                    draftMediaName = clip?.name,
+                    draftMediaContentType = clip?.contentType,
+                    mediaDraftSavedAt = mediaDraft?.lastActivityDate,
+                )
+            }
             else -> {
                 val textDraft = submissionUploadHelper.loadDraft(
                     canvasContext, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
@@ -100,6 +117,10 @@ class GetSubmissionDataUseCase @Inject constructor(
             instructionsHtml = assignment.description,
             draftUrl = payload.draftUrl,
             urlDraftSavedAt = payload.urlDraftSavedAt,
+            draftMediaPath = payload.draftMediaPath,
+            draftMediaName = payload.draftMediaName,
+            draftMediaContentType = payload.draftMediaContentType,
+            mediaDraftSavedAt = payload.mediaDraftSavedAt,
             rubricUiState = rubric,
         )
     }
@@ -111,5 +132,9 @@ class GetSubmissionDataUseCase @Inject constructor(
         val fileDraftSavedAt: Date? = null,
         val draftUrl: String? = null,
         val urlDraftSavedAt: Date? = null,
+        val draftMediaPath: String? = null,
+        val draftMediaName: String? = null,
+        val draftMediaContentType: String? = null,
+        val mediaDraftSavedAt: Date? = null,
     )
 }

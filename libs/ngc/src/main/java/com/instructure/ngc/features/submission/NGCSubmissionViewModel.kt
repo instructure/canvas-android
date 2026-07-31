@@ -29,6 +29,7 @@ import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionDataUseCase
+import com.instructure.ngc.features.submission.domain.GetMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionFileStatesUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
@@ -36,9 +37,11 @@ import com.instructure.ngc.features.submission.domain.ObserveSubmissionProgressU
 import com.instructure.ngc.features.submission.domain.ResumeInFlightSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.RetryFileSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.SaveFileDraftUseCase
+import com.instructure.ngc.features.submission.domain.SaveMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
+import com.instructure.ngc.features.submission.domain.SubmitMediaUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
 import com.instructure.ngc.features.submission.supportingpane.SubmissionSupportingPaneUiState
@@ -82,6 +85,9 @@ class NGCSubmissionViewModel @Inject constructor(
     private val saveUrlDraftUseCase: SaveUrlDraftUseCase,
     private val deleteDraftUseCase: DeleteDraftUseCase,
     private val submitUrlUseCase: SubmitUrlUseCase,
+    private val getMediaDraftUseCase: GetMediaDraftUseCase,
+    private val saveMediaDraftUseCase: SaveMediaDraftUseCase,
+    private val submitMediaUseCase: SubmitMediaUseCase,
     private val dateFormatter: SubmissionDateFormatter,
 ) : ViewModel() {
 
@@ -96,6 +102,7 @@ class NGCSubmissionViewModel @Inject constructor(
     private var textSavedAtText: String = ""
     private var fileSavedAtText: String = ""
     private var urlSavedAtText: String = ""
+    private var mediaSavedAtText: String = ""
 
     private val _uiState = MutableStateFlow(NGCSubmissionUiState())
     val uiState: StateFlow<NGCSubmissionUiState> = _uiState.asStateFlow()
@@ -179,10 +186,16 @@ class NGCSubmissionViewModel @Inject constructor(
                 } else {
                     ""
                 }
+                mediaSavedAtText = if (defaultType == Assignment.SubmissionType.MEDIA_RECORDING) {
+                    finalData.mediaDraftSavedAt?.let { formatSavedAt(it) } ?: ""
+                } else {
+                    ""
+                }
 
                 val initialSavedAtText = when (defaultType) {
                     Assignment.SubmissionType.ONLINE_UPLOAD -> fileSavedAtText
                     Assignment.SubmissionType.ONLINE_URL -> urlSavedAtText
+                    Assignment.SubmissionType.MEDIA_RECORDING -> mediaSavedAtText
                     else -> textSavedAtText
                 }
 
@@ -214,8 +227,14 @@ class NGCSubmissionViewModel @Inject constructor(
                             urlError = urlErrorFor(urlDraft),
                             contentResetKey = state.urlState.contentResetKey + 1,
                         ),
+                        mediaState = state.mediaState.copy(
+                            clipName = finalData.draftMediaName,
+                            clipPath = finalData.draftMediaPath,
+                            clipContentType = finalData.draftMediaContentType,
+                            onClipReady = ::onMediaClipReady,
+                        ),
                         savedAtText = initialSavedAtText,
-                        submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles, urlDraft),
+                        submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles, urlDraft, finalData.draftMediaPath),
                         onRetry = {},
                         supportingPane = SubmissionSupportingPaneUiState(
                             loading = false,
@@ -383,6 +402,19 @@ class NGCSubmissionViewModel @Inject constructor(
                         )
                     }
                 }
+                Assignment.SubmissionType.MEDIA_RECORDING -> {
+                    val clipPath = _uiState.value.mediaState.clipPath
+                    deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.MEDIA_RECORDING))
+                    clipPath?.let { FileUploadUtils.deleteTempFile(it) }
+                    mediaSavedAtText = ""
+                    _uiState.update { state ->
+                        state.copy(
+                            mediaState = state.mediaState.copy(clipName = null, clipPath = null, clipContentType = null),
+                            savedAtText = "",
+                            submitEnabled = false,
+                        )
+                    }
+                }
                 else -> {
                     deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
                     textSavedAtText = ""
@@ -407,6 +439,7 @@ class NGCSubmissionViewModel @Inject constructor(
         when (_uiState.value.selectedType) {
             Assignment.SubmissionType.ONLINE_UPLOAD -> submitFiles()
             Assignment.SubmissionType.ONLINE_URL -> submitUrl()
+            Assignment.SubmissionType.MEDIA_RECORDING -> submitMedia()
             else -> submitText()
         }
     }
@@ -521,6 +554,79 @@ class NGCSubmissionViewModel @Inject constructor(
                                 urlError = null,
                                 contentResetKey = state.urlState.contentResetKey + 1,
                             ),
+                            savedAtText = "",
+                            submitEnabled = false,
+                            submissionSuccess = true,
+                            onSubmissionSuccessHandled = {
+                                _uiState.update { s -> s.copy(submissionSuccess = false) }
+                            },
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                setSubmissionError()
+            }
+        }
+    }
+
+    private fun submitMedia() {
+        val clip = _uiState.value.mediaState
+        val clipPath = clip.clipPath
+        if (clipPath == null) {
+            _uiState.update { it.copy(submitting = false) }
+            return
+        }
+        val mediaType = mediaTypeFor(clip.clipContentType)
+        if (mediaType == null) {
+            // Should not happen — onMediaClipReady already rejects non-audio/video clips — but
+            // guard rather than silently mislabeling an unexpected contentType as "video".
+            setSubmissionError()
+            return
+        }
+        viewModelScope.launch {
+            try {
+                submitMediaUseCase(
+                    SubmitMediaUseCase.Params(
+                        canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                        assignmentId = assignmentId,
+                        assignmentName = assignmentName,
+                        mediaFilePath = clipPath,
+                        mediaType = mediaType,
+                        attempt = lastAttempt,
+                    )
+                )
+
+                var seenNonNull = false
+                var terminalIsSuccess = false
+                observeSubmissionProgressUseCase(
+                    ObserveSubmissionProgressUseCase.Params(
+                        assignmentId = assignmentId,
+                        submissionType = Assignment.SubmissionType.MEDIA_RECORDING,
+                    )
+                )
+                    .first { entity ->
+                        when {
+                            entity == null && seenNonNull -> { terminalIsSuccess = true; true }
+                            entity != null -> {
+                                seenNonNull = true
+                                when {
+                                    entity.errorFlag -> true
+                                    (entity.progress ?: 0f) == 100.0f -> { terminalIsSuccess = true; true }
+                                    else -> false
+                                }
+                            }
+                            else -> false
+                        }
+                    }
+
+                if (!terminalIsSuccess) {
+                    setSubmissionError()
+                } else {
+                    mediaSavedAtText = ""
+                    _uiState.update { state ->
+                        state.copy(
+                            submitting = false,
+                            mediaState = state.mediaState.copy(clipName = null, clipPath = null, clipContentType = null),
                             savedAtText = "",
                             submitEnabled = false,
                             submissionSuccess = true,
@@ -683,6 +789,25 @@ class NGCSubmissionViewModel @Inject constructor(
                         )
                     }
                 }
+                Assignment.SubmissionType.MEDIA_RECORDING -> {
+                    // Load the media draft on demand (Room-only, no network).
+                    val mediaDraft = getMediaDraftUseCase(GetMediaDraftUseCase.Params(assignmentId))
+                    mediaSavedAtText = mediaDraft?.savedAt?.let { formatSavedAt(it) } ?: ""
+                    _uiState.update { state ->
+                        state.copy(
+                            selectedType = type,
+                            mediaState = state.mediaState.copy(
+                                clipName = mediaDraft?.name,
+                                clipPath = mediaDraft?.path,
+                                clipContentType = mediaDraft?.contentType,
+                            ),
+                            savedAtText = mediaSavedAtText,
+                            submitEnabled = computeSubmitEnabled(
+                                type, state.textState.draftHtml, state.fileState.files, state.urlState.draftUrl, mediaDraft?.path
+                            ),
+                        )
+                    }
+                }
                 else -> {
                     // Load the text draft on demand (Room-only, no network).
                     // Always reads html + real lastActivityDate so a draft saved while on the
@@ -803,6 +928,66 @@ class NGCSubmissionViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Media is a single-clip draft: a new pick/capture replaces whatever was previously attached.
+     * Saved immediately (no debounce — unlike text/url, this is a discrete pick action, not typing).
+     */
+    private fun onMediaClipReady(clip: FileSubmitObject) {
+        if (_uiState.value.submitting) return
+        // The chooser's EXTRA_MIME_TYPES filter is advisory only (some pickers ignore it), so a
+        // non-audio/video pick must still be rejected here rather than attached as a draft.
+        if (mediaTypeFor(clip.contentType) == null) {
+            _uiState.update {
+                it.copy(errorMessage = context.getString(R.string.ngc_submission_unsupportedMediaType))
+            }
+            return
+        }
+        val previousPath = _uiState.value.mediaState.clipPath
+        // Attach the clip to UI state synchronously (no await on the Room write) so the media body
+        // swaps from the recorder straight to the clip card in a single recomposition — the recorder
+        // holder is already Idle by the time this runs, and any gap here would flash its default UI.
+        mediaSavedAtText = formatSavedAt(Date())
+        _uiState.update { state ->
+            state.copy(
+                mediaState = state.mediaState.copy(
+                    clipName = clip.name,
+                    clipPath = clip.fullPath,
+                    clipContentType = clip.contentType,
+                ),
+                savedAtText = mediaSavedAtText,
+                submitEnabled = computeSubmitEnabled(
+                    state.selectedType, state.textState.draftHtml, state.fileState.files, state.urlState.draftUrl, clip.fullPath
+                ),
+            )
+        }
+        viewModelScope.launch {
+            saveMediaDraftUseCase(
+                SaveMediaDraftUseCase.Params(
+                    canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                    assignmentId = assignmentId,
+                    assignmentName = assignmentName,
+                    clip = clip,
+                )
+            )
+            // Replacing an existing clip — clean up the old temp file now that the draft row
+            // points at the new one. Guard against deleting a path that's (unexpectedly) shared.
+            if (previousPath != null && previousPath != clip.fullPath) {
+                FileUploadUtils.deleteTempFile(previousPath)
+            }
+        }
+    }
+
+    /**
+     * Maps a resolved contentType to the API's media-submission `mediaType`, or null when it's
+     * neither audio nor video. Never falls through to a default — an unrecognized contentType
+     * (including null) must be treated as a rejection, not silently submitted as "video".
+     */
+    private fun mediaTypeFor(contentType: String?): String? = when {
+        contentType?.startsWith("audio/") == true -> "audio"
+        contentType?.startsWith("video/") == true -> "video"
+        else -> null
+    }
+
     private fun setSubmissionError() {
         val errorMsg = context.getString(R.string.ngc_submission_submissionError)
         _uiState.update { state ->
@@ -828,9 +1013,11 @@ class NGCSubmissionViewModel @Inject constructor(
         html: String,
         files: List<SubmissionFileUiState>,
         url: String = "",
+        mediaClipPath: String? = null,
     ): Boolean = when (type) {
         Assignment.SubmissionType.ONLINE_UPLOAD -> files.isNotEmpty()
         Assignment.SubmissionType.ONLINE_URL -> url.isNotBlank() && urlErrorFor(url) == null
+        Assignment.SubmissionType.MEDIA_RECORDING -> mediaClipPath != null
         else -> !isHtmlBlank(html)
     }
 

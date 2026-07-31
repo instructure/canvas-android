@@ -99,6 +99,12 @@ dependencies {
     implementation(Libs.KOTLIN_SERIALIZABLE)
     implementation(Libs.GLIDE_COMPOSE)
 
+    implementation(Libs.CAMERAX_CORE)
+    implementation(Libs.CAMERAX_CAMERA2)
+    implementation(Libs.CAMERAX_LIFECYCLE)
+    implementation(Libs.CAMERAX_VIEW)
+    implementation(Libs.CAMERAX_VIDEO)
+
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true
     }

@@ -27,19 +27,23 @@ import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.FileDraftData
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionDataUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionFileStatesUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
+import com.instructure.ngc.features.submission.domain.MediaDraftData
 import com.instructure.ngc.features.submission.domain.ObserveSubmissionProgressUseCase
 import com.instructure.ngc.features.submission.domain.ResumeInFlightSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.RetryFileSubmissionUseCase
 import com.instructure.ngc.features.submission.domain.SaveFileDraftUseCase
+import com.instructure.ngc.features.submission.domain.SaveMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmissionData
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
+import com.instructure.ngc.features.submission.domain.SubmitMediaUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
 import com.instructure.ngc.features.submission.domain.TextDraftData
@@ -94,6 +98,9 @@ class NGCSubmissionViewModelTest {
     private val saveUrlDraftUseCase: SaveUrlDraftUseCase = mockk()
     private val deleteDraftUseCase: DeleteDraftUseCase = mockk()
     private val submitUrlUseCase: SubmitUrlUseCase = mockk()
+    private val getMediaDraftUseCase: GetMediaDraftUseCase = mockk()
+    private val saveMediaDraftUseCase: SaveMediaDraftUseCase = mockk()
+    private val submitMediaUseCase: SubmitMediaUseCase = mockk()
 
     private val stubDateFormatter = object : SubmissionDateFormatter {
         override fun formatDateTime(context: Context, date: Date) = "Jun 19, 10:00 AM"
@@ -114,6 +121,7 @@ class NGCSubmissionViewModelTest {
         coEvery { getTextDraftUseCase(any()) } returns null
         coEvery { getFileDraftUseCase(any()) } returns FileDraftData(emptyList(), null)
         coEvery { getUrlDraftUseCase(any()) } returns null
+        coEvery { getMediaDraftUseCase(any()) } returns null
     }
 
     @After
@@ -729,6 +737,9 @@ class NGCSubmissionViewModelTest {
             saveUrlDraftUseCase = saveUrlDraftUseCase,
             deleteDraftUseCase = deleteDraftUseCase,
             submitUrlUseCase = submitUrlUseCase,
+            getMediaDraftUseCase = getMediaDraftUseCase,
+            saveMediaDraftUseCase = saveMediaDraftUseCase,
+            submitMediaUseCase = submitMediaUseCase,
             dateFormatter = formatter,
         )
         testDispatcher.scheduler.advanceUntilIdle()
@@ -785,12 +796,8 @@ class NGCSubmissionViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
         assertEquals(Assignment.SubmissionType.ONLINE_UPLOAD, vm.uiState.value.selectedType)
         assertEquals(1, vm.uiState.value.fileState.files.size)
-        // File state should not be contaminated by text draft
-        assertEquals("", vm.uiState.value.textState.draftHtml.let {
-            // textState.draftHtml was set to "<p>my text</p>" when we were on text; that's fine.
-            // What matters is the selected type and its own state are correct.
-            ""
-        })
+        // Text draft should still be intact in the background, unaffected by switching to file
+        assertEquals("<p>my text</p>", vm.uiState.value.textState.draftHtml)
     }
 
     // -------------------------------------------------------------------------
@@ -1845,6 +1852,338 @@ class NGCSubmissionViewModelTest {
         assertTrue(vm.uiState.value.urlState.draftUrl.isEmpty())
     }
 
+    // -------------------------------------------------------------------------
+    // Media Recording submission
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `onMediaClipReady - attaches clip synchronously, then persists draft in the background`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        // Simulate a slow Room write so a test that (wrongly) awaited it before asserting would fail.
+        coEvery { saveMediaDraftUseCase(any()) } coAnswers {
+            delay(1_000)
+            1L
+        }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19, 10:00 AM"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val clip = FileSubmitObject("vid_1.mp4", 2048L, "video/mp4", "/tmp/vid_1.mp4")
+        vm.uiState.value.mediaState.onClipReady(clip)
+
+        // The clip must be attached immediately, before the (still in-flight) draft save
+        // completes — otherwise the media body would flash the recorder's default UI.
+        val stateBeforeSaveCompletes = vm.uiState.value
+        assertTrue(stateBeforeSaveCompletes.submitEnabled)
+        assertEquals("vid_1.mp4", stateBeforeSaveCompletes.mediaState.clipName)
+        assertEquals("/tmp/vid_1.mp4", stateBeforeSaveCompletes.mediaState.clipPath)
+        assertEquals("video/mp4", stateBeforeSaveCompletes.mediaState.clipContentType)
+        assertTrue(stateBeforeSaveCompletes.savedAtText.isNotEmpty())
+
+        // The persistence still happens — just not gating the UI update above.
+        testDispatcher.scheduler.advanceUntilIdle()
+        coVerify { saveMediaDraftUseCase(match { it.assignmentId == assignmentId && it.clip == clip }) }
+    }
+
+    @Test
+    fun `onMediaClipReady with a non-media contentType - rejects the clip and surfaces an error`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        every { context.getString(any()) } returns "Unsupported file type. Choose an audio or video file."
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val badClip = FileSubmitObject("essay.pdf", 1024L, "application/pdf", "/tmp/essay.pdf")
+        vm.uiState.value.mediaState.onClipReady(badClip)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { saveMediaDraftUseCase(any()) }
+        val state = vm.uiState.value
+        assertNull(state.mediaState.clipPath)
+        assertNull(state.mediaState.clipName)
+        assertFalse(state.submitEnabled)
+        assertEquals("Unsupported file type. Choose an audio or video file.", state.errorMessage)
+    }
+
+    @Test
+    fun `onSubmit MEDIA_RECORDING with an unexpected contentType in state - guards instead of defaulting to video`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Assignment.SubmissionType.MEDIA_RECORDING),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        // Simulate a stale/bad draft (e.g. seeded before this validation existed) reaching state
+        // via the type-switch load path, which does not go through onMediaClipReady's guard.
+        coEvery { getMediaDraftUseCase(any()) } returns MediaDraftData(
+            path = "/tmp/bad.pdf",
+            name = "bad.pdf",
+            contentType = "application/pdf",
+            savedAt = Date(),
+        )
+        every { context.getString(any()) } returns "Error submitting assignment"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.MEDIA_RECORDING)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { submitMediaUseCase(any()) }
+        val state = vm.uiState.value
+        assertFalse(state.submitting)
+        assertNotNull(state.errorMessage)
+    }
+
+    @Test
+    fun `onMediaClipReady replacing an existing clip - deletes the old temp file`() = runTest {
+        mockkObject(FileUploadUtils)
+        every { FileUploadUtils.deleteTempFile(any()) } returns true
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/old.mp4",
+            draftMediaName = "old.mp4",
+            draftMediaContentType = "video/mp4",
+            mediaDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { saveMediaDraftUseCase(any()) } returns 1L
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val newClip = FileSubmitObject("new.mp4", 4096L, "video/mp4", "/tmp/new.mp4")
+        vm.uiState.value.mediaState.onClipReady(newClip)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        verify { FileUploadUtils.deleteTempFile("/tmp/old.mp4") }
+        assertEquals("new.mp4", vm.uiState.value.mediaState.clipName)
+    }
+
+    @Test
+    fun `onDeleteDraft for MEDIA_RECORDING - clears state, deletes draft and temp file`() = runTest {
+        mockkObject(FileUploadUtils)
+        every { FileUploadUtils.deleteTempFile(any()) } returns true
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/clip.mp4",
+            draftMediaName = "clip.mp4",
+            draftMediaContentType = "video/mp4",
+            mediaDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { deleteDraftUseCase(any()) }
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onDeleteDraft()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.MEDIA_RECORDING)) }
+        verify { FileUploadUtils.deleteTempFile("/tmp/clip.mp4") }
+        val state = vm.uiState.value
+        assertNull(state.mediaState.clipName)
+        assertNull(state.mediaState.clipPath)
+        assertFalse(state.submitEnabled)
+        assertTrue(state.savedAtText.isEmpty())
+    }
+
+    @Test
+    fun `onSubmissionTypeSelected media - loads media draft and shows saved timestamp`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.MEDIA_RECORDING,
+            ),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getMediaDraftUseCase(any()) } returns MediaDraftData(
+            path = "/tmp/saved.mp4",
+            name = "saved.mp4",
+            contentType = "video/mp4",
+            savedAt = Date(),
+        )
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.MEDIA_RECORDING)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertEquals(Assignment.SubmissionType.MEDIA_RECORDING, state.selectedType)
+        assertEquals("saved.mp4", state.mediaState.clipName)
+        assertEquals("/tmp/saved.mp4", state.mediaState.clipPath)
+        assertTrue(state.savedAtText.isNotEmpty())
+        assertTrue(state.submitEnabled)
+    }
+
+    @Test
+    fun `Initial load - seeds mediaState from the media draft when default type is MEDIA_RECORDING`() = runTest {
+        val mediaSavedAt = Date(1_700_000_040_000L)
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/initial.mp4",
+            draftMediaName = "initial.mp4",
+            draftMediaContentType = "video/mp4",
+            mediaDraftSavedAt = mediaSavedAt,
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertEquals(Assignment.SubmissionType.MEDIA_RECORDING, state.selectedType)
+        assertEquals("initial.mp4", state.mediaState.clipName)
+        assertEquals("/tmp/initial.mp4", state.mediaState.clipPath)
+        assertEquals("video/mp4", state.mediaState.clipContentType)
+        assertTrue(state.savedAtText.isNotEmpty())
+        assertTrue(state.submitEnabled)
+    }
+
+    @Test
+    fun `onSubmit with MEDIA_RECORDING - calls submitMediaUseCase not submitTextUseCase`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/clip.mp4",
+            draftMediaName = "clip.mp4",
+            draftMediaContentType = "video/mp4",
+            mediaDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { submitMediaUseCase(any()) }
+        val successEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "media_recording",
+            userId = 1L,
+            progress = 100.0f,
+            errorFlag = false,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.MEDIA_RECORDING)
+            )
+        } returns flowOf(successEntity)
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { submitMediaUseCase(match { it.assignmentId == assignmentId && it.mediaFilePath == "/tmp/clip.mp4" && it.mediaType == "video" }) }
+        coVerify(exactly = 0) { submitTextUseCase(any()) }
+    }
+
+    @Test
+    fun `onSubmit media success - clears clip and sets submissionSuccess`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/clip.m4a",
+            draftMediaName = "clip.m4a",
+            draftMediaContentType = "audio/mp4",
+            mediaDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { submitMediaUseCase(any()) }
+        val successEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "media_recording",
+            userId = 1L,
+            progress = 100.0f,
+            errorFlag = false,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.MEDIA_RECORDING)
+            )
+        } returns flowOf(successEntity)
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { submitMediaUseCase(match { it.mediaType == "audio" }) }
+        val state = vm.uiState.value
+        assertTrue(state.submissionSuccess)
+        assertFalse(state.submitting)
+        assertNull(state.mediaState.clipName)
+        assertTrue(state.savedAtText.isEmpty())
+        assertFalse(state.submitEnabled)
+    }
+
+    @Test
+    fun `onSubmit media error - errorFlag sets errorMessage and does not clear clip`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING),
+            draftMediaPath = "/tmp/clip.mp4",
+            draftMediaName = "clip.mp4",
+            draftMediaContentType = "video/mp4",
+            mediaDraftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coJustRun { submitMediaUseCase(any()) }
+        val errorEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "media_recording",
+            userId = 1L,
+            progress = 0f,
+            errorFlag = true,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.MEDIA_RECORDING)
+            )
+        } returns flowOf(errorEntity)
+        every { context.getString(any()) } returns "Error submitting assignment"
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertFalse(state.submitting)
+        assertNotNull(state.errorMessage)
+        assertFalse(state.submissionSuccess)
+        assertEquals("clip.mp4", state.mediaState.clipName)
+    }
+
+    @Test
+    fun `onSubmit MEDIA_RECORDING with no clip - is a no-op`() = runTest {
+        val data = minimalSubmissionData(availableTypes = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+
+        val vm = createViewModel(submissionType = "media_recording")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { submitMediaUseCase(any()) }
+        assertFalse(vm.uiState.value.submitting)
+    }
+
     private fun createViewModel(submissionType: String? = null): NGCSubmissionViewModel {
         val args = mutableMapOf<String, Any?>(
             NGCSubmissionViewModel.ARG_COURSE_ID to courseId,
@@ -1871,6 +2210,9 @@ class NGCSubmissionViewModelTest {
             saveUrlDraftUseCase = saveUrlDraftUseCase,
             deleteDraftUseCase = deleteDraftUseCase,
             submitUrlUseCase = submitUrlUseCase,
+            getMediaDraftUseCase = getMediaDraftUseCase,
+            saveMediaDraftUseCase = saveMediaDraftUseCase,
+            submitMediaUseCase = submitMediaUseCase,
             dateFormatter = stubDateFormatter,
         )
     }
@@ -1887,6 +2229,10 @@ class NGCSubmissionViewModelTest {
         allowedExtensions: List<String> = emptyList(),
         draftUrl: String? = null,
         urlDraftSavedAt: Date? = null,
+        draftMediaPath: String? = null,
+        draftMediaName: String? = null,
+        draftMediaContentType: String? = null,
+        mediaDraftSavedAt: Date? = null,
         rubric: NgcRubricUiState? = null,
     ) = SubmissionData(
         assignmentName = assignmentName,
@@ -1903,6 +2249,10 @@ class NGCSubmissionViewModelTest {
         instructionsHtml = instructionsHtml,
         draftUrl = draftUrl,
         urlDraftSavedAt = urlDraftSavedAt,
+        draftMediaPath = draftMediaPath,
+        draftMediaName = draftMediaName,
+        draftMediaContentType = draftMediaContentType,
+        mediaDraftSavedAt = mediaDraftSavedAt,
         rubricUiState = rubric,
     )
 

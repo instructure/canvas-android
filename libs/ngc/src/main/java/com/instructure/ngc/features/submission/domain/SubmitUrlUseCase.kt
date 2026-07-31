@@ -15,6 +15,7 @@
  */
 package com.instructure.ngc.features.submission.domain
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.submission.SubmissionUploadHelper
@@ -39,6 +40,7 @@ class SubmitUrlUseCase @Inject constructor(
             assignmentName = params.assignmentName,
             url = params.url,
             attempt = params.attempt ?: 1L,
+            deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_URL,
         )
     }
 }

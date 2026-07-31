@@ -2546,6 +2546,27 @@
     <string name="ngc_submission_sourceChooseFromGallery">Choose from gallery</string>
     <string name="ngc_submission_fileUploadFailed">One or more files could not be uploaded</string>
 
+    <!-- NGC Media submission -->
+    <string name="ngc_submission_mediaRecording">Media Recording</string>
+    <string name="ngc_submission_sourceChooseMediaFile">Choose media file</string>
+    <string name="ngc_submission_sourceRecordAudio">Record audio</string>
+    <string name="ngc_submission_unsupportedMediaType">Unsupported file type. Choose an audio or video file.</string>
+    <string name="ngc_submission_audioPermissionRequired">Microphone access is needed to record audio.</string>
+    <string name="ngc_submission_videoPermissionRequired">Camera and microphone access are needed to record video.</string>
+
+    <!-- NGC In-app audio recorder -->
+    <string name="ngc_submission_audioRecorderTitle">Record audio</string>
+    <string name="ngc_submission_audioRecorderRecord">Record</string>
+    <string name="ngc_submission_audioRecorderStop">Stop</string>
+    <string name="ngc_submission_audioRecorderCancel">Cancel</string>
+    <string name="ngc_submission_audioRecorderEmptyRecording">Recording was too short. Please try again.</string>
+    <string name="ngc_submission_audioRecorderStartFailed">Couldn\'t start recording. Please try again.</string>
+
+    <!-- NGC In-app video recorder (reuses the audio recorder's Stop/Cancel/empty-recording/
+         start-failed copy above, since the wording is capture-agnostic) -->
+    <string name="ngc_submission_videoRecorderTitle">Record video</string>
+    <string name="ngc_submission_videoRecorderProcessing">Processing…</string>
+
     <!-- NGC Submission type dropdown accessibility -->
     <string name="a11y_submission_typeDropdownTrigger">Change submission type, currently %1$s</string>
     <string name="a11y_submission_typeSelected">%1$s, selected</string>
@@ -2558,6 +2579,20 @@
     <string name="a11y_submission_sourceTakePhoto">Open camera to take a photo</string>
     <string name="a11y_submission_sourceRecordVideo">Open camera to record a video</string>
     <string name="a11y_submission_sourceChooseFromGallery">Choose a photo from gallery</string>
+
+    <!-- NGC Media submission accessibility -->
+    <string name="a11y_submission_sourceChooseMediaFile">Choose an audio or video file</string>
+    <!-- Distinct from a11y_submission_sourceRecordVideo above: that one opens the system camera
+         app (file picker's "Record video"), this one opens the in-app inline recorder (media
+         submission's "Record video"). -->
+    <string name="a11y_submission_sourceRecordVideoInline">Record a video in the app</string>
+    <!-- The video recorder's mirror-image affordance for switching back to the in-app audio
+         recorder. -->
+    <string name="a11y_submission_sourceRecordAudioInline">Record audio in the app</string>
+
+    <!-- NGC In-app audio recorder accessibility -->
+    <!-- Also reused by the in-app video recorder's timer (capture-agnostic wording). -->
+    <string name="a11y_submission_audioRecorderTimer">Recorded time %1$s</string>
     <string name="ngc_availableUntil">Available until</string>
     <string name="ngc_quizSettings">Quiz settings</string>
     <string name="ngc_submission">Submission</string>

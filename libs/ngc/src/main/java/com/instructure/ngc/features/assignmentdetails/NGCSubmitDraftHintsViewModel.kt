@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetUrlDraftUseCase
 import com.instructure.pandautils.utils.Const
@@ -34,6 +35,7 @@ data class NGCSubmitDraftHintsUiState(
     val hasTextDraft: Boolean = false,
     val hasFileDraft: Boolean = false,
     val hasUrlDraft: Boolean = false,
+    val hasMediaDraft: Boolean = false,
 )
 
 /**
@@ -50,6 +52,7 @@ class NGCSubmitDraftHintsViewModel @Inject constructor(
     private val getTextDraftUseCase: GetTextDraftUseCase,
     private val getFileDraftUseCase: GetFileDraftUseCase,
     private val getUrlDraftUseCase: GetUrlDraftUseCase,
+    private val getMediaDraftUseCase: GetMediaDraftUseCase,
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) ?: 0L
@@ -82,10 +85,16 @@ class NGCSubmitDraftHintsViewModel @Inject constructor(
             }.getOrNull()
             val hasUrlDraft = urlDraft != null
 
+            val mediaDraft = runCatching {
+                getMediaDraftUseCase(GetMediaDraftUseCase.Params(assignmentId))
+            }.getOrNull()
+            val hasMediaDraft = mediaDraft != null
+
             _uiState.value = NGCSubmitDraftHintsUiState(
                 hasTextDraft = hasTextDraft,
                 hasFileDraft = hasFileDraft,
                 hasUrlDraft = hasUrlDraft,
+                hasMediaDraft = hasMediaDraft,
             )
         }
     }
