@@ -183,6 +183,24 @@ class EnabledTabsTest {
     }
 
     @Test
+    fun `isPathTabNotEnabled allows page named syllabus even when syllabus tab is disabled`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = Tab.PAGES_ID, htmlUrl = "/courses/1/pages"))),
+            )
+        )
+        enabledTabs.initTabs()
+
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/pages/syllabus"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "pages", "syllabus")
+
+        val result = enabledTabs.isPathTabNotEnabled(route)
+
+        assertFalse(result)
+    }
+
+    @Test
     fun `isPathTabNotEnabled can handle cross-course navigation`() = runTest {
         coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
             listOf(
