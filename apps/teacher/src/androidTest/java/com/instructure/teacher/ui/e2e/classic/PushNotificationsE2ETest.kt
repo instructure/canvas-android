@@ -34,6 +34,9 @@ class PushNotificationsE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Log in with any existing teacher user to test the Push Notification Page.")
         loginSignInPage.loginAs(BuildConfig.PUSH_NOTIFICATIONS_TEACHER_TEST_USER, BuildConfig.PUSH_NOTIFICATIONS_TEACHER_TEST_PASSWORD)
+
+        Log.d(STEP_TAG, "Allow the 'Help us build a better app' privacy consent dialog.")
+        cookieConsentPage.clickAllow()
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")

@@ -26,6 +26,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.CookieConsentPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
@@ -52,6 +53,7 @@ abstract class TeacherComposeTest : TeacherTest() {
     val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     val calendarFilterPage = CalendarFilterPage(composeTestRule)
     val progressPage = ProgressPage(composeTestRule)
+    val cookieConsentPage = CookieConsentPage(composeTestRule)
     val settingsPage = SettingsPage(composeTestRule)
     val inboxDetailsPage = InboxDetailsPage(composeTestRule)
     val inboxComposePage = InboxComposePage(composeTestRule)

@@ -17,6 +17,7 @@
 package com.instructure.student.ui.e2e.classic.offline
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -24,6 +25,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.canvas.espresso.utils.refresh
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -76,7 +78,14 @@ class OfflineSettingsE2ETest : StudentComposeTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
         Log.d(STEP_TAG, "Click on 'Profile Settings' menu.")
-        settingsPage.clickOnSettingsItem("Profile Settings")
+        retryWithIncreasingDelay(times = 5, maxDelay = 3000, catchBlock = {
+            Log.d(STEP_TAG, "Settings Page has not loaded properly. Press back and reopen the Settings Page.")
+            Espresso.pressBack()
+            dashboardPage.openLeftSideMenu()
+            leftSideNavigationDrawerPage.clickSettingsMenu()
+        }) {
+            settingsPage.clickOnSettingsItem("Profile Settings")
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is displayed.")
         assertNoInternetConnectionDialog()
