@@ -958,7 +958,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                 .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                 .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
                 .setDefaultColor(ContextCompat.getColor(context, R.color.darkGrayAnnotation))
-                .setDefaultTextSize(smallFont)
+                .setDefaultTextSize(defaultFreeTextPointSize)
                 .setDefaultFillColor(Color.TRANSPARENT)
                 .setCustomColorPickerEnabled(false)
                 .setHorizontalResizingEnabled(false)

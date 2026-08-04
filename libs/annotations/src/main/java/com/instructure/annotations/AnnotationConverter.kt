@@ -19,6 +19,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PointF
 import android.graphics.RectF
+import android.text.StaticLayout
+import android.text.TextPaint
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
@@ -26,6 +28,7 @@ import com.instructure.canvasapi2.models.canvadocs.CanvaDocInkList
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.pspdfkit.annotations.*
 import com.pspdfkit.annotations.Annotation
+import com.pspdfkit.utils.EdgeInsets
 import java.util.*
 
 
@@ -128,21 +131,267 @@ private fun convertFreeTextType(canvaDocAnnotation: CanvaDocAnnotation, context:
     freeTextAnnotation.color = canvaDocAnnotation.getColorInt(ContextCompat.getColor(context, (R.color.darkGrayAnnotation)))
     freeTextAnnotation.name = canvaDocAnnotation.annotationId
     freeTextAnnotation.textSize = getTextSizeFromFont(canvaDocAnnotation.font)
+    getFontFamilyFromFont(canvaDocAnnotation.font)?.let { freeTextAnnotation.fontName = it }
     freeTextAnnotation.fillColor = Color.TRANSPARENT
     freeTextAnnotation.flags.remove(AnnotationFlags.NOZOOM)
+    shrinkFreeTextToFitBox(freeTextAnnotation)
 
     return freeTextAnnotation
 }
 
-private fun getTextSizeFromFont(font: String?): Float{
-    // 14pt, 22pt, 38pt are the supported font sizes on web, but these don't match up well to PSPDFkit's font
-    return when {
-        font?.contains("14pt") == true -> smallFont
-        font?.contains("22pt") == true -> mediumFont
-        font?.contains("38pt") == true -> largeFont
-        else -> smallFont
+/**
+ * Web sizes a free-text `rect` to exactly fit its own rendering of the text. PSPDFKit's Android text
+ * layout is wider and taller than web's at the same nominal point size (see MBL-20131), so rendering
+ * at web's parsed size can overflow that rect - and PSPDFKit clips overflow instead of wrapping the
+ * box, silently losing text. Shrinks [FreeTextAnnotation.getTextSize] - never grows it - until the
+ * wrapped text fits. Any failure here (missing bounds, measurement throwing) leaves the annotation at
+ * its already-assigned size rather than breaking annotation loading.
+ *
+ * Measurement uses [TextPaint]'s default typeface. PSPDFKit's own substitution for a family absent from
+ * the device is not exposed by its API, so measurement and render can diverge; that residual risk is
+ * unavoidable with the tools the SDK offers.
+ *
+ * The winning measurement from [largestFittingPointSize] is reused for [applyMeanLineErrorTopInset]
+ * instead of being recomputed - both the size decision and the inset arithmetic come from the exact
+ * same [StaticLayout] result, and free-text annotations can otherwise trigger dozens of layout passes
+ * on the main thread.
+ *
+ * Shrinking to fit also leaves vertical slack in the box (web's leading is tighter than Android's
+ * substituted font's), which [applyMeanLineErrorTopInset] partially compensates for.
+ */
+private fun shrinkFreeTextToFitBox(freeTextAnnotation: FreeTextAnnotation) {
+    val contents = freeTextAnnotation.contents
+    if (contents.isNullOrBlank()) return
+
+    val box = freeTextAnnotation.boundingBox ?: return
+    // Fields are in PDF space (top > bottom), so RectF.height() - which assumes the opposite
+    // convention - would return a negative number here.
+    val boxWidth = box.right - box.left
+    val boxHeight = box.top - box.bottom
+    val insets = runCatching { freeTextAnnotation.textInsets }.getOrNull()
+    val usableWidth = boxWidth - (insets?.left ?: 0f) - (insets?.right ?: 0f)
+    val usableHeight = boxHeight - (insets?.top ?: 0f) - (insets?.bottom ?: 0f)
+    if (usableWidth <= 0f || usableHeight <= 0f) return
+
+    val maxHeight = usableHeight * (1f - freeTextShrinkSafetyMarginFraction)
+
+    val fitResult = runCatching {
+        largestFittingPointSize(
+            requestedPointSize = freeTextAnnotation.textSize,
+            minPointSize = minShrinkPointSize,
+            maxHeight = maxHeight,
+        ) { candidate -> measureWrappedText(contents, usableWidth, candidate) }
+    }.getOrNull() ?: return
+
+    freeTextAnnotation.textSize = fitResult.pointSize
+    applyMeanLineErrorTopInset(freeTextAnnotation, usableHeight, maxHeight, fitResult.measurement)
+}
+
+/**
+ * Best-effort halving of a residual vertical error that shrink-to-fit cannot remove: the SDK exposes
+ * no line-spacing control and no usable custom-font mechanism (see MBL-20131 progress notes), so once
+ * text is shrunk to fit the box's width, our leading is still tighter than web's - each successive
+ * line renders further above where web puts it. Shifting the whole block down by the *mean* per-line
+ * error (rather than leaving it all accumulated at the last line) halves the worst-case offset. This
+ * does not eliminate the drift - nothing client-side can - it only makes it less bad.
+ *
+ * [measurement] is the exact result [largestFittingPointSize] already produced for the chosen size -
+ * not recomputed here, so this adds no extra [StaticLayout] pass. Failure here
+ * ([FreeTextAnnotation.setTextInsets] throwing) leaves the annotation's insets untouched rather than
+ * breaking annotation loading.
+ */
+private fun applyMeanLineErrorTopInset(
+    freeTextAnnotation: FreeTextAnnotation,
+    usableBoxHeight: Float,
+    maxHeight: Float,
+    measurement: WrappedTextMeasurement,
+) {
+    val extraTopInset = meanLineErrorInset(measurement.lineCount, usableBoxHeight, maxHeight, measurement.height)
+    if (extraTopInset <= 0f) return
+
+    runCatching {
+        val existing = freeTextAnnotation.textInsets
+        freeTextAnnotation.textInsets = EdgeInsets(
+            (existing?.top ?: 0f) + extraTopInset,
+            existing?.left ?: 0f,
+            existing?.bottom ?: 0f,
+            existing?.right ?: 0f
+        )
     }
 }
+
+/**
+ * Constant downward shift equal to the mean of the per-line vertical error that accumulates when our
+ * leading is tighter than web's: line `i` (0-indexed) sits `i * (webLeading - ourLeading)` above where
+ * web renders it, so the error ranges from 0 (first line) to `(n-1) * (webLeading - ourLeading)` (last
+ * line); its mean is half that. Expressed in terms of the measured block instead of an unknown leading
+ * difference: the total slack `usableBoxHeight - measuredHeight` is `n` line-gaps' worth of that same
+ * per-line difference, so the mean error is `((n - 1) / (2n)) * slack`.
+ *
+ * [maxHeight] is the same budget [largestFittingPointSize] measured [measuredHeight] against
+ * (`usableBoxHeight` after [freeTextShrinkSafetyMarginFraction] is reserved) - the result is clamped to
+ * that budget, not to the full [usableBoxHeight]. Clamping against [usableBoxHeight] instead would let
+ * `measuredHeight + result` exceed [maxHeight] and eat into the very safety margin the shrink search
+ * reserved to absorb divergence between Android's [StaticLayout] and PSPDFKit's own layout - reachable
+ * whenever `measuredHeight > (1 - margin) * usableBoxHeight`, i.e. exactly the tight-fit case where
+ * clipping is likeliest.
+ *
+ * Guarded so it can only ever hand back a value in `[0, slack]` that also satisfies
+ * `measuredHeight + result <= maxHeight`: never applied for a single line (n < 2, mean error is 0
+ * anyway), never applied when there is no slack to redistribute ([measuredHeight] >= [usableBoxHeight]),
+ * and clamped to whichever of `slack` or the [maxHeight] budget is tighter. [lineCount] <= 0 also
+ * short-circuits to 0, avoiding a divide-by-zero.
+ */
+internal fun meanLineErrorInset(lineCount: Int, usableBoxHeight: Float, maxHeight: Float, measuredHeight: Float): Float {
+    if (lineCount < 2) return 0f
+    if (measuredHeight >= usableBoxHeight) return 0f
+
+    val slack = usableBoxHeight - measuredHeight
+    val raw = ((lineCount - 1).toFloat() / (2f * lineCount)) * slack
+    val maxHeightBudget = (maxHeight - measuredHeight).coerceAtLeast(0f)
+    return raw.coerceIn(0f, minOf(slack, maxHeightBudget))
+}
+
+/** Pairs the chosen point size with the exact [WrappedTextMeasurement] it was measured at, so callers
+ * that need the measurement (e.g. for [applyMeanLineErrorTopInset]) never have to measure again. */
+internal data class FittingSizeResult(val pointSize: Float, val measurement: WrappedTextMeasurement)
+
+/**
+ * Largest size at most [requestedPointSize] whose measured height is `<= maxHeight`. [StaticLayout]
+ * height only changes when the wrapped line count changes, so [measure] is effectively a step function
+ * of point size: a plain bisection can converge inside a fitting step rather than at its top, leaving
+ * several points of unused box height. A bounded binary search first finds a size known to fit, then
+ * [climbToTopOfStep] runs a second, narrower bisection between that size and the first search's
+ * tightest known non-fitting bound, to land at the top of that step. Both phases use fixed iteration
+ * counts, never a `while(true)` loop, so a non-monotonic [measure] cannot hang this - it just yields a
+ * size that isn't provably optimal (see the returned/fits-or-floor guarantee documented on the
+ * non-monotonic unit test). Never exceeds [requestedPointSize]: web's parsed size is the intent, this
+ * only ever shrinks it. Never returns less than [minPointSize], even if nothing fits - clipping a
+ * pathological case beats rendering invisibly small text. Returns [requestedPointSize] unchanged,
+ * measured exactly once, when it already fits.
+ *
+ * The returned [FittingSizeResult.measurement] is always the actual measurement taken at
+ * [FittingSizeResult.pointSize] - it is never recomputed or approximated - so a caller can reuse it
+ * directly instead of measuring the chosen size a second time.
+ */
+internal fun largestFittingPointSize(
+    requestedPointSize: Float,
+    minPointSize: Float,
+    maxHeight: Float,
+    measure: (pointSize: Float) -> WrappedTextMeasurement,
+): FittingSizeResult {
+    if (requestedPointSize <= minPointSize) {
+        // Already at (or below) the floor: shrinking further is pointless, so there is nothing to
+        // decide and nothing worth measuring for. lineCount=0 is a sentinel a caller's
+        // meanLineErrorInset guard already treats as "no measurement, no inset".
+        return FittingSizeResult(requestedPointSize, WrappedTextMeasurement(0f, 0))
+    }
+
+    val requestedMeasurement = measure(requestedPointSize)
+    if (requestedMeasurement.height <= maxHeight) {
+        return FittingSizeResult(requestedPointSize, requestedMeasurement)
+    }
+
+    var low = minPointSize
+    var high = requestedPointSize
+    var best = minPointSize
+    var bestMeasurement: WrappedTextMeasurement? = null
+
+    for (i in 0 until sizeSearchBisectionIterations) {
+        if (high - low <= sizeSearchBisectionTolerance) break
+        val mid = (low + high) / 2f
+        val midMeasurement = measure(mid)
+        if (midMeasurement.height <= maxHeight) {
+            best = mid
+            bestMeasurement = midMeasurement
+            low = mid
+        } else {
+            high = mid
+        }
+    }
+
+    // Nothing in the loop fit: fall back to the floor, measured once so the caller still gets a real
+    // measurement paired with the size actually returned (documented floor behaviour above).
+    val resolvedBestMeasurement = bestMeasurement ?: measure(minPointSize)
+    return climbToTopOfStep(best, resolvedBestMeasurement, high.coerceAtMost(requestedPointSize), maxHeight, measure)
+}
+
+/**
+ * Narrows from [best] (already known to fit, with [bestMeasurement] its exact measurement) up to
+ * [ceiling] (the outer bisection's tightest known non-fitting bound, itself at most
+ * `requestedPointSize`) using a second, independent bisection. This is what actually lands the result
+ * at the top of a fitting step rather than wherever the outer bisection's coarser tolerance happened to
+ * stop - replacing a fixed linear climb (which measured a step per candidate regardless of how close
+ * it already was) with a search whose measurement count only grows with the log of the remaining range.
+ * Bounded iteration count, no `while(true)`: a non-monotonic [measure] just ends the climb at its
+ * current best, never loops.
+ */
+private fun climbToTopOfStep(
+    best: Float,
+    bestMeasurement: WrappedTextMeasurement,
+    ceiling: Float,
+    maxHeight: Float,
+    measure: (pointSize: Float) -> WrappedTextMeasurement,
+): FittingSizeResult {
+    if (ceiling <= best) return FittingSizeResult(best, bestMeasurement)
+
+    var low = best
+    var lowMeasurement = bestMeasurement
+    var high = ceiling
+
+    for (i in 0 until sizeSearchClimbIterations) {
+        if (high - low <= sizeSearchClimbTolerance) break
+        val mid = (low + high) / 2f
+        val midMeasurement = measure(mid)
+        if (midMeasurement.height <= maxHeight) {
+            low = mid
+            lowMeasurement = midMeasurement
+        } else {
+            high = mid
+        }
+    }
+    return FittingSizeResult(low, lowMeasurement)
+}
+
+internal data class WrappedTextMeasurement(val height: Float, val lineCount: Int)
+
+/**
+ * How [text] wraps at [pointSize] when laid out at [width]: both the resulting height and the line
+ * count it wrapped into. Layout pixels stand in for PDF points: [largestFittingPointSize] only ever
+ * compares this against another value produced the same way, so the units cancel out and the
+ * pixel/point distinction doesn't matter.
+ */
+private fun measureWrappedText(text: String, width: Float, pointSize: Float): WrappedTextMeasurement {
+    val paint = TextPaint().apply { textSize = pointSize }
+    val layoutWidth = width.toInt().coerceAtLeast(1)
+    val layout = StaticLayout.Builder.obtain(text, 0, text.length, paint, layoutWidth).build()
+    return WrappedTextMeasurement(layout.height.toFloat(), layout.lineCount)
+}
+
+// Matches the size token anywhere and case-insensitively, since strings like "bold 38PT Verdana"
+// occur. Unsigned, so a leading "-" can never yield a negative size. Group 2 is the rest of the
+// string, which may contain spaces ("Times New Roman").
+private val freeTextFontRegex = Regex("""(\d+(?:\.\d+)?)\s*pt\b(.*)$""", RegexOption.IGNORE_CASE)
+
+private data class ParsedFont(val pointSize: Float, val family: String?)
+
+private fun parseFont(font: String?): ParsedFont {
+    val match = font?.let { freeTextFontRegex.find(it) }
+    val parsedSize = match?.groupValues?.getOrNull(1)?.toFloatOrNull()
+    val parsedFamily = match?.groupValues?.getOrNull(2)?.trim()?.takeIf { it.isNotBlank() }
+
+    val pointSize = (parsedSize ?: defaultFreeTextPointSize).coerceIn(minFreeTextPointSize, maxFreeTextPointSize)
+    return ParsedFont(pointSize, parsedFamily)
+}
+
+/**
+ * Web's `font` is `"<size>pt <Family>"`, e.g. `"14pt Verdana"`. [FreeTextAnnotation.textSize] is in
+ * PDF points, the same unit, so the parsed size maps across directly.
+ */
+internal fun getTextSizeFromFont(font: String?): Float = parseFont(font).pointSize
+
+/** Null when `font` names no family, so callers leave PSPDFKit's default typeface in place. */
+internal fun getFontFamilyFromFont(font: String?): String? = parseFont(font).family
 
 private fun convertTextType(canvaDocAnnotation: CanvaDocAnnotation) : StampAnnotation {
     val rect = canvaDocAnnotation.rect?.let { RectF(it[0][0], it[0][1], it[1][0], it[1][1]) }
@@ -432,7 +681,28 @@ const val purpleStampHex = "#741865"
 const val redStampHex = "#EE0612"
 const val yellowStampHex = "#FCB900"
 
-// Free Text Annotation Font sizes
-const val smallFont = 10f
-const val mediumFont = 18f
-const val largeFont = 32f
+// Free Text Annotation font sizes, in PDF points. 14pt is web's smallest supported size, used both
+// as the fallback for an unparseable `font` and as the default for free text created on mobile.
+const val defaultFreeTextPointSize = 14f
+private const val minFreeTextPointSize = 1f
+private const val maxFreeTextPointSize = 200f
+
+// Floor for shrink-to-fit (shrinkFreeTextToFitBox), distinct from minFreeTextPointSize above - that
+// one only sanity-clamps a parsed `font` string and has nothing to do with fitting a box. 1pt text is
+// visually indistinguishable from missing text, so shrinking that far just to avoid clipping trades
+// one readability problem for a worse one. Below this floor we accept visible-but-clipped text over
+// unreadably small text.
+internal const val minShrinkPointSize = 6f
+
+// Reserve a slice of the box height as headroom so a small divergence between Android's StaticLayout
+// measurement and PSPDFKit's own text layout still lands under the box, instead of clipping anyway.
+private const val freeTextShrinkSafetyMarginFraction = 0.03f
+
+// largestFittingPointSize search parameters, all fixed so the search is bounded and deterministic.
+// Two bisections in sequence - one to find any size that fits, one to climb to the top of that size's
+// fitting step - replace the original single bisection + 16-step fixed linear climb, measuring far
+// fewer times in the worst case while still landing at the top of the step.
+private const val sizeSearchBisectionIterations = 10
+private const val sizeSearchBisectionTolerance = 0.25f
+private const val sizeSearchClimbIterations = 8
+private const val sizeSearchClimbTolerance = 0.02f
