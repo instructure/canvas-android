@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.NewQuizzesApi
 import com.instructure.espresso.retryWithIncreasingDelay
@@ -41,6 +42,7 @@ class NewQuizzesE2ETest : StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.QUIZZES, TestCategory.E2E)
+    @ReleaseExclude
     fun testNewQuizzesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

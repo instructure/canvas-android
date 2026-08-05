@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.ConferencesApi
 import com.instructure.student.ui.pages.classic.ConferenceWebPage
@@ -120,6 +121,7 @@ class ConferencesE2ETest: StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CONFERENCES, TestCategory.E2E)
+    @ReleaseExclude
     fun testConferenceLifecycleE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

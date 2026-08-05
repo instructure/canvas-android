@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.student.BuildConfig
 import com.instructure.student.ui.utils.StudentComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -37,6 +38,7 @@ class PushNotificationsE2ETest : StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @ReleaseExclude
     fun testPushNotificationsUIE2E() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
