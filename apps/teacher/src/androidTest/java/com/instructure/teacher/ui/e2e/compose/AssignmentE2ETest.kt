@@ -735,6 +735,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    @ReleaseExclude
     fun testVideoFileUploadSubmissionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
