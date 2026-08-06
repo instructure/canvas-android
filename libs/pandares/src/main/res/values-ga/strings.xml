@@ -527,7 +527,6 @@
 
     <string name="pages">Leathanaigh</string>
     <string name="noPageFound">Níl aon eolas leathanach ar fáil.</string>
-    <string name="noPagesInContext">Níl aon leathanaigh ar fáil chuige seo</string>
     <string name="modified">Athraithe Deiridh:</string>
     <string name="lastModified">Athraithe Deiridh: %1$s</string>
 

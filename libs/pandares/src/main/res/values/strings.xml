@@ -527,7 +527,8 @@
 
     <string name="pages">Pages</string>
     <string name="noPageFound">There is no page information available.</string>
-    <string name="noPagesInContext">There are no pages available for this</string>
+    <string name="noPagesAvailableForCourse">There are no pages available for this course.</string>
+    <string name="noPagesAvailableForGroup">There are no pages available for this group.</string>
     <string name="modified">Last Modified:</string>
     <string name="lastModified">Last Modified: %1$s</string>
 

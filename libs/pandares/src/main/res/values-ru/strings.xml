@@ -549,7 +549,6 @@
 
     <string name="pages">Страницы</string>
     <string name="noPageFound">Нет доступной информации о странице.</string>
-    <string name="noPagesInContext">Нет страниц доступных для этого</string>
     <string name="modified">Последнее изменение:</string>
     <string name="lastModified">Последнее изменение: %1$s</string>
 

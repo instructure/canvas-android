@@ -19,9 +19,10 @@ package com.instructure.ngc.coursehome.home
 import androidx.lifecycle.SavedStateHandle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.ngc.features.coursehome.CourseHomeViewModel
 import com.instructure.ngc.features.coursehome.home.CourseHomeTabViewModel
-import com.instructure.pandautils.domain.usecase.pages.LoadCourseFrontPageUseCase
+import com.instructure.pandautils.domain.usecase.pages.LoadFrontPageUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
@@ -42,7 +43,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class CourseHomeTabViewModelTest {
 
-    private val loadCourseFrontPageUseCase: LoadCourseFrontPageUseCase = mockk(relaxed = true)
+    private val loadFrontPageUseCase: LoadFrontPageUseCase = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -58,9 +59,9 @@ class CourseHomeTabViewModelTest {
 
     @Test
     fun `Initial state is loading`() = runTest {
-        coEvery { loadCourseFrontPageUseCase(any()) } coAnswers {
+        coEvery { loadFrontPageUseCase(any()) } coAnswers {
             kotlinx.coroutines.delay(100)
-            Page(body = "<p>Hello</p>")
+            DataResult.Success(Page(body = "<p>Hello</p>"))
         }
 
         val viewModel = getViewModel()
@@ -72,7 +73,7 @@ class CourseHomeTabViewModelTest {
 
     @Test
     fun `Successful load exposes front page body`() = runTest {
-        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "<p>Welcome</p>")
+        coEvery { loadFrontPageUseCase(any()) } returns DataResult.Success(Page(body = "<p>Welcome</p>"))
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -85,7 +86,7 @@ class CourseHomeTabViewModelTest {
 
     @Test
     fun `Blank front page body yields null content`() = runTest {
-        coEvery { loadCourseFrontPageUseCase(any()) } returns Page(body = "")
+        coEvery { loadFrontPageUseCase(any()) } returns DataResult.Success(Page(body = ""))
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -97,7 +98,7 @@ class CourseHomeTabViewModelTest {
 
     @Test
     fun `Null page response yields null content`() = runTest {
-        coEvery { loadCourseFrontPageUseCase(any()) } returns null
+        coEvery { loadFrontPageUseCase(any()) } returns DataResult.Fail()
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -110,7 +111,7 @@ class CourseHomeTabViewModelTest {
     @Test
     fun `Failed load sets error state and records exception`() = runTest {
         val error = RuntimeException("Boom")
-        coEvery { loadCourseFrontPageUseCase(any()) } throws error
+        coEvery { loadFrontPageUseCase(any()) } throws error
 
         val viewModel = getViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
@@ -126,7 +127,7 @@ class CourseHomeTabViewModelTest {
         val savedStateHandle = SavedStateHandle(mapOf(CourseHomeViewModel.ARG_COURSE_ID to courseId))
         return CourseHomeTabViewModel(
             savedStateHandle,
-            loadCourseFrontPageUseCase,
+            loadFrontPageUseCase,
             crashlytics,
         )
     }

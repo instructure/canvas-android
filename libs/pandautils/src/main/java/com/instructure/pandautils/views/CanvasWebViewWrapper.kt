@@ -73,6 +73,12 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     var themeSwitched = false
         private set
 
+    // The night-mode flag the currently-loaded HTML was themed for. Content colors are baked into the
+    // HTML rather than restyled in place, so only a change to *this* requires a reload. Any other
+    // configuration change (notably rotation) must not reload, or the WebView loses its scroll position
+    // and re-renders for nothing.
+    private var loadedNightModeFlags: Int = currentNightModeFlags()
+
     private val binding: ViewCanvasWebViewWrapperBinding
 
     val webView: CanvasWebView
@@ -90,7 +96,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
             html?.let { html ->
                 themeSwitched = !themeSwitched
                 changeButtonTheme()
-                onThemeChanged(themeSwitched, html)
+                preservingScrollPosition { onThemeChanged(themeSwitched, html) }
             }
         }
 
@@ -118,6 +124,20 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     private fun reapplyButtonThemeIfVisible() {
         if (binding.themeSwitchButton.isVisible) changeButtonTheme()
     }
+
+    /**
+     * Re-loading is the only way to re-color content whose colors are baked into the HTML, but it resets
+     * the WebView's scroll position - restore it once the reload has settled.
+     */
+    private fun preservingScrollPosition(reload: () -> Unit) {
+        val scrollY = binding.contentWebView.scrollY
+        reload()
+        binding.contentWebView.postDelayed({
+            binding.contentWebView.scrollTo(0, scrollY)
+        }, 100)
+    }
+
+    private fun currentNightModeFlags() = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
 
     private fun changeContentTheme(html: String, extraFormatting: ((String) -> String)? = null) {
         // Capture the consumer's override once (before we start toggling it for theme switches).
@@ -187,6 +207,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     }
 
     private fun initVisibility(html: String) {
+        loadedNightModeFlags = currentNightModeFlags()
         updateButtonVisibility(html)
         if (binding.themeSwitchButton.visibility == android.view.View.VISIBLE) {
             changeButtonTheme()
@@ -194,8 +215,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
     }
 
     private fun updateButtonVisibility(html: String) {
-        val nightModeFlags: Int = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES && html.isNotEmpty()) {
+        if (currentNightModeFlags() == Configuration.UI_MODE_NIGHT_YES && html.isNotEmpty()) {
             binding.themeSwitchButton.setVisible()
         } else {
             binding.themeSwitchButton.setGone()
@@ -204,7 +224,14 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        handleConfigurationChange()
+        // Only reload when the content's colors actually became stale, i.e. night mode flipped. Hosts that
+        // declare `android:configChanges` (e.g. `orientation|screenSize`) handle those changes themselves
+        // without recreating this View, so we get this callback for rotations too - reloading there would
+        // re-render and scroll back to the top even though no color has changed.
+        val nightModeFlags = newConfig?.let { it.uiMode and Configuration.UI_MODE_NIGHT_MASK } ?: currentNightModeFlags()
+        val nightModeChanged = nightModeFlags != loadedNightModeFlags
+        loadedNightModeFlags = nightModeFlags
+        handleConfigurationChange(reloadContent = nightModeChanged)
     }
 
     fun setHtmlContent(content: String?) {
@@ -221,7 +248,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
             if (binding.themeSwitchButton.isVisible) {
                 changeButtonTheme()
                 if (reloadContent) {
-                    changeContentTheme(htmlContent)
+                    preservingScrollPosition { changeContentTheme(htmlContent) }
                 }
             }
         }

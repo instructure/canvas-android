@@ -527,7 +527,6 @@
 
     <string name="pages">Ngā whārangi</string>
     <string name="noPageFound">Kāore he mōhiohio whārangi e wātea ana.</string>
-    <string name="noPagesInContext">Kaore ngā whārangi e wātea ana mō tenei</string>
     <string name="modified">Whakarerekētanga Mutunga:</string>
     <string name="lastModified">Whakarerekētanga Mutunga: %1$s</string>
 

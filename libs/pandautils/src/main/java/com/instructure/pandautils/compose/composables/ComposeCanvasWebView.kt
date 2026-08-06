@@ -32,6 +32,13 @@ data class ComposeWebViewCallbacks(
     val canRouteInternally: (String) -> Boolean = { _ -> false },
     val routeInternally: (String) -> Unit = { _ -> },
     val onReceivedError: (WebView, Int, String, String) -> Unit = { _, _, _, _ -> },
+    /**
+     * Internal file links (canvadocs/Canvas file/caption downloads) linked directly in the content,
+     * as opposed to media embedded via a Studio-style player. Null by default, meaning the consumer
+     * doesn't handle downloads; [ComposeCanvasWebViewWrapper] only wires the underlying WebView's
+     * media download callback when this is non-null, so download interception stays opt-in.
+     */
+    val downloadInternalMedia: ((mime: String?, url: String, filename: String) -> Unit)? = null,
 )
 
 data class ComposeEmbeddedWebViewCallbacks(

@@ -527,7 +527,6 @@
 
     <string name="pages">Sidor</string>
     <string name="noPageFound">Det finns ingen sidinformation tillgänglig.</string>
-    <string name="noPagesInContext">Det finns inga sidor tillgängliga för det här</string>
     <string name="modified">Senast ändrad:</string>
     <string name="lastModified">Senast ändrad: %1$s</string>
 

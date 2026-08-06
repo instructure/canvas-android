@@ -516,7 +516,6 @@
 
     <string name="pages">ページ</string>
     <string name="noPageFound">ページ情報は利用できません。</string>
-    <string name="noPagesInContext">このために利用できるページはありません</string>
     <string name="modified">最後の変更:</string>
     <string name="lastModified">最後の変更:%1$s</string>
 

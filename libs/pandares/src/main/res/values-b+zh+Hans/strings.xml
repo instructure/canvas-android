@@ -516,7 +516,6 @@
 
     <string name="pages">页面</string>
     <string name="noPageFound">没有可用的页面信息。</string>
-    <string name="noPagesInContext">没有页面为此可用</string>
     <string name="modified">上一次更改：</string>
     <string name="lastModified">上一次更改：%1$s</string>
 

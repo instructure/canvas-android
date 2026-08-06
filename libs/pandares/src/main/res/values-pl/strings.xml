@@ -549,7 +549,6 @@
 
     <string name="pages">Strony</string>
     <string name="noPageFound">Brak informacji o stronie.</string>
-    <string name="noPagesInContext">Brak dostępnych stron do tego zadania</string>
     <string name="modified">Ostatnia modyfikacja:</string>
     <string name="lastModified">Ostatnia modyfikacja: %1$s</string>
 

@@ -55,7 +55,7 @@ class StudentSmartSearchInteractionTest : SmartSearchInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions())
-    private val pageDetailsPage = PageDetailsPage(ModuleItemInteractions())
+    private val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     override fun initData(): MockCanvas {
         val data = MockCanvas.init(

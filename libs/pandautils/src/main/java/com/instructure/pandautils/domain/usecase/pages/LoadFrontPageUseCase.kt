@@ -15,21 +15,23 @@
  */
 package com.instructure.pandautils.domain.usecase.pages
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.page.PageRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-class LoadCourseFrontPageUseCase @Inject constructor(
-    private val pageRepository: PageRepository,
-) : BaseUseCase<LoadCourseFrontPageUseCase.Params, Page?>() {
+class LoadFrontPageUseCase @Inject constructor(
+    private val pageRepository: PageRepository
+) : BaseUseCase<LoadFrontPageUseCase.Params, DataResult<Page>>() {
 
-    override suspend fun execute(params: Params): Page? {
-        return pageRepository.getFrontPage(params.courseId, params.forceNetwork)
+    override suspend fun execute(params: Params): DataResult<Page> {
+        return pageRepository.getFrontPage(params.canvasContext, params.forceNetwork)
     }
 
     data class Params(
-        val courseId: Long,
-        val forceNetwork: Boolean = false,
+        val canvasContext: CanvasContext,
+        val forceNetwork: Boolean = false
     )
 }

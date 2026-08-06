@@ -69,7 +69,6 @@ import com.instructure.student.ui.pages.classic.ModuleProgressionPage
 import com.instructure.student.ui.pages.classic.ModulesPage
 import com.instructure.student.ui.pages.classic.NewQuizWebViewPage
 import com.instructure.student.ui.pages.classic.NotificationPage
-import com.instructure.student.ui.pages.classic.PageDetailsPage
 import com.instructure.student.ui.pages.classic.PageListPage
 import com.instructure.student.ui.pages.classic.PairObserverPage
 import com.instructure.student.ui.pages.classic.PandaAvatarPage
@@ -145,7 +144,6 @@ abstract class StudentTest : CanvasTest() {
     val modulesPage = ModulesPage()
     val notificationPage = NotificationPage()
     val pageListPage = PageListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val pageDetailsPage = PageDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val pairObserverPage = PairObserverPage()
     val pandaAvatarPage = PandaAvatarPage()
     val peopleListPage = PeopleListPage()

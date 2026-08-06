@@ -527,7 +527,6 @@
 
     <string name="pages">Paj</string>
     <string name="noPageFound">Pa gen oken enfòmasyon paj disponib.</string>
-    <string name="noPagesInContext">Pa gen paj ki disponib pou sa a</string>
     <string name="modified">Dènye Modifikasyon:</string>
     <string name="lastModified">Dènye Modifikasyon: %1$s</string>
 

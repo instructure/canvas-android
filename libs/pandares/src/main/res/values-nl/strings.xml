@@ -527,7 +527,6 @@
 
     <string name="pages">Pagina\'s</string>
     <string name="noPageFound">Er is geen pagina-informatie beschikbaar</string>
-    <string name="noPagesInContext">Er zijn hier geen pagina\'s voor beschikbaar</string>
     <string name="modified">Laatst gewijzigd:</string>
     <string name="lastModified">Laatst gewijzigd: %1$s</string>
 

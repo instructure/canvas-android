@@ -527,7 +527,6 @@
 
     <string name="pages">Sivut</string>
     <string name="noPageFound">Sivutietoja ei ole saatavilla.</string>
-    <string name="noPagesInContext">Tälle ei ole sivuja saatavana.</string>
     <string name="modified">Viimeksi muokattu:</string>
     <string name="lastModified">Viimeksi muokattu: %1$s</string>
 

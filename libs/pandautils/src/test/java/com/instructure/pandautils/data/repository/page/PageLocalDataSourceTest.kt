@@ -1,44 +1,42 @@
 /*
- * Copyright (C) 2023 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
 
-package com.instructure.student.features.pages.details
+package com.instructure.pandautils.data.repository.page
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.facade.PageFacade
-import com.instructure.student.features.pages.details.datasource.PageDetailsLocalDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
-class PageDetailsLocalDataSourceTest {
+class PageLocalDataSourceTest {
 
     private val pageFacade: PageFacade = mockk(relaxed = true)
 
-    private lateinit var localDataSource: PageDetailsLocalDataSource
+    private lateinit var localDataSource: PageLocalDataSource
 
     @Before
     fun setup() {
-        localDataSource = PageDetailsLocalDataSource(pageFacade)
+        localDataSource = PageLocalDataSource(pageFacade)
     }
 
     @Test
@@ -49,7 +47,7 @@ class PageDetailsLocalDataSourceTest {
 
         val result = localDataSource.getFrontPage(CanvasContext.emptyCourseContext(1), true)
 
-        TestCase.assertEquals(DataResult.Success(expected), result)
+        assertEquals(DataResult.Success(expected), result)
         coVerify(exactly = 1) {
             pageFacade.getFrontPage(1)
         }
@@ -61,7 +59,7 @@ class PageDetailsLocalDataSourceTest {
 
         val result = localDataSource.getFrontPage(CanvasContext.emptyCourseContext(1), true)
 
-        TestCase.assertEquals(DataResult.Fail(), result)
+        assertEquals(DataResult.Fail(), result)
         coVerify(exactly = 1) {
             pageFacade.getFrontPage(1)
         }
@@ -75,7 +73,7 @@ class PageDetailsLocalDataSourceTest {
 
         val result = localDataSource.getPageDetails(CanvasContext.emptyCourseContext(1), "id", true)
 
-        TestCase.assertEquals(DataResult.Success(expected), result)
+        assertEquals(DataResult.Success(expected), result)
         coVerify(exactly = 1) {
             pageFacade.getPageDetails(1, "id")
         }
@@ -87,7 +85,7 @@ class PageDetailsLocalDataSourceTest {
 
         val result = localDataSource.getPageDetails(CanvasContext.emptyCourseContext(1), "id", true)
 
-        TestCase.assertEquals(DataResult.Fail(), result)
+        assertEquals(DataResult.Fail(), result)
         coVerify(exactly = 1) {
             pageFacade.getPageDetails(1, "id")
         }

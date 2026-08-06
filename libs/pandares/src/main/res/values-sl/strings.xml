@@ -527,7 +527,6 @@
 
     <string name="pages">Strani</string>
     <string name="noPageFound">Informacije o strani niso na voljo.</string>
-    <string name="noPagesInContext">Ni razpoložljivih strani za to</string>
     <string name="modified">Nazadnje prilagojeno:</string>
     <string name="lastModified">Nazadnje prilagojeno: %1$s</string>
 

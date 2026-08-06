@@ -570,7 +570,6 @@
 
     <string name="pages">الصفحات</string>
     <string name="noPageFound">لا تتوفر أي صفحة معلومات</string>
-    <string name="noPagesInContext">لا تتوفر أي صفحات لذلك</string>
     <string name="modified">تاريخ آخر تعديل:</string>
     <string name="lastModified">تاريخ آخر تعديل: %1$s</string>
 

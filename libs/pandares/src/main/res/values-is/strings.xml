@@ -527,7 +527,6 @@
 
     <string name="pages">Síður</string>
     <string name="noPageFound">Það eru engar síðuupplýsingar tiltækar.</string>
-    <string name="noPagesInContext">Það eru engar síður tiltækar fyrir þetta</string>
     <string name="modified">Síðast breytt:</string>
     <string name="lastModified">Síðast breytt: %1$s</string>
 

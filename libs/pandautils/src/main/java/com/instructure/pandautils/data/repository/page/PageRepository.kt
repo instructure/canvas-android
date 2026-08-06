@@ -16,8 +16,17 @@
 
 package com.instructure.pandautils.data.repository.page
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.DataResult
 
+/**
+ * Returns [DataResult] rather than a nullable [Page] because the page details screen distinguishes
+ * error cases by HTTP status code (a 4xx on a front page yields a "no pages in this course" message
+ * instead of the generic one) - see PageDetailsViewModel.onFetchFailed. Callers that don't care can
+ * narrow with dataOrNull.
+ */
 interface PageRepository {
-    suspend fun getFrontPage(courseId: Long, forceRefresh: Boolean): Page?
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceRefresh: Boolean): DataResult<Page>
+    suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page>
 }

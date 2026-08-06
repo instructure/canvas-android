@@ -16,8 +16,11 @@
 
 package com.instructure.pandautils.data.repository.page
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.utils.DataResult
 
 interface PageDataSource {
-    suspend fun getFrontPage(courseId: Long, forceRefresh: Boolean): Page?
+    suspend fun getFrontPage(canvasContext: CanvasContext, forceRefresh: Boolean): DataResult<Page>
+    suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page>
 }

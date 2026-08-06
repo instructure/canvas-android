@@ -20,8 +20,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.ngc.features.coursehome.CourseHomeViewModel
-import com.instructure.pandautils.domain.usecase.pages.LoadCourseFrontPageUseCase
+import com.instructure.pandautils.domain.usecase.pages.LoadFrontPageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseHomeTabViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val loadCourseFrontPageUseCase: LoadCourseFrontPageUseCase,
+    private val loadFrontPageUseCase: LoadFrontPageUseCase,
     private val crashlytics: FirebaseCrashlytics,
 ) : ViewModel() {
 
@@ -49,9 +50,9 @@ class CourseHomeTabViewModel @Inject constructor(
     private fun loadFrontPage() {
         viewModelScope.launch {
             try {
-                val page = loadCourseFrontPageUseCase(
-                    LoadCourseFrontPageUseCase.Params(courseId, false)
-                )
+                val page = loadFrontPageUseCase(
+                    LoadFrontPageUseCase.Params(CanvasContext.emptyCourseContext(courseId), false)
+                ).dataOrNull
                 val content = page?.body?.takeIf { it.isNotBlank() }
                 _uiState.update { it.copy(isLoading = false, content = content) }
             } catch (e: Exception) {

@@ -527,7 +527,6 @@
 
     <string name="pages">Páginas</string>
     <string name="noPageFound">No hay información disponible de la página.</string>
-    <string name="noPagesInContext">No hay páginas disponibles para este</string>
     <string name="modified">Modificado por última vez:</string>
     <string name="lastModified">Modificado por última vez: %1$s</string>
 

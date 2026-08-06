@@ -527,7 +527,6 @@
 
     <string name="pages">Halaman</string>
     <string name="noPageFound">Tiada maklumat halaman tersedia.</string>
-    <string name="noPagesInContext">Tiada halaman yang tersedia untuk ini</string>
     <string name="modified">Terakhir Diubah Suai:</string>
     <string name="lastModified">Terakhir Diubah Suai: %1$s</string>
 

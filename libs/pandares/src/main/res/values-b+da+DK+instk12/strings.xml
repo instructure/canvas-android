@@ -527,7 +527,6 @@
 
     <string name="pages">Sider</string>
     <string name="noPageFound">Der er ingen tilgængelige sideinformationer.</string>
-    <string name="noPagesInContext">Der er ingen tilgængelige sider for dette</string>
     <string name="modified">Sidst redigeret:</string>
     <string name="lastModified">Sidst redigeret: %1$s</string>
 

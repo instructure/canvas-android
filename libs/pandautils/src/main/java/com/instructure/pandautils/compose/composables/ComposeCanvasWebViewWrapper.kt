@@ -21,11 +21,9 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
@@ -68,13 +66,16 @@ fun ComposeCanvasWebViewWrapper(
 ) {
     val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel(key = webViewStateKey)
     val webViewState = stateViewModel.webViewState
-    val savedHtml = rememberSaveable(content, stateSaver = Saver(
-        save = { it },
-        restore = { it }
-    )) { mutableStateOf(content) }
     val savedThemeSwitched = rememberSaveable { bundleOf("themeSwitched" to false) }
-    val configuration = LocalConfiguration.current
-    val configKey = "${configuration.orientation}-${configuration.uiMode}"
+    // Both reset exactly when this composable's underlying View is torn down and recreated (e.g. the
+    // Fragment view is destroyed/recreated), and persist across recompositions that leave the same View
+    // instance in place (e.g. a configuration change the host Activity handles itself without
+    // recreating the View) - which is what lets us tell "genuinely new View" apart from "same View,
+    // just re-evaluated" below, instead of reloading (and losing scroll position) on every recomposition.
+    // Plain (non-snapshot) state: these flags never need to trigger recomposition, and reading them
+    // via mutableStateOf inside AndroidView's update lambda while also writing them there would
+    // invalidate the update block's own snapshot read-observer, scheduling a redundant second pass.
+    val viewState = remember { object { var isFirstUpdate = true; var loadedContent = content } }
 
     if (LocalInspectionMode.current) {
         Text(text = content)
@@ -98,6 +99,15 @@ fun ComposeCanvasWebViewWrapper(
                             override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) =
                                 webViewCallbacks.onReceivedError(webView, errorCode, description, failingUrl)
                         }
+                        webViewCallbacks.downloadInternalMedia?.let { downloadInternalMedia ->
+                            webView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback {
+                                override fun downloadMedia(mime: String?, url: String?, filename: String?) = Unit
+
+                                override fun downloadInternalMedia(mime: String?, url: String?, filename: String?) {
+                                    downloadInternalMedia(mime, url.orEmpty(), filename.orEmpty())
+                                }
+                            })
+                        }
                     }
                     if (embeddedWebViewCallbacks != null) {
                         webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
@@ -113,29 +123,42 @@ fun ComposeCanvasWebViewWrapper(
                 }
             },
             update = { view ->
-                configKey // Read configuration to trigger update on change
-                savedHtml.value = content // Update saved HTML on each update
-                if (webViewState.isEmpty || !preserveState) {
+                val contentChanged = !viewState.isFirstUpdate && viewState.loadedContent != content
+                val canRestore = viewState.isFirstUpdate && preserveState && !webViewState.isEmpty
+                val isFirstUpdate = viewState.isFirstUpdate
+                viewState.loadedContent = content
+                viewState.isFirstUpdate = false
+                if (canRestore) {
+                    // This exact View instance was just (re)created (e.g. popping back from an internal
+                    // screen, or a configuration change the host Activity doesn't handle itself) and we
+                    // have saved state for it - restore rather than reload so scroll position/DOM state
+                    // survive.
+                    view.webView.restoreState(webViewState)
+                    view.setHtmlContent(content)
+                    view.setThemeSwitched(savedThemeSwitched.getBoolean("themeSwitched", false))
+                    view.handleConfigurationChange(reloadContent = false)
+                } else if (isFirstUpdate || contentChanged || !preserveState) {
+                    // First ever load for this WebView, a genuinely new/different page, or a consumer
+                    // that opted out of state preservation - (re)load it fresh.
                     if (useInAppFormatting) {
-                        view.loadHtml(savedHtml.value, title, baseUrl)
+                        view.loadHtml(content, title, baseUrl)
                     } else {
-                        view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), savedHtml.value, contentType, "UTF-8", null)
+                        view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
                     }
 
                     if (onLtiButtonPressed != null) {
                         view.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
                     }
 
-                    if (HtmlContentFormatter.hasGoogleDocsUrl(savedHtml.value)) {
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(content)) {
                         view.webView.addJavascriptInterface(JsGoogleDocsInterface(view.context), Const.GOOGLE_DOCS)
                     }
                     view.handleConfigurationChange()
-                } else {
-                    view.webView.restoreState(webViewState)
-                    view.setHtmlContent(savedHtml.value)
-                    view.setThemeSwitched(savedThemeSwitched.getBoolean("themeSwitched", false))
-                    view.handleConfigurationChange(reloadContent = false)
                 }
+                // else: the same View instance already showing this exact content was just re-evaluated
+                // (e.g. a configuration change the host Activity handles itself without recreating the
+                // View) - nothing to do, the WebView keeps its own scroll position and already reacts to
+                // configuration changes on its own.
                 applyOnUpdate?.let { applyOnUpdate -> view.applyOnUpdate() }
             },
             onRelease = {

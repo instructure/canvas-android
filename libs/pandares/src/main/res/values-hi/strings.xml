@@ -527,7 +527,6 @@
 
     <string name="pages">पेज</string>
     <string name="noPageFound">पेज की कोई जानकारी उपलब्ध नहीं है।</string>
-    <string name="noPagesInContext">इसके लिए कोई पेज उपलब्ध नहीं है</string>
     <string name="modified">अंतिम बार संशोधन का समय:</string>
     <string name="lastModified">अंतिम बार संशोधन का समय: %1$s</string>
 

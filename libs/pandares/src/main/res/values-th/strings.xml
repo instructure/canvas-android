@@ -527,7 +527,6 @@
 
     <string name="pages">เพจ</string>
     <string name="noPageFound">ไม่มีข้อมูลเพจ</string>
-    <string name="noPagesInContext">ไม่มีเพจสำหรับเนื้อหาส่วนนี้</string>
     <string name="modified">แก้ไขล่าสุด:</string>
     <string name="lastModified">แก้ไขล่าสุด: %1$s</string>
 

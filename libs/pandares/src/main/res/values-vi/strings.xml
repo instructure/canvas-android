@@ -527,7 +527,6 @@
 
     <string name="pages">Trang</string>
     <string name="noPageFound">Không có thông tin trang nào có thể sử dụng.</string>
-    <string name="noPagesInContext">Không có trang có thể sử dụng cho nội dung này</string>
     <string name="modified">Lần Sửa Đổi Gần Nhất:</string>
     <string name="lastModified">Lần Sửa Đổi Gần Nhất: %1$s</string>
 

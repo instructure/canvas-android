@@ -43,6 +43,7 @@ import com.instructure.canvas.espresso.common.pages.compose.ToDoListPage
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.ui.pages.classic.PageDetailsPage
 import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
 import com.instructure.student.ui.pages.compose.NewDashboardPage
 import com.instructure.student.ui.pages.compose.TextSubmissionUploadPage
@@ -84,4 +85,11 @@ abstract class StudentComposeTest : StudentTest() {
     val textSubmissionUploadPage = TextSubmissionUploadPage(composeTestRule)
     val gradesPage = GradesPage(composeTestRule)
     val newDashboardPage = NewDashboardPage(composeTestRule)
+    val pageDetailsPage = PageDetailsPage(
+        ModuleItemInteractions(
+            R.id.moduleName,
+            R.id.next_item,
+            R.id.prev_item
+        ), composeTestRule
+    )
 }
