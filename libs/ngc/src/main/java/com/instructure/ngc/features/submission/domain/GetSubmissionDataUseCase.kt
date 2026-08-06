@@ -43,6 +43,7 @@ class GetSubmissionDataUseCase @Inject constructor(
         Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
         Assignment.SubmissionType.ONLINE_UPLOAD,
         Assignment.SubmissionType.ONLINE_URL,
+        Assignment.SubmissionType.STUDENT_ANNOTATION,
         Assignment.SubmissionType.MEDIA_RECORDING,
     )
 
@@ -117,6 +118,8 @@ class GetSubmissionDataUseCase @Inject constructor(
             instructionsHtml = assignment.description,
             draftUrl = payload.draftUrl,
             urlDraftSavedAt = payload.urlDraftSavedAt,
+            submissionId = assignment.submission?.id?.takeIf { it > 0 },
+            annotatableAttachmentId = assignment.annotatableAttachmentId,
             draftMediaPath = payload.draftMediaPath,
             draftMediaName = payload.draftMediaName,
             draftMediaContentType = payload.draftMediaContentType,

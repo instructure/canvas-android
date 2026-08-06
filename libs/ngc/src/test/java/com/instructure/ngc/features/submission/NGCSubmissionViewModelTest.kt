@@ -23,8 +23,10 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.ngc.features.rubric.NgcRubricCriterion
 import com.instructure.ngc.features.rubric.NgcRubricRating
 import com.instructure.ngc.features.rubric.NgcRubricUiState
+import com.instructure.ngc.features.submission.domain.CanvaDocSessionData
 import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
 import com.instructure.ngc.features.submission.domain.FileDraftData
+import com.instructure.ngc.features.submission.domain.GetCanvaDocSessionUseCase
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetMediaDraftUseCase
@@ -43,6 +45,7 @@ import com.instructure.ngc.features.submission.domain.SubmissionData
 import com.instructure.ngc.features.submission.domain.SubmissionFileData
 import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
+import com.instructure.ngc.features.submission.domain.SubmitStudentAnnotationUseCase
 import com.instructure.ngc.features.submission.domain.SubmitMediaUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
@@ -58,6 +61,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -98,6 +102,8 @@ class NGCSubmissionViewModelTest {
     private val saveUrlDraftUseCase: SaveUrlDraftUseCase = mockk()
     private val deleteDraftUseCase: DeleteDraftUseCase = mockk()
     private val submitUrlUseCase: SubmitUrlUseCase = mockk()
+    private val getCanvaDocSessionUseCase: GetCanvaDocSessionUseCase = mockk()
+    private val submitStudentAnnotationUseCase: SubmitStudentAnnotationUseCase = mockk()
     private val getMediaDraftUseCase: GetMediaDraftUseCase = mockk()
     private val saveMediaDraftUseCase: SaveMediaDraftUseCase = mockk()
     private val submitMediaUseCase: SubmitMediaUseCase = mockk()
@@ -737,6 +743,8 @@ class NGCSubmissionViewModelTest {
             saveUrlDraftUseCase = saveUrlDraftUseCase,
             deleteDraftUseCase = deleteDraftUseCase,
             submitUrlUseCase = submitUrlUseCase,
+            getCanvaDocSessionUseCase = getCanvaDocSessionUseCase,
+            submitStudentAnnotationUseCase = submitStudentAnnotationUseCase,
             getMediaDraftUseCase = getMediaDraftUseCase,
             saveMediaDraftUseCase = saveMediaDraftUseCase,
             submitMediaUseCase = submitMediaUseCase,
@@ -1853,6 +1861,367 @@ class NGCSubmissionViewModelTest {
     }
 
     // -------------------------------------------------------------------------
+    // Student Annotation — live (gated via ngcImplementedTypes, routed from the submit chooser as of
+    // Phase 4). Exercised here via direct invocation of the onSubmissionTypeSelected/onSubmit lambdas,
+    // the same entry points the Compose layer calls once the type is selected.
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `onSubmissionTypeSelected STUDENT_ANNOTATION - loads canvadoc session into studentAnnotationState`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 777L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertEquals(Assignment.SubmissionType.STUDENT_ANNOTATION, state.selectedType)
+        assertEquals("https://canvadocs.example.com/session/abc", state.studentAnnotationState.sessionUrl)
+        assertFalse(state.studentAnnotationState.sessionLoading)
+        assertNull(state.studentAnnotationState.sessionLoadError)
+    }
+
+    @Test
+    fun `onSubmissionTypeSelected STUDENT_ANNOTATION - session load failure sets sessionLoadError`() = runTest {
+        val data = minimalSubmissionData()
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } throws RuntimeException("network error")
+        every { context.getString(any()) } returns "Failed to load submission"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertFalse(state.studentAnnotationState.sessionLoading)
+        assertNotNull(state.studentAnnotationState.sessionLoadError)
+        assertTrue(state.studentAnnotationState.sessionUrl.isEmpty())
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION success - uses loaded annotatableAttachmentId and sets submissionSuccess`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 999L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coJustRun { submitStudentAnnotationUseCase(any()) }
+        val successEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "student_annotation",
+            userId = 1L,
+            progress = 100.0f,
+            errorFlag = false,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.STUDENT_ANNOTATION)
+            )
+        } returns flowOf(successEntity)
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Register a flush the way the Compose layer does via AndroidFragment's onUpdate, once the
+        // hosted fragment is ready. Submitting without a registered flush is now treated as unsafe
+        // (see the dedicated "without a registered flush" test below).
+        vm.uiState.value.studentAnnotationState.registerAnnotationFlush { true }
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify {
+            submitStudentAnnotationUseCase(match {
+                it.annotatableAttachmentId == 999L && it.assignmentId == assignmentId
+            })
+        }
+        val state = vm.uiState.value
+        assertTrue(state.submissionSuccess)
+        assertFalse(state.submitting)
+    }
+
+    /**
+     * Regression for the QA finding that a brief error flashed over the annotation pane on submit.
+     * The success branch used to replace studentAnnotationState with a fresh StudentAnnotationUiState(),
+     * which blanked sessionUrl — and StudentAnnotationContent renders its error state (with a Retry
+     * button) whenever sessionUrl is blank. Replacing the sub-state also reset its callbacks to the
+     * no-op defaults, so that Retry was dead.
+     */
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION success - leaves the session and its callbacks intact`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 999L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coJustRun { submitStudentAnnotationUseCase(any()) }
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.STUDENT_ANNOTATION)
+            )
+        } returns flowOf(
+            CreateSubmissionEntity(
+                id = 1L,
+                assignmentId = assignmentId,
+                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                submissionType = "student_annotation",
+                userId = 1L,
+                progress = 100.0f,
+                errorFlag = false,
+            )
+        )
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.studentAnnotationState.registerAnnotationFlush { true }
+
+        val retryBefore = vm.uiState.value.studentAnnotationState.onRetrySessionLoad
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val annotationState = vm.uiState.value.studentAnnotationState
+        assertTrue(vm.uiState.value.submissionSuccess)
+        // Not blanked -> the pane never falls into its "failed to load" branch on the way out.
+        assertEquals("https://canvadocs.example.com/session/abc", annotationState.sessionUrl)
+        assertNull(annotationState.sessionLoadError)
+        assertFalse(annotationState.sessionLoading)
+        // Callbacks survive, so nothing rendered afterwards is wired to a no-op.
+        assertEquals(retryBefore, annotationState.onRetrySessionLoad)
+    }
+
+    /**
+     * Regression for the review finding that a slow canvadoc session load wrote submitEnabled
+     * unconditionally: switching to an empty text draft while the load was in flight left Submit
+     * enabled, and onSubmit() then routed to submitText() with an empty body.
+     */
+    @Test
+    fun `loadCanvaDocSession - a session load landing after a type switch does not enable submit`() = runTest {
+        coEvery { getSubmissionDataUseCase(any()) } returns minimalSubmissionData(annotatableAttachmentId = 999L)
+        val session = CompletableDeferred<CanvaDocSessionData>()
+        coEvery { getCanvaDocSessionUseCase(any()) } coAnswers { session.await() }
+        coEvery { getTextDraftUseCase(any()) } returns null
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // User gives up waiting and switches to text entry, which has no draft.
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertFalse(vm.uiState.value.submitEnabled)
+
+        // The stale annotation session finally resolves.
+        session.complete(CanvaDocSessionData(sessionUrl = "https://canvadocs.example.com/session/abc"))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, vm.uiState.value.selectedType)
+        assertFalse(vm.uiState.value.submitEnabled)
+    }
+
+    /** Mirror of the above for the failure branch: it must not disable Submit for another type's valid draft. */
+    @Test
+    fun `loadCanvaDocSession - a session failure landing after a type switch does not disable submit`() = runTest {
+        coEvery { getSubmissionDataUseCase(any()) } returns minimalSubmissionData(annotatableAttachmentId = 999L)
+        val session = CompletableDeferred<CanvaDocSessionData>()
+        coEvery { getCanvaDocSessionUseCase(any()) } coAnswers { session.await() }
+        coJustRun { saveTextDraftUseCase(any()) }
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.onTextChanged("<p>a real draft</p>")
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.submitEnabled)
+
+        session.completeExceptionally(RuntimeException("network error"))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, vm.uiState.value.selectedType)
+        assertTrue(vm.uiState.value.submitEnabled)
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION - errorFlag sets errorMessage`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 111L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coJustRun { submitStudentAnnotationUseCase(any()) }
+        val errorEntity = CreateSubmissionEntity(
+            id = 1L,
+            assignmentId = assignmentId,
+            canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+            submissionType = "student_annotation",
+            userId = 1L,
+            progress = 0f,
+            errorFlag = true,
+        )
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.STUDENT_ANNOTATION)
+            )
+        } returns flowOf(errorEntity)
+        every { context.getString(any()) } returns "Error submitting assignment"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Register a successful flush so this test exercises the errorFlag path (not the flush-abort path).
+        vm.uiState.value.studentAnnotationState.registerAnnotationFlush { true }
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify { submitStudentAnnotationUseCase(any()) }
+        val state = vm.uiState.value
+        assertFalse(state.submitting)
+        assertNotNull(state.errorMessage)
+        assertFalse(state.submissionSuccess)
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION without a loaded session - sets errorMessage and never calls submitStudentAnnotationUseCase`() = runTest {
+        val data = minimalSubmissionData()
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } throws RuntimeException("session never resolved")
+        every { context.getString(any()) } returns "Something went wrong"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        // Session load fails, so lastAnnotatableAttachmentId stays null.
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { submitStudentAnnotationUseCase(any()) }
+        assertNotNull(vm.uiState.value.errorMessage)
+        assertFalse(vm.uiState.value.submitting)
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION - flushes in-flight annotation writes before submitting`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 555L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        val callOrder = mutableListOf<String>()
+        coEvery { submitStudentAnnotationUseCase(any()) } coAnswers { callOrder.add("submit") }
+        every {
+            observeSubmissionProgressUseCase(
+                ObserveSubmissionProgressUseCase.Params(assignmentId, Assignment.SubmissionType.STUDENT_ANNOTATION)
+            )
+        } returns flowOf(
+            CreateSubmissionEntity(
+                id = 1L,
+                assignmentId = assignmentId,
+                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                submissionType = "student_annotation",
+                userId = 1L,
+                progress = 100.0f,
+                errorFlag = false,
+            )
+        )
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Register a fake flush the way the Compose layer does via AndroidFragment's onUpdate.
+        vm.uiState.value.studentAnnotationState.registerAnnotationFlush {
+            callOrder.add("flush")
+            true
+        }
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(listOf("flush", "submit"), callOrder)
+        assertTrue(vm.uiState.value.submissionSuccess)
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION - a failed flush blocks the submit use case and surfaces as a submission error`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 555L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coJustRun { submitStudentAnnotationUseCase(any()) }
+        every { context.getString(any()) } returns "Error submitting assignment"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Register a flush that reports failure (e.g. the annotation write never reached the server).
+        vm.uiState.value.studentAnnotationState.registerAnnotationFlush { false }
+
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { submitStudentAnnotationUseCase(any()) }
+        assertNotNull(vm.uiState.value.errorMessage)
+        assertFalse(vm.uiState.value.submitting)
+    }
+
+    @Test
+    fun `onSubmit STUDENT_ANNOTATION - submitting before the flush callback is registered fails safe`() = runTest {
+        val data = minimalSubmissionData(annotatableAttachmentId = 555L)
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coJustRun { submitStudentAnnotationUseCase(any()) }
+        every { context.getString(any()) } returns "Error submitting assignment"
+
+        val vm = createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Deliberately do NOT call registerAnnotationFlush — simulates tapping Submit before the
+        // Compose layer's AndroidFragment onUpdate callback has registered the hosted fragment's
+        // flush function. This must never silently finalize without flushing.
+        vm.onSubmit()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { submitStudentAnnotationUseCase(any()) }
+        assertNotNull(vm.uiState.value.errorMessage)
+        assertFalse(vm.uiState.value.submitting)
+        assertFalse(vm.uiState.value.submissionSuccess)
+    }
+
+    // -------------------------------------------------------------------------
     // Media Recording submission
     // -------------------------------------------------------------------------
 
@@ -1992,6 +2361,72 @@ class NGCSubmissionViewModelTest {
         assertNull(state.mediaState.clipPath)
         assertFalse(state.submitEnabled)
         assertTrue(state.savedAtText.isEmpty())
+    }
+
+    /**
+     * Student Annotation has no local draft row — annotations are persisted to the canvadocs draft
+     * session as they are drawn. Without an explicit branch the type fell into onDeleteDraft's `else`,
+     * which deletes the ONLINE_TEXT_ENTRY draft: tapping Delete draft on the annotation pane silently
+     * destroyed the student's text draft.
+     */
+    @Test
+    fun `onDeleteDraft for STUDENT_ANNOTATION - does not delete any other type's draft`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.STUDENT_ANNOTATION,
+            ),
+            draftHtml = "<p>a text draft that must survive</p>",
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+
+        val vm = createViewModel(submissionType = "student_annotation")
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        vm.onDeleteDraft()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(exactly = 0) { deleteDraftUseCase(any()) }
+        assertEquals("<p>a text draft that must survive</p>", vm.uiState.value.textState.draftHtml)
+    }
+
+    /**
+     * The Delete draft affordance must not be reachable on the annotation pane at all: the footer row is
+     * rendered whenever savedAtText is non-blank, and every other type sets its own value there.
+     */
+    @Test
+    fun `STUDENT_ANNOTATION - no saved-at row, on initial load or after switching to it`() = runTest {
+        val data = minimalSubmissionData(
+            availableTypes = listOf(
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                Assignment.SubmissionType.STUDENT_ANNOTATION,
+            ),
+            draftHtml = "<p>a text draft</p>",
+            draftSavedAt = Date(),
+        )
+        coEvery { getSubmissionDataUseCase(any()) } returns data
+        coEvery { getCanvaDocSessionUseCase(any()) } returns CanvaDocSessionData(
+            sessionUrl = "https://canvadocs.example.com/session/abc",
+        )
+        coEvery { getTextDraftUseCase(any()) } returns TextDraftData("<p>a text draft</p>", Date())
+        every { context.getString(any(), any<String>()) } returns "Saved Jun 19"
+
+        // Opening straight onto the annotation type must not inherit the text draft's timestamp.
+        val vm = createViewModel(submissionType = "student_annotation")
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.savedAtText.isEmpty())
+
+        // Nor must switching away to a type that has one and back again leave it behind.
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.savedAtText.isNotEmpty())
+
+        vm.uiState.value.onSubmissionTypeSelected(Assignment.SubmissionType.STUDENT_ANNOTATION)
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertTrue(vm.uiState.value.savedAtText.isEmpty())
     }
 
     @Test
@@ -2210,6 +2645,8 @@ class NGCSubmissionViewModelTest {
             saveUrlDraftUseCase = saveUrlDraftUseCase,
             deleteDraftUseCase = deleteDraftUseCase,
             submitUrlUseCase = submitUrlUseCase,
+            getCanvaDocSessionUseCase = getCanvaDocSessionUseCase,
+            submitStudentAnnotationUseCase = submitStudentAnnotationUseCase,
             getMediaDraftUseCase = getMediaDraftUseCase,
             saveMediaDraftUseCase = saveMediaDraftUseCase,
             submitMediaUseCase = submitMediaUseCase,
@@ -2229,6 +2666,8 @@ class NGCSubmissionViewModelTest {
         allowedExtensions: List<String> = emptyList(),
         draftUrl: String? = null,
         urlDraftSavedAt: Date? = null,
+        submissionId: Long? = 1L,
+        annotatableAttachmentId: Long = 0L,
         draftMediaPath: String? = null,
         draftMediaName: String? = null,
         draftMediaContentType: String? = null,
@@ -2249,6 +2688,8 @@ class NGCSubmissionViewModelTest {
         instructionsHtml = instructionsHtml,
         draftUrl = draftUrl,
         urlDraftSavedAt = urlDraftSavedAt,
+        submissionId = submissionId,
+        annotatableAttachmentId = annotatableAttachmentId,
         draftMediaPath = draftMediaPath,
         draftMediaName = draftMediaName,
         draftMediaContentType = draftMediaContentType,

@@ -34,6 +34,8 @@ data class SubmissionData(
     val instructionsHtml: String? = null,
     val draftUrl: String? = null,
     val urlDraftSavedAt: Date? = null,
+    val submissionId: Long? = null,
+    val annotatableAttachmentId: Long = 0L,
     val draftMediaPath: String? = null,
     val draftMediaName: String? = null,
     val draftMediaContentType: String? = null,

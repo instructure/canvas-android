@@ -307,7 +307,9 @@ class GetSubmissionDataUseCaseTest {
         val assignment = Assignment(
             id = assignmentId,
             name = "Non-NGC Assignment",
-            submissionTypesRaw = listOf("online_quiz", "student_annotation"),
+            // Both types are still outside ngcImplementedTypes; student_annotation used to be one of
+            // them but is implemented as of MBL-19937, so it can no longer stand in for "not supported".
+            submissionTypesRaw = listOf("online_quiz", "discussion_topic"),
             submission = null
         )
         val course = Course(id = courseId, name = "Test Course")
@@ -319,6 +321,104 @@ class GetSubmissionDataUseCaseTest {
         val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
 
         assertTrue(result.availableTypes.isEmpty())
+    }
+
+    @Test
+    fun `availableTypes - includes STUDENT_ANNOTATION when the assignment declares it`() = runTest {
+        val courseId = 13L
+        val assignmentId = 107L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Annotation Assignment",
+            submissionTypesRaw = listOf("student_annotation"),
+            submission = null
+        )
+        val course = Course(id = courseId, name = "Test Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.STUDENT_ANNOTATION))
+
+        assertEquals(listOf(Assignment.SubmissionType.STUDENT_ANNOTATION), result.availableTypes)
+    }
+
+    // -------------------------------------------------------------------------
+    // submissionId / annotatableAttachmentId (folded in from the assignment fetch, Phase 4)
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `submissionId and annotatableAttachmentId - populated from the assignment regardless of requested submissionType`() = runTest {
+        val courseId = 14L
+        val assignmentId = 108L
+
+        val submission = Submission(id = 555L, attempt = 1L, workflowState = "submitted")
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Annotation Assignment",
+            submissionTypesRaw = listOf("online_text_entry", "student_annotation"),
+            submission = submission,
+            annotatableAttachmentId = 777L,
+        )
+        val course = Course(id = courseId, name = "Test Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        // Requesting ONLINE_TEXT_ENTRY, not STUDENT_ANNOTATION — the fields must still be populated.
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertEquals(555L, result.submissionId)
+        assertEquals(777L, result.annotatableAttachmentId)
+    }
+
+    @Test
+    fun `submissionId - null when the assignment has no submission`() = runTest {
+        val courseId = 15L
+        val assignmentId = 109L
+
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "No Submission Assignment",
+            submissionTypesRaw = listOf("online_text_entry"),
+            submission = null,
+        )
+        val course = Course(id = courseId, name = "Test Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertNull(result.submissionId)
+        assertEquals(0L, result.annotatableAttachmentId)
+    }
+
+    @Test
+    fun `submissionId - null when the submission id is not greater than zero`() = runTest {
+        val courseId = 16L
+        val assignmentId = 110L
+
+        val submission = Submission(id = 0L, attempt = 1L, workflowState = "submitted")
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Placeholder Submission Assignment",
+            submissionTypesRaw = listOf("online_text_entry"),
+            submission = submission,
+        )
+        val course = Course(id = courseId, name = "Test Course")
+
+        coEvery { assignmentRepository.getAssignmentWithHistory(courseId, assignmentId, false) } returns DataResult.Success(assignment)
+        coEvery { courseRepository.getCourseWithGrade(courseId, false) } returns DataResult.Success(course)
+        coEvery { submissionUploadHelper.loadDraft(any(), any(), any()) } returns null
+
+        val result = useCase(GetSubmissionDataUseCase.Params(courseId, assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+
+        assertNull(result.submissionId)
     }
 
     // -------------------------------------------------------------------------

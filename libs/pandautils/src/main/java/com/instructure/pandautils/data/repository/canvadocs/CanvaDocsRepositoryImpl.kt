@@ -18,6 +18,7 @@ package com.instructure.pandautils.data.repository.canvadocs
 import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionRequestBody
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
@@ -48,5 +49,31 @@ class CanvaDocsRepositoryImpl(
             sessionId,
             RestParams(domain = canvaDocDomain, apiVersion = "", isForceReadFromNetwork = true)
         )
+    }
+
+    override suspend fun putAnnotation(
+        sessionId: String,
+        annotationId: String,
+        annotation: CanvaDocAnnotation,
+        canvaDocDomain: String
+    ): DataResult<CanvaDocAnnotation> {
+        return canvaDocsApi.putAnnotation(
+            sessionId,
+            annotationId,
+            annotation,
+            RestParams(domain = canvaDocDomain, apiVersion = "")
+        )
+    }
+
+    override suspend fun deleteAnnotation(
+        sessionId: String,
+        annotationId: String,
+        canvaDocDomain: String
+    ): DataResult<Unit> {
+        return canvaDocsApi.deleteAnnotation(
+            sessionId,
+            annotationId,
+            RestParams(domain = canvaDocDomain, apiVersion = "")
+        ).map { }
     }
 }

@@ -16,6 +16,7 @@
 package com.instructure.pandautils.data.repository.canvadocs
 
 import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.utils.DataResult
@@ -31,4 +32,24 @@ interface CanvaDocsRepository {
     suspend fun getCanvaDoc(previewUrl: String): DataResult<DocSession>
 
     suspend fun getAnnotations(sessionId: String, canvaDocDomain: String): DataResult<CanvaDocAnnotationResponse>
+
+    /**
+     * Creates (when [annotationId] is unused) or fully replaces (when it already exists) a CanvaDocs
+     * annotation — including `COMMENT_REPLY` annotations, i.e. this is also how a reply is added or
+     * edited (edit = PUT the same [annotationId] with mutated [annotation].`contents`; there is no
+     * separate edit endpoint). Mirrors classic [com.instructure.canvasapi2.managers.CanvaDocsManager.putAnnotation].
+     */
+    suspend fun putAnnotation(
+        sessionId: String,
+        annotationId: String,
+        annotation: CanvaDocAnnotation,
+        canvaDocDomain: String,
+    ): DataResult<CanvaDocAnnotation>
+
+    /** Deletes a CanvaDocs annotation (including a single `COMMENT_REPLY`) by id. */
+    suspend fun deleteAnnotation(
+        sessionId: String,
+        annotationId: String,
+        canvaDocDomain: String,
+    ): DataResult<Unit>
 }

@@ -104,7 +104,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Response
 import java.io.File
+import java.util.Collections
 import java.util.EnumSet
+import java.util.IdentityHashMap
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false, private val courseId: Long) :
@@ -172,6 +174,38 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private var stampRaceFlag = true
     private var stampAppearanceGeneratorsRegistered = false
 
+    // Tracks every in-flight annotation create/update/delete write (not just the most recently
+    // launched one of each kind, unlike createAnnotationJob/updateAnnotationJob/deleteAnnotationJob
+    // above), so awaitPendingAnnotationWrites() can await all of them.
+    private val pendingAnnotationWrites = mutableSetOf<Job>()
+
+    // The annotations whose last create/update write failed, keyed by object IDENTITY: PSPDFKit hands
+    // back the same in-memory Annotation instance for a given annotation over the life of the document,
+    // and a failed create has no server-assigned `name` to key on yet.
+    //
+    // Tracked per annotation rather than as a single sticky boolean so a later SUCCESSFUL write for the
+    // same annotation clears it — PSPDFKit re-fires updateAnnotation on the next edit, which is the
+    // normal recovery from a transient connectivity blip. A single flag meant one dropped packet wedged
+    // Submit for the lifetime of the view, with no in-UI hint that backing out was the only way to clear it.
+    //
+    // NOT a set of failed Jobs: each catch block would have to name its own Job, which is not safely
+    // possible here — viewScope is Dispatchers.Main.immediate, so tryLaunch runs the coroutine body
+    // inline and a throw before the first suspension point invokes catch BEFORE the launch call has
+    // returned the Job there is to assign.
+    private val failedAnnotationWrites: MutableSet<Annotation> =
+        Collections.newSetFromMap(IdentityHashMap<Annotation, Boolean>())
+
+    // Set when a write is cancelled mid-flight, or when a DELETE fails. A failed delete is not
+    // recoverable the way a create/update is: the annotation is already gone from the page, so PSPDFKit
+    // will never re-fire a write for it, and the copy on the server would silently survive into the
+    // submitted attempt.
+    private var unrecoverableAnnotationWriteFailure = false
+
+    private fun trackAnnotationWrite(job: Job) {
+        pendingAnnotationWrites += job
+        job.invokeOnCompletion { pendingAnnotationWrites -= job }
+    }
+
     @get:ColorRes
     abstract val progressColor: Int
     abstract val annotationToolbarLayout: ToolbarCoordinatorLayout
@@ -213,6 +247,41 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
+    }
+
+    /**
+     * Awaits completion of every in-flight annotation create/update/delete network call (see
+     * [createNewAnnotation]/[updateAnnotation]/[deleteAnnotation]) — not just the most recently launched
+     * one of each kind — and reports whether any write (in-flight or already completed) has failed.
+     *
+     * Callers that need to finalize a submission should await this first and abort if it returns `false`,
+     * so annotation edits are guaranteed to have either reached the canvadocs draft session, or the
+     * caller is told they didn't rather than silently finalizing an attempt with un-persisted annotations.
+     *
+     * Each write job already catches its own failure internally (`weave`'s `tryLaunch`/`catch`, which
+     * surfaces a toast and does not rethrow), so [Job.join] alone can never observe a write's failure —
+     * failures are recorded as they occur in [failedAnnotationWrites] (per annotation, and cleared by a
+     * later successful write for that same annotation) and [unrecoverableAnnotationWriteFailure].
+     *
+     * A write is also treated as failed if its job was *cancelled*: `tryLaunch`'s handler deliberately
+     * skips `CancellationException`, and [Job.join] on a cancelled job returns immediately, so a
+     * configuration change (which cancels `viewScope`) mid-write would otherwise look like success and
+     * let an attempt be finalized with an annotation that never reached canvadocs.
+     *
+     * Joins in a loop rather than over a single snapshot, because PSPDFKit can commit a further
+     * annotation while this is suspended (e.g. as the pane loses focus on Submit) and that write must be
+     * awaited too.
+     *
+     * @return `true` if every tracked write succeeded, `false` if any write failed or was cancelled.
+     */
+    protected suspend fun awaitPendingAnnotationWrites(): Boolean {
+        while (pendingAnnotationWrites.isNotEmpty()) {
+            pendingAnnotationWrites.toList().forEach { job ->
+                job.join()
+                if (job.isCancelled) unrecoverableAnnotationWriteFailure = true
+            }
+        }
+        return failedAnnotationWrites.isEmpty() && !unrecoverableAnnotationWriteFailure
     }
 
     protected fun unregisterPdfFragmentListeners() {
@@ -358,16 +427,20 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         }
     }
 
-    protected fun openComments() {
-        // Get current annotation in both forms
-        if (pdfFragment?.selectedAnnotations.isNullOrEmpty()) {
+    protected fun openComments(targetAnnotation: Annotation? = null) {
+        // Get current annotation in both forms. Prefer an explicitly-supplied annotation (e.g. the point
+        // annotation just created in createNewAnnotation()) over the fragment's current selection: right
+        // after creation the annotation is not reliably present in selectedAnnotations yet (selection can
+        // settle asynchronously, especially while still in a creation mode), which previously surfaced a
+        // spurious "no annotation selected" toast on an otherwise-successful point-comment placement.
+        val currentPdfAnnotation = targetAnnotation ?: pdfFragment?.selectedAnnotations?.firstOrNull()
+        if (currentPdfAnnotation == null) {
             toast(R.string.noAnnotationSelected)
             return
         }
-        val currentPdfAnnotation = pdfFragment?.selectedAnnotations?.get(0)
-        val currentAnnotation = currentPdfAnnotation?.convertPDFAnnotationToCanvaDoc(docSession.documentId)
-        // Assuming neither is null, continue
-        if (currentPdfAnnotation != null && currentAnnotation != null) {
+        val currentAnnotation = currentPdfAnnotation.convertPDFAnnotationToCanvaDoc(docSession.documentId)
+        // Assuming it converts, continue
+        if (currentAnnotation != null) {
             // If the contents of the current annotation are empty we want to prompt them to add a comment
             if (commentRepliesHashMap[currentAnnotation.annotationId] == null || commentRepliesHashMap[currentAnnotation.annotationId]?.isEmpty() == true) {
                 // No comments for this annotation, show a dialog for the user to add some if they want
@@ -477,6 +550,14 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationsJob = viewScope.tryLaunch {
             // Snag them annotations with the session id
             val annotations = awaitApi { CanvaDocsManager.getAnnotations(apiValues.sessionId, apiValues.canvaDocsDomain, it) }
+
+            // This is always a full, fresh fetch of every reply from the server, so start from a clean
+            // map rather than assuming commentRepliesHashMap is still empty — updateAnnotations() can
+            // call this again on an already-populated instance (e.g. Teacher's SubmissionContentAdapter),
+            // and a caller may also have pre-patched an entry (e.g. NGC's onCommentThreadResult) before
+            // this reload lands. Without clearing first, the loop below would append onto whatever is
+            // already there and duplicate every reply.
+            commentRepliesHashMap.clear()
 
             // Grab all the annotations and sort them by type (descending).
             // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
@@ -717,7 +798,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             commentsButton.isEnabled = false
         }
 
-        createAnnotationJob = viewScope.tryLaunch {
+        val job = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null) {
                 val newAnnotation = awaitApi {
@@ -730,19 +811,28 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                     )
                 }
 
+                // This annotation is now persisted; clear any earlier failure recorded for it.
+                failedAnnotationWrites -= annotation
+
                 // Edit the annotation with the appropriate id
                 annotation.name = newAnnotation.annotationId
                 pdfFragment?.notifyAnnotationHasChanged(annotation)
                 commentsButton.isEnabled = true
                 if (annotation.type == AnnotationType.STAMP) {
+                    // Open the add-comment dialog for the annotation we just created directly, rather than
+                    // relying on it being in pdfFragment.selectedAnnotations: right after creation (and
+                    // while still in a creation mode) the selection is not reliably populated yet, which
+                    // previously surfaced a spurious "no annotation selected" toast on a successful
+                    // point-comment placement.
                     commentsButton.setVisible()
-                    openComments()
+                    openComments(annotation)
                     // Now that the stamp has been created, re-enable the flag for updates
                     stampRaceFlag = true
                 }
             }
         } catch {
             // Show general error, make more specific in the future?
+            failedAnnotationWrites += annotation
             toast(R.string.errorOccurred)
             it.printStackTrace()
             commentsButton.isEnabled = true
@@ -750,6 +840,8 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             // Just in case something went wrong, re-enable stamp updates
             if (annotation.type == AnnotationType.STAMP) stampRaceFlag = true
         }
+        createAnnotationJob = job
+        trackAnnotationWrite(job)
     }
 
     private fun updateAnnotation(annotation: Annotation) {
@@ -761,7 +853,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         // Don't want to update if we just created a stamp.
         if (annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
-        updateAnnotationJob = viewScope.tryLaunch {
+        val job = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty()) {
                 awaitApi<CanvaDocAnnotation> {
@@ -773,8 +865,12 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                         it
                     )
                 }
+                // Re-editing an annotation whose previous write failed is the normal recovery path from
+                // a transient network error, so a success here clears that annotation's failure.
+                failedAnnotationWrites -= annotation
             }
         } catch {
+            failedAnnotationWrites += annotation
             if (it is StatusCallbackError) {
                 val rawResponse: Response? = it.response?.raw()
                 if (rawResponse?.code == 404) {
@@ -796,20 +892,28 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
             it.printStackTrace()
         }
+        updateAnnotationJob = job
+        trackAnnotationWrite(job)
     }
 
     private fun deleteAnnotation(annotation: Annotation) {
         // Annotation deleted; DELETE
-        deleteAnnotationJob = viewScope.tryLaunch {
+        val job = viewScope.tryLaunch {
             // If it is not found, don't hit the server (it will fail)
             if (!annotation.name.isNullOrEmpty())
                 awaitApi { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.name!!, apiValues.canvaDocsDomain, it) }
             noteHinter?.notifyDrawablesChanged()
         } catch {
             // Show general error, make more specific in the future?
+            // Unrecoverable, unlike a failed create/update: the annotation is already gone from the page,
+            // so PSPDFKit will never re-fire a write for it and the server's copy would otherwise survive
+            // into the submitted attempt.
+            unrecoverableAnnotationWriteFailure = true
             toast(R.string.errorOccurred)
             it.printStackTrace()
         }
+        deleteAnnotationJob = job
+        trackAnnotationWrite(job)
     }
 
     private fun createCommentAnnotation(inReplyToId: String, page: Int, comment: String?) {
@@ -864,7 +968,6 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     }
 
     override fun onEnterAnnotationEditingMode(controller: AnnotationEditingController) {
-
         // We never want to show annotation toolbars if the user doesn't have permission to write
         if (docSession.annotationMetadata?.canWrite() == false) return
         currentAnnotationModeType = controller.currentSingleSelectedAnnotation?.type

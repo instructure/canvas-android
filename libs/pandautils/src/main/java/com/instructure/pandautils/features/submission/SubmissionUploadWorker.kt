@@ -54,8 +54,8 @@ import java.net.URLEncoder
  * Design goals:
  * - No EventBus, no notifications, no Mobius callbacks.
  * - Results are surfaced purely through Room state (CreateSubmissionDao).
- * - Text and file entry are both implemented; URL/MEDIA/STUDIO/ANNOTATION are clear
- *   extension points below.
+ * - Text, file, URL, and student-annotation entry are all implemented; MEDIA/STUDIO
+ *   are clear extension points below.
  *
  * This class is intentionally named [SubmissionUploadWorker] to avoid clashing with
  * the legacy student-app `SubmissionWorker`.
@@ -90,7 +90,8 @@ class SubmissionUploadWorker @AssistedInject constructor(
                 SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
                 SubmissionWorkerAction.URL_ENTRY -> uploadUrl(submission)
                 SubmissionWorkerAction.MEDIA_ENTRY -> uploadMedia(submission)
-                // TODO: add STUDIO_ENTRY, STUDENT_ANNOTATION
+                SubmissionWorkerAction.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
+                // TODO: add STUDIO_ENTRY
                 //  when those submission types are supported in the NGC experience.
                 else -> Result.failure()
             }
@@ -316,6 +317,33 @@ class SubmissionUploadWorker @AssistedInject constructor(
         // Restore the draft flag so loadDraft(ONLINE_UPLOAD) can find this submission
         // after a failed upload, even across process death.
         createSubmissionDao.setDraft(submission.id, true)
+        return Result.failure()
+    }
+
+    internal suspend fun uploadStudentAnnotation(submission: CreateSubmissionEntity): Result {
+        val annotatableAttachmentId = submission.annotatableAttachmentId
+            ?: return failStudentAnnotation(submission)
+
+        val params = RestParams(
+            canvasContext = submission.canvasContext,
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
+        )
+
+        val result = submissionApi.postStudentAnnotationSubmission(
+            submission.canvasContext.id,
+            submission.assignmentId,
+            Assignment.SubmissionType.STUDENT_ANNOTATION.apiString,
+            annotatableAttachmentId,
+            params
+        )
+
+        return handleSubmissionResult(result, submission)
+    }
+
+    private suspend fun failStudentAnnotation(submission: CreateSubmissionEntity): Result {
+        createSubmissionDao.updateProgress(0.0, submission.id)
+        createSubmissionDao.setSubmissionError(true, submission.id)
         return Result.failure()
     }
 

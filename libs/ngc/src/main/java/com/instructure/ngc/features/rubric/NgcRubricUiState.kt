@@ -15,6 +15,7 @@
  */
 package com.instructure.ngc.features.rubric
 
+import androidx.compose.runtime.Immutable
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
@@ -29,10 +30,12 @@ import com.instructure.canvasapi2.utils.NumberHelper
  * `SubmissionRubricPresenter` mapping (assessed rating matched by rating id, `hidePoints`, free-form,
  * and custom-score handling).
  */
+@Immutable
 data class NgcRubricUiState(
     val criteria: List<NgcRubricCriterion>,
 )
 
+@Immutable
 data class NgcRubricCriterion(
     val title: String,
     // criterion long description, shown under the title; null when blank.
@@ -46,6 +49,7 @@ data class NgcRubricCriterion(
     val comment: String?,
 )
 
+@Immutable
 data class NgcRubricRating(
     // Points chip label; null when points are hidden.
     val pointsLabel: String?,

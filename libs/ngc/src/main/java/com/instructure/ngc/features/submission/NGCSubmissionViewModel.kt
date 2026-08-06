@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.ngc.R
 import com.instructure.ngc.features.submission.domain.DeleteDraftUseCase
+import com.instructure.ngc.features.submission.domain.GetCanvaDocSessionUseCase
 import com.instructure.ngc.features.submission.domain.GetDraftFilesUseCase
 import com.instructure.ngc.features.submission.domain.GetFileDraftUseCase
 import com.instructure.ngc.features.submission.domain.GetSubmissionDataUseCase
@@ -41,6 +42,7 @@ import com.instructure.ngc.features.submission.domain.SaveMediaDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveTextDraftUseCase
 import com.instructure.ngc.features.submission.domain.SaveUrlDraftUseCase
 import com.instructure.ngc.features.submission.domain.SubmitFilesUseCase
+import com.instructure.ngc.features.submission.domain.SubmitStudentAnnotationUseCase
 import com.instructure.ngc.features.submission.domain.SubmitMediaUseCase
 import com.instructure.ngc.features.submission.domain.SubmitTextUseCase
 import com.instructure.ngc.features.submission.domain.SubmitUrlUseCase
@@ -50,6 +52,7 @@ import com.instructure.pandautils.utils.isHtmlBlank
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -85,6 +88,8 @@ class NGCSubmissionViewModel @Inject constructor(
     private val saveUrlDraftUseCase: SaveUrlDraftUseCase,
     private val deleteDraftUseCase: DeleteDraftUseCase,
     private val submitUrlUseCase: SubmitUrlUseCase,
+    private val getCanvaDocSessionUseCase: GetCanvaDocSessionUseCase,
+    private val submitStudentAnnotationUseCase: SubmitStudentAnnotationUseCase,
     private val getMediaDraftUseCase: GetMediaDraftUseCase,
     private val saveMediaDraftUseCase: SaveMediaDraftUseCase,
     private val submitMediaUseCase: SubmitMediaUseCase,
@@ -97,6 +102,21 @@ class NGCSubmissionViewModel @Inject constructor(
 
     private var assignmentName: String = ""
     private var lastAttempt: Long? = null
+
+    // Populated by loadData() from SubmissionData.annotatableAttachmentId (the assignment is already
+    // fetched once there; no separate use case call needed), read by submitStudentAnnotation().
+    private var lastAnnotatableAttachmentId: Long? = null
+
+    // Populated by loadData() from SubmissionData.submissionId; used to key the canvadocs "draft" session.
+    private var submissionId: Long? = null
+
+    // Registered by the Compose layer via StudentAnnotationUiState.registerAnnotationFlush while a
+    // PdfAnnotationHostFragment is hosted; null when no fragment is currently attached.
+    private var annotationFlush: (suspend () -> Boolean)? = null
+
+    // The in-flight canvadocs draft-session load, cancelled on re-entry so overlapping calls can't each
+    // create a session server-side and race on sessionUrl — see loadCanvaDocSession().
+    private var canvaDocSessionJob: Job? = null
 
     // Each submission type keeps its own draft timestamp so switching types shows the right "Saved" time.
     private var textSavedAtText: String = ""
@@ -167,6 +187,9 @@ class NGCSubmissionViewModel @Inject constructor(
                     data
                 }
 
+                submissionId = finalData.submissionId
+                lastAnnotatableAttachmentId = finalData.annotatableAttachmentId.takeIf { it != 0L }
+
                 val draftFiles = finalData.draftFiles.map { it.toSubmissionFileUiState() }
 
                 val textDraftHtml = finalData.draftHtml ?: ""
@@ -196,6 +219,10 @@ class NGCSubmissionViewModel @Inject constructor(
                     Assignment.SubmissionType.ONLINE_UPLOAD -> fileSavedAtText
                     Assignment.SubmissionType.ONLINE_URL -> urlSavedAtText
                     Assignment.SubmissionType.MEDIA_RECORDING -> mediaSavedAtText
+                    // No local draft for annotations — see the STUDENT_ANNOTATION branch of
+                    // onSubmissionTypeSelected. Without this the screen would open on the annotation
+                    // pane already showing a text draft's timestamp and Delete draft button.
+                    Assignment.SubmissionType.STUDENT_ANNOTATION -> ""
                     else -> textSavedAtText
                 }
 
@@ -233,6 +260,9 @@ class NGCSubmissionViewModel @Inject constructor(
                             clipContentType = finalData.draftMediaContentType,
                             onClipReady = ::onMediaClipReady,
                         ),
+                        studentAnnotationState = state.studentAnnotationState.copy(
+                            registerAnnotationFlush = ::registerAnnotationFlush,
+                        ),
                         savedAtText = initialSavedAtText,
                         submitEnabled = computeSubmitEnabled(defaultType, textDraftHtml, draftFiles, urlDraft, finalData.draftMediaPath),
                         onRetry = {},
@@ -241,6 +271,14 @@ class NGCSubmissionViewModel @Inject constructor(
                             instructionsHtml = finalData.instructionsHtml.orEmpty(),
                         ),
                     )
+                }
+
+                // STUDENT_ANNOTATION can legitimately be the default/only available type for an
+                // assignment (unlike the other types, its content pane has no on-demand load path via
+                // onSubmissionTypeSelected unless the user switches away and back), so the canvadoc
+                // session must be kicked off here too, not only from onSubmissionTypeSelected.
+                if (defaultType == Assignment.SubmissionType.STUDENT_ANNOTATION) {
+                    loadCanvaDocSession()
                 }
 
                 // Re-attach to any in-flight upload that survived process death
@@ -415,6 +453,15 @@ class NGCSubmissionViewModel @Inject constructor(
                         )
                     }
                 }
+                // STUDENT_ANNOTATION has no local draft to delete: annotations are persisted to the
+                // canvadocs draft session as they are drawn, not stored in a CreateSubmissionEntity row.
+                // An explicit no-op branch is required — without it the type falls into the `else` below
+                // and deletes the student's ONLINE_TEXT_ENTRY draft instead, which is silent data loss.
+                // Giving Student Annotation real draft semantics (including what "delete draft" should
+                // mean for server-side annotations) is tracked separately; this only closes the data-loss
+                // path. The Delete draft affordance itself is kept off the annotation pane by clearing
+                // savedAtText in onSubmissionTypeSelected.
+                Assignment.SubmissionType.STUDENT_ANNOTATION -> Unit
                 else -> {
                     deleteDraftUseCase(DeleteDraftUseCase.Params(assignmentId, Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
                     textSavedAtText = ""
@@ -440,6 +487,7 @@ class NGCSubmissionViewModel @Inject constructor(
             Assignment.SubmissionType.ONLINE_UPLOAD -> submitFiles()
             Assignment.SubmissionType.ONLINE_URL -> submitUrl()
             Assignment.SubmissionType.MEDIA_RECORDING -> submitMedia()
+            Assignment.SubmissionType.STUDENT_ANNOTATION -> submitStudentAnnotation()
             else -> submitText()
         }
     }
@@ -642,6 +690,164 @@ class NGCSubmissionViewModel @Inject constructor(
         }
     }
 
+    // Registers (or clears, when null) the currently-hosted PdfAnnotationHostFragment's flush
+    // function, so submitStudentAnnotation() can await any in-flight annotation writes before
+    // finalizing the attempt. See StudentAnnotationUiState.registerAnnotationFlush.
+    private fun registerAnnotationFlush(flush: (suspend () -> Boolean)?) {
+        annotationFlush = flush
+    }
+
+    /**
+     * Loads the canvadocs "draft" session so the inline PSPDFKit view has a document to render/annotate.
+     *
+     * Held in a cancellable [canvaDocSessionJob] and cancelled on re-entry, because this is reachable
+     * more than once concurrently (double-tapping Retry, or `loadData`'s default-type kick-off racing an
+     * `onSubmissionTypeSelected`). Overlapping calls would each create a NEW draft session server-side and
+     * race to write `sessionUrl` — and since `sessionUrl` keys the `PdfAnnotationHostFragment` in
+     * `StudentAnnotationContent`, a late-arriving loser would swap in a fresh `PdfFragment` and discard
+     * whatever the student had already annotated against the first session.
+     *
+     * Both terminal branches also re-check the selected type before writing: the load is not cancelled by
+     * a type switch alone (the user may switch back), so without the guard a slow session load that lands
+     * after the user moved to ONLINE_TEXT_ENTRY would enable Submit for an empty text draft — or, on the
+     * failure path, disable Submit for a type that has a perfectly valid one.
+     */
+    private fun loadCanvaDocSession() {
+        canvaDocSessionJob?.cancel()
+        _uiState.update { state ->
+            state.copy(
+                submitEnabled = false,
+                studentAnnotationState = state.studentAnnotationState.copy(
+                    sessionLoading = true,
+                    sessionLoadError = null,
+                    registerAnnotationFlush = ::registerAnnotationFlush,
+                )
+            )
+        }
+        canvaDocSessionJob = viewModelScope.launch {
+            try {
+                val session = getCanvaDocSessionUseCase(
+                    GetCanvaDocSessionUseCase.Params(submissionId = submissionId)
+                )
+                _uiState.update { state ->
+                    if (state.selectedType != Assignment.SubmissionType.STUDENT_ANNOTATION) {
+                        state
+                    } else {
+                        state.copy(
+                            submitEnabled = true,
+                            studentAnnotationState = state.studentAnnotationState.copy(
+                                sessionUrl = session.sessionUrl,
+                                sessionLoading = false,
+                                sessionLoadError = null,
+                            )
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                _uiState.update { state ->
+                    if (state.selectedType != Assignment.SubmissionType.STUDENT_ANNOTATION) {
+                        state
+                    } else {
+                        state.copy(
+                            submitEnabled = false,
+                            studentAnnotationState = state.studentAnnotationState.copy(
+                                sessionLoading = false,
+                                sessionLoadError = context.getString(R.string.ngc_submission_loadError),
+                                onRetrySessionLoad = { loadCanvaDocSession() },
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    // Finalizes the attempt via the same startStudentAnnotationSubmission() → SubmissionUploadWorker
+    // path the file/url types use. Awaits any in-flight PSPDFKit annotation writes first (see
+    // annotationFlush / StudentAnnotationUiState.registerAnnotationFlush) so the latest edits have had
+    // a chance to reach the canvadocs draft session before the attempt is marked submitted, and now
+    // aborts (surfacing the same inline error/retry state the other types use) if any tracked write is
+    // known to have failed — see PdfSubmissionView.awaitPendingAnnotationWrites. If annotationFlush is
+    // still null (the Compose layer hasn't registered the hosted fragment's flush function yet — e.g.
+    // the user tapped Submit before AndroidFragment's onUpdate fired), there is nothing to safely await,
+    // so this treats that as a failure too, rather than risk silently finalizing without flushing.
+    private fun submitStudentAnnotation() {
+        val annotatableAttachmentId = lastAnnotatableAttachmentId
+        if (annotatableAttachmentId == null) {
+            setSubmissionError()
+            return
+        }
+        viewModelScope.launch {
+            try {
+                val flushed = annotationFlush?.invoke() ?: false
+                if (!flushed) {
+                    setSubmissionError()
+                    return@launch
+                }
+
+                submitStudentAnnotationUseCase(
+                    SubmitStudentAnnotationUseCase.Params(
+                        canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                        assignmentId = assignmentId,
+                        assignmentName = assignmentName,
+                        annotatableAttachmentId = annotatableAttachmentId,
+                        attempt = lastAttempt,
+                    )
+                )
+
+                var seenNonNull = false
+                var terminalIsSuccess = false
+                observeSubmissionProgressUseCase(
+                    ObserveSubmissionProgressUseCase.Params(
+                        assignmentId = assignmentId,
+                        submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION,
+                    )
+                )
+                    .first { entity ->
+                        when {
+                            entity == null && seenNonNull -> { terminalIsSuccess = true; true }
+                            entity != null -> {
+                                seenNonNull = true
+                                when {
+                                    entity.errorFlag -> true
+                                    (entity.progress ?: 0f) == 100.0f -> { terminalIsSuccess = true; true }
+                                    else -> false
+                                }
+                            }
+                            else -> false
+                        }
+                    }
+
+                if (!terminalIsSuccess) {
+                    setSubmissionError()
+                } else {
+                    // The flushed fragment is torn down with the screen; drop the reference so a
+                    // later submit can never await a dead view's writes.
+                    annotationFlush = null
+                    _uiState.update { state ->
+                        state.copy(
+                            submitting = false,
+                            // studentAnnotationState is deliberately left ALONE. It previously got a
+                            // fresh StudentAnnotationUiState(), which blanked sessionUrl — and
+                            // StudentAnnotationContent treats a blank sessionUrl as a load failure, so
+                            // the pane flashed "Failed to load assignment" over the annotation surface
+                            // in the moment between success and the screen being torn down, with a
+                            // Retry button whose callback had just been reset to a no-op (MBL-19937 QA).
+                            // The success overlay covers the pane anyway, so there is nothing to clear.
+                            submitEnabled = false,
+                            submissionSuccess = true,
+                            onSubmissionSuccessHandled = {
+                                _uiState.update { s -> s.copy(submissionSuccess = false) }
+                            },
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                setSubmissionError()
+            }
+        }
+    }
+
     private fun submitFiles() {
         val currentFiles = _uiState.value.fileState.files.map { it.toFileSubmitObject() }
         if (currentFiles.isEmpty()) {
@@ -807,6 +1013,24 @@ class NGCSubmissionViewModel @Inject constructor(
                             ),
                         )
                     }
+                }
+                Assignment.SubmissionType.STUDENT_ANNOTATION -> {
+                    _uiState.update { state ->
+                        state.copy(
+                            selectedType = type,
+                            submitEnabled = false,
+                            // Cleared, unlike the other types which set their own draft timestamp here.
+                            // Student Annotation has no local draft, so leaving the previous type's
+                            // value in place would render the "Saved … / Delete draft" footer over the
+                            // annotation pane — an affordance that cannot do what it says, since the
+                            // annotations live in the canvadocs draft session rather than a local row.
+                            savedAtText = "",
+                            studentAnnotationState = state.studentAnnotationState.copy(
+                                registerAnnotationFlush = ::registerAnnotationFlush,
+                            ),
+                        )
+                    }
+                    loadCanvaDocSession()
                 }
                 else -> {
                     // Load the text draft on demand (Room-only, no network).

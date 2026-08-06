@@ -2546,6 +2546,14 @@
     <string name="ngc_submission_sourceChooseFromGallery">Choose from gallery</string>
     <string name="ngc_submission_fileUploadFailed">One or more files could not be uploaded</string>
 
+    <!-- NGC Annotation comment thread -->
+    <string name="ngc_annotationComments_empty">No comments yet</string>
+    <string name="ngc_annotationComments_loadError">Failed to load comments</string>
+    <string name="ngc_annotationComments_actionError">Something went wrong. Please try again.</string>
+    <string name="ngc_annotationComments_deleteConfirmMessage">This comment will be permanently deleted.</string>
+    <string name="a11y_annotationComments_editComment">Edit comment</string>
+    <string name="a11y_annotationComments_deleteComment">Delete comment</string>
+    <string name="ngc_annotation_documentLoadError">Failed to load document</string>
     <!-- NGC Media submission -->
     <string name="ngc_submission_mediaRecording">Media Recording</string>
     <string name="ngc_submission_sourceChooseMediaFile">Choose media file</string>

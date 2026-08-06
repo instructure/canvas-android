@@ -273,8 +273,8 @@ fun NGCAssignmentDetailsScreen(
                     type == Assignment.SubmissionType.ONLINE_TEXT_ENTRY ||
                         type == Assignment.SubmissionType.ONLINE_UPLOAD ||
                         type == Assignment.SubmissionType.ONLINE_URL ||
-                        type == Assignment.SubmissionType.MEDIA_RECORDING -> type?.let { onNavigateToSubmission(it) }
-                    else -> Log.d(TAG, "Submission type selected (not yet routed): ${option.label}")
+                        type == Assignment.SubmissionType.MEDIA_RECORDING ||
+                        type == Assignment.SubmissionType.STUDENT_ANNOTATION -> type?.let { onNavigateToSubmission(it) }
                 }
             },
             onDismiss = { showSubmitSheet = false },

@@ -50,9 +50,10 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * Unit tests for [SubmissionUploadWorker.uploadText] and [SubmissionUploadWorker.uploadFileSubmission].
+ * Unit tests for [SubmissionUploadWorker.uploadText], [SubmissionUploadWorker.uploadUrl],
+ * [SubmissionUploadWorker.uploadFileSubmission], and [SubmissionUploadWorker.uploadStudentAnnotation].
  *
- * Both methods are `internal` and tested directly to avoid the heavy Hilt/WorkManager test
+ * All methods are `internal` and tested directly to avoid the heavy Hilt/WorkManager test
  * harness. [FileUploadManager] is a Kotlin object and is mocked with [mockkObject].
  */
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -97,6 +98,14 @@ class SubmissionUploadWorkerTest {
         canvasContext = course,
         submissionType = "media_recording",
         userId = 7L,
+    )
+    private val studentAnnotationSubmission = CreateSubmissionEntity(
+        id = 4L,
+        assignmentId = 99L,
+        canvasContext = course,
+        submissionType = "student_annotation",
+        userId = 7L,
+        annotatableAttachmentId = 555L
     )
 
     @Before
@@ -396,6 +405,66 @@ class SubmissionUploadWorkerTest {
         } finally {
             unmockkObject(FileUploadUtils)
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // uploadStudentAnnotation
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun `uploadStudentAnnotation success calls updateProgress(100) and deleteSubmissionById, returns Result_success`() = runTest {
+        coEvery {
+            submissionApi.postStudentAnnotationSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Success(Submission(id = 1L))
+
+        val result = worker.uploadStudentAnnotation(studentAnnotationSubmission)
+
+        coVerify { createSubmissionDao.updateProgress(100.0, studentAnnotationSubmission.id) }
+        coVerify { createSubmissionDao.deleteSubmissionById(studentAnnotationSubmission.id) }
+        assertEquals(Result.success(), result)
+    }
+
+    @Test
+    fun `uploadStudentAnnotation posts the annotatableAttachmentId with correct ids and student_annotation type`() = runTest {
+        coEvery {
+            submissionApi.postStudentAnnotationSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Success(Submission(id = 1L))
+
+        worker.uploadStudentAnnotation(studentAnnotationSubmission)
+
+        coVerify {
+            submissionApi.postStudentAnnotationSubmission(
+                contextId = course.id,
+                assignmentId = studentAnnotationSubmission.assignmentId,
+                submissionType = "student_annotation",
+                annotatableAttachmentId = 555L,
+                restParams = any<RestParams>()
+            )
+        }
+    }
+
+    @Test
+    fun `uploadStudentAnnotation API failure calls setSubmissionError(true) and returns Result_failure`() = runTest {
+        coEvery {
+            submissionApi.postStudentAnnotationSubmission(any(), any(), any(), any(), any())
+        } returns DataResult.Fail()
+
+        val result = worker.uploadStudentAnnotation(studentAnnotationSubmission)
+
+        coVerify { createSubmissionDao.setSubmissionError(true, studentAnnotationSubmission.id) }
+        assertEquals(Result.failure(), result)
+    }
+
+    @Test
+    fun `uploadStudentAnnotation missing annotatableAttachmentId calls setSubmissionError(true), resets progress to 0, and returns Result_failure`() = runTest {
+        val submissionWithoutAttachment = studentAnnotationSubmission.copy(annotatableAttachmentId = null)
+
+        val result = worker.uploadStudentAnnotation(submissionWithoutAttachment)
+
+        coVerify { createSubmissionDao.updateProgress(0.0, submissionWithoutAttachment.id) }
+        coVerify { createSubmissionDao.setSubmissionError(true, submissionWithoutAttachment.id) }
+        coVerify(exactly = 0) { submissionApi.postStudentAnnotationSubmission(any(), any(), any(), any(), any()) }
+        assertEquals(Result.failure(), result)
     }
 
     // -------------------------------------------------------------------------

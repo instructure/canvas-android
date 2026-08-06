@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
@@ -39,7 +40,6 @@ import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +51,7 @@ import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.navigation.NavigableSupportingPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberSupportingPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
+import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -77,6 +78,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.LocalCourseColor
+import com.instructure.instui.compose.container.Dialog
+import com.instructure.instui.compose.container.DialogAction
 import com.instructure.instui.compose.indicator.Icon
 import com.instructure.instui.compose.indicator.IconColor
 import com.instructure.instui.compose.indicator.IconSize
@@ -96,6 +99,7 @@ import com.instructure.instui.token.icon.trash2
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.ngc.R
+import com.instructure.ngc.features.submission.annotation.StudentAnnotationContent
 import com.instructure.ngc.features.submission.file.FileSubmissionContent
 import com.instructure.ngc.features.submission.file.rememberFilePicker
 import com.instructure.ngc.features.submission.media.MediaSubmissionContent
@@ -110,6 +114,10 @@ import kotlinx.coroutines.launch
 // Height of the default Material3 bottom sheet drag handle (22.dp vertical padding x2 + 4.dp handle),
 // added to the measured peek content so the handle is accounted for in the collapsed peek height.
 private val SupportingPaneDragHandleHeight = 48.dp
+
+// Floor for the inline PSPDFKit annotation surface. Roughly the PSPDFKit annotation-creation toolbar
+// (~124.dp) plus enough document area to remain usable, so the pane can never be measured to zero.
+private val MinAnnotationPaneHeight = 200.dp
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -182,7 +190,8 @@ fun NGCSubmissionScreen(
                     AnimatedPane {
                         MainPaneContent(
                             uiState = uiState,
-                            onTextChanged = viewModel::onTextChanged,
+                            courseId = viewModel.courseId,
+                                onTextChanged = viewModel::onTextChanged,
                             onUrlChanged = viewModel::onUrlChanged,
                             onDeleteDraft = viewModel::onDeleteDraft,
                             onSubmit = viewModel::onSubmit,
@@ -275,6 +284,7 @@ fun NGCSubmissionScreen(
                 Box(modifier = Modifier.padding(innerPadding)) {
                     MainPaneContent(
                         uiState = uiState,
+                        courseId = viewModel.courseId,
                         onTextChanged = viewModel::onTextChanged,
                         onUrlChanged = viewModel::onUrlChanged,
                         onDeleteDraft = viewModel::onDeleteDraft,
@@ -289,6 +299,7 @@ fun NGCSubmissionScreen(
 @Composable
 private fun MainPaneContent(
     uiState: NGCSubmissionUiState,
+    courseId: Long,
     onTextChanged: (String) -> Unit,
     onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
@@ -337,6 +348,7 @@ private fun MainPaneContent(
             else -> {
                 SubmissionFormContent(
                     uiState = uiState,
+                    courseId = courseId,
                     onTextChanged = onTextChanged,
                     onUrlChanged = onUrlChanged,
                     onDeleteDraft = onDeleteDraft,
@@ -351,6 +363,7 @@ private fun MainPaneContent(
 @Composable
 private fun SubmissionFormContent(
     uiState: NGCSubmissionUiState,
+    courseId: Long,
     onTextChanged: (String) -> Unit,
     onUrlChanged: (String) -> Unit,
     onDeleteDraft: () -> Unit,
@@ -367,56 +380,166 @@ private fun SubmissionFormContent(
     val mediaPicker = rememberMediaPicker(onClipReady = uiState.mediaState.onClipReady)
 
     if (showDeleteConfirmDialog) {
-        AlertDialog(
+        Dialog(
+            title = stringResource(R.string.ngc_submission_deleteDraftDialogTitle),
+            description = stringResource(R.string.ngc_submission_deleteDraftDialogMessage),
             onDismissRequest = { showDeleteConfirmDialog = false },
-            containerColor = InstUISemanticColors.Background.base(),
-            title = {
-                Text(
-                    text = stringResource(R.string.ngc_submission_deleteDraftDialogTitle),
-                    style = InstUIText.contentImportant,
-                )
-            },
-            text = {
-                Text(
-                    text = stringResource(R.string.ngc_submission_deleteDraftDialogMessage),
-                    style = InstUIText.content,
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    text = stringResource(R.string.ngc_submission_deleteDraftDialogConfirm),
+            actions = listOf(
+                DialogAction(
+                    label = stringResource(R.string.ngc_submission_deleteDraftDialogCancel),
+                    onClick = { showDeleteConfirmDialog = false },
+                ),
+                DialogAction(
+                    label = stringResource(R.string.ngc_submission_deleteDraftDialogConfirm),
                     onClick = {
                         showDeleteConfirmDialog = false
                         onDeleteDraft()
                     },
                     contentColor = InstUISemanticColors.Text.error(),
-                )
-            },
-            dismissButton = {
-                TextButton(
-                    text = stringResource(R.string.ngc_submission_deleteDraftDialogCancel),
-                    onClick = { showDeleteConfirmDialog = false },
-                )
-            },
+                ),
+            ),
         )
     }
+
+    // STUDENT_ANNOTATION hosts a full PSPDFKit surface, which owns its own vertical pan/scroll
+    // gestures. Nesting it inside the form's verticalScroll Column (like the other submission types)
+    // would create a nested-vertical-scroll gesture conflict and needed a hardcoded height to boot,
+    // since verticalScroll measures children with an unbounded max height. So in that mode the Column
+    // does NOT scroll: the header and submit chrome stay fixed and the annotation surface fills the
+    // remaining space via weight(1f) — bounded and adaptive on both phone and tablet, no fixed dp.
+    //
+    // Both modes share ONE Column rather than sitting in two sibling if/else subtrees, so that
+    // switching submission type keeps the header and footer composables' node identity and only the
+    // content slot between them swaps. Two sibling Columns meant every type change disposed and
+    // recreated the entire form, which read as the whole screen flickering (MBL-19937 QA).
+    val isAnnotation = uiState.selectedType == Assignment.SubmissionType.STUDENT_ANNOTATION
+    // Hoisted unconditionally: remembering it inside a branch would shift composition slots as the
+    // selected type changes.
+    val formScrollState = rememberScrollState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            // Ensure the Submit button scrolls above the keyboard on short screens.
-            .imePadding()
+            .then(
+                if (isAnnotation) {
+                    // Deliberately NO imePadding here. The only keyboard in this mode belongs to
+                    // PSPDFKit's own "Input Text" prompt, which is a separate window that pans
+                    // itself, so there is no field of ours to keep above the keyboard. Applying
+                    // imePadding shrank this Column by the IME height (818px on a 1080x2400 device)
+                    // while the header and Submit chrome stayed fixed, which measured the weight(1f)
+                    // annotation pane to exactly 0 height — the PDF vanished and PSPDFKit never
+                    // re-rendered the document even after the keyboard closed (MBL-19937 QA).
+                    Modifier
+                } else {
+                    // Ensure the Submit button scrolls above the keyboard on short screens.
+                    Modifier
+                        .verticalScroll(formScrollState)
+                        .imePadding()
+                }
+            )
             .padding(InstUILayoutSizes.Spacing.SpaceLg.spaceLg),
         verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
     ) {
-        // Assignment title
+        SubmissionFormHeader(uiState = uiState, typeSwitchEnabled = !mediaTakeInProgress)
+
+        if (isAnnotation) {
+            StudentAnnotationContent(
+                uiState = uiState.studentAnnotationState,
+                courseId = courseId,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    // Floor the surface so no future chrome change (or an unusually tall header) can
+                    // squeeze it back to zero and strand the user with a blank pane.
+                    .heightIn(min = MinAnnotationPaneHeight),
+            )
+        } else {
+            // Main-pane content swaps based on the selected submission type.
+            // AnimatedContent cross-fades the two subtrees to avoid a hard visual flash when the
+            // type selector changes (the WebView reload is still necessary for draft restore, but
+            // the fade softens it). The key is the selectedType so the animation fires only on
+            // an actual type change, not on every other UiState update.
+            AnimatedContent(
+                targetState = uiState.selectedType,
+                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                label = "SubmissionTypeTransition",
+                modifier = Modifier.fillMaxWidth(),
+            ) { selectedType ->
+                when (selectedType) {
+                    Assignment.SubmissionType.ONLINE_UPLOAD -> {
+                        FileSubmissionContent(
+                            files = uiState.fileState.files,
+                            onAddFile = { filePicker.launch() },
+                            onFileRemoved = uiState.fileState.onFileRemoved,
+                            onRetryFile = uiState.fileState.onRetryFile,
+                            allowedExtensions = uiState.fileState.allowedExtensions,
+                            enabled = !uiState.submitting,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    Assignment.SubmissionType.ONLINE_URL -> {
+                        UrlSubmissionContent(
+                            url = uiState.urlState.draftUrl,
+                            contentResetKey = uiState.urlState.contentResetKey,
+                            previewUrl = uiState.urlState.previewUrl,
+                            urlError = uiState.urlState.urlError,
+                            onUrlChanged = onUrlChanged,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    Assignment.SubmissionType.MEDIA_RECORDING -> {
+                        MediaSubmissionContent(
+                            clipName = uiState.mediaState.clipName,
+                            clipPath = uiState.mediaState.clipPath,
+                            clipContentType = uiState.mediaState.clipContentType,
+                            onClipReady = uiState.mediaState.onClipReady,
+                            onChooseMediaFile = mediaPicker.chooseMediaFile,
+                            onRequestAudioPermission = mediaPicker.requestAudioPermission,
+                            audioPermissionDenied = mediaPicker.audioPermissionDenied,
+                            onRequestVideoPermission = mediaPicker.requestVideoPermission,
+                            videoPermissionDenied = mediaPicker.videoPermissionDenied,
+                            onUnconfirmedTakeChanged = { mediaTakeInProgress = it },
+                            enabled = !uiState.submitting,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                    else -> {
+                        SubmissionTextEntryField(
+                            html = uiState.textState.draftHtml,
+                            contentResetKey = uiState.textState.contentResetKey,
+                            onTextChanged = onTextChanged,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            }
+        }
+
+        SubmissionFormFooter(
+            uiState = uiState,
+            onDeleteDraftClick = { showDeleteConfirmDialog = true },
+            onSubmit = onSubmit,
+        )
+    }
+}
+
+/** Assignment title, due date (if any) and the "New Submission" type-selector row. */
+@Composable
+private fun SubmissionFormHeader(
+    uiState: NGCSubmissionUiState,
+    // Locked while an unconfirmed media take exists, so switching types can't silently discard it.
+    typeSwitchEnabled: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
         Heading(
             text = uiState.assignmentName,
             level = HeadingLevel.H2,
         )
 
-        // Due date (hidden when blank)
         if (uiState.dueDateText.isNotBlank()) {
             Text(
                 text = uiState.dueDateText,
@@ -425,71 +548,22 @@ private fun SubmissionFormContent(
             )
         }
 
-        // "New Submission" label + type selector row. Locked while an unconfirmed media take
-        // exists so switching types can't silently discard it.
-        SubmissionTypeRow(uiState = uiState, typeSwitchEnabled = !mediaTakeInProgress)
+        SubmissionTypeRow(uiState = uiState, typeSwitchEnabled = typeSwitchEnabled)
+    }
+}
 
-        // Main-pane content swaps based on the selected submission type.
-        // AnimatedContent cross-fades the two subtrees to avoid a hard visual flash when the
-        // type selector changes (the WebView reload is still necessary for draft restore, but
-        // the fade softens it). The key is the selectedType so the animation fires only on
-        // an actual type change, not on every other UiState update.
-        AnimatedContent(
-            targetState = uiState.selectedType,
-            transitionSpec = { fadeIn() togetherWith fadeOut() },
-            label = "SubmissionTypeTransition",
-            modifier = Modifier.fillMaxWidth(),
-        ) { selectedType ->
-            when (selectedType) {
-                Assignment.SubmissionType.ONLINE_UPLOAD -> {
-                    FileSubmissionContent(
-                        files = uiState.fileState.files,
-                        onAddFile = { filePicker.launch() },
-                        onFileRemoved = uiState.fileState.onFileRemoved,
-                        onRetryFile = uiState.fileState.onRetryFile,
-                        allowedExtensions = uiState.fileState.allowedExtensions,
-                        enabled = !uiState.submitting,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-                Assignment.SubmissionType.ONLINE_URL -> {
-                    UrlSubmissionContent(
-                        url = uiState.urlState.draftUrl,
-                        contentResetKey = uiState.urlState.contentResetKey,
-                        previewUrl = uiState.urlState.previewUrl,
-                        urlError = uiState.urlState.urlError,
-                        onUrlChanged = onUrlChanged,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-                Assignment.SubmissionType.MEDIA_RECORDING -> {
-                    MediaSubmissionContent(
-                        clipName = uiState.mediaState.clipName,
-                        clipPath = uiState.mediaState.clipPath,
-                        clipContentType = uiState.mediaState.clipContentType,
-                        onClipReady = uiState.mediaState.onClipReady,
-                        onChooseMediaFile = mediaPicker.chooseMediaFile,
-                        onRequestAudioPermission = mediaPicker.requestAudioPermission,
-                        audioPermissionDenied = mediaPicker.audioPermissionDenied,
-                        onRequestVideoPermission = mediaPicker.requestVideoPermission,
-                        videoPermissionDenied = mediaPicker.videoPermissionDenied,
-                        onUnconfirmedTakeChanged = { mediaTakeInProgress = it },
-                        enabled = !uiState.submitting,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-                else -> {
-                    SubmissionTextEntryField(
-                        html = uiState.textState.draftHtml,
-                        contentResetKey = uiState.textState.contentResetKey,
-                        onTextChanged = onTextChanged,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }
-        }
-
-        // Saved-at + Delete draft row — only shown when a draft exists
+/** Saved-at + delete-draft row (if a draft exists), the submit button, and the inline error message. */
+@Composable
+private fun SubmissionFormFooter(
+    uiState: NGCSubmissionUiState,
+    onDeleteDraftClick: () -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceMd.spaceMd),
+    ) {
         if (uiState.savedAtText.isNotBlank()) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -508,7 +582,7 @@ private fun SubmissionFormContent(
                     horizontalArrangement = Arrangement.spacedBy(InstUILayoutSizes.Spacing.SpaceXs.spaceXs),
                     modifier = if (deleteDraftEnabled) {
                         Modifier
-                            .clickable(role = Role.Button) { showDeleteConfirmDialog = true }
+                            .clickable(role = Role.Button) { onDeleteDraftClick() }
                             .padding(InstUILayoutSizes.Spacing.SpaceXs.spaceXs)
                     } else {
                         Modifier.padding(InstUILayoutSizes.Spacing.SpaceXs.spaceXs)
@@ -534,7 +608,6 @@ private fun SubmissionFormContent(
             }
         }
 
-        // Submit button
         Button(
             text = stringResource(R.string.ngc_submission_submit),
             onClick = onSubmit,
@@ -543,7 +616,6 @@ private fun SubmissionFormContent(
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // Inline error message — shown until the next submit attempt clears it
         if (uiState.errorMessage != null) {
             Text(
                 text = uiState.errorMessage,
@@ -553,6 +625,7 @@ private fun SubmissionFormContent(
         }
     }
 }
+
 
 /**
  * Renders the "New Submission" label row with an interactive [Select] type-selector
@@ -609,14 +682,28 @@ private fun SubmissionTypeRow(
     }
 }
 
-@Composable
-private fun submissionTypeLabel(type: Assignment.SubmissionType): String = when (type) {
-    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> stringResource(R.string.ngc_submission_textEntry)
-    Assignment.SubmissionType.ONLINE_UPLOAD -> stringResource(R.string.ngc_submission_fileUpload)
-    Assignment.SubmissionType.ONLINE_URL -> stringResource(R.string.websiteUrl)
-    Assignment.SubmissionType.MEDIA_RECORDING -> stringResource(R.string.ngc_submission_mediaRecording)
-    else -> type.apiString
+/**
+ * The localized label for a submission type, or `null` for a type the NGC selector has no string for
+ * (the caller then falls back to the raw `apiString`).
+ *
+ * Kept as a plain, non-composable mapping so it can be unit tested directly as a JVM test (hence
+ * `internal` rather than `private`) — see `SubmissionTypeLabelTest`. The composable wrapper below stays
+ * private, so no composition side effect is needed to observe the mapping. A missing branch here is
+ * what once leaked the raw `student_annotation` token into the type-selector dropdown.
+ */
+@StringRes
+internal fun submissionTypeLabelRes(type: Assignment.SubmissionType): Int? = when (type) {
+    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> R.string.ngc_submission_textEntry
+    Assignment.SubmissionType.ONLINE_UPLOAD -> R.string.ngc_submission_fileUpload
+    Assignment.SubmissionType.ONLINE_URL -> R.string.websiteUrl
+    Assignment.SubmissionType.MEDIA_RECORDING -> R.string.ngc_submission_mediaRecording
+    Assignment.SubmissionType.STUDENT_ANNOTATION -> R.string.canvasAPI_studentAnnotation
+    else -> null
 }
+
+@Composable
+private fun submissionTypeLabel(type: Assignment.SubmissionType): String =
+    submissionTypeLabelRes(type)?.let { stringResource(it) } ?: type.apiString
 
 // region Previews
 
@@ -626,6 +713,7 @@ private fun MainPaneLoadingPreview() {
     InstUITheme {
         MainPaneContent(
             uiState = NGCSubmissionUiState(loading = true),
+            courseId = 1L,
             onTextChanged = {},
             onUrlChanged = {},
             onDeleteDraft = {},
@@ -648,6 +736,7 @@ private fun MainPaneLoadedPreview() {
                 savedAtText = "Saved 06/19, 10:30 AM",
                 submitEnabled = true,
             ),
+            courseId = 1L,
             onTextChanged = {},
             onUrlChanged = {},
             onDeleteDraft = {},
@@ -665,6 +754,7 @@ private fun MainPaneErrorPreview() {
                 loading = false,
                 loadError = "Failed to load assignment",
             ),
+            courseId = 1L,
             onTextChanged = {},
             onUrlChanged = {},
             onDeleteDraft = {},
@@ -691,6 +781,7 @@ private fun MainPaneLoadedDarkPreview() {
                 savedAtText = "",
                 submitEnabled = false,
             ),
+            courseId = 1L,
             onTextChanged = {},
             onUrlChanged = {},
             onDeleteDraft = {},

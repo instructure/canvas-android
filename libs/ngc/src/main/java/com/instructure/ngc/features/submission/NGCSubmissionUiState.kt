@@ -15,6 +15,7 @@
  */
 package com.instructure.ngc.features.submission
 
+import androidx.compose.runtime.Immutable
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.ngc.features.rubric.NgcRubricUiState
@@ -27,6 +28,7 @@ data class TextSubmissionUiState(
     val contentResetKey: Int = 0,
 )
 
+@Immutable
 data class FileSubmissionUiState(
     val files: List<SubmissionFileUiState> = emptyList(),
     val allowedExtensions: List<String> = emptyList(),
@@ -47,6 +49,24 @@ data class UrlSubmissionUiState(
     val contentResetKey: Int = 0,
 )
 
+/**
+ * State for the inline PSPDFKit `STUDENT_ANNOTATION` document, backed by the canvadocs "draft" session.
+ * [sessionLoading]/[sessionLoadError] cover the session fetch itself, separate from the top-level
+ * [NGCSubmissionUiState.loading]/[NGCSubmissionUiState.submitting].
+ *
+ * [registerAnnotationFlush] is how the Compose layer hands the ViewModel a reference to the currently
+ * hosted [com.instructure.ngc.features.submission.annotation.PdfAnnotationHostFragment]'s flush
+ * function (or `null` when no fragment is currently hosted), so `onSubmit` can await any in-flight
+ * annotation writes before finalizing the attempt (see MBL-19937 Phase 4).
+ */
+data class StudentAnnotationUiState(
+    val sessionUrl: String = "",
+    val sessionLoading: Boolean = false,
+    val sessionLoadError: String? = null,
+    val onRetrySessionLoad: () -> Unit = {},
+    val registerAnnotationFlush: ((suspend () -> Boolean)?) -> Unit = {},
+)
+
 data class MediaSubmissionUiState(
     // The single attached clip (audio or video). All three fields are null when no clip is attached.
     // Unlike Text/Url there is no text field to re-seed, so no contentResetKey is needed — the clip
@@ -57,6 +77,21 @@ data class MediaSubmissionUiState(
     val onClipReady: (FileSubmitObject) -> Unit = {},
 )
 
+/**
+ * `@Immutable` because the Compose compiler infers this class as UNSTABLE from its `List` properties
+ * (`availableTypes`, and transitively `fileState`/`rubricUiState`) — `List` is a read-only interface, so
+ * the compiler cannot prove the backing collection never mutates.
+ *
+ * An unstable parameter makes a composable non-skippable, and this state is passed whole to
+ * `SubmissionFormContent`, `SubmissionFormHeader`, `SubmissionFormFooter` and `SubmissionTypeRow`. The
+ * result was that the entire form subtree recomposed on *every* state emission — every keystroke, every
+ * upload-progress tick, every type switch — which is what made switching submission type read as the
+ * whole screen flickering (MBL-19937 QA).
+ *
+ * The promise holds: every property is a `val`, and the lists are only ever replaced via `copy(...)`,
+ * never mutated in place. Verified with the Compose compiler stability report.
+ */
+@Immutable
 data class NGCSubmissionUiState(
     val loading: Boolean = true,
     val loadError: String? = null,
@@ -76,6 +111,7 @@ data class NGCSubmissionUiState(
     val textState: TextSubmissionUiState = TextSubmissionUiState(),
     val fileState: FileSubmissionUiState = FileSubmissionUiState(),
     val urlState: UrlSubmissionUiState = UrlSubmissionUiState(),
+    val studentAnnotationState: StudentAnnotationUiState = StudentAnnotationUiState(),
     val mediaState: MediaSubmissionUiState = MediaSubmissionUiState(),
 
     val savedAtText: String = "",

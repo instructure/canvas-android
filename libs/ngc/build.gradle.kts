@@ -86,6 +86,12 @@ dependencies {
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.COMPOSE_ADAPTIVE)
     implementation(Libs.COMPOSE_ADAPTIVE_NAVIGATION)
+    // Hosts the inline PSPDFKit annotation surface's PdfFragment in a FragmentManager scoped to a
+    // dedicated host Fragment (see features/submission/annotation/PdfAnnotationHostFragment.kt),
+    // rather than the Activity's supportFragmentManager, so config-change fragment restoration is
+    // isolated from the Compose-hosted container's layout timing. The actively-maintained,
+    // non-deprecated way to embed a Fragment in a Compose tree.
+    implementation(Libs.COMPOSE_FRAGMENT)
     implementation(Libs.HILT)
     ksp(Libs.HILT_COMPILER)
     implementation(Libs.HILT_ANDROIDX_WORK)

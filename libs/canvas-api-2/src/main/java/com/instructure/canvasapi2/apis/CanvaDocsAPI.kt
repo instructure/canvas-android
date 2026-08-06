@@ -56,6 +56,21 @@ object CanvaDocsAPI {
 
         @GET("/2018-04-06/sessions/{sessionId}/annotations")
         suspend fun getAnnotations(@Path("sessionId") sessionId: String, @Tag restParams: RestParams): DataResult<CanvaDocAnnotationResponse>
+
+        @PUT("/2018-03-07/sessions/{sessionId}/annotations/{annotationId}")
+        suspend fun putAnnotation(
+            @Path("sessionId") sessionId: String,
+            @Path("annotationId") annotationId: String,
+            @Body annotation: CanvaDocAnnotation,
+            @Tag restParams: RestParams
+        ): DataResult<CanvaDocAnnotation>
+
+        @DELETE("/1/sessions/{sessionId}/annotations/{annotationId}")
+        suspend fun deleteAnnotation(
+            @Path("sessionId") sessionId: String,
+            @Path("annotationId") annotationId: String,
+            @Tag restParams: RestParams
+        ): DataResult<ResponseBody>
     }
 
     fun getCanvaDoc(
