@@ -48,17 +48,26 @@ class StudentSettingsRouter(
     }
 
     override fun navigateToPushNotificationsSettings() {
+        val fragment = if (ApiPrefs.isStudentView) {
+            NothingToSeeHereFragment::class.java
+        } else {
+            PushNotificationPreferencesFragment::class.java
+        }
         RouteMatcher.route(
             activity,
-            Route(null, PushNotificationPreferencesFragment::class.java)
+            Route(null, fragment)
         )
-
     }
 
     override fun navigateToEmailNotificationsSettings() {
+        val fragment = if (ApiPrefs.isStudentView) {
+            NothingToSeeHereFragment::class.java
+        } else {
+            EmailNotificationPreferencesFragment::class.java
+        }
         RouteMatcher.route(
             activity,
-            Route(null, EmailNotificationPreferencesFragment::class.java)
+            Route(null, fragment)
         )
     }
 
