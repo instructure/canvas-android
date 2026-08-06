@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentGroupsApi
@@ -76,7 +75,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testAssignmentsE2E() {
 
@@ -575,7 +573,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.SECTIONS)
     fun testFilterForAssignmentSectionsE2E() {
 
@@ -735,7 +732,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @ReleaseExclude
     fun testVideoFileUploadSubmissionE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -827,7 +823,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testGradingPeriodFiltersAndGroupByAssignmentsE2E() {
 

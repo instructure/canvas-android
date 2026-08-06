@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.ClassicQuizzesApi
@@ -152,7 +151,6 @@ class NotificationsE2ETest : StudentComposeTest() {
         }
     }
 
-    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.NOTIFICATIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)

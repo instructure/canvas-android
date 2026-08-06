@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -54,7 +53,6 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
-    @ReleaseExclude
     fun testGradesListE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

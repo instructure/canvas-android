@@ -27,7 +27,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.FileFolderApi
@@ -370,7 +369,6 @@ class DiscussionsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
     fun testDiscussionCheckpointsCalendarE2E() {
 

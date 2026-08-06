@@ -16,6 +16,6 @@ jobs:
     with:
       app-name: student
       app-display-name: Student
-      include-e2e-offline: false
+      include-e2e-offline: true
       slack-emoji: ':student-app:'
     secrets: inherit

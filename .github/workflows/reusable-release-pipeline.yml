@@ -210,8 +210,6 @@ jobs:
             flank-config: flank_landscape_interaction_release.yml
           - test-type: tablet
             flank-config: flank_tablet_interaction_release.yml
-          - test-type: e2e
-            flank-config: flank_e2e_release.yml
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -272,79 +270,35 @@ jobs:
         if: always()
         run: rm -f service-account-key.json
 
+  e2e-tests:
+    name: e2e-tests
+    needs: build-test-apks
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: ${{ inputs.app-name }}
+      flank-config: flank_e2e_release.yml
+      branch-name: ${{ github.head_ref || github.ref_name }}
+    secrets: inherit
+
   e2e-offline:
     name: e2e-offline
-    runs-on: ubuntu-latest-16core
-    timeout-minutes: 60
     needs: build-test-apks
     if: ${{ inputs.include-e2e-offline }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Setup Service account
-        env:
-          GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: |
-          if [ -z "${GCLOUD_KEY}" ]; then
-            echo "Error: GCLOUD_KEY secret is not set"
-            exit 1
-          fi
-          echo "${GCLOUD_KEY}" > service-account-key.json
-          chmod 600 service-account-key.json
-
-      - name: Setup Flank config
-        run: cp ./apps/${{ inputs.app-name }}/flank_e2e_offline.yml ./flank.yml
-
-      - name: Copy APKs to expected locations
-        run: |
-          if [ -d "${{ inputs.app-name }}-qa-debug.apk" ]; then
-            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug
-            mv ${{ inputs.app-name }}-qa-debug.apk/${{ inputs.app-name }}-qa-debug.apk apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/
-            rm -rf ${{ inputs.app-name }}-qa-debug.apk
-          fi
-          if [ -d "${{ inputs.app-name }}-qa-debug-androidTest.apk" ]; then
-            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug
-            mv ${{ inputs.app-name }}-qa-debug-androidTest.apk/${{ inputs.app-name }}-qa-debug-androidTest.apk apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/
-            rm -rf ${{ inputs.app-name }}-qa-debug-androidTest.apk
-          fi
-
-      - name: Run Flank E2E offline tests
-        run: |
-          curl -fL -o flank.jar https://github.com/Flank/flank/releases/download/v23.07.0/flank.jar
-          GOOGLE_APPLICATION_CREDENTIALS=./service-account-key.json java -jar flank.jar android run -c=./flank.yml
-
-      - name: Report test results
-        if: always()
-        run: |
-          if [ -d results ] && [ "$(ls results 2>/dev/null | wc -l)" -eq 1 ]; then
-            ./apps/postProcessTestRun.bash ${{ inputs.app-name }} results/$(ls results)
-          else
-            echo "Warning: Expected exactly one results directory, found: $(ls results 2>/dev/null || echo 'none')"
-          fi
-        env:
-          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
-          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
-          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
-          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-      - name: Cleanup sensitive files
-        if: always()
-        run: rm -f service-account-key.json
+    uses: ./.github/workflows/e2e-app.yml
+    with:
+      app-type-lower: ${{ inputs.app-name }}
+      flank-config: flank_e2e_offline_release.yml
+      branch-name: ${{ github.head_ref || github.ref_name }}
+    secrets: inherit
 
   build-release-candidate:
     name: build-release-candidate
-    needs: [unit-tests, flank-tests, e2e-offline]
+    needs: [unit-tests, flank-tests, e2e-tests, e2e-offline]
     if: |
       always() &&
       needs.unit-tests.result == 'success' &&
       needs.flank-tests.result == 'success' &&
+      needs.e2e-tests.result == 'success' &&
       (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
     uses: ./.github/workflows/reusable-build-rc.yml
     with:

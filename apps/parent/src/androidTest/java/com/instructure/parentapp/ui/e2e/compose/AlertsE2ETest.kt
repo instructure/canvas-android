@@ -22,7 +22,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -340,7 +339,6 @@ class AlertsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ALERTS, TestCategory.E2E)
     fun testAlertsUndoMechanismE2E() {
 

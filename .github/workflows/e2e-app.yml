@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       flank-config:
-        description: 'Flank config file under apps/<app>/ (e.g. flank_e2e.yml, flank_e2e_offline.yml)'
+        description: 'Flank config file (e.g. flank_e2e.yml, flank_e2e_offline.yml, flank_e2e_release.yml, flank_e2e_offline_release.yml)'
         required: false
         type: string
         default: 'flank_e2e.yml'
@@ -17,6 +17,11 @@ on:
         required: false
         type: boolean
         default: false
+      branch-name:
+        description: 'Branch name to report to Splunk/Observe. Defaults to github.ref_name, which is wrong for pull_request-triggered callers (resolves to a merge ref) — those should pass github.head_ref || github.ref_name'
+        required: false
+        type: string
+        default: ''
     outputs:
       matrix-url:
         description: 'Firebase Test Matrix URL for the run (empty if Flank produced no matrix link)'
@@ -69,15 +74,16 @@ jobs:
           FLANK_CONFIG: ${{ inputs.flank-config }}
           RECORD_VIDEO: ${{ inputs.record_video }}
         run: |
-          case "$FLANK_CONFIG" in
-            flank_e2e.yml|flank_e2e_offline.yml) ;;
-            *) echo "Unsupported flank-config: $FLANK_CONFIG"; exit 1 ;;
-          esac
           case "$APP" in
             parent|student|teacher) ;;
             *) echo "Unsupported app: $APP"; exit 1 ;;
           esac
-          cp "./apps/$APP/$FLANK_CONFIG" ./flank.yml
+          case "$FLANK_CONFIG" in
+            flank_e2e.yml|flank_e2e_offline.yml) SRC="./apps/$APP/$FLANK_CONFIG" ;;
+            flank_e2e_release.yml|flank_e2e_offline_release.yml) SRC="./apps/$APP/release_tests/$FLANK_CONFIG" ;;
+            *) echo "Unsupported flank-config: $FLANK_CONFIG"; exit 1 ;;
+          esac
+          cp "$SRC" ./flank.yml
           if [ "$RECORD_VIDEO" = "true" ]; then
             sed -i 's/^  record-video:.*/  record-video: true/' ./flank.yml
             echo "Video recording enabled for this run"
@@ -186,7 +192,7 @@ jobs:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_GIT_BRANCH: ${{ inputs.branch-name || github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -d results-initial ] && [ -n "$(ls -A results-initial 2>/dev/null)" ]; then
@@ -200,7 +206,7 @@ jobs:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
-          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_GIT_BRANCH: ${{ inputs.branch-name || github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: ./apps/postProcessTestRun.bash "$APP" "results/$(ls results)"
 

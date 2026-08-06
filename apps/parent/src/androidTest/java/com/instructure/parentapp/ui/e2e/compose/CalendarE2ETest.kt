@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.utils.checkToastText
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
@@ -253,7 +252,6 @@ class CalendarE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @ReleaseExclude("Flaky on beta")
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)
     fun testCalendarScreenE2E() {
 
@@ -344,7 +342,6 @@ class CalendarE2ETest : ParentComposeTest() {
         calendarScreenPage.assertItemDetails(newEventTitle, parent.name, currentDate)
     }
 
-    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E)

@@ -11,12 +11,15 @@ gcloud:
   performance-metrics: false
   record-video: true
   timeout: 60m
+  num-flaky-test-attempts: 1
+  environment-variables:
+    timeout_msec: 600000
   test-targets:
   - annotation com.instructure.canvas.espresso.annotations.E2E
   - notAnnotation com.instructure.canvas.espresso.annotations.ReleaseExclude, com.instructure.canvas.espresso.annotations.Stub, com.instructure.canvas.espresso.annotations.FlakyE2E, com.instructure.canvas.espresso.annotations.KnownBug, com.instructure.canvas.espresso.annotations.OfflineE2E
   device:
-  - model: Pixel2.arm
-    version: 29
+  - model: MediumPhone.arm
+    version: 34
     locale: en_US
     orientation: portrait
 

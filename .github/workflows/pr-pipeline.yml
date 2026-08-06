@@ -1789,7 +1789,8 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: parent
-      record_video: ${{ github.event.inputs.record_video == 'true' }}
+      record_video: ${{ (github.event.inputs.record_video == 'true') || contains(github.event.pull_request.body, 'Run E2E test suite with video') }}
+      branch-name: ${{ github.head_ref || github.ref_name }}
     secrets: inherit
 
   student-e2e-tests:
@@ -1798,7 +1799,8 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: student
-      record_video: ${{ github.event.inputs.record_video == 'true' }}
+      record_video: ${{ (github.event.inputs.record_video == 'true') || contains(github.event.pull_request.body, 'Run E2E test suite with video') }}
+      branch-name: ${{ github.head_ref || github.ref_name }}
     secrets: inherit
 
   teacher-e2e-tests:
@@ -1807,7 +1809,8 @@ jobs:
     uses: ./.github/workflows/e2e-app.yml
     with:
       app-type-lower: teacher
-      record_video: ${{ github.event.inputs.record_video == 'true' }}
+      record_video: ${{ (github.event.inputs.record_video == 'true') || contains(github.event.pull_request.body, 'Run E2E test suite with video') }}
+      branch-name: ${{ github.head_ref || github.ref_name }}
     secrets: inherit
 
   submodule-ui-tests:
