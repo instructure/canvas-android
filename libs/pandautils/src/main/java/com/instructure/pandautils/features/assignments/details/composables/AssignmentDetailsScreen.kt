@@ -17,6 +17,12 @@
 package com.instructure.pandautils.features.assignments.details.composables
 
 import androidx.annotation.ColorInt
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -51,7 +57,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -196,11 +204,12 @@ private fun AssignmentDetailsContent(
     recordingOverlay: @Composable () -> Unit
 ) {
     val actions = uiState.actions
+    val scrollState = rememberScrollState()
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(scrollState)
         ) {
             Text(
                 text = uiState.assignmentName,
@@ -307,7 +316,7 @@ private fun AssignmentDetailsContent(
         }
 
         if (messageFab != null) {
-            MessageFab(toolbarColor = toolbarColor, messageFab = messageFab)
+            MessageFab(toolbarColor = toolbarColor, messageFab = messageFab, scrollState = scrollState)
         }
         recordingOverlay()
     }
@@ -337,23 +346,44 @@ private fun BookmarkOverflowMenu(onAddBookmark: () -> Unit) {
 @Composable
 private fun BoxScope.MessageFab(
     @ColorInt toolbarColor: Int,
-    messageFab: MessageFabUiState
+    messageFab: MessageFabUiState,
+    scrollState: ScrollState
 ) {
-    FloatingActionButton(
-        onClick = messageFab.onClick,
-        containerColor = Color(toolbarColor),
-        contentColor = colorResource(id = R.color.textLightest),
-        shape = CircleShape,
-        modifier = Modifier
-            .align(Alignment.BottomEnd)
-            .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
-            .padding(16.dp)
-            .testTag("messageFab")
+    var previousScrollOffset by remember { mutableIntStateOf(scrollState.value) }
+    var fabVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(scrollState.value) {
+        val currentScrollOffset = scrollState.value
+        fabVisible = when {
+            currentScrollOffset == 0 -> true
+            !scrollState.canScrollForward -> false
+            currentScrollOffset < previousScrollOffset -> true
+            currentScrollOffset > previousScrollOffset -> false
+            else -> fabVisible
+        }
+        previousScrollOffset = currentScrollOffset
+    }
+
+    AnimatedVisibility(
+        visible = fabVisible,
+        modifier = Modifier.align(Alignment.BottomEnd),
+        enter = fadeIn() + scaleIn(),
+        exit = fadeOut() + scaleOut()
     ) {
-        Icon(
-            painter = painterResource(id = messageFab.iconRes),
-            contentDescription = messageFab.contentDescription
-        )
+        FloatingActionButton(
+            onClick = messageFab.onClick,
+            containerColor = Color(toolbarColor),
+            contentColor = colorResource(id = R.color.textLightest),
+            shape = CircleShape,
+            modifier = Modifier
+                .padding(16.dp)
+                .testTag("messageFab")
+        ) {
+            Icon(
+                painter = painterResource(id = messageFab.iconRes),
+                contentDescription = messageFab.contentDescription
+            )
+        }
     }
 }
 
