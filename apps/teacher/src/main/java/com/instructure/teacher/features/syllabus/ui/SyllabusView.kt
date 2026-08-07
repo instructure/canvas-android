@@ -177,7 +177,9 @@ class SyllabusView(
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
 
-        if (state.syllabus == null && syllabusPager.currentItem != SUMMARY_TAB_POSITION) {
+        if (!showSummary && syllabusPager.currentItem != SYLLABUS_TAB_POSITION) {
+            syllabusPager.setCurrentItem(SYLLABUS_TAB_POSITION, false)
+        } else if (showSummary && state.syllabus == null && syllabusPager.currentItem != SUMMARY_TAB_POSITION) {
             syllabusPager.setCurrentItem(SUMMARY_TAB_POSITION, false)
         }
         (activity as? MasterDetailInteractions)?.setMasterPaneExpanded(

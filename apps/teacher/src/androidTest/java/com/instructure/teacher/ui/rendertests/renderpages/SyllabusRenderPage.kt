@@ -36,6 +36,7 @@ class SyllabusRenderPage : SyllabusPage() {
 
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
     private val webView by WaitForViewWithId(R.id.contentWebView)
+    private val syllabusScrollView by OnViewWithId(R.id.syllabusScrollView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecyclerView)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)
@@ -62,6 +63,11 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun assertDisplaysEvents() {
         eventsRecycler.assertDisplayed()
+    }
+
+    fun assertDisplaysSyllabusTab() {
+        tabs.assertNotDisplayed()
+        syllabusScrollView.assertDisplayed()
     }
 
     fun clickEventsTab() {

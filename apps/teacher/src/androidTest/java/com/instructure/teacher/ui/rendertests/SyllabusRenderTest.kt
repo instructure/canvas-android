@@ -79,6 +79,14 @@ class SyllabusRenderTest : TeacherRenderTest() {
     }
 
     @Test
+    fun doesNotRedirectToSummaryWhenSummaryDisabled() {
+        val model = baseModel.copy(syllabus = null, summaryAllowed = false)
+        loadPageWithModel(model)
+
+        syllabusRenderPage.assertDisplaysSyllabusTab()
+    }
+
+    @Test
     fun displaysEmpty() {
         val model = baseModel.copy(syllabus = null)
         loadPageWithModel(model)
