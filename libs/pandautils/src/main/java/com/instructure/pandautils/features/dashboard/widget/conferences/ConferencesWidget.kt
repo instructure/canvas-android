@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -125,7 +126,8 @@ fun ConferencesWidgetContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 12.dp),
+                .padding(bottom = 12.dp)
+                .testTag("conferencesWidget_header"),
             text = stringResource(R.string.conferencesWidgetTitle, uiState.conferences.size),
             fontSize = 14.sp,
             lineHeight = 19.sp,
@@ -137,7 +139,9 @@ fun ConferencesWidgetContent(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("conferencesWidget_pager"),
             pageSpacing = 8.dp,
             contentPadding = PaddingValues(start = 16.dp, end = 24.dp),
             beyondViewportPageCount = 1
@@ -186,6 +190,7 @@ private fun ConferenceCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .testTag("conferencesWidget_card_${conference.canvasContext.id}")
             .pendoTag("conferencesWidget_joinConference", true)
             .clickable(enabled = !isJoining, onClick = onJoin),
         shape = RoundedCornerShape(16.dp),
@@ -233,6 +238,7 @@ private fun ConferenceCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
+                    modifier = Modifier.testTag("conferencesWidget_conferenceSubtitle_${conference.canvasContext.id}"),
                     text = conference.subtitle,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
@@ -253,7 +259,10 @@ private fun ConferenceCard(
             } else {
                 IconButton(
                     onClick = onDismiss,
-                    modifier = Modifier.padding(end = 4.dp).pendoTag("conferencesWidget_dismissConference", true)
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .testTag("conferencesWidget_dismissConference_${conference.canvasContext.id}")
+                        .pendoTag("conferencesWidget_dismissConference", true)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_close),

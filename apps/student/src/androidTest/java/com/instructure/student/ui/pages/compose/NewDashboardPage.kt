@@ -18,10 +18,12 @@ package com.instructure.student.ui.pages.compose
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -142,6 +144,12 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         composeTestRule.onNodeWithTag("$COURSE_CARD_TAG_PREFIX$courseId").assertDoesNotExist()
     }
 
+    fun clickCourse(courseId: Long) {
+        composeTestRule.waitForTag("$COURSE_CARD_TAG_PREFIX$courseId")
+        composeTestRule.onNodeWithTag("$COURSE_CARD_TAG_PREFIX$courseId").performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun assertGlobalAnnouncementsHeaderCount(count: Int) {
         val expected = targetContext.getString(R.string.institutionalAnnouncementsTitle, count)
         composeTestRule.onNodeWithTag(GLOBAL_ANNOUNCEMENT_HEADER_TAG).assertIsDisplayed().assert(hasText(expected))
@@ -185,6 +193,57 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         composeTestRule.onNodeWithTag("$GLOBAL_ANNOUNCEMENT_CARD_TAG_PREFIX$announcementId").assertDoesNotExist()
     }
 
+    fun assertConferencesHeaderCount(count: Int) {
+        val expected = targetContext.getString(R.string.conferencesWidgetTitle, count)
+        composeTestRule.onNodeWithTag(CONFERENCES_HEADER_TAG).assertIsDisplayed().assert(hasText(expected))
+    }
+
+    fun assertConferenceDisplayed(courseId: Long, courseName: String) {
+        composeTestRule.waitForTag("$CONFERENCE_CARD_TAG_PREFIX$courseId")
+        bringConferenceIntoView(courseId)
+        composeTestRule.onNodeWithTag("$CONFERENCE_CARD_TAG_PREFIX$courseId").assertIsDisplayed()
+        composeTestRule.onNode(
+            hasText(targetContext.getString(R.string.conferencesWidgetConferenceInProgress))
+                .and(hasAnyAncestor(hasTestTag("$CONFERENCE_CARD_TAG_PREFIX$courseId"))),
+            useUnmergedTree = true
+        ).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("$CONFERENCE_SUBTITLE_TAG_PREFIX$courseId", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assert(hasText(courseName))
+    }
+
+    fun clickConference(courseId: Long) {
+        composeTestRule.waitForTag("$CONFERENCE_CARD_TAG_PREFIX$courseId")
+        bringConferenceIntoView(courseId)
+        composeTestRule.onNodeWithTag("$CONFERENCE_CARD_TAG_PREFIX$courseId").performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun dismissConference(courseId: Long) {
+        composeTestRule.waitForTag("$CONFERENCE_DISMISS_TAG_PREFIX$courseId")
+        bringConferenceIntoView(courseId)
+        composeTestRule.onNodeWithTag("$CONFERENCE_DISMISS_TAG_PREFIX$courseId").performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    private fun bringConferenceIntoView(courseId: Long) {
+        bringPagerItemIntoView(CONFERENCE_PAGER_TAG, "$CONFERENCE_CARD_TAG_PREFIX$courseId")
+    }
+
+    fun assertConferenceGone(courseId: Long, timeoutMillis: Long = 20000) {
+        composeTestRule.waitUntil(timeoutMillis = timeoutMillis) {
+            composeTestRule.onAllNodesWithTag("$CONFERENCE_CARD_TAG_PREFIX$courseId").fetchSemanticsNodes().isEmpty()
+        }
+        composeTestRule.onNodeWithTag("$CONFERENCE_CARD_TAG_PREFIX$courseId").assertDoesNotExist()
+    }
+
+    fun assertSnackbar(message: String, timeoutMillis: Long = 10000) {
+        composeTestRule.waitUntil(timeoutMillis = timeoutMillis) {
+            composeTestRule.onAllNodesWithText(message).fetchSemanticsNodes().isNotEmpty()
+        }
+        composeTestRule.onNodeWithText(message).assertIsDisplayed()
+    }
+
     companion object {
         private const val DASHBOARD_PULL_REFRESH_INDICATOR_TAG = "dashboardPullRefreshIndicator"
         private const val WELCOME_GREETING_TAG = "welcomeGreetingText"
@@ -201,6 +260,11 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         private const val GLOBAL_ANNOUNCEMENT_CARD_TAG_PREFIX = "institutionalAnnouncementsWidget_announcementCard_"
         private const val GLOBAL_ANNOUNCEMENT_SUBJECT_TAG_PREFIX = "institutionalAnnouncementsWidget_announcementSubject_"
         private const val GLOBAL_ANNOUNCEMENT_DISMISS_TAG_PREFIX = "institutionalAnnouncementsWidget_dismissAnnouncement_"
+        private const val CONFERENCES_HEADER_TAG = "conferencesWidget_header"
+        private const val CONFERENCE_PAGER_TAG = "conferencesWidget_pager"
+        private const val CONFERENCE_CARD_TAG_PREFIX = "conferencesWidget_card_"
+        private const val CONFERENCE_SUBTITLE_TAG_PREFIX = "conferencesWidget_conferenceSubtitle_"
+        private const val CONFERENCE_DISMISS_TAG_PREFIX = "conferencesWidget_dismissConference_"
         private const val MAX_PAGER_SWIPES = 3
     }
 }

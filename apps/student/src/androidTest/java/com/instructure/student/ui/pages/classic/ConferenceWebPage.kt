@@ -84,6 +84,12 @@ class ConferenceWebPage(private val device: UiDevice) {
 
     fun clickStart() {
         findClickable("Start", WEB_TIMEOUT).click()
+        Thread.sleep(1000)
+    }
+
+    fun assertJoinPageDisplayed() {
+        selectChromeFromChooserIfPresent()
+        requirePresent("BigBlueButton", WEB_TIMEOUT, "the BigBlueButton page in the Custom Tab")
     }
 
     fun clickEnd() {

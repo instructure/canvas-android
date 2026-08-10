@@ -32,6 +32,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.utils.actionWithCustomConstraints
+import com.instructure.canvas.espresso.utils.isElementDisplayed
 import com.instructure.canvas.espresso.utils.scrollRecyclerView
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
@@ -169,6 +170,12 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
 
     // Minimizes toolbar if it is not already minimized
     private fun minimizeToolbar() {
+        // When the course color overlay is hidden, the fragment shows a plain fixed toolbar
+        // (noOverlayToolbar) instead of the collapsing hero toolbar, so there is nothing to minimize.
+        if (isElementDisplayed(R.id.noOverlayToolbar)) {
+            return
+        }
+
         try {
             onView(allOf(withId(R.id.collapsingToolbarLayout), isDisplayed())).swipeUp()
         }

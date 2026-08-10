@@ -26,6 +26,8 @@ import com.instructure.canvas.espresso.RemoteConfigOverrides
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.utils.pressBackButton
+import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
@@ -33,6 +35,7 @@ import com.instructure.dataseeding.api.FeatureFlagsApi
 import com.instructure.dataseeding.api.GlobalAnnouncementsApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.FEATURE_FLAG_WIDGET_DASHBOARD
+import com.instructure.student.ui.pages.classic.ConferenceWebPage
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.di.FakeTimeProvider
@@ -278,5 +281,93 @@ class NewDashboardE2ETest : StudentComposeTest() {
         newDashboardPage.assertGlobalAnnouncementsHeaderCount(1)
         newDashboardPage.assertGlobalAnnouncementDisplayed(announcementToOpen.id, subjectToOpen)
         newDashboardPage.assertGlobalAnnouncementGone(announcementToDismiss.id)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.NEW_DASHBOARD, TestCategory.E2E)
+    fun testConferencesWidgetE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val course = data.coursesList[0]
+
+        val conferenceWebPage = ConferenceWebPage(device)
+        val conferenceName = "E2E dashboard widget conference"
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLoginWithoutDashboardWait(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the redesigned (Compose) dashboard is displayed.")
+        newDashboardPage.assertDashboardDisplayed()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course from the dashboard and navigate to its Conferences page.")
+        newDashboardPage.clickCourse(course.id)
+        courseBrowserPage.selectConferences()
+
+        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed since no conference has been created yet.")
+        conferenceListPage.assertEmptyView()
+
+        Log.d(STEP_TAG, "Tap 'Open Externally' to open the conferences web page in a Chrome Custom Tab.")
+        conferenceListPage.clickOnOpenExternallyButton()
+        conferenceWebPage.waitForPageLoaded()
+
+        Log.d(STEP_TAG, "Tap 'Add Conference' on the web page to open the create modal.")
+        conferenceWebPage.clickAddConference()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'New Video Conference' modal is displayed with the expected fields.")
+        conferenceWebPage.assertCreateModalDisplayed()
+
+        Log.d(STEP_TAG, "Enter '$conferenceName' as the conference name and tap 'Create'.")
+        conferenceWebPage.setConferenceName(conferenceName)
+        conferenceWebPage.clickCreate()
+
+        Log.d(ASSERTION_TAG, "Assert that '$conferenceName' appears under 'New Conferences' in the web list.")
+        conferenceWebPage.assertConferenceInWebList(conferenceName)
+
+        Log.d(STEP_TAG, "Tap 'Start' on the conference, then close the Custom Tab and return to the app.")
+        conferenceWebPage.clickStart()
+        conferenceWebPage.closeCustomTab()
+        refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that '$conferenceName' status is now 'In Progress' under 'New Conferences'.")
+        conferenceListPage.assertConferenceStatus(conferenceName, "In Progress")
+        conferenceListPage.assertNewConferencesDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to the redesigned dashboard.")
+        pressBackButton(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the redesigned (Compose) dashboard is displayed again, where the Conferences widget should now show '$conferenceName'.")
+        newDashboardPage.assertDashboardDisplayed()
+
+        Log.d(STEP_TAG, "Refresh the dashboard.")
+        newDashboardPage.refreshDashboard()
+
+        Log.d(ASSERTION_TAG, "Assert that the Conferences widget header shows a count of 1 in-progress conference.")
+        newDashboardPage.assertConferencesHeaderCount(1)
+
+        Log.d(ASSERTION_TAG, "Assert that the Conferences widget shows a card for '${course.name}' with the 'Conference in progress' status.")
+        newDashboardPage.assertConferenceDisplayed(course.id, course.name)
+
+        Log.d(STEP_TAG, "Tap the Conferences widget card to join the conference.")
+        newDashboardPage.clickConference(course.id)
+
+        Log.d(ASSERTION_TAG, "Assert that tapping the widget opens the BigBlueButton join page in a Chrome Custom Tab.")
+        conferenceWebPage.assertJoinPageDisplayed()
+
+        Log.d(STEP_TAG, "Close the Custom Tab and return to the redesigned dashboard.")
+        conferenceWebPage.closeCustomTab()
+        newDashboardPage.assertDashboardDisplayed()
+
+        Log.d(STEP_TAG, "Tap the 'X' button on the Conferences widget card to dismiss it.")
+        newDashboardPage.dismissConference(course.id)
+
+        Log.d(ASSERTION_TAG, "Assert that the Conferences widget card is no longer displayed after dismissing it.")
+        newDashboardPage.assertConferenceGone(course.id)
+
+        Log.d(ASSERTION_TAG, "Assert that a 'Conference dismissed' snackbar is displayed.")
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        newDashboardPage.assertSnackbar(context.getString(R.string.conferencesWidgetDismissed))
     }
 }
