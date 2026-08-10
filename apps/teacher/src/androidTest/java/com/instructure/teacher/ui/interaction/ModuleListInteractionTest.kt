@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockcanvas.addItemToModule
 import com.instructure.canvas.espresso.mockcanvas.addModuleToCourse
+import com.instructure.canvas.espresso.mockcanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -411,6 +412,32 @@ class ModuleListInteractionTest : TeacherComposeTest() {
 
         moduleListPage.clickItemOverflow(assignment.name.orEmpty())
         moduleListPage.assertSnackbarContainsText(assignment.name.orEmpty())
+        moduleListPage.assertSnackbarContainsText("student submissions")
+    }
+
+    @Test
+    fun assertFrontPageModuleItemShowsFrontPageUnpublishError() {
+        val data = goToModulesPage()
+        val module = data.courseModules.values.first().first()
+        val course = data.courses.values.first()
+        val page = data.addPageToCourse(
+            courseId = course.id,
+            published = true,
+            frontPage = true
+        )
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = page,
+            published = true,
+            unpublishable = false
+        )
+
+        moduleListPage.refresh()
+
+        moduleListPage.clickItemOverflow(page.title.orEmpty())
+        moduleListPage.assertSnackbarContainsText(page.title.orEmpty())
+        moduleListPage.assertSnackbarContainsText("front page")
     }
 
 

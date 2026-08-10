@@ -88,7 +88,7 @@ class ModuleListItemBinder :
                 } else {
                     if (!item.unpublishable) {
                         callback.showSnackbar(
-                            R.string.error_unpublishable_module_item,
+                            getUnpublishableErrorMessage(item.type),
                             arrayOf(item.title.orEmpty())
                         )
                     } else {
@@ -101,6 +101,12 @@ class ModuleListItemBinder :
             publishActions.accessibilityClassName("android.widget.Button")
             root.accessibilityClassName("android.widget.Button")
         }
+    }
+
+    @StringRes
+    private fun getUnpublishableErrorMessage(type: ModuleItem.Type) = when (type) {
+        ModuleItem.Type.Page -> R.string.error_unpublishable_front_page_module_item
+        else -> R.string.error_unpublishable_module_item
     }
 
     private fun getStatusIcon(data: ModuleListItemData.ModuleItemData): StatusIcon {

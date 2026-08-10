@@ -1692,6 +1692,7 @@
     <string name="unpublishModuleItemAction">Unpublish</string>
     <string name="publishDialogPositiveButton">Publish</string>
     <string name="unpublishDialogPositiveButton">Unpublish</string>
+    <string name="error_unpublishable_front_page_module_item">Cannot unpublish %s because it is the front page</string>
     <string name="discussionMenuRefresh">Refresh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Jump to Today</string>
