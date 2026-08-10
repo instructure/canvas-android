@@ -54,15 +54,23 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
             .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$menuText']")))
     }
 
+    fun clickOnMarkAllAsUnreadMenuButton() = clickOnMoreMenuItem("Mark All as Unread")
+
+    fun clickOnMarkAllAsReadMenuButton() = clickOnMoreMenuItem("Mark All as Read")
+
     fun clickOnDeleteMenuButtonAndConfirm() {
         try {
-            Web.onWebView()
-                .withElement(DriverAtoms.findElement(Locator.XPATH, "//span[text()='Delete']"))
-                .perform(webClick())
+            clickOnMoreMenuItem("Delete")
         } catch (e: Exception) {
             // Expected: the blocking confirm() dialog interrupts the web interaction.
         }
         waitForView(withId(android.R.id.button1)).click()
+    }
+
+    private fun clickOnMoreMenuItem(menuText: String) {
+        Web.onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//span[text()='$menuText']"))
+            .perform(webClick())
     }
 
     fun assertToolbarDiscussionTitle(discussionTitle: String) {

@@ -19,12 +19,14 @@ package com.instructure.teacher.ui.pages.classic
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvas.espresso.utils.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -33,6 +35,7 @@ import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
@@ -204,5 +207,24 @@ class AnnouncementsListPage(val searchable: Searchable) : BasePage() {
         onView(withId(R.id.discussionRecyclerView) + withAncestor(R.id.swipeRefreshLayout)).check(
             ViewAssertions.matches(ViewMatchers.hasChildCount(expectedCount + 1)) //because of the FrameLayout, it does not actually a discussion
         )
+    }
+
+    /**
+     * Assert the visibility of the unread status indicator on the row of the announcement with the given name.
+     *
+     * @param announcementName: The announcement name string parameter.
+     * @param displayed: Whether the unread status indicator is expected to be displayed.
+     */
+    fun assertUnreadIndicatorVisibility(announcementName: String, displayed: Boolean) {
+        val matcher = withId(R.id.statusIndicator) + withAncestor(
+            withId(R.id.discussionLayout) + withDescendant(withId(R.id.discussionTitle) + withText(announcementName))
+        )
+
+        if (displayed) {
+            waitForMatcherWithRefreshes(matcher) // May need to refresh before the status indicator shows up.
+            onView(matcher).assertDisplayed()
+        } else {
+            onView(matcher).assertNotDisplayed()
+        }
     }
 }

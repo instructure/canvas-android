@@ -74,6 +74,9 @@ class AnnouncementsE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that '${lockedAnnouncement.title}' announcement is really locked so that the 'locked' icon is displayed.")
         announcementListPage.assertAnnouncementLocked(lockedAnnouncement.title)
 
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${lockedAnnouncement.title}' announcement's row, since it has just been seeded and not viewed yet.")
+        announcementListPage.assertUnreadIndicatorVisibility(lockedAnnouncement.title, true)
+
         Log.d(STEP_TAG, "Select '${lockedAnnouncement.title}' announcement.")
         announcementListPage.selectTopic(lockedAnnouncement.title)
 
@@ -85,6 +88,43 @@ class AnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate back to Announcement List Page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${lockedAnnouncement.title}' announcement's row, since it has just been viewed and became read.")
+        announcementListPage.assertUnreadIndicatorVisibility(lockedAnnouncement.title, false)
+
+        Log.d(STEP_TAG, "Open the '${lockedAnnouncement.title}' announcement again and click on the more menu of the announcement.")
+        announcementListPage.selectTopic(lockedAnnouncement.title)
+        discussionDetailsPage.waitForDiscussionMoreMenu()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Unread' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Unread' to mark the announcement's main topic as unread.")
+        discussionDetailsPage.clickOnMarkAllAsUnreadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to Announcement List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${lockedAnnouncement.title}' announcement's row because its main topic has been marked as unread.")
+        announcementListPage.assertUnreadIndicatorVisibility(lockedAnnouncement.title, true)
+
+        Log.d(STEP_TAG, "Open the '${lockedAnnouncement.title}' announcement again and click on the more menu of the announcement.")
+        announcementListPage.selectTopic(lockedAnnouncement.title)
+        discussionDetailsPage.waitForDiscussionMoreMenu()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Read' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Read' to mark the announcement's main topic as read.")
+        discussionDetailsPage.clickOnMarkAllAsReadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to Announcement List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${lockedAnnouncement.title}' announcement's row after marking it as read.")
+        announcementListPage.assertUnreadIndicatorVisibility(lockedAnnouncement.title, false)
 
         Log.d(STEP_TAG, "Select '${announcement.title}' announcement.")
         announcementListPage.selectTopic(announcement.title)

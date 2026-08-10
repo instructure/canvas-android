@@ -20,6 +20,8 @@ import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.web.assertion.WebViewAssertions.webContent
 import androidx.test.espresso.web.matcher.DomMatchers.hasElementWithXpath
 import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
@@ -57,6 +59,36 @@ class DiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
 
     fun assertEntryDisplayed(entryMessage: String) {
         onWebView(withId(R.id.discussionWebView)).check(webContent(hasElementWithXpath("//*[normalize-space(text())='$entryMessage']")))
+    }
+
+    fun waitForDiscussionMoreMenu() {
+        waitForWebElement(
+            webViewMatcher = withId(R.id.discussionWebView),
+            locator = Locator.XPATH,
+            value = "//button[@data-testid='discussion-post-menu-trigger']",
+            timeoutMillis = 10000,
+            intervalMillis = 500
+        )
+    }
+
+    fun clickOnDiscussionMoreMenu() {
+        onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//button[@data-testid='discussion-post-menu-trigger']"))
+            .perform(webClick())
+    }
+
+    fun assertMoreMenuButtonDisplayed(menuText: String) {
+        onWebView().check(webContent(hasElementWithXpath("//span[text()='$menuText']")))
+    }
+
+    fun clickOnMarkAllAsUnreadMenuButton() = clickOnMoreMenuItem("Mark All as Unread")
+
+    fun clickOnMarkAllAsReadMenuButton() = clickOnMoreMenuItem("Mark All as Read")
+
+    private fun clickOnMoreMenuItem(menuText: String) {
+        onWebView()
+            .withElement(DriverAtoms.findElement(Locator.XPATH, "//span[text()='$menuText']"))
+            .perform(webClick())
     }
 
     fun assertModulesToolbarDiscussionTitle(discussionTitle: String) {

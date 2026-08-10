@@ -119,6 +119,19 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
 
     }
 
+    fun assertUnreadIndicatorVisibility(topicTitle: String, displayed: Boolean) {
+        val matcher = withId(R.id.statusIndicator) + withAncestor(
+            withId(R.id.discussionLayout) + withDescendant(withId(R.id.discussionTitle) + withText(topicTitle))
+        )
+
+        if (displayed) {
+            waitForMatcherWithRefreshes(matcher)
+            onView(matcher).assertDisplayed()
+        } else {
+            onView(matcher).assertNotDisplayed()
+        }
+    }
+
     fun assertAnnouncementCreated(inputTitle: String) {
             var expectedTitle = inputTitle
             if (inputTitle.isNullOrEmpty()) {

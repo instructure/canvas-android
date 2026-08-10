@@ -115,6 +115,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         discussionListPage.waitForDiscussionTopicToDisplay(announcement.title)
 
         Log.d(ASSERTION_TAG, "Assert that both announcements, '${announcement.title}' and '${announcement2.title}' has been displayed.")
+        discussionListPage.assertTopicDisplayed(announcement.title)
         discussionListPage.assertTopicDisplayed(announcement2.title)
 
         Log.d(STEP_TAG, "Navigate back to CourseBrowser Page.")
@@ -138,6 +139,9 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${topic2.title}' discussion is displayed.")
         discussionListPage.assertTopicDisplayed(topic2.title)
 
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${topic2.title}' discussion's row, since it has just been seeded and not viewed yet.")
+        discussionListPage.assertUnreadIndicatorVisibility(topic2.title, true)
+
         Log.d(STEP_TAG, "Select '${topic2.title}' discussion.")
         discussionListPage.selectTopic(topic2.title)
 
@@ -146,6 +150,43 @@ class DiscussionsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Navigate back to Discussion List Page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${topic2.title}' discussion's row, since it has just been viewed and became read.")
+        discussionListPage.assertUnreadIndicatorVisibility(topic2.title, false)
+
+        Log.d(STEP_TAG, "Open the '${topic2.title}' discussion again and click on the more menu of the discussion.")
+        discussionListPage.selectTopic(topic2.title)
+        discussionDetailsPage.waitForDiscussionMoreMenu()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Unread' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Unread' to mark the discussion's main topic as unread.")
+        discussionDetailsPage.clickOnMarkAllAsUnreadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to Discussion List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${topic2.title}' discussion's row, even though it has no unread replies, because its main topic has been marked as unread.")
+        discussionListPage.assertUnreadIndicatorVisibility(topic2.title, true)
+
+        Log.d(STEP_TAG, "Open the '${topic2.title}' discussion again and click on the more menu of the discussion.")
+        discussionListPage.selectTopic(topic2.title)
+        discussionDetailsPage.waitForDiscussionMoreMenu()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Read' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Read' to mark the discussion's main topic as read.")
+        discussionDetailsPage.clickOnMarkAllAsReadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to Discussion List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${topic2.title}' discussion's row after marking it as read.")
+        discussionListPage.assertUnreadIndicatorVisibility(topic2.title, false)
 
         Log.d(STEP_TAG, "Create a new discussion then close it.")
         discussionListPage.launchCreateDiscussionThenClose()

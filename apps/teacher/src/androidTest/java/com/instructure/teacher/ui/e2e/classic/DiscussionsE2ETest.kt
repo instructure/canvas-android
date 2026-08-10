@@ -82,6 +82,9 @@ class DiscussionsE2ETest : TeacherComposeTest() {
         discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
 
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${discussion.title}' discussion's row because of the unread entry and reply seeded for it.")
+        discussionsListPage.assertUnreadIndicatorVisibility(discussion.title, true)
+
         Log.d(STEP_TAG, "Click on '${discussion.title}' discussion.")
         discussionsListPage.clickDiscussion(discussion)
 
@@ -92,7 +95,7 @@ class DiscussionsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the toolbar's title is the '${discussion.title}' discussion's title.")
         discussionDetailsPage.assertToolbarDiscussionTitle(discussion.title)
 
-        Log.d(STEP_TAG, "Click on the more menu of the announcement.")
+        Log.d(STEP_TAG, "Click on the more menu of the discussion.")
         discussionDetailsPage.clickOnDiscussionMoreMenu()
 
         Log.d(ASSERTION_TAG, "Assert if the more menu items are all displayed.")
@@ -118,8 +121,44 @@ class DiscussionsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that it's displayed.")
         discussionDetailsPage.assertReplyDisplayed(testDiscussionEntryReplyMessage)
 
-        Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion.")
+        Log.d(STEP_TAG, "Navigate back to the Discussion List Page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Open the '${discussion3.title}' discussion, which has no replies, and click on the more menu of the discussion.")
+        discussionsListPage.clickDiscussion(discussion3)
+        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Unread' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Unread' to mark the discussion's main topic as unread.")
+        discussionDetailsPage.clickOnMarkAllAsUnreadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to the Discussion List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${discussion3.title}' discussion's row, even though it has no unread replies, because its main topic has been marked as unread.")
+        discussionsListPage.assertUnreadIndicatorVisibility(discussion3.title, true)
+
+        Log.d(STEP_TAG, "Open the '${discussion3.title}' discussion again and click on the more menu of the discussion.")
+        discussionsListPage.clickDiscussion(discussion3)
+        discussionDetailsPage.waitForReplyButtonDisplayed()
+        discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Read' menu item is displayed.")
+        discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Read' to mark the discussion's main topic as read.")
+        discussionDetailsPage.clickOnMarkAllAsReadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to the Discussion List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${discussion3.title}' discussion's row after marking it as read.")
+        discussionsListPage.assertUnreadIndicatorVisibility(discussion3.title, false)
+
+        Log.d(STEP_TAG, "Select 'Pin' overflow menu of '${discussion2.title}' discussion.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion2.title)
         discussionsListPage.selectOverFlowMenu("Pin")
 

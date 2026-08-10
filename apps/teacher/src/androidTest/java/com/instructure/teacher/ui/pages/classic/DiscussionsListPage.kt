@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvas.espresso.utils.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.DoesNotExistAssertion
@@ -25,6 +26,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -206,5 +208,24 @@ class DiscussionsListPage(val searchable: Searchable) : BasePage() {
         val groupChildMatcher = withId(R.id.groupName) + withText(groupName)
         onView(withId(R.id.discussionTitle) + withText(discussionTitle) +
                 withAncestor(withId(R.id.discussionRecyclerView) + withDescendant(groupChildMatcher))).check(DoesNotExistAssertion(5))
+    }
+
+    /**
+     * Asserts the visibility of the unread status indicator on the row of the discussion with the specified [discussionTitle].
+     *
+     * @param discussionTitle The title of the discussion to be asserted.
+     * @param displayed Whether the unread status indicator is expected to be displayed.
+     */
+    fun assertUnreadIndicatorVisibility(discussionTitle: String, displayed: Boolean) {
+        val matcher = withId(R.id.statusIndicator) + withAncestor(
+            withId(R.id.discussionLayout) + withDescendant(withId(R.id.discussionTitle) + withText(discussionTitle))
+        )
+
+        if (displayed) {
+            waitForMatcherWithRefreshes(matcher) // May need to refresh before the status indicator shows up.
+            onView(matcher).assertDisplayed()
+        } else {
+            onView(matcher).assertNotDisplayed()
+        }
     }
 }

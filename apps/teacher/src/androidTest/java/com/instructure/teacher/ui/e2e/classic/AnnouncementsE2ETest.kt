@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.e2e.classic
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -101,7 +102,41 @@ class AnnouncementsE2ETest : TeacherTest() {
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
 
-        Log.d(STEP_TAG, "Click on 'Delete' in the more menu and confirm the deletion in the (WebView) confirmation dialog.")
+        Log.d(STEP_TAG, "Click on 'Mark All as Unread' menu item to mark the main announcement topic as unread.")
+        announcementDetailsPage.clickOnMarkAllAsUnreadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to the Announcements List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is displayed on the '${announcement.title}' announcement's row because the main topic has been marked as unread.")
+        announcementsListPage.assertUnreadIndicatorVisibility(announcement.title, true)
+
+        Log.d(STEP_TAG, "Open the '${announcement.title}' announcement again and click on the more menu of the announcement.")
+        announcementsListPage.clickAnnouncement(announcement)
+        announcementDetailsPage.waitForReplyButtonDisplayed()
+        announcementDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Mark All as Read' menu item is displayed.")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
+
+        Log.d(STEP_TAG, "Click on 'Mark All as Read' to mark the announcement's main topic as read.")
+        announcementDetailsPage.clickOnMarkAllAsReadMenuButton()
+
+        Log.d(STEP_TAG, "Navigate back to the Announcements List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unread status indicator is no longer displayed on the '${announcement.title}' announcement's row after marking it as read.")
+        announcementsListPage.assertUnreadIndicatorVisibility(announcement.title, false)
+
+        Log.d(STEP_TAG, "Open the '${announcement.title}' announcement again and click on the more menu of the announcement.")
+        announcementsListPage.clickAnnouncement(announcement)
+        announcementDetailsPage.waitForReplyButtonDisplayed()
+        announcementDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Delete' menu item is displayed.")
+        announcementDetailsPage.assertMoreMenuButtonDisplayed("Delete")
+
+        Log.d(STEP_TAG, "Click on 'Delete' and confirm the deletion in the (WebView) confirmation dialog.")
         announcementDetailsPage.clickOnDeleteMenuButtonAndConfirm()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Announcement deleted.' confirmation toast is displayed.")
