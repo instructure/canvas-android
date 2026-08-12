@@ -61,6 +61,7 @@ import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.notification.preferences.EmailNotificationPreferencesFragment
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
+import com.instructure.pandautils.features.privacysettings.PrivacySettingsFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
@@ -293,6 +294,7 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(FeatureFlagsFragment::class.java)
         fullscreenFragments.add(RemoteConfigParamsFragment::class.java)
         fullscreenFragments.add(InboxSignatureFragment::class.java)
+        fullscreenFragments.add(PrivacySettingsFragment::class.java)
 
         // Bottom Sheet Fragments
         bottomSheetFragments.add(EditAssignmentDetailsFragment::class.java)

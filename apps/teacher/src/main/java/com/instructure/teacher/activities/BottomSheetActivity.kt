@@ -30,6 +30,10 @@ import android.view.View
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import android.widget.RelativeLayout
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.percentlayout.widget.PercentRelativeLayout
 import com.instructure.canvasapi2.StatusCallback
@@ -110,6 +114,32 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions {
         mKeyboardEventListener = KeyboardVisibilityEvent.registerEventListener(this@BottomSheetActivity) { isOpen ->
             if (isOpen) { keyboardVisible() } else keyboardHidden()
         }
+
+        consumeImeInsets(bottom)
+    }
+
+    /**
+     * The bottom sheet is resized to sit entirely above the keyboard, so the hosted content must not
+     * apply the IME inset again. Compose screens read it from the dispatched insets, which would
+     * subtract the keyboard height a second time and push their input fields out of view.
+     */
+    private fun consumeImeInsets(view: View) {
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, insets ->
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(WindowInsetsCompat.Type.ime(), Insets.NONE)
+                .build()
+        }
+        // The IME also reaches descendants through the inset animation callbacks, which ignore the
+        // listener above, so that dispatch has to stop here as well.
+        ViewCompat.setWindowInsetsAnimationCallback(
+            view,
+            object : WindowInsetsAnimationCompat.Callback(DISPATCH_MODE_STOP) {
+                override fun onProgress(
+                    insets: WindowInsetsCompat,
+                    runningAnimations: MutableList<WindowInsetsAnimationCompat>
+                ) = insets
+            }
+        )
     }
 
     override fun onDestroy() {
