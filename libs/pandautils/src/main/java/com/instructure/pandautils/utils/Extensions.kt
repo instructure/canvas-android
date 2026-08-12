@@ -17,10 +17,12 @@
 package com.instructure.pandautils.utils
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
@@ -29,6 +31,8 @@ import androidx.work.Data
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -160,11 +164,16 @@ suspend fun <T> poll(
 }
 
 fun Activity.launchCustomTab(url: String, @ColorInt color: Int) {
-    val uri = url.toUri()
-        .buildUpon()
-        .appendQueryParameter("display", "borderless")
-        .appendQueryParameter("platform", "android")
-        .build()
+    val parsedUri = url.toUri()
+    // display/platform are only meaningful to Canvas, so they must not be sent to a third party
+    val uri = if (parsedUri.host.orEmpty().equals(ApiPrefs.domain, ignoreCase = true)) {
+        parsedUri.buildUpon()
+            .appendQueryParameter("display", "borderless")
+            .appendQueryParameter("platform", "android")
+            .build()
+    } else {
+        parsedUri
+    }
 
     val colorSchemeParams = CustomTabColorSchemeParams.Builder()
         .setToolbarColor(color)
@@ -182,7 +191,12 @@ fun Activity.launchCustomTab(url: String, @ColorInt color: Int) {
     // Exclude Instructure apps from chooser options
     intent = intent.asChooserExcludingInstructure()
 
-    startActivity(intent)
+    try {
+        startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        // A device with no browser at all would otherwise crash the app
+        toast(R.string.noCompatibleAppInstalled, Toast.LENGTH_LONG)
+    }
 }
 
 fun BroadcastReceiver.goAsync(

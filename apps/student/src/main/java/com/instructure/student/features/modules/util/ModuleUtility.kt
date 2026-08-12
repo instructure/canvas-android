@@ -35,6 +35,7 @@ import com.instructure.pandautils.features.offline.sync.StudioOfflineVideoHelper
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment.Companion.makeRoute
 import com.instructure.student.features.files.details.FileDetailsFragment
+import com.instructure.student.features.modules.progression.ExternalUrlFragment
 import com.instructure.student.features.modules.progression.LockedModuleItemFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
@@ -85,37 +86,56 @@ object ModuleUtility {
                 MasteryPathSelectionFragment.newInstance(route)
             }
         }
-        "ExternalUrl", "ExternalTool" -> {
-            if (item.isLocked()) {
-                LockedModuleItemFragment.newInstance(LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: ""))
-            } else if (!isOnline && studioOfflineVideoHelper != null) {
-                val mediaId = studioOfflineVideoHelper.getStudioMediaId(item.externalUrl)
-                if (mediaId != null && studioOfflineVideoHelper.isStudioVideoAvailableOffline(mediaId)) {
-                    StudioVideoFragment.newInstance(
-                        StudioVideoFragment.makeRoute(
-                            course.id,
-                            studioOfflineVideoHelper.getStudioVideoUri(mediaId),
-                            item.title ?: "",
-                            studioOfflineVideoHelper.getStudioPosterUri(mediaId)
-                        )
-                    )
-                } else {
-                    NotAvailableOfflineFragment.newInstance(
-                        NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescription))
-                    )
-                }
-            } else {
-                createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context) {
-                    val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
-                    val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
-                    InternalWebviewFragment.newInstance(route)
-                }
-            }
+        "ExternalUrl" -> createExternalFragment(item, course, isOnline, syncedTabs, context, studioOfflineVideoHelper) {
+            ExternalUrlFragment.newInstance(
+                ExternalUrlFragment.makeRoute(course, item.title.orEmpty(), item.externalUrl)
+            )
+        }
+        "ExternalTool" -> createExternalFragment(item, course, isOnline, syncedTabs, context, studioOfflineVideoHelper) {
+            val uri = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build()
+            val route = makeRoute(course, uri.toString(), item.title!!, true, true, true)
+            InternalWebviewFragment.newInstance(route)
         }
         "File" -> { // TODO Handle offline availability after files sync
             createFileDetailsFragmentWithOfflineCheck(isOnline, course, item, moduleObject, syncedFileIds, context)
         }
         else -> null
+    }
+
+    /**
+     * ExternalUrl and ExternalTool items share the locked and Studio-offline-video handling, and only
+     * differ in what they show when the item is available online.
+     */
+    private fun createExternalFragment(
+        item: ModuleItem,
+        course: Course,
+        isOnline: Boolean,
+        syncedTabs: Set<String>,
+        context: Context,
+        studioOfflineVideoHelper: StudioOfflineVideoHelper?,
+        onlineBlock: () -> Fragment?
+    ): Fragment? = when {
+        item.isLocked() -> LockedModuleItemFragment.newInstance(
+            LockedModuleItemFragment.makeRoute(course, item.title!!, item.moduleDetails?.lockExplanation ?: "")
+        )
+        !isOnline && studioOfflineVideoHelper != null -> {
+            val mediaId = studioOfflineVideoHelper.getStudioMediaId(item.externalUrl)
+            if (mediaId != null && studioOfflineVideoHelper.isStudioVideoAvailableOffline(mediaId)) {
+                StudioVideoFragment.newInstance(
+                    StudioVideoFragment.makeRoute(
+                        course.id,
+                        studioOfflineVideoHelper.getStudioVideoUri(mediaId),
+                        item.title ?: "",
+                        studioOfflineVideoHelper.getStudioPosterUri(mediaId)
+                    )
+                )
+            } else {
+                NotAvailableOfflineFragment.newInstance(
+                    NotAvailableOfflineFragment.makeRoute(course, item.title, context.getString(R.string.notAvailableOfflineDescription))
+                )
+            }
+        }
+        else -> createFragmentWithOfflineCheck(isOnline, course, item, syncedTabs, context, creationBlock = onlineBlock)
     }
 
     private fun createFragmentWithOfflineCheck(

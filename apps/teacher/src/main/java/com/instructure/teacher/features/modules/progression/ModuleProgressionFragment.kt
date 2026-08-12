@@ -131,7 +131,7 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
             canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId, isInModulesPager = true)
         )
 
-        is ModuleItemViewData.External -> InternalWebViewFragment.newInstance(
+        is ModuleItemViewData.ExternalTool -> InternalWebViewFragment.newInstance(
             InternalWebViewFragment.makeBundle(
                 item.url,
                 item.title,
@@ -140,6 +140,10 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
                 isInModulesPager = true,
                 allowRoutingTheSameUrlInternally = false
             )
+        )
+
+        is ModuleItemViewData.ExternalUrl -> ExternalUrlFragment.newInstance(
+            ExternalUrlFragment.makeBundle(canvasContext, item.title, item.externalUrl)
         )
 
         is ModuleItemViewData.File -> FileDetailsFragment.newInstance(

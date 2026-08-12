@@ -15,7 +15,14 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import android.text.Html
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import org.junit.Assert.assertEquals
 import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
@@ -196,9 +203,24 @@ class ModuleInteractionTest : StudentComposeTest() {
         // click the external url module item
         modulesPage.refresh()
         modulesPage.clickModuleItem(module, externalUrl)
-        // Not much we can test here, as it is an external URL, but testModules_navigateToNextAndPreviousModuleItems
-        // will test that the module name and module item name are displayed correctly.
-        canvasWebViewPage.checkWebViewURL("https://www.google.com")
+        moduleProgressionPage.assertExternalUrlScreenDisplayed(composeTestRule)
+
+        // Tapping the button must hand the external URL to a browser untouched - in particular
+        // without the display/platform params we append to Canvas URLs.
+        Intents.init()
+        try {
+            intending(hasAction(Intent.ACTION_CHOOSER))
+                .respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, null))
+
+            moduleProgressionPage.clickOpenInBrowser(composeTestRule)
+
+            val chooser = Intents.getIntents().first { it.action == Intent.ACTION_CHOOSER }
+            val browserIntent = chooser.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)!!
+            assertEquals(Intent.ACTION_VIEW, browserIntent.action)
+            assertEquals(externalUrl, browserIntent.data.toString())
+        } finally {
+            Intents.release()
+        }
     }
 
     // Tapping a File module item should navigate to that item's detail page

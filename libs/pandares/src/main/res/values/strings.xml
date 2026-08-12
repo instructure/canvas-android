@@ -671,6 +671,7 @@
     <string name="isNotSupported">The link is not supported.</string>
     <string name="openInBrowser">Open In Browser</string>
     <string name="unsupported">Unsupported</string>
+    <string name="externalUrlBrowserOnly">This page can only be viewed from a web browser.</string>
 
 
     <!-- Profile Strings -->

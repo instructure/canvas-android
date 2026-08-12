@@ -1824,6 +1824,7 @@ fun MockCanvas.addItemToModule(
     var itemType: ModuleItem.Type? = null
     var itemTitle: String? = null
     var itemUrl: String? = null
+    var itemExternalUrl: String? = null
     when(item) {
         is Assignment -> {
             itemType = ModuleItem.Type.Assignment
@@ -1854,6 +1855,9 @@ fun MockCanvas.addItemToModule(
             itemType = ModuleItem.Type.ExternalUrl
             itemTitle = item
             itemUrl = item
+            // Canvas always sends external_url for ExternalUrl items, and that is the field the
+            // apps open, so the mock has to populate it too.
+            itemExternalUrl = item
         }
         is LTITool -> {
             itemType = ModuleItem.Type.ExternalTool
@@ -1880,6 +1884,7 @@ fun MockCanvas.addItemToModule(
             // htmlUrl populated in order to get external url module items to work.
             url = itemUrl,
             htmlUrl = itemUrl,
+            externalUrl = itemExternalUrl,
             contentId = contentId,
             moduleDetails = moduleContentDetails,
             unpublishable = unpublishable,

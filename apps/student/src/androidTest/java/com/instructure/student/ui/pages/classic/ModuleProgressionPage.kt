@@ -18,7 +18,10 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.test.espresso.AmbiguousViewMatcherException
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
@@ -31,6 +34,7 @@ import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertInvisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
@@ -82,5 +86,18 @@ class ModuleProgressionPage : BasePage(R.id.moduleProgressionPage) {
             // title as a Compose Text that Espresso's View matchers can't see; fall back to Compose.
             composeTestRule?.onNodeWithText(moduleItemTitle)?.assertIsDisplayed() ?: throw e
         }
+    }
+
+    fun assertExternalUrlScreenDisplayed(composeTestRule: ComposeTestRule) {
+        // The message sits in a scrolling container: in landscape the illustration above it is taller
+        // than the viewport, so scroll it into view before asserting.
+        composeTestRule.onNodeWithText(
+            getStringFromResource(R.string.externalUrlBrowserOnly)
+        ).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("openInBrowserButton").assertIsDisplayed()
+    }
+
+    fun clickOpenInBrowser(composeTestRule: ComposeTestRule) {
+        composeTestRule.onNodeWithTag("openInBrowserButton").performClick()
     }
 }

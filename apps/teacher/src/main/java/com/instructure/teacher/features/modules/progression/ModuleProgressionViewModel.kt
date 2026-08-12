@@ -113,9 +113,10 @@ class ModuleProgressionViewModel @Inject constructor(
         Type.Assignment.name -> ModuleItemViewData.Assignment(item.contentId)
         Type.Discussion.name -> ModuleItemViewData.Discussion(item.contentId)
         Type.Quiz.name -> ModuleItemViewData.Quiz(item.contentId)
-        Type.ExternalUrl.name, Type.ExternalTool.name -> {
+        Type.ExternalUrl.name -> ModuleItemViewData.ExternalUrl(item.externalUrl, item.title.orEmpty())
+        Type.ExternalTool.name -> {
             val url = Uri.parse(item.htmlUrl).buildUpon().appendQueryParameter("display", "borderless").build().toString()
-            ModuleItemViewData.External(url, item.title.orEmpty())
+            ModuleItemViewData.ExternalTool(url, item.title.orEmpty())
         }
         Type.File.name -> ModuleItemViewData.File(item.url.orEmpty())
         else -> null

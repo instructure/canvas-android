@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.files.details.FileDetailsFragment
+import com.instructure.student.features.modules.progression.ExternalUrlFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
 import com.instructure.student.features.modules.progression.NotAvailableOfflineFragment
 import com.instructure.student.features.modules.util.ModuleUtility
@@ -230,11 +231,11 @@ class ModuleUtilityTest : TestCase() {
     }
 
     @Test
-    fun testGetFragment_externalurl_externaltool() {
+    fun testGetFragment_externaltool() {
         val url = "https://instructure.com"
         val moduleItem = ModuleItem(
                 id = 4567,
-                type = "ExternalUrl",
+                type = "ExternalTool",
                 title = "Hello",
                 htmlUrl = url
 
@@ -249,16 +250,55 @@ class ModuleUtilityTest : TestCase() {
         expectedBundle.putBoolean(com.instructure.pandautils.utils.Const.IS_EXTERNAL_TOOL, true)
         expectedBundle.putBoolean(com.instructure.pandautils.utils.Const.IS_UNSUPPORTED_FEATURE, true)
 
-        var parentFragment = callGetFragment(moduleItem, course, null)
+        val parentFragment = callGetFragment(moduleItem, course, null)
         assertNotNull(parentFragment)
         assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
         assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
-        // test external tool type
+    }
 
-        val moduleItem2 = moduleItem.copy(type = "ExternalTool")
-        parentFragment = callGetFragment(moduleItem2, course, null)
+    @Test
+    fun testGetFragment_externalurl() {
+        val moduleItem = ModuleItem(
+                id = 4567,
+                type = "ExternalUrl",
+                title = "Hello",
+                htmlUrl = "https://instructure.com/api/v1/courses/1/module_item_redirect/4567",
+                externalUrl = "https://instructure.com/video.mp4"
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putString(Const.ACTION_BAR_TITLE, "Hello")
+        expectedBundle.putString(Const.URL, "https://instructure.com/video.mp4")
+
+        val parentFragment = callGetFragment(moduleItem, course, null)
         assertNotNull(parentFragment)
-        assertEquals(InternalWebviewFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(ExternalUrlFragment::class.java, parentFragment!!.javaClass)
+        assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
+    }
+
+    @Test
+    fun testGetFragment_externalurl_nullExternalUrl() {
+        // htmlUrl is deliberately not used as a fallback: it is an api/v1 module_item_redirect
+        // endpoint that needs a Canvas session, so it would fail in an external browser.
+        val moduleItem = ModuleItem(
+                id = 4567,
+                type = "ExternalUrl",
+                title = "Hello",
+                htmlUrl = "https://instructure.com/api/v1/courses/1/module_item_redirect/4567",
+                externalUrl = null
+        )
+
+        val course = Course()
+        val expectedBundle = Bundle()
+        expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
+        expectedBundle.putString(Const.ACTION_BAR_TITLE, "Hello")
+        expectedBundle.putString(Const.URL, null)
+
+        val parentFragment = callGetFragment(moduleItem, course, null)
+        assertNotNull(parentFragment)
+        assertEquals(ExternalUrlFragment::class.java, parentFragment!!.javaClass)
         assertEquals(expectedBundle.toString(), parentFragment.arguments!!.toString())
     }
 

@@ -148,8 +148,8 @@ class ModuleProgressionViewModelTest {
                 ModuleItemViewData.Assignment(1L),
                 ModuleItemViewData.Discussion(2L),
                 ModuleItemViewData.Quiz(3L),
-                ModuleItemViewData.External("mockUri", "Title 1"),
-                ModuleItemViewData.External("mockUri", "Title 2"),
+                ModuleItemViewData.ExternalUrl("externalUrl1", "Title 1"),
+                ModuleItemViewData.ExternalTool("mockUri", "Title 2"),
                 ModuleItemViewData.File("fileUri"),
             ),
             listOf("Module 1", "Module 1", "Module 2", "Module 2", "Module 3", "Module 3", "Module 3"),
@@ -174,7 +174,7 @@ class ModuleProgressionViewModelTest {
             ),
             ModuleObject(
                 id = 3L, name = "Module 3", items = listOf(
-                    ModuleItem(id = 5L, type = "ExternalUrl", htmlUrl = "externalUri1", title = "Title 1", moduleId = 3L),
+                    ModuleItem(id = 5L, type = "ExternalUrl", htmlUrl = "externalUri1", externalUrl = "externalUrl1", title = "Title 1", moduleId = 3L),
                     ModuleItem(id = 6L, type = "ExternalTool", htmlUrl = "externalUri2", title = "Title 2", moduleId = 3L),
                     ModuleItem(id = 7L, type = "File", url = "fileUri", moduleId = 3L)
                 )
@@ -183,9 +183,9 @@ class ModuleProgressionViewModelTest {
 
         viewModel.loadData(Course(id = 1L), 1L, ModuleItemAsset.MODULE_ITEM.name, "")
 
-        verify { Uri.parse("externalUri1") }
+        // An ExternalUrl item uses its externalUrl as-is, so only the ExternalTool item is parsed.
         verify { Uri.parse("externalUri2") }
-        verify(exactly = 2) { mockUriBuilder.appendQueryParameter("display", "borderless") }
+        verify(exactly = 1) { mockUriBuilder.appendQueryParameter("display", "borderless") }
         assertEquals(expected, viewModel.data.value)
     }
 

@@ -355,11 +355,18 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         val currentModuleItem = getCurrentModuleItem(currentPos) ?: return
 
         val completionRequirement = currentModuleItem.completionRequirement
-        if (completionRequirement != null && modules[groupPos].sequentialProgress) {
-            // Reload the sequential module object to update the subsequent items that may now be unlocked
-            // The user has viewed the item, and may have completed the contribute/submit requirements for a
-            // discussion/assignment.
-            addLockedIconIfNeeded(modules, items, groupPos, childPos)
+        val sequentialProgress = modules[groupPos].sequentialProgress
+        // Every other item type registers the view with Canvas by loading its content, but an
+        // ExternalUrl item opens in a browser without the app requesting anything on the Canvas
+        // domain, so it has to be marked as viewed explicitly.
+        val isExternalUrl = currentModuleItem.type == ModuleItem.Type.ExternalUrl.name
+        if (completionRequirement != null && (sequentialProgress || isExternalUrl)) {
+            if (sequentialProgress) {
+                // Reload the sequential module object to update the subsequent items that may now be unlocked
+                // The user has viewed the item, and may have completed the contribute/submit requirements for a
+                // discussion/assignment.
+                addLockedIconIfNeeded(modules, items, groupPos, childPos)
+            }
 
             // Mark the item as viewed
             markAsRead(currentModuleItem)
