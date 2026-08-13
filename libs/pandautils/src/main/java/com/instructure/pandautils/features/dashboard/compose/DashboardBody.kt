@@ -281,7 +281,9 @@ fun CustomizeDashboardButton(
             ),
             border = BorderStroke(1.dp, color),
             contentPadding = PaddingValues(start = 8.dp, end = 12.dp, top = 0.dp, bottom = 0.dp),
-            modifier = Modifier.height(30.dp)
+            modifier = Modifier
+                .height(30.dp)
+                .testTag("customizeDashboardButton")
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_edit_new),

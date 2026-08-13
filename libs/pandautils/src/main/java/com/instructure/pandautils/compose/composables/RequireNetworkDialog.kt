@@ -25,7 +25,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import com.instructure.canvasapi2.utils.APIHelper
@@ -60,6 +62,7 @@ private fun NoInternetConnectionDialog(
     onDismissRequest: () -> Unit
 ) {
     AlertDialog(
+        modifier = Modifier.testTag("noInternetConnectionDialog"),
         title = {
             Text(
                 text = stringResource(R.string.noInternetConnectionTitle),
@@ -74,7 +77,10 @@ private fun NoInternetConnectionDialog(
         },
         onDismissRequest = onDismissRequest,
         confirmButton = {
-            TextButton(onClick = onDismissRequest) {
+            TextButton(
+                onClick = onDismissRequest,
+                modifier = Modifier.testTag("noInternetConnectionDialogConfirmButton")
+            ) {
                 Text(
                     text = stringResource(R.string.ok),
                     color = Color(ThemePrefs.textButtonColor)

@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -129,19 +130,25 @@ fun DashboardScreenContent(
                         modifier = Modifier
                             .background(color = colorResource(id = R.color.backgroundLightestElevated))
                     ) {
-                        DropdownMenuItem(onClick = {
-                            showMenu = !showMenu
-                            manageOfflineContentClick()
-                        }) {
+                        DropdownMenuItem(
+                            onClick = {
+                                showMenu = !showMenu
+                                manageOfflineContentClick()
+                            },
+                            modifier = Modifier.testTag("dashboardManageOfflineContent")
+                        ) {
                             Text(
                                 stringResource(R.string.course_menu_manage_offline_content),
                                 color = colorResource(id = R.color.textDarkest)
                             )
                         }
-                        DropdownMenuItem(onClick = {
-                            showMenu = !showMenu
-                            customizeDashboardClick()
-                        }) {
+                        DropdownMenuItem(
+                            onClick = {
+                                showMenu = !showMenu
+                                customizeDashboardClick()
+                            },
+                            modifier = Modifier.testTag("dashboardCustomizeDashboard")
+                        ) {
                             Text(
                                 stringResource(R.string.customize_dashboard),
                                 color = colorResource(id = R.color.textDarkest)

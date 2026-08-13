@@ -162,6 +162,7 @@ fun CourseCard(
                             Box(
                                 modifier = Modifier
                                     .size(24.dp)
+                                    .testTag("courseCardMenu_${courseCard.id}")
                                     .pendoTag("coursesWidget_courseCardMenu", true)
                                     .clickable(onClick = openMenuClick)
                                     .background(
@@ -252,7 +253,8 @@ fun CourseCard(
                         contentDescription = stringResource(R.string.offline_content_available),
                         modifier = Modifier
                             .padding(end = 8.dp)
-                            .size(24.dp),
+                            .size(24.dp)
+                            .testTag("courseCardSyncedIcon_${courseCard.id}"),
                         tint = colorResource(R.color.textDark)
                     )
                 }

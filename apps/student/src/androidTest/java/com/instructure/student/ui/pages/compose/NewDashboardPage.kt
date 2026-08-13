@@ -244,6 +244,70 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         composeTestRule.onNodeWithText(message).assertIsDisplayed()
     }
 
+    fun assertCourseSynced(courseId: Long) {
+        val syncedIconTag = "$COURSE_CARD_SYNCED_ICON_TAG_PREFIX$courseId"
+        waitForUnmergedTag(syncedIconTag)
+        composeTestRule.onNodeWithTag(syncedIconTag, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun waitForCourseSynced(courseId: Long, timeoutMillis: Long = 60000) {
+        waitForUnmergedTag("$COURSE_CARD_SYNCED_ICON_TAG_PREFIX$courseId", timeoutMillis)
+        assertCourseSynced(courseId)
+    }
+
+    fun assertCourseNotSynced(courseId: Long) {
+        composeTestRule.onNodeWithTag(
+            "$COURSE_CARD_SYNCED_ICON_TAG_PREFIX$courseId",
+            useUnmergedTree = true
+        ).assertDoesNotExist()
+    }
+
+    fun openCourseCardMenu(courseId: Long) {
+        val menuTag = "$COURSE_CARD_MENU_TAG_PREFIX$courseId"
+        waitForUnmergedTag(menuTag)
+        composeTestRule.onNodeWithTag(menuTag, useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    private fun waitForUnmergedTag(tag: String, timeoutMillis: Long = 20000) {
+        composeTestRule.waitUntil(timeoutMillis = timeoutMillis) {
+            composeTestRule.onAllNodesWithTag(tag, useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    fun openGlobalManageOfflineContent() {
+        composeTestRule.waitForTag(OVERFLOW_MENU_TAG)
+        composeTestRule.onNodeWithTag(OVERFLOW_MENU_TAG).performClick()
+        composeTestRule.waitForTag(DASHBOARD_MANAGE_OFFLINE_CONTENT_TAG)
+        composeTestRule.onNodeWithTag(DASHBOARD_MANAGE_OFFLINE_CONTENT_TAG).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickCustomizeDashboardButton() {
+        composeTestRule.waitForTag(CUSTOMIZE_DASHBOARD_BUTTON_TAG)
+        composeTestRule.onNodeWithTag(CUSTOMIZE_DASHBOARD_BUTTON_TAG).performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun openOverflowMenuCustomizeDashboard() {
+        composeTestRule.waitForTag(OVERFLOW_MENU_TAG)
+        composeTestRule.onNodeWithTag(OVERFLOW_MENU_TAG).performClick()
+        composeTestRule.waitForTag(DASHBOARD_CUSTOMIZE_DASHBOARD_TAG)
+        composeTestRule.onNodeWithTag(DASHBOARD_CUSTOMIZE_DASHBOARD_TAG).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertNoInternetConnectionDialogDisplayed() {
+        composeTestRule.waitForTag(NO_INTERNET_CONNECTION_DIALOG_TAG)
+        composeTestRule.onNodeWithTag(NO_INTERNET_CONNECTION_DIALOG_TAG).assertIsDisplayed()
+    }
+
+    fun dismissNoInternetConnectionDialog() {
+        composeTestRule.waitForTag(NO_INTERNET_CONNECTION_DIALOG_CONFIRM_BUTTON_TAG)
+        composeTestRule.onNodeWithTag(NO_INTERNET_CONNECTION_DIALOG_CONFIRM_BUTTON_TAG).performClick()
+        composeTestRule.waitForIdle()
+    }
+
     companion object {
         private const val DASHBOARD_PULL_REFRESH_INDICATOR_TAG = "dashboardPullRefreshIndicator"
         private const val WELCOME_GREETING_TAG = "welcomeGreetingText"
@@ -266,5 +330,13 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         private const val CONFERENCE_SUBTITLE_TAG_PREFIX = "conferencesWidget_conferenceSubtitle_"
         private const val CONFERENCE_DISMISS_TAG_PREFIX = "conferencesWidget_dismissConference_"
         private const val MAX_PAGER_SWIPES = 3
+        private const val COURSE_CARD_SYNCED_ICON_TAG_PREFIX = "courseCardSyncedIcon_"
+        private const val COURSE_CARD_MENU_TAG_PREFIX = "courseCardMenu_"
+        private const val OVERFLOW_MENU_TAG = "overflowMenu"
+        private const val DASHBOARD_MANAGE_OFFLINE_CONTENT_TAG = "dashboardManageOfflineContent"
+        private const val CUSTOMIZE_DASHBOARD_BUTTON_TAG = "customizeDashboardButton"
+        private const val DASHBOARD_CUSTOMIZE_DASHBOARD_TAG = "dashboardCustomizeDashboard"
+        private const val NO_INTERNET_CONNECTION_DIALOG_TAG = "noInternetConnectionDialog"
+        private const val NO_INTERNET_CONNECTION_DIALOG_CONFIRM_BUTTON_TAG = "noInternetConnectionDialogConfirmButton"
     }
 }

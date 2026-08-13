@@ -59,8 +59,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import kotlinx.coroutines.flow.SharedFlow
-import java.util.UUID
 import sdk.pendo.io.pendoTag
+import java.util.UUID
 
 @Composable
 fun ProgressWidget(
