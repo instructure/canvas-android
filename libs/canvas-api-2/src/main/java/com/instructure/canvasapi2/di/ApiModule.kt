@@ -41,6 +41,7 @@ import com.instructure.canvasapi2.apis.SmartSearchApi
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.StudioAuthAPI
+import com.instructure.canvasapi2.apis.StudyAssistAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
@@ -335,6 +336,11 @@ class ApiModule {
     @Provides
     fun provideFeaturesApi(): FeaturesAPI.FeaturesInterface {
         return RestBuilder().build(FeaturesAPI.FeaturesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideStudyAssistApi(): StudyAssistAPI.StudyAssistInterface {
+        return RestBuilder().build(StudyAssistAPI.StudyAssistInterface::class.java, RestParams())
     }
 
     @Provides

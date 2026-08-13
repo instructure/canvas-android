@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.DashboardCoursesManager
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.canvasapi2.apis.StudyAssistAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -64,6 +65,8 @@ import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositor
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
 import com.instructure.pandautils.data.repository.features.FeaturesRepository
 import com.instructure.pandautils.data.repository.features.FeaturesRepositoryImpl
+import com.instructure.pandautils.data.repository.studytools.StudyToolsRepository
+import com.instructure.pandautils.data.repository.studytools.StudyToolsRepositoryImpl
 import com.instructure.pandautils.data.repository.theme.ThemeRepository
 import com.instructure.pandautils.data.repository.theme.ThemeRepositoryImpl
 import com.instructure.pandautils.data.repository.group.GroupLocalDataSource
@@ -104,6 +107,14 @@ class RepositoryModule {
         enrollmentApi: EnrollmentAPI.EnrollmentInterface
     ): EnrollmentRepository {
         return EnrollmentRepositoryImpl(enrollmentApi)
+    }
+
+    @Provides
+    @ActivityRetainedScoped
+    fun provideStudyToolsRepository(
+        studyAssistApi: StudyAssistAPI.StudyAssistInterface
+    ): StudyToolsRepository {
+        return StudyToolsRepositoryImpl(studyAssistApi)
     }
 
     @Provides
