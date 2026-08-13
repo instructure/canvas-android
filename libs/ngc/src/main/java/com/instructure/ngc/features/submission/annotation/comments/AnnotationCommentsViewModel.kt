@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.ngc.R
 import com.instructure.ngc.features.submission.SubmissionDateFormatter
 import com.instructure.ngc.features.submission.annotation.CommentThreadRequest
@@ -27,7 +28,6 @@ import com.instructure.ngc.features.submission.domain.AddAnnotationCommentReplyU
 import com.instructure.ngc.features.submission.domain.DeleteAnnotationCommentReplyUseCase
 import com.instructure.ngc.features.submission.domain.EditAnnotationCommentReplyUseCase
 import com.instructure.ngc.features.submission.domain.GetAnnotationCommentRepliesUseCase
-import com.instructure.ngc.features.submission.domain.parseCanvaDocsTimestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -273,12 +273,12 @@ class AnnotationCommentsViewModel @Inject constructor(
     private fun toUiState(reply: CanvaDocAnnotation): AnnotationCommentUiState = AnnotationCommentUiState(
         id = reply.annotationId,
         authorName = reply.userName.orEmpty(),
-        // parseCanvaDocsTimestamp is pure java.time (safe off-device) and, unlike
-        // DateHelper.stringToDateWithMillis, can actually parse canvadocs' createdAt — see its KDoc.
         // The locale-aware 12h/24h rendering goes through the injectable SubmissionDateFormatter (the
         // same one NGCSubmissionViewModel uses) rather than android.text.format.DateFormat directly, so
         // this stays unit-testable without Robolectric.
-        timestampText = parseCanvaDocsTimestamp(reply.createdAt)?.let { dateFormatter.formatDateTime(context, it) }.orEmpty(),
+        timestampText = DateHelper.stringToDateWithMillis(reply.createdAt)
+            ?.let { dateFormatter.formatDateTime(context, it) }
+            .orEmpty(),
         body = reply.contents.orEmpty(),
         canEdit = canEdit(reply),
         canDelete = canDelete(reply),

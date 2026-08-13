@@ -21,6 +21,8 @@ import android.text.format.DateFormat
 import android.text.format.DateUtils
 import java.text.Format
 import java.text.SimpleDateFormat
+import java.time.DateTimeException
+import java.time.OffsetDateTime
 import java.util.Calendar
 import java.util.Date
 import java.util.GregorianCalendar
@@ -28,12 +30,23 @@ import java.util.Locale
 
 @Suppress("MemberVisibilityCanBePrivate")
 object DateHelper {
+    /**
+     * Parses an ISO-8601 offset date-time string (e.g. `2026-07-24T10:00:00.000Z` or
+     * `2026-07-24T12:00:00+02:00`) into a [Date]. Accepts both `Z` and numeric offsets, with or without
+     * fractional seconds of any precision.
+     *
+     * @return the parsed date, or `null` if [iso8601string] is null/blank or not a valid offset date-time.
+     */
     fun stringToDateWithMillis(iso8601string: String?): Date? {
+        if (iso8601string.isNullOrBlank()) return null
         return try {
-            var s = iso8601string!!.replace("Z", "+00:00")
-            s = s.substring(0, 22) + s.substring(23)
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US).parse(s)
-        } catch (e: Exception) {
+            Date(OffsetDateTime.parse(iso8601string).toInstant().toEpochMilli())
+        } catch (e: DateTimeException) {
+            // DateTimeParseException (malformed input) and the other java.time range errors.
+            null
+        } catch (e: ArithmeticException) {
+            // OffsetDateTime.parse accepts in-range-but-unrepresentable years, e.g.
+            // "+999999999-12-31T23:59:59Z", which then overflow toEpochMilli().
             null
         }
     }

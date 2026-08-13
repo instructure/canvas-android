@@ -16,6 +16,7 @@
 package com.instructure.ngc.features.submission.domain
 
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.data.repository.canvadocs.CanvaDocsRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
@@ -53,6 +54,6 @@ class GetAnnotationCommentRepliesUseCase @Inject constructor(
             // only correct while every value is a fixed-width UTC ISO-8601 stamp, and would silently
             // mis-order the thread given a numeric offset (+02:00) or varying fractional-second
             // precision. Unparseable values sort first, keeping the ordering total and stable.
-            .sortedBy { parseCanvaDocsTimestamp(it.createdAt)?.time ?: Long.MIN_VALUE }
+            .sortedBy { DateHelper.stringToDateWithMillis(it.createdAt)?.time ?: Long.MIN_VALUE }
     }
 }
