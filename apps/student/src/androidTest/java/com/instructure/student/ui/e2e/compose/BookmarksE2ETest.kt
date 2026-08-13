@@ -152,7 +152,7 @@ class BookmarksE2ETest : StudentComposeTest() {
 
         val bookmarkName = "Home Front Page Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
-        assignmentDetailsPage.addBookmark(bookmarkName)
+        pageDetailsPage.addBookmark(bookmarkName)
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
         pressBackButton(2)
@@ -167,6 +167,7 @@ class BookmarksE2ETest : StudentComposeTest() {
         bookmarkPage.clickBookmark(bookmarkName)
 
         Log.d(ASSERTION_TAG, "Assert if it's navigating to the '$pagePublishedFront' Front Page.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
     }
 

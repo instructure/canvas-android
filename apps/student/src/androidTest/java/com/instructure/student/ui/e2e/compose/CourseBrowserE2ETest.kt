@@ -97,22 +97,8 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         val smartSearchText = testAssignment.name.take(4) // "Test" will be the search text.
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
 
+            Log.d(STEP_TAG, "Clear the search input field before retrying, since the Smart Search index might not have caught up with the newly created content yet.")
             composeTestRule.onNodeWithTag("clearButton").performClick()
-
-            Log.d(STEP_TAG, "Type the '$smartSearchText' into the search input field.")
-            composeTestRule.onNodeWithTag("searchField")
-                .requestFocus()
-                .performClick()
-                .performTextInput(smartSearchText)
-            composeTestRule.onNodeWithTag("searchField").performImeAction()
-            composeTestRule.waitForIdle()
-
-            Log.d(ASSERTION_TAG, "Assert that the '$smartSearchText' text is displayed in the search input field and the filter button is displayed on the search bar.")
-            smartSearchPage.assertQuery(smartSearchText)
-            composeTestRule.onNodeWithTag("filterButton").assertIsDisplayed()
-
-            Log.d(ASSERTION_TAG, "Assert that the Smart Search Result List page displays all the corresponding result items and the course itself as well.")
-            assertSmartSearchResults(course.name, testAssignment, testAnnouncement, testDiscussion, testPage)
         }) {
 
             Log.d(STEP_TAG, "Type the '$smartSearchText' into the search input field.")
@@ -161,9 +147,8 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the '${testPage.title}' page.")
         smartSearchPage.clickOnItem(testPage.title)
 
-        Log.d(ASSERTION_TAG, "Assert that the previous click action will navigate to the '${testPage.title}' page's details page." +
-                "(Assert for the URL as we are displaying the URL of the page when navigating to it's details page from a link.")
-        pageDetailsPage.assertToolbarTitle(testPage.url)
+        Log.d(ASSERTION_TAG, "Assert that the previous click action will navigate to the '${testPage.title}' page's details page.")
+        pageDetailsPage.assertToolbarTitle(testPage.title)
 
         Log.d(STEP_TAG, "Navigate back to the Smart Search Result List page.")
         Espresso.pressBack()

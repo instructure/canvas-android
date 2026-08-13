@@ -26,14 +26,14 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class PagesE2ETest: StudentTest() {
+class PagesE2ETest: StudentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -102,6 +102,7 @@ class PagesE2ETest: StudentTest() {
         pageListPage.selectFrontPage(pagePublishedFront)
 
         Log.d(ASSERTION_TAG, "Assert that it is really a front (published) page via web view assertions.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
 
         Log.d(STEP_TAG, "Navigate back to Pages page.")
@@ -111,7 +112,7 @@ class PagesE2ETest: StudentTest() {
         pageListPage.selectRegularPage(pageNotEditable)
 
         Log.d(ASSERTION_TAG, "Assert that it is not editable as a student.")
-        canvasWebViewPage.assertDoesNotEditable()
+        pageDetailsPage.assertDoesNotEditable()
 
         Log.d(STEP_TAG, "Navigate back to Page List page.")
         Espresso.pressBack()
@@ -120,14 +121,16 @@ class PagesE2ETest: StudentTest() {
         pageListPage.selectRegularPage(pagePublished)
 
         Log.d(ASSERTION_TAG, "Assert that it is really a regular published page via web view assertions.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Regular Page Text"))
 
         Log.d(STEP_TAG, "Click on the 'Pencil' icon and edit the body. Click on 'Save' button.")
-        canvasWebViewPage.clickEditPencilIcon()
+        pageDetailsPage.clickEditPencilIcon()
         canvasWebViewPage.typeInRCEEditor("<h1 id=\"header1\">Page Text Mod</h1>")
         canvasWebViewPage.clickOnSave()
 
         Log.d(ASSERTION_TAG, "Assert that the new, edited text is displayed in the page body.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Page Text Mod"))
 
         Log.d(STEP_TAG, "Navigate back to Page List page. Select '${pagePublishedFront.title}' front page.")
@@ -135,12 +138,12 @@ class PagesE2ETest: StudentTest() {
         pageListPage.selectFrontPage(pagePublishedFront)
 
         Log.d(STEP_TAG, "Click on the 'Pencil' icon and edit the body. Click on 'Save' button.")
-        canvasWebViewPage.clickEditPencilIcon()
+        pageDetailsPage.clickEditPencilIcon()
         canvasWebViewPage.typeInRCEEditor("<h1 id=\"header1\">Front Page Text Mod</h1>")
         canvasWebViewPage.clickOnSave()
 
         Log.d(ASSERTION_TAG, "Assert that the new, edited text is displayed in the page body.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text Mod"))
     }
-
 }

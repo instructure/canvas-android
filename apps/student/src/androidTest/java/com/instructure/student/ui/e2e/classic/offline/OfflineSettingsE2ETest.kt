@@ -84,6 +84,7 @@ class OfflineSettingsE2ETest : StudentComposeTest() {
             dashboardPage.openLeftSideMenu()
             leftSideNavigationDrawerPage.clickSettingsMenu()
         }) {
+            settingsPage.waitForListLoaded()
             settingsPage.clickOnSettingsItem("Profile Settings")
         }
 

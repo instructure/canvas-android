@@ -42,6 +42,7 @@ import com.instructure.canvas.espresso.utils.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.utils.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.utils.withResourceIdContaining
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.composetest.waitForTag
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.assertDisplayed
@@ -95,18 +96,20 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertAssignmentDetails(assignment: Assignment) {
-        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignment.name!!)
-        composeTestRule.onNodeWithTag("points").assertTextContains(assignment.pointsPossible.toInt().toString(), substring = true, ignoreCase = true)
+        composeTestRule.waitForTag("assignmentName", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("assignmentName", useUnmergedTree = true).assertTextEquals(assignment.name!!)
+        composeTestRule.onNodeWithTag("points", useUnmergedTree = true).assertTextContains(assignment.pointsPossible.toInt().toString(), substring = true, ignoreCase = true)
     }
 
     fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignment.name)
-        composeTestRule.onNodeWithTag("points").assertTextContains(assignment.pointsPossible?.toInt().toString(), substring = true, ignoreCase = true)
+        composeTestRule.waitForTag("assignmentName", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("assignmentName", useUnmergedTree = true).assertTextEquals(assignment.name)
+        composeTestRule.onNodeWithTag("points", useUnmergedTree = true).assertTextContains(assignment.pointsPossible?.toInt().toString(), substring = true, ignoreCase = true)
     }
 
     fun assertAssignmentTitle(assignmentName: String) {
-        composeTestRule.onNodeWithTag("assignmentName").assertTextEquals(assignmentName)
+        composeTestRule.waitForTag("assignmentName", useUnmergedTree = true)
+        composeTestRule.onNodeWithTag("assignmentName", useUnmergedTree = true).assertTextEquals(assignmentName)
     }
 
     fun assertAssignmentSubmitted() {

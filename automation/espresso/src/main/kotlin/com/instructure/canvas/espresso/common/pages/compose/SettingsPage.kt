@@ -30,6 +30,7 @@ import androidx.compose.ui.test.swipeDown
 import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import com.instructure.composetest.waitForTag
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -41,6 +42,9 @@ import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.AppTheme
 
 class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+    fun waitForListLoaded(timeoutMillis: Long = 15000) {
+        composeTestRule.waitForTag("settingsList", timeoutMillis = timeoutMillis)
+    }
 
     fun assertSettingsItemDisplayed(title: String, subtitle: String? = null) {
         retry(catchBlock = {

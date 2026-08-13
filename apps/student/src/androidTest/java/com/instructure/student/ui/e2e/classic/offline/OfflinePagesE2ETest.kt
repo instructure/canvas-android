@@ -29,7 +29,7 @@ import com.instructure.canvas.espresso.annotations.OfflineE2E
 import com.instructure.canvas.espresso.utils.refresh
 import com.instructure.dataseeding.api.PagesApi
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import com.instructure.student.ui.utils.offline.OfflineTestUtils
@@ -40,7 +40,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflinePagesE2ETest : StudentTest() {
+class OfflinePagesE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -136,6 +136,7 @@ class OfflinePagesE2ETest : StudentTest() {
         pageListPage.selectFrontPage(pagePublishedFront)
 
         Log.d(ASSERTION_TAG, "Assert that it is really a front (published) page via web view assertions.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
 
         Log.d(STEP_TAG, "Navigate back to Pages page.")
@@ -145,7 +146,7 @@ class OfflinePagesE2ETest : StudentTest() {
         pageListPage.selectRegularPage(pageNotEditable)
 
         Log.d(ASSERTION_TAG, "Assert that it is not editable as a student")
-        canvasWebViewPage.assertDoesNotEditable()
+        pageDetailsPage.assertDoesNotEditable()
 
         Log.d(STEP_TAG, "Navigate back to Page List page.")
         Espresso.pressBack()
@@ -154,10 +155,11 @@ class OfflinePagesE2ETest : StudentTest() {
         pageListPage.selectRegularPage(pagePublished)
 
         Log.d(ASSERTION_TAG, "Assert that it is really a regular published page via web view assertions.")
+        canvasWebViewPage.waitForWebView()
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Regular Page Text"))
 
         Log.d(STEP_TAG, "Click on the 'Pencil' icon.")
-        canvasWebViewPage.clickEditPencilIcon()
+        pageDetailsPage.clickEditPencilIcon()
 
         Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog has displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
@@ -170,7 +172,7 @@ class OfflinePagesE2ETest : StudentTest() {
         pageListPage.selectFrontPage(pagePublishedFront)
 
         Log.d(STEP_TAG, "Click on the 'Pencil' icon.")
-        canvasWebViewPage.clickEditPencilIcon()
+        pageDetailsPage.clickEditPencilIcon()
 
         Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog has displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()

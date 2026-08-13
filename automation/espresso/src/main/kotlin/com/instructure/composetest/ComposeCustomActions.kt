@@ -52,10 +52,12 @@ fun ComposeTestRule.clickToolbarIconButton(
  *
  * @param tag The test tag to wait for
  * @param timeoutMillis The maximum time to wait, defaults to 20000ms
+ * @param useUnmergedTree Whether to query the unmerged semantics tree, needed when the tagged node is a
+ * descendant of a node that merges its descendants (e.g. a clickable card)
  */
-fun ComposeTestRule.waitForTag(tag: String, timeoutMillis: Long = 20000) {
+fun ComposeTestRule.waitForTag(tag: String, timeoutMillis: Long = 20000, useUnmergedTree: Boolean = false) {
     waitUntil(timeoutMillis = timeoutMillis) {
-        onAllNodesWithTag(tag).fetchSemanticsNodes().isNotEmpty()
+        onAllNodesWithTag(tag, useUnmergedTree = useUnmergedTree).fetchSemanticsNodes().isNotEmpty()
     }
 }
 

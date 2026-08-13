@@ -16,19 +16,30 @@
  */
 package com.instructure.student.ui.pages.classic
 
+import androidx.appcompat.widget.AppCompatButton
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.model.Atoms
 import androidx.test.espresso.web.sugar.Web.onWebView
+import com.instructure.canvas.espresso.CanvasTest
+import com.instructure.canvas.espresso.utils.containsTextCaseInsensitive
 import com.instructure.espresso.ModuleItemInteractions
+import com.instructure.espresso.clearText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.containsString
@@ -55,12 +66,38 @@ class PageDetailsPage(
         hasAnyAncestor(hasTestTag("pageDetailsPage"))
 
     fun webAssertPageUrl(pageUrl: String) {
+        waitForView(allOf(withId(R.id.contentWebView), isDisplayed()))
         onWebView(allOf(withId(R.id.contentWebView), isDisplayed()))
             .check(webMatches(Atoms.getCurrentUrl(), containsString(pageUrl)))
     }
 
     fun assertToolbarTitle(pageName: String) {
-        composeTestRule.waitForIdle()
+        composeTestRule.waitUntil(10000) {
+            composeTestRule.onAllNodes(inToolbar(pageName)).fetchSemanticsNodes().isNotEmpty()
+        }
         composeTestRule.onNode(inToolbar(pageName)).assertIsDisplayed()
+    }
+
+    fun openOverflowMenu() {
+        composeTestRule.onNode(
+            hasTestTag("overflowMenu") and hasAnyAncestor(hasTestTag("pageDetailsPage"))
+        ).performClick()
+    }
+
+    fun addBookmark(bookmarkName: String) {
+        openOverflowMenu()
+        composeTestRule.onNodeWithText("Add Bookmark").performClick()
+        Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
+        Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
+        if (CanvasTest.isLandscapeDevice()) Espresso.pressBack()
+        Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
+    }
+
+    fun clickEditPencilIcon() {
+        composeTestRule.onNodeWithTag("editPageButton").performClick()
+    }
+
+    fun assertDoesNotEditable() {
+        composeTestRule.onNodeWithTag("editPageButton").assertDoesNotExist()
     }
 }
