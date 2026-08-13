@@ -24,4 +24,12 @@
     <item type="id" name="circle" />
     <item type="id" name="checkMark" />
     <item type="id" name="eventFragment" />
+
+    <!--
+      ~ media3-ui declares exo_top_controls only via @+id inside its exo_player_control_view.xml,
+      ~ which our own copy of that layout shadows. Without this declaration the id never reaches the
+      ~ merged resources, androidx.media3.ui.R.id.exo_top_controls does not exist, and every
+      ~ PlayerView crashes on inflate in minified builds. See MBL-20295.
+      -->
+    <item type="id" name="exo_top_controls" />
 </resources>

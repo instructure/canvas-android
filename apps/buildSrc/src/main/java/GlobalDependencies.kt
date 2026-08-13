@@ -39,7 +39,7 @@ object Versions {
     const val ROOM = "2.8.4"
     const val HAMCREST = "3.0"
     const val NAVIGATION = "2.9.6"
-    const val MEDIA3 = "1.8.0"
+    const val MEDIA3 = "1.9.0"
     const val DATASTORE = "1.2.0"
     const val LOTTIE = "6.7.0"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0"
