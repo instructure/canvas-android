@@ -91,6 +91,7 @@ fun CourseCard(
     onManageOfflineContent: ((Long) -> Unit)? = null,
     onCustomizeCourse: ((Long) -> Unit)? = null,
     onAnnouncementClick: ((Long) -> Unit)? = null,
+    offlineEnabled: Boolean = false,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
@@ -185,23 +186,25 @@ fun CourseCard(
                                 shape = RoundedCornerShape(8.dp),
                                 containerColor = colorResource(R.color.backgroundLightest)
                             ) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(
-                                            text = stringResource(R.string.course_menu_manage_offline_content),
-                                            fontSize = 16.sp,
-                                            color = colorResource(R.color.textDarkest)
+                                if (offlineEnabled) {
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(
+                                                text = stringResource(R.string.course_menu_manage_offline_content),
+                                                fontSize = 16.sp,
+                                                color = colorResource(R.color.textDarkest)
+                                            )
+                                        },
+                                        onClick = {
+                                            showMenu = false
+                                            onManageOfflineContent?.invoke(courseCard.id)
+                                        },
+                                        modifier = Modifier.pendoTag(
+                                            "coursesWidget_manageOfflineContent",
+                                            true
                                         )
-                                    },
-                                    onClick = {
-                                        showMenu = false
-                                        onManageOfflineContent?.invoke(courseCard.id)
-                                    },
-                                    modifier = Modifier.pendoTag(
-                                        "coursesWidget_manageOfflineContent",
-                                        true
                                     )
-                                )
+                                }
                                 DropdownMenuItem(
                                     text = {
                                         Text(
@@ -445,7 +448,8 @@ private fun CourseCardPreview() {
         onCourseClick = { },
         onCustomizeCourse = { },
         onManageOfflineContent = { },
-        onAnnouncementClick = { }
+        onAnnouncementClick = { },
+        offlineEnabled = true
     )
 }
 

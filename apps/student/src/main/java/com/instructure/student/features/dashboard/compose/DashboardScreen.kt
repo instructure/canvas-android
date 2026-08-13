@@ -130,17 +130,19 @@ fun DashboardScreenContent(
                         modifier = Modifier
                             .background(color = colorResource(id = R.color.backgroundLightestElevated))
                     ) {
-                        DropdownMenuItem(
-                            onClick = {
-                                showMenu = !showMenu
-                                manageOfflineContentClick()
-                            },
-                            modifier = Modifier.testTag("dashboardManageOfflineContent")
-                        ) {
-                            Text(
-                                stringResource(R.string.course_menu_manage_offline_content),
-                                color = colorResource(id = R.color.textDarkest)
-                            )
+                        if (uiState.offlineEnabled) {
+                            DropdownMenuItem(
+                                onClick = {
+                                    showMenu = !showMenu
+                                    manageOfflineContentClick()
+                                },
+                                modifier = Modifier.testTag("dashboardManageOfflineContent")
+                            ) {
+                                Text(
+                                    stringResource(R.string.course_menu_manage_offline_content),
+                                    color = colorResource(id = R.color.textDarkest)
+                                )
+                            }
                         }
                         DropdownMenuItem(
                             onClick = {

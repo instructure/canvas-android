@@ -24,6 +24,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
+import com.instructure.pandautils.domain.usecase.offline.IsOfflineEnabledUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
@@ -31,6 +32,7 @@ import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidge
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,6 +51,7 @@ class DashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val analytics: Analytics,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val isOfflineEnabledUseCase: IsOfflineEnabledUseCase,
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
@@ -72,6 +75,7 @@ class DashboardViewModel @Inject constructor(
         loadDashboard()
         observeNetworkState()
         observeConfig()
+        checkOfflineEnabled()
     }
 
     fun showSnackbar(message: String, actionLabel: String? = null, action: (() -> Unit)? = null) {
@@ -117,6 +121,7 @@ class DashboardViewModel @Inject constructor(
                 _uiState.update { it.copy(refreshing = false, error = e.message) }
             }
         }
+        checkOfflineEnabled()
     }
 
     private fun onRetry() {
@@ -140,6 +145,20 @@ class DashboardViewModel @Inject constructor(
             }
         }
         analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, bundle)
+    }
+
+    private fun checkOfflineEnabled() {
+        viewModelScope.launch {
+            try {
+                val offlineEnabled = isOfflineEnabledUseCase(Unit)
+                _uiState.update { it.copy(offlineEnabled = offlineEnabled) }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+                _uiState.update { it.copy(offlineEnabled = false) }
+            }
+        }
     }
 
     private fun observeConfig() {

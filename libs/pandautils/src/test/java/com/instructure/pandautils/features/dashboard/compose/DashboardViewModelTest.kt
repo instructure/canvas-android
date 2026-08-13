@@ -26,6 +26,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
+import com.instructure.pandautils.domain.usecase.offline.IsOfflineEnabledUseCase
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
@@ -49,8 +50,10 @@ import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -79,6 +82,7 @@ class DashboardViewModelTest {
     private val analytics: Analytics = mockk(relaxed = true)
     private val bundleStorage = mutableMapOf<String, String?>()
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val isOfflineEnabledUseCase: IsOfflineEnabledUseCase = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
@@ -110,6 +114,7 @@ class DashboardViewModelTest {
         every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
         coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
         every { crashlytics.recordException(any()) } just Runs
 
         mockkObject(ColorKeeper)
@@ -118,7 +123,7 @@ class DashboardViewModelTest {
 
     private fun createViewModel(): DashboardViewModel {
         return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase, analytics, observeGlobalConfigUseCase,
-            crashlytics)
+            isOfflineEnabledUseCase, crashlytics)
     }
 
     @After
@@ -556,5 +561,77 @@ class DashboardViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(themedColor, state.color)
+    }
+
+    @Test
+    fun testOfflineEnabledTrueWhenFeatureFlagOn() = runTest {
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun testOfflineEnabledFalseWhenFeatureFlagOff() = runTest {
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun testOfflineEnabledFalseWhenUseCaseThrows() = runTest {
+        val exception = Exception("Test error")
+        coEvery { isOfflineEnabledUseCase(Unit) } throws exception
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+        verify(exactly = 1) { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun testOfflineEnabledCancellationExceptionIsNotRecordedAndPropagates() = runTest {
+        coEvery { isOfflineEnabledUseCase(Unit) } throws CancellationException("Cancelled")
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        verify(exactly = 0) { crashlytics.recordException(any()) }
+    }
+
+    @Test
+    fun testOfflineEnabledDefaultsToFalseBeforeCheckResolves() = runTest {
+        coEvery { isOfflineEnabledUseCase(Unit) } coAnswers {
+            delay(1000)
+            true
+        }
+
+        viewModel = createViewModel()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun testOnRefreshRePicksUpOfflineFlagFlippedFromFalseToTrue() = runTest {
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+        viewModel.uiState.value.onRefresh()
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.offlineEnabled)
     }
 }

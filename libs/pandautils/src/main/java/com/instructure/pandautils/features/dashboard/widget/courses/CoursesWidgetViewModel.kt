@@ -37,6 +37,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
+import com.instructure.pandautils.domain.usecase.offline.IsOfflineEnabledUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -96,7 +97,8 @@ class CoursesWidgetViewModel @Inject constructor(
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val userRepository: UserRepository,
-    private val offlineAnalyticsManager: OfflineAnalyticsManager
+    private val offlineAnalyticsManager: OfflineAnalyticsManager,
+    private val isOfflineEnabledUseCase: IsOfflineEnabledUseCase
 ) : ViewModel() {
 
     private var visibleCourses: List<Course> = emptyList()
@@ -259,6 +261,11 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun loadData(forceRefresh: Boolean = false) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, isError = false) }
+
+            // Re-checked on every load (including refresh), isolated from the course-loading
+            // try/catch below so a flag-check failure can't flip isError, and a course-load
+            // failure can't clobber a previously-successful offlineEnabled value.
+            checkOfflineEnabled()
 
             try {
                 val isOnline = networkStateProvider.isOnline()
@@ -546,6 +553,18 @@ class CoursesWidgetViewModel @Inject constructor(
                     val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
                     _uiState.update { it.copy(color = themedColor) }
                 }
+        }
+    }
+
+    private suspend fun checkOfflineEnabled() {
+        try {
+            val offlineEnabled = isOfflineEnabledUseCase(Unit)
+            _uiState.update { it.copy(offlineEnabled = offlineEnabled) }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            _uiState.update { it.copy(offlineEnabled = false) }
         }
     }
 }

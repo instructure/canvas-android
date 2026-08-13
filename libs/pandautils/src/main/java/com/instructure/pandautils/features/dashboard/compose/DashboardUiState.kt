@@ -28,5 +28,6 @@ data class DashboardUiState(
     val widgets: List<WidgetMetadata> = emptyList(),
     val onRefresh: () -> Unit = {},
     val onRetry: () -> Unit = {},
-    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR)
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
+    val offlineEnabled: Boolean = false
 )

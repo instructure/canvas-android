@@ -145,7 +145,8 @@ fun CoursesWidgetContent(
                                     onCustomizeCourse = uiState.onCustomizeCourse,
                                     onAnnouncementClick = uiState.onAnnouncementClick,
                                     modifier = Modifier.longPressDraggableHandle(),
-                                    dashboardColor = Color(uiState.color.color())
+                                    dashboardColor = Color(uiState.color.color()),
+                                    offlineEnabled = uiState.offlineEnabled
                                 )
                             }
                         }

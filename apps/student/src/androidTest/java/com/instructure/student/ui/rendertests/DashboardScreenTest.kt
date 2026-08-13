@@ -23,10 +23,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.DashboardNavigationHandler
 import com.instructure.pandautils.features.dashboard.compose.DashboardUiState
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.student.R
 import com.instructure.student.features.dashboard.compose.DashboardScreenContent
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.junit.Assert.assertTrue
@@ -39,6 +41,8 @@ class DashboardScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
+
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
 
     private val mockNavigationHandler = object : DashboardNavigationHandler {
         override fun handleCoursesNavigation(event: DashboardNavigationEvent.Courses) {}
@@ -171,7 +175,7 @@ class DashboardScreenTest {
         }
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Customize Dashboard").assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.customize_dashboard)).assertIsDisplayed()
     }
 
     @Test
@@ -213,8 +217,64 @@ class DashboardScreenTest {
         }
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Customize Dashboard").performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.customize_dashboard)).performClick()
 
         assertTrue("NavigationHandler's handleDashboardNavigation should be called", navigationCalled)
+    }
+
+    @Test
+    fun testManageOfflineContentDisplayedWhenOfflineEnabled() {
+        val mockUiState = DashboardUiState(
+            loading = false,
+            error = null,
+            refreshing = false,
+            onRefresh = {},
+            onRetry = {},
+            offlineEnabled = true
+        )
+
+        composeTestRule.setContent {
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> },
+                navigationHandler = mockNavigationHandler
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("overflowMenu").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(context.getString(R.string.course_menu_manage_offline_content)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.customize_dashboard)).assertIsDisplayed()
+    }
+
+    @Test
+    fun testManageOfflineContentHiddenWhenOfflineDisabled() {
+        val mockUiState = DashboardUiState(
+            loading = false,
+            error = null,
+            refreshing = false,
+            onRefresh = {},
+            onRetry = {},
+            offlineEnabled = false
+        )
+
+        composeTestRule.setContent {
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> },
+                navigationHandler = mockNavigationHandler
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("overflowMenu").performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText(context.getString(R.string.course_menu_manage_offline_content)).assertDoesNotExist()
+        composeTestRule.onNodeWithText(context.getString(R.string.customize_dashboard)).assertIsDisplayed()
     }
 }

@@ -20,6 +20,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -278,6 +279,60 @@ class CourseCardTest {
 
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.announcements))
             .assertDoesNotExist()
+    }
+
+    @Test
+    fun testCourseCardShowsManageOfflineContentWhenOfflineEnabled() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val courseCard = createSampleCourseCard()
+
+        composeTestRule.setContent {
+            CourseCard(
+                courseCard = courseCard,
+                showGrade = false,
+                showColorOverlay = false,
+                onCourseClick = { },
+                onManageOfflineContent = { },
+                onCustomizeCourse = { },
+                offlineEnabled = true
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.a11y_contentDescription_moreOptions))
+            .performClick()
+
+        composeTestRule.onNodeWithText(context.getString(R.string.course_menu_manage_offline_content))
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.customizeCourse))
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun testCourseCardHidesManageOfflineContentWhenOfflineDisabled() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val courseCard = createSampleCourseCard()
+
+        composeTestRule.setContent {
+            CourseCard(
+                courseCard = courseCard,
+                showGrade = false,
+                showColorOverlay = false,
+                onCourseClick = { },
+                onManageOfflineContent = { },
+                onCustomizeCourse = { },
+                offlineEnabled = false
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.a11y_contentDescription_moreOptions))
+            .performClick()
+
+        composeTestRule.onNodeWithText(context.getString(R.string.course_menu_manage_offline_content))
+            .assertDoesNotExist()
+        // Positive control: proves the menu actually opened, so the assertion above fails the
+        // test (rather than passing vacuously) if the kebab menu ever stops opening.
+        composeTestRule.onNodeWithText(context.getString(R.string.customizeCourse))
+            .assertIsDisplayed()
     }
 
     @Test

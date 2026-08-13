@@ -30,6 +30,7 @@ data class CoursesWidgetUiState(
     val isGroupsExpanded: Boolean = true,
     val showGrades: Boolean = false,
     val showColorOverlay: Boolean = false,
+    val offlineEnabled: Boolean = false,
     val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
     val onCourseClick: (Long) -> Unit = {},
     val onGroupClick: (Long) -> Unit = {},

@@ -36,6 +36,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCa
 import com.instructure.pandautils.domain.usecase.courses.LoadSingleCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
+import com.instructure.pandautils.domain.usecase.offline.IsOfflineEnabledUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.DashboardNavigationEvent
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
@@ -61,9 +62,11 @@ import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import java.util.concurrent.atomic.AtomicInteger
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -104,6 +107,7 @@ class CoursesWidgetViewModelTest {
     private val userRepository: UserRepository = mockk(relaxed = true)
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
     private val offlineAnalyticsManager: OfflineAnalyticsManager = mockk(relaxed = true)
+    private val isOfflineEnabledUseCase: IsOfflineEnabledUseCase = mockk()
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -143,6 +147,7 @@ class CoursesWidgetViewModelTest {
             )
         )
         coEvery { featureFlagProvider.offlineEnabled() } returns false
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
         every { networkStateProvider.isOnline() } returns true
         every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
         every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
@@ -1457,6 +1462,117 @@ class CoursesWidgetViewModelTest {
         assertFalse(viewModel.uiState.value.courses[0].announcementsLoading)
     }
 
+    @Test
+    fun `offlineEnabled is true when IsOfflineEnabledUseCase returns true`() {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+
+        viewModel = createViewModel()
+
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun `offlineEnabled is false when IsOfflineEnabledUseCase returns false`() {
+        setupDefaultMocks()
+        // Drive offlineEnabled to true first, then to false, so the assertion below can only
+        // pass if the check actually re-ran and flipped the value (the UiState default is
+        // already false, which would make a bare "returns false" assertion vacuous).
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+
+        viewModel = createViewModel()
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
+        viewModel.refresh()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun `offlineEnabled is re-checked and updated on refresh`() {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } returns false
+
+        viewModel = createViewModel()
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+        viewModel.refresh()
+
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+        coVerify(exactly = 2) { isOfflineEnabledUseCase(Unit) }
+    }
+
+    @Test
+    fun `offlineEnabled resets to false when a later refresh's flag check fails`() {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+
+        viewModel = createViewModel()
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+
+        val exception = Exception("Test error")
+        coEvery { isOfflineEnabledUseCase(Unit) } throws exception
+        viewModel.refresh()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+        verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `offlineEnabled is not clobbered by an unrelated course-load failure on refresh`() {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } returns true
+
+        viewModel = createViewModel()
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+
+        coEvery { loadVisibleCoursesUseCase(any()) } throws RuntimeException("Network error")
+        viewModel.refresh()
+
+        assertTrue(viewModel.uiState.value.isError)
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+    }
+
+    @Test
+    fun `offlineEnabled is false when IsOfflineEnabledUseCase throws`() {
+        setupDefaultMocks()
+        val exception = Exception("Test error")
+        coEvery { isOfflineEnabledUseCase(Unit) } throws exception
+
+        viewModel = createViewModel()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+        verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `offlineEnabled CancellationException is not recorded and propagates`() {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } throws CancellationException("Cancelled")
+
+        viewModel = createViewModel()
+
+        verify(exactly = 0) { crashlytics.recordException(any()) }
+    }
+
+    @Test
+    fun `offlineEnabled defaults to false before the check resolves`() = runTest {
+        setupDefaultMocks()
+        coEvery { isOfflineEnabledUseCase(Unit) } coAnswers {
+            delay(1000)
+            true
+        }
+
+        viewModel = createViewModel()
+
+        assertFalse(viewModel.uiState.value.offlineEnabled)
+
+        advanceUntilIdle()
+        assertTrue(viewModel.uiState.value.offlineEnabled)
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadVisibleCoursesUseCase = loadVisibleCoursesUseCase,
@@ -1475,7 +1591,8 @@ class CoursesWidgetViewModelTest {
             observeOfflineSyncUpdatesUseCase = observeOfflineSyncUpdatesUseCase,
             observeGlobalConfigUseCase = observeGlobalConfigUseCase,
             userRepository = userRepository,
-            offlineAnalyticsManager = offlineAnalyticsManager
+            offlineAnalyticsManager = offlineAnalyticsManager,
+            isOfflineEnabledUseCase = isOfflineEnabledUseCase
         )
     }
 }
