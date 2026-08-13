@@ -311,7 +311,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionId?.let { subId ->
                     val submission = assignmentResult.submission
                     if (submission != null
-                        && submission.id == subId
+                        && (submission.userId == subId || submission.id == subId)
                         && submission.submissionType != SubmissionType.NOT_GRADED.apiString
                         && submission.submissionType != SubmissionType.ON_PAPER.apiString)
                     {

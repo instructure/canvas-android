@@ -2353,7 +2353,7 @@ fun MockCanvas.addSubmissionStreamItem(
         userId = user.id,
         user = user,
         updatedAt = submittedAt ?: "",
-        htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
+        htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${user.id}",
         context_type = CanvasContext.Type.USER.apiString,
         score = score,
         grade = grade,

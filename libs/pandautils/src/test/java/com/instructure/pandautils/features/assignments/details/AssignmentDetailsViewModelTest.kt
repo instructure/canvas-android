@@ -1154,12 +1154,36 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
-    fun `loadData navigates to submission screen when submissionId is provided and matches`() {
+    fun `loadData navigates to submission screen when route id matches the submission user id`() {
+        val userId = 555L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = 12345L, userId = userId, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns userId
+
+        val viewModel = getViewModel()
+        val expected = AssignmentDetailsNavigation.SubmissionScreen(
+            isObserver = false,
+            selectedSubmissionAttempt = 2L,
+            assignmentUrl = "https://assignment.url",
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
+        )
+        assertEquals(expected, viewModel.uiState.value.navigation)
+    }
+
+    @Test
+    fun `loadData navigates to submission screen when route id matches the submission id`() {
         val submissionId = 12345L
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val submission = Submission(id = submissionId, attempt = 2, submissionType = "online_text_entry")
+        val submission = Submission(id = submissionId, userId = 555L, attempt = 2, submissionType = "online_text_entry")
         val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
         coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
@@ -1182,7 +1206,7 @@ class AssignmentDetailsViewModelTest {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val submission = Submission(id = 12345L, userId = 555L, attempt = 2, submissionType = "online_text_entry")
         val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
         coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
@@ -1194,12 +1218,12 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
-    fun `loadData does not navigate when submissionId does not match`() {
+    fun `loadData does not navigate when submissionId matches neither the submission id nor the user id`() {
         val submissionId = 99999L
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val submission = Submission(id = 12345L, userId = 555L, attempt = 2, submissionType = "online_text_entry")
         val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
         coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
@@ -1228,16 +1252,16 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `loadData does not navigate when submission type is not_graded`() {
-        val submissionId = 12345L
+        val userId = 555L
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val submission = Submission(id = submissionId, attempt = 2, submissionType = "not_graded")
+        val submission = Submission(id = 12345L, userId = userId, attempt = 2, submissionType = "not_graded")
         val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
         coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
 
-        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns userId
 
         val viewModel = getViewModel()
         assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
@@ -1245,16 +1269,16 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `loadData does not navigate when submission type is on_paper`() {
-        val submissionId = 12345L
+        val userId = 555L
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val submission = Submission(id = submissionId, attempt = 2, submissionType = "on_paper")
+        val submission = Submission(id = 12345L, userId = userId, attempt = 2, submissionType = "on_paper")
         val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
         coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
 
-        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns userId
 
         val viewModel = getViewModel()
         assertFalse(viewModel.uiState.value.navigation is AssignmentDetailsNavigation.SubmissionScreen)
