@@ -182,7 +182,10 @@ class PageDetailsViewModel @Inject constructor(
                     baseUrl = page.htmlUrl,
                     editMenuVisible = checkCanEdit(page),
                     pageSet = true,
-                    clearWebViewHistory = isPageUpdate
+                    clearWebViewHistory = isPageUpdate,
+                    // Not set for locked pages: Study Tools is never offered there, matching
+                    // existing (unchanged) behavior.
+                    pageSlug = page.url ?: pageUrl
                 )
             }
         }

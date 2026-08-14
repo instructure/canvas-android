@@ -5,4 +5,6 @@
     <string name="masteryConnect" translatable="false">Mastery</string>
     <string name="portfolio" translatable="false">Portfolio</string>
     <string name="unsupportedContentMessage" translatable="false">This isn\'t right, you shouldn\'t be here.</string>
+    <!-- Matches the model pinned by canvas-lms in config/llm_configs/study_assist_*.yml -->
+    <string name="studyTools_nutritionFacts_baseModel_value" translatable="false">Claude Haiku 4.5 by Anthropic</string>
 </resources>

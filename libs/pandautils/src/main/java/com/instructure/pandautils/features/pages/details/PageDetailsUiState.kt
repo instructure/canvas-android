@@ -27,6 +27,10 @@ data class PageDetailsUiState(
     // fragment's `setPageObject()` call), used to gate the `@PageView` "pageSet" prerequisite.
     // A total fetch failure never sets this, matching existing (unchanged) analytics behavior.
     val pageSet: Boolean = false,
+    // The page's resolved slug, once known - null for locked pages and while the fetch is in
+    // flight. This is the only Study-Tools-adjacent field left here: it is a page fact, not a
+    // Study Tools fact. PageDetailsScreen forwards it to StudyToolsViewModel.onPageResolved once set.
+    val pageSlug: String? = null,
     val actions: PageDetailsActions = PageDetailsActions(),
     // Navigation — one destination at a time.
     val navigation: PageDetailsNavigation? = null,

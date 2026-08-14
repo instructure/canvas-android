@@ -48,6 +48,7 @@ import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.features.pages.details.PageDetailsNavigation
 import com.instructure.pandautils.features.pages.details.PageDetailsViewModel
 import com.instructure.pandautils.features.pages.details.composables.PageDetailsScreen
+import com.instructure.pandautils.features.studytools.StudyToolsViewModel
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileDownloader
@@ -82,6 +83,7 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
     var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
 
     private val viewModel: PageDetailsViewModel by viewModels()
+    private val studyToolsViewModel: StudyToolsViewModel by viewModels()
 
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
 
@@ -106,6 +108,11 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
         return ComposeView(requireActivity()).apply {
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
+                val studyToolsUiState by studyToolsViewModel.uiState.collectAsState()
+
+                LaunchedEffect(uiState.pageSlug) {
+                    uiState.pageSlug?.let(studyToolsViewModel::onPageResolved)
+                }
 
                 LaunchedEffect(uiState.navigation) {
                     uiState.navigation?.let { navigation ->
@@ -147,6 +154,7 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
                     navigationActionClick = { activity?.onBackPressed() },
                     webViewCallbacks = descriptionWebViewCallbacks(),
                     embeddedWebViewCallbacks = descriptionEmbeddedWebViewCallbacks(),
+                    studyToolsUiState = studyToolsUiState,
                     applyOnWebView = { addVideoClient(requireActivity()) },
                     onAddBookmark = onAddBookmark
                 )

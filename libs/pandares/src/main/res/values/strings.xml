@@ -2655,4 +2655,57 @@
         <item quantity="one">%d additional file</item>
         <item quantity="other">%d additional files</item>
     </plurals>
+
+    <!-- Study Tools (IgniteAI) -->
+    <string name="studyTools_title">Study tools</string>
+    <string name="studyTools_openContentDescription">Open study tools</string>
+    <string name="studyTools_aiDisclosureContentDescription">About AI study tools</string>
+    <string name="studyTools_summarize">Summarize</string>
+    <string name="studyTools_quizMe">Quiz me</string>
+    <string name="studyTools_flashcards">Flashcards</string>
+    <string name="studyTools_noToolsAvailable">No study tools are currently available.</string>
+    <string name="studyTools_offline">You\'re offline. Connect to the internet to use study tools.</string>
+    <string name="studyTools_genericError">Study tools are temporarily unavailable. Please try again.</string>
+
+    <!-- Study Tools AI disclosure ("Nutrition Facts") -->
+    <string name="studyTools_nutritionFacts_title">Nutrition Facts</string>
+    <string name="studyTools_nutritionFacts_featureName">Study tools</string>
+    <string name="studyTools_nutritionFacts_block_modelData">Model &amp; Data</string>
+    <string name="studyTools_nutritionFacts_block_privacyCompliance">Privacy &amp; Compliance</string>
+    <string name="studyTools_nutritionFacts_block_outputs">Outputs</string>
+    <string name="studyTools_nutritionFacts_baseModel_title">Base Model</string>
+    <string name="studyTools_nutritionFacts_baseModel_description">The foundational AI on which further training and customizations are built.</string>
+    <string name="studyTools_nutritionFacts_trainedWithUserData_title">Trained with User Data</string>
+    <string name="studyTools_nutritionFacts_trainedWithUserData_description">Indicates the AI model has been given customer data in order to improve its results.</string>
+    <string name="studyTools_nutritionFacts_trainedWithUserData_value">No</string>
+    <string name="studyTools_nutritionFacts_dataSharedWithModel_title">Data Shared with Model</string>
+    <string name="studyTools_nutritionFacts_dataSharedWithModel_description">Indicates which training or operational content was given to the model.</string>
+    <string name="studyTools_nutritionFacts_dataSharedWithModel_value">Course content</string>
+    <string name="studyTools_nutritionFacts_dataRetention_title">Data Retention</string>
+    <string name="studyTools_nutritionFacts_dataRetention_description">How long the model stores customer data.</string>
+    <string name="studyTools_nutritionFacts_dataRetention_value">No</string>
+    <string name="studyTools_nutritionFacts_dataLogging_title">Data Logging</string>
+    <string name="studyTools_nutritionFacts_dataLogging_description">Recording the AI\'s performance for auditing, analysis, and improvement.</string>
+    <string name="studyTools_nutritionFacts_dataLogging_value">Logs are retained for 30 days for troubleshooting and debugging</string>
+    <string name="studyTools_nutritionFacts_regionsSupported_title">Regions Supported</string>
+    <string name="studyTools_nutritionFacts_regionsSupported_description">The locations where the AI model is officially available and supported.</string>
+    <string name="studyTools_nutritionFacts_regionsSupported_value">Global</string>
+    <string name="studyTools_nutritionFacts_pii_title">PII</string>
+    <string name="studyTools_nutritionFacts_pii_description">Sensitive data that can be used to identify an individual.</string>
+    <string name="studyTools_nutritionFacts_pii_value">Not Exposed</string>
+    <string name="studyTools_nutritionFacts_aiSettingsControl_title">AI Settings Control</string>
+    <string name="studyTools_nutritionFacts_aiSettingsControl_description">The ability to turn the AI on or off within the product.</string>
+    <string name="studyTools_nutritionFacts_aiSettingsControl_value">No</string>
+    <string name="studyTools_nutritionFacts_humanInTheLoop_title">Human in the Loop</string>
+    <string name="studyTools_nutritionFacts_humanInTheLoop_description">Indicates if a human is involved in the AI\'s process or output.</string>
+    <string name="studyTools_nutritionFacts_humanInTheLoop_value">Yes</string>
+    <string name="studyTools_nutritionFacts_guardrails_title">Guardrails</string>
+    <string name="studyTools_nutritionFacts_guardrails_description">Preventative safety mechanisms or limitations built into the AI model.</string>
+    <string name="studyTools_nutritionFacts_guardrails_value">Yes</string>
+    <string name="studyTools_nutritionFacts_expectedRisks_title">Expected Risks</string>
+    <string name="studyTools_nutritionFacts_expectedRisks_description">Any risks the model may pose to the user.</string>
+    <string name="studyTools_nutritionFacts_expectedRisks_value">Low risk</string>
+    <string name="studyTools_nutritionFacts_intendedOutcomes_title">Intended Outcomes</string>
+    <string name="studyTools_nutritionFacts_intendedOutcomes_description">The specific results the AI model is meant to achieve.</string>
+    <string name="studyTools_nutritionFacts_intendedOutcomes_value">AI generated content may contain mistakes or inaccurate information and should always be verified</string>
 </resources>

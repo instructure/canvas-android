@@ -158,7 +158,7 @@ The project uses a Router pattern for navigation between features:
 
 ### InstUI / NGC Conventions
 - Use **InstUI components directly** (`com.instructure.instui.compose.*`) in NGC screens rather than the `ngc`/`designsystem` `DS*` wrappers
-- **No Material Icons in `instui`** — don't use `Libs.COMPOSE_MATERIAL_ICONS` or `Icons.Filled.*`/`Icons.Default.*`; use an icon slot or defer icon-bearing work until the InstUI icon system exists
+- **No Material Icons in `instui`** — don't use `Libs.COMPOSE_MATERIAL_ICONS` or `Icons.Filled.*`/`Icons.Default.*`; use `InstUIIcons` (`libs/instui/.../token/icon/`) instead, importing both the `InstUIIcons` object and the specific icon property
 - When **no Android design exists** for a component, build it from InstUI design tokens (typography, `InstUISemanticColors`, `InstUILayoutSizes.Spacing`) rather than stalling; lean iOS-faithful when an iOS reference implementation exists
 
 #### Dark mode: `onColor` vs `inverse`, and course/brand colors
@@ -214,8 +214,9 @@ The project uses `PrivateData.merge()` to inject private configuration (API keys
 ### Localization
 Apps support multiple languages. Translation tags are scanned at build time via `LocaleScanner.getAvailableLanguageTags()`.
 
-### InstUI Design System (in progress, as of 2026-04)
+### InstUI Design System (in progress, as of 2026-08)
 This is a snapshot of an evolving effort, not a permanent spec — check for updates before relying on specifics long-term.
 - **Architecture direction ("Option B")**: a standalone design-token repo plus separate Android/iOS design-system repos, with no web dependency. `libs/horizon` and `libs/ngc` are the current home for this work; the plan is to move it into a separate repo, consumed first as a git submodule and later via Maven.
-- **Token generation status**: in `libs/instui`, the primitive and semantic token layers are generated; the component-token layer is still pending, so new components currently follow a dummy-component strategy until that layer lands.
-- **Icons**: the InstUI icon system has not been designed yet — components that need icons should wait for it or use a placeholder slot (see InstUI / NGC Conventions above).
+- **Token generation status**: in `libs/instui`, the primitive, semantic, and component token layers are all generated (`libs/instui/.../token/component/` has 67 generated files, e.g. `InstUITray`, `InstUIText`, `InstUIBillboard`, `InstUINutritionFacts`). Never edit anything under `libs/instui/.../token/` — it's generator output (`./gradlew :libs:instui:generateInstUITokens`); hand-written InstUI is only `compose/**` + `BorderStyle.kt`.
+- **Icons**: the InstUI icon system has landed — `libs/instui/.../token/icon/` contains ~2027 generated `ImageVector` extension properties (Lucide + instructure-ui custom icons) exposed via `InstUIIcons`. Use these directly instead of a placeholder slot.
+- Some InstUI components still don't exist (e.g. a drawer/side-panel composable, shimmer/skeleton, empty/error-state billboard component) — for those, keep the existing hand-rolled composable and re-color it with InstUI tokens, or build a small local composable from tokens, rather than stalling on the missing piece.

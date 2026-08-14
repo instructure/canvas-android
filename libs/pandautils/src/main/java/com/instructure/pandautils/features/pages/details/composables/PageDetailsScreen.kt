@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,9 +47,16 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.pages.details.PageDetailsScreenState
 import com.instructure.pandautils.features.pages.details.PageDetailsUiState
+import com.instructure.pandautils.features.studytools.StudyToolsPanel
+import com.instructure.pandautils.features.studytools.StudyToolsUiState
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 
+/**
+ * [studyToolsUiState] is resolved by the caller (its owning `StudyToolsViewModel` is
+ * Fragment-scoped) rather than via `hiltViewModel()` here, so this composable stays testable
+ * under a plain `createComposeRule()` — `:pandautils` androidTest has no Hilt harness.
+ */
 @Composable
 fun PageDetailsScreen(
     uiState: PageDetailsUiState,
@@ -57,6 +65,7 @@ fun PageDetailsScreen(
     webViewCallbacks: ComposeWebViewCallbacks,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks,
     modifier: Modifier = Modifier,
+    studyToolsUiState: StudyToolsUiState = StudyToolsUiState(),
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
     onAddBookmark: (() -> Unit)? = null
@@ -72,6 +81,18 @@ fun PageDetailsScreen(
                     backgroundColor = Color(toolbarColor),
                     contentColor = colorResource(id = R.color.textLightest),
                     actions = {
+                        if (studyToolsUiState.available) {
+                            IconButton(
+                                onClick = studyToolsUiState.actions.onOpen,
+                                modifier = Modifier.testTag("studyToolsButton")
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_study_tools),
+                                    contentDescription = stringResource(id = R.string.studyTools_openContentDescription),
+                                    tint = colorResource(id = R.color.textLightest)
+                                )
+                            }
+                        }
                         if (uiState.editMenuVisible) {
                             IconButton(
                                 onClick = uiState.actions.onEditClick,
@@ -117,6 +138,13 @@ fun PageDetailsScreen(
                     )
                 }
             }
+        }
+
+        if (studyToolsUiState.panelVisible) {
+            StudyToolsPanel(
+                uiState = studyToolsUiState,
+                isTablet = booleanResource(id = R.bool.isDeviceTablet)
+            )
         }
     }
 }
