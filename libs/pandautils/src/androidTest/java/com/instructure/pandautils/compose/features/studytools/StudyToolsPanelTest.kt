@@ -15,12 +15,17 @@
  */
 package com.instructure.pandautils.compose.features.studytools
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.domain.models.studytools.StudyTool
 import com.instructure.pandautils.domain.models.studytools.StudyToolOption
+import com.instructure.pandautils.domain.models.studytools.StudyToolResult
+import com.instructure.pandautils.features.studytools.StudyToolState
 import com.instructure.pandautils.features.studytools.StudyToolsPanel
 import com.instructure.pandautils.features.studytools.StudyToolsScreenState
 import com.instructure.pandautils.features.studytools.StudyToolsUiState
@@ -36,6 +41,50 @@ class StudyToolsPanelTest {
 
     private val summarize = StudyToolOption(StudyTool.SUMMARIZE, "Summarize")
     private val menuState = StudyToolsUiState(screenState = StudyToolsScreenState.Content(listOf(summarize)))
+
+    /**
+     * The phone sheet is measured at full height so it has a full-page stage to drag to, which means
+     * anything pinned to the bottom of its content sits below the screen while the sheet is only
+     * partially expanded. Opening a tool has to take the sheet to its full stage, or the regenerate link
+     * and the feedback icons are unreachable with nothing on screen hinting they exist.
+     */
+    @Test
+    fun assertOpeningAToolBringsItsFooterOnScreen() {
+        var uiState by mutableStateOf(menuState)
+        composeTestRule.setContent {
+            StudyToolsPanel(uiState = uiState, isTablet = false)
+        }
+
+        composeTestRule.onNodeWithTag("studyToolsMenu").assertIsDisplayed()
+
+        uiState = uiState.copy(
+            selectedTool = summarize,
+            toolState = StudyToolState.Ready(StudyToolResult.Summary("A summary."))
+        )
+        composeTestRule.waitForIdle()
+
+        composeTestRule.onNodeWithTag("studyToolsSummary").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("studyToolsRegenerate").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("studyToolsFeedbackLiked").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("studyToolsFeedbackDisliked").assertIsDisplayed()
+    }
+
+    @Test
+    fun assertTabletDrawerShowsTheToolFooter() {
+        composeTestRule.setContent {
+            StudyToolsPanel(
+                uiState = menuState.copy(
+                    selectedTool = summarize,
+                    toolState = StudyToolState.Ready(StudyToolResult.Summary("A summary."))
+                ),
+                isTablet = true
+            )
+        }
+
+        composeTestRule.onNodeWithTag("studyToolsDrawer").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("studyToolsSummary").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("studyToolsRegenerate").assertIsDisplayed()
+    }
 
     @Test
     fun assertMenuIsShownWhenNoToolIsSelected() {

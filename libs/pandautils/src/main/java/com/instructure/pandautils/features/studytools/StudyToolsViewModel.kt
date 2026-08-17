@@ -15,16 +15,24 @@
  */
 package com.instructure.pandautils.features.studytools
 
+import android.content.res.Resources
+import android.os.Bundle
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.pandautils.R
+import com.instructure.pandautils.domain.models.studytools.StudyTool
 import com.instructure.pandautils.domain.models.studytools.StudyToolOption
 import com.instructure.pandautils.domain.models.studytools.StudyToolsError
 import com.instructure.pandautils.domain.models.studytools.StudyToolsOutcome
 import com.instructure.pandautils.domain.usecase.studytools.GetStudyToolsUseCase
+import com.instructure.pandautils.domain.usecase.studytools.RunStudyToolUseCase
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +56,10 @@ import javax.inject.Inject
 class StudyToolsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getStudyToolsUseCase: GetStudyToolsUseCase,
-    private val networkStateProvider: NetworkStateProvider
+    private val runStudyToolUseCase: RunStudyToolUseCase,
+    private val networkStateProvider: NetworkStateProvider,
+    private val resources: Resources,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val canvasContext: CanvasContext = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) ?: CanvasContext.emptyUserContext()
@@ -61,6 +72,9 @@ class StudyToolsViewModel @Inject constructor(
 
     /** Tools resolved by the availability check, reused when the panel opens. */
     private var availableTools: List<StudyToolOption>? = null
+
+    /** The in-flight generation, cancelled whenever the user leaves the tool it belongs to. */
+    private var studyToolJob: Job? = null
 
     /** The in-flight menu list load, cancelled on dismiss and replaced by any newer retry. */
     private var loadStudyToolsJob: Job? = null
@@ -129,6 +143,7 @@ class StudyToolsViewModel @Inject constructor(
     }
 
     private fun onDismiss() {
+        studyToolJob?.cancel()
         loadStudyToolsJob?.cancel()
         resetPanel()
     }
@@ -142,6 +157,7 @@ class StudyToolsViewModel @Inject constructor(
             it.copy(
                 panelVisible = false,
                 selectedTool = null,
+                toolState = null,
                 aiDisclosureVisible = false
             )
         }
@@ -186,9 +202,119 @@ class StudyToolsViewModel @Inject constructor(
         }
     }
 
-    private fun onStudyToolSelected(tool: StudyToolOption) = updateStudyTools { it.copy(selectedTool = tool) }
+    private fun onStudyToolSelected(tool: StudyToolOption) {
+        // A generation for the tool being left behind is of no use to anyone.
+        studyToolJob?.cancel()
+        updateStudyTools { it.copy(selectedTool = tool, toolState = null) }
 
-    private fun onStudyToolsBack() = updateStudyTools { it.copy(selectedTool = null) }
+        // Quiz and Flashcards have no renderer yet (MBL-20263), so generating for them would only burn
+        // a request against the daily limit and show nothing.
+        if (tool.tool == StudyTool.SUMMARIZE) runStudyTool(tool, regenerate = false)
+    }
+
+    private fun onStudyToolsBack() {
+        studyToolJob?.cancel()
+        updateStudyTools { it.copy(selectedTool = null, toolState = null) }
+    }
+
+    /** Always regenerates: a plain repeat of the request returns the result the server cached for 24h. */
+    private fun onStudyToolRegenerate() = rerunSelectedTool(regenerate = true)
+
+    /** Re-attempts a generation that produced nothing, leaving the server's cache in place. */
+    private fun onStudyToolRetry() = rerunSelectedTool(regenerate = false)
+
+    private fun rerunSelectedTool(regenerate: Boolean) {
+        val tool = _uiState.value.selectedTool ?: return
+        runStudyTool(tool, regenerate)
+    }
+
+    private fun runStudyTool(tool: StudyToolOption, regenerate: Boolean) {
+        // Whatever the user is currently reading, kept so a failed regenerate reports itself instead of
+        // taking their content away.
+        val previous = (_uiState.value.toolState as? StudyToolState.Ready)
+            ?.copy(regenerateError = null)
+
+        fun fail(message: String?, header: String? = null, retryable: Boolean = false) {
+            // retryable is dropped here on purpose: the Regenerate link is already the retry
+            // affordance for this path. header is folded into the message instead of being dropped
+            // too, so the same server response reads the same way as it does on a first generation.
+            val regenerateError = listOfNotNull(header, message)
+                .joinToString(" ")
+                .ifEmpty { null } ?: genericStudyToolsError()
+            val state = previous?.copy(regenerateError = regenerateError)
+                ?: StudyToolState.Error(message, header, retryable)
+            updateStudyTools { it.copy(toolState = state) }
+        }
+
+        val courseId = (canvasContext as? Course)?.id
+        val url = pageUrl
+        if (courseId == null || url == null) {
+            fail(message = null)
+            return
+        }
+
+        if (!networkStateProvider.isOnline()) {
+            if (previous != null) {
+                fail(message = resources.getString(R.string.studyTools_offline))
+            } else {
+                updateStudyTools { it.copy(toolState = StudyToolState.Offline) }
+            }
+            return
+        }
+
+        updateStudyTools { it.copy(toolState = StudyToolState.Generating) }
+
+        studyToolJob?.cancel()
+        studyToolJob = viewModelScope.launch {
+            val outcome = runStudyToolUseCase(
+                RunStudyToolUseCase.Params(
+                    courseId = courseId,
+                    pageUrl = url,
+                    tool = tool.tool,
+                    prompt = tool.prompt,
+                    regenerate = regenerate
+                )
+            )
+
+            // A result for a tool the user has already moved on from must not replace what they are
+            // looking at now.
+            if (_uiState.value.selectedTool != tool) return@launch
+
+            when (outcome) {
+                is StudyToolsOutcome.Success ->
+                    updateStudyTools { it.copy(toolState = StudyToolState.Ready(outcome.data)) }
+
+                // The repository has already exhausted its automatic 502 retries, so a manual one is the
+                // last resort rather than a duplicate.
+                is StudyToolsOutcome.Failure -> fail(
+                    message = outcome.error.message,
+                    header = outcome.error.header,
+                    retryable = outcome.error is StudyToolsError.TemporarilyUnavailable
+                )
+            }
+        }
+    }
+
+    private fun genericStudyToolsError(): String = resources.getString(R.string.studyTools_genericError)
+
+    private fun onStudyToolFeedback(feedback: StudyToolsFeedback) {
+        val ready = _uiState.value.toolState as? StudyToolState.Ready ?: return
+        // Re-tapping the vote already cast would double-count it in Pendo.
+        if (ready.feedback == feedback) return
+
+        // Pendo-only by design: there is no feedback endpoint, so this cannot fail and has no retry.
+        analytics.logEvent(
+            AnalyticsEventConstants.STUDY_ASSIST_FEEDBACK,
+            Bundle().apply { putString(AnalyticsParamConstants.VOTE, feedback.vote) }
+        )
+
+        // Re-read inside the update so the vote is applied to the current content, never to the copy
+        // captured above.
+        updateStudyTools { state ->
+            val current = state.toolState as? StudyToolState.Ready ?: return@updateStudyTools state
+            state.copy(toolState = current.copy(feedback = feedback))
+        }
+    }
 
     private fun onAiDisclosureClick() = updateStudyTools { it.copy(aiDisclosureVisible = true) }
 
@@ -206,6 +332,9 @@ class StudyToolsViewModel @Inject constructor(
             onToolSelected = ::onStudyToolSelected,
             onBack = ::onStudyToolsBack,
             onRetry = ::loadStudyTools,
+            onRegenerate = ::onStudyToolRegenerate,
+            onToolRetry = ::onStudyToolRetry,
+            onFeedback = ::onStudyToolFeedback,
             onAiDisclosureClick = ::onAiDisclosureClick,
             onAiDisclosureDismiss = ::onAiDisclosureDismiss
         )

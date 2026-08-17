@@ -188,6 +188,9 @@ object AnalyticsEventConstants {
     const val TODO_ITEM_MARKED_UNDONE = "todo_item_marked_undone"
     const val TODO_LIST_LOADED_DEFAULT_FILTER = "todo_list_loaded_default_filter"
     const val TODO_LIST_LOADED_CUSTOM_FILTER = "todo_list_loaded_custom_filter"
+
+    /* Study Tools - names mirror Canvas web's study_assist_* events so both platforms report into one funnel */
+    const val STUDY_ASSIST_FEEDBACK = "study_assist_feedback"
 }
 
 /**
@@ -221,4 +224,7 @@ object AnalyticsParamConstants {
     const val SELECTED_REASON = "selected_reason"
 
     const val NEW_DASHBOARD_ENABLED = "new_dashboard_enabled"
+
+    //study tools
+    const val VOTE = "vote"
 }

@@ -2693,6 +2693,11 @@
     <string name="studyTools_noToolsAvailable">No study tools are currently available.</string>
     <string name="studyTools_offline">You\'re offline. Connect to the internet to use study tools.</string>
     <string name="studyTools_genericError">Study tools are temporarily unavailable. Please try again.</string>
+    <string name="studyTools_generationFailed">This couldn\'t be generated for this page.</string>
+    <string name="studyTools_regenerate">Regenerate</string>
+    <string name="studyTools_generatingContentDescription">Generating response</string>
+    <string name="studyTools_positiveFeedbackContentDescription">Rate this response as helpful</string>
+    <string name="studyTools_negativeFeedbackContentDescription">Rate this response as not helpful</string>
 
     <!-- Study Tools AI disclosure ("Nutrition Facts") -->
     <string name="studyTools_nutritionFacts_title">Nutrition Facts</string>

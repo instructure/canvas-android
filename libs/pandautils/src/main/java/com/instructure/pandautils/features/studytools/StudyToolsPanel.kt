@@ -65,6 +65,7 @@ import com.instructure.instui.token.icon.x
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.studytools.composables.StudyToolContent
 import com.instructure.pandautils.features.studytools.composables.StudyToolsEmptyState
 import com.instructure.pandautils.features.studytools.composables.StudyToolsMenu
 import com.instructure.pandautils.features.studytools.composables.labelRes
@@ -178,41 +179,51 @@ private fun StudyToolsPanelContent(
     Column(modifier = modifier.fillMaxWidth()) {
         StudyToolsHeader(uiState = uiState)
 
-        Box(modifier = Modifier.fillMaxWidth()) {
-            when (val state = uiState.screenState) {
-                is StudyToolsScreenState.Loading -> Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = InstUILayoutSizes.Spacing.SpaceXl.spaceXl)
-                        .testTag("studyToolsLoading"),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Spinner()
+        // A selected tool owns the whole area below the header; the menu and its states are what the
+        // panel falls back to.
+        if (uiState.selectedTool != null) {
+            StudyToolContent(
+                state = uiState.toolState,
+                actions = uiState.actions,
+                modifier = Modifier.weight(1f)
+            )
+        } else {
+            Box(modifier = Modifier.fillMaxWidth()) {
+                when (val state = uiState.screenState) {
+                    is StudyToolsScreenState.Loading -> Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = InstUILayoutSizes.Spacing.SpaceXl.spaceXl)
+                            .testTag("studyToolsLoading"),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Spinner()
+                    }
+
+                    is StudyToolsScreenState.Content -> StudyToolsMenu(
+                        tools = state.tools,
+                        onToolSelected = uiState.actions.onToolSelected,
+                        modifier = Modifier.testTag("studyToolsMenu")
+                    )
+
+                    is StudyToolsScreenState.NoToolsAvailable -> StudyToolsEmptyState(
+                        message = stringResource(id = R.string.studyTools_noToolsAvailable),
+                        modifier = Modifier.testTag("studyToolsEmpty")
+                    )
+
+                    is StudyToolsScreenState.Offline -> StudyToolsEmptyState(
+                        message = stringResource(id = R.string.studyTools_offline),
+                        modifier = Modifier.testTag("studyToolsOffline")
+                    )
+
+                    is StudyToolsScreenState.Error -> StudyToolsEmptyState(
+                        title = state.header,
+                        message = state.message ?: stringResource(id = R.string.studyTools_genericError),
+                        buttonText = if (state.retryable) stringResource(id = R.string.retry) else null,
+                        onButtonClick = if (state.retryable) uiState.actions.onRetry else null,
+                        modifier = Modifier.testTag("studyToolsError")
+                    )
                 }
-
-                is StudyToolsScreenState.Content -> StudyToolsMenu(
-                    tools = state.tools,
-                    onToolSelected = uiState.actions.onToolSelected,
-                    modifier = Modifier.testTag("studyToolsMenu")
-                )
-
-                is StudyToolsScreenState.NoToolsAvailable -> StudyToolsEmptyState(
-                    message = stringResource(id = R.string.studyTools_noToolsAvailable),
-                    modifier = Modifier.testTag("studyToolsEmpty")
-                )
-
-                is StudyToolsScreenState.Offline -> StudyToolsEmptyState(
-                    message = stringResource(id = R.string.studyTools_offline),
-                    modifier = Modifier.testTag("studyToolsOffline")
-                )
-
-                is StudyToolsScreenState.Error -> StudyToolsEmptyState(
-                    title = state.header,
-                    message = state.message ?: stringResource(id = R.string.studyTools_genericError),
-                    buttonText = if (state.retryable) stringResource(id = R.string.retry) else null,
-                    onButtonClick = if (state.retryable) uiState.actions.onRetry else null,
-                    modifier = Modifier.testTag("studyToolsError")
-                )
             }
         }
     }
@@ -282,7 +293,9 @@ private fun StudyToolsHeader(uiState: StudyToolsUiState) {
 
 /**
  * InstUI's `IconButton` only accepts a `@DrawableRes` icon, so it cannot host a vector from
- * [InstUIIcons]. Built from [InstUIIcon] plus a clickable modifier instead.
+ * [InstUIIcons]. Built from [InstUIIcon] plus a clickable modifier instead, matching the pattern
+ * [com.instructure.pandautils.features.studytools.composables.StudyToolsFeedbackRow]'s `FeedbackIcon`
+ * already uses.
  */
 @Composable
 private fun HeaderIconButton(
