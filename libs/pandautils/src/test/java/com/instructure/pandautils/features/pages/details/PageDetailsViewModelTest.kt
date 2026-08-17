@@ -19,25 +19,33 @@ import android.content.Context
 import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.LearningObjectType
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.StudyNote
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
+import com.instructure.pandautils.domain.usecase.notes.GetPageStudyNotesUseCase
 import com.instructure.pandautils.domain.usecase.pages.LoadFrontPageUseCase
 import com.instructure.pandautils.domain.usecase.pages.LoadPageDetailsUseCase
+import com.instructure.pandautils.features.notes.notebook.NotebookTrayArgs
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNull
@@ -67,9 +75,23 @@ class PageDetailsViewModelTest {
     private val loadPageDetailsUseCase: LoadPageDetailsUseCase = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val getPageStudyNotesUseCase: GetPageStudyNotesUseCase = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private val studentCourse = Course(id = 1L, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
     private val teacherCourse = Course(id = 1L, enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Teacher)))
+
+    private fun createStudyNote(id: String = "note-1") = StudyNote(
+        id = id,
+        userText = "Great point",
+        reactions = emptyList(),
+        highlightData = null,
+        learningObjectId = "1",
+        learningObjectType = LearningObjectType.WikiPage,
+        createdAt = null,
+        updatedAt = null
+    )
 
     @Before
     fun setUp() {
@@ -105,7 +127,10 @@ class PageDetailsViewModelTest {
         loadFrontPageUseCase,
         loadPageDetailsUseCase,
         htmlContentFormatter,
-        resources
+        resources,
+        featureFlagProvider,
+        getPageStudyNotesUseCase,
+        firebaseCrashlytics
     )
 
     @Test
@@ -119,6 +144,36 @@ class PageDetailsViewModelTest {
         assertEquals("My Page", viewModel.uiState.value.toolbarTitle)
         assertTrue(viewModel.uiState.value.htmlContent.contains("Hello"))
         assertTrue(viewModel.uiState.value.pageSet)
+    }
+
+    @Test
+    fun `Page content is wrapped in a single-level parent-container div for Notebook highlight anchoring`() {
+        val page = Page(id = 1L, title = "My Page", body = "<p>Hello</p>", editingRoles = "public")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val htmlContent = getViewModel().uiState.value.htmlContent
+
+        assertTrue(htmlContent.contains("id=\"parent-container\""))
+        // Must stay a single-level wrapper (no extra inner <div>, unlike Horizon's own page screen):
+        // JSTextSelectionInterface's XPath anchoring is authored relative to parent-container's
+        // direct children, so an extra nesting level would shift every offset and break resolution.
+        assertFalse(htmlContent.contains("<div id=\"parent-container\"><div>"))
+    }
+
+    @Test
+    fun `Page content is wrapped in parent-container before formatHtmlWithIframes runs, not after`() {
+        // Regression test: formatHtmlWithIframes re-wraps its ENTIRE input in a full HTML document
+        // whenever the content contains an iframe. If parent-container wrapped that formatter's
+        // OUTPUT instead of its INPUT, real content would end up nested one level deeper inside that
+        // document's own container on iframe-containing pages only, silently breaking every Notebook
+        // highlight XPath on exactly those pages. Wrapping the raw body first guarantees
+        // formatHtmlWithIframes always receives (and its output always contains) our wrapper intact.
+        val page = Page(id = 1L, title = "My Page", body = "<p>Hello</p>", editingRoles = "public")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        getViewModel()
+
+        coVerify { htmlContentFormatter.formatHtmlWithIframes(match { it.contains("id=\"parent-container\"") }, any()) }
     }
 
     @Test
@@ -346,5 +401,184 @@ class PageDetailsViewModelTest {
 
         viewModel.uiState.value.onWebViewHistoryCleared()
         assertFalse(viewModel.uiState.value.clearWebViewHistory)
+    }
+
+    @Test
+    fun `Study notes fetch is skipped when the rendered page has no id`() {
+        every { savedStateHandle.get<String>(PageDetailsViewModel.PAGE_URL) } returns "some-page"
+        val fetchedPage = Page(id = 0L, title = "Page", body = "<p>Body</p>")
+        coEvery { loadPageDetailsUseCase(any()) } returns DataResult.Success(fetchedPage)
+
+        val viewModel = getViewModel()
+
+        assertEquals(PageDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertTrue(viewModel.uiState.value.highlights.isEmpty())
+        coVerify(exactly = 0) { getPageStudyNotesUseCase(any()) }
+    }
+
+    @Test
+    fun `Study notes fetch is skipped when canvasContext is not a Course`() {
+        every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns CanvasContext.emptyUserContext()
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.highlights.isEmpty())
+        coVerify(exactly = 0) { getPageStudyNotesUseCase(any()) }
+    }
+
+    @Test
+    fun `Study notes fetch is skipped when the course context is not a student enrollment`() {
+        every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns teacherCourse
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.highlights.isEmpty())
+        coVerify(exactly = 0) { getPageStudyNotesUseCase(any()) }
+    }
+
+    @Test
+    fun `Study notes fetch is skipped when the notebook feature flag is disabled`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns false
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.highlights.isEmpty())
+        coVerify(exactly = 0) { getPageStudyNotesUseCase(any()) }
+    }
+
+    @Test
+    fun `Study notes are fetched and populate highlights when the feature flag is enabled`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns true
+        val note = createStudyNote()
+        coEvery { getPageStudyNotesUseCase(GetPageStudyNotesUseCase.Params(studentCourse.id, "1")) } returns listOf(note)
+
+        val viewModel = getViewModel()
+
+        assertEquals(listOf(note), viewModel.uiState.value.highlights)
+        coVerify { getPageStudyNotesUseCase(GetPageStudyNotesUseCase.Params(studentCourse.id, "1")) }
+    }
+
+    @Test
+    fun `Study notes fetch failure is swallowed and does not affect screen state`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns true
+        coEvery { getPageStudyNotesUseCase(any()) } throws RuntimeException("boom")
+
+        val viewModel = getViewModel()
+
+        assertEquals(PageDetailsScreenState.Content, viewModel.uiState.value.screenState)
+        assertTrue(viewModel.uiState.value.htmlContent.contains("Body"))
+        assertTrue(viewModel.uiState.value.highlights.isEmpty())
+        verify { firebaseCrashlytics.recordException(any()) }
+    }
+
+    @Test
+    fun `onHighlightClicked sets notebookTrayArgs with the tapped note id and page title`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns true
+        val note = createStudyNote()
+        coEvery { getPageStudyNotesUseCase(any()) } returns listOf(note)
+
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onHighlightClicked("note-1")
+
+        assertEquals(
+            NotebookTrayArgs(
+                courseId = studentCourse.id, pageId = "1", pageTitle = "Page", initialNoteId = "note-1", forceNetwork = false
+            ),
+            viewModel.uiState.value.notebookTrayArgs
+        )
+    }
+
+    @Test
+    fun `onNotebookClick sets notebookTrayArgs without an initial note`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onNotebookClick()
+
+        assertEquals(
+            NotebookTrayArgs(
+                courseId = studentCourse.id, pageId = "1", pageTitle = "Page", initialNoteId = null, forceNetwork = false
+            ),
+            viewModel.uiState.value.notebookTrayArgs
+        )
+    }
+
+    @Test
+    fun `onNotebookTrayDismiss clears notebookTrayArgs`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onNotebookClick()
+        assertTrue(viewModel.uiState.value.notebookTrayArgs != null)
+
+        viewModel.uiState.value.actions.onNotebookTrayDismiss()
+
+        assertNull(viewModel.uiState.value.notebookTrayArgs)
+    }
+
+    @Test
+    fun `opening the tray does not clear a pending one-shot navigation`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>", editingRoles = "students")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onLtiButtonPressed("https://lti.example.com")
+        viewModel.uiState.value.actions.onNotebookClick()
+
+        assertEquals(PageDetailsNavigation.LtiScreen("https://lti.example.com"), viewModel.uiState.value.navigation)
+        assertTrue(viewModel.uiState.value.notebookTrayArgs != null)
+    }
+
+    @Test
+    fun `notebookButtonVisible is true for a student course with the flag enabled`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns true
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.notebookButtonVisible)
+    }
+
+    @Test
+    fun `notebookButtonVisible stays false for a teacher course or a disabled flag`() {
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns page
+        coEvery { featureFlagProvider.notebookEnabled() } returns false
+
+        assertFalse(getViewModel().uiState.value.notebookButtonVisible)
+
+        every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns teacherCourse
+        coEvery { featureFlagProvider.notebookEnabled() } returns true
+
+        assertFalse(getViewModel().uiState.value.notebookButtonVisible)
+    }
+
+    @Test
+    fun `notebookTrayArgs is not set when the page id is unresolved`() {
+        every { savedStateHandle.get<String>(PageDetailsViewModel.PAGE_URL) } returns "some-page"
+        val fetchedPage = Page(id = 0L, title = "Page", body = "<p>Body</p>")
+        coEvery { loadPageDetailsUseCase(any()) } returns DataResult.Success(fetchedPage)
+
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onHighlightClicked("note-1")
+        assertNull(viewModel.uiState.value.notebookTrayArgs)
+
+        viewModel.uiState.value.actions.onNotebookClick()
+        assertNull(viewModel.uiState.value.notebookTrayArgs)
     }
 }

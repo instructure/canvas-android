@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import android.content.res.Configuration
 import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
@@ -67,6 +68,14 @@ fun ComposeCanvasWebViewWrapper(
     val stateViewModel: ComposeCanvasWebViewStateViewModel = viewModel(key = webViewStateKey)
     val webViewState = stateViewModel.webViewState
     val savedThemeSwitched = rememberSaveable { bundleOf("themeSwitched" to false) }
+    // The night-mode flag the currently-restorable state was themed for. A system dark/light switch
+    // isn't declared in any host's `android:configChanges` (only orientation/screenSize are), so it
+    // recreates the whole Activity/View tree rather than delivering onConfigurationChanged to the old
+    // View instance - the fresh View's own CanvasWebViewWrapper.loadedNightModeFlags initializes to the
+    // *new* night mode at construction time and can never see the transition. This Bundle survives the
+    // recreation (backed by saved instance state, like savedThemeSwitched above) so the restore branch
+    // below can still detect the flip and force a re-theme instead of silently restoring stale colors.
+    val savedNightModeFlags = rememberSaveable { bundleOf("nightModeFlags" to Int.MIN_VALUE) }
     // Both reset exactly when this composable's underlying View is torn down and recreated (e.g. the
     // Fragment view is destroyed/recreated), and persist across recompositions that leave the same View
     // instance in place (e.g. a configuration change the host Activity handles itself without
@@ -128,15 +137,20 @@ fun ComposeCanvasWebViewWrapper(
                 val isFirstUpdate = viewState.isFirstUpdate
                 viewState.loadedContent = content
                 viewState.isFirstUpdate = false
+                val nightModeFlags = view.context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                val nightModeChanged = savedNightModeFlags.getInt("nightModeFlags", nightModeFlags) != nightModeFlags
+                savedNightModeFlags.putInt("nightModeFlags", nightModeFlags)
                 if (canRestore) {
                     // This exact View instance was just (re)created (e.g. popping back from an internal
                     // screen, or a configuration change the host Activity doesn't handle itself) and we
                     // have saved state for it - restore rather than reload so scroll position/DOM state
-                    // survive.
+                    // survive. Still re-theme if night mode flipped since the state was saved (a system
+                    // dark/light switch recreates the whole View tree, so this is the only place that
+                    // transition is ever observable).
                     view.webView.restoreState(webViewState)
                     view.setHtmlContent(content)
                     view.setThemeSwitched(savedThemeSwitched.getBoolean("themeSwitched", false))
-                    view.handleConfigurationChange(reloadContent = false)
+                    view.handleConfigurationChange(reloadContent = nightModeChanged)
                 } else if (isFirstUpdate || contentChanged || !preserveState) {
                     // First ever load for this WebView, a genuinely new/different page, or a consumer
                     // that opted out of state preservation - (re)load it fresh.

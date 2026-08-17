@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -148,12 +149,19 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
                     null
                 }
 
+                // Remembered so the callbacks object (and the lambdas inside it) keep a stable identity
+                // across recompositions - PageDetailsScreen relies on that stability (remember(webViewCallbacks))
+                // to avoid tearing down/rebuilding the WebView wrapper on every uiState change, e.g. the one
+                // triggered by tapping a Notebook highlight (which now sets notebookTrayArgs).
+                val webViewCallbacks = remember { descriptionWebViewCallbacks() }
+                val embeddedWebViewCallbacks = remember { descriptionEmbeddedWebViewCallbacks() }
+
                 PageDetailsScreen(
                     uiState = uiState,
                     toolbarColor = canvasContext.color,
                     navigationActionClick = { activity?.onBackPressed() },
-                    webViewCallbacks = descriptionWebViewCallbacks(),
-                    embeddedWebViewCallbacks = descriptionEmbeddedWebViewCallbacks(),
+                    webViewCallbacks = webViewCallbacks,
+                    embeddedWebViewCallbacks = embeddedWebViewCallbacks,
                     studyToolsUiState = studyToolsUiState,
                     applyOnWebView = { addVideoClient(requireActivity()) },
                     onAddBookmark = onAddBookmark

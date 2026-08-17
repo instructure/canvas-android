@@ -25,6 +25,8 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.instructure.instui.token.component.InstUITray
 
 /**
@@ -48,15 +50,21 @@ fun Tray(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
+    containerColor: Color = InstUITray.backgroundColor,
     contentWindowInsets: @Composable () -> WindowInsets = { BottomSheetDefaults.windowInsets },
+    // M3's own default (640.dp) centers the sheet with visible scrim gaps on either side once the
+    // window is wider than that - e.g. any phone in landscape - which reads as unwanted padding for
+    // a full-bleed tray. Pass Dp.Unspecified (M3's own documented escape hatch) to span full width.
+    sheetMaxWidth: Dp = BottomSheetDefaults.SheetMaxWidth,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         modifier = modifier,
         sheetState = sheetState,
-        containerColor = InstUITray.backgroundColor,
+        containerColor = containerColor,
         contentWindowInsets = contentWindowInsets,
+        sheetMaxWidth = sheetMaxWidth,
         content = content,
     )
 }

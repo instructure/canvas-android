@@ -20,6 +20,7 @@ import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
@@ -29,9 +30,12 @@ import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.R
+import com.instructure.pandautils.domain.usecase.notes.GetPageStudyNotesUseCase
 import com.instructure.pandautils.domain.usecase.pages.LoadFrontPageUseCase
 import com.instructure.pandautils.domain.usecase.pages.LoadPageDetailsUseCase
+import com.instructure.pandautils.features.notes.notebook.NotebookTrayArgs
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.LockInfoHTMLHelper
 import com.instructure.pandautils.utils.orDefault
@@ -51,7 +55,10 @@ class PageDetailsViewModel @Inject constructor(
     private val loadFrontPageUseCase: LoadFrontPageUseCase,
     private val loadPageDetailsUseCase: LoadPageDetailsUseCase,
     private val htmlContentFormatter: HtmlContentFormatter,
-    private val resources: Resources
+    private val resources: Resources,
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val getPageStudyNotesUseCase: GetPageStudyNotesUseCase,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     val canvasContext: CanvasContext = savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) ?: CanvasContext.emptyUserContext()
@@ -166,7 +173,26 @@ class PageDetailsViewModel @Inject constructor(
                 }
                 // Some pages need to know the course ID, so we set it on window.ENV.COURSE.id (See MBL-14324)
                 val withCourseIdScript = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + content
-                htmlContentFormatter.formatHtmlWithIframes(withCourseIdScript, canvasContext.id)
+                // JSTextSelectionInterface's highlight anchoring (highlightSelection/selectionchange) resolves
+                // StudyNote XPath containers (e.g. "/p[1]") as paths relative to the DIRECT children of the
+                // element with id="parent-container", so that id must wrap our real content with nothing extra
+                // in between, or highlighting silently no-ops. Unlike Horizon's own page screen, which nests an
+                // extra inner <div> here, this wraps content directly (single level) so a container's simple
+                // XPath segments (one per real DOM ancestor) resolve as authored/expected - Horizon's StudyNotes
+                // are on a separate (Redwood) backend today and never round-trip through this screen, so there's
+                // no cross-screen XPath compatibility to preserve by matching its nesting.
+                val wrapped = """<div id="parent-container">$withCourseIdScript</div>"""
+                // Must wrap BEFORE formatHtmlWithIframes, not after: that formatter re-wraps its ENTIRE input in
+                // a full HTML document (discussion_topic_header_html_template, with its own <meta>/<style>/<div
+                // id="header_content">/<script>) whenever the content contains an <iframe> (e.g. embedded Sway/
+                // media pages). If we wrapped afterward, parent-container's real children would end up nested one
+                // level deeper inside that template's own header_content div on iframe-containing pages only,
+                // silently breaking every XPath-based highlight lookup on exactly those pages. Wrapping first
+                // guarantees parent-container's direct children are always our real content either way: when no
+                // iframe is present formatHtmlWithIframes returns its input unchanged, and when one is present our
+                // wrapper just ends up nested inside header_content instead of at the document root, which doesn't
+                // matter since all anchoring is computed relative to parent-container itself, not document root.
+                htmlContentFormatter.formatHtmlWithIframes(wrapped, canvasContext.id)
             } else {
                 resources.getString(R.string.noPageFound)
             }
@@ -183,10 +209,39 @@ class PageDetailsViewModel @Inject constructor(
                     editMenuVisible = checkCanEdit(page),
                     pageSet = true,
                     clearWebViewHistory = isPageUpdate,
+                    // Reset stale highlights/notebook-button visibility from a previous page while the
+                    // new fetch is in flight.
+                    highlights = emptyList(),
+                    notebookButtonVisible = false,
                     // Not set for locked pages: Study Tools is never offered there, matching
                     // existing (unchanged) behavior.
                     pageSlug = page.url ?: pageUrl
                 )
+            }
+
+            fetchPageStudyNotes(page)
+        }
+    }
+
+    /**
+     * Notebook highlights are a supplementary overlay on top of the page content, never a blocker -
+     * any failure or skip here (missing feature flag, non-student context, etc.) is silently
+     * swallowed and must never affect [PageDetailsUiState.screenState].
+     */
+    private fun fetchPageStudyNotes(page: Page) {
+        val course = canvasContext as? Course
+        if (page.id == 0L || course?.isStudent != true) return
+        viewModelScope.launch {
+            try {
+                if (!featureFlagProvider.notebookEnabled()) return@launch
+                // Set before awaiting the use case so the toolbar button appears as soon as we know the
+                // feature applies, independent of whether the page has notes yet (the list screen has its
+                // own empty state).
+                _uiState.update { it.copy(notebookButtonVisible = true) }
+                val notes = getPageStudyNotesUseCase(GetPageStudyNotesUseCase.Params(course.id, page.id.toString()))
+                _uiState.update { it.copy(highlights = notes) }
+            } catch (e: Exception) {
+                firebaseCrashlytics.recordException(e)
             }
         }
     }
@@ -276,10 +331,35 @@ class PageDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(clearWebViewHistory = false) }
     }
 
+    private fun onHighlightClicked(highlightId: String) {
+        val pageId = currentPage.id.takeIf { it != 0L }?.toString() ?: return
+        _uiState.update {
+            it.copy(
+                notebookTrayArgs = NotebookTrayArgs(
+                    canvasContext.id, pageId, currentTitle(), initialNoteId = highlightId, forceNetwork = false
+                )
+            )
+        }
+    }
+
+    private fun onNotebookClick() {
+        val pageId = currentPage.id.takeIf { it != 0L }?.toString() ?: return
+        _uiState.update {
+            it.copy(notebookTrayArgs = NotebookTrayArgs(canvasContext.id, pageId, currentTitle(), forceNetwork = false))
+        }
+    }
+
+    private fun onNotebookTrayDismiss() {
+        _uiState.update { it.copy(notebookTrayArgs = null) }
+    }
+
     private fun PageDetailsUiState.withCallbacks(): PageDetailsUiState = copy(
         actions = PageDetailsActions(
             onEditClick = ::onEditClick,
-            onLtiButtonPressed = ::onLtiButtonPressed
+            onLtiButtonPressed = ::onLtiButtonPressed,
+            onHighlightClicked = ::onHighlightClicked,
+            onNotebookClick = ::onNotebookClick,
+            onNotebookTrayDismiss = ::onNotebookTrayDismiss
         ),
         onNavigationHandled = ::onNavigationHandled,
         onNoInternetDialogShown = ::onNoInternetDialogShown,

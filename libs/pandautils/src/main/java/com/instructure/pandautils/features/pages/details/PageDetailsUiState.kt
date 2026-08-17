@@ -16,6 +16,8 @@
 package com.instructure.pandautils.features.pages.details
 
 import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.StudyNote
+import com.instructure.pandautils.features.notes.notebook.NotebookTrayArgs
 
 data class PageDetailsUiState(
     val screenState: PageDetailsScreenState = PageDetailsScreenState.Loading,
@@ -41,7 +43,17 @@ data class PageDetailsUiState(
     // One-shot signal telling the WebView to clear its navigation history after an edit-triggered
     // reload, so the back button can't return to stale (pre-edit) content.
     val clearWebViewHistory: Boolean = false,
-    val onWebViewHistoryCleared: () -> Unit = {}
+    val onWebViewHistoryCleared: () -> Unit = {},
+    // Notebook highlights overlaid on the page content, fetched asynchronously and supplementary to
+    // the core page content - a failed/skipped fetch never blocks or errors the screen.
+    val highlights: List<StudyNote> = emptyList(),
+    // Gates the standalone Notebook toolbar button; mirrors the same conditions as the highlight
+    // fetch (notebook flag + student course + page resolved).
+    val notebookButtonVisible: Boolean = false,
+    // Persistent (NOT one-shot) open/closed state for the Notebook tray: non-null while the tray should
+    // be shown. Unlike [navigation], a modal bottom sheet must survive recomposition while it's open, so
+    // it can't be modeled as a one-shot event that a LaunchedEffect immediately consumes and nulls.
+    val notebookTrayArgs: NotebookTrayArgs? = null
 )
 
 sealed class PageDetailsScreenState {
@@ -55,7 +67,10 @@ sealed class PageDetailsScreenState {
  */
 data class PageDetailsActions(
     val onEditClick: () -> Unit = {},
-    val onLtiButtonPressed: (String) -> Unit = {}
+    val onLtiButtonPressed: (String) -> Unit = {},
+    val onHighlightClicked: (highlightId: String) -> Unit = {},
+    val onNotebookClick: () -> Unit = {},
+    val onNotebookTrayDismiss: () -> Unit = {}
 )
 
 /**

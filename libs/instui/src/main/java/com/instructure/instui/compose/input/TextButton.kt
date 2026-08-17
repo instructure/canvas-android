@@ -20,19 +20,32 @@ import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.instui.compose.InstUITheme
+import com.instructure.instui.compose.indicator.Icon
+import com.instructure.instui.compose.indicator.IconSize
 import com.instructure.instui.compose.text.Text
+import com.instructure.instui.token.component.InstUIBaseButton
 import com.instructure.instui.token.component.InstUIText
 import com.instructure.instui.token.semantic.InstUILayoutSizes
 import com.instructure.instui.token.semantic.InstUISemanticColors
 import androidx.compose.material3.TextButton as M3TextButton
 
+/**
+ * InstUI text button.
+ *
+ * @param icon optional leading icon, mirroring [Button]'s own `icon` parameter.
+ * @param maxLines applied to [text]; keep at 1 for buttons in a single-line row such as a top bar.
+ */
 @Composable
 fun TextButton(
     text: String,
@@ -41,7 +54,11 @@ fun TextButton(
     enabled: Boolean = true,
     contentColor: Color = InstUISemanticColors.Text.Interactive.Action.Tertiary.base(),
     disabledContentColor: Color = InstUISemanticColors.Text.Interactive.Disabled.base(),
+    icon: ImageVector? = null,
+    iconSize: IconSize = IconSize.Small,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
+    val resolvedContentColor = if (enabled) contentColor else disabledContentColor
     M3TextButton(
         onClick = onClick,
         enabled = enabled,
@@ -51,10 +68,16 @@ fun TextButton(
             disabledContentColor = disabledContentColor,
         ),
     ) {
+        if (icon != null) {
+            Icon(imageVector = icon, tint = resolvedContentColor, size = iconSize, contentDescription = null)
+            Spacer(modifier = Modifier.size(InstUIBaseButton.gapButtonContentMd))
+        }
         Text(
             text = text,
             style = InstUIText.contentImportant,
-            color = if (enabled) contentColor else disabledContentColor,
+            color = resolvedContentColor,
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis,
         )
     }
 }

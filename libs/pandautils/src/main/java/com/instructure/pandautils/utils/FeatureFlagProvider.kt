@@ -27,6 +27,7 @@ import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFl
 const val FEATURE_FLAG_OFFLINE = "mobile_offline_mode"
 const val FEATURE_FLAG_WIDGET_DASHBOARD = "widget_dashboard"
 const val FEATURE_FLAG_COOKIE_CONSENT = "cookie_consent_necessary"
+const val FEATURE_FLAG_NOTEBOOK = "notebook"
 class FeatureFlagProvider(
     private val userManager: UserManager,
     private val apiPrefs: ApiPrefs,
@@ -56,6 +57,8 @@ class FeatureFlagProvider(
     suspend fun offlineEnabled(): Boolean {
         return checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) && !apiPrefs.canvasForElementary
     }
+
+    suspend fun notebookEnabled(): Boolean = true // TODO Change this to check the feature flag once the backend is ready
 
     private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
         return apiPrefs.user?.id?.let { environmentFeatureFlags.findByUserId(it)?.featureFlags?.get(featureFlag) == true } ?: false

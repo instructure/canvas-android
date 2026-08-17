@@ -1,27 +1,62 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
-package com.instructure.horizon.features.notebook.common.webview
+package com.instructure.pandautils.features.notes.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.google.gson.Gson
-import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
-import com.instructure.horizon.features.notebook.common.model.Note
+import com.instructure.canvasapi2.models.NoteType
+import com.instructure.canvasapi2.models.StudyNote
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.notes.composable.toNoteLocalisedDateFormat
 import org.json.JSONObject
+
+data class WebViewHighlight(
+    val id: String,
+    val selectedText: String,
+    val userText: String,
+    val reactionLabel: String,
+    val range: HighlightRange,
+    val textPosition: HighlightTextPosition,
+    val updatedAt: String
+)
+
+
+fun StudyNote.toWebViewHighlight(): WebViewHighlight? {
+    val highlightData = highlightData ?: return null
+    val range = highlightData.range ?: return null
+    val textPosition = highlightData.textPosition ?: return null
+    return WebViewHighlight(
+        id = id,
+        selectedText = highlightData.selectedText,
+        userText = userText,
+        // Intentionally NOT normalized via NoteType.apiValue: reactionLabel is also interpolated into
+        // the a11y string a11y_webViewHighlightMarkedAs ("... marked as %2$s ..."); mapping an unknown
+        // reaction to NoteType.OTHER.apiValue ("") would silently degrade that label. The CSS-class
+        // branch in JS_CODE already treats any unrecognized value as "confusing" either way.
+        reactionLabel = reactions.firstOrNull().orEmpty(),
+        range = HighlightRange(range.startOffset, range.endOffset, range.startContainer, range.endContainer),
+        textPosition = HighlightTextPosition(textPosition.start, textPosition.end),
+        updatedAt = updatedAt?.toNoteLocalisedDateFormat().orEmpty()
+    )
+}
+
+data class HighlightRange(val startOffset: Int, val endOffset: Int, val startContainer: String, val endContainer: String)
+
+data class HighlightTextPosition(val start: Int, val end: Int)
 
 class JSTextSelectionInterface(
     private val onTextSelect: (
@@ -111,7 +146,7 @@ class JSTextSelectionInterface(
     companion object {
         private val gson = Gson()
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
-		private const val JS_CODE_FROM_WEB = """
+        private const val JS_CODE_FROM_WEB = """
 let highlightCss = `
     .highlighted-important {
       background-color: rgba(14, 104, 179, 0.2);
@@ -119,7 +154,7 @@ let highlightCss = `
       text-decoration-color: rgba(14, 104, 179, 1);
       position: relative;
     }
-    
+
     .highlighted-confusing {
       background-color: rgba(199, 31, 35, 0.2);
       text-decoration: underline;
@@ -131,7 +166,7 @@ let highlightCss = `
 const styleSheet = document.createElement("style");
 styleSheet.innerText = highlightCss;
 document.head.appendChild(styleSheet);
-   
+
 const getNodeName = (node) => {
 	const nodeName = node.nodeName.toLowerCase();
 	return nodeName === "#text" ? "text()" : nodeName;
@@ -668,9 +703,9 @@ function highlightSelection(paramsJson) {
 	for (const textNode of textNodeSpans) {
 		const parent = textNode.parentNode;
 		let cssClass;
-		if (noteReactionString === 'Confusing') {
+		if (noteReactionString === '${NoteType.CONFUSING.apiValue}') {
 			cssClass = `highlighted-confusing`;
-		} else if (noteReactionString === 'Important') {
+		} else if (noteReactionString === '${NoteType.IMPORTANT.apiValue}') {
 			cssClass = `highlighted-important`;
 		} else {
 			cssClass = `highlighted-confusing`;
@@ -765,32 +800,32 @@ javascript: (function () {
             this.evaluateJavascript(JS_CODE, null)
         }
 
-        fun WebView.highlightNotes(notes: List<Note>, onHighlighted: () -> Unit) {
-            notes.forEachIndexed { index, note ->
+        fun WebView.highlightRanges(highlights: List<WebViewHighlight>, onHighlighted: () -> Unit) {
+            highlights.forEachIndexed { index, highlight ->
                 val accessibilityLabel = context.getString(
-                    com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
-                    note.highlightedText.selectedText,
-                    note.type.name
+                    R.string.a11y_webViewHighlightMarkedAs,
+                    highlight.selectedText,
+                    highlight.reactionLabel
                 )
                 val params = HighlightParams(
-                    noteId = note.id,
-                    selectedText = note.highlightedText.selectedText,
-                    userComment = note.userText,
-                    startOffset = note.highlightedText.range.startOffset,
-                    startContainer = note.highlightedText.range.startContainer,
-                    endOffset = note.highlightedText.range.endOffset,
-                    endContainer = note.highlightedText.range.endContainer,
-                    noteReactionString = note.type.name,
-                    textSelectionStart = note.highlightedText.textPosition.start,
-                    textSelectionEnd = note.highlightedText.textPosition.end,
-                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat(),
+                    noteId = highlight.id,
+                    selectedText = highlight.selectedText,
+                    userComment = highlight.userText,
+                    startOffset = highlight.range.startOffset,
+                    startContainer = highlight.range.startContainer,
+                    endOffset = highlight.range.endOffset,
+                    endContainer = highlight.range.endContainer,
+                    noteReactionString = highlight.reactionLabel,
+                    textSelectionStart = highlight.textPosition.start,
+                    textSelectionEnd = highlight.textPosition.end,
+                    updatedAt = highlight.updatedAt,
                     accessibilityLabel = accessibilityLabel
                 )
                 val paramsJson = gson.toJson(params)
                 val quotedJson = JSONObject.quote(paramsJson)
                 val script = "javascript:highlightSelection($quotedJson)"
                 this.evaluateJavascript(script) {
-                    if (index == notes.lastIndex){ onHighlighted() }
+                    if (index == highlights.lastIndex) { onHighlighted() }
                 }
             }
         }

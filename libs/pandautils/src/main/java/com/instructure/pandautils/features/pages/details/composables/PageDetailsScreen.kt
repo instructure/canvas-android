@@ -25,6 +25,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,8 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.notebookPen
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasScaffold
@@ -45,6 +48,11 @@ import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCall
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.features.notes.notebook.NotebookTray
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.highlightRanges
+import com.instructure.pandautils.features.notes.webview.toWebViewHighlight
 import com.instructure.pandautils.features.pages.details.PageDetailsScreenState
 import com.instructure.pandautils.features.pages.details.PageDetailsUiState
 import com.instructure.pandautils.features.studytools.StudyToolsPanel
@@ -105,6 +113,15 @@ fun PageDetailsScreen(
                                 )
                             }
                         }
+                        if (uiState.notebookButtonVisible) {
+                            IconButton(onClick = uiState.actions.onNotebookClick, modifier = Modifier.testTag("notebookButton")) {
+                                Icon(
+                                    imageVector = InstUIIcons.notebookPen,
+                                    contentDescription = stringResource(id = R.string.a11y_notebookOpenPageNotes),
+                                    tint = colorResource(id = R.color.textLightest)
+                                )
+                            }
+                        }
                         onAddBookmark?.let { BookmarkOverflowMenu(it) }
                     }
                 )
@@ -123,21 +140,83 @@ fun PageDetailsScreen(
                             .testTag("loading")
                     )
 
-                    is PageDetailsScreenState.Content -> ComposeCanvasWebViewWrapper(
-                        content = uiState.htmlContent,
-                        title = uiState.toolbarTitle,
-                        baseUrl = uiState.baseUrl,
-                        onLtiButtonPressed = { uiState.actions.onLtiButtonPressed(it) },
-                        applyOnWebView = applyOnWebView,
-                        applyOnUpdate = applyOnUpdate,
-                        webViewCallbacks = webViewCallbacks,
-                        embeddedWebViewCallbacks = embeddedWebViewCallbacks,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .testTag("pageDetailsWebView")
-                    )
+                    is PageDetailsScreenState.Content -> {
+                        // Local WebView-load tracking, kept in addition to the ViewModel's async
+                        // highlights fetch: `onPageFinished` (real page load) and `highlights`
+                        // (network round-trip) can complete in either order, and the highlight JS
+                        // must only run once *both* have happened - see the LaunchedEffect below.
+                        // A counter (not a boolean) so every real page load - including a native,
+                        // content-unchanged reload triggered by the WebView's own dark/light
+                        // "switch theme" button - is distinguishable from the previous one and
+                        // re-triggers re-injection; a plain toggled-then-reset boolean would stay
+                        // `true` across that kind of reload (it only ever flips to `false` when
+                        // `uiState.htmlContent` itself changes), silently wiping the highlight spans
+                        // that reload's fresh HTML load discards.
+                        var webViewRef by remember { mutableStateOf<CanvasWebView?>(null) }
+                        var pageLoadCount by remember { mutableStateOf(0) }
+
+                        val combinedWebViewCallbacks = remember(webViewCallbacks) {
+                            webViewCallbacks.copy(
+                                onPageFinished = { view, url ->
+                                    webViewCallbacks.onPageFinished(view, url)
+                                    pageLoadCount++
+                                }
+                            )
+                        }
+
+                        val combinedApplyOnWebView: CanvasWebView.() -> Unit = {
+                            webViewRef = this
+                            applyOnWebView?.invoke(this)
+                        }
+
+                        val combinedApplyOnUpdate: CanvasWebViewWrapper.() -> Unit = {
+                            applyOnUpdate?.invoke(this)
+                            // Registered unconditionally (matching Horizon's proven
+                            // ComposeNotesHighlightingCanvasWebView pattern) rather than gating on
+                            // uiState.highlights.isNotEmpty() - gating it added a dependency on highlight
+                            // fetch timing with no upside, since re-registering the interface under the
+                            // same JS-side name is always safe.
+                            webView.addTextSelectionInterface(
+                                onTextSelect = { _, _, _, _, _, _, _ -> },
+                                onHighlightedTextClick = { noteId, _, _, _, _, _, _, _, _, _, _ ->
+                                    uiState.actions.onHighlightClicked(noteId)
+                                },
+                                onSelectionPositionChange = { _, _, _, _ -> }
+                            )
+                        }
+
+                        LaunchedEffect(pageLoadCount, uiState.highlights) {
+                            val view = webViewRef ?: return@LaunchedEffect
+                            if (pageLoadCount > 0 && uiState.highlights.isNotEmpty()) {
+                                view.evaluateTextSelectionInterface()
+                                view.highlightRanges(uiState.highlights.mapNotNull { it.toWebViewHighlight() }) {}
+                            }
+                        }
+
+                        ComposeCanvasWebViewWrapper(
+                            content = uiState.htmlContent,
+                            title = uiState.toolbarTitle,
+                            baseUrl = uiState.baseUrl,
+                            onLtiButtonPressed = { uiState.actions.onLtiButtonPressed(it) },
+                            applyOnWebView = combinedApplyOnWebView,
+                            applyOnUpdate = combinedApplyOnUpdate,
+                            webViewCallbacks = combinedWebViewCallbacks,
+                            embeddedWebViewCallbacks = embeddedWebViewCallbacks,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .testTag("pageDetailsWebView")
+                        )
+                    }
                 }
             }
+        }
+
+        uiState.notebookTrayArgs?.let { trayArgs ->
+            NotebookTray(
+                args = trayArgs,
+                courseColor = Color(toolbarColor),
+                onDismiss = uiState.actions.onNotebookTrayDismiss
+            )
         }
 
         if (studyToolsUiState.panelVisible) {

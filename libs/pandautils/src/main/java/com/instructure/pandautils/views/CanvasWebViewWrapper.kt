@@ -247,9 +247,14 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
             updateButtonVisibility(htmlContent)
             if (binding.themeSwitchButton.isVisible) {
                 changeButtonTheme()
-                if (reloadContent) {
-                    preservingScrollPosition { changeContentTheme(htmlContent) }
-                }
+            }
+            // Content re-theming must not be gated on the manual switch button's visibility: the button
+            // only ever shows in dark mode (it lets the user preview light mode), but content colors
+            // (e.g. R.color.backgroundLightest) are resolved from night-qualified resources regardless
+            // of system theme direction - a dark-to-light system switch must still re-bake them even
+            // though the button itself becomes hidden in that case.
+            if (reloadContent) {
+                preservingScrollPosition { changeContentTheme(htmlContent) }
             }
         }
     }

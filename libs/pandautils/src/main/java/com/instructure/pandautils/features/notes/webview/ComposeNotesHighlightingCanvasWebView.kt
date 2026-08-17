@@ -1,20 +1,19 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
-package com.instructure.horizon.features.notebook.common.webview
+package com.instructure.pandautils.features.notes.webview
 
 import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
@@ -41,16 +40,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewStateViewModel
-import com.instructure.horizon.R
-import com.instructure.horizon.features.notebook.common.model.Note
-import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
-import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
-import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.getNoteYPosition
-import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.getNoteYPosition
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.highlightRanges
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
@@ -64,8 +61,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ComposeNotesHighlightingCanvasWebView(
     content: String,
-    notes: List<Note>,
-    notesCallback: NotesCallback,
+    highlights: List<WebViewHighlight>,
+    highlightCallback: NotesCallback,
     modifier: Modifier = Modifier,
     contentType: String = "text/html",
     useInAppFormatting: Boolean = true,
@@ -91,7 +88,7 @@ fun ComposeNotesHighlightingCanvasWebView(
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
-    val notesStateValue = rememberUpdatedState(notes)
+    val highlightsStateValue = rememberUpdatedState(highlights)
 
     var selectedText by remember { mutableStateOf("") }
     var selectedTextRangeStartContainer by remember { mutableStateOf("") }
@@ -143,16 +140,16 @@ fun ComposeNotesHighlightingCanvasWebView(
                         menuItems = {
                             buildList {
                                 add(
-                                    ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
+                                    ActionMenuItem(1, context.getString(R.string.webViewHighlightActionMenuCopy)) {
                                         clipboardManager.setText(AnnotatedString(selectedText))
                                     }
                                 )
-                                if (canMarkNotes && notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
+                                if (canMarkNotes && highlights.none { intersects(it.textPosition.start to it.textPosition.end, selectedTextStart to selectedTextEnd) }){
                                     add(
-                                        ActionMenuItem(2, context.getString(R.string.notesActionMenuMarkImportantNote)) {
-                                            notesCallback.onNoteAdded(
+                                        ActionMenuItem(2, context.getString(R.string.webViewHighlightActionMenuMarkImportant)) {
+                                            highlightCallback.onHighlightAdded(
                                                 selectedText,
-                                                NotebookType.Important.name,
+                                                "Important",
                                                 selectedTextRangeStartContainer,
                                                 selectedTextRangeStartOffset,
                                                 selectedTextRangeEndContainer,
@@ -163,10 +160,10 @@ fun ComposeNotesHighlightingCanvasWebView(
                                         }
                                     )
                                     add(
-                                        ActionMenuItem(3, context.getString(R.string.notesActionMenuMarkConfusingNote)) {
-                                            notesCallback.onNoteAdded(
+                                        ActionMenuItem(3, context.getString(R.string.webViewHighlightActionMenuMarkConfusing)) {
+                                            highlightCallback.onHighlightAdded(
                                                 selectedText,
-                                                NotebookType.Confusing.name,
+                                                "Confusing",
                                                 selectedTextRangeStartContainer,
                                                 selectedTextRangeStartOffset,
                                                 selectedTextRangeEndContainer,
@@ -188,7 +185,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                             webViewCallbacks.onPageFinished(webView, url)
 
                             webView.evaluateTextSelectionInterface()
-                            webView.highlightNotes(notesStateValue.value) {
+                            webView.highlightRanges(highlightsStateValue.value) {
                                 isPageLoaded = true
                             }
                         }
@@ -248,7 +245,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                     },
                     onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, selectedTextStartParam, selectedTextEndParam, updatedAt ->
                         lifecycleOwner.lifecycleScope.launch {
-                            notesCallback.onNoteSelected(
+                            highlightCallback.onHighlightSelected(
                                 noteId,
                                 noteType,
                                 selectedText,

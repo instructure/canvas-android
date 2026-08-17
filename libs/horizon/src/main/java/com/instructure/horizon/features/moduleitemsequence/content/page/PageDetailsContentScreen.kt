@@ -34,14 +34,19 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
-import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
-import com.instructure.horizon.features.notebook.common.webview.NotesCallback
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
+import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.features.notes.webview.ComposeNotesHighlightingCanvasWebView
+import com.instructure.pandautils.features.notes.webview.HighlightRange
+import com.instructure.pandautils.features.notes.webview.HighlightTextPosition
+import com.instructure.pandautils.features.notes.webview.NotesCallback
+import com.instructure.pandautils.features.notes.webview.WebViewHighlight
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -86,7 +91,7 @@ fun PageDetailsContentScreen(
             ) {
                 ComposeNotesHighlightingCanvasWebView(
                     content = "<div id=\"parent-container\"><div>$it</div></div>",
-                    notes = uiState.notes,
+                    highlights = uiState.notes.map { note -> note.toWebViewHighlight() },
                     canMarkNotes = uiState.isOnline,
                     scrollToNoteId = scrollToNoteId,
                     applyOnWebView = {
@@ -101,8 +106,8 @@ fun PageDetailsContentScreen(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
-                    notesCallback = NotesCallback(
-                        onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt ->
+                    highlightCallback = NotesCallback(
+                        onHighlightSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt ->
                             navController.navigate(
                                 NotebookRoute.EditNotebook(
                                     noteId = noteId,
@@ -119,7 +124,7 @@ fun PageDetailsContentScreen(
                                 )
                             )
                         },
-                        onNoteAdded = { selectedText, noteType, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
+                        onHighlightAdded = { selectedText, noteType, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
                             uiState.addNote(
                                 NoteHighlightedData(
                                     selectedText = selectedText,
@@ -143,4 +148,24 @@ fun PageDetailsContentScreen(
             }
         }
     }
+}
+
+private fun Note.toWebViewHighlight(): WebViewHighlight {
+    return WebViewHighlight(
+        id = id,
+        selectedText = highlightedText.selectedText,
+        userText = userText,
+        reactionLabel = type.name,
+        range = HighlightRange(
+            startOffset = highlightedText.range.startOffset,
+            endOffset = highlightedText.range.endOffset,
+            startContainer = highlightedText.range.startContainer,
+            endContainer = highlightedText.range.endContainer
+        ),
+        textPosition = HighlightTextPosition(
+            start = highlightedText.textPosition.start,
+            end = highlightedText.textPosition.end
+        ),
+        updatedAt = updatedAt.toNotebookLocalisedDateFormat()
+    )
 }

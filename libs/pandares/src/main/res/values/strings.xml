@@ -788,6 +788,27 @@
     <string name="close">Close</string>
     <string name="closed">Closed</string>
 
+    <string name="notebookTitle">Notebook</string>
+    <string name="notebookNoteTitle">Note</string>
+    <string name="notebookPageNotesTitle">Page notes</string>
+    <string name="notebookNoteTypeImportant">Important</string>
+    <string name="notebookNoteTypeUnclear">Unclear</string>
+    <string name="notebookShowAll">Show all</string>
+    <string name="notebookShowLess">Show less</string>
+    <string name="notebookYourNote">Your Note</string>
+    <string name="notebookNoNotesTitle">No notes yet</string>
+    <string name="notebookNoNotesMessage">Highlight text on this page to add a note.</string>
+    <string name="notebookNoFilteredNotesTitle">No matching notes</string>
+    <string name="notebookNoFilteredNotesMessage">Try a different filter to see your other notes.</string>
+    <string name="notebookNoteNotFound">This note is no longer available.</string>
+    <string name="notebookLoadError">There was a problem loading your notes.</string>
+    <string name="a11y_notebookOpenPageNotes">Open page notes</string>
+    <string name="a11y_notebookBackToNotesList">Back to page notes</string>
+    <plurals name="notebookNotesCount">
+        <item quantity="one">"%d Note"</item>
+        <item quantity="other">"%d Notes"</item>
+    </plurals>
+
     <string name="overdueAssignments">Overdue Assignments</string>
     <string name="upcomingAssignments">Upcoming Assignments</string>
     <string name="undatedAssignments">Undated Assignments</string>
@@ -2655,6 +2676,12 @@
         <item quantity="one">%d additional file</item>
         <item quantity="other">%d additional files</item>
     </plurals>
+
+    <!-- WebView highlight/text-selection anchoring -->
+    <string name="a11y_webViewHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
+    <string name="webViewHighlightActionMenuCopy">Copy</string>
+    <string name="webViewHighlightActionMenuMarkImportant">Mark important</string>
+    <string name="webViewHighlightActionMenuMarkConfusing">Mark unclear</string>
 
     <!-- Study Tools (IgniteAI) -->
     <string name="studyTools_title">Study tools</string>

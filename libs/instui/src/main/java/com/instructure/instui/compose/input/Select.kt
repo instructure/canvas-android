@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.instui.compose.InstUITheme
 import com.instructure.instui.compose.indicator.Icon
@@ -79,9 +80,11 @@ fun Select(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = InstUILayoutSizes.Size.Interactive.height_md)
+                .clip(shape)
+                .background(color = InstUISemanticColors.Background.Interactive.Input.base(), shape = shape)
                 .border(
                     width = InstUILayoutSizes.BorderWidth.Sm.sm,
-                    color = InstUISemanticColors.Stroke.base(),
+                    color = InstUISemanticColors.Stroke.Interactive.Input.base(),
                     shape = shape,
                 )
                 .clickable(enabled = enabled) { expanded = true }
