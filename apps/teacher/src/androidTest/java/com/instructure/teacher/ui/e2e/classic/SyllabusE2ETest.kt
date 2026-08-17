@@ -79,8 +79,7 @@ class SyllabusE2ETest : TeacherTest() {
         syllabusPage.assertItemDisplayed(assignment[0].name)
         syllabusPage.assertItemDisplayed(quiz.quizList[0].title)
 
-        Log.d(STEP_TAG, "Select 'Syllabus' Tab and click on 'Pencil' (aka. 'Edit') icon.")
-        syllabusPage.selectSyllabusTab()
+        Log.d(STEP_TAG, "From the 'Summary' Tab, click on 'Pencil' (aka. 'Edit') icon.")
         syllabusBody = "Edited Syllabus Body"
         syllabusPage.openEditSyllabus()
 
@@ -89,7 +88,7 @@ class SyllabusE2ETest : TeacherTest() {
         editSyllabusPage.editSyllabusToggleShowSummary()
         editSyllabusPage.saveSyllabusEdit()
 
-        Log.d(ASSERTION_TAG, "Assert that the previously made modifications has been applied on the syllabus.")
+        Log.d(ASSERTION_TAG, "Assert that we land back on the 'Syllabus' tab with the edited body, and the 'Summary' tab is gone (not stuck on the now-disabled 'Summary' tab).")
         syllabusPage.assertDisplaysSyllabus(syllabusBody = syllabusBody, shouldDisplayTabs = false)
     }
 }

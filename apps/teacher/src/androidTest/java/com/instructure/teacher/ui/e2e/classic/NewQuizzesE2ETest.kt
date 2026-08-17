@@ -17,7 +17,6 @@
 package com.instructure.teacher.ui.e2e.classic
 
 import android.util.Log
-import androidx.test.espresso.Espresso.pressBack
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -148,8 +147,12 @@ class NewQuizzesE2ETest : TeacherComposeTest() {
         newQuizWebViewPage.assertQuestionDisplayed("The Earth is round.")
         newQuizWebViewPage.assertQuestionDisplayed("The sun is a planet.")
 
-        Log.d(STEP_TAG, "Navigate back to the Assignment Details page.")
-        pressBack()
+        Log.d(STEP_TAG, "Tap the 'Return' button in the Build webview to navigate back.")
+        newQuizWebViewPage.clickReturnButton()
+
+        Log.d(ASSERTION_TAG, "Assert that tapping 'Return' navigates back to the Assignment Details page (not the assignment list).")
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertAssignmentName(quiz.title)
 
         Log.d(STEP_TAG, "Open not-submitted submissions to view '${student.name}' in SpeedGrader before any submission.")
         assignmentDetailsPage.clickNotSubmittedSubmissions()

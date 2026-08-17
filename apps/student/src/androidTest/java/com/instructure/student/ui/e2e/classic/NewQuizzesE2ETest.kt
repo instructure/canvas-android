@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.utils.pressBackButton
 import com.instructure.dataseeding.api.NewQuizzesApi
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -152,8 +151,14 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the error message is displayed in the webview because the quiz has no questions.")
         newQuizWebViewPage.assertErrorMessageDisplayed()
 
+        Log.d(STEP_TAG, "Tap the 'Return' button in the webview to navigate back to the Assignment Details page.")
+        newQuizWebViewPage.clickReturnButton()
+
+        Log.d(ASSERTION_TAG, "Assert that tapping 'Return' navigates back to the Assignment Details page.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+
         Log.d(STEP_TAG, "Navigate back to the Quiz List page.")
-        pressBackButton(2)
+        Espresso.pressBack()
 
         Log.d(STEP_TAG, "Select '${quizWithQuestion.title}' quiz (the quiz with a question).")
         quizListPage.selectNewQuiz(quizWithQuestion)
@@ -181,10 +186,10 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         newQuizWebViewPage.assertQuestionDisplayed("The Earth is round.")
         newQuizWebViewPage.assertQuestionDisplayed("The sun is a planet.")
 
-        Log.d(STEP_TAG, "Navigate back to the Assignment Details page without submitting the quiz.")
-        Espresso.pressBack()
+        Log.d(STEP_TAG, "Tap the 'Return' button to navigate back to the Assignment Details page without submitting the quiz.")
+        newQuizWebViewPage.clickReturnButton()
 
-        Log.d(ASSERTION_TAG, "Assert that we are back on the Assignment Details page.")
+        Log.d(ASSERTION_TAG, "Assert that tapping 'Return' navigates back to the Assignment Details page.")
         assignmentDetailsPage.assertDisplayToolbarTitle()
 
         Log.d(STEP_TAG, "Click 'Open the Quiz' button again to re-open the quiz.")
@@ -222,8 +227,11 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         newQuizWebViewPage.assertResultScoreDisplayed("Out of 2 points")
         newQuizWebViewPage.assertResultPercentageDisplayed("50%")
 
-        Log.d(STEP_TAG, "Navigate back to the Assignment Details page.")
-        Espresso.pressBack()
+        Log.d(STEP_TAG, "Tap the 'Return' button to navigate back to the Assignment Details page.")
+        newQuizWebViewPage.clickReturnButton()
+
+        Log.d(ASSERTION_TAG, "Assert that tapping 'Return' navigates back to the Assignment Details page.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
 
         Log.d(ASSERTION_TAG, "Refresh the Assignment Details page. Assert that the assignment is graded with score '25' (50% of 50 pts) and 'Out of 50 pts' is displayed.")
         assignmentDetailsPage.refresh()

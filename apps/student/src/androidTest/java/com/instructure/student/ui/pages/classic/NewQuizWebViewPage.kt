@@ -141,4 +141,11 @@ class NewQuizWebViewPage : BasePage(R.id.webView) {
             .perform(webScrollIntoView())
             .check(webMatches(getText(), containsString(percentage)))
     }
+
+    fun clickReturnButton() {
+        onWebView(allOf(withId(R.id.webView), isDisplayed()))
+            .withElementRepeat(findElement(Locator.XPATH, "//a[@data-automation='sdk-return-button']"), 15)
+            .perform(webScrollIntoView())
+            .perform(webClick())
+    }
 }

@@ -21,6 +21,7 @@ import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
@@ -63,5 +64,12 @@ class NewQuizWebViewPage : BasePage(R.id.webView) {
             .withElementRepeat(findElement(Locator.XPATH, "//*[contains(., '$questionText')]"), 15)
             .perform(webScrollIntoView())
             .check(webMatches(getText(), containsString(questionText)))
+    }
+
+    fun clickReturnButton() {
+        onWebView(allOf(withId(R.id.webView), isDisplayed()))
+            .withElementRepeat(findElement(Locator.XPATH, "//a[@data-automation='sdk-return-button']"), 15)
+            .perform(webScrollIntoView())
+            .perform(webClick())
     }
 }
