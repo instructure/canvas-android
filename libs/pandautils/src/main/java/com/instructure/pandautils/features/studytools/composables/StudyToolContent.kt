@@ -49,8 +49,9 @@ import com.instructure.instui.compose.text.Text as InstUIText
  * Everything below the panel header once a tool is open: the generated result with the shared footer,
  * or the skeleton / error that stands in for it.
  *
- * A null [state] means there is nothing to show for the selected tool yet — the case for Quiz and
- * Flashcards until MBL-20263 lands.
+ * A null [state] means there is nothing to show for the selected tool yet — the case right after
+ * [com.instructure.pandautils.features.studytools.StudyToolsUiState]'s panel is opened but before the
+ * first generation kicks off.
  */
 @Composable
 fun StudyToolContent(
@@ -72,8 +73,8 @@ fun StudyToolContent(
 
                 is StudyToolState.Ready -> when (val result = state.result) {
                     is StudyToolResult.Summary -> SummarizeContent(summary = result)
-                    // Renderers for these land with MBL-20263.
-                    is StudyToolResult.Quiz, is StudyToolResult.Flashcards -> Unit
+                    is StudyToolResult.Quiz -> QuizContent(quiz = result)
+                    is StudyToolResult.Flashcards -> FlashcardsContent(flashcards = result)
                 }
 
                 StudyToolState.Offline -> StudyToolsEmptyState(

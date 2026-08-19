@@ -2698,6 +2698,15 @@
     <string name="studyTools_generatingContentDescription">Generating response</string>
     <string name="studyTools_positiveFeedbackContentDescription">Rate this response as helpful</string>
     <string name="studyTools_negativeFeedbackContentDescription">Rate this response as not helpful</string>
+    <string name="studyTools_checkAnswer">Check answer</string>
+    <string name="studyTools_nextQuestion">Next question</string>
+    <string name="studyTools_quizQuestionProgress">Question %1$d of %2$d</string>
+    <string name="studyTools_quizAnswerCorrectContentDescription">Correct</string>
+    <string name="studyTools_quizAnswerIncorrectContentDescription">Incorrect</string>
+    <string name="studyTools_quizCompleted">You\'ve completed this quiz. Regenerate below for a new set of questions.</string>
+    <string name="studyTools_flashcardQuestionLabel">Question</string>
+    <string name="studyTools_flashcardAnswerLabel">Answer</string>
+    <string name="studyTools_flashcardTapToFlipContentDescription">Tap to flip the card</string>
 
     <!-- Study Tools AI disclosure ("Nutrition Facts") -->
     <string name="studyTools_nutritionFacts_title">Nutrition Facts</string>

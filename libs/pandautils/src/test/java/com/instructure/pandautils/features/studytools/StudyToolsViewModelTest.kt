@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.pandautils.R
+import com.instructure.pandautils.domain.models.studytools.Flashcard
+import com.instructure.pandautils.domain.models.studytools.QuizQuestion
 import com.instructure.pandautils.domain.models.studytools.StudyTool
 import com.instructure.pandautils.domain.models.studytools.StudyToolOption
 import com.instructure.pandautils.domain.models.studytools.StudyToolResult
@@ -85,6 +87,12 @@ class StudyToolsViewModelTest {
     )
 
     private val summary = StudyToolResult.Summary("This page is about photosynthesis.")
+    private val quiz = StudyToolResult.Quiz(
+        listOf(QuizQuestion("What is 2 + 2?", listOf("3", "4", "5"), correctAnswerIndex = 1))
+    )
+    private val flashcards = StudyToolResult.Flashcards(
+        listOf(Flashcard("What is the capital of France?", "Paris"))
+    )
 
     @Before
     fun setUp() {
@@ -565,17 +573,23 @@ class StudyToolsViewModelTest {
     }
 
     @Test
-    fun `quiz and flashcards do not generate anything yet`() {
-        val viewModel = getViewModel()
-        viewModel.uiState.value.actions.onOpen()
+    fun `selecting quiz generates the quiz`() {
+        coEvery { runStudyToolUseCase(any()) } returns StudyToolsOutcome.Success(quiz)
 
-        viewModel.uiState.value.actions.onToolSelected(tools[1])
-        assertNull(viewModel.uiState.value.toolState)
+        val viewModel = openQuiz()
 
-        viewModel.uiState.value.actions.onToolSelected(tools[2])
-        assertNull(viewModel.uiState.value.toolState)
+        assertEquals(StudyToolState.Ready(quiz), viewModel.uiState.value.toolState)
+        coVerify(exactly = 1) { runStudyToolUseCase(match { it.tool == StudyTool.QUIZ }) }
+    }
 
-        coVerify(exactly = 0) { runStudyToolUseCase(any()) }
+    @Test
+    fun `selecting flashcards generates the flashcards`() {
+        coEvery { runStudyToolUseCase(any()) } returns StudyToolsOutcome.Success(flashcards)
+
+        val viewModel = openFlashcards()
+
+        assertEquals(StudyToolState.Ready(flashcards), viewModel.uiState.value.toolState)
+        coVerify(exactly = 1) { runStudyToolUseCase(match { it.tool == StudyTool.FLASHCARDS }) }
     }
 
     @Test
@@ -741,6 +755,20 @@ class StudyToolsViewModelTest {
         val viewModel = getViewModel()
         viewModel.uiState.value.actions.onOpen()
         viewModel.uiState.value.actions.onToolSelected(tools[0])
+        return viewModel
+    }
+
+    private fun openQuiz(): StudyToolsViewModel {
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onOpen()
+        viewModel.uiState.value.actions.onToolSelected(tools[1])
+        return viewModel
+    }
+
+    private fun openFlashcards(): StudyToolsViewModel {
+        val viewModel = getViewModel()
+        viewModel.uiState.value.actions.onOpen()
+        viewModel.uiState.value.actions.onToolSelected(tools[2])
         return viewModel
     }
 }

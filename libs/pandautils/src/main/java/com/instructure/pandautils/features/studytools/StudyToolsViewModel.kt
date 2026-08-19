@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.pandautils.R
-import com.instructure.pandautils.domain.models.studytools.StudyTool
 import com.instructure.pandautils.domain.models.studytools.StudyToolOption
 import com.instructure.pandautils.domain.models.studytools.StudyToolsError
 import com.instructure.pandautils.domain.models.studytools.StudyToolsOutcome
@@ -206,10 +205,7 @@ class StudyToolsViewModel @Inject constructor(
         // A generation for the tool being left behind is of no use to anyone.
         studyToolJob?.cancel()
         updateStudyTools { it.copy(selectedTool = tool, toolState = null) }
-
-        // Quiz and Flashcards have no renderer yet (MBL-20263), so generating for them would only burn
-        // a request against the daily limit and show nothing.
-        if (tool.tool == StudyTool.SUMMARIZE) runStudyTool(tool, regenerate = false)
+        runStudyTool(tool, regenerate = false)
     }
 
     private fun onStudyToolsBack() {
