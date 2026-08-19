@@ -34,3 +34,9 @@ fun hasTestTagThatContains(substring: String): SemanticsMatcher =
         val tag = node.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.TestTag)
         tag?.contains(substring) == true
     }
+
+fun hasTestTagThatStartsWith(prefix: String): SemanticsMatcher =
+    SemanticsMatcher("Has testTag starting with \"$prefix\"") { node ->
+        val tag = node.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.TestTag)
+        tag?.startsWith(prefix) == true
+    }

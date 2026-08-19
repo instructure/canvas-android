@@ -33,7 +33,10 @@ import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import com.instructure.composetest.assertNodeColor
+import com.instructure.composetest.assertTagOrder
 import com.instructure.composetest.isTagDisplayed
+import com.instructure.composetest.swipeUpUntilTagDisplayed
 import com.instructure.composetest.waitForTag
 import com.instructure.espresso.page.BasePage
 import com.instructure.pandautils.R
@@ -68,6 +71,42 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
     fun assertWelcomeMessageDisplayed() {
         composeTestRule.waitForTag(WELCOME_MESSAGE_TAG)
         composeTestRule.onNodeWithTag(WELCOME_MESSAGE_TAG).assertIsDisplayed()
+    }
+
+    fun assertWidgetDisplayed(widgetId: String) {
+        composeTestRule.waitForTag("$WIDGET_TAG_PREFIX$widgetId")
+        composeTestRule.onNodeWithTag("$WIDGET_TAG_PREFIX$widgetId").performScrollTo().assertIsDisplayed()
+    }
+
+    /**
+     * Asserts the background color of the Weekly Summary (forecast) widget's card, which follows the
+     * dashboard color setting. The color is sampled from the left padding of the card at half of its
+     * height, where nothing is drawn over its background.
+     */
+    fun assertForecastWidgetColor(expectedColor: Int) {
+        composeTestRule.waitForTag(FORECAST_WIDGET_CARD_TAG)
+        composeTestRule.swipeUpUntilTagDisplayed(FORECAST_WIDGET_CARD_TAG)
+        composeTestRule.assertNodeColor(
+            tag = FORECAST_WIDGET_CARD_TAG,
+            expectedColor = expectedColor,
+            relativeX = 0.02f,
+            relativeY = 0.5f
+        )
+    }
+
+    fun assertWidgetNotDisplayed(widgetId: String, timeoutMillis: Long = 20000) {
+        composeTestRule.waitUntil(timeoutMillis = timeoutMillis) {
+            composeTestRule.onAllNodesWithTag("$WIDGET_TAG_PREFIX$widgetId").fetchSemanticsNodes().isEmpty()
+        }
+        composeTestRule.onNodeWithTag("$WIDGET_TAG_PREFIX$widgetId").assertDoesNotExist()
+    }
+
+    /**
+     * Asserts the top-to-bottom order of the widgets on the dashboard. Only the relative order of the
+     * given widget ids is checked, see [assertTagOrder].
+     */
+    fun assertWidgetOrder(vararg widgetIds: String) {
+        composeTestRule.assertTagOrder(WIDGET_TAG_PREFIX, widgetIds.toList())
     }
 
     fun assertCourseInvitationsHeaderCount(count: Int) {
@@ -283,9 +322,12 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         composeTestRule.waitForIdle()
     }
 
+    // The button is the last item of the dashboard's scrollable column, where performScrollTo() can
+    // spin forever instead of failing, see swipeUpUntilTagDisplayed.
     fun clickCustomizeDashboardButton() {
         composeTestRule.waitForTag(CUSTOMIZE_DASHBOARD_BUTTON_TAG)
-        composeTestRule.onNodeWithTag(CUSTOMIZE_DASHBOARD_BUTTON_TAG).performScrollTo().performClick()
+        composeTestRule.swipeUpUntilTagDisplayed(CUSTOMIZE_DASHBOARD_BUTTON_TAG)
+        composeTestRule.onNodeWithTag(CUSTOMIZE_DASHBOARD_BUTTON_TAG).performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -338,5 +380,7 @@ class NewDashboardPage(private val composeTestRule: ComposeTestRule) : BasePage(
         private const val DASHBOARD_CUSTOMIZE_DASHBOARD_TAG = "dashboardCustomizeDashboard"
         private const val NO_INTERNET_CONNECTION_DIALOG_TAG = "noInternetConnectionDialog"
         private const val NO_INTERNET_CONNECTION_DIALOG_CONFIRM_BUTTON_TAG = "noInternetConnectionDialogConfirmButton"
+        private const val WIDGET_TAG_PREFIX = "dashboardWidget_"
+        private const val FORECAST_WIDGET_CARD_TAG = "forecastWidget_card"
     }
 }

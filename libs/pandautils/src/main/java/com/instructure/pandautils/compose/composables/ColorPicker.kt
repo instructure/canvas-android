@@ -58,6 +58,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -175,7 +176,8 @@ fun ColorPicker(
                                 if (isCollapsible) {
                                     isExpanded = false
                                 }
-                            }
+                            },
+                            modifier = Modifier.testTag("colorOption_${themedColor.light}")
                         )
                     }
                 }

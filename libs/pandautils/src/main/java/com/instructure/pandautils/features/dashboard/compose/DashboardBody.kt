@@ -177,7 +177,9 @@ private fun WidgetList(
                 columns,
                 onShowSnackbar,
                 navigationHandler,
-                modifier = Modifier.padding(top = 16.dp)
+                modifier = Modifier
+                    .padding(top = 16.dp)
+                    .testTag("dashboardWidget_${metadata.id}")
             )
         }
 

@@ -411,7 +411,9 @@ private fun WidgetSettingsContent(
                         onColorSelected = { newValue ->
                             onUpdateSetting(widgetId, setting.key, newValue)
                         },
-                        titleModifier = Modifier.padding(vertical = 8.dp)
+                        titleModifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .testTag("colorPickerTitle_${setting.key}")
                     )
                 }
             }
