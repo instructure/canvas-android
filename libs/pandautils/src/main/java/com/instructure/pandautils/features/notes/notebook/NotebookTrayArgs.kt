@@ -16,10 +16,12 @@
 package com.instructure.pandautils.features.notes.notebook
 
 /**
- * The contract the host (e.g. [com.instructure.pandautils.features.pages.details.composables.PageDetailsScreen])
- * hands to [NotebookTray] to open it. [initialNoteId] non-null (highlight tap) makes the tray push that
- * note's detail level on top of the list; null (toolbar button) lands on the list root. [pageTitle] is
- * shown as the list level header's subtitle.
+ * The contract the host (e.g. [com.instructure.pandautils.features.pages.details.composables.PageDetailsScreen],
+ * or Student's `CourseBrowserFragment`) hands to [NotebookTray] to open it. [pageId] non-null opens the
+ * tray at the Page level ([pageTitle] as its subtitle); null opens it at the Course level ([courseTitle]
+ * as its subtitle) - see [NotebookViewModel]'s root-level selection. [initialNoteId] non-null (highlight
+ * tap) additionally makes the tray push that note's detail level on top of the list; only ever passed
+ * together with a non-null [pageId], since highlights only ever exist on a page today.
  *
  * [courseId] is required explicitly here because shared Compose code (unlike the old Fragment-hosted
  * feature) has no [com.instructure.canvasapi2.models.CanvasContext] of its own to derive it from - the
@@ -32,8 +34,9 @@ package com.instructure.pandautils.features.notes.notebook
  */
 data class NotebookTrayArgs(
     val courseId: Long,
-    val pageId: String,
-    val pageTitle: String,
+    val pageId: String? = null,
+    val pageTitle: String? = null,
+    val courseTitle: String = "",
     val initialNoteId: String? = null,
     val forceNetwork: Boolean = true
 )

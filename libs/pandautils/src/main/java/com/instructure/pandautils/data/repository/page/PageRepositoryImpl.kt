@@ -38,4 +38,8 @@ class PageRepositoryImpl(
     override suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page> {
         return dataSource().getPageDetails(canvasContext, pageId, forceRefresh)
     }
+
+    override suspend fun getCoursePages(courseId: Long, forceRefresh: Boolean): DataResult<List<Page>> {
+        return dataSource().getCoursePages(courseId, forceRefresh)
+    }
 }

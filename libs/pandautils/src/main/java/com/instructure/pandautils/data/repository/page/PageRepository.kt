@@ -29,4 +29,5 @@ import com.instructure.canvasapi2.utils.DataResult
 interface PageRepository {
     suspend fun getFrontPage(canvasContext: CanvasContext, forceRefresh: Boolean): DataResult<Page>
     suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page>
+    suspend fun getCoursePages(courseId: Long, forceRefresh: Boolean): DataResult<List<Page>>
 }

@@ -117,4 +117,30 @@ class PageRepositoryImplTest {
 
         assertEquals(offlineExpected, pageDetails)
     }
+
+    @Test
+    fun `Get course pages from network if online`() = runTest {
+        val offlineExpected = DataResult.Success(listOf(Page(id = 1L, title = "Offline")))
+        val onlineExpected = DataResult.Success(listOf(Page(id = 2L, title = "Online")))
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { localDataSource.getCoursePages(any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.getCoursePages(any(), any()) } returns onlineExpected
+
+        val coursePages = repository.getCoursePages(1L, true)
+
+        assertEquals(onlineExpected, coursePages)
+    }
+
+    @Test
+    fun `Get course pages from db if offline`() = runTest {
+        val offlineExpected = DataResult.Success(listOf(Page(id = 1L, title = "Offline")))
+        val onlineExpected = DataResult.Success(listOf(Page(id = 2L, title = "Online")))
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { localDataSource.getCoursePages(any(), any()) } returns offlineExpected
+        coEvery { networkDataSource.getCoursePages(any(), any()) } returns onlineExpected
+
+        val coursePages = repository.getCoursePages(1L, true)
+
+        assertEquals(offlineExpected, coursePages)
+    }
 }

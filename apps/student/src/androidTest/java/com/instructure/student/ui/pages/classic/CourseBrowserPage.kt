@@ -18,6 +18,9 @@ package com.instructure.student.ui.pages.classic
 
 import android.view.View
 import android.widget.LinearLayout
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
@@ -44,7 +47,6 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeUp
@@ -129,8 +131,10 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         onView(matcher).click()
     }
 
-    fun clickOnSmartSearch() {
-        onView(withId(R.id.searchBar) + withAncestor(R.id.courseBrowserPage)).click()
+    // The search bar/notebook icon row is a small Compose tree hosted inside the XML toolbar
+    // (see CourseBrowserFragment), so it needs composeTestRule rather than a raw Espresso View click.
+    fun clickOnSmartSearch(composeTestRule: ComposeTestRule) {
+        composeTestRule.onNodeWithTag("searchButton").performClick()
     }
 
     fun assertTitleCorrect(course: Course) {

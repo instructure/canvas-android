@@ -52,6 +52,7 @@ import com.instructure.pandautils.features.notes.notebook.NotebookTray
 import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
 import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.highlightRanges
+import com.instructure.pandautils.features.notes.webview.JSTextSelectionInterface.Companion.scrollToNote
 import com.instructure.pandautils.features.notes.webview.toWebViewHighlight
 import com.instructure.pandautils.features.pages.details.PageDetailsScreenState
 import com.instructure.pandautils.features.pages.details.PageDetailsUiState
@@ -78,6 +79,12 @@ fun PageDetailsScreen(
     applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
     onAddBookmark: (() -> Unit)? = null
 ) {
+    // Set when a Notebook note's arrow is tapped for a note on *this* page (see NotebookRouter/
+    // onNoteArrowClick) - there's nowhere to navigate to, so the tray just closes and this asks the
+    // WebView below to scroll to that note instead. Hoisted above the WebView content (which is only
+    // composed in the Content screen state) since NotebookTray, further down, needs to set it.
+    var sameScreenScrollToNoteId by remember { mutableStateOf<String?>(null) }
+
     CanvasTheme {
         CanvasScaffold(
             modifier = modifier.testTag("pageDetailsPage"),
@@ -154,6 +161,10 @@ fun PageDetailsScreen(
                         // that reload's fresh HTML load discards.
                         var webViewRef by remember { mutableStateOf<CanvasWebView?>(null) }
                         var pageLoadCount by remember { mutableStateOf(0) }
+                        // One-shot, for this screen's whole lifetime (not per pageLoadCount) - once we've
+                        // scrolled to the note the user arrived for, later highlight refreshes (e.g. after
+                        // an edit) must not keep re-scrolling back to it.
+                        var hasScrolledToNote by remember { mutableStateOf(false) }
 
                         val combinedWebViewCallbacks = remember(webViewCallbacks) {
                             webViewCallbacks.copy(
@@ -189,8 +200,24 @@ fun PageDetailsScreen(
                             val view = webViewRef ?: return@LaunchedEffect
                             if (pageLoadCount > 0 && uiState.highlights.isNotEmpty()) {
                                 view.evaluateTextSelectionInterface()
-                                view.highlightRanges(uiState.highlights.mapNotNull { it.toWebViewHighlight() }) {}
+                                view.highlightRanges(uiState.highlights.mapNotNull { it.toWebViewHighlight() }) {
+                                    val noteId = uiState.scrollToNoteId
+                                    if (noteId != null && !hasScrolledToNote) {
+                                        hasScrolledToNote = true
+                                        view.scrollToNote(noteId)
+                                    }
+                                }
                             }
+                        }
+
+                        // The same-page Notebook-arrow case (see sameScreenScrollToNoteId above) - unlike
+                        // the arrival case just above, this page's highlights are already injected (the
+                        // tray couldn't have been open otherwise), so this can scroll directly with no
+                        // need to wait on highlightRanges() first.
+                        LaunchedEffect(sameScreenScrollToNoteId) {
+                            val noteId = sameScreenScrollToNoteId ?: return@LaunchedEffect
+                            webViewRef?.scrollToNote(noteId)
+                            sameScreenScrollToNoteId = null
                         }
 
                         ComposeCanvasWebViewWrapper(
@@ -215,7 +242,8 @@ fun PageDetailsScreen(
             NotebookTray(
                 args = trayArgs,
                 courseColor = Color(toolbarColor),
-                onDismiss = uiState.actions.onNotebookTrayDismiss
+                onDismiss = uiState.actions.onNotebookTrayDismiss,
+                onScrollToNoteRequested = { sameScreenScrollToNoteId = it }
             )
         }
 

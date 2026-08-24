@@ -57,6 +57,7 @@ import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.legal.LegalRouter
 import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
+import com.instructure.pandautils.features.notes.notebook.NotebookRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.settings.SettingsBehaviour
 import com.instructure.pandautils.features.settings.SettingsRouter
@@ -254,6 +255,11 @@ object HorizonTestModule {
 
     @Provides
     fun provideLtiLaunchFragmentBehavior(): LtiLaunchFragmentBehavior {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideNotebookRouter(): NotebookRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 

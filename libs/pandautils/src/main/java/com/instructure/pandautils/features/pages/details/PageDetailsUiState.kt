@@ -53,7 +53,11 @@ data class PageDetailsUiState(
     // Persistent (NOT one-shot) open/closed state for the Notebook tray: non-null while the tray should
     // be shown. Unlike [navigation], a modal bottom sheet must survive recomposition while it's open, so
     // it can't be modeled as a one-shot event that a LaunchedEffect immediately consumes and nulls.
-    val notebookTrayArgs: NotebookTrayArgs? = null
+    val notebookTrayArgs: NotebookTrayArgs? = null,
+    // Set only when routed here from a Notebook note's arrow (see NotebookRouter) - the screen scrolls
+    // the WebView to this note's highlight once [highlights] renders. Fixed for the screen's lifetime,
+    // not a one-shot event - there's nothing to "consume" since it's never cleared/reused.
+    val scrollToNoteId: String? = null
 )
 
 sealed class PageDetailsScreenState {

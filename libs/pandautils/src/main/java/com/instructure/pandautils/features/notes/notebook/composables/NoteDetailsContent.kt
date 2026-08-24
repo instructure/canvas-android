@@ -51,6 +51,7 @@ import com.instructure.instui.token.semantic.InstUISemanticColors
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.notes.notebook.NoteTypePill
 import com.instructure.pandautils.features.notes.notebook.NoteUiState
+import com.instructure.pandautils.features.notes.notebook.NotebookLevel
 import com.instructure.pandautils.features.notes.notebook.NotebookScreenState
 import com.instructure.pandautils.features.notes.notebook.NotebookUiState
 
@@ -65,8 +66,8 @@ fun NoteDetailsContent(
     Column(modifier = modifier.fillMaxWidth().fillMaxHeight()) {
         NotebookTrayHeader(
             title = stringResource(R.string.notebookNoteTitle),
-            backLabel = stringResource(R.string.notebookPageNotesTitle),
-            backContentDescription = stringResource(R.string.a11y_notebookBackToNotesList),
+            backLabel = uiState.listLevel.backLabel(),
+            backContentDescription = uiState.listLevel.backContentDescription(),
             backTestTag = "notebookDetailsBack",
             onBackClick = onBackClick,
             onDoneClick = onDoneClick,
@@ -140,6 +141,26 @@ fun NoteDetailsContent(
             }
         }
     }
+}
+
+/** Label for the level a note detail actually goes back to - the note may have been opened directly
+ * from any list level (Global/Course/Page), not only Page notes, so this always reflects [uiState]'s
+ * real [NotebookUiState.listLevel] rather than assuming Page notes. */
+@Composable
+private fun NotebookLevel.ListLevel.backLabel(): String = when (this) {
+    is NotebookLevel.GlobalNotes -> stringResource(R.string.notebookGlobalNotesBackLabel)
+    is NotebookLevel.CourseNotes -> stringResource(R.string.course)
+    is NotebookLevel.PageNotes -> stringResource(R.string.notebookPageNotesTitle)
+}
+
+/** Content description for the same back control [backLabel] labels visually - kept in sync with it
+ * (rather than defaulting to the visible [backLabel] text, which reads correctly for Page notes but is
+ * ambiguous/ungrammatical for Global/Course) so TalkBack announces the level it actually navigates to. */
+@Composable
+private fun NotebookLevel.ListLevel.backContentDescription(): String = when (this) {
+    is NotebookLevel.GlobalNotes -> stringResource(R.string.a11y_notebookBackToGlobalNotes)
+    is NotebookLevel.CourseNotes -> stringResource(R.string.a11y_notebookBackToCourseNotes)
+    is NotebookLevel.PageNotes -> stringResource(R.string.a11y_notebookBackToNotesList)
 }
 
 // region Previews

@@ -32,4 +32,8 @@ class PageLocalDataSource(
     override suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page> {
         return pageFacade.getPageDetails(canvasContext.id, pageId)?.let { DataResult.Success(it) } ?: DataResult.Fail()
     }
+
+    override suspend fun getCoursePages(courseId: Long, forceRefresh: Boolean): DataResult<List<Page>> {
+        return DataResult.Success(pageFacade.findByCourseId(courseId))
+    }
 }

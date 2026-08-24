@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.managers.graphql
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.ApolloResponse
 import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.StudyNotesForCourseQuery
 import com.instructure.canvasapi2.StudyNotesForPageQuery
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.models.LearningObjectType as StudyNoteLearningObjectType
@@ -27,6 +28,8 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -36,6 +39,7 @@ import org.junit.Before
 import org.junit.Test
 import java.util.Date
 import java.util.UUID
+import java.util.concurrent.atomic.AtomicInteger
 
 private const val QL_CLIENT_CONFIG_CLASS = "com.instructure.canvasapi2.QLClientConfigKt"
 
@@ -152,6 +156,21 @@ class StudyNoteManagerImplTest {
     }
 
     @Test
+    fun `getPageStudyNotes stops paginating when hasNextPage is true but endCursor is null instead of looping forever`() = runTest {
+        val response = queryResponse(
+            data(nodes = listOf(studyNoteNode("1")), hasNextPage = true, endCursor = null)
+        )
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForPageQuery>(), any(), any())
+        } returns response
+
+        val result = manager.getPageStudyNotes(courseId = 100L, pageId = "page-1", forceNetwork = true)
+
+        assertEquals(listOf("1"), result.map { it.id })
+        coVerify(exactly = 1) { apolloClient.enqueueQuery(any<StudyNotesForPageQuery>(), any(), any()) }
+    }
+
+    @Test
     fun `getPageStudyNotes returns an empty list when the connection has no nodes`() = runTest {
         val response = queryResponse(data(nodes = emptyList()))
         coEvery {
@@ -163,6 +182,201 @@ class StudyNoteManagerImplTest {
         assertTrue(result.isEmpty())
         coVerify(exactly = 1) { apolloClient.enqueueQuery(any<StudyNotesForPageQuery>(), any(), any()) }
     }
+
+    @Test
+    fun `getCourseStudyNotes returns every note of a single course`() = runTest {
+        val response = courseQueryResponse(
+            courseData(nodes = listOf(courseStudyNoteNode("1"), courseStudyNoteNode("2")))
+        )
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } returns response
+
+        val result = manager.getCourseStudyNotes(courseId = 100L, forceNetwork = true)
+
+        assertEquals(2, result.size)
+        assertEquals(listOf("1", "2"), result.map { it.id })
+        coVerify(exactly = 1) { apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any()) }
+    }
+
+    @Test
+    fun `getCourseStudyNotes accumulates notes across multiple pages`() = runTest {
+        val firstPage = courseQueryResponse(
+            courseData(nodes = listOf(courseStudyNoteNode("1")), hasNextPage = true, endCursor = "cursor-1")
+        )
+        val secondPage = courseQueryResponse(courseData(nodes = listOf(courseStudyNoteNode("2"))))
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } returnsMany listOf(firstPage, secondPage)
+
+        val result = manager.getCourseStudyNotes(courseId = 100L, forceNetwork = true)
+
+        assertEquals(listOf("1", "2"), result.map { it.id })
+        coVerify(exactly = 1) {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.after == Optional.absent() }, any(), any())
+        }
+        coVerify(exactly = 1) {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.after == Optional.Present("cursor-1") }, any(), any())
+        }
+        coVerify(exactly = 2) { apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any()) }
+    }
+
+    @Test
+    fun `getCourseStudyNotes stops paginating when hasNextPage is true but endCursor is null instead of looping forever`() = runTest {
+        val response = courseQueryResponse(
+            courseData(nodes = listOf(courseStudyNoteNode("1")), hasNextPage = true, endCursor = null)
+        )
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } returns response
+
+        val result = manager.getCourseStudyNotes(courseId = 100L, forceNetwork = true)
+
+        assertEquals(listOf("1"), result.map { it.id })
+        coVerify(exactly = 1) { apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any()) }
+    }
+
+    @Test
+    fun `getCourseStudyNotes returns an empty list when the connection has no nodes`() = runTest {
+        val response = courseQueryResponse(courseData(nodes = emptyList()))
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } returns response
+
+        val result = manager.getCourseStudyNotes(courseId = 100L, forceNetwork = true)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `getGlobalStudyNotes fans out one call per course and tags each note with its course id`() = runTest {
+        coEvery {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.courseId == "100" }, any(), any())
+        } returns courseQueryResponse(courseData(nodes = listOf(courseStudyNoteNode("1"))))
+        coEvery {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.courseId == "200" }, any(), any())
+        } returns courseQueryResponse(courseData(nodes = listOf(courseStudyNoteNode("2"))))
+
+        val result = manager.getGlobalStudyNotes(courseIds = listOf(100L, 200L), forceNetwork = true)
+
+        assertEquals(2, result.size)
+        assertEquals(100L, result.find { it.note.id == "1" }?.courseId)
+        assertEquals(200L, result.find { it.note.id == "2" }?.courseId)
+        coVerify(exactly = 2) { apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any()) }
+    }
+
+    @Test
+    fun `getGlobalStudyNotes returns an empty list when given no courses`() = runTest {
+        val result = manager.getGlobalStudyNotes(courseIds = emptyList(), forceNetwork = true)
+
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 0) { apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any()) }
+    }
+
+    @Test
+    fun `getGlobalStudyNotes returns an empty list when a course has no notes`() = runTest {
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } returns courseQueryResponse(courseData(nodes = emptyList()))
+
+        val result = manager.getGlobalStudyNotes(courseIds = listOf(100L), forceNetwork = true)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `getGlobalStudyNotes drops a course whose call fails instead of failing the whole fan-out`() = runTest {
+        coEvery {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.courseId == "100" }, any(), any())
+        } throws RuntimeException("boom")
+        coEvery {
+            apolloClient.enqueueQuery(match<StudyNotesForCourseQuery> { it.courseId == "200" }, any(), any())
+        } returns courseQueryResponse(courseData(nodes = listOf(courseStudyNoteNode("2"))))
+
+        val result = manager.getGlobalStudyNotes(courseIds = listOf(100L, 200L), forceNetwork = true)
+
+        assertEquals(1, result.size)
+        assertEquals(200L, result.single().courseId)
+        assertEquals("2", result.single().note.id)
+    }
+
+    @Test
+    fun `getGlobalStudyNotes propagates CancellationException from a course fetch instead of swallowing it as a dropped course`() = runTest {
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } throws CancellationException("cancelled")
+
+        var caught: CancellationException? = null
+        try {
+            manager.getGlobalStudyNotes(courseIds = listOf(100L), forceNetwork = true)
+        } catch (e: CancellationException) {
+            caught = e
+        }
+
+        assertTrue(caught != null)
+    }
+
+    @Test
+    fun `getGlobalStudyNotes never runs more than 6 course fetches concurrently`() = runTest {
+        val courseIds = (1L..12L).toList()
+        val concurrentCalls = AtomicInteger(0)
+        val maxConcurrentCalls = AtomicInteger(0)
+
+        coEvery {
+            apolloClient.enqueueQuery(any<StudyNotesForCourseQuery>(), any(), any())
+        } coAnswers {
+            val current = concurrentCalls.incrementAndGet()
+            maxConcurrentCalls.updateAndGet { previous -> maxOf(previous, current) }
+            delay(10)
+            concurrentCalls.decrementAndGet()
+            courseQueryResponse(courseData(nodes = emptyList()))
+        }
+
+        manager.getGlobalStudyNotes(courseIds = courseIds, forceNetwork = true)
+
+        assertEquals(6, maxConcurrentCalls.get())
+    }
+
+    private fun courseStudyNoteNode(
+        id: String,
+        userText: String? = "Text $id",
+        reactions: List<String> = listOf("👍"),
+        highlightData: Any? = validHighlightData(),
+        learningObjectId: String = "page-1",
+        learningObjectType: LearningObjectType = LearningObjectType.WikiPage,
+        createdAt: Date? = Date(),
+        updatedAt: Date? = Date(),
+    ) = StudyNotesForCourseQuery.Node(
+        _id = id,
+        userText = userText,
+        reactions = reactions,
+        highlightData = highlightData,
+        learningObjectId = learningObjectId,
+        learningObjectType = learningObjectType,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+
+    private fun courseData(
+        nodes: List<StudyNotesForCourseQuery.Node?>,
+        hasNextPage: Boolean = false,
+        endCursor: String? = null,
+    ) = StudyNotesForCourseQuery.Data(
+        studyNotesConnection = StudyNotesForCourseQuery.StudyNotesConnection(
+            nodes = nodes,
+            pageInfo = StudyNotesForCourseQuery.PageInfo(hasNextPage = hasNextPage, endCursor = endCursor)
+        )
+    )
+
+    private fun courseQueryResponse(data: StudyNotesForCourseQuery.Data?): ApolloResponse<StudyNotesForCourseQuery.Data> =
+        ApolloResponse.Builder(
+            operation = StudyNotesForCourseQuery(
+                courseId = "100",
+                pageSize = 20,
+                after = Optional.absent()
+            ),
+            requestUuid = UUID.randomUUID()
+        ).data(data).build()
 
     private fun studyNoteNode(
         id: String,

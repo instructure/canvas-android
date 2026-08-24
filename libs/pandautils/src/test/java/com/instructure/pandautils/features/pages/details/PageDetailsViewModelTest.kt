@@ -106,6 +106,7 @@ class PageDetailsViewModelTest {
         every { savedStateHandle.get<Boolean>(PageDetailsViewModel.FRONT_PAGE) } returns false
         every { savedStateHandle.get<Page>(PageDetailsViewModel.PAGE) } returns null
         every { savedStateHandle.get<String>(PageDetailsViewModel.PAGE_NAME) } returns null
+        every { savedStateHandle.get<String>(PageDetailsViewModel.NOTE_ID) } returns null
 
         every { resources.getString(R.string.pages) } returns "Pages"
         every { resources.getString(R.string.noPageFound) } returns "No page found"
@@ -580,5 +581,23 @@ class PageDetailsViewModelTest {
 
         viewModel.uiState.value.actions.onNotebookClick()
         assertNull(viewModel.uiState.value.notebookTrayArgs)
+    }
+
+    @Test
+    fun `scrollToNoteId is null by default`() {
+        val viewModel = getViewModel()
+
+        assertNull(viewModel.uiState.value.scrollToNoteId)
+    }
+
+    @Test
+    fun `scrollToNoteId is seeded from the nav arg and survives a page fetch`() {
+        every { savedStateHandle.get<String>(PageDetailsViewModel.NOTE_ID) } returns "note-42"
+        val page = Page(id = 1L, title = "Page", body = "<p>Body</p>")
+        coEvery { loadPageDetailsUseCase(any()) } returns DataResult.Success(page)
+
+        val viewModel = getViewModel()
+
+        assertEquals("note-42", viewModel.uiState.value.scrollToNoteId)
     }
 }

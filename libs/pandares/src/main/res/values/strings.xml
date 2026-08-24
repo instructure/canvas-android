@@ -803,7 +803,15 @@
     <string name="notebookNoteNotFound">This note is no longer available.</string>
     <string name="notebookLoadError">There was a problem loading your notes.</string>
     <string name="a11y_notebookOpenPageNotes">Open page notes</string>
+    <string name="a11y_notebookOpenCourseNotes">Open course notes</string>
     <string name="a11y_notebookBackToNotesList">Back to page notes</string>
+    <string name="a11y_notebookBackToCourseNotes">Back to course notes</string>
+    <string name="a11y_notebookBackToGlobalNotes">Back to global notes</string>
+    <string name="a11y_notebookGoToLearningObject">Go to page</string>
+    <string name="notebookGlobalNotesBackLabel">Global</string>
+    <string name="notebookAssignmentNoteLabel">Assignment note %1$s</string>
+    <string name="notebookQuizNoteLabel">Quiz note %1$s</string>
+    <string name="notebookPageNoteLabel">Page note %1$s</string>
     <plurals name="notebookNotesCount">
         <item quantity="one">"%d Note"</item>
         <item quantity="other">"%d Notes"</item>

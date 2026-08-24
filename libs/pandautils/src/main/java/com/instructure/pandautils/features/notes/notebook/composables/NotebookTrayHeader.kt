@@ -55,14 +55,16 @@ import com.instructure.pandautils.R
  * (its title starts after the navigation slot, with no centered variant), which is why this hand-rolled
  * layout exists instead of reusing it.
  *
- * [onBackClick] null renders the back control inert (see open question 1 in the plan: the "Course"
- * back affordance on the list level has no destination yet) - it stays visually clickable per Figma
- * but is excluded from the accessibility tree so it is never announced as an actionable control.
+ * [backLabel] null renders no leading control at all - the top of the Notebook's hierarchy
+ * ([com.instructure.pandautils.features.notes.notebook.NotebookLevel.GlobalNotes], per Figma) has none.
+ * A non-null [backLabel] with [onBackClick] null instead renders an inert-but-visible control (still
+ * clickable per Figma, but excluded from the accessibility tree) - not used by any level today, but kept
+ * for a level whose back destination might not be resolvable yet.
  */
 @Composable
 fun NotebookTrayHeader(
     title: String,
-    backLabel: String,
+    backLabel: String?,
     onBackClick: (() -> Unit)?,
     onDoneClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -78,12 +80,14 @@ fun NotebookTrayHeader(
                 vertical = InstUILayoutSizes.Spacing.SpaceSm.spaceSm
             ),
         leading = {
-            NotebookTrayBackControl(
-                label = backLabel,
-                contentDescription = backContentDescription ?: backLabel,
-                onBackClick = onBackClick,
-                testTag = backTestTag
-            )
+            backLabel?.let { label ->
+                NotebookTrayBackControl(
+                    label = label,
+                    contentDescription = backContentDescription ?: label,
+                    onBackClick = onBackClick,
+                    testTag = backTestTag
+                )
+            }
         },
         title = { NotebookTrayHeaderTitle(title = title, subtitle = subtitle) },
         trailing = {
@@ -177,14 +181,7 @@ private fun NotebookTrayBackControl(
 ) {
     // The same InstUI TextButton component the "Done" button above uses, so the back control's ripple
     // shape and touch-target padding match Done's by construction rather than by hand.
-    val semanticsModifier = if (onBackClick != null) {
-        Modifier.semantics { this.contentDescription = contentDescription }
-    } else {
-        // TODO(MBL-xxxxx): route to the Course-level notebook once it exists. Still clickable (matches
-        // Figma's affordance) but clearAndSetSemantics() keeps it out of the accessibility tree so it
-        // is never announced as an actionable control until it actually does something.
-        Modifier.clearAndSetSemantics {}
-    }
+    val semanticsModifier = Modifier.semantics { this.contentDescription = contentDescription }
     TextButton(
         text = label,
         onClick = onBackClick ?: {},

@@ -226,6 +226,7 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
         const val PAGE = PageDetailsViewModel.PAGE
         const val PAGE_URL = PageDetailsViewModel.PAGE_URL
         const val NAVIGATED_FROM_MODULES = PageDetailsViewModel.NAVIGATED_FROM_MODULES
+        const val NOTE_ID = PageDetailsViewModel.NOTE_ID
         private const val FRONT_PAGE = PageDetailsViewModel.FRONT_PAGE
 
         fun newInstance(route: Route): PageDetailsFragment? {
@@ -243,6 +244,7 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
             return route.canvasContext != null &&
                     (route.arguments.containsKey(PAGE) ||
                             route.arguments.containsKey(PAGE_NAME) ||
+                            route.arguments.containsKey(PAGE_URL) ||
                             route.paramsHash.containsKey(RouterParams.PAGE_ID))
         }
 
@@ -252,13 +254,21 @@ class PageDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bookmark
             }))
         }
 
-        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?, navigatedFromModules: Boolean): Route {
+        fun makeRoute(
+            canvasContext: CanvasContext,
+            pageName: String?,
+            pageUrl: String?,
+            navigatedFromModules: Boolean,
+            noteId: String? = null
+        ): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
                 putBoolean(NAVIGATED_FROM_MODULES, navigatedFromModules)
                 if (pageName != null)
                     putString(PAGE_NAME, pageName)
                 if (pageUrl != null)
                     putString(PAGE_URL, pageUrl)
+                if (noteId != null)
+                    putString(NOTE_ID, noteId)
             }))
         }
 

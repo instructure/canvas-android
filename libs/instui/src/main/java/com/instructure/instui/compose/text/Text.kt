@@ -78,6 +78,9 @@ fun Text(
 
 /**
  * InstUI text component with [AnnotatedString] support.
+ *
+ * @param onTextLayout called with the layout result on every layout pass - use it to detect whether
+ * the text was actually truncated (`it.hasVisualOverflow`) when driving a "show more" affordance.
  */
 @Composable
 fun Text(
@@ -88,6 +91,7 @@ fun Text(
     textAlign: TextAlign? = null,
     overflow: TextOverflow = TextOverflow.Clip,
     maxLines: Int = Int.MAX_VALUE,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
 ) {
     androidx.compose.material3.Text(
         text = text,
@@ -97,6 +101,7 @@ fun Text(
         textAlign = textAlign,
         overflow = overflow,
         maxLines = maxLines,
+        onTextLayout = onTextLayout,
     )
 }
 

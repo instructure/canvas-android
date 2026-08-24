@@ -22,19 +22,23 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
@@ -56,7 +60,12 @@ import com.instructure.instui.compose.container.Tray
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotebookTray(args: NotebookTrayArgs, courseColor: Color, onDismiss: () -> Unit) {
+fun NotebookTray(
+    args: NotebookTrayArgs,
+    courseColor: Color,
+    onDismiss: () -> Unit,
+    onScrollToNoteRequested: (String) -> Unit = {}
+) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
     // "Done" dismisses programmatically, so animate the sheet out first (canonical M3 idiom);
@@ -79,8 +88,22 @@ fun NotebookTray(args: NotebookTrayArgs, courseColor: Color, onDismiss: () -> Un
             // there for why that layering, rather than the reverse, is correct.
             containerColor = InstUISemanticColors.Background.muted(),
             // Cap below the status bar and fill the rest, exactly like SubmissionCommentsBottomSheet.
-            modifier = Modifier.testTag("notebookTray").windowInsetsPadding(WindowInsets.statusBars),
-            contentWindowInsets = { WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom) },
+            // windowInsetsPadding(WindowInsets.statusBars) can't be called directly here: this whole
+            // Tray(...) call's arguments are evaluated in the *caller's* composition (e.g. PageDetailsScreen,
+            // or CourseBrowserFragment's small nested `searchBar` ComposeView), not inside the sheet's own
+            // Dialog - so WindowInsets.statusBars would resolve against whichever View hosts the caller,
+            // not the Dialog's own window. That's harmless from a fullscreen ComposeView host (same real
+            // status bar height either way), but from a small/nested host like `searchBar` it reads a
+            // stale/zero value, and the sheet ends up drawn on top of the status bar. composed{} defers the
+            // WindowInsets.statusBars lookup to where this modifier actually attaches (the Surface inside
+            // the Dialog), which is always the correct, dialog-scoped insets regardless of the caller.
+            modifier = Modifier.testTag("notebookTray").composed { windowInsetsPadding(WindowInsets.statusBars) },
+            // Also union in the display cutout (e.g. a camera cutout on the long edge in landscape) -
+            // navigationBars alone doesn't cover it, so rotated content could render under the cutout.
+            contentWindowInsets = {
+                WindowInsets.navigationBars.union(WindowInsets.displayCutout)
+                    .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom)
+            },
             // Otherwise M3's default 640.dp cap centers the sheet with visible scrim padding on
             // both sides on any window wider than that (e.g. a phone in landscape) - this tray is
             // meant to be full-bleed at every width/orientation.
@@ -105,6 +128,19 @@ fun NotebookTray(args: NotebookTrayArgs, courseColor: Color, onDismiss: () -> Un
                 composable(route = NotebookRoute.PATTERN, arguments = NotebookRoute.arguments) {
                     val viewModel = hiltViewModel<NotebookViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+
+                    // A note row's arrow was tapped. Either the ViewModel already routed to the note's
+                    // underlying page/assignment/quiz (app-specific, via NotebookRouter) and all that's
+                    // left here is closing the tray - exactly like tapping "Done" - or the note belongs
+                    // to the page the tray is already sitting on top of, in which case there's nowhere
+                    // to route to and scrollToNoteOnDismiss asks the host to scroll to it instead.
+                    LaunchedEffect(uiState.closeTrayRequested) {
+                        if (uiState.closeTrayRequested) {
+                            uiState.scrollToNoteOnDismiss?.let { onScrollToNoteRequested(it) }
+                            close()
+                        }
+                    }
+
                     NotebookContent(uiState = uiState, onDoneClick = close)
                 }
             }
@@ -119,8 +155,11 @@ private fun NotebookContent(uiState: NotebookUiState, onDoneClick: () -> Unit, m
         label = "notebookLevel",
         modifier = modifier,
         transitionSpec = {
-            val pushingDetail = targetState is NotebookLevel.NoteDetails
-            if (pushingDetail) {
+            // Global -> Course -> Page -> NoteDetails is a fixed hierarchy (see NotebookLevel.depth()) -
+            // drilling in (target deeper than where we came from) always pushes from the right, zooming
+            // out always pushes from the left, regardless of which two levels are actually involved.
+            val drillingIn = targetState.depth() > initialState.depth()
+            if (drillingIn) {
                 slideInHorizontally(tween()) { width -> width } togetherWith slideOutHorizontally(tween()) { width -> -width }
             } else {
                 slideInHorizontally(tween()) { width -> -width } togetherWith slideOutHorizontally(tween()) { width -> width }
@@ -136,4 +175,12 @@ private fun NotebookContent(uiState: NotebookUiState, onDoneClick: () -> Unit, m
             )
         }
     }
+}
+
+/** Position in the fixed Global > Course > Page > NoteDetails hierarchy - see [NotebookLevel]. */
+private fun NotebookLevel.depth(): Int = when (this) {
+    is NotebookLevel.GlobalNotes -> 0
+    is NotebookLevel.CourseNotes -> 1
+    is NotebookLevel.PageNotes -> 2
+    is NotebookLevel.NoteDetails -> 3
 }

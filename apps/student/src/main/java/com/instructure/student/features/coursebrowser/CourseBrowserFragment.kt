@@ -23,6 +23,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -33,6 +43,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -55,10 +66,15 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SearchBar
+import com.instructure.instui.token.icon.InstUIIcons
+import com.instructure.instui.token.icon.notebookPen
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
+import com.instructure.pandautils.features.notes.notebook.NotebookTray
+import com.instructure.pandautils.features.notes.notebook.NotebookTrayArgs
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -105,9 +121,27 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     @Inject
     lateinit var observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
 
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
     private var apiCalls: Job? = null
+
+    // Backed by plain mutableStateOf fields (rather than remember{} inside the Compose content below)
+    // because notebookIconVisible is resolved asynchronously from a Fragment-scoped coroutine, outside
+    // of composition - see onViewCreated. searchBar (see fragment_course_browser.xml) is not
+    // ViewModel/UiState-driven, unlike the rest of this feature - it mounts a small local Compose tree
+    // via setContent{} for just its own icon/search bar/tray, matching how the SearchBar itself already
+    // works here.
+    private var notebookIconVisible by mutableStateOf(false)
+    private var notebookTrayVisible by mutableStateOf(false)
+    private var searchBarExpanded by mutableStateOf(false)
+
+    // Whether the Smart Search tab exists for this course - decoupled from notebookIconVisible (see
+    // onViewCreated below) so the notebook entry point doesn't depend on Smart Search being enabled
+    // for the account: the searchBar host View's own visibility no longer implies the tab exists.
+    private var smartSearchTabAvailable by mutableStateOf(false)
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -143,6 +177,20 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Gated identically to the existing Page-level Notebook entry point (PageDetailsViewModel):
+        // the notebook feature flag AND the user having a student enrollment in this course. Notebook
+        // is Student-app only (StudyNote mutations/queries hard-require course.user_is_student? server
+        // side), so this is never shown for a Group's CourseBrowserFragment.
+        (canvasContext as? Course)?.let { course ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                try {
+                    notebookIconVisible = course.isStudent && featureFlagProvider.notebookEnabled()
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                }
+            }
+        }
+
         // Observe widget config for color overlay setting when dashboard redesign is enabled
         if (isDashboardRedesignEnabled) {
             viewLifecycleOwner.lifecycleScope.launch {
@@ -160,39 +208,71 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         }
 
         networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
+            // Not gated on smartSearchTabAvailable - the notebook icon must stay visible (while online)
+            // even for a course with no Smart Search tab. Going offline closes an open tray instead of
+            // just hiding its host, so state doesn't silently linger behind a gone View.
             searchBar.setVisible(isOnline)
+            if (!isOnline) notebookTrayVisible = false
         }
 
         searchBar.apply {
             setContent {
                 CanvasTheme {
-                    SearchBar(
-                        icon = R.drawable.ic_smart_search,
-                        tintColor = colorResource(R.color.textLightest),
-                        placeholder = stringResource(R.string.smartSearchPlaceholder),
-                        onExpand = { expanded ->
-                            overlayToolbar.background =
-                                if (expanded) ColorDrawable(canvasContext.color) else null
-                            overlayToolbar.navigationIcon =
-                                if (expanded) {
-                                    null
-                                } else {
-                                    ContextCompat.getDrawable(
-                                        requireContext(),
-                                        R.drawable.ic_back_arrow
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (notebookIconVisible && !searchBarExpanded) {
+                            IconButton(
+                                onClick = { notebookTrayVisible = true },
+                                modifier = Modifier.testTag("courseBrowserNotebookButton")
+                            ) {
+                                Icon(
+                                    imageVector = InstUIIcons.notebookPen,
+                                    contentDescription = stringResource(id = R.string.a11y_notebookOpenCourseNotes),
+                                    tint = colorResource(R.color.textLightest)
+                                )
+                            }
+                        }
+                        if (smartSearchTabAvailable) {
+                            SearchBar(
+                                icon = R.drawable.ic_smart_search,
+                                tintColor = colorResource(R.color.textLightest),
+                                placeholder = stringResource(R.string.smartSearchPlaceholder),
+                                onExpand = { expanded ->
+                                    searchBarExpanded = expanded
+                                    overlayToolbar.background =
+                                        if (expanded) ColorDrawable(canvasContext.color) else null
+                                    overlayToolbar.navigationIcon =
+                                        if (expanded) {
+                                            null
+                                        } else {
+                                            ContextCompat.getDrawable(
+                                                requireContext(),
+                                                R.drawable.ic_back_arrow
+                                            )
+                                        }
+                                    ViewStyler.colorToolbarIconsAndText(
+                                        requireActivity(),
+                                        overlayToolbar,
+                                        requireContext().getColor(R.color.textLightest)
                                     )
-                                }
-                            ViewStyler.colorToolbarIconsAndText(
-                                requireActivity(),
-                                overlayToolbar,
-                                requireContext().getColor(R.color.textLightest)
+                                },
+                                onSearch = { query ->
+                                    RouteMatcher.route(requireActivity(), SmartSearchFragment.makeRoute(canvasContext, query))
+                                },
+                                collapseOnSearch = true
                             )
-                        },
-                        onSearch = { query ->
-                            RouteMatcher.route(requireActivity(), SmartSearchFragment.makeRoute(canvasContext, query))
-                        },
-                        collapseOnSearch = true
-                    )
+                        }
+                    }
+
+                    if (notebookTrayVisible) {
+                        NotebookTray(
+                            args = NotebookTrayArgs(
+                                courseId = canvasContext.id,
+                                courseTitle = canvasContext.name.orEmpty()
+                            ),
+                            courseColor = Color(canvasContext.color),
+                            onDismiss = { notebookTrayVisible = false }
+                        )
+                    }
                 }
             }
         }
@@ -304,11 +384,15 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
             if (searchBar.parent == overlayToolbar) {
                 overlayToolbar.removeView(searchBar)
                 noOverlayToolbar.addView(searchBar)
+                // searchBar's default ViewCompositionStrategy disposes its composition on detach, so
+                // reparenting would silently reset an open tray's NavHost/ViewModel - close it instead.
+                notebookTrayVisible = false
             }
         } else {
             if (searchBar.parent == noOverlayToolbar) {
                 noOverlayToolbar.removeView(searchBar)
                 overlayToolbar.addView(searchBar)
+                notebookTrayVisible = false
             }
         }
         noOverlayToolbar.setVisible(!useOverlay)
@@ -416,7 +500,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
             val tabs = repository.getTabs(canvasContext, isRefresh)
 
-            binding.searchBar.setVisible(networkStateProvider.isOnline() && tabs.find { it.tabId == Tab.SEARCH_ID } != null)
+            binding.searchBar.setVisible(networkStateProvider.isOnline())
+            smartSearchTabAvailable = tabs.find { it.tabId == Tab.SEARCH_ID } != null
 
             // Finds the home tab so we can reorder them if necessary
             val sortedTabs = tabs.filter { it.tabId != Tab.SEARCH_ID }.toMutableList()

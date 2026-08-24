@@ -67,6 +67,9 @@ class PageDetailsViewModel @Inject constructor(
     val pageUrl: String? = savedStateHandle.get<String>(PAGE_URL)
     private val navigatedFromModules: Boolean = savedStateHandle.get<Boolean>(NAVIGATED_FROM_MODULES).orDefault()
     private val frontPage: Boolean = savedStateHandle.get<Boolean>(FRONT_PAGE).orDefault()
+    // Set only when routed here from a Notebook note's arrow (see NotebookRouter) - scrolls the WebView
+    // to that note's highlight once it renders.
+    private val scrollToNoteId: String? = savedStateHandle.get<String>(NOTE_ID)
 
     var currentPage: Page = savedStateHandle.get<Page>(PAGE) ?: Page()
         private set
@@ -80,7 +83,9 @@ class PageDetailsViewModel @Inject constructor(
     // Seeded with the title we already know from the nav args so the toolbar shows the page name
     // immediately instead of only once the fetch resolves (the legacy fragment did this in
     // applyTheme()). Falls back to "Pages" when we were routed without a name (e.g. front page).
-    private val _uiState = MutableStateFlow(PageDetailsUiState(toolbarTitle = currentTitle()).withCallbacks())
+    private val _uiState = MutableStateFlow(
+        PageDetailsUiState(toolbarTitle = currentTitle(), scrollToNoteId = scrollToNoteId).withCallbacks()
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -372,5 +377,6 @@ class PageDetailsViewModel @Inject constructor(
         const val PAGE_URL = "pageUrl"
         const val NAVIGATED_FROM_MODULES = "navigated_from_modules"
         const val FRONT_PAGE = "frontPage"
+        const val NOTE_ID = "notebookScrollToNoteId"
     }
 }

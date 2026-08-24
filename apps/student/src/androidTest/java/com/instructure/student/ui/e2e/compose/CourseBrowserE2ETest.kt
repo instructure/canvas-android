@@ -92,7 +92,7 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         courseBrowserPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on the 'Smart Search' (Magnifying glass) icon on the top right corner of the Course Browser page.")
-        courseBrowserPage.clickOnSmartSearch()
+        courseBrowserPage.clickOnSmartSearch(composeTestRule)
 
         val smartSearchText = testAssignment.name.take(4) // "Test" will be the search text.
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {

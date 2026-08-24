@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
 
 class PageNetworkDataSource(
     private val pageApi: PageAPI.PagesInterface
@@ -34,5 +35,15 @@ class PageNetworkDataSource(
     override suspend fun getPageDetails(canvasContext: CanvasContext, pageId: String, forceRefresh: Boolean): DataResult<Page> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return pageApi.getDetailedPage(canvasContext.apiContext(), canvasContext.id, pageId, params)
+    }
+
+    override suspend fun getCoursePages(courseId: Long, forceRefresh: Boolean): DataResult<List<Page>> {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+        return pageApi.getFirstPagePages(courseId, COURSE_CONTEXT_TYPE, params)
+            .depaginate { nextUrl -> pageApi.getNextPagePagesList(nextUrl, params) }
+    }
+
+    private companion object {
+        const val COURSE_CONTEXT_TYPE = "courses"
     }
 }

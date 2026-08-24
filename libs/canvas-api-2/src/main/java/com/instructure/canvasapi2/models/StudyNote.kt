@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.models
 
 import com.google.gson.Gson
+import com.instructure.canvasapi2.StudyNotesForCourseQuery
 import com.instructure.canvasapi2.StudyNotesForPageQuery
 import java.util.Date
 
@@ -29,6 +30,14 @@ data class StudyNote(
     val createdAt: Date?,
     val updatedAt: Date?
 )
+
+/**
+ * A [StudyNote] fetched as part of a Global (all-courses) fetch, tagged client-side with the id of the
+ * course whose request produced it - see [com.instructure.canvasapi2.managers.graphql.StudyNoteManager.getGlobalStudyNotes].
+ * [StudyNoteType] itself exposes no course id, so this annotation only ever exists after the fact, never
+ * as part of the GraphQL response shape.
+ */
+data class CourseTaggedStudyNote(val courseId: Long, val note: StudyNote)
 
 enum class LearningObjectType { WikiPage, Assignment, Quiz }
 
@@ -54,6 +63,19 @@ data class StudyNoteHighlightTextPosition(
 private val gson = Gson()
 
 fun StudyNotesForPageQuery.Node.mapToStudyNote(): StudyNote {
+    return StudyNote(
+        id = _id,
+        userText = userText.orEmpty(),
+        reactions = reactions,
+        highlightData = highlightData.toStudyNoteHighlightData(),
+        learningObjectId = learningObjectId,
+        learningObjectType = learningObjectType.rawValue.toLearningObjectType(),
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+}
+
+fun StudyNotesForCourseQuery.Node.mapToStudyNote(): StudyNote {
     return StudyNote(
         id = _id,
         userText = userText.orEmpty(),

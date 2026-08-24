@@ -737,6 +737,17 @@ function getNotePosition(noteId) {
 	}
 	return 0;
 }
+
+function scrollToNote(noteId) {
+	const highlights = document.getElementsByClassName('notebook-highlight');
+	for (const highlight of highlights) {
+		if (highlight.getAttribute('data-note-id') === noteId) {
+			highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			return true;
+		}
+	}
+	return false;
+}
 javascript: (function () {
 	document.addEventListener("selectionchange", () => {
 		const selection = window.getSelection();
@@ -836,6 +847,17 @@ javascript: (function () {
                 val position = result?.replace("\"", "")?.toFloatOrNull()
                 onResult(if (position != null && position >= 0) position else null)
             }
+        }
+
+        /** Scrolls the WebView's own document to the given note's highlight, entirely in-JS via
+         * `Element.scrollIntoView` - unlike [getNoteYPosition] (which reports a position for a *caller-
+         * owned* Compose [androidx.compose.foundation.ScrollState] to scroll, e.g. Horizon's page screen,
+         * which nests its WebView inside a scrollable Column), this is for a WebView that scrolls itself
+         * natively, so there's no Kotlin-side position/coordinate handling needed at all. No-ops if the
+         * note's highlight span isn't in the DOM (e.g. wrong id, or called before highlightRanges()). */
+        fun WebView.scrollToNote(noteId: String) {
+            val quotedNoteId = JSONObject.quote(noteId)
+            this.evaluateJavascript("scrollToNote($quotedNoteId)", null)
         }
     }
 }
