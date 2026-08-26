@@ -85,6 +85,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import org.greenrobot.eventbus.EventBus
 import javax.inject.Named
+import javax.inject.Provider
 import javax.inject.Singleton
 
 const val PLANNER_API_SERIALIZE_NULLS = "PLANNER_API_SERIALIZE_NULLS"
@@ -411,7 +412,7 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: Provider<LoginRouter>, eventBus: EventBus): TokenRefresher {
         return TokenRefresher(context, loginRouter, eventBus)
     }
 

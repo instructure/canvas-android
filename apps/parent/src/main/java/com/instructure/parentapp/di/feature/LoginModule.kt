@@ -39,7 +39,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityComponent::class)
@@ -72,7 +71,6 @@ class LoginModule {
 @InstallIn(SingletonComponent::class)
 class LoginRouterModule {
     @Provides
-    @Singleton
     fun provideLoginRouter(
         @ApplicationContext context: Context,
         loginPrefs: LoginPrefs,

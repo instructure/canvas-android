@@ -26,13 +26,14 @@ import kotlinx.coroutines.withTimeoutOrNull
 import okhttp3.Request
 import okhttp3.Response
 import org.greenrobot.eventbus.EventBus
+import javax.inject.Provider
 
 private const val AUTH_HEADER = "Authorization"
 private const val RETRY_HEADER = "mobile_refresh"
 
 class TokenRefresher(
     private val context: Context,
-    private val loginRouter: LoginRouter,
+    private val loginRouter: Provider<LoginRouter>,
     private val eventBus: EventBus
 ) {
 
@@ -105,7 +106,7 @@ class TokenRefresher(
     }
 
     private fun launchLogin() {
-        val intent = loginRouter.loginIntent()
+        val intent = loginRouter.get().loginIntent()
         intent.putExtra(TOKEN_REFRESH, true)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         context.startActivity(intent)
